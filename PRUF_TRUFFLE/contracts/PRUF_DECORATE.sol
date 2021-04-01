@@ -11,7 +11,7 @@ __/\\\\\\\\\\\\\ _____/\\\\\\\\\ _______/\\../\\ ___/\\\\\\\\\\\\\\\
          *-------------------------------------------------------------------*/
 
 /*-----------------------------------------------------------------
- *  TO DO --- 
+ *  TO DO ---
  *
  *-----------------------------------------------------------------
  * Decorates ERC721 compliant tokens with a PRUF record
@@ -27,10 +27,10 @@ pragma solidity ^0.8.0;
 import "./PRUF_CORE.sol";
 import "./Imports/token/ERC721/IERC721.sol";
 
-//DPS:TEST WHAT COMMENTS?
-contract DECORATE is
-    CORE //CTS:EXAMINE COMMENTS NEED UPDATING
-{
+/*
+ * @dev Decorates an external ERC721 with PRüF data
+ */
+contract DECORATE is CORE {
     modifier isTokenHolder(uint256 _tokenID, address _tokenContract) {
         //require that user holds token @ ID-Contract
         require(
@@ -43,7 +43,7 @@ contract DECORATE is
     //--------------------------------------------External Functions--------------------------
 
     /*
-     * @dev Wrapper for newRecord
+     * @dev Decorates an external ERC721 with PRüF data
      */
     function decorate721(
         uint256 _tokenID,
@@ -61,10 +61,7 @@ contract DECORATE is
         Record memory rec = getRecord(idxHash);
         AC memory AC_info = getACinfo(_assetClass);
 
-        require(
-            AC_info.custodyType == 5,
-            "D:D:Asset class.custodyType != 5"
-        );
+        require(AC_info.custodyType == 5, "D:D:Asset class.custodyType != 5");
         require(
             (AC_info.referenceAddress == _tokenContract) ||
                 (AC_info.referenceAddress == address(0)),
@@ -303,8 +300,6 @@ contract DECORATE is
         address _tokenContract,
         bytes32 _Ipfs2a,
         bytes32 _Ipfs2b
-        
-
     )
         external
         nonReentrant
@@ -401,8 +396,8 @@ contract DECORATE is
             "D:I:Asset class.custodyType != 5 & record must exist"
         );
         require(
-                (AC_info.managementType < 5),
-                "D:I:Contract does not support management types > 4 or AC is locked"
+            (AC_info.managementType < 5),
+            "D:I:Contract does not support management types > 4 or AC is locked"
         );
         require(
             ((AC_info.referenceAddress == _tokenContract) ||
@@ -448,8 +443,8 @@ contract DECORATE is
             "D:CRO:Asset class.custodyType must be 5 (wrapped/decorated erc721)"
         );
         require(
-                (AC_info.managementType < 5),
-                "D:CRO:Contract does not support management types > 4 or AC is locked"
+            (AC_info.managementType < 5),
+            "D:CRO:Contract does not support management types > 4 or AC is locked"
         );
         if ((AC_info.managementType == 1) || (AC_info.managementType == 2)) {
             require(

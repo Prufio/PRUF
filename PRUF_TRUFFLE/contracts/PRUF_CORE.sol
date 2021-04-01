@@ -180,7 +180,7 @@ contract CORE is BASIC {
     }
 
     /*
-     * @dev Send payment to appropriate pullPayment adresses for payable function CTS:EXAMINE comment
+     * @dev Send payment to appropriate  adresses
      */
     function deductRecycleCosts(
         uint32 _assetClass,

@@ -53,7 +53,7 @@ contract PURCHASE is CORE {
             rec.assetStatus == 51,
             "PP:P: Must be in transferrable status (51)"
         );
-        require( // CTS:EXAMINE, THROWS IN _setPrice
+        require( //THROWS IN _setPrice CTS:PREFERRED
             rec.currency == 2,
             "PP:P: Payment must be in PRUF tokens for this contract"
         );

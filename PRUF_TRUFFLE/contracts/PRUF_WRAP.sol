@@ -127,7 +127,7 @@ contract WRAP is CORE {
             AC_info.custodyType == 5,
             "W:UW: Asset class.custodyType != 5"
         );
-        require( // CTS:EXAMINE, STAT UNREACHABLE WITH CURRENT CONTRACTS
+        require( // CTS:PREFERRED, STAT UNREACHABLE WITH CURRENT CONTRACTS
             (AC_info.referenceAddress == foreignTokenContract) ||
                 (AC_info.referenceAddress == address(0)),
             "W:UW: Asset class extended data must be '0' or ERC721 contract address"
@@ -179,7 +179,7 @@ contract WRAP is CORE {
             A_TKN.tokenExists(tokenId) == 0,
             "W:CR: Asset token already exists"
         );
-        require( //CTS:EXAMINE redundant/unreachable with current contract structure, throws in wrap.
+        require( //CTS:PREFERRED redundant/unreachable with current contract structure, throws in wrap.
             (AC_info.custodyType == 5),
             "W:CR: Cannot create asset - contract not authorized for asset class custody type"
         );

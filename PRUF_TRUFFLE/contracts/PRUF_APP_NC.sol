@@ -138,7 +138,7 @@ contract APP_NC is CORE {
     }
 
     /*
-     * @dev Modify record.Ipfs2 with confirmation CTS:EXAMINE comment
+     * @dev Modify record.Ipfs2
      */
     function addIpfs2Note(bytes32 _idxHash, bytes32 _Ipfs2a, bytes32 _Ipfs2b)
         external

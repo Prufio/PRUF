@@ -65,7 +65,7 @@ contract ECR_NC is ECR_CORE {
             (rec.assetStatus > 49),
             "ENC:SE: Only ACadmin authorized user can change status < 50"
         );
-        require( //REDUNDANT, THROWS IN SAFEMATH  CTS:EXAMINE
+        require( //REDUNDANT, THROWS CTS:PREFERRED
             (escrowTime >= block.timestamp),
             "ENC:SE:Escrow must be set to a time in the future"
         );

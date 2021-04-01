@@ -55,7 +55,7 @@ contract ECR is ECR_CORE {
 
         require(contractInfo.contractType > 0, "E:SE: Contract not auth in AC");
         require((userType > 0) && (userType < 10), "E:SE: User not auth in AC");
-        require( //REDUNDANT, THROWS IN SAFEMATH CTS:EXAMINE
+        require( //REDUNDANT, THROWS IN SAFEMATH CTS:PREFERRED
             (escrowTime >= block.timestamp),
             "E:SE: Escrow must be set to a time in the future"
         );
