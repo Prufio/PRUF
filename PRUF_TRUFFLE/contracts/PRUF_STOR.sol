@@ -616,11 +616,9 @@ contract STOR is AccessControl, ReentrancyGuard, Pausable {
         whenNotPaused
         exists(_idxHash) //asset must exist in 'database' REDUNDANT THROWS IN PURCHASE, UNREACHABLE WITH CURRENT CONTRACTS
         isAuthorized(database[_idxHash].assetClass) //calling contract must be authorized in relevant assetClass
-    //notEscrow(_idxHash) // asset must not be held in escrow status
     {
         Record memory rec = database[_idxHash];
         require((isTransferred(rec.assetStatus) == 0), "S:CP: Txfrd asset"); // REDUNDANT THROWS IN PURCHASE, UNREACHABLE WITH CURRENT CONTRACTS
-        //require(isEscrow(rec.assetStatus) == 0, "S:CP: Escrowed asset");
         //^^^^^^^checks^^^^^^^^^
 
         rec.price = 0;
