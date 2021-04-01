@@ -32,7 +32,7 @@ __/\\\\\\\\\\\\\ _____/\\\\\\\\\ _______/\\../\\ ___/\\\\\\\\\\\\\\\
 // uint8 storageProvider;
 // uint32 discount;
 // address referenceAddress;
-// uint8 additional;
+// uint8 switches;
 // bytes32 IPFS;
 
 // SPDX-License-Identifier: UNLICENSED
@@ -178,7 +178,7 @@ contract AC_MGR is BASIC {
         uint8 _storageProvider,
         uint32 _discount,
         address _refAddress,
-        uint8 _additional,
+        uint8 _switches,
         bytes32 _IPFS
     ) external isAdmin nonReentrant {
         AC memory _ac = AC_data[_assetClassRoot];
@@ -204,7 +204,7 @@ contract AC_MGR is BASIC {
         AC_data[_assetClass].custodyType = _custodyType;
         AC_data[_assetClass].managementType = _managementType;
         AC_data[_assetClass].storageProvider = _storageProvider;
-        AC_data[_assetClass].additional = _additional;
+        AC_data[_assetClass].switches = _switches;
         AC_data[_assetClass].referenceAddress = _refAddress;
         AC_data[_assetClass].IPFS = _IPFS;
         //^^^^^^^effects^^^^^^^^^
@@ -495,13 +495,13 @@ contract AC_MGR is BASIC {
     //     (
     //         asset_data.storageProvider,
     //         asset_data.referenceAddress,
-    //         asset_data.additional,
+    //         asset_data.switches,
     //         asset_data.IPFS
     //     ) = AC_MGR.getExtAC_data_nostruct(_assetClass);
 
     //     return (
     //         asset_data.storageProvider,
-    //         asset_data.additional,
+    //         asset_data.switches,
     //         asset_data.referenceAddress,
     //         asset_data.IPFS
     //     );

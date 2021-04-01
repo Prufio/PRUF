@@ -16,7 +16,7 @@ __/\\\\\\\\\\\\\ _____/\\\\\\\\\ _______/\\../\\ ___/\\\\\\\\\\\\\\\
  *-----------------------------------------------------------------
  * IMPORTANT!!! NO EXTERNAL OR PUBLIC FUNCTIONS ALLOWED IN THIS CONTRACT!!!!!!!!
  *-----------------------------------------------------------------
- * PRUF core provides additional core functionality covering cost getters, payment processing, withdrawls, common test conditionals, and setters for data in storage
+ * PRUF core provides switches core functionality covering cost getters, payment processing, withdrawls, common test conditionals, and setters for data in storage
  *---------------------------------------------------------------*/
 
 // SPDX-License-Identifier: UNLICENSED

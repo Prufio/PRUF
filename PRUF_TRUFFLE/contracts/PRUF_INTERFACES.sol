@@ -44,7 +44,7 @@ struct AC {
     uint8 storageProvider; // Storage Provider
     uint32 discount; // price sharing //internal admin                                      //immutable
     address referenceAddress; // Used with wrap / decorate
-    uint8 additional; // Future Use                           //immutable
+    uint8 switches; // Future Use                           //immutable
     bytes32 IPFS; //IPFS data for defining idxHash creation attribute fields
 }
 
@@ -964,7 +964,7 @@ interface AC_MGR_Interface {
         uint8 _storageProvider,
         uint32 _discount,
         address _refAddress,
-        uint8 _additional,
+        uint8 _switches,
         bytes32 _IPFS
     ) external;
 
