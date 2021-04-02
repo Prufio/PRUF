@@ -67,9 +67,12 @@ contract A_TKN is
     address internal STOR_Address;
     address internal RCLR_Address;
     address internal AC_MGR_Address;
+    address internal AC_TKN_Address;
     STOR_Interface internal STOR;
     RCLR_Interface internal RCLR;
     AC_MGR_Interface internal AC_MGR;
+    AC_TKN_Interface internal AC_TKN;
+
 
     bytes32 public constant B320xF_ =
         0xFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFF;
@@ -156,6 +159,9 @@ contract A_TKN is
 
         AC_MGR_Address = STOR.resolveContractAddress("AC_MGR");
         AC_MGR = AC_MGR_Interface(AC_MGR_Address);
+
+        AC_TKN_Address = STOR.resolveContractAddress("AC_TKN");
+        AC_TKN = AC_TKN_Interface(AC_TKN_Address);
         //^^^^^^^effects^^^^^^^^^
     }
 
@@ -205,7 +211,7 @@ contract A_TKN is
     }
 
     /*
-     * @dev Set new token URI String
+     * @dev Set new token URI String  //DPS:TEST
      */
     function setURI(uint256 tokenId, string calldata _tokenURI)
         external
@@ -215,10 +221,19 @@ contract A_TKN is
         Record memory rec = getRecord(_idxHash);
 
         if (AC_MGR.getSwitchAt(rec.assetClass, 1) == 1 ) {  //if switch at bit 1 (0) is set
-         //make sure you cant change the URI once it is set
-        }
-        MAKE THIS WORK
+            string memory tokenURI = tokenURI(tokenId);
 
+            require(
+             bytes(tokenURI).length == 0,
+            "AT:SURI:URI already set, is immutable"
+            );
+
+            require(
+             AC_TKN.ownerOf(tokenId) == _msgSender(),
+            "AT:SURI:URI can only be set by ACNode Holder"
+            );
+
+        }
 
         require(
             _isApprovedOrOwner(_msgSender(), tokenId),
