@@ -114,10 +114,10 @@ contract AC_MGR is BASIC {
      * This breaks decentralization and must eventually be given over to some kind of governance contract. //CTS:EXAMINE
      */
 
-    function adminIncreaseShare(
-        uint32 _assetClass,
-        uint32 _newDiscount
-    ) external isAdmin {
+    function adminIncreaseShare(uint32 _assetClass, uint32 _newDiscount)
+        external
+        isAdmin
+    {
         require(
             (AC_data[_assetClass].assetClassRoot != 0),
             "ACM:AIS: AC not in use"
@@ -126,10 +126,7 @@ contract AC_MGR is BASIC {
             _newDiscount >= AC_data[_assetClass].discount,
             "ACM:AIS: New share < old share"
         );
-        require(
-            _newDiscount <= 10000,
-            "ACM:AIS: Discount > 100% (10000)"
-        );
+        require(_newDiscount <= 10000, "ACM:AIS: Discount > 100% (10000)");
         //^^^^^^^checks^^^^^^^^^
 
         AC_data[_assetClass].discount = _newDiscount;
@@ -145,7 +142,6 @@ contract AC_MGR is BASIC {
      *
      */
     function transferName(
-
         uint32 _assetClass_source,
         uint32 _assetClass_dest,
         string calldata _name
@@ -178,25 +174,18 @@ contract AC_MGR is BASIC {
         uint8 _storageProvider,
         uint32 _discount,
         address _refAddress,
-        uint8 _switches,
         bytes32 _IPFS
     ) external isAdmin nonReentrant {
         AC memory _ac = AC_data[_assetClassRoot];
         uint256 tokenId = uint256(_assetClass);
 
         require((tokenId != 0), "ACM:AMAC: AC = 0"); //sanity check inputs
-        require(
-            _discount <= 10000,
-            "ACM:AMAC: Discount > 10000 (100%)"
-        );
+        require(_discount <= 10000, "ACM:AMAC: Discount > 10000 (100%)");
         require( //has valid root
             (_ac.custodyType == 3) || (_assetClassRoot == _assetClass),
             "ACM:AMAC: Root !exist"
         );
-        require(
-            AC_TKN.tokenExists(tokenId) == 170,
-            "ACM:AMAC: ACtoken !exist"
-        );
+        require(AC_TKN.tokenExists(tokenId) == 170, "ACM:AMAC: ACtoken !exist");
         //^^^^^^^checks^^^^^^^^^
 
         AC_data[_assetClass].assetClassRoot = _assetClassRoot;
@@ -204,11 +193,39 @@ contract AC_MGR is BASIC {
         AC_data[_assetClass].custodyType = _custodyType;
         AC_data[_assetClass].managementType = _managementType;
         AC_data[_assetClass].storageProvider = _storageProvider;
-        AC_data[_assetClass].switches = _switches;
         AC_data[_assetClass].referenceAddress = _refAddress;
         AC_data[_assetClass].IPFS = _IPFS;
         //^^^^^^^effects^^^^^^^^^
         //^^^^^^^interactions^^^^^^^^^
+    }
+
+    /*
+     * @dev Modifies AC.switches bitwise DPS:TEST
+     */
+    function AdminModAssetClassSwitches(
+        uint32 _assetClass,
+        uint8 _position,
+        uint8 _bit
+    ) external isAdmin nonReentrant {
+        require(
+            (_position > 0) && (_position < 9),
+            "bit position must be between 1 and 8"
+        );
+
+        //^^^^^^^checks^^^^^^^^^
+
+        uint256 switches = AC_data[_assetClass].switches;
+
+        if (_bit == 1) {
+            switches = switches | (1 << (_position - 1));
+        }
+
+        if (_bit == 0) {
+            switches = switches & ~(1 << (_position - 1)); //make zero mask
+        }
+
+        AC_data[_assetClass].switches = uint8(switches);
+        //^^^^^^^effects^^^^^^^^^
     }
 
     //--------------------------------------------NODEMINTER only Functions--------------------------
@@ -307,7 +324,6 @@ contract AC_MGR is BASIC {
         return ACtokenIndex; //returns asset class # of minted token
         //^^^^^^^effects/interactions^^^^^^^^^
     }
-
 
     /*
      * @dev Authorize / Deauthorize / Authorize users for an address be permitted to make record modifications
@@ -539,30 +555,27 @@ contract AC_MGR is BASIC {
         //^^^^^^^effects/interactions^^^^^^^^^
     }
 
-
-     /*
-     * @dev get bit from .switches at specified position 
+    /*
+     * @dev get bit from .switches at specified position //DPS:TEST
      */
     function getSwitchAt(uint32 _assetClass, uint8 _position)
         external
         view
-        returns (
-            uint256
-        )
+        returns (uint256)
     {
-        require( (_position > 0) && (_position < 9),"AM:GSA: bit position must be between 1 and 8");
+        require(
+            (_position > 0) && (_position < 9),
+            "AM:GSA: bit position must be between 1 and 8"
+        );
         //^^^^^^^checks^^^^^^^^^
 
-        if ((AC_data[_assetClass].switches & (1 << (_position-1))) > 0) {
+        if ((AC_data[_assetClass].switches & (1 << (_position - 1))) > 0) {
             return 1;
         } else {
             return 0;
         }
         //^^^^^^^effects/interactions^^^^^^^^^
     }
-
-
-
 
     //-------------------------------------------functions for payment calculations----------------------------------------------
 
@@ -628,14 +641,11 @@ contract AC_MGR is BASIC {
         uint256 tokenId = uint256(_assetClass);
 
         require((tokenId != 0), "ACM:CAC: AC = 0"); //sanity check inputs
-        require(
-            _discount <= 10000,
-            "ACM:CAC: Discount > 10000 (100%)"
-        );
+        require(_discount <= 10000, "ACM:CAC: Discount > 10000 (100%)");
         require( //has valid root
             (_ac.custodyType == 3) || (_assetClassRoot == _assetClass),
             "ACM:CAC: Root !exist"
-        );  
+        );
         require(
             (ID_TKN.balanceOf(_msgSender()) == 1), //_msgSender() is ID token holder
             "ACM:MOD-IA: Caller does not hold a valid PRuF_ID token"
