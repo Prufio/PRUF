@@ -263,7 +263,7 @@ pragma solidity ^0.6.7;
 - -----------------------------------------------------------------
 
 *-----------------------------------------------------------------
- * ASSET CLASS option switches: AC_data.switches (AC_manager)
+ * ASSET CLASS option switches: AC_data.switches (AC_manager)  //DPS:TEST
  *             Switches will be duplicated from root 
  * bit1  -- If set, cannot change URI after initial setting
  * bit2  --
@@ -475,19 +475,5 @@ contract test {
     
 }
 
-
-
-if (_ac.managementType == 3) {
-        require( //caller address must be user authorized type 1 in AC
-            registeredUsers[keccak256(abi.encodePacked(_msgSender()))][_assetClass] == 1,
-            "ACM:CAC: Restricted from creating AC's in this root - address naot auth type 1"
-        );
-    }
-    if (_ac.managementType == 4) {
-        require( //Requires trust level > 9
-            ID_TKN.trustedLevelByAddress(_msgSender()) > 10,
-            "ACM:CAC: Restricted from creating AC's in this root - address needs trustlevel > 10"
-        );
-    }
 
  
