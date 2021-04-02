@@ -264,10 +264,10 @@ contract AC_MGR is BASIC {
             ACtokenIndex < 4294000000,
             "ACM:IS: Only 4294000000 AC tokens allowed"
         );
-        require(
-            (ID_TKN.balanceOf(_msgSender()) == 1), //_msgSender() is token holder
-            "ACM:MOD-IA: Caller does not hold a valid PRuF_ID token"
-        );
+        // require(
+        //     (ID_TKN.balanceOf(_msgSender()) == 1), //_msgSender() is token holder
+        //     "ACM:MOD-IA: Caller does not hold a valid PRuF_ID token"
+        // );
         //^^^^^^^checks^^^^^^^^^
 
         if (ACtokenIndex < 4294000000) ACtokenIndex++; //increment ACtokenIndex up to last one
@@ -476,38 +476,6 @@ contract AC_MGR is BASIC {
         //^^^^^^^interactions^^^^^^^^^
     }
 
-    /* CAN'T RETURN A STRUCT WITH A STRING WITHOUT WIERDNESS-0.8.1
-     * @dev Retrieve AC_data @ _assetClass
-     *--------DPS TEST ---- NEW args, order
-     */
-    // function helper_getExtAC_data_nostruct(uint32 _assetClass)
-    //     external
-    //     view
-    //     returns (
-    //         uint8,
-    //         uint8,
-    //         address,
-    //         bytes32
-    //     )
-    // {
-    //     AC memory asset_data;
-    //     //^^^^^^^checks^^^^^^^^^
-    //     (
-    //         asset_data.storageProvider,
-    //         asset_data.referenceAddress,
-    //         asset_data.switches,
-    //         asset_data.IPFS
-    //     ) = AC_MGR.getExtAC_data_nostruct(_assetClass);
-
-    //     return (
-    //         asset_data.storageProvider,
-    //         asset_data.switches,
-    //         asset_data.referenceAddress,
-    //         asset_data.IPFS
-    //     );
-    //     //^^^^^^^interactions^^^^^^^^^
-    // }
-
     /*
      * @dev compare the root of two asset classes
      */
@@ -570,6 +538,31 @@ contract AC_MGR is BASIC {
         return (ACtokenIndex, currentACtokenPrice, acPrice_L1);
         //^^^^^^^effects/interactions^^^^^^^^^
     }
+
+
+     /*
+     * @dev get bit from .switches at specified position 
+     */
+    function getSwitchAt(uint32 _assetClass, uint8 _position)
+        external
+        view
+        returns (
+            uint256
+        )
+    {
+        require( (_position > 0) && (_position < 9),"AM:GSA: bit position must be between 1 and 8");
+        //^^^^^^^checks^^^^^^^^^
+
+        if ((AC_data[_assetClass].switches & (1 << (_position-1))) > 0) {
+            return 1;
+        } else {
+            return 0;
+        }
+        //^^^^^^^effects/interactions^^^^^^^^^
+    }
+
+
+
 
     //-------------------------------------------functions for payment calculations----------------------------------------------
 
@@ -642,8 +635,12 @@ contract AC_MGR is BASIC {
         require( //has valid root
             (_ac.custodyType == 3) || (_assetClassRoot == _assetClass),
             "ACM:CAC: Root !exist"
+        );  
+        require(
+            (ID_TKN.balanceOf(_msgSender()) == 1), //_msgSender() is ID token holder
+            "ACM:MOD-IA: Caller does not hold a valid PRuF_ID token"
         );
-        if (AC_data[_assetClassRoot].managementType != 0) {
+        if (_ac.managementType != 0) {
             require( //holds root token if root is restricted
                 (AC_TKN.ownerOf(_assetClassRoot) == _msgSender()),
                 "ACM:CAC: Restricted from creating AC's in this root - does not hold root token"
@@ -662,7 +659,9 @@ contract AC_MGR is BASIC {
         AC_data[_assetClass].discount = _discount;
         AC_data[_assetClass].custodyType = _custodyType;
         AC_data[_assetClass].managementType = _managementType;
+        AC_data[_assetClass].switches = _ac.switches;
         AC_data[_assetClass].IPFS = _IPFS;
+
         //^^^^^^^effects^^^^^^^^^
 
         AC_TKN.mintACToken(

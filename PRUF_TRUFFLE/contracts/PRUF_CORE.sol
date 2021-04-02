@@ -73,8 +73,8 @@ contract CORE is BASIC {
             }
             if (AC_info.managementType == 4) {
                 require(
-                    ID_TKN.trustedLevelByAddress(_msgSender()) > 10,
-                    "C:CR:Caller does not hold sufficiently trusted ID"
+                    ID_TKN.trustedLevelByAddress(_msgSender()) > 9,
+                    "C:CR:Caller does not hold sufficiently trusted ID (10+)"
                 );
             }
         }

@@ -66,8 +66,10 @@ contract A_TKN is
 
     address internal STOR_Address;
     address internal RCLR_Address;
+    address internal AC_MGR_Address;
     STOR_Interface internal STOR;
     RCLR_Interface internal RCLR;
+    AC_MGR_Interface internal AC_MGR;
 
     bytes32 public constant B320xF_ =
         0xFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFF;
@@ -151,6 +153,9 @@ contract A_TKN is
 
         RCLR_Address = STOR.resolveContractAddress("RCLR");
         RCLR = RCLR_Interface(RCLR_Address);
+
+        AC_MGR_Address = STOR.resolveContractAddress("AC_MGR");
+        AC_MGR = AC_MGR_Interface(AC_MGR_Address);
         //^^^^^^^effects^^^^^^^^^
     }
 
@@ -206,6 +211,15 @@ contract A_TKN is
         external
         returns (uint256)
     {
+        bytes32 _idxHash = bytes32(tokenId);
+        Record memory rec = getRecord(_idxHash);
+
+        if (AC_MGR.getSwitchAt(rec.assetClass, 1) == 1 ) {  //if switch at bit 1 (0) is set
+         //make sure you cant change the URI once it is set
+        }
+        MAKE THIS WORK
+
+
         require(
             _isApprovedOrOwner(_msgSender(), tokenId),
             "AT:SURI:caller is not owner nor approved"

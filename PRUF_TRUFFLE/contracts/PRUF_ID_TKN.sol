@@ -245,7 +245,7 @@ contract ID_TKN is
     /*
      * @dev get ID trustLevel
      */
-    function trustedLevel(uint256 _tokenId) external view returns (uint256) {
+    function trustLevel(uint256 _tokenId) external view returns (uint256) {
         return id[_tokenId].trustLevel;
     }
 

@@ -1128,6 +1128,16 @@ interface AC_MGR_Interface {
         );
 
     /*
+     * @dev get bit (1/0) from .switches at specified position 
+     */
+    function getSwitchAt(uint32 _assetClass, uint8 _position)
+        external
+        view
+        returns (
+            uint256
+        );
+
+    /*
      * @dev Retrieve function costs per asset class, per service type, in Wei
      */
     function getServiceCosts(uint32 _assetClass, uint16 _service)

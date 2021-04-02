@@ -258,7 +258,7 @@ pragma solidity ^0.6.7;
  * 1   -- Restricted (Only ACNode holder can create, export or import prohibited - does not require IDtoken)
  * 2   -- Less Restricted (Only ACNode holder can create, import prohibited - does not require IDtoken)
  * 3   -- Authorized (caller address must be user authorized type 1 in AC)
- * 4   -- Trusted (Requires trust level > 10)
+ * 4   -- Trusted (Requires trust level >= 10)
  * 255 -- unconfigured - No minting permitted, not yet activated (set by default on node purchase, cannot be reverted)
 - -----------------------------------------------------------------
 
@@ -474,5 +474,20 @@ contract test {
     
     
 }
+
+
+
+if (_ac.managementType == 3) {
+        require( //caller address must be user authorized type 1 in AC
+            registeredUsers[keccak256(abi.encodePacked(_msgSender()))][_assetClass] == 1,
+            "ACM:CAC: Restricted from creating AC's in this root - address naot auth type 1"
+        );
+    }
+    if (_ac.managementType == 4) {
+        require( //Requires trust level > 9
+            ID_TKN.trustedLevelByAddress(_msgSender()) > 10,
+            "ACM:CAC: Restricted from creating AC's in this root - address needs trustlevel > 10"
+        );
+    }
 
  
