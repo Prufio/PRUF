@@ -44,7 +44,7 @@ struct AC {
     uint8 storageProvider; // Storage Provider
     uint32 discount; // price sharing //internal admin                                      //immutable
     address referenceAddress; // Used with wrap / decorate
-    uint8 switches; // Future Use                           //immutable
+    uint8 switches; // bitwise Flags for AC control                          //immutable
     bytes32 IPFS; //IPFS data for defining idxHash creation attribute fields
 }
 
