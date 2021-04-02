@@ -31,7 +31,6 @@ struct Record {
     bytes32 Ipfs2a; // Publically viewable immutable notes
     bytes32 Ipfs1b; // Publically viewable asset description
     bytes32 Ipfs2b; // Publically viewable immutable notes
-    
     bytes32 rightsHolder; // KEK256 Registered owner
 }
 
@@ -1128,14 +1127,12 @@ interface AC_MGR_Interface {
         );
 
     /*
-     * @dev get bit (1/0) from .switches at specified position 
+     * @dev get bit (1/0) from .switches at specified position
      */
     function getSwitchAt(uint32 _assetClass, uint8 _position)
         external
         view
-        returns (
-            uint256
-        );
+        returns (uint256);
 
     /*
      * @dev Retrieve function costs per asset class, per service type, in Wei
@@ -1256,12 +1253,20 @@ interface STOR_Interface {
     /*
      * @dev Modify record Ipfs1a data
      */
-    function modifyIpfs1(bytes32 _idxHash, bytes32 _Ipfs1a, bytes32 _Ipfs1b) external;
+    function modifyIpfs1(
+        bytes32 _idxHash,
+        bytes32 _Ipfs1a,
+        bytes32 _Ipfs1b
+    ) external;
 
     /*
      * @dev Write record Ipfs2 data
      */
-    function modifyIpfs2(bytes32 _idxHash, bytes32 _Ipfs2a, bytes32 _Ipfs2b) external;
+    function modifyIpfs2(
+        bytes32 _idxHash,
+        bytes32 _Ipfs2a,
+        bytes32 _Ipfs2b
+    ) external;
 
     /*
      * @dev return a record from the database, including rgt

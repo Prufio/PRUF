@@ -164,7 +164,7 @@ contract AC_MGR is BASIC {
     }
 
     /*
-     * @dev Modifies an asset class with minimal controls
+     * @dev Modifies an asset class with minimal controls  //DPS:TEST Removed parameter
      */
     function AdminModAssetClass(
         uint32 _assetClass,
@@ -209,8 +209,9 @@ contract AC_MGR is BASIC {
     ) external isAdmin nonReentrant {
         require(
             (_position > 0) && (_position < 9),
-            "bit position must be between 1 and 8"
+            "ACM:AMACS: bit position must be between 1 and 8"
         );
+        require(_bit < 2, "ACM:AMACS: bit must be 1 or 0");
 
         //^^^^^^^checks^^^^^^^^^
 

@@ -73,7 +73,6 @@ contract A_TKN is
     AC_MGR_Interface internal AC_MGR;
     AC_TKN_Interface internal AC_TKN;
 
-
     bytes32 public constant B320xF_ =
         0xFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFF;
 
@@ -220,19 +219,19 @@ contract A_TKN is
         bytes32 _idxHash = bytes32(tokenId);
         Record memory rec = getRecord(_idxHash);
 
-        if (AC_MGR.getSwitchAt(rec.assetClass, 1) == 1 ) {  //if switch at bit 1 (0) is set
+        if (AC_MGR.getSwitchAt(rec.assetClass, 1) == 1) {
+            //if switch at bit 1 (0) is set
             string memory tokenURI = tokenURI(tokenId);
 
             require(
-             bytes(tokenURI).length == 0,
-            "AT:SURI:URI already set, is immutable"
+                bytes(tokenURI).length == 0,
+                "AT:SURI:URI already set, is immutable"
             );
 
             require(
-             AC_TKN.ownerOf(tokenId) == _msgSender(),
-            "AT:SURI:URI can only be set by ACNode Holder"
+                AC_TKN.ownerOf(rec.assetClass) == _msgSender(),
+                "AT:SURI:URI can only be set by ACNode Holder"
             );
-
         }
 
         require(
@@ -265,7 +264,6 @@ contract A_TKN is
                 keccak256(abi.encodePacked(authString)),
             "AT:VPT:AuthCode and assetClass != URI"
         );
-
     }
 
     /*
@@ -339,7 +337,6 @@ contract A_TKN is
             isColdWallet(ownerOf(tokenId)) != 170,
             "AT:TATF:Holder is cold Wallet"
         );
-
         //^^^^^^^checks^^^^^^^^
 
         rec.numberOfTransfers = 170;
@@ -465,7 +462,7 @@ contract A_TKN is
         whenNotPaused
     {
         //^^^^^^^checks^^^^^^^^^
-        
+
         STOR.modifyRecord(
             _idxHash,
             _rec.rightsHolder,
