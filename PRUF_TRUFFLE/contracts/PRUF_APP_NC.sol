@@ -65,6 +65,34 @@ contract APP_NC is CORE {
     }
 
     /*
+     * @dev Create a  newRecord with description
+     */
+    function newRecordWithNote(
+        bytes32 _idxHash,
+        bytes32 _rgtHash,
+        uint32 _assetClass,
+        uint32 _countDownStart,
+        bytes32 _Ipfs2a,
+        bytes32 _Ipfs2b
+    ) external nonReentrant whenNotPaused {
+        require(
+            (ID_TKN.balanceOf(_msgSender()) == 1), //_msgSender() is token holder
+            "ANC:NRWD: Caller !PRuF_ID holder"
+        );
+        //^^^^^^^Checks^^^^^^^^^
+
+        Record memory rec;
+        rec.Ipfs2a = _Ipfs2a;
+        rec.Ipfs2b = _Ipfs2b;
+        //^^^^^^^effects^^^^^^^^^
+
+        createRecord(_idxHash, _rgtHash, _assetClass, _countDownStart);
+        writeRecordIpfs1(_idxHash, rec);
+        deductServiceCosts(_assetClass, 1);
+        //^^^^^^^interactions^^^^^^^^^
+    }
+
+    /*
      * @dev Create a new record
      */
     function newRecord(
@@ -83,6 +111,7 @@ contract APP_NC is CORE {
         deductServiceCosts(_assetClass, 1);
         //^^^^^^^interactions^^^^^^^^^
     }
+    
 
     /*
      * @dev Import a record into a new asset class
