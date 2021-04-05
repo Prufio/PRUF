@@ -248,7 +248,7 @@ contract FAUCET is ReentrancyGuard, Pausable, AccessControl {
         //^^^^^^^checks^^^^^^^^^
         //^^^^^^^effects^^^^^^^^^
         tokenId++;
-        ID_TKN.mintPRUF_IDToken(_msgSender(), tokenId);
+        ID_TKN.mintPRUF_IDToken(_msgSender(), tokenId, "0");
         //^^^^^^^Interactions^^^^^^^^^
     }
 

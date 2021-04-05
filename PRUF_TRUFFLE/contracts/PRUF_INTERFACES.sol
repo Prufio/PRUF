@@ -779,9 +779,11 @@ interface ID_TKN_Interface {
     /*
      * @dev Mint new PRUF_ID token
      */
-    function mintPRUF_IDToken(address _recipientAddress, uint256 tokenId)
-        external
-        returns (uint256);
+    function mintPRUF_IDToken(
+        address _recipientAddress,
+        uint256 _tokenId,
+        string calldata _URI
+    ) external returns (uint256);
 
     /*
      * @dev remint Asset Token

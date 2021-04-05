@@ -236,7 +236,7 @@ contract STOR is AccessControl, ReentrancyGuard, Pausable {
 
     /*
      * @dev set the default list of 11 contracts (zero index) to be applied to asset classes
-     * APP_NC, NP_NC, AC_MGR, AC_TKN, A_TkN, ECR_MGR, RCLR, PIP, PURCHASE, DECORATE, WRAP
+     * APP_NC, NP_NC, AC_MGR, AC_TKN, A_TKN, ECR_MGR, RCLR, PIP, PURCHASE, DECORATE, WRAP
      */
     function addDefaultContracts(
         uint256 _contractNumber, // 0-10
@@ -261,12 +261,12 @@ contract STOR is AccessControl, ReentrancyGuard, Pausable {
     }
 
     /*
-     * @dev ASet the default 11 authorized contracts
+     * @dev Set the default 11 authorized contracts
      */
     function enableDefaultContractsForAC(uint32 _assetClass) public {
         require(
-            AC_TKN.ownerOf(_assetClass) == _msgSender(),
-            "S:EDCFAC: Caller not ACtokenHolder"
+            _msgSender() == AC_MGR_Address,
+            "S:EDCFAC: Caller not AC_MGR"
         );
         enableContractForAC(
             defaultContracts[0].name,
@@ -335,7 +335,7 @@ contract STOR is AccessControl, ReentrancyGuard, Pausable {
         uint8 _contractAuthLevel
     ) public {
         require(
-            AC_TKN.ownerOf(_assetClass) == _msgSender(),
+            (AC_TKN.ownerOf(_assetClass) == _msgSender()) || (_msgSender() == AC_MGR_Address),
             "S:ECFAC: Caller not ACtokenHolder"
         );
 
