@@ -1939,6 +1939,16 @@ contract('AC_MGR', accounts => {
     })
 
 
+    it('Should set assetClass 13 switch to 1:1', async () => {
+        return AC_MGR.AdminModAssetClassSwitches(
+            "13",
+            "1",
+            "1",
+            { from: account1 }
+        )
+    })
+
+
     it('Should mint ID_TKN(1) to account1', async () => {
         return ID_TKN.mintPRUF_IDToken(
             account1,
@@ -2126,7 +2136,6 @@ contract('AC_MGR', accounts => {
             "0",
             "9600",
             account3,
-            "1",
             rgt1,
             { from: account1 }
         )
