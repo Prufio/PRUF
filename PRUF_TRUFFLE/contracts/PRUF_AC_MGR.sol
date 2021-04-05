@@ -282,10 +282,10 @@ contract AC_MGR is BASIC {
             ACtokenIndex < 4294000000,
             "ACM:IS: Only 4294000000 AC tokens allowed"
         );
-        // require(
-        //     (ID_TKN.balanceOf(_msgSender()) == 1), //_msgSender() is token holder
-        //     "ACM:MOD-IA: Caller does not hold a valid PRuF_ID token"
-        // );
+        require(
+            (ID_TKN.balanceOf(_msgSender()) == 1), //_msgSender() is token holder
+            "ACM:MOD-IA: Caller does not hold a valid PRuF_ID token"
+        );
         //^^^^^^^checks^^^^^^^^^
 
         if (ACtokenIndex < 4294000000) ACtokenIndex++; //increment ACtokenIndex up to last one
@@ -647,10 +647,10 @@ contract AC_MGR is BASIC {
             (_ac.custodyType == 3) || (_assetClassRoot == _assetClass),
             "ACM:CAC: Root !exist"
         );
-        require(
-            (ID_TKN.balanceOf(_msgSender()) == 1), //_msgSender() is ID token holder
-            "ACM:MOD-IA: Caller does not hold a valid PRuF_ID token"
-        );
+        // require(
+        //     (ID_TKN.balanceOf(_msgSender()) == 1), //_msgSender() is ID token holder
+        //     "ACM:MOD-IA: Caller does not hold a valid PRuF_ID token"
+        // );
         if (_ac.managementType != 0) {
             require( //holds root token if root is restricted
                 (AC_TKN.ownerOf(_assetClassRoot) == _msgSender()),

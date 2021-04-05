@@ -85,11 +85,11 @@ contract CORE is BASIC {
             "C:CR:Cannot create asset - contract not authorized for asset class custody type"
         );
         if (AC_info.custodyType == 1) {
-            A_TKN.mintAssetToken(address(this), tokenId, "pruf.io");
+            A_TKN.mintAssetToken(address(this), tokenId, ""); //CTS:EXAMINE
         }
 
         if ((AC_info.custodyType == 2) || (AC_info.custodyType == 4)) {
-            A_TKN.mintAssetToken(_msgSender(), tokenId, "pruf.io");
+            A_TKN.mintAssetToken(_msgSender(), tokenId, ""); //CTS:EXAMINE
         }
         //^^^^^^^Checks^^^^^^^^
 

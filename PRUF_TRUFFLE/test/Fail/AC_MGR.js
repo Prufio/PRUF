@@ -1961,11 +1961,21 @@ contract('AC_MGR', accounts => {
         })
     })
 
+
+    it('Should set assetClass 13 switch to 1:1', async () => {
+        return AC_MGR.AdminModAssetClassSwitches(
+            "13",
+            "1",
+            "1",
+            { from: account1 }
+        )
+    })
+
     //1
     it('Should fail because caller is not admin', async () => {
 
         console.log("//**************************************END AC_MGR SETUP**********************************************/")
-        console.log("//**************************************BEGIN AC_MGR FAIL BATCH (31)**********************************************/")
+        console.log("//**************************************BEGIN AC_MGR FAIL BATCH (33)**********************************************/")
         console.log("//**************************************BEGIN OO_SetACpricing FAIL BATCH**********************************************/")
         return AC_MGR.OO_SetACpricing(
             '10',
@@ -2090,7 +2100,6 @@ contract('AC_MGR', accounts => {
             '1',
             '5100',
             account2,
-            "0",
             rgt000,
             { from: account2 }
         )
@@ -2106,7 +2115,6 @@ contract('AC_MGR', accounts => {
             '1',
             '5100',
             account2,
-            "0",
             rgt000,
             { from: account1 }
         )
@@ -2122,7 +2130,6 @@ contract('AC_MGR', accounts => {
             '1',
             '10001',
             account2,
-            "0",
             rgt000,
             { from: account1 }
         )
@@ -2138,7 +2145,6 @@ contract('AC_MGR', accounts => {
             '1',
             '5100',
             account2,
-            "0",
             rgt000,
             { from: account1 }
         )
@@ -2154,16 +2160,38 @@ contract('AC_MGR', accounts => {
             '1',
             '5100',
             account2,
-            "0",
             rgt000,
             { from: account1 }
         )
     })
 
     //14
-    it('Should fail because caller is not node minter', async () => {
+    it('Should fail because caller !admin', async () => {
 
         console.log("//**************************************END AdminModAssetClass FAIL BATCH**********************************************/")
+        console.log("//**************************************BEGIN AdminModAssetClassSwitches FAIL BATCH**********************************************/")
+        return AC_MGR.AdminModAssetClassSwitches(
+            "12",
+            "1",
+            "1",
+            { from: account2 }
+        )
+    })
+
+    //15
+    it('Should fail bit !1||0', async () => {
+        return AC_MGR.AdminModAssetClassSwitches(
+            "12",
+            "1",
+            "4",
+            { from: account1 }
+        )
+    })
+
+    //16
+    it('Should fail because caller is not node minter', async () => {
+
+        console.log("//**************************************END AdminModAssetClassSwitches FAIL BATCH**********************************************/")
         console.log("//**************************************BEGIN createAssetClass FAIL BATCH**********************************************/")
         return AC_MGR.createAssetClass(
             '20',
@@ -2178,7 +2206,7 @@ contract('AC_MGR', accounts => {
         )
     })
 
-    //15
+    //17
     it('Should fail because caller is not holder of an ID Token', async () => {
 
         console.log("//**************************************END addUser FAIL BATCH**********************************************/")
@@ -2192,7 +2220,7 @@ contract('AC_MGR', accounts => {
         )
     })
 
-    //16
+    //18
     it('Should fail because caller does not hold AC token', async () => {
 
         console.log("//**************************************END purchaseACnode FAIL BATCH**********************************************/")
@@ -2205,7 +2233,7 @@ contract('AC_MGR', accounts => {
         )
     })
 
-    //17
+    //19
     it('Should fail because caller does not hold AC token', async () => {
 
         console.log("//**************************************END addUser FAIL BATCH**********************************************/")
@@ -2217,7 +2245,7 @@ contract('AC_MGR', accounts => {
         )
     })
 
-    //18
+    //20
     it('Should fail because used name being signed to different AC', async () => {
         return AC_MGR.updateACname(
             '2',
@@ -2226,7 +2254,7 @@ contract('AC_MGR', accounts => {
         )
     })
 
-    //19
+    //21
     it('Should fail because caller is not ACTH', async () => {
 
         console.log("//**************************************END updateACname FAIL BATCH**********************************************/")
@@ -2238,7 +2266,7 @@ contract('AC_MGR', accounts => {
         )
     })
 
-    //20
+    //22
     it('Should fail because caller is not ACTH', async () => {
 
         console.log("//**************************************END updateACipfs FAIL BATCH**********************************************/")
@@ -2252,7 +2280,7 @@ contract('AC_MGR', accounts => {
         )
     })
 
-    //21
+    //23
     it('Should fail because caller is not ACTH', async () => {
 
         console.log("//**************************************END ACTH_setCosts FAIL BATCH**********************************************/")
@@ -2266,7 +2294,7 @@ contract('AC_MGR', accounts => {
         )
     })
 
-    //22
+    //24
     it('Should fail because immutable data = 255', async () => {
 
         console.log("//**************************************END ACTH_setCosts FAIL BATCH**********************************************/")
@@ -2291,7 +2319,7 @@ contract('AC_MGR', accounts => {
         )
     })
 
-    //23
+    //25
     it('Should fail because immutable data has already been set', async () => {
         return AC_MGR.updateACImmutable(
             '10',
@@ -2302,7 +2330,7 @@ contract('AC_MGR', accounts => {
         )
     })
 
-    //24
+    //26
     it('Should fail because AC not yet populated', async () => {
 
         console.log("//**************************************END updateACImmutable FAIL BATCH**********************************************/")
@@ -2314,7 +2342,7 @@ contract('AC_MGR', accounts => {
         )
     })
 
-    //25
+    //27
     it('Should fail because service 0 is not valid', async () => {
         return AC_MGR.getServiceCosts(
             '10',
@@ -2323,7 +2351,7 @@ contract('AC_MGR', accounts => {
         )
     })
 
-    //26
+    //28
     it('Should fail because AC = 0', async () => {
 
         console.log("//**************************************END getServiceCosts FAIL BATCH**********************************************/")
@@ -2341,7 +2369,7 @@ contract('AC_MGR', accounts => {
         )
     })
 
-    //27
+    //29
     it('Should fail because discount > 10000', async () => {
         return AC_MGR.createAssetClass(
             '20',
@@ -2356,7 +2384,7 @@ contract('AC_MGR', accounts => {
         )
     })
 
-    //28
+    //30
     it('Should fail because root !exist', async () => {
         return AC_MGR.createAssetClass(
             '20',
@@ -2371,7 +2399,7 @@ contract('AC_MGR', accounts => {
         )
     })
 
-    //29
+    //31
     it('Should fail because root is disabled && !ACTH', async () => {
         return AC_MGR.createAssetClass(
             '20',
@@ -2386,7 +2414,7 @@ contract('AC_MGR', accounts => {
         )
     })
 
-    //30
+    //32
     it('Should fail because name already exists', async () => {
         return AC_MGR.createAssetClass(
             '20',
@@ -2401,7 +2429,7 @@ contract('AC_MGR', accounts => {
         )
     })
 
-    //31
+    //33
     it('Should fail because AC already exists', async () => {
         return AC_MGR.createAssetClass(
             '1',
