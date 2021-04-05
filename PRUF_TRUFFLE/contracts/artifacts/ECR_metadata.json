@@ -550,7 +550,7 @@
 			"bytecodeHash": "ipfs"
 		},
 		"optimizer": {
-			"enabled": true,
+			"enabled": false,
 			"runs": 200
 		},
 		"remappings": []
@@ -621,11 +621,11 @@
 			]
 		},
 		"PRUF_ECR.sol": {
-			"keccak256": "0xab013881ad252fa6ef40fdc506a529038d30c697b2b29389df980eca0c156d4a",
+			"keccak256": "0x20f671210e6bfc7ed8726a0cd8db48df17e80e4a59f7b1d4409c3fb71d552fe9",
 			"license": "UNLICENSED",
 			"urls": [
-				"bzz-raw://672fdc75d119f7c33ae1764afb24d56d4822efe6170ab5dc24a40c9cc0c3b5d8",
-				"dweb:/ipfs/QmNSST52QwguefqZH9JNMS6J4CR8coWSXFargXBkotcmDV"
+				"bzz-raw://c3b4c9ef7f433c1bc4bff4bfef033a9385622e8c1a5393eff81effb4cceb5503",
+				"dweb:/ipfs/QmSmYJnfEE4rD7rWutF978gE3PyLQVksVm1thXpxUGcKnv"
 			]
 		},
 		"PRUF_ECR_CORE.sol": {
@@ -637,11 +637,11 @@
 			]
 		},
 		"PRUF_INTERFACES.sol": {
-			"keccak256": "0x586db882b89771bf81cbb0da0adaf2a98fb1f988bb8153cf2def44cbefe8d3e5",
+			"keccak256": "0x3bc64547299577247544c49bccf9bd934183547646f026e7f3cd8354e7687f37",
 			"license": "UNLICENSED",
 			"urls": [
-				"bzz-raw://22fc6a1ec7676c5cbcc2fe5d236cd039649e18761fa5e2421cfad0b07a807dd5",
-				"dweb:/ipfs/QmRgntdmeuCRVK1rjNaGMwCdy1wPkUNN1oQVW91bMdAXmn"
+				"bzz-raw://44b0263e4d86a1fd366b8930e5592852b4226983af78a45de4bf23f12ba6a281",
+				"dweb:/ipfs/QmWQTaNFDRi3MzVU5DUarUXEEv5ixAPsf2VgXFsLAq9HjC"
 			]
 		}
 	},

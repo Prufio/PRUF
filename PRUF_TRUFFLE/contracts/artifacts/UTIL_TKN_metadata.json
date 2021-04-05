@@ -1023,7 +1023,7 @@
 			"bytecodeHash": "ipfs"
 		},
 		"optimizer": {
-			"enabled": true,
+			"enabled": false,
 			"runs": 200
 		},
 		"remappings": []
@@ -1126,11 +1126,11 @@
 			]
 		},
 		"PRUF_INTERFACES.sol": {
-			"keccak256": "0x586db882b89771bf81cbb0da0adaf2a98fb1f988bb8153cf2def44cbefe8d3e5",
+			"keccak256": "0x3bc64547299577247544c49bccf9bd934183547646f026e7f3cd8354e7687f37",
 			"license": "UNLICENSED",
 			"urls": [
-				"bzz-raw://22fc6a1ec7676c5cbcc2fe5d236cd039649e18761fa5e2421cfad0b07a807dd5",
-				"dweb:/ipfs/QmRgntdmeuCRVK1rjNaGMwCdy1wPkUNN1oQVW91bMdAXmn"
+				"bzz-raw://44b0263e4d86a1fd366b8930e5592852b4226983af78a45de4bf23f12ba6a281",
+				"dweb:/ipfs/QmWQTaNFDRi3MzVU5DUarUXEEv5ixAPsf2VgXFsLAq9HjC"
 			]
 		},
 		"PRUF_UTIL_TKN.sol": {
