@@ -87,7 +87,7 @@ contract APP_NC is CORE {
         //^^^^^^^effects^^^^^^^^^
 
         createRecord(_idxHash, _rgtHash, _assetClass, _countDownStart);
-        writeRecordIpfs1(_idxHash, rec);
+        writeRecordIpfs2(_idxHash, rec);
         deductServiceCosts(_assetClass, 1);
         //^^^^^^^interactions^^^^^^^^^
     }
