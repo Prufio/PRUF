@@ -203,17 +203,35 @@
 						"type": "address"
 					},
 					{
-						"internalType": "uint8",
-						"name": "_additional",
-						"type": "uint8"
-					},
-					{
 						"internalType": "bytes32",
 						"name": "_IPFS",
 						"type": "bytes32"
 					}
 				],
 				"name": "AdminModAssetClass",
+				"outputs": [],
+				"stateMutability": "nonpayable",
+				"type": "function"
+			},
+			{
+				"inputs": [
+					{
+						"internalType": "uint32",
+						"name": "_assetClass",
+						"type": "uint32"
+					},
+					{
+						"internalType": "uint8",
+						"name": "_position",
+						"type": "uint8"
+					},
+					{
+						"internalType": "uint8",
+						"name": "_bit",
+						"type": "uint8"
+					}
+				],
+				"name": "AdminModAssetClassSwitches",
 				"outputs": [],
 				"stateMutability": "nonpayable",
 				"type": "function"
@@ -585,7 +603,7 @@
 							},
 							{
 								"internalType": "uint8",
-								"name": "additional",
+								"name": "switches",
 								"type": "uint8"
 							},
 							{
@@ -710,6 +728,30 @@
 						"internalType": "struct Invoice",
 						"name": "",
 						"type": "tuple"
+					}
+				],
+				"stateMutability": "view",
+				"type": "function"
+			},
+			{
+				"inputs": [
+					{
+						"internalType": "uint32",
+						"name": "_assetClass",
+						"type": "uint32"
+					},
+					{
+						"internalType": "uint8",
+						"name": "_position",
+						"type": "uint8"
+					}
+				],
+				"name": "getSwitchAt",
+				"outputs": [
+					{
+						"internalType": "uint256",
+						"name": "",
+						"type": "uint256"
 					}
 				],
 				"stateMutability": "view",
@@ -1179,11 +1221,11 @@
 			]
 		},
 		"PRUF_AC_MGR.sol": {
-			"keccak256": "0xecec0b6b4eb71809a5510d4aff458afc1b1c7d764a9461e2df79f2293d3aba69",
+			"keccak256": "0xd1e884e1b21d86886ed52472f4b97275bd6367a4c2bda9fd36dd4e5edaf35679",
 			"license": "UNLICENSED",
 			"urls": [
-				"bzz-raw://24d7a7857d9d1833867d7007d29b8f6defe5c6f62c7622a1f2393aa24192b052",
-				"dweb:/ipfs/QmfQ4Vno46QpkTTMLCrUAmAgQp4eSAtA3BGvdRBH8YyzSF"
+				"bzz-raw://ac68fff1dcbd794ebec626844205124375073eeda046ab70e8c824706717f7ac",
+				"dweb:/ipfs/QmZXAuYVdeFo9B6jKBsUmyrYCTbAwBEML5WArdL1VYmZH7"
 			]
 		},
 		"PRUF_BASIC.sol": {
@@ -1195,11 +1237,11 @@
 			]
 		},
 		"PRUF_INTERFACES.sol": {
-			"keccak256": "0x586db882b89771bf81cbb0da0adaf2a98fb1f988bb8153cf2def44cbefe8d3e5",
+			"keccak256": "0x3bc64547299577247544c49bccf9bd934183547646f026e7f3cd8354e7687f37",
 			"license": "UNLICENSED",
 			"urls": [
-				"bzz-raw://22fc6a1ec7676c5cbcc2fe5d236cd039649e18761fa5e2421cfad0b07a807dd5",
-				"dweb:/ipfs/QmRgntdmeuCRVK1rjNaGMwCdy1wPkUNN1oQVW91bMdAXmn"
+				"bzz-raw://44b0263e4d86a1fd366b8930e5592852b4226983af78a45de4bf23f12ba6a281",
+				"dweb:/ipfs/QmWQTaNFDRi3MzVU5DUarUXEEv5ixAPsf2VgXFsLAq9HjC"
 			]
 		}
 	},
