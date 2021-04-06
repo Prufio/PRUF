@@ -52,10 +52,10 @@ contract STOR is AccessControl, ReentrancyGuard, Pausable {
     mapping(uint256 => DefaultContract) private defaultContracts; //default contracts for AC creation
     mapping(bytes32 => Record) private database; // Main Data Storage
 
-    address private AC_TKN_Address;
+    //address private AC_TKN_Address;
     AC_TKN_Interface private AC_TKN; //erc721_token prototype initialization
 
-    address internal AC_MGR_Address;
+    //address internal AC_MGR_Address;
     AC_MGR_Interface internal AC_MGR; // Set up external contract interface for AC_MGR
 
     constructor() {
@@ -265,7 +265,7 @@ contract STOR is AccessControl, ReentrancyGuard, Pausable {
      */
     function enableDefaultContractsForAC(uint32 _assetClass) public {
         require(
-            _msgSender() == AC_MGR_Address,
+            _msgSender() == contractNameToAddress["AC_MGR"],
             "S:EDCFAC: Caller not AC_MGR"
         );
         enableContractForAC(
@@ -335,7 +335,7 @@ contract STOR is AccessControl, ReentrancyGuard, Pausable {
         uint8 _contractAuthLevel
     ) public {
         require(
-            (AC_TKN.ownerOf(_assetClass) == _msgSender()) || (_msgSender() == AC_MGR_Address),
+            (AC_TKN.ownerOf(_assetClass) == _msgSender()) || (_msgSender() == contractNameToAddress["AC_MGR"]),
             "S:ECFAC: Caller not ACtokenHolder"
         );
 
