@@ -1288,11 +1288,11 @@
 			]
 		},
 		"PRUF_INTERFACES.sol": {
-			"keccak256": "0x3bc64547299577247544c49bccf9bd934183547646f026e7f3cd8354e7687f37",
+			"keccak256": "0x6a47babcbcc039bc0c9ea3e9b83907c94ec2cfffe4317e7fa2085ec1c2d195a1",
 			"license": "UNLICENSED",
 			"urls": [
-				"bzz-raw://44b0263e4d86a1fd366b8930e5592852b4226983af78a45de4bf23f12ba6a281",
-				"dweb:/ipfs/QmWQTaNFDRi3MzVU5DUarUXEEv5ixAPsf2VgXFsLAq9HjC"
+				"bzz-raw://501fab5cb8df56da99760a326711cda2a12d603e0d8c85694beaa09d6e46acf7",
+				"dweb:/ipfs/QmcdmtMsUuCs9ekJEih21DUA3Xykv1rtyynUpUTrLtQXuy"
 			]
 		}
 	},
