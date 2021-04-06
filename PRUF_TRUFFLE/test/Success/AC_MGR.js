@@ -1947,36 +1947,38 @@ contract('AC_MGR', accounts => {
             "2",
             { from: account1 }
         )
-    }).then(() => {
-        console.log("Default contract 1")
-        return STOR.addDefaultContracts('1', NP_NC, '2', { from: account1 })
-    }).then(() => {
-        console.log("Default contract 2")
-        return STOR.addDefaultContracts('2', AC_MGR, '1', { from: account1 })
-    }).then(() => {
-        console.log("Default contract 3")
-        return STOR.addDefaultContracts('3', AC_TKN, '1', { from: account1 })
-    }).then(() => {
-        console.log("Default contract 4")
-        return STOR.addDefaultContracts('4', A_TKN, '1', { from: account1 })
-    }).then(() => {
-        console.log("Default contract 5")
-        return STOR.addDefaultContracts('5', ECR_MGR, '1', { from: account1 })
-    }).then(() => {
-        console.log("Default contract 6")
-        return STOR.addDefaultContracts('6', RCLR, '3', { from: account1 })
-    }).then(() => {
-        console.log("Default contract 7")
-        return STOR.addDefaultContracts('7', PIP, '1', { from: account1 })
-    }).then(() => {
-        console.log("Default contract 8")
-        return STOR.addDefaultContracts('8', PURCHASE, '2', { from: account1 })
-    }).then(() => {
-        console.log("Default contract 9")
-        return STOR.addDefaultContracts('9', DECORATE, '2', { from: account1 })
-    }).then(() => {
-        console.log("Default contract 10")
-        return STOR.addDefaultContracts('10', WRAP, '2', { from: account1 })
+            .then(() => {
+                console.log("Default contract 1")
+                return STOR.addDefaultContracts('1', "NP_NC", '2', { from: account1 })
+            }).then(() => {
+                console.log("Default contract 2")
+                return STOR.addDefaultContracts('2', "AC_MGR", '1', { from: account1 })
+            }).then(() => {
+                console.log("Default contract 3")
+                return STOR.addDefaultContracts('3', "AC_TKN", '1', { from: account1 })
+            }).then(() => {
+                console.log("Default contract 4")
+                return STOR.addDefaultContracts('4', "A_TKN", '1', { from: account1 })
+            }).then(() => {
+                console.log("Default contract 5")
+                return STOR.addDefaultContracts('5', "ECR_MGR", '1', { from: account1 })
+            }).then(() => {
+                console.log("Default contract 6")
+                return STOR.addDefaultContracts('6', "RCLR", '3', { from: account1 })
+            }).then(() => {
+                console.log("Default contract 7")
+                return STOR.addDefaultContracts('7', "PIP", '1', { from: account1 })
+            }).then(() => {
+                console.log("Default contract 8")
+                return STOR.addDefaultContracts('8', "PURCHASE", '2', { from: account1 })
+            }).then(() => {
+                console.log("Default contract 9")
+                return STOR.addDefaultContracts('9', "DECORATE", '2', { from: account1 })
+            }).then(() => {
+                console.log("Default contract 10")
+                return STOR.addDefaultContracts('10', "WRAP", '2', { from: account1 })
+            })
+
     })
 
 
