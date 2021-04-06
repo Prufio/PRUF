@@ -1062,11 +1062,11 @@
 			]
 		},
 		"PRUF_STOR.sol": {
-			"keccak256": "0x1632790b2e6a17be8e69fb88e179faff730943d6af19b0e20228c249ada6310c",
+			"keccak256": "0x89fc151dd505dc6dd705361df046d58d4ce3b1bc88c9bd4f64e3b97cc2d71c98",
 			"license": "UNLICENSED",
 			"urls": [
-				"bzz-raw://224ab72f005db3aa26dabca8df3409fb02266b625e534a349b13e17bd5f7f717",
-				"dweb:/ipfs/QmWMmaeGvX1Derr5QdAZY1rh76mVaof1tzf7xCUyhLHnrX"
+				"bzz-raw://7b06c18a8d41761ca5242e32b38397ffdadf95a864a27caaaa5c86e3f30872cd",
+				"dweb:/ipfs/QmTsQNgbkW3Z3gytxCdjcqVawR3kELbisTaSiKuR1RZYNA"
 			]
 		}
 	},
