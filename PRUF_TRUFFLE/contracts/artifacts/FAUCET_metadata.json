@@ -619,7 +619,7 @@
 	},
 	"settings": {
 		"compilationTarget": {
-			"_PRUF_PARTY.sol": "FAUCET"
+			"PRUF_TRUFFLE/contracts/_PRUF_PARTY.sol": "FAUCET"
 		},
 		"evmVersion": "istanbul",
 		"libraries": {},
@@ -633,7 +633,7 @@
 		"remappings": []
 	},
 	"sources": {
-		"Imports/access/AccessControl.sol": {
+		"PRUF_TRUFFLE/contracts/Imports/access/AccessControl.sol": {
 			"keccak256": "0x6e98c0d315f562a98d915414f948e041531138284dd633b4cdb0361a7172cd97",
 			"license": "MIT",
 			"urls": [
@@ -641,7 +641,7 @@
 				"dweb:/ipfs/QmSWUiJXUDFQbno6WgsadapBtYnQwn1iKuCo1z6A5qHjEV"
 			]
 		},
-		"Imports/utils/Address.sol": {
+		"PRUF_TRUFFLE/contracts/Imports/utils/Address.sol": {
 			"keccak256": "0x069b2631bb5b5193a58ccf7a06266c7361bd2c20095667af4402817605627f45",
 			"license": "MIT",
 			"urls": [
@@ -649,7 +649,7 @@
 				"dweb:/ipfs/QmXmxubE3jnatFgZuN8ay1VV6hZ8WRmhvUjNpeVjki15HX"
 			]
 		},
-		"Imports/utils/Context.sol": {
+		"PRUF_TRUFFLE/contracts/Imports/utils/Context.sol": {
 			"keccak256": "0xf930d2df426bfcfc1f7415be724f04081c96f4fb9ec8d0e3a521c07692dface0",
 			"license": "MIT",
 			"urls": [
@@ -657,7 +657,7 @@
 				"dweb:/ipfs/QmTbFya18786ckJfLYUoWau9jBTKfmWnWm5XSViWvB7PXN"
 			]
 		},
-		"Imports/utils/EnumerableSet.sol": {
+		"PRUF_TRUFFLE/contracts/Imports/utils/EnumerableSet.sol": {
 			"keccak256": "0x71e0d1cc75b67306382e055b789b6d3ffe34a9e2e55380d3c9895a36a42229e1",
 			"license": "MIT",
 			"urls": [
@@ -665,7 +665,7 @@
 				"dweb:/ipfs/QmdwRX791f2gdkxLfzQLcyx3ZLvSjGd2wdX8gXFi8sH2uW"
 			]
 		},
-		"Imports/utils/Pausable.sol": {
+		"PRUF_TRUFFLE/contracts/Imports/utils/Pausable.sol": {
 			"keccak256": "0xc6e9bea1d943d97521f0a73f2667eccc2eb0f740c209574d113ec5addb617472",
 			"license": "MIT",
 			"urls": [
@@ -673,7 +673,7 @@
 				"dweb:/ipfs/QmXfPZ8XDfMDMWD4uajioE21AhQhndDdo5tqbMpaM51scV"
 			]
 		},
-		"Imports/utils/ReentrancyGuard.sol": {
+		"PRUF_TRUFFLE/contracts/Imports/utils/ReentrancyGuard.sol": {
 			"keccak256": "0x1278c76b840063ff5e14a2d7c5707812c1eabc2342ed040bf862c2d7552102fe",
 			"license": "MIT",
 			"urls": [
@@ -681,20 +681,20 @@
 				"dweb:/ipfs/Qmdg6rbPsShpnzvqKmPVuFk7eYU53oXTPxqUJXd9WLD4vg"
 			]
 		},
-		"PRUF_INTERFACES.sol": {
-			"keccak256": "0x6a47babcbcc039bc0c9ea3e9b83907c94ec2cfffe4317e7fa2085ec1c2d195a1",
+		"PRUF_TRUFFLE/contracts/PRUF_INTERFACES.sol": {
+			"keccak256": "0x1560cb07854831ebafb4d308aac4f08c0b03c5866989fde61454f9535b34a36b",
 			"license": "UNLICENSED",
 			"urls": [
-				"bzz-raw://501fab5cb8df56da99760a326711cda2a12d603e0d8c85694beaa09d6e46acf7",
-				"dweb:/ipfs/QmcdmtMsUuCs9ekJEih21DUA3Xykv1rtyynUpUTrLtQXuy"
+				"bzz-raw://2750bf4f4bd262e86b1e79c2f25a028384344128efee8bb98d2c5d74121befe8",
+				"dweb:/ipfs/QmepNjaPw6E1dDXALHL7DteUhFutTRQ7YeQ2jYbrwQgwbn"
 			]
 		},
-		"_PRUF_PARTY.sol": {
-			"keccak256": "0x3a20a8e9942d2a7a9151b7137884f8b08468b8f9dcf07d620b21eafa04c3213c",
+		"PRUF_TRUFFLE/contracts/_PRUF_PARTY.sol": {
+			"keccak256": "0xd92d4cf64298f698f7f32d9b1e4a1fc57624b7f35116a93d606f941e462c035f",
 			"license": "UNLICENSED",
 			"urls": [
-				"bzz-raw://995dbfefa6210dc55e90e10dbe1095b39a72f993186ba567a3332cd451a085e0",
-				"dweb:/ipfs/QmTSjC4DX6SyjYfb9Rp3GuAAjMxmQzZeZjPqqvArriPPQ2"
+				"bzz-raw://83f2c96dc3b1dd104928ab7406f20a00314213d32ccf68ff76896b07c52838cb",
+				"dweb:/ipfs/QmcDurJsnKur73qmhihKNa1EjSzqdqxoda2WTJLMeB7APs"
 			]
 		}
 	},

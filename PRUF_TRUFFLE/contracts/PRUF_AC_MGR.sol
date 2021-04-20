@@ -47,8 +47,7 @@ contract AC_MGR is BASIC {
         0xFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFF;
 
     uint256 private ACtokenIndex = 1000000; //Starting index for purchased ACnode tokens
-    uint256 public acPrice_L1 = 200000 ether;
-    uint256 private currentACtokenPrice = acPrice_L1;
+    uint256 public AC_Price = 200000 ether;
     uint32 private constant startingDiscount = 9500; // Purchased nodes start with 95% profit share
     /*
         Cost indexes
@@ -98,10 +97,10 @@ contract AC_MGR is BASIC {
     /*
      * @dev Set pricing
      */
-    function OO_SetACpricing(uint256 _L1) external isAdmin {
+    function OO_SetACpricing(uint256 newACprice) external isAdmin {
         //^^^^^^^checks^^^^^^^^^
 
-        acPrice_L1 = _L1;
+        AC_Price = newACprice;
         //^^^^^^^effects^^^^^^^^^
 
         emit REPORT("ACnode pricing Changed!"); //report access to internal parameter
@@ -290,21 +289,16 @@ contract AC_MGR is BASIC {
 
         if (ACtokenIndex < 4294000000) ACtokenIndex++; //increment ACtokenIndex up to last one
 
-        uint256 newACtokenPrice;
         address rootPaymentAddress = cost[_assetClassRoot][1].paymentAddress; //payment for upgrade goes to root AC payment adress specified for service (1)
-
-        newACtokenPrice = acPrice_L1;
 
         //mint an asset class token to _msgSender(), at tokenID ACtokenIndex, with URI = root asset Class #
 
-        UTIL_TKN.trustedAgentBurn(_msgSender(), currentACtokenPrice / 2);
+        UTIL_TKN.trustedAgentBurn(_msgSender(), AC_Price / 2);
         UTIL_TKN.trustedAgentTransfer(
             _msgSender(),
             rootPaymentAddress,
-            currentACtokenPrice - (currentACtokenPrice / 2)
+            AC_Price - (AC_Price / 2)
         );
-
-        currentACtokenPrice = newACtokenPrice;
 
         _createAssetClass(
             uint32(ACtokenIndex), //safe because ACtokenIndex <  4294000000 required
@@ -545,14 +539,13 @@ contract AC_MGR is BASIC {
         view
         returns (
             uint256,
-            uint256,
             uint256
         )
     {
         //^^^^^^^checks^^^^^^^^^
 
         //uint256 numberOfTokensSold = ACtokenIndex - uint256(1000000);
-        return (ACtokenIndex, currentACtokenPrice, acPrice_L1);
+        return (ACtokenIndex, AC_Price);
         //^^^^^^^effects/interactions^^^^^^^^^
     }
 

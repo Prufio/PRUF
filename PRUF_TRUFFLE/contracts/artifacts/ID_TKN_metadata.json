@@ -1116,7 +1116,7 @@
 	},
 	"settings": {
 		"compilationTarget": {
-			"PRUF_ID_TKN.sol": "ID_TKN"
+			"PRUF_TRUFFLE/contracts/PRUF_ID_TKN.sol": "ID_TKN"
 		},
 		"evmVersion": "istanbul",
 		"libraries": {},
@@ -1130,7 +1130,7 @@
 		"remappings": []
 	},
 	"sources": {
-		"Imports/access/AccessControl.sol": {
+		"PRUF_TRUFFLE/contracts/Imports/access/AccessControl.sol": {
 			"keccak256": "0x6e98c0d315f562a98d915414f948e041531138284dd633b4cdb0361a7172cd97",
 			"license": "MIT",
 			"urls": [
@@ -1138,7 +1138,7 @@
 				"dweb:/ipfs/QmSWUiJXUDFQbno6WgsadapBtYnQwn1iKuCo1z6A5qHjEV"
 			]
 		},
-		"Imports/introspection/ERC165.sol": {
+		"PRUF_TRUFFLE/contracts/Imports/introspection/ERC165.sol": {
 			"keccak256": "0x5718c5df9bd67ac68a796961df938821bb5dc0cd4c6118d77e9145afb187409b",
 			"license": "MIT",
 			"urls": [
@@ -1146,7 +1146,7 @@
 				"dweb:/ipfs/Qmejonoaj5MLekPus229rJQHcC6E9dz2xorjHJR84fMfmn"
 			]
 		},
-		"Imports/introspection/IERC165.sol": {
+		"PRUF_TRUFFLE/contracts/Imports/introspection/IERC165.sol": {
 			"keccak256": "0xa28007762d9da9db878dd421960c8cb9a10471f47ab5c1b3309bfe48e9e79ff4",
 			"license": "MIT",
 			"urls": [
@@ -1154,7 +1154,7 @@
 				"dweb:/ipfs/QmcsVgLgzWdor3UnAztUkXKNGcysm1MPneWksF72AvnwBx"
 			]
 		},
-		"Imports/token/ERC721/ERC721.sol": {
+		"PRUF_TRUFFLE/contracts/Imports/token/ERC721/ERC721.sol": {
 			"keccak256": "0x38260b2c03371119b3cf56310a388bfef4b2a99ec25ff9b9c68c67c9785c48f3",
 			"license": "MIT",
 			"urls": [
@@ -1162,7 +1162,7 @@
 				"dweb:/ipfs/QmWetUQdbVhpG2hxfuiY7jRC25gEJ1YFDExQ9fY8Qrm3aL"
 			]
 		},
-		"Imports/token/ERC721/ERC721Burnable.sol": {
+		"PRUF_TRUFFLE/contracts/Imports/token/ERC721/ERC721Burnable.sol": {
 			"keccak256": "0xe9353948d8e97e1438c2880ad7764985d33fd7f9e4bc614997e36a9524934e91",
 			"license": "MIT",
 			"urls": [
@@ -1170,7 +1170,7 @@
 				"dweb:/ipfs/QmfZkR9E9qcLA1ttftVyAt6okS6VSUjJsjwpMFCQPWkqWp"
 			]
 		},
-		"Imports/token/ERC721/ERC721Pausable.sol": {
+		"PRUF_TRUFFLE/contracts/Imports/token/ERC721/ERC721Pausable.sol": {
 			"keccak256": "0x5b45c6efe3861bc04f76858dc8ae29505a908f9d73346c07843c12e167edc0e3",
 			"license": "MIT",
 			"urls": [
@@ -1178,7 +1178,7 @@
 				"dweb:/ipfs/QmRMUEzQXA4EkHDpoM5hdXLzPWNwNpXXZT9PBFAvaQPM4B"
 			]
 		},
-		"Imports/token/ERC721/IERC721.sol": {
+		"PRUF_TRUFFLE/contracts/Imports/token/ERC721/IERC721.sol": {
 			"keccak256": "0xe75db2fa62af4f543d39e1d718f77b5091aaf032988329e48839ce3410996fde",
 			"license": "MIT",
 			"urls": [
@@ -1186,7 +1186,7 @@
 				"dweb:/ipfs/QmcDS45TqG1DaaDbM9khBPV3FU2qi3ztgVGZWF133qujLd"
 			]
 		},
-		"Imports/token/ERC721/IERC721Enumerable.sol": {
+		"PRUF_TRUFFLE/contracts/Imports/token/ERC721/IERC721Enumerable.sol": {
 			"keccak256": "0xb963a99b5eb875a72b388a5e776ed7a748e4e8244137eee6b6b3734bd9f299b7",
 			"license": "MIT",
 			"urls": [
@@ -1194,7 +1194,7 @@
 				"dweb:/ipfs/QmQpH3qXdHKtkVb4hNhiJgaPJUXPYUJRPuBePoNkJAEbH2"
 			]
 		},
-		"Imports/token/ERC721/IERC721Metadata.sol": {
+		"PRUF_TRUFFLE/contracts/Imports/token/ERC721/IERC721Metadata.sol": {
 			"keccak256": "0xed7e5a97848069b11b7199311bcb4b1f3c412c9237337703e752afb0b9970ddf",
 			"license": "MIT",
 			"urls": [
@@ -1202,7 +1202,7 @@
 				"dweb:/ipfs/QmdufYhAB54DCUKkreBcqugy6S3ofGdfaws7xKnP4hAD7Z"
 			]
 		},
-		"Imports/token/ERC721/IERC721Receiver.sol": {
+		"PRUF_TRUFFLE/contracts/Imports/token/ERC721/IERC721Receiver.sol": {
 			"keccak256": "0x96877bb2eb8ca360e949ee1bd77b47a14e92e42f79897c350f088f87a3c231d4",
 			"license": "MIT",
 			"urls": [
@@ -1210,7 +1210,7 @@
 				"dweb:/ipfs/QmdAPS8uLrzPJEeFZyJVkwTtaL3KB9jo9wJm1UcoJP55wT"
 			]
 		},
-		"Imports/utils/Address.sol": {
+		"PRUF_TRUFFLE/contracts/Imports/utils/Address.sol": {
 			"keccak256": "0x069b2631bb5b5193a58ccf7a06266c7361bd2c20095667af4402817605627f45",
 			"license": "MIT",
 			"urls": [
@@ -1218,7 +1218,7 @@
 				"dweb:/ipfs/QmXmxubE3jnatFgZuN8ay1VV6hZ8WRmhvUjNpeVjki15HX"
 			]
 		},
-		"Imports/utils/Context.sol": {
+		"PRUF_TRUFFLE/contracts/Imports/utils/Context.sol": {
 			"keccak256": "0xf930d2df426bfcfc1f7415be724f04081c96f4fb9ec8d0e3a521c07692dface0",
 			"license": "MIT",
 			"urls": [
@@ -1226,7 +1226,7 @@
 				"dweb:/ipfs/QmTbFya18786ckJfLYUoWau9jBTKfmWnWm5XSViWvB7PXN"
 			]
 		},
-		"Imports/utils/Counters.sol": {
+		"PRUF_TRUFFLE/contracts/Imports/utils/Counters.sol": {
 			"keccak256": "0x62d306ff0499a11913bc60b5939eec619509b5c67b30e86ebf8b8bda0b7a7fee",
 			"license": "MIT",
 			"urls": [
@@ -1234,7 +1234,7 @@
 				"dweb:/ipfs/QmZ92pU9DJ3h1qREMFvDQhArSy6fh6zA983NeLFHRs1qKJ"
 			]
 		},
-		"Imports/utils/EnumerableMap.sol": {
+		"PRUF_TRUFFLE/contracts/Imports/utils/EnumerableMap.sol": {
 			"keccak256": "0xefd5694c5e32907810d3bcb301166c409b559d452777b0de9b155fc3d1671ae7",
 			"license": "MIT",
 			"urls": [
@@ -1242,7 +1242,7 @@
 				"dweb:/ipfs/QmVvVQ39WjkiBYPSGUDXQxsJz7QTiUZdNSxaGQWo1MCxb8"
 			]
 		},
-		"Imports/utils/EnumerableSet.sol": {
+		"PRUF_TRUFFLE/contracts/Imports/utils/EnumerableSet.sol": {
 			"keccak256": "0x71e0d1cc75b67306382e055b789b6d3ffe34a9e2e55380d3c9895a36a42229e1",
 			"license": "MIT",
 			"urls": [
@@ -1250,7 +1250,7 @@
 				"dweb:/ipfs/QmdwRX791f2gdkxLfzQLcyx3ZLvSjGd2wdX8gXFi8sH2uW"
 			]
 		},
-		"Imports/utils/Pausable.sol": {
+		"PRUF_TRUFFLE/contracts/Imports/utils/Pausable.sol": {
 			"keccak256": "0xc6e9bea1d943d97521f0a73f2667eccc2eb0f740c209574d113ec5addb617472",
 			"license": "MIT",
 			"urls": [
@@ -1258,7 +1258,7 @@
 				"dweb:/ipfs/QmXfPZ8XDfMDMWD4uajioE21AhQhndDdo5tqbMpaM51scV"
 			]
 		},
-		"Imports/utils/ReentrancyGuard.sol": {
+		"PRUF_TRUFFLE/contracts/Imports/utils/ReentrancyGuard.sol": {
 			"keccak256": "0x1278c76b840063ff5e14a2d7c5707812c1eabc2342ed040bf862c2d7552102fe",
 			"license": "MIT",
 			"urls": [
@@ -1266,7 +1266,7 @@
 				"dweb:/ipfs/Qmdg6rbPsShpnzvqKmPVuFk7eYU53oXTPxqUJXd9WLD4vg"
 			]
 		},
-		"Imports/utils/Strings.sol": {
+		"PRUF_TRUFFLE/contracts/Imports/utils/Strings.sol": {
 			"keccak256": "0x456e9b3a2bfe189b5249857f624f4139e59331db518483b456c4e587a20552e0",
 			"license": "MIT",
 			"urls": [
@@ -1274,7 +1274,7 @@
 				"dweb:/ipfs/QmUpgMg8EFDnv87ePKUjXxXpJT3qwHRj9VDNSnRxu7T9sy"
 			]
 		},
-		"PRUF_ID_TKN.sol": {
+		"PRUF_TRUFFLE/contracts/PRUF_ID_TKN.sol": {
 			"keccak256": "0xfd543bdcd2b1014e768da8c211907f5417c666c029fd0cc5160c8dfe6863f7d0",
 			"license": "UNLICENSED",
 			"urls": [
@@ -1282,12 +1282,12 @@
 				"dweb:/ipfs/QmYuSdDVUMQ3hzkms8VBfoLWtWmhH7KSVYi54XAg4KdMLm"
 			]
 		},
-		"PRUF_INTERFACES.sol": {
-			"keccak256": "0x6a47babcbcc039bc0c9ea3e9b83907c94ec2cfffe4317e7fa2085ec1c2d195a1",
+		"PRUF_TRUFFLE/contracts/PRUF_INTERFACES.sol": {
+			"keccak256": "0x1560cb07854831ebafb4d308aac4f08c0b03c5866989fde61454f9535b34a36b",
 			"license": "UNLICENSED",
 			"urls": [
-				"bzz-raw://501fab5cb8df56da99760a326711cda2a12d603e0d8c85694beaa09d6e46acf7",
-				"dweb:/ipfs/QmcdmtMsUuCs9ekJEih21DUA3Xykv1rtyynUpUTrLtQXuy"
+				"bzz-raw://2750bf4f4bd262e86b1e79c2f25a028384344128efee8bb98d2c5d74121befe8",
+				"dweb:/ipfs/QmepNjaPw6E1dDXALHL7DteUhFutTRQ7YeQ2jYbrwQgwbn"
 			]
 		}
 	},
