@@ -13,6 +13,8 @@ __/\\\\\\\\\\\\\ _____/\\\\\\\\\ _______/\\../\\ ___/\\\\\\\\\\\\\\\
 /*-----------------------------------------------------------------
  *  TO DO
  * PIP IS VULNERABLE TO THE DARK FOREST, needs to be completely rewritten
+ * PIP NEEDS TO BE DONE BY A SERVER USING AUTH MINTER IN AC ADDRESS, USING IPFS FOR DATA STORAGE.
+ * Perhaps this can work with some kind of ZK auth? Doubt?
  *
  *---------------------------------------------------------------*/
 
