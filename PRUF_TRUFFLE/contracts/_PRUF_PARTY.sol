@@ -246,9 +246,10 @@ contract FAUCET is ReentrancyGuard, Pausable, AccessControl {
      */
     function GET_ID() external nonReentrant whenNotPaused {
         //^^^^^^^checks^^^^^^^^^
-        //^^^^^^^effects^^^^^^^^^
+        //^^^^^^^effects^^^^^^^^
         tokenId++;
         ID_TKN.mintPRUF_IDToken(_msgSender(), tokenId, "0");
+        ID_TKN.setTrustLevel(tokenId, 10);
         //^^^^^^^Interactions^^^^^^^^^
     }
 

@@ -844,6 +844,15 @@ interface ID_TKN_Interface {
         bytes calldata _data
     ) external;
 
+    
+    /*
+     * @dev Set new ID data fields
+     */
+    function setTrustLevel(
+        uint256 _tokenId,
+        uint256 _trustLevel
+    ) external;
+
     /*
      * @dev get ID data
      */
@@ -1123,7 +1132,6 @@ interface AC_MGR_Interface {
         view
         returns (
             //--------DPS TEST ---- NEW
-            uint256,
             uint256,
             uint256
         );
