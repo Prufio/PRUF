@@ -65,19 +65,19 @@ struct escrowData {
     uint256 timelock;
 }
 
-struct escrowDataExtLight {
+struct escrowDataExtLight { //used only in recycle
     //1 slot
-    uint8 escrowData;
+    uint8 escrowData; //used by recycle
     uint8 u8_1;
     uint8 u8_2;
     uint8 u8_3;
     uint16 u16_1;
     uint16 u16_2;
     uint32 u32_1;
-    address addr_1;
+    address addr_1; //used by recycle
 }
 
-struct escrowDataExtHeavy {
+struct escrowDataExtHeavy { //specific uses not defined
     // 5 slots
     uint32 u32_2;
     uint32 u32_3;
@@ -623,14 +623,14 @@ interface A_TKN_Interface {
         external
         returns (uint256);
 
-    /*
-     * @dev Reassures user that token is minted in the PRUF system
-     */
-    function validatePipToken(
-        uint256 tokenId,
-        uint32 _assetClass,
-        string calldata _authCode
-    ) external view;
+    // /*
+    //  * @dev Reassures user that token is minted in the PRUF system
+    //  */
+    // function validatePipToken(
+    //     uint256 tokenId,
+    //     uint32 _assetClass,
+    //     string calldata _authCode
+    // ) external view;
 
     /*
      * @dev See if token exists

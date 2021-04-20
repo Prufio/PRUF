@@ -12,6 +12,7 @@ __/\\\\\\\\\\\\\ _____/\\\\\\\\\ _______/\\../\\ ___/\\\\\\\\\\\\\\\
 
 /*-----------------------------------------------------------------
  *  TO DO
+ * PIP IS VULNERABLE TO THE DARK FOREST, needs to be completely rewritten
  *
  *---------------------------------------------------------------*/
 
@@ -71,7 +72,7 @@ contract PIP is CORE {
      */
     function claimPipAsset(
         bytes32 _idxHash,
-        string calldata _authCode,
+        //String calldata _authCode,
         uint32 _newAssetClass,
         bytes32 _rgtHash,
         uint32 _countDownStart
@@ -84,7 +85,7 @@ contract PIP is CORE {
         );
         //^^^^^^^checks^^^^^^^^^
 
-        A_TKN.validatePipToken(tokenId, _newAssetClass, _authCode); //check supplied data matches tokenURI
+        //A_TKN.validatePipToken(tokenId, _newAssetClass, _authCode); //check supplied data matches tokenURI
         STOR.newRecord(_idxHash, _rgtHash, _newAssetClass, _countDownStart); // Make a new record at the tokenId b32
         A_TKN.setURI(tokenId, "pruf.io"); // set URI
         A_TKN.safeTransferFrom(address(this), _msgSender(), tokenId); // sends token from this holding contract to caller wallet
