@@ -245,26 +245,26 @@ contract A_TKN is
         //^^^^^^^interactions^^^^^^^^^
     }
 
-    /*
-     * @dev Reassures user that token is minted in the PRUF system
-     */
-    function validatePipToken(
-        uint256 tokenId,
-        uint32 _assetClass,
-        string calldata _authCode
-    ) external view {
-        bytes32 _hashedAuthCode = keccak256(abi.encodePacked(_authCode));
-        bytes32 b32URI =
-            keccak256(abi.encodePacked(_hashedAuthCode, _assetClass));
-        string memory authString = uint256toString(uint256(b32URI));
-        string memory URI = tokenURI(tokenId);
+    // /* PIP IS VULNERABLE TO THE DARK FOREST
+    //  * @dev Reassures user that token is minted in the PRUF system
+    //  */
+    // function validatePipToken(
+    //     uint256 tokenId,
+    //     uint32 _assetClass,
+    //     string calldata _authCode
+    // ) external view {
+    //     bytes32 _hashedAuthCode = keccak256(abi.encodePacked(_authCode));
+    //     bytes32 b32URI =
+    //         keccak256(abi.encodePacked(_hashedAuthCode, _assetClass));
+    //     string memory authString = uint256toString(uint256(b32URI));
+    //     string memory URI = tokenURI(tokenId);
 
-        require(
-            keccak256(abi.encodePacked(URI)) ==
-                keccak256(abi.encodePacked(authString)),
-            "AT:VPT:AuthCode and assetClass != URI"
-        );
-    }
+    //     require(
+    //         keccak256(abi.encodePacked(URI)) ==
+    //             keccak256(abi.encodePacked(authString)),
+    //         "AT:VPT:AuthCode and assetClass != URI"
+    //     );
+    // }
 
     /*
      * @dev See if token exists
