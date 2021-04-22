@@ -1131,7 +1131,6 @@ interface AC_MGR_Interface {
         external
         view
         returns (
-            //--------DPS TEST ---- NEW
             uint256,
             uint256
         );
