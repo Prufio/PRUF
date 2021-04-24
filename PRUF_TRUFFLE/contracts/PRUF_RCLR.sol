@@ -72,15 +72,45 @@ contract RCLR is ECR_CORE, CORE {
         escrowDataExtLight memory escrowDataLight =
             getEscrowDataLight(_idxHash);
         Record memory rec = getRecord(_idxHash);
+        AC memory AC_info = getACinfo(_assetClass);
         require(_rgtHash != 0, "R:R: New rights holder cannot be zero");
         require(rec.assetStatus == 60, "R:R: Asset not discarded");
+                require(
+            AC_MGR.isSameRootAC(_assetClass, rec.assetClass) == 170,
+            "R:R: !Change AC to new root"
+        );
+        require(
+                (AC_info.managementType < 5),
+                "R:R: Contract does not support management types > 4 or AC is locked"
+        );
+        if ((AC_info.managementType == 1) || (AC_info.managementType == 2)) {
+            require(
+                (AC_TKN.ownerOf(_assetClass) == _msgSender()),
+                "R:R: Cannot create asset in AC mgmt type 1||2 - caller does not hold AC token"
+            );
+        }
+        if (AC_info.managementType == 3) {
+            require(
+                AC_MGR.getUserType(
+                    keccak256(abi.encodePacked(_msgSender())),
+                    _assetClass
+                ) == 1,
+                "R:R: Cannot create asset - caller address !authorized"
+            );
+        }
+        if (AC_info.managementType == 4) {
+            require(
+                ID_TKN.trustedLevelByAddress(_msgSender()) > 10,
+                "R:R: Caller !trusted ID holder"
+            );
+        }
         //^^^^^^^checks^^^^^^^^^
 
         rec.rightsHolder = _rgtHash;
         rec.numberOfTransfers = 170;
         //^^^^^^^effects^^^^^^^^^^^^
 
-        A_TKN.mintAssetToken(_msgSender(), tokenId, "pruf.io");
+        A_TKN.mintAssetToken(_msgSender(), tokenId, "pruf.io");   //FIX TO MAKE REAL ASSET URL DPS / CTS
         ECR_MGR.endEscrow(_idxHash);
         STOR.changeAC(_idxHash, _assetClass);
         deductRecycleCosts(_assetClass, escrowDataLight.addr_1);
