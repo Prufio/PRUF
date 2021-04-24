@@ -122,10 +122,7 @@ contract STOR is AccessControl, ReentrancyGuard, Pausable {
      * @dev Check record _idxHash exists in database
      */
     modifier exists(bytes32 _idxHash) {
-        require(
-            database[_idxHash].assetClass != 0,
-            "S:MOD-E: Rec !exist"
-        );
+        require(database[_idxHash].assetClass != 0, "S:MOD-E: Rec !exist");
         _;
     }
 
@@ -335,7 +332,8 @@ contract STOR is AccessControl, ReentrancyGuard, Pausable {
         uint8 _contractAuthLevel
     ) public {
         require(
-            (AC_TKN.ownerOf(_assetClass) == _msgSender()) || (_msgSender() == contractNameToAddress["AC_MGR"]),
+            (AC_TKN.ownerOf(_assetClass) == _msgSender()) ||
+                (_msgSender() == contractNameToAddress["AC_MGR"]),
             "S:ECFAC: Caller not ACtokenHolder"
         );
 
@@ -417,8 +415,16 @@ contract STOR is AccessControl, ReentrancyGuard, Pausable {
         bytes32 idxHash = _idxHash; //stack saving
 
         require(_countDown <= rec.countDown, "S:MR: CountDown +!"); //prohibit increasing the countdown value
-        require((isLostOrStolen(_newAssetStatus) == 0) || (_newAssetStatus == rec.assetStatus), "S:MR: Must use L/S");
-        require((isEscrow(_newAssetStatus) == 0) || (_newAssetStatus == rec.assetStatus), "S:MR: Must use ECR");
+        require(
+            (isLostOrStolen(_newAssetStatus) == 0) ||
+                (_newAssetStatus == rec.assetStatus),
+            "S:MR: Must use L/S"
+        );
+        require(
+            (isEscrow(_newAssetStatus) == 0) ||
+                (_newAssetStatus == rec.assetStatus),
+            "S:MR: Must use ECR"
+        );
         // require(
         //     (_newAssetStatus != 7) &&
         //         (_newAssetStatus != 57) &&
@@ -634,7 +640,11 @@ contract STOR is AccessControl, ReentrancyGuard, Pausable {
     /*
      * @dev Modify record Ipfs1 data
      */
-    function modifyIpfs1(bytes32 _idxHash, bytes32 _Ipfs1a, bytes32 _Ipfs1b)
+    function modifyIpfs1(
+        bytes32 _idxHash,
+        bytes32 _Ipfs1a,
+        bytes32 _Ipfs1b
+    )
         external
         nonReentrant
         whenNotPaused
@@ -645,7 +655,10 @@ contract STOR is AccessControl, ReentrancyGuard, Pausable {
         Record memory rec = database[_idxHash];
         require((isTransferred(rec.assetStatus) == 0), "S:MI1: Txfrd asset"); //STAT UNREACHABLE
 
-        require((rec.Ipfs1a != _Ipfs1a) || (rec.Ipfs1b != _Ipfs1b), "S:MI1: New value = old");
+        require(
+            (rec.Ipfs1a != _Ipfs1a) || (rec.Ipfs1b != _Ipfs1b),
+            "S:MI1: New value = old"
+        );
         //^^^^^^^checks^^^^^^^^^
 
         rec.Ipfs1a = _Ipfs1a;
@@ -674,7 +687,10 @@ contract STOR is AccessControl, ReentrancyGuard, Pausable {
         require((isLostOrStolen(rec.assetStatus) == 0), "S:MI2: L/S asset"); //asset cannot be in lost or stolen status
         require((isTransferred(rec.assetStatus) == 0), "S:MI2: Txfrd. asset"); //asset cannot be in transferred status
 
-        require((rec.Ipfs2a == 0) && (rec.Ipfs2b == 0), "S:MI2: Cannot overwrite I2"); //IPFS2 record is immutable after first write
+        require(
+            ((rec.Ipfs2a == 0) && (rec.Ipfs2b == 0)) || rec.assetStatus == 201,
+            "S:MI2: Cannot overwrite I2"
+        ); //IPFS2 record is immutable after first write unlwss status 201 is set (Storage provider has died)
         //^^^^^^^checks^^^^^^^^^
 
         rec.Ipfs2a = _Ipfs2a;
