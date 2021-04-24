@@ -52,6 +52,8 @@ pragma solidity ^0.6.7;
  *
  *      *0xFF for transferred costs more gas than 0x0....fix this?
  *
+ *      FIX token URI's TO MAKE REAL ASSET URLs
+ *
  *
 - ----------------------------------------------------------------
 
