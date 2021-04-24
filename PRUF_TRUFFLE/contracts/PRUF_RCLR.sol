@@ -61,7 +61,7 @@ contract RCLR is ECR_CORE, CORE {
     }
 
     /*
-     * @dev reutilize a recycled asset
+     * @dev reutilize a recycled asset //DPS:CHECK NEW REQUIRES!!!
      */
     function recycle(
         bytes32 _idxHash,
