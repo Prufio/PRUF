@@ -62,6 +62,9 @@ contract AC_MGR is BASIC {
     mapping(uint32 => AC) private AC_data; // AC info database asset class to AC struct (NAME,ACroot,CUSTODIAL/NC,uint32)
     mapping(string => uint32) private AC_number; //name to asset class resolution map
     mapping(bytes32 => mapping(uint32 => uint8)) private registeredUsers; // Authorized recorder database by asset class, by address hash
+    mapping(uint8 => uint8) private storageProvidersEnabled; //storageProvider -> status (enabled or disabled)
+    mapping(uint8 => uint8) private managementTypesEnabled; //managementTypes -> status (enabled or disabled)
+    mapping(uint8 => uint8) private custodyTypesEnabled; //managementTypes -> status (enabled or disabled)
 
     constructor() {
         _setupRole(NODE_MINTER_ROLE, _msgSender());
@@ -97,7 +100,7 @@ contract AC_MGR is BASIC {
     /*
      * @dev Set pricing
      */
-    function OO_SetACpricing(uint256 newACprice) external isAdmin {
+    function adminSetACpricing(uint256 newACprice) external isAdmin {
         //^^^^^^^checks^^^^^^^^^
 
         AC_Price = newACprice;
@@ -133,6 +136,45 @@ contract AC_MGR is BASIC {
     }
 
     /*
+     * Sets the valid storage type providers. DPS:TEST NEW **REQUIRED CONFIGURATION**
+     */
+
+    function adminSetStorageProviders(uint8 _storageProvider, uint8 _status)
+        external
+        isAdmin
+    {
+        //^^^^^^^checks^^^^^^^^^
+        storageProvidersEnabled[_storageProvider] = _status;
+        //^^^^^^^effects^^^^^^^^^
+    }
+
+    /*
+     * Sets the valid management types.  DPS:TEST NEW **REQUIRED CONFIGURATION**
+     */
+
+    function adminSetManagementTypes(uint8 _managementType, uint8 _status)
+        external
+        isAdmin
+    {
+        //^^^^^^^checks^^^^^^^^^
+        managementTypesEnabled[_managementType] = _status;
+        //^^^^^^^effects^^^^^^^^^
+    }
+
+    /*
+     * Sets the valid custody types.  DPS:TEST NEW **REQUIRED CONFIGURATION**
+     */
+    function adminSetCustodyTypes(uint8 _custodyType, uint8 _status)
+        external
+        isAdmin
+    {
+        //^^^^^^^checks^^^^^^^^^
+        custodyTypesEnabled[_custodyType] = _status;
+        //^^^^^^^effects^^^^^^^^^
+    }
+
+
+    /*
      * @dev Transfers a name from one asset class to another
      * !! -------- to be used with great caution and only as a result of community governance action -----------
      * Designed to remedy brand infringement issues. This breaks decentralization and must eventually be given
@@ -163,7 +205,8 @@ contract AC_MGR is BASIC {
     }
 
     /*
-     * @dev Modifies an asset class with minimal controls  //DPS:TEST Removed parameter
+     * @dev Modifies an asset class with minimal controls -- mad powerful juju. 
+     * You can really break things with this. The frontend for this must have extensive checks.  //DPS:TEST Removed parameter
      */
     function AdminModAssetClass(
         uint32 _assetClass,
@@ -185,6 +228,7 @@ contract AC_MGR is BASIC {
             "ACM:AMAC: Root !exist"
         );
         require(AC_TKN.tokenExists(tokenId) == 170, "ACM:AMAC: ACtoken !exist");
+
         //^^^^^^^checks^^^^^^^^^
 
         AC_data[_assetClass].assetClassRoot = _assetClassRoot;
@@ -244,6 +288,7 @@ contract AC_MGR is BASIC {
         uint32 _assetClassRoot,
         uint8 _custodyType,
         uint8 _managementType,
+        uint8 _storageProvider,
         uint32 _discount,
         bytes32 _IPFS,
         address _recipientAddress
@@ -256,6 +301,7 @@ contract AC_MGR is BASIC {
             _assetClassRoot,
             _custodyType,
             _managementType,
+            _storageProvider,
             _discount,
             _IPFS
         );
@@ -306,7 +352,8 @@ contract AC_MGR is BASIC {
             _name,
             _assetClassRoot,
             _custodyType,
-            255, //creates ACNODES at managementType 255 = not yet usable
+            255, //creates ACNODES at managementType 255 = not yet usable,
+            0, //creates ACNODES at storageType 0 = not yet usable,
             startingDiscount,
             _IPFS
         );
@@ -427,6 +474,14 @@ contract AC_MGR is BASIC {
             _managementType != 255,
             "ACM:UACI: managementType = 255(Unconfigured)"
         );
+        require( //_managementType is a valid type
+            (managementTypesEnabled[_managementType] > 0),
+            "ACM:UACI: Management type is invalid (0)"
+        );
+        require( //_storageProvider is a valid type
+            (storageProvidersEnabled[_storageProvider] > 0),
+            "ACM:UACI: Storage provider is invalid (0)"
+        );
         //^^^^^^^checks^^^^^^^^^
 
         AC_data[_assetClass].managementType = _managementType;
@@ -446,6 +501,45 @@ contract AC_MGR is BASIC {
     {
         //^^^^^^^checks^^^^^^^^^
         return (registeredUsers[_userHash][_assetClass]);
+        //^^^^^^^interactions^^^^^^^^^
+    }
+
+    /*
+     * @dev get the authorization status of a management type 0 = not allowed  DPS:TEST -- NEW
+     */
+    function getManagementTypeStatus(uint8 _managementType)
+        external
+        view
+        returns (uint8)
+    {
+        //^^^^^^^checks^^^^^^^^^
+        return (managementTypesEnabled[_managementType]);
+        //^^^^^^^interactions^^^^^^^^^
+    }
+
+    /*
+    * @dev get the authorization status of a storage type 0 = not allowed   DPS:TEST -- NEW
+     */
+    function getStorageProviderStatus(uint8 _storageProvider)
+        external
+        view
+        returns (uint8)
+    {
+        //^^^^^^^checks^^^^^^^^^
+        return (storageProvidersEnabled[_storageProvider]);
+        //^^^^^^^interactions^^^^^^^^^
+    }
+
+    /*
+    * @dev get the authorization status of a custody type 0 = not allowed   DPS:TEST -- NEW
+     */
+    function getCustodyTypeStatus(uint8 _custodyType)
+        external
+        view
+        returns (uint8)
+    {
+        //^^^^^^^checks^^^^^^^^^
+        return (custodyTypesEnabled[_custodyType]);
         //^^^^^^^interactions^^^^^^^^^
     }
 
@@ -628,6 +722,7 @@ contract AC_MGR is BASIC {
         uint32 _assetClassRoot,
         uint8 _custodyType,
         uint8 _managementType,
+        uint8 _storageProvider,
         uint32 _discount,
         bytes32 _IPFS
     ) private whenNotPaused {
@@ -636,6 +731,18 @@ contract AC_MGR is BASIC {
 
         require((tokenId != 0), "ACM:CAC: AC = 0"); //sanity check inputs
         require(_discount <= 10000, "ACM:CAC: Discount > 10000 (100%)");
+        require( //_ac.managementType is a valid type or explicitly unset (255)
+            (managementTypesEnabled[_managementType] > 0) || (_managementType == 255),
+            "ACM:CAC: Management type is invalid (0)"
+        );
+        require( //_ac.storageProvider is a valid type or not specified (0)
+            (storageProvidersEnabled[_storageProvider] > 0) || (_storageProvider == 0),
+            "ACM:CAC: Storage Provider is invalid (0)"
+        );
+        require( //_ac.custodyType is a valid type or specifically unset (255)
+            (custodyTypesEnabled[_custodyType] > 0) || (_custodyType == 255),
+            "ACM:CAC: Custody type is invalid (0)"
+        );
         require( //has valid root
             (_ac.custodyType == 3) || (_assetClassRoot == _assetClass),
             "ACM:CAC: Root !exist"
