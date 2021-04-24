@@ -1155,7 +1155,6 @@ interface AC_MGR_Interface {
         external
         view
         returns (
-            //--------DPS TEST ---- NEW
             uint256,
             uint256
         );
@@ -1323,7 +1322,7 @@ interface STOR_Interface {
     /*
      * @dev return a record from the database w/o rgt
      */
-    function retrieveShortRecord(bytes32 _idxHash)
+    function retrieveShortRecord(bytes32 _idxHash) //CTS:EXAMINE, doesn't return same number of params as STOR
         external
         view
         returns (
