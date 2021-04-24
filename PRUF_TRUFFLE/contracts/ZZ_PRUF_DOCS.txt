@@ -263,6 +263,13 @@ pragma solidity ^0.6.7;
 - -----------------------------------------------------------------
 
 *-----------------------------------------------------------------
+ * ASSET CLASS Storage Providers: AC_data.storageProvider (AC_manager)
+ * 0   -- Not Set
+ * 1   -- IPFS 
+ * 2   -- ARweave 
+- -----------------------------------------------------------------
+
+*-----------------------------------------------------------------
  * ASSET CLASS option switches, 1 or 0 : AC_data.switches (AC_manager)  //DPS:TEST
  *             Switches will be duplicated from root 
  * bit1  -- If set, cannot change URI after initial setting
