@@ -1070,6 +1070,30 @@ interface AC_MGR_Interface {
         returns (uint8);
 
     /*
+     * @dev get the authorization status of a management type 0 = not allowed  DPS:TEST -- NEW
+     */
+    function getManagementTypeStatus(uint8 _managementType)
+        external
+        view
+        returns (uint8);
+
+    /*
+    * @dev get the authorization status of a storage type 0 = not allowed   DPS:TEST -- NEW
+     */
+    function getStorageProviderStatus(uint8 _storageProvider)
+        external
+        view
+        returns (uint8);
+
+    /*
+    * @dev get the authorization status of a custody type 0 = not allowed   DPS:TEST -- NEW
+     */
+    function getCustodyTypeStatus(uint8 _custodyType)
+        external
+        view
+        returns (uint8);
+
+    /*
      * @dev Retrieve AC_data @ _assetClass
      */
     function getAC_data(uint32 _assetClass)
