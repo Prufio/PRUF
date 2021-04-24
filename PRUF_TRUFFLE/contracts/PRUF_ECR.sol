@@ -122,6 +122,14 @@ contract ECR is ECR_CORE {
     }
 
     /*
+     * @dev A standard function for all escrow contracts which returns all relevant data about an escrow
+     * in this case only the relevant escrowData struct
+     */
+    function getEscrowParameters (bytes32 _idxHash) external returns (escrowData memory){
+        return(getEscrowData(_idxHash));
+    }
+
+    /*
      * @dev Takes asset out of excrow status if time period has resolved || is escrow issuer
      */
     function endEscrow(bytes32 _idxHash)
