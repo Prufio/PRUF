@@ -226,7 +226,7 @@ contract NP is CORE {
     {
         Record memory rec = getRecord(_idxHash);
         uint8 userType = getCallingUserType(rec.assetClass);
-        AC memory AC_info = getACinfo(rec.assetClass);
+        //AC memory AC_info = getACinfo(rec.assetClass);
 
         require(
             (userType > 0) && (userType < 10),
@@ -243,7 +243,7 @@ contract NP is CORE {
 
         APP.transferAssetToken(_addr, _idxHash);
         writeRecord(_idxHash, rec);
-        STOR.changeAC(_idxHash, AC_info.assetClassRoot);
+        //STOR.changeAC(_idxHash, AC_info.assetClassRoot);
 
         return rec.assetStatus;
         //^^^^^^^interactions^^^^^^^^^
