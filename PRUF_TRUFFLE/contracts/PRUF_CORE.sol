@@ -50,19 +50,20 @@ contract CORE is BASIC {
             "C:CR:Cannot create asset in a root asset class"
         );
         require(
-            (AC_info.managementType < 5),
-            "C:CR:Contract does not support management types > 4 or AC is locked"
+            (AC_info.managementType < 6),
+            "C:CR:Contract does not support management types > 5 or AC is locked"
         );
         if (AC_info.custodyType != 1) {
             if (
-                (AC_info.managementType == 1) || (AC_info.managementType == 2)
+                (AC_info.managementType == 1) ||
+                (AC_info.managementType == 2) ||
+                (AC_info.managementType == 5)
             ) {
                 require(
                     (AC_TKN.ownerOf(_assetClass) == _msgSender()),
-                    "C:CR:Cannot create asset in AC mgmt type 1||2 - caller does not hold AC token"
+                    "C:CR:Cannot create asset in AC mgmt type 1||2||5 - caller does not hold AC token"
                 );
-            }
-            if (AC_info.managementType == 3) {
+            } else if (AC_info.managementType == 3) {
                 require(
                     AC_MGR.getUserType(
                         keccak256(abi.encodePacked(_msgSender())),
@@ -70,8 +71,7 @@ contract CORE is BASIC {
                     ) == 1,
                     "C:CR:Cannot create asset - caller address not authorized"
                 );
-            }
-            if (AC_info.managementType == 4) {
+            } else if (AC_info.managementType == 4) {
                 require(
                     ID_TKN.trustedLevelByAddress(_msgSender()) > 9,
                     "C:CR:Caller does not hold sufficiently trusted ID (10+)"
@@ -127,6 +127,18 @@ contract CORE is BASIC {
         virtual
         whenNotPaused
     {
+        AC memory AC_info = getACinfo(_rec.assetClass);
+
+        require(
+            (AC_info.managementType < 6),
+            "C:CR:Contract does not support management types > 5 or AC is locked"
+        );
+        if ((AC_info.custodyType != 1) && (AC_info.managementType == 5)) {
+            require(
+                (AC_TKN.ownerOf(_rec.assetClass) == _msgSender()),
+                "C:WIPFS1: Caller must hold ACnode (management type 5)"
+            );
+        }
         //^^^^^^^Checks^^^^^^^^^
 
         STOR.modifyIpfs1(_idxHash, _rec.Ipfs1a, _rec.Ipfs1b); // Send data to storage
@@ -182,10 +194,11 @@ contract CORE is BASIC {
     /*
      * @dev Send payment to appropriate  adresses
      */
-    function deductRecycleCosts(
-        uint32 _assetClass,
-        address _oldOwner 
-    ) internal virtual whenNotPaused {
+    function deductRecycleCosts(uint32 _assetClass, address _oldOwner)
+        internal
+        virtual
+        whenNotPaused
+    {
         //^^^^^^^checks^^^^^^^^^
         Invoice memory pricing;
         uint256 half;

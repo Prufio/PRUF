@@ -88,7 +88,11 @@ contract NP_NC is CORE {
             rec.assetStatus == 51,
             "NPNC:EX: Must be in transferrable status (51)"
         );
-        if (AC_info.managementType == 1) {
+        require(
+            (AC_info.managementType < 6),
+            "NPNC:EX: Contract does not support management types > 5 or AC is locked"
+        );
+        if ((AC_info.managementType == 1) || (AC_info.managementType == 5)) {
             require( //holds AC token if AC is restricted --------DPS TEST ---- NEW
                 (AC_TKN.ownerOf(rec.assetClass) == _msgSender()),
                 "NPNC:EX: Restricted from exporting assets from this AC - does not hold ACtoken"
@@ -210,12 +214,11 @@ contract NP_NC is CORE {
     /*
      * @dev Modify **Record**.Ipfs1a with confirmation
      */
-    function _modIpfs1(bytes32 _idxHash, bytes32 _Ipfs1a, bytes32 _Ipfs1b)
-        external
-        nonReentrant
-        whenNotPaused
-        isAuthorized(_idxHash)
-    {
+    function _modIpfs1(
+        bytes32 _idxHash,
+        bytes32 _Ipfs1a,
+        bytes32 _Ipfs1b
+    ) external nonReentrant whenNotPaused isAuthorized(_idxHash) {
         Record memory rec = getRecord(_idxHash);
 
         require( //IMPOSSIBLE, ASSET CANNOT MEET STATUS IN NC CONTRACTS CTS:PREFERRED

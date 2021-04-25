@@ -111,7 +111,6 @@ contract APP_NC is CORE {
         deductServiceCosts(_assetClass, 1);
         //^^^^^^^interactions^^^^^^^^^
     }
-    
 
     /*
      * @dev Import a record into a new asset class
@@ -131,16 +130,19 @@ contract APP_NC is CORE {
             "ANC:IA: !Change AC to new root"
         );
         require(
-                (AC_info.managementType < 5),
-                "ANC:IA: Contract does not support management types > 4 or AC is locked"
+            (AC_info.managementType < 6),
+            "ANC:IA: Contract does not support management types > 5 or AC is locked"
         );
-        if ((AC_info.managementType == 1) || (AC_info.managementType == 2)) {
+        if (
+            (AC_info.managementType == 1) ||
+            (AC_info.managementType == 2) ||
+            (AC_info.managementType == 5)
+        ) {
             require(
                 (AC_TKN.ownerOf(_newAssetClass) == _msgSender()),
-                "ANC:IA: Cannot create asset in AC mgmt type 1||2 - caller does not hold AC token"
+                "ANC:IA: Cannot create asset in AC mgmt type 1||2||5 - caller does not hold AC token"
             );
-        }
-        if (AC_info.managementType == 3) {
+        } else if (AC_info.managementType == 3) {
             require(
                 AC_MGR.getUserType(
                     keccak256(abi.encodePacked(_msgSender())),
@@ -148,8 +150,7 @@ contract APP_NC is CORE {
                 ) == 1,
                 "ANC:IA: Cannot create asset - caller address !authorized"
             );
-        }
-        if (AC_info.managementType == 4) {
+        } else if (AC_info.managementType == 4) {
             require(
                 ID_TKN.trustedLevelByAddress(_msgSender()) > 10,
                 "ANC:IA: Caller !trusted ID holder"
@@ -169,12 +170,11 @@ contract APP_NC is CORE {
     /*
      * @dev Modify record.Ipfs2
      */
-    function addIpfs2Note(bytes32 _idxHash, bytes32 _Ipfs2a, bytes32 _Ipfs2b)
-        external
-        nonReentrant
-        whenNotPaused
-        isAuthorized(_idxHash)
-    {
+    function addIpfs2Note(
+        bytes32 _idxHash,
+        bytes32 _Ipfs2a,
+        bytes32 _Ipfs2b
+    ) external nonReentrant whenNotPaused isAuthorized(_idxHash) {
         Record memory rec = getRecord(_idxHash);
         require( //STATE UNREACHABLE
             needsImport(rec.assetStatus) == 0,

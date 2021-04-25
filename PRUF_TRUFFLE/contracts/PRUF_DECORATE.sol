@@ -271,6 +271,16 @@ contract DECORATE is CORE {
             "D:MI1:Asset class.custodyType != 5 & record must exist"
         );
         require(
+            (AC_info.managementType < 6),
+            "C:CR:Contract does not support management types > 5 or AC is locked"
+        );
+        if ((AC_info.custodyType != 1) && (AC_info.managementType == 5)) {
+            require(
+                (AC_TKN.ownerOf(rec.assetClass) == _msgSender()),
+                "C:WIPFS1: Caller must hold ACnode (management type 5)"
+            );
+        }
+        require(
             (AC_info.referenceAddress == _tokenContract) ||
                 (AC_info.referenceAddress == address(0)),
             "D:MI1:Asset class extended data must be '0' or ERC721 contract address"
@@ -295,6 +305,7 @@ contract DECORATE is CORE {
     /*
      * @dev Modify **Record**.Ipfs2
      */
+
     function addIpfs2Note(
         uint256 _tokenID,
         address _tokenContract,
@@ -352,6 +363,16 @@ contract DECORATE is CORE {
             "D:E:Asset class.custodyType != 5 & record must exist"
         );
         require(
+            (AC_info.managementType < 6),
+            "C:CR:Contract does not support management types > 5 or AC is locked"
+        );
+        if ((AC_info.managementType == 1) || (AC_info.managementType == 5)) {
+            require( //holds AC token if AC is restricted --------DPS TEST ---- NEW
+                (AC_TKN.ownerOf(rec.assetClass) == _msgSender()),
+                "D:E: Restricted from exporting assets from this AC - does not hold ACtoken"
+            );
+        }
+        require(
             (AC_info.referenceAddress == _tokenContract) ||
                 (AC_info.referenceAddress == address(0)),
             "D:E:Asset class extended data must be '0' or ERC721 contract address"
@@ -391,26 +412,48 @@ contract DECORATE is CORE {
         AC memory newAC_info = getACinfo(_newAssetClass);
 
         require(
-            ((AC_info.custodyType == 5) || AC_info.custodyType == 3) &&
-                (newAC_info.custodyType == 5),
+            (AC_info.custodyType == 5) && (newAC_info.custodyType == 5), //only allow import of other wrappers
             "D:I:Asset class.custodyType != 5 & record must exist"
-        );
-        require(
-            (AC_info.managementType < 5),
-            "D:I:Contract does not support management types > 4 or AC is locked"
         );
         require(
             ((AC_info.referenceAddress == _tokenContract) ||
                 (AC_info.referenceAddress == address(0))) &&
                 ((newAC_info.referenceAddress == _tokenContract) ||
                     (newAC_info.referenceAddress == address(0))),
-            "D:I:Asset class extended data must be '0' or ERC721 contract address"
+            "D:I:Asset class extended data must be '0' or ERC721 contract address" //if AC has a contract erc721address specified, it must match
         );
         require(rec.assetStatus == 70, "D:I: Asset not exported");
         require(
             AC_MGR.isSameRootAC(_newAssetClass, rec.assetClass) == 170,
             "D:I:Cannot change AC to new root"
         );
+        require(
+            (newAC_info.managementType < 6),
+            "D:I: Contract does not support management types > 5 or AC is locked"
+        );
+        if (
+            (newAC_info.managementType == 1) ||
+            (newAC_info.managementType == 2) ||
+            (newAC_info.managementType == 5)
+        ) {
+            require(
+                (AC_TKN.ownerOf(_newAssetClass) == _msgSender()),
+                "D:I: Cannot create asset in AC mgmt type 1||2||5 - caller does not hold AC token"
+            );
+        } else if (newAC_info.managementType == 3) {
+            require(
+                AC_MGR.getUserType(
+                    keccak256(abi.encodePacked(_msgSender())),
+                    _newAssetClass
+                ) == 1,
+                "D:I: Cannot create asset - caller address !authorized"
+            );
+        } else if (newAC_info.managementType == 4) {
+            require(
+                ID_TKN.trustedLevelByAddress(_msgSender()) > 10,
+                "D:I: Caller !trusted ID holder"
+            );
+        }
         //^^^^^^^checks^^^^^^^^^
 
         rec.assetStatus = 52;
@@ -444,15 +487,18 @@ contract DECORATE is CORE {
         );
         require(
             (AC_info.managementType < 5),
-            "D:CRO:Contract does not support management types > 4 or AC is locked"
+            "D:CRO:Contract does not support management types > 5 or AC is locked"
         );
-        if ((AC_info.managementType == 1) || (AC_info.managementType == 2)) {
+        if (
+            (AC_info.managementType == 1) ||
+            (AC_info.managementType == 2) ||
+            (AC_info.managementType == 5)
+        ) {
             require(
                 (AC_TKN.ownerOf(_assetClass) == _msgSender()),
-                "D:CRO:Cannot create asset in AC mgmt type 1||2 - caller does not hold AC token"
+                "D:CRO:Cannot create asset in AC mgmt type 1||2||5 - caller does not hold AC token"
             );
-        }
-        if (AC_info.managementType == 3) {
+        } else if (AC_info.managementType == 3) {
             require(
                 AC_MGR.getUserType(
                     keccak256(abi.encodePacked(_msgSender())),
@@ -460,8 +506,7 @@ contract DECORATE is CORE {
                 ) == 1,
                 "D:CRO:Cannot create asset - caller address not authorized"
             );
-        }
-        if (AC_info.managementType == 4) {
+        } else if (AC_info.managementType == 4) {
             require(
                 ID_TKN.trustedLevelByAddress(_msgSender()) > 10,
                 "D:CRO:Caller does not hold sufficiently trusted ID"

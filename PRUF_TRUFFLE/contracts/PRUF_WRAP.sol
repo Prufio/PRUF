@@ -123,10 +123,7 @@ contract WRAP is CORE {
         address foreignTokenContract = wrapped[_tokenID].tokenContract;
         uint256 foreignTokenID = wrapped[_tokenID].tokenID;
 
-        require(
-            AC_info.custodyType == 5,
-            "W:UW: Asset class.custodyType != 5"
-        );
+        require(AC_info.custodyType == 5, "W:UW: Asset class.custodyType != 5");
         require( // CTS:PREFERRED, STAT UNREACHABLE WITH CURRENT CONTRACTS
             (AC_info.referenceAddress == foreignTokenContract) ||
                 (AC_info.referenceAddress == address(0)),
@@ -184,22 +181,27 @@ contract WRAP is CORE {
             "W:CR: Cannot create asset - contract not authorized for asset class custody type"
         );
         require(
-                (AC_info.managementType < 5),
-                "W:CR: Contract does not support management types > 4 or AC is locked"
+            (AC_info.managementType < 6),
+            "W:CR: Contract does not support management types > 5 or AC is locked"
         );
-        if ((AC_info.managementType == 1) || (AC_info.managementType == 2)) {
-            require( 
+        if (
+            (AC_info.managementType == 1) ||
+            (AC_info.managementType == 2) ||
+            (AC_info.managementType == 5)
+        ) {
+            require(
                 (AC_TKN.ownerOf(_assetClass) == _msgSender()),
-                "W:CR: Cannot create asset in AC mgmt type 1||2 - caller does not hold AC token"
+                "W:CR: Cannot create asset in AC mgmt type 1||2||5 - caller does not hold AC token"
             );
-        }
-        if (AC_info.managementType == 3) {
-            require( 
-                AC_MGR.getUserType(keccak256(abi.encodePacked(_msgSender())), _assetClass) == 1,
+        } else if (AC_info.managementType == 3) {
+            require(
+                AC_MGR.getUserType(
+                    keccak256(abi.encodePacked(_msgSender())),
+                    _assetClass
+                ) == 1,
                 "W:CR:Cannot create asset - caller address not authorized"
             );
-        }
-        if (AC_info.managementType == 4) {
+        } else if (AC_info.managementType == 4) {
             require(
                 ID_TKN.trustedLevelByAddress(_msgSender()) > 10,
                 "W:CR:Caller does not hold sufficiently trusted ID"
