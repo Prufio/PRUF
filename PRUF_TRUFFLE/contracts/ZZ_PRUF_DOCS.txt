@@ -38,6 +38,10 @@ pragma solidity ^0.6.7;
  * staking, 2% to stskers, 3% to root_address
  * 
  *
+ *      * 25% staker rewards on nodes, nodeholders can stake.
+ *      
+ *      * get out on ALL bridged EVM pltforms ASAP 
+ *
  *      * refactor all require(local condition || external condition) => if(local condition){require (external condition)}
  * 
  *      * make an auction escrow contract
