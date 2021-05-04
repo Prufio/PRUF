@@ -85,7 +85,7 @@ contract ECR_NC is ECR_CORE {
 
     /*
      * @dev A standard function for all escrow contracts which returns all relevant data about an escrow
-     * in this case only the relevant escrowData struct
+     * in this case only the relevant escrowData struct DPS:TEST
      */
     function getEscrowParameters (bytes32 _idxHash) external returns (escrowData memory){
         return(getEscrowData(_idxHash));
