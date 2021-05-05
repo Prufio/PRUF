@@ -247,6 +247,10 @@ contract FAUCET is ReentrancyGuard, Pausable, AccessControl {
     function GET_ID() external nonReentrant whenNotPaused {
         //^^^^^^^checks^^^^^^^^^
         //^^^^^^^effects^^^^^^^^
+        require(
+            ID_TKN.balanceOf(_msgSender()) < 1, //_msgSender() is token holder
+            "PP:GI: Caller is PRuF_ID holder"
+        );
         tokenId++;
         ID_TKN.mintPRUF_IDToken(_msgSender(), tokenId, "0");
         ID_TKN.setTrustLevel(tokenId, 10);
