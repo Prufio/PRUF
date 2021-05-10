@@ -12,17 +12,21 @@ __/\\\\\\\\\\\\\ _____/\\\\\\\\\ _______/\\../\\ ___/\\\\\\\\\\\\\\\
 
 /*-----------------------------------------------------------------
  *  TO DO
- *
+ * //CTS:EXAMINE all params/returns defined in comments global
+ * //CTS:EXAMINE AssetClass, asset class, assetClass->Node global
+ * //CTS:EXAMINE AssetClassRoot, asset class root, root->RootNode global
+ * //CTS:EXAMINE IPFS1/IPFS2->storProvider/storProvider2 global
+
  *---------------------------------------------------------------*/
 
 /*-----------------------------------------------------------------
- *  PRUF STOR  is the primary data repository for the PRUF system. No direct user writes are permitted in STOR, all data must come from explicitly approved contracts.
+ *  PRUF STOR  is the primary data repository for the PRUF network. No direct user writes are permitted in STOR, all data must come from explicitly approved contracts. //CTS:EXAMINE maybe change the word "network" in the beginning
  *  PRUF STOR  stores records in a map of Records, foreward and reverse name resolution for approved contracts, as well as contract authorization data.
  *---------------------------------------------------------------*/
 
 /*-----------------------------------------------------------------
  * IMPORTANT NOTE : DO NOT REMOVE FROM CODE:
- *      Verification of rgtHash in curated, custodial classes are not secure beyond the honorable intentions
+ *      Verification of rgtHash in curated, custodial classes are not secure beyond the honorable intentions //CTS:EXAMINE change wording for custodial to management types
  * of authorized recorders. All blockchain info is readable, so a bad actor could trivially obtain a copy of the
  * correct rgtHash on chain. This "stumbling block" measure is in place primarily to keep honest people honest, and
  * to require an actual, malicious effort to bypass security rather than a little copy-paste. Actual decentralized
@@ -69,7 +73,7 @@ contract STOR is AccessControl, ReentrancyGuard, Pausable {
     /*
      * @dev Verify user credentials
      * Originating Address:
-     *      is admin
+     *      is admin //CTS:EXAMINE "is Contract Admin"?
      */
     modifier isAdmin() {
         require(
@@ -94,7 +98,7 @@ contract STOR is AccessControl, ReentrancyGuard, Pausable {
 
     /*
      * @dev Verify user credentials
-     *
+     * //CTS:EXAMINE param
      * Originating Address is authorized for asset class
      */
     modifier isAuthorized(uint32 _assetClass) {
@@ -108,7 +112,9 @@ contract STOR is AccessControl, ReentrancyGuard, Pausable {
     }
 
     /*
-     * @dev Check record _idxHash is not in escrow
+     * @dev Check record is not in escrow
+     * //CTS:EXAMINE param
+     * //CTS:EXAMINE should isEscrow just take an idx?
      */
     modifier notEscrow(bytes32 _idxHash) {
         require(
@@ -119,7 +125,8 @@ contract STOR is AccessControl, ReentrancyGuard, Pausable {
     }
 
     /*
-     * @dev Check record _idxHash exists in database
+     * @dev Check record exists in database
+     * //CTS:EXAMINE param
      */
     modifier exists(bytes32 _idxHash) {
         require(database[_idxHash].assetClass != 0, "S:MOD-E: Rec !exist");
@@ -127,18 +134,20 @@ contract STOR is AccessControl, ReentrancyGuard, Pausable {
     }
 
     /*
-     * @dev Check to see if contract address resolves to ECR_MGR
+     * @dev Check to see if contract address resolves to ECR_MGR //CTS:EXAMINE "...if caller address..."
      */
     modifier isEscrowManager() {
         require(
             _msgSender() == contractNameToAddress["ECR_MGR"],
-            "S:MOD-IEM: Caller not ECR_MGR"
+            "S:MOD-IEM: Caller not ECR_MGR" //CTS:EXAMINE "Caller !ECR_MGR"
         );
         _;
     }
 
     /*
-     * @dev Check to see a status matches lost or stolen status
+     * @dev Check to see a status matches lost or stolen status //CTS:EXAMINE "...to see if a status matches..."
+     * //CTS:EXAMINE param
+     * //CTS:EXAMINE return
      */
     function isLostOrStolen(uint8 _assetStatus) private pure returns (uint8) {
         if (
@@ -154,7 +163,9 @@ contract STOR is AccessControl, ReentrancyGuard, Pausable {
     }
 
     /*
-     * @dev Check to see a status matches transferred status
+     * @dev Check to see a status matches transferred status //CTS:EXAMINE "...to see if a status matches..."
+     * //CTS:EXAMINE param
+     * //CTS:EXAMINE return
      */
     function isTransferred(uint8 _assetStatus) private pure returns (uint8) {
         if ((_assetStatus != 5) && (_assetStatus != 55)) {
@@ -166,6 +177,8 @@ contract STOR is AccessControl, ReentrancyGuard, Pausable {
 
     /*
      * @dev Check to see a status matches escrow status
+     * //CTS:EXAMINE param
+     * //CTS:EXAMINE return
      */
     function isEscrow(uint8 _assetStatus) private pure returns (uint8) {
         if (
@@ -181,7 +194,7 @@ contract STOR is AccessControl, ReentrancyGuard, Pausable {
     }
 
     //-----------------------------------------------Events------------------------------------------------//
-
+    //CTS:EXAMINE comment
     event REPORT(string _msg, bytes32 b32);
 
     //--------------------------------Internal Admin functions / isAdmin---------------------------------//
@@ -201,8 +214,12 @@ contract STOR is AccessControl, ReentrancyGuard, Pausable {
     }
 
     /*
-     * @dev Authorize / Deauthorize / Authorize ADRESSES permitted to make record modifications, per AssetClass
+     * @dev Authorize / Deauthorize / Authorize ADRESSES permitted to make record modifications, per AssetClass //CTS:EXAMINE "Authorize" twice in intro
      * populates contract name resolution and data mappings
+     * //CTS:EXAMINE param
+     * //CTS:EXAMINE param
+     * //CTS:EXAMINE param
+     * //CTS:EXAMINE param
      */
     function OO_addContract(
         string calldata _name,
@@ -210,22 +227,22 @@ contract STOR is AccessControl, ReentrancyGuard, Pausable {
         uint32 _assetClass,
         uint8 _contractAuthLevel
     ) external isAdmin {
-        require(_assetClass == 0, "S:AC: AC !0");
+        require(_assetClass == 0, "S:AC: AC !0"); //CTS:EXAMINE "AC = 0"
         //^^^^^^^checks^^^^^^^^^
 
-        contractInfo[_name][_assetClass] = _contractAuthLevel; //does not pose an partial record overwrite risk
+        contractInfo[_name][_assetClass] = _contractAuthLevel; //does not pose an partial record overwrite risk //CTS:EXAMINE are vvv these vvv neccesary
         contractNameToAddress[_name] = _addr; //does not pose an partial record overwrite risk
         contractAddressToName[_addr] = _name; //does not pose an partial record overwrite risk
 
-        AC_TKN = AC_TKN_Interface(contractNameToAddress["AC_TKN"]);
+        AC_TKN = AC_TKN_Interface(contractNameToAddress["AC_TKN"]); //CTS:EXAMINE does this need to happen every time? ex. if (_name = AC_TKN) {=>} ?
         AC_MGR = AC_MGR_Interface(contractNameToAddress["AC_MGR"]);
         //^^^^^^^effects^^^^^^^^^
 
-        emit REPORT("ACDA", bytes32(uint256(_contractAuthLevel))); //report access to the internal user database
+        emit REPORT("ACDA", bytes32(uint256(_contractAuthLevel))); //report access to the internal user database //CTS:EXAMINE is this neccesary
         //^^^^^^^interactions^^^^^^^^^
     }
 
-    // struct DefaultContract {
+    // struct DefaultContract { //CTS:EXAMINE
     // //Struct for holding and manipulating contract authorization data
     // uint8 contractType; // Auth Level / type
     // string name; // Contract name
@@ -234,9 +251,16 @@ contract STOR is AccessControl, ReentrancyGuard, Pausable {
     /*
      * @dev set the default list of 11 contracts (zero index) to be applied to asset classes
      * APP_NC, NP_NC, AC_MGR, AC_TKN, A_TKN, ECR_MGR, RCLR, PIP, PURCHASE, DECORATE, WRAP
+     * //CTS:EXAMINE param
+     * //CTS:EXAMINE param
+     * //CTS:EXAMINE param
+     * //CTS:EXAMINE:
+        //^^^^^^^checks^^^^^^^^^
+        //^^^^^^^effects^^^^^^^^^
+        //^^^^^^^interactions^^^^^^^^^
      */
     function addDefaultContracts(
-        uint256 _contractNumber, // 0-10
+        uint256 _contractNumber, // 0-10 //CTS:EXAMINE I wouldnt describe params like this, clutters up the code. keep it in the head comment
         string calldata _name, //name
         uint8 _contractAuthLevel //authLevel
     ) public isAdmin {
@@ -247,6 +271,12 @@ contract STOR is AccessControl, ReentrancyGuard, Pausable {
 
     /*
      * @dev retrieve a record from the default list of 11 contracts to be applied to asset classes
+     * //CTS:EXAMINE param
+     * //CTS:EXAMINE return
+     * //CTS:EXAMINE:
+        //^^^^^^^checks^^^^^^^^^
+        //^^^^^^^effects^^^^^^^^^
+        //^^^^^^^interactions^^^^^^^^^
      */
     function getDefaultContract(uint256 _contractNumber)
         public
@@ -259,6 +289,12 @@ contract STOR is AccessControl, ReentrancyGuard, Pausable {
 
     /*
      * @dev Set the default 11 authorized contracts
+     * //CTS:EXAMINE param
+     * //CTS:EXAMINE should remain public, reqs should check if caller is ACTH or AC_MGR for future contract upgrade purposes
+     * //CTS:EXAMINE:
+        //^^^^^^^checks^^^^^^^^^
+        //^^^^^^^effects^^^^^^^^^
+        //^^^^^^^interactions^^^^^^^^^
      */
     function enableDefaultContractsForAC(uint32 _assetClass) public {
         require(
@@ -323,8 +359,11 @@ contract STOR is AccessControl, ReentrancyGuard, Pausable {
     }
 
     /*
-     * @dev Authorize / Deauthorize / Authorize contract NAMES permitted to make record modifications, per AssetClass
-     * allows ACtokenHolder to auithorize or deauthorize specific contracts to work within their asset class
+     * @dev Authorize / Deauthorize / Authorize contract NAMES permitted to make record modifications, per AssetClass //CTS:EXAMINE "Authorize" twice in intro, "deauthorize"->"unauthorize"
+     * allows ACtokenHolder to auithorize or deauthorize specific contracts to work within their asset class //CTS:EXAMINE "auithorize"->"authorize", "deauthorize"->"unauthorize"
+     * //CTS:EXAMINE param
+     * //CTS:EXAMINE param
+     * //CTS:EXAMINE param
      */
     function enableContractForAC(
         string memory _name,
@@ -334,15 +373,15 @@ contract STOR is AccessControl, ReentrancyGuard, Pausable {
         require(
             (AC_TKN.ownerOf(_assetClass) == _msgSender()) ||
                 (_msgSender() == contractNameToAddress["AC_MGR"]),
-            "S:ECFAC: Caller not ACtokenHolder"
+            "S:ECFAC: Caller not ACtokenHolder" //CTS:EXAMINE || AC_MGR
         );
 
         //^^^^^^^checks^^^^^^^^^
 
-        contractInfo[_name][_assetClass] = _contractAuthLevel; //does not pose an partial record overwrite risk
+        contractInfo[_name][_assetClass] = _contractAuthLevel; //does not pose an partial record overwrite risk //CTS:EXAMINE comment neccesary?
         //^^^^^^^effects^^^^^^^^^
 
-        emit REPORT("ACDA", bytes32(uint256(_contractAuthLevel))); //report access to the internal user database
+        emit REPORT("ACDA", bytes32(uint256(_contractAuthLevel))); //report access to the internal user database //CTS:EXAMINE neccesary?
         //^^^^^^^interactions^^^^^^^^^
     }
 
@@ -350,6 +389,10 @@ contract STOR is AccessControl, ReentrancyGuard, Pausable {
 
     /*
      * @dev Make a new record, writing to the 'database' mapping with basic initial asset data
+     * //CTS:EXAMINE param
+     * //CTS:EXAMINE param
+     * //CTS:EXAMINE param
+     * //CTS:EXAMINE param
      */
     function newRecord(
         bytes32 _idxHash,
@@ -360,21 +403,21 @@ contract STOR is AccessControl, ReentrancyGuard, Pausable {
         external
         nonReentrant
         whenNotPaused
-        isAuthorized(_assetClass) //calling contract must be authorized in relevant assetClass
+        isAuthorized(_assetClass) //calling contract must be authorized in relevant assetClass //CTS:EXAMINE are these kind of comments neccesary? They can(and should) track down the function if they want to know what it does
     {
         require(
             database[_idxHash].assetStatus != 60,
             "S:NR: Asset discarded use APP_NC rcycl"
         );
-        require(database[_idxHash].assetClass == 0, "S:NR: Rec already exists"); // CTS:PREFERRED
+        require(database[_idxHash].assetClass == 0, "S:NR: Rec already exists");
         require(_rgtHash != 0, "S:NR: RGT = 0");
-        require(_assetClass != 0, "S:NR: AC = 0"); //CTS:PREFERRED
+        require(_assetClass != 0, "S:NR: AC = 0");
         //^^^^^^^checks^^^^^^^^^
 
         Record memory rec;
 
         if (
-            contractInfo[contractAddressToName[_msgSender()]][_assetClass] == 1
+            contractInfo[contractAddressToName[_msgSender()]][_assetClass] == 1 //CTS:EXAMINE, what do management types do to how we handle "custodial" status'
         ) {
             rec.assetStatus = 0;
         } else {
@@ -382,7 +425,7 @@ contract STOR is AccessControl, ReentrancyGuard, Pausable {
         }
 
         rec.assetClass = _assetClass;
-        rec.countDownStart = _countDownStart;
+        rec.countDownStart = _countDownStart; //CTS:EXAMINE put in order, put rgt here, move this one step down. just to prettify
         rec.countDown = _countDownStart;
         rec.rightsHolder = _rgtHash;
 
@@ -395,13 +438,19 @@ contract STOR is AccessControl, ReentrancyGuard, Pausable {
 
     /*
      * @dev Modify a record, writing to the 'database' mapping with updates to multiple fields
+     * //CTS:EXAMINE param
+     * //CTS:EXAMINE param
+     * //CTS:EXAMINE param
+     * //CTS:EXAMINE param
+     * //CTS:EXAMINE param
+     * //CTS:EXAMINE param
      */
     function modifyRecord(
         bytes32 _idxHash,
         bytes32 _rgtHash,
         uint8 _newAssetStatus,
         uint32 _countDown,
-        uint256 _incrementForceModCount,
+        uint256 _incrementForceModCount, //CTS:EXAMINE do we want to call it force mod count? doesn't happen without custodial contracts (import, modRGT)
         uint256 _incrementNumberOfTransfers
     )
         external
@@ -425,7 +474,7 @@ contract STOR is AccessControl, ReentrancyGuard, Pausable {
                 (_newAssetStatus == rec.assetStatus),
             "S:MR: Must use ECR"
         );
-        // require(
+        // require( //CTS:EXAMINE remove? done higher up? not sure
         //     (_newAssetStatus != 7) &&
         //         (_newAssetStatus != 57) &&
         //         (_newAssetStatus != 58),
@@ -451,12 +500,14 @@ contract STOR is AccessControl, ReentrancyGuard, Pausable {
         database[idxHash] = rec;
         //^^^^^^^effects^^^^^^^^^
 
-        //emit REPORT("REC MOD", _idxHash);
+        //emit REPORT("REC MOD", _idxHash); //CTS:EXAMINE remove?
         //^^^^^^^interactions^^^^^^^^^
     }
 
     /*
      * @dev Change asset class of an asset - writes to assetClass in the 'Record' struct of the 'database' at _idxHash
+     * //CTS:EXAMINE param
+     * //CTS:EXAMINE param
      */
     function changeAC(bytes32 _idxHash, uint32 _newAssetClass)
         external
@@ -468,25 +519,28 @@ contract STOR is AccessControl, ReentrancyGuard, Pausable {
     {
         Record memory rec = database[_idxHash];
 
-        require(_newAssetClass != 0, "S:CAC: Cannot set AC-0");
+        require(_newAssetClass != 0, "S:CAC: Cannot set AC-0"); //CTS:EXAMINE "AC = 0"
         require( //require new assetClass is in the same root as old assetClass
             AC_MGR.isSameRootAC(_newAssetClass, rec.assetClass) == 170,
             "S:CAC: Cannot mod AC to new root"
         );
-        require((isLostOrStolen(rec.assetStatus) == 0), "S:CAC: L/S asset"); //asset cannot be in lost or stolen status
-        require((isTransferred(rec.assetStatus) == 0), "S:CAC: Txfrd asset"); //asset cannot be in transferred status
+        require((isLostOrStolen(rec.assetStatus) == 0), "S:CAC: L/S asset"); //asset cannot be in lost or stolen status //CTS:EXAMINE remove extra ()
+        require((isTransferred(rec.assetStatus) == 0), "S:CAC: Txfrd asset"); //asset cannot be in transferred status //CTS:EXAMINE remove extra ()
         //^^^^^^^checks^^^^^^^^^
 
         rec.assetClass = _newAssetClass;
         database[_idxHash] = rec;
         //^^^^^^^effects^^^^^^^^^
 
-        //emit REPORT("UPD AC", _idxHash);
+        //emit REPORT("UPD AC", _idxHash); //CTS:EXAMINE remove?
         //^^^^^^^interactions^^^^^^^^^
     }
 
     /*
      * @dev Set an asset to stolen or lost. Allows narrow modification of status 6/12 assets, normally locked
+     * //CTS:EXAMINE param
+     * //CTS:EXAMINE param
+     * //CTS:EXAMINE we use "...StolenOrLost", but reference it as "L/S" or "...LostOrStolen" everywhere. a little awkward.
      */
     function setStolenOrLost(bytes32 _idxHash, uint8 _newAssetStatus)
         external
@@ -499,13 +553,13 @@ contract STOR is AccessControl, ReentrancyGuard, Pausable {
 
         require(
             isLostOrStolen(_newAssetStatus) == 170, //proposed new status must be L/S status
-            "S:SSL: Must set to L/S"
+            "S:SSL: Must set to L/S" //CTS:EXAMINE "Already L/S"
         );
-        require( //asset cannot be set l/s if in transferred or locked escrow status
+        require( //asset cannot be set l/s if in transferred or locked escrow status //CTS:EXAMINE cap "...l/s..."
             (rec.assetStatus != 5) &&
                 (rec.assetStatus != 50) &&
                 (rec.assetStatus != 55), //STATE UNREACHABLE TO SET TO STAT 55 IN CURRENT CONTRACTS
-            "S:SSL: Txfr or ecr-locked asset != L/S."
+            "S:SSL: Txfr or ecr-locked asset != L/S." //CTS:EXAMINE remove "...!= L/S"
         );
         //^^^^^^^checks^^^^^^^^^
 
@@ -513,6 +567,7 @@ contract STOR is AccessControl, ReentrancyGuard, Pausable {
         database[_idxHash] = rec;
         //^^^^^^^effects^^^^^^^^^
 
+        //CTS:EXAMINE remove? vvvv
         // if ((_newAssetStatus == 3) || (_newAssetStatus == 53)) {
         //     emit REPORT("STOLEN", _idxHash);
         // } else {
@@ -523,19 +578,21 @@ contract STOR is AccessControl, ReentrancyGuard, Pausable {
 
     /*
      * @dev Set an asset to escrow locked status (6/50/56).
+     * //CTS:EXAMINE param
+     * //CTS:EXAMINE param
      */
     function setEscrow(bytes32 _idxHash, uint8 _newAssetStatus)
         external
         nonReentrant
         whenNotPaused
-        isEscrowManager
+        isEscrowManager //CTS:EXAMINE add -> calling contract must be ECR_MGR
         exists(_idxHash) //asset must exist in 'database'
         notEscrow(_idxHash) // asset must not be held in escrow status
     {
         Record memory rec = database[_idxHash];
-        require(isEscrow(_newAssetStatus) == 170, "S:SE: Stat must = ecr"); //proposed new status must be an escrow status
-        require((isLostOrStolen(rec.assetStatus) == 0), "S:SE: L/S asset"); //asset cannot be in lost or stolen status
-        require((isTransferred(rec.assetStatus) == 0), "S:SE: Txfrd asset"); //asset cannot be in transferred status
+        require(isEscrow(_newAssetStatus) == 170, "S:SE: Stat must = ecr"); //proposed new status must be an escrow status //CTS:EXAMINE "Stat !ECR"
+        require((isLostOrStolen(rec.assetStatus) == 0), "S:SE: L/S asset"); //asset cannot be in lost or stolen status //CTS:EXAMINE remove extra ()
+        require((isTransferred(rec.assetStatus) == 0), "S:SE: Txfrd asset"); //asset cannot be in transferred status //CTS:EXAMINE remove extra ()
         //^^^^^^^checks^^^^^^^^^
 
         if (_newAssetStatus == 60) {
@@ -546,12 +603,13 @@ contract STOR is AccessControl, ReentrancyGuard, Pausable {
         rec.assetStatus = _newAssetStatus;
         database[_idxHash] = rec;
         //^^^^^^^effects^^^^^^^^^
-        //emit REPORT("ECR SET", _idxHash);
+        //emit REPORT("ECR SET", _idxHash); //CTS:EXAMINE remove?
         //^^^^^^^interactions^^^^^^^^^
     }
 
     /*
      * @dev remove an asset from escrow status. Implicitly trusts escrowManager ECR_MGR contract
+     * //CTS:EXAMINE param
      */
     function endEscrow(bytes32 _idxHash)
         external
@@ -561,7 +619,7 @@ contract STOR is AccessControl, ReentrancyGuard, Pausable {
         exists(_idxHash) //asset must exist in 'database' REDUNDANT THROWS IN ECR_MGR WITH "Asset not in escrow status"
     {
         Record memory rec = database[_idxHash];
-        require(isEscrow(rec.assetStatus) == 170, "S:EE: !Ecr stat"); //asset must be in an escrow status CTS:PREFERRED
+        require(isEscrow(rec.assetStatus) == 170, "S:EE: !Ecr stat"); //asset must be in an escrow status //CTS:EXAMINE "Stat !ECR"
         //^^^^^^^checks^^^^^^^^^
 
         if (rec.assetStatus == 6) {
@@ -579,12 +637,15 @@ contract STOR is AccessControl, ReentrancyGuard, Pausable {
 
         database[_idxHash] = rec;
         //^^^^^^^effects^^^^^^^^^
-        //emit REPORT("ECR END:", _idxHash);
+        //emit REPORT("ECR END:", _idxHash); //CTS:EXAMINE remove?
         //^^^^^^^interactions^^^^^^^^^
     }
 
     /*
      * @dev Modify record sale price and currency data
+     * //CTS:EXAMINE param
+     * //CTS:EXAMINE param
+     * //CTS:EXAMINE param
      */
     function setPrice(
         bytes32 _idxHash,
@@ -594,13 +655,13 @@ contract STOR is AccessControl, ReentrancyGuard, Pausable {
         external
         nonReentrant
         whenNotPaused
-        exists(_idxHash) //asset must exist in 'database' CTS:PREFERRED  REDUNDANT THROWS IN PURCHASE, UNREACHABLE WITH CURRENT CONTRACTS
+        exists(_idxHash) //asset must exist in 'database'
         isAuthorized(database[_idxHash].assetClass) //calling contract must be authorized in relevant assetClass
-    //notEscrow(_idxHash) // asset must not be held in escrow status
+    //notEscrow(_idxHash) // asset must not be held in escrow status //CTS:EXAMINE remove?
     {
         Record memory rec = database[_idxHash];
-        require((isTransferred(rec.assetStatus) == 0), "S:SP: Txfrd asset"); //CTS:PREFERRED REDUNDANT THROWS IN PURCHASE, UNREACHABLE WITH CURRENT CONTRACTS
-        //require(isEscrow(rec.assetStatus) == 0, "S:SP: Escrowed asset");
+        require((isTransferred(rec.assetStatus) == 0), "S:SP: Txfrd asset"); //CTS:EXAMINE remove extra ()
+        //require(isEscrow(rec.assetStatus) == 0, "S:SP: Escrowed asset"); //CTS:EXAMINE remove?
         //^^^^^^^checks^^^^^^^^^
 
         rec.price = _price;
@@ -609,22 +670,23 @@ contract STOR is AccessControl, ReentrancyGuard, Pausable {
         database[_idxHash] = rec;
         //^^^^^^^effects^^^^^^^^^
 
-        //emit REPORT("Price mod", _idxHash);
+        //emit REPORT("Price mod", _idxHash); //CTS:EXAMINE remove?
         //^^^^^^^interactions^^^^^^^^^
     }
 
     /*
      * @dev set record sale price and currency data to zero
+     * //CTS:EXAMINE param
      */
     function clearPrice(bytes32 _idxHash)
         external
         nonReentrant
         whenNotPaused
-        exists(_idxHash) //asset must exist in 'database' REDUNDANT THROWS IN PURCHASE, UNREACHABLE WITH CURRENT CONTRACTS
+        exists(_idxHash) //asset must exist in 'database'
         isAuthorized(database[_idxHash].assetClass) //calling contract must be authorized in relevant assetClass
     {
         Record memory rec = database[_idxHash];
-        require((isTransferred(rec.assetStatus) == 0), "S:CP: Txfrd asset"); // REDUNDANT THROWS IN PURCHASE, UNREACHABLE WITH CURRENT CONTRACTS
+        require((isTransferred(rec.assetStatus) == 0), "S:CP: Txfrd asset"); //CTS:EXAMINE remove extra ()
         //^^^^^^^checks^^^^^^^^^
 
         rec.price = 0;
@@ -633,12 +695,15 @@ contract STOR is AccessControl, ReentrancyGuard, Pausable {
         database[_idxHash] = rec;
         //^^^^^^^effects^^^^^^^^^
 
-        //emit REPORT("Price mod", _idxHash);
+        //emit REPORT("Price mod", _idxHash); //CTS:EXAMINE remove?
         //^^^^^^^interactions^^^^^^^^^
     }
 
     /*
      * @dev Modify record Ipfs1 data
+     * //CTS:EXAMINE param
+     * //CTS:EXAMINE param
+     * //CTS:EXAMINE param
      */
     function modifyIpfs1(
         bytes32 _idxHash,
@@ -653,7 +718,7 @@ contract STOR is AccessControl, ReentrancyGuard, Pausable {
         notEscrow(_idxHash) // asset must not be held in escrow status
     {
         Record memory rec = database[_idxHash];
-        require((isTransferred(rec.assetStatus) == 0), "S:MI1: Txfrd asset"); //STAT UNREACHABLE
+        require((isTransferred(rec.assetStatus) == 0), "S:MI1: Txfrd asset"); //STAT UNREACHABLE //CTS:EXAMINE remove extra ()
 
         require(
             (rec.Ipfs1a != _Ipfs1a) || (rec.Ipfs1b != _Ipfs1b),
@@ -666,12 +731,18 @@ contract STOR is AccessControl, ReentrancyGuard, Pausable {
 
         database[_idxHash] = rec;
         //^^^^^^^effects^^^^^^^^^
-        //emit REPORT("I1 mod", _idxHash);
+        //emit REPORT("I1 mod", _idxHash); //CTS:EXAMINE remove?
         //^^^^^^^interactions^^^^^^^^^
     }
 
+    /*
+     * //CTS:EXAMINE comment?
+     * //CTS:EXAMINE param
+     * //CTS:EXAMINE param
+     * //CTS:EXAMINE param
+     */
     function modifyIpfs2(
-        //bytes32 _userHash,
+        //bytes32 _userHash, //CTS:EXAMINE remove?
         bytes32 _idxHash,
         bytes32 _Ipfs2a,
         bytes32 _Ipfs2b
@@ -684,13 +755,13 @@ contract STOR is AccessControl, ReentrancyGuard, Pausable {
         notEscrow(_idxHash) // asset must not be held in escrow status
     {
         Record memory rec = database[_idxHash];
-        require((isLostOrStolen(rec.assetStatus) == 0), "S:MI2: L/S asset"); //asset cannot be in lost or stolen status
-        require((isTransferred(rec.assetStatus) == 0), "S:MI2: Txfrd. asset"); //asset cannot be in transferred status
+        require((isLostOrStolen(rec.assetStatus) == 0), "S:MI2: L/S asset"); //asset cannot be in lost or stolen status //CTS:EXAMINE remove extra ()
+        require((isTransferred(rec.assetStatus) == 0), "S:MI2: Txfrd. asset"); //asset cannot be in transferred status //CTS:EXAMINE remove extra ()
 
         require(
-            ((rec.Ipfs2a == 0) && (rec.Ipfs2b == 0)) || rec.assetStatus == 201,
+            ((rec.Ipfs2a == 0) && (rec.Ipfs2b == 0)) || rec.assetStatus == 201, //CTS:EXAMINE add () to both sides
             "S:MI2: Cannot overwrite I2"
-        ); //IPFS2 record is immutable after first write unlwss status 201 is set (Storage provider has died)
+        ); //IPFS2 record is immutable after first write unlwss status 201 is set (Storage provider has died) //CTS:EXAMINE "unlwss"->"unless"
         //^^^^^^^checks^^^^^^^^^
 
         rec.Ipfs2a = _Ipfs2a;
@@ -699,13 +770,15 @@ contract STOR is AccessControl, ReentrancyGuard, Pausable {
         database[_idxHash] = rec;
         //^^^^^^^effects^^^^^^^^^
 
-        //emit REPORT("I2 mod", _idxHash);
+        //emit REPORT("I2 mod", _idxHash); //CTS:EXAMINE remove?
         //^^^^^^^interactions^^^^^^^^^
     }
 
     //--------------------------------External READ ONLY contract functions / authuser---------------------------------//
     /*
      * @dev return a record from the database
+     * //CTS:EXAMINE param
+     * //CTS:EXAMINE return
      */
     function retrieveRecord(bytes32 _idxHash)
         external
@@ -719,6 +792,17 @@ contract STOR is AccessControl, ReentrancyGuard, Pausable {
 
     /*
      * @dev return a record from the database w/o rgt
+     * //CTS:EXAMINE param
+     * //CTS:EXAMINE return
+     * //CTS:EXAMINE return
+     * //CTS:EXAMINE return
+     * //CTS:EXAMINE return
+     * //CTS:EXAMINE return
+     * //CTS:EXAMINE return
+     * //CTS:EXAMINE return
+     * //CTS:EXAMINE return
+     * //CTS:EXAMINE return
+     * //CTS:EXAMINE return
      */
     function retrieveShortRecord(bytes32 _idxHash)
         external
@@ -738,7 +822,7 @@ contract STOR is AccessControl, ReentrancyGuard, Pausable {
     {
         Record memory rec = database[_idxHash];
 
-        //  if (
+        //  if ( CTS:EXAMINE remove? 
         //      (rec.assetStatus == 3) ||
         //      (rec.assetStatus == 4) ||
         //      (rec.assetStatus == 53) ||
@@ -764,6 +848,9 @@ contract STOR is AccessControl, ReentrancyGuard, Pausable {
 
     /*
      * @dev return the pricing and currency data from a record
+     * //CTS:EXAMINE param
+     * //CTS:EXAMINE return
+     * //CTS:EXAMINE return
      */
     function getPriceData(bytes32 _idxHash)
         external
@@ -776,6 +863,8 @@ contract STOR is AccessControl, ReentrancyGuard, Pausable {
 
     /*
      * @dev Compare record.rightsholder with supplied bytes32 rightsholder
+     * //CTS:EXAMINE param
+     * //CTS:EXAMINE param
      * return 170 if matches, 0 if not
      */
     function _verifyRightsHolder(bytes32 _idxHash, bytes32 _rgtHash)
@@ -793,6 +882,9 @@ contract STOR is AccessControl, ReentrancyGuard, Pausable {
 
     /*
      * @dev Compare record.rightsholder with supplied bytes32 rightsholder (writes an emit in blockchain for independant verification)
+     * //CTS:EXAMINE param
+     * //CTS:EXAMINE param
+     * //CTS:EXAMINE return
      */
     function blockchainVerifyRightsHolder(bytes32 _idxHash, bytes32 _rgtHash)
         external
@@ -811,6 +903,8 @@ contract STOR is AccessControl, ReentrancyGuard, Pausable {
     /*
      * @dev //returns the address of a contract with name _name. This is for web3 implementations to find the right contract to interact with
      * example :  Frontend = ****** so web 3 first asks storage where to find frontend, then calls for frontend functions.
+     * //CTS:EXAMINE param
+     * //CTS:EXAMINE return
      */
     function resolveContractAddress(string calldata _name)
         external
@@ -823,6 +917,10 @@ contract STOR is AccessControl, ReentrancyGuard, Pausable {
 
     /*
      * @dev //returns the contract type of a contract with address _addr.
+     * //CTS:EXAMINE param
+     * //CTS:EXAMINE param
+     * //CTS:EXAMINE return
+     * //CTS:EXAMINE return
      */
     function ContractInfoHash(address _addr, uint32 _assetClass)
         external
