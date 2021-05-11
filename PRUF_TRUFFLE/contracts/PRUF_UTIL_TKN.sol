@@ -39,8 +39,6 @@ import "./Imports/token/ERC20/ERC20Snapshot.sol";
  *  - a TRUSTED_AGENT_ROLE role that allows authorized addresses to transfer and burn tokens (AC_MGR)
 
 
-
-
  *
  * This contract uses {AccessControl} to lock permissioned functions using the
  * different roles - head to its documentation for details.
@@ -91,74 +89,74 @@ contract UTIL_TKN is
     //------------------------------------------------------------------------MODIFIERS
 
     /*
-     * @dev Verify user credentials
+     * @dev Verify user credentials //CTS:EXAMINE comment kinda weak
      * Originating Address:
-     *      is Admin
+     *      is Admin //CTS:EXAMINE "is Contract Admin"
      */
     modifier isContractAdmin() {
         require(
             hasRole(CONTRACT_ADMIN_ROLE, _msgSender()),
-            "PRuF:MOD-IADM: Must have CONTRACT_ADMIN_ROLE"
+            "PRUF:MOD-IADM: Must have CONTRACT_ADMIN_ROLE" //CTS:EXAMINE "PRUF:MOD-ICA"
         );
         _;
     }
 
     /*
-     * @dev Verify user credentials
+     * @dev Verify user credentials //CTS:EXAMINE comment kinda weak
      * Originating Address:
      *      is Pauser
      */
     modifier isPauser() {
         require(
             hasRole(PAUSER_ROLE, _msgSender()),
-            "PRuF:MOD-IP: Must have PAUSER_ROLE"
+            "PRUF:MOD-IP: Must have PAUSER_ROLE"
         );
         _;
     }
 
     /*
-     * @dev Verify user credentials
+     * @dev Verify user credentials //CTS:EXAMINE comment kinda weak
      * Originating Address:
      *      is Minter
      */
     modifier isMinter() {
         require(
             hasRole(MINTER_ROLE, _msgSender()),
-            "PRuF:MOD-IM: Must have MINTER_ROLE"
+            "PRUF:MOD-IM: Must have MINTER_ROLE"
         );
         _;
     }
 
     /*
-     * @dev Verify user credentials
+     * @dev Verify user credentials //CTS:EXAMINE comment kinda weak
      * Originating Address:
-     *      is Payable in PRuF
+     *      is Payable in PRUF
      */
     modifier isPayable() {
         require(
             hasRole(PAYABLE_ROLE, _msgSender()),
-            "PRuF:MOD-IPAY: Must have PAYABLE_ROLE"
+            "PRUF:MOD-IPAY: Must have PAYABLE_ROLE"
         );
         require(
             trustedAgentEnabled == 1,
-            "PRuF:MOD-IPAY: Trusted Payable Function permanently disabled - use allowance / transferFrom pattern"
+            "PRUF:MOD-IPAY: Trusted Payable Function permanently disabled - use allowance / transferFrom pattern"
         );
         _;
     }
 
     /*
-     * @dev Verify user credentials
+     * @dev Verify user credentials //CTS:EXAMINE comment kinda weak
      * Originating Address:
      *      is Trusted Agent
      */
     modifier isTrustedAgent() {
         require(
             hasRole(TRUSTED_AGENT_ROLE, _msgSender()),
-            "PRuF:MOD-ITA: Must have TRUSTED_AGENT_ROLE"
+            "PRUF:MOD-ITA: Must have TRUSTED_AGENT_ROLE"
         );
         require(
             trustedAgentEnabled == 1,
-            "PRuF:MOD-ITA: Trusted Agent function permanently disabled - use allowance / transferFrom pattern"
+            "PRUF:MOD-ITA: Trusted Agent function permanently disabled - use allowance / transferFrom pattern"
         );
         _;
     }
@@ -170,8 +168,8 @@ contract UTIL_TKN is
      * The workaround for this is to create an allowance for pruf contracts for a single or multiple payments,
      * either ahead of time "loading up your PRUF account" or on demand with an operation. On demand will use quite a bit more gas.
      * "preloading" should be pretty gas efficient, but will add an extra step to the workflow, requiring users to have sufficient
-     * PRuF "banked" in an allowance for use in the system.
-     *
+     * PRUF "banked" in an allowance for use in the system.
+     * //CTS:EXAMINE param
      */
     function adminKillTrustedAgent(uint256 _key) external isContractAdmin {
         if (_key == 170) {
@@ -198,8 +196,10 @@ contract UTIL_TKN is
     }
 
     /*
-     * @dev return an adresses "cold wallet" status
+     * @dev return an adresses "cold wallet" status //CTS:EXAMINE adress->address
      * WALLET ADDRESSES SET TO "Cold" DO NOT WORK WITH TRUSTED_AGENT FUNCTIONS
+     * //CTS:EXAMINE param
+     * //CTS:EXAMINE return
      */
     function isColdWallet(address _addr) external view returns (uint256) {
         return coldWallet[_addr];
@@ -207,11 +207,12 @@ contract UTIL_TKN is
 
     /*
      * @dev Set address of SHARES payment contract. by default contract will use root address instead if set to zero.
+     * //CTS:EXAMINE param
      */
     function AdminSetSharesAddress(address _paymentAddress) external isContractAdmin {
         require(
             _paymentAddress != address(0),
-            "PRuF:ASSA: Payment address cannot be zero"
+            "PRUF:ASSA: Payment address cannot be zero"
         );
 
         //^^^^^^^checks^^^^^^^^^
@@ -220,13 +221,15 @@ contract UTIL_TKN is
         //^^^^^^^effects^^^^^^^^^
     }
 
-    /*
+    /* //CTS:EXAMINE what is this?
      * @dev Deducts token payment from transaction
      * address rootAddress;
        uint256 rootPrice;
        address ACTHaddress;
        uint256 ACTHprice;
        uint32 asset class ----this will be built out to enable staking.
+     * //CTS:EXAMINE param
+     * //CTS:EXAMINE param
      */
      //------------------------- NON-LEGACY
     function payForService(
@@ -235,11 +238,11 @@ contract UTIL_TKN is
     ) external isPayable { //PREFERRED unreachable with current contracts
         require(
             coldWallet[_senderAddress] == 0,
-            "PRuF:PFS: Cold Wallet - Trusted payable functions prohibited"
+            "PRUF:PFS: Cold Wallet - Trusted payable functions prohibited"
         );
         require( //redundant? throws on transfer?
             balanceOf(_senderAddress) >= (invoice.rootPrice + invoice.ACTHprice),
-            "PRuF:PFS: Insufficient balance"
+            "PRUF:PFS: Insufficient balance"
         );
         //^^^^^^^checks^^^^^^^^^
 
@@ -256,10 +259,10 @@ contract UTIL_TKN is
             _transfer(_senderAddress, sharesAddress, sharesShare);
             _transfer(_senderAddress, invoice.ACTHaddress, invoice.ACTHprice);
         }
-        //^^^^^^^effects / interactions^^^^^^^^^
+        //^^^^^^^effects / interactions^^^^^^^^^ //CTS:EXAMINE just interactions
     }
 
-    //------------------------------ LEGACY
+    //------------------------------ LEGACY //CTS:EXAMINE remove?
     // function payForService(
     //     address _senderAddress,
     //     address _rootAddress,
@@ -269,11 +272,11 @@ contract UTIL_TKN is
     // ) external isPayable {
     //     require(
     //         coldWallet[_senderAddress] == 0,
-    //         "PRuF:PFS: Cold Wallet - Trusted payable functions prohibited"
+    //         "PRUF:PFS: Cold Wallet - Trusted payable functions prohibited"
     //     );
     //     require( //redundant? throws on transfer?
     //         balanceOf(_senderAddress) >= (_rootPrice + _ACTHprice),
-    //         "PRuF:PFS: insufficient balance"
+    //         "PRUF:PFS: insufficient balance"
     //     );
     //     //^^^^^^^checks^^^^^^^^^
 
@@ -295,6 +298,8 @@ contract UTIL_TKN is
 
     /*
      * @dev arbitrary burn (requires TRUSTED_AGENT_ROLE)   ****USE WITH CAUTION
+     * //CTS:EXAMINE param
+     * //CTS:EXAMINE param
      */
     function trustedAgentBurn(address _addr, uint256 _amount)
         external
@@ -302,7 +307,7 @@ contract UTIL_TKN is
     {
         require(
             coldWallet[_addr] == 0,
-            "PRuF:TAB: Cold Wallet - Trusted functions prohibited"
+            "PRUF:TAB: Cold Wallet - Trusted functions prohibited"
         );
         //^^^^^^^checks^^^^^^^^^
         _burn(_addr, _amount);
@@ -311,6 +316,9 @@ contract UTIL_TKN is
 
     /*
      * @dev arbitrary transfer (requires TRUSTED_AGENT_ROLE)   ****USE WITH CAUTION
+     * //CTS:EXAMINE param
+     * //CTS:EXAMINE param
+     * //CTS:EXAMINE param
      */
     function trustedAgentTransfer(
         address _from,
@@ -319,7 +327,7 @@ contract UTIL_TKN is
     ) external isTrustedAgent {
         require(
             coldWallet[_from] == 0,
-            "PRuF:TAT: Cold Wallet - Trusted functions prohibited"
+            "PRUF:TAT: Cold Wallet - Trusted functions prohibited"
         );
         //^^^^^^^checks^^^^^^^^^
         _transfer(_from, _to, _amount);
@@ -328,11 +336,12 @@ contract UTIL_TKN is
 
     /*
      * @dev Take a balance snapshot, returns snapshot ID
+     * //CTS:EXAMINE return
      */
     function takeSnapshot() external returns (uint256) {
         require(
             hasRole(SNAPSHOT_ROLE, _msgSender()),
-            "PRuF:TS: ERC20PresetMinterPauser: must have snapshot role to take a snapshot"
+            "PRUF:TS: ERC20PresetMinterPauser: must have snapshot role to take a snapshot"
         );
         return _snapshot();
     }
@@ -345,11 +354,13 @@ contract UTIL_TKN is
      * Requirements:
      *
      * - the caller must have the `MINTER_ROLE`.
+     * //CTS:EXAMINE param
+     * //CTS:EXAMINE param
      */
     function mint(address to, uint256 _amount) public virtual {
         require(
             hasRole(MINTER_ROLE, _msgSender()),
-            "PRuF:M: Must have MINTER_ROLE"
+            "PRUF:M: Must have MINTER_ROLE"
         );
         //^^^^^^^checks^^^^^^^^^
 
@@ -389,6 +400,7 @@ contract UTIL_TKN is
 
     /**
      * @dev Returns the cap on the token's total supply.
+     * //CTS:EXAMINE return
      */
     function cap() public view returns (uint256) {
         return _cap;
@@ -396,6 +408,9 @@ contract UTIL_TKN is
 
     /**
      * @dev all paused functions are blocked here, unless caller has "pauser" role
+     * //CTS:EXAMINE param
+     * //CTS:EXAMINE param
+     * //CTS:EXAMINE param
      */
     function _beforeTokenTransfer(
         address from,
@@ -406,13 +421,13 @@ contract UTIL_TKN is
 
         require(
             (!paused()) || hasRole(PAUSER_ROLE, _msgSender()),
-            "PRuF:BTT: Function unavailble while contract is paused"
+            "PRUF:BTT: Function unavailble while contract is paused"
         );
         if (from == address(0)) {
             // When minting tokens
             require(
                 (totalSupply() + amount) <= _cap,
-                "PRuF:BTT: Cap exceeded"
+                "PRUF:BTT: Cap exceeded"
             );
         }
     }
