@@ -54,7 +54,7 @@ contract SPLIT is ReentrancyGuard, Pausable, AccessControl {
      * Originating Address:
      *      is Admin
      */
-    modifier isAdmin() {
+    modifier isContractAdmin() {
         require(
             hasRole(CONTRACT_ADMIN_ROLE, msg.sender),
             "SPLIT:MOD-IA: must have CONTRACT_ADMIN_ROLE"
@@ -81,7 +81,7 @@ contract SPLIT is ReentrancyGuard, Pausable, AccessControl {
      * @dev Set address of PRUF_TKN contract to interface with
      * TESTING: ALL REQUIRES, ACCESS ROLE
      */
-    function ADMIN_setTokenContract(address _address) external isAdmin {
+    function ADMIN_setTokenContract(address _address) external isContractAdmin {
         require(
             _address != address(0),
             "SPLIT:ASTC: Token contract address = zero"
@@ -97,7 +97,7 @@ contract SPLIT is ReentrancyGuard, Pausable, AccessControl {
      * @dev Set snapshot ID
      * TESTING: ALL REQUIRES, ACCESS ROLE
      */
-    // function ADMIN_setSnapshotID(uint256 _snapshot) external isAdmin {
+    // function ADMIN_setSnapshotID(uint256 _snapshot) external isContractAdmin {
     //^^^^^^^checks^^^^^^^^^
 
     // snapshotID = _snapshot;
@@ -108,7 +108,7 @@ contract SPLIT is ReentrancyGuard, Pausable, AccessControl {
     //  * @dev Set pruf doulble multiplier
     //  * TESTING: ALL REQUIRES, ACCESS ROLE
     //  */
-    // function ADMIN_setMultiplier(uint256 _mult) external isAdmin {
+    // function ADMIN_setMultiplier(uint256 _mult) external isContractAdmin {
     //     //^^^^^^^checks^^^^^^^^^
     //     multiplier = _mult;
     //     //^^^^^^^effects^^^^^^^^^
@@ -118,7 +118,7 @@ contract SPLIT is ReentrancyGuard, Pausable, AccessControl {
      * @dev pause the contract, renounce pauser role, take a snapshot,
      * TESTING: ALL REQUIRES, ACCESS ROLE
      */
-    function ADMIN_takeSnapshot() external isAdmin {
+    function ADMIN_takeSnapshot() external isContractAdmin {
         //^^^^^^^checks^^^^^^^^^
         // UTIL_TKN.pause();
         // renounceRole(PAUSER_ROLE, address(this));

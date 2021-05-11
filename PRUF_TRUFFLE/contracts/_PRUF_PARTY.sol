@@ -75,7 +75,7 @@ contract FAUCET is ReentrancyGuard, Pausable, AccessControl {
      * Originating Address:
      *      is Admin
      */
-    modifier isAdmin() {
+    modifier isContractAdmin() {
         require(
             hasRole(DEFAULT_ADMIN_ROLE, _msgSender()),
             "PP:MOD: must have DEFAULT_ADMIN_ROLE"
@@ -117,7 +117,7 @@ contract FAUCET is ReentrancyGuard, Pausable, AccessControl {
      * @dev Set address of PRUF_TKN contract to interface with
      * TESTING: ALL REQUIRES, ACCESS ROLE
      */
-    function ADMIN_set_Util_TokenContract(address _address) external isAdmin {
+    function ADMIN_set_Util_TokenContract(address _address) external isContractAdmin {
         require(
             _address != address(0),
             "PP:STC: token contract address cannot be zero"
@@ -133,7 +133,7 @@ contract FAUCET is ReentrancyGuard, Pausable, AccessControl {
      * @dev Set address of ID_TKN contract to interface with
      * TESTING: ALL REQUIRES, ACCESS ROLE
      */
-    function ADMIN_set_Id_TokenContract(address _address) external isAdmin {
+    function ADMIN_set_Id_TokenContract(address _address) external isContractAdmin {
         require(
             _address != address(0),
             "PP:STC: token contract address cannot be zero"
@@ -151,7 +151,7 @@ contract FAUCET is ReentrancyGuard, Pausable, AccessControl {
      */
     function ADMIN_setPaymentAddress(address payable _address)
         external
-        isAdmin
+        isContractAdmin
     {
         require(
             _address != address(0),
@@ -168,7 +168,7 @@ contract FAUCET is ReentrancyGuard, Pausable, AccessControl {
      * @dev Set airdropAmount
      * TESTING: ALL REQUIRES, ACCESS ROLE, sets airdrop amount for all airdrop functions
      */
-    function ADMIN_setAirDropAmount(uint256 _airdropAmount) external isAdmin {
+    function ADMIN_setAirDropAmount(uint256 _airdropAmount) external isContractAdmin {
         require(_airdropAmount != 0, "PP:SAA: airdrop amount cannot be zero");
         //^^^^^^^checks^^^^^^^^^
         airdropAmount = _airdropAmount;
@@ -179,7 +179,7 @@ contract FAUCET is ReentrancyGuard, Pausable, AccessControl {
      * @dev Set presale limit, reset presale counter
      * TESTING: ALL REQUIRES, ACCESS ROLE, presale limit works, presale limit can be reset for new presale
      */
-    function ADMIN_setPresaleLimit(uint256 _presaleLimit) external isAdmin {
+    function ADMIN_setPresaleLimit(uint256 _presaleLimit) external isContractAdmin {
         //^^^^^^^checks^^^^^^^^^
         presaleLimit = _presaleLimit;
         presaleCount = 0;
@@ -261,7 +261,7 @@ contract FAUCET is ReentrancyGuard, Pausable, AccessControl {
      * @dev withdraw to specified payment address
      * TESTING: WORKS
      */
-    function withdraw() external isAdmin nonReentrant {
+    function withdraw() external isContractAdmin nonReentrant {
         require(
             payment_address != address(0),
             "PP:W: payment address cannot be zero."

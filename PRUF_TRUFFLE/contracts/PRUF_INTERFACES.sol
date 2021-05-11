@@ -447,7 +447,7 @@ interface AC_TKN_Interface {
     function OO_resolveContractAddresses() external;
 
     /*
-     * @dev Mints assetClass token, must be isAdmin
+     * @dev Mints assetClass token, must be isContractAdmin
      */
     function mintACToken(
         address _recipientAddress,

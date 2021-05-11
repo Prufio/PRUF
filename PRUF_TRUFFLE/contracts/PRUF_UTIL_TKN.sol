@@ -95,7 +95,7 @@ contract UTIL_TKN is
      * Originating Address:
      *      is Admin
      */
-    modifier isAdmin() {
+    modifier isContractAdmin() {
         require(
             hasRole(CONTRACT_ADMIN_ROLE, _msgSender()),
             "PRuF:MOD-IADM: Must have CONTRACT_ADMIN_ROLE"
@@ -173,7 +173,7 @@ contract UTIL_TKN is
      * PRuF "banked" in an allowance for use in the system.
      *
      */
-    function adminKillTrustedAgent(uint256 _key) external isAdmin {
+    function adminKillTrustedAgent(uint256 _key) external isContractAdmin {
         if (_key == 170) {
             trustedAgentEnabled = 0; //-------------------THIS IS A PERMANENT ACTION AND CANNOT BE UNDONE
         }
@@ -208,7 +208,7 @@ contract UTIL_TKN is
     /*
      * @dev Set address of SHARES payment contract. by default contract will use root address instead if set to zero.
      */
-    function AdminSetSharesAddress(address _paymentAddress) external isAdmin {
+    function AdminSetSharesAddress(address _paymentAddress) external isContractAdmin {
         require(
             _paymentAddress != address(0),
             "PRuF:ASSA: Payment address cannot be zero"

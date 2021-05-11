@@ -100,7 +100,7 @@ contract AC_MGR is BASIC {
     /*
      * @dev Set pricing
      */
-    function adminSetACpricing(uint256 newACprice) external isAdmin {
+    function adminSetACpricing(uint256 newACprice) external isContractAdmin {
         //^^^^^^^checks^^^^^^^^^
 
         AC_Price = newACprice;
@@ -118,7 +118,7 @@ contract AC_MGR is BASIC {
 
     function adminIncreaseShare(uint32 _assetClass, uint32 _newDiscount)
         external
-        isAdmin
+        isContractAdmin
     {
         require(
             (AC_data[_assetClass].assetClassRoot != 0),
@@ -141,7 +141,7 @@ contract AC_MGR is BASIC {
 
     function adminSetStorageProviders(uint8 _storageProvider, uint8 _status)
         external
-        isAdmin
+        isContractAdmin
     {
         //^^^^^^^checks^^^^^^^^^
         storageProvidersEnabled[_storageProvider] = _status;
@@ -154,7 +154,7 @@ contract AC_MGR is BASIC {
 
     function adminSetManagementTypes(uint8 _managementType, uint8 _status)
         external
-        isAdmin
+        isContractAdmin
     {
         //^^^^^^^checks^^^^^^^^^
         managementTypesEnabled[_managementType] = _status;
@@ -166,7 +166,7 @@ contract AC_MGR is BASIC {
      */
     function adminSetCustodyTypes(uint8 _custodyType, uint8 _status)
         external
-        isAdmin
+        isContractAdmin
     {
         //^^^^^^^checks^^^^^^^^^
         custodyTypesEnabled[_custodyType] = _status;
@@ -186,7 +186,7 @@ contract AC_MGR is BASIC {
         uint32 _assetClass_source,
         uint32 _assetClass_dest,
         string calldata _name
-    ) external isAdmin {
+    ) external isContractAdmin {
         require(
             AC_number[_name] == _assetClass_source,
             "ACM:TN: Name not in source AC"
@@ -217,7 +217,7 @@ contract AC_MGR is BASIC {
         uint32 _discount,
         address _refAddress,
         bytes32 _IPFS
-    ) external isAdmin nonReentrant {
+    ) external isContractAdmin nonReentrant {
         AC memory _ac = AC_data[_assetClassRoot];
         uint256 tokenId = uint256(_assetClass);
 
@@ -249,7 +249,7 @@ contract AC_MGR is BASIC {
         uint32 _assetClass,
         uint8 _position,
         uint8 _bit
-    ) external isAdmin nonReentrant {
+    ) external isContractAdmin nonReentrant {
         require(
             (_position > 0) && (_position < 9),
             "ACM:AMACS: bit position must be between 1 and 8"

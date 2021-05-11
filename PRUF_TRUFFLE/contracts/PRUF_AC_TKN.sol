@@ -71,7 +71,7 @@ contract AC_TKN is
 
     event REPORT(string _msg);
 
-    modifier isAdmin() {
+    modifier isContractAdmin() {
         require(
             hasRole(CONTRACT_ADMIN_ROLE, _msgSender()),
             "AT:MOD-IA: Calling address does not belong to a contract admin"
@@ -87,7 +87,7 @@ contract AC_TKN is
         _;
     }
 
-    //----------------------Admin functions / isAdmin or isMinter----------------------//
+    //----------------------Admin functions / isContractAdmin or isMinter----------------------//
 
     /*
      * @dev Mints assetClass token, must be isMinter

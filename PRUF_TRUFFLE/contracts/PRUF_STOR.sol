@@ -20,13 +20,13 @@ __/\\\\\\\\\\\\\ _____/\\\\\\\\\ _______/\\../\\ ___/\\\\\\\\\\\\\\\
  *---------------------------------------------------------------*/
 
 /*-----------------------------------------------------------------
- *  PRUF STOR  is the primary data repository for the PRUF network. No direct user writes are permitted in STOR, all data must come from explicitly approved contracts. //CTS:EXAMINE maybe change the word "network" in the beginning
+ *  PRUF STOR  is the primary data repository for the PRUF protocol. No direct user writes are permitted in STOR, all data must come from explicitly approved contracts. 
  *  PRUF STOR  stores records in a map of Records, foreward and reverse name resolution for approved contracts, as well as contract authorization data.
  *---------------------------------------------------------------*/
 
 /*-----------------------------------------------------------------
  * IMPORTANT NOTE : DO NOT REMOVE FROM CODE:
- *      Verification of rgtHash in curated, custodial classes are not secure beyond the honorable intentions //CTS:EXAMINE change wording for custodial to management types
+ *      Verification of rgtHash in curated, certain management types are not secure beyond the honorable intentions 
  * of authorized recorders. All blockchain info is readable, so a bad actor could trivially obtain a copy of the
  * correct rgtHash on chain. This "stumbling block" measure is in place primarily to keep honest people honest, and
  * to require an actual, malicious effort to bypass security rather than a little copy-paste. Actual decentralized
@@ -75,7 +75,7 @@ contract STOR is AccessControl, ReentrancyGuard, Pausable {
      * Originating Address:
      *      is admin //CTS:EXAMINE "is Contract Admin"?
      */
-    modifier isAdmin() {
+    modifier isContractAdmin() {
         require(
             hasRole(CONTRACT_ADMIN_ROLE, _msgSender()),
             "S:MOD-IADM: Must have CONTRACT_ADMIN_ROLE"
@@ -197,7 +197,7 @@ contract STOR is AccessControl, ReentrancyGuard, Pausable {
     //CTS:EXAMINE comment
     event REPORT(string _msg, bytes32 b32);
 
-    //--------------------------------Internal Admin functions / isAdmin---------------------------------//
+    //--------------------------------Internal Admin functions / isContractAdmin---------------------------------//
 
     /*
      * @dev Triggers stopped state. (pausable)
@@ -226,7 +226,7 @@ contract STOR is AccessControl, ReentrancyGuard, Pausable {
         address _addr,
         uint32 _assetClass,
         uint8 _contractAuthLevel
-    ) external isAdmin {
+    ) external isContractAdmin {
         require(_assetClass == 0, "S:AC: AC !0"); //CTS:EXAMINE "AC = 0"
         //^^^^^^^checks^^^^^^^^^
 
@@ -263,7 +263,7 @@ contract STOR is AccessControl, ReentrancyGuard, Pausable {
         uint256 _contractNumber, // 0-10 //CTS:EXAMINE I wouldnt describe params like this, clutters up the code. keep it in the head comment
         string calldata _name, //name
         uint8 _contractAuthLevel //authLevel
-    ) public isAdmin {
+    ) public isContractAdmin {
         require(_contractNumber <= 10, "S:ADC: Contract number > 10");
         defaultContracts[_contractNumber].name = _name;
         defaultContracts[_contractNumber].contractType = _contractAuthLevel;
@@ -281,7 +281,7 @@ contract STOR is AccessControl, ReentrancyGuard, Pausable {
     function getDefaultContract(uint256 _contractNumber)
         public
         view
-        isAdmin
+        isContractAdmin
         returns (DefaultContract memory)
     {
         return (defaultContracts[_contractNumber]);

@@ -106,7 +106,7 @@ abstract contract BASIC is
      * Originating Address:
      *      is admin
      */
-    modifier isAdmin() {
+    modifier isContractAdmin() {
         require(
             hasRole(CONTRACT_ADMIN_ROLE, _msgSender()),
             "B:MOD:-IADM caller !CONTRACT_ADMIN_ROLE"
@@ -122,7 +122,7 @@ abstract contract BASIC is
         _;
     }
 
-    //----------------------External Admin functions / isAdmin----------------------//
+    //----------------------External Admin functions / isContractAdmin----------------------//
     /*
      * @dev Resolve Contract Addresses from STOR
      */
@@ -130,7 +130,7 @@ abstract contract BASIC is
         external
         virtual
         nonReentrant
-        isAdmin //-------------------------------------------------------STRICT PERMISSIONING
+        isContractAdmin //-------------------------------------------------------STRICT PERMISSIONING
     {
         //^^^^^^^checks^^^^^^^^^
         AC_TKN_Address = STOR.resolveContractAddress("AC_TKN");
@@ -189,7 +189,7 @@ abstract contract BASIC is
     function OO_transferACToken(address _to, uint256 _tokenID)
         external
         virtual
-        isAdmin //-------------------------------------------------------STRICT PERMISSIONING
+        isContractAdmin //-------------------------------------------------------STRICT PERMISSIONING
         nonReentrant
     {
         //^^^^^^^checks^^^^^^^^^
@@ -203,7 +203,7 @@ abstract contract BASIC is
     function OO_setStorageContract(address _storageAddress)
         external
         virtual
-        isAdmin //-------------------------------------------------------STRICT PERMISSIONING
+        isContractAdmin //-------------------------------------------------------STRICT PERMISSIONING
     {
         require(
             _storageAddress != address(0),

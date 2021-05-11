@@ -30,7 +30,7 @@ contract STAT201 is CORE {
         external
         nonReentrant
         whenNotPaused
-        isAdmin
+        isContractAdmin
     {
         Record memory rec = getRecord(_idxHash);
         AC memory AC_info = getACinfo(rec.assetClass);
