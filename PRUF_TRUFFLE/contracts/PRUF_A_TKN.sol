@@ -87,7 +87,7 @@ contract A_TKN is
 
     event REPORT(string _msg);
 
-    modifier isAdmin() {
+    modifier isContractAdmin() {
         require(
             hasRole(CONTRACT_ADMIN_ROLE, _msgSender()),
             "AT:MOD-IA:Calling address does not belong to a contract admin"
@@ -115,7 +115,7 @@ contract A_TKN is
         _;
     }
 
-    //----------------------Admin functions / isAdmin ----------------------//
+    //----------------------Admin functions / isContractAdmin ----------------------//
 
     /*
      * @dev ----------------------------------------PERMANANTLY !!!  Kills trusted agent and payable functions
@@ -127,7 +127,7 @@ contract A_TKN is
      * PRuF "banked" in an allowance for use in the system.
      *
      */
-    function adminKillTrustedAgent(uint256 _key) external isAdmin {
+    function adminKillTrustedAgent(uint256 _key) external isContractAdmin {
         if (_key == 170) {
             trustedAgentEnabled = 0; //-------------------THIS IS A PERMANENT ACTION AND CANNOT BE UNDONE
         }
@@ -136,7 +136,7 @@ contract A_TKN is
     /*
      * @dev Set storage contract to interface with
      */
-    function OO_setStorageContract(address _storageAddress) external isAdmin {
+    function OO_setStorageContract(address _storageAddress) external isContractAdmin {
         require(
             _storageAddress != address(0),
             "AT:SSC: storage address cannot be zero"
@@ -150,7 +150,7 @@ contract A_TKN is
     /*
      * @dev Address Setters
      */
-    function OO_resolveContractAddresses() external isAdmin {
+    function OO_resolveContractAddresses() external isContractAdmin {
         //^^^^^^^checks^^^^^^^^^
 
         RCLR_Address = STOR.resolveContractAddress("RCLR");

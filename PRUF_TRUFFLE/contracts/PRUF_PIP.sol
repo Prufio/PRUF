@@ -29,7 +29,7 @@ contract PIP is CORE {
     /*
      * @dev Sets import discount for this contract
      */
-    function setImportDiscount(uint256 _importDiscount) external isAdmin {
+    function setImportDiscount(uint256 _importDiscount) external isContractAdmin {
         //^^^^^^^checks^^^^^^^^^
         if (_importDiscount < 1) {
             importDiscount = 1;

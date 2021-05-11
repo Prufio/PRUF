@@ -74,7 +74,7 @@ contract ID_TKN is
 
     event REPORT(string _msg);
 
-    modifier isAdmin() {
+    modifier isContractAdmin() {
         require(
             hasRole(CONTRACT_ADMIN_ROLE, _msgSender()),
             "PIDT:MOD-IA: Calling address does not belong to an admin"
@@ -90,7 +90,7 @@ contract ID_TKN is
         _;
     }
 
-    //----------------------Admin functions / isAdmin----------------------//
+    //----------------------Admin functions / isContractAdmin----------------------//
 
     /*
      * @dev Mint new PRUF_ID token

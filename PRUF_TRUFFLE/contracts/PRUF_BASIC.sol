@@ -107,7 +107,7 @@ abstract contract BASIC is
      * Originating Address:
      *      is admin //CTS:EXAMINE "is contract admin"
      */
-    modifier isAdmin() {
+    modifier isContractAdmin() {
         require(
             hasRole(CONTRACT_ADMIN_ROLE, _msgSender()),
             "B:MOD:-IADM caller !CONTRACT_ADMIN_ROLE" //CTS:EXAMINE cap caller
@@ -123,7 +123,7 @@ abstract contract BASIC is
         _;
     }
 
-    //----------------------External Admin functions / isAdmin----------------------//
+    //----------------------External Admin functions / isContractAdmin----------------------//
     /*
      * @dev Resolve Contract Addresses from STOR //CTS:EXAMINE its okay that functions like this arent upgradable right? (cant add contracts to resolution)
      */
@@ -132,7 +132,7 @@ abstract contract BASIC is
         virtual
         //CTS:EXAMINE not OO
         nonReentrant
-        isAdmin //-------------------------------------------------------STRICT PERMISSIONING //CTS:EXAMINE comment obvious?
+        isContractAdmin //-------------------------------------------------------STRICT PERMISSIONING //CTS:EXAMINE comment obvious?
     {
         //^^^^^^^checks^^^^^^^^^
         AC_TKN_Address = STOR.resolveContractAddress("AC_TKN");
@@ -195,7 +195,7 @@ abstract contract BASIC is
     function OO_transferACToken(address _to, uint256 _tokenID) //CTS:EXAMINE not OO
         external
         virtual
-        isAdmin //-------------------------------------------------------STRICT PERMISSIONING //CTS:EXAMINE comment obvious?
+        isContractAdmin //-------------------------------------------------------STRICT PERMISSIONING //CTS:EXAMINE comment obvious?
         nonReentrant
     {
         //^^^^^^^checks^^^^^^^^^
@@ -210,7 +210,7 @@ abstract contract BASIC is
     function OO_setStorageContract(address _storageAddress) //CTS:EXAMINE not OO
         external
         virtual
-        isAdmin //-------------------------------------------------------STRICT PERMISSIONING //CTS:EXAMINE comment obvious?
+        isContractAdmin //-------------------------------------------------------STRICT PERMISSIONING //CTS:EXAMINE comment obvious?
     {
         require(_storageAddress != address(0), "B:SSC: Address = 0");
         //^^^^^^^checks^^^^^^^^^
