@@ -79,7 +79,7 @@ contract STOR is AccessControl, ReentrancyGuard, Pausable {
     modifier isContractAdmin() {
         require(
             hasRole(CONTRACT_ADMIN_ROLE, _msgSender()),
-            "S:MOD-IADM: Must have CONTRACT_ADMIN_ROLE"
+            "S:MOD-IADM: Must have CONTRACT_ADMIN_ROLE" //CTS:EXAMINE "S:MOD-ICA"
         );
         _;
     }
