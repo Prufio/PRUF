@@ -12,17 +12,17 @@ __/\\\\\\\\\\\\\ _____/\\\\\\\\\ _______/\\../\\ ___/\\\\\\\\\\\\\\\
 
 /*-----------------------------------------------------------------
  *  TO DO
- *
+ *  //CTS:!!EXAMINE GLOBAL!! we need to be using pascal case for all acronyms ex. htmlButton or bigHtmlButton, except for things with tow acronyms ex. prufIO rather than prufIo !!important
  *-----------------------------------------------------------------
  * IMPORTANT!!! NO EXTERNAL OR PUBLIC FUNCTIONS ALLOWED IN THIS CONTRACT!!!!!!!!
  *-----------------------------------------------------------------
- * PRUF core provides switches core functionality covering cost getters, payment processing, withdrawls, common test conditionals, and setters for data in storage
+ * PRUF core provides switches core functionality covering cost getters, payment processing, withdrawls, common test conditionals, and setters for data in storage //CTS:EXAMINE this is all over the place, add commas?
  *---------------------------------------------------------------*/
 
 // SPDX-License-Identifier: UNLICENSED
 pragma solidity ^0.8.0;
 
-//import "./PRUF_INTERFACES.sol";
+//import "./PRUF_INTERFACES.sol"; //CTS:EXAMINE remove?
 import "./Imports/utils/ReentrancyGuard.sol";
 import "./PRUF_BASIC.sol";
 
@@ -31,6 +31,10 @@ contract CORE is BASIC {
 
     /*
      * @dev create a Record in Storage @ idxHash (SETTER)
+     * //CTS:EXAMINE param
+     * //CTS:EXAMINE param
+     * //CTS:EXAMINE param
+     * //CTS:EXAMINE param
      */
     function createRecord(
         bytes32 _idxHash,
@@ -43,7 +47,7 @@ contract CORE is BASIC {
 
         require(
             A_TKN.tokenExists(tokenId) == 0,
-            "C:CR:Asset token already exists"
+            "C:CR:Asset token already exists" //CTS:EXAMINE "Asset exists"
         );
         require(
             AC_info.custodyType != 3,
@@ -69,12 +73,12 @@ contract CORE is BASIC {
                         keccak256(abi.encodePacked(_msgSender())),
                         _assetClass
                     ) == 1,
-                    "C:CR:Cannot create asset - caller address not authorized"
+                    "C:CR:Cannot create asset - caller address not authorized" //CTS:EXAMINE "...caller not authorized"
                 );
             } else if (AC_info.managementType == 4) {
                 require(
                     ID_TKN.trustedLevelByAddress(_msgSender()) > 9,
-                    "C:CR:Caller does not hold sufficiently trusted ID (10+)"
+                    "C:CR:Caller does not hold sufficiently trusted ID (10+)" //CTS:EXAMINE remove "(10+)" it doesn't mean anything out of context
                 );
             }
         }
@@ -85,11 +89,11 @@ contract CORE is BASIC {
             "C:CR:Cannot create asset - contract not authorized for asset class custody type"
         );
         if (AC_info.custodyType == 1) {
-            A_TKN.mintAssetToken(address(this), tokenId, ""); //CTS:EXAMINE
+            A_TKN.mintAssetToken(address(this), tokenId, ""); //CTS:EXAMINE interactions?
         }
 
         if ((AC_info.custodyType == 2) || (AC_info.custodyType == 4)) {
-            A_TKN.mintAssetToken(_msgSender(), tokenId, ""); //CTS:EXAMINE
+            A_TKN.mintAssetToken(_msgSender(), tokenId, ""); //CTS:EXAMINE interactions?
         }
         //^^^^^^^Checks^^^^^^^^
 
@@ -99,12 +103,14 @@ contract CORE is BASIC {
 
     /*
      * @dev Write a Record to Storage @ idxHash (SETTER)
+     * //CTS:EXAMINE param
+     * //CTS:EXAMINE param
      */
     function writeRecord(bytes32 _idxHash, Record memory _rec)
         internal
         virtual
         whenNotPaused
-    //isAuthorized(_idxHash)
+    //isAuthorized(_idxHash) //CTS:EXAMINE remove?
     {
         //^^^^^^^checks^^^^^^^^^
 
@@ -115,12 +121,14 @@ contract CORE is BASIC {
             _rec.countDown,
             _rec.forceModCount,
             _rec.numberOfTransfers
-        ); // Send data and writehash to storage
+        ); // Send data and writehash to storage //CTS:EXAMINE writehash?
         //^^^^^^^interactions^^^^^^^^^
     }
 
     /*
-     * @dev Write an Ipfs Record to Storage @ idxHash  (SETTER)
+     * @dev Write an Ipfs Record to Storage @ idxHash (SETTER)
+     * //CTS:EXAMINE param
+     * //CTS:EXAMINE param
      */
     function writeRecordIpfs1(bytes32 _idxHash, Record memory _rec)
         internal
@@ -134,6 +142,7 @@ contract CORE is BASIC {
             "C:CR:Contract does not support management types > 5 or AC is locked"
         );
         if ((AC_info.custodyType != 1) && (AC_info.managementType == 5)) {
+            //CTS:EXAMINE interactions?
             require(
                 (AC_TKN.ownerOf(_rec.assetClass) == _msgSender()),
                 "C:WIPFS1: Caller must hold ACnode (management type 5)"
@@ -141,29 +150,34 @@ contract CORE is BASIC {
         }
         //^^^^^^^Checks^^^^^^^^^
 
-        STOR.modifyIpfs1(_idxHash, _rec.Ipfs1a, _rec.Ipfs1b); // Send data to storage
+        STOR.modifyIpfs1(_idxHash, _rec.Ipfs1a, _rec.Ipfs1b); // Send data to storage //CTS:EXAMINE "Send extended data field to storage" or something more definative
         //^^^^^^^interactions^^^^^^^^^
     }
 
     /*
-     * @dev Write an Ipfs Record to Storage @ idxHash  (SETTER)
+     * @dev Write an Ipfs Record to Storage @ idxHash (SETTER) //CTS:EXAMINE "...Ipfs2(storageProvider2) record..."
+     * //CTS:EXAMINE param
+     * //CTS:EXAMINE param
      */
     function writeRecordIpfs2(bytes32 _idxHash, Record memory _rec)
         internal
         virtual
         whenNotPaused
-    //isAuthorized(_idxHash)
+    //isAuthorized(_idxHash) //CTS:EXAMINE remove?
     {
         //^^^^^^^checks^^^^^^^^^
 
-        STOR.modifyIpfs2(_idxHash, _rec.Ipfs2a, _rec.Ipfs2b); // Send data to storage
+        STOR.modifyIpfs2(_idxHash, _rec.Ipfs2a, _rec.Ipfs2b); // Send data to storage //CTS:EXAMINE "Send extended data field to storage" or something more definative
         //^^^^^^^interactions^^^^^^^^^
     }
 
-    //--------------------------------------------------------------------------------------Payment internal functions
+    //--------------------------------------------------------------------------------------Payment internal functions //CTS:EXAMINE all payment functions are internal? combine the two sections?
 
     /*
-     * @dev Send payment to appropriate pullPayment adresses for payable function
+     * @dev Send payment to appropriate pullPayment adresses for payable function //CTS:EXAMINE isnt pullPayment dep, adresses->addresses
+     * //CTS:EXAMINE param
+     * //CTS:EXAMINE param
+     * //CTS:EXAMINE checks/effects/interactions all messed up here
      */
     function deductServiceCosts(uint32 _assetClass, uint16 _service)
         internal
@@ -174,7 +188,7 @@ contract CORE is BASIC {
         Invoice memory pricing;
         uint256 ACTHnetPercent =
             uint256(AC_MGR.getAC_discount(_assetClass)) / uint256(100);
-        require( //IMPOSSIBLE TO REACH unless stuff is really broken, still ensures sanity
+        require( //IMPOSSIBLE TO REACH unless stuff is really broken, still ensures sanity //CTS:EXAMINE still super redundant, maybe secure in AC_MGR instead?
             (ACTHnetPercent >= 0) && (ACTHnetPercent <= 100),
             "C:DSC:invalid discount value for price calculation"
         );
@@ -192,16 +206,19 @@ contract CORE is BASIC {
     }
 
     /*
-     * @dev Send payment to appropriate  adresses
+     * @dev Send payment to appropriate adresses //CTS:EXAMINE more description for it being recycle, adresses->addresses
+     * //CTS:EXAMINE param
+     * //CTS:EXAMINE param
      */
-    function deductRecycleCosts(uint32 _assetClass, address _oldOwner)
+    function deductRecycleCosts(uint32 _assetClass, address _oldOwner) //CTS:EXAMINE maybe change param _oldOwner to something more clever? ex. _recycler?
         internal
         virtual
         whenNotPaused
     {
         //^^^^^^^checks^^^^^^^^^
+
         Invoice memory pricing;
-        uint256 half;
+        uint256 half; //CTS:EXAMINE move to interactions
         //^^^^^^^effects^^^^^^^^^
 
         pricing = AC_MGR.getServiceCosts(_assetClass, 1);
@@ -218,8 +235,9 @@ contract CORE is BASIC {
     //--------------------------------------------------------------PAYMENT FUNCTIONS
 
     /*
-     * @dev Deducts payment from transaction -- NON_LEGACY
-     * sets ACTHaddress to rootAddress if ACTHaddress is not set
+     * @dev Deducts payment from transaction -- NON_LEGACY //CTS:EXAMINE "-- NON_LEGACY" remove?
+     * sets ACTHaddress to rootAddress if ACTHaddress is not set //CTS:EXAMINE put in code(if its even needed)
+     * //CTS:EXAMINE param
      */
     function deductPayment(Invoice memory pricing)
         internal
@@ -228,7 +246,7 @@ contract CORE is BASIC {
     {
         require(
             pricing.rootAddress != address(0),
-            "C:DP: root payment adress is zero address"
+            "C:DP: root payment adress is zero address" //CTS:EXAMINE "Root payment address = zero address"
         );
         if (pricing.ACTHaddress == address(0)) {
             pricing.ACTHaddress = pricing.rootAddress;
@@ -243,6 +261,8 @@ contract CORE is BASIC {
 
     /*
      * @dev Check to see if record is lost or stolen
+     * //CTS:EXAMINE param
+     * //CTS:EXAMINE return
      */
     function isLostOrStolen(uint8 _assetStatus) internal pure returns (uint8) {
         if (
@@ -259,6 +279,8 @@ contract CORE is BASIC {
 
     /*
      * @dev Check to see if record is in escrow status
+     * //CTS:EXAMINE param
+     * //CTS:EXAMINE return
      */
     function isEscrow(uint8 _assetStatus) internal pure returns (uint8) {
         if (
@@ -272,6 +294,8 @@ contract CORE is BASIC {
 
     /*
      * @dev Check to see if record needs imported
+     * //CTS:EXAMINE param
+     * //CTS:EXAMINE return
      */
     function needsImport(uint8 _assetStatus) internal pure returns (uint8) {
         if (
