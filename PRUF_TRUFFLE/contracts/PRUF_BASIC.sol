@@ -39,7 +39,7 @@ abstract contract BASIC is
         keccak256("CONTRACT_ADMIN_ROLE");
     bytes32 public constant PAUSER_ROLE = keccak256("PAUSER_ROLE");
     bytes32 public constant ASSET_TXFR_ROLE = keccak256("ASSET_TXFR_ROLE");
-
+    //CTS:EXAMINE how do we make this upgradable? doesn't vvv this vvv method for interfacing seem limited?
     address internal STOR_Address;
     STOR_Interface internal STOR;
 
@@ -81,21 +81,22 @@ abstract contract BASIC is
 
     // --------------------------------------REPORTING--------------------------------------------//
 
-    event REPORT(string _msg);
+    event REPORT(string _msg); //not used internally, can this be inherited?
     // --------------------------------------Modifiers--------------------------------------------//
 
     /*
-     * @dev Verify user credentials
+     * @dev Verify user credentials //CTS:EXAMINE this comment is hard to follow
      * Originating Address:
      *      Exists in registeredUsers as a usertype 1 to 9
      *      Is authorized for asset class
      *      asset token held by this.contract
      * ----OR---- (comment out part that will not be used)
      *      holds asset token
+     * //CTS:EXAMINE param
      */
     modifier isAuthorized(bytes32 _idxHash) virtual {
         require(
-            _idxHash == 0, //function should always be overridden!!! will throw if not
+            _idxHash == 0, //function should always be overridden!!! will throw if not //CTS:EXAMINE is there a better way to do this? Also, move up to comments
             "B:MOD-IAUTH: Modifier must be overridden"
         );
         _;
@@ -104,12 +105,12 @@ abstract contract BASIC is
     /*
      * @dev Verify user credentials
      * Originating Address:
-     *      is admin
+     *      is admin //CTS:EXAMINE "is contract admin"
      */
     modifier isAdmin() {
         require(
             hasRole(CONTRACT_ADMIN_ROLE, _msgSender()),
-            "B:MOD:-IADM caller !CONTRACT_ADMIN_ROLE"
+            "B:MOD:-IADM caller !CONTRACT_ADMIN_ROLE" //CTS:EXAMINE cap caller
         );
         _;
     }
@@ -124,13 +125,14 @@ abstract contract BASIC is
 
     //----------------------External Admin functions / isAdmin----------------------//
     /*
-     * @dev Resolve Contract Addresses from STOR
+     * @dev Resolve Contract Addresses from STOR //CTS:EXAMINE its okay that functions like this arent upgradable right? (cant add contracts to resolution)
      */
     function OO_resolveContractAddresses()
         external
         virtual
+        //CTS:EXAMINE not OO
         nonReentrant
-        isAdmin //-------------------------------------------------------STRICT PERMISSIONING
+        isAdmin //-------------------------------------------------------STRICT PERMISSIONING //CTS:EXAMINE comment obvious?
     {
         //^^^^^^^checks^^^^^^^^^
         AC_TKN_Address = STOR.resolveContractAddress("AC_TKN");
@@ -165,17 +167,19 @@ abstract contract BASIC is
 
     /*
      * @dev Transfer any specified assetToken from contract
+     * //CTS:EXAMINE param
+     * //CTS:EXAMINE param
      */
     function transferAssetToken(address _to, bytes32 _idxHash)
         external
         virtual
         nonReentrant
     {
-        require( //-------------------------------------------------------STRICT PERMISSIONING
+        require( //-------------------------------------------------------STRICT PERMISSIONING //CTS:EXAMINE comment obvious?
             hasRole(ASSET_TXFR_ROLE, _msgSender()),
             "B:TX:Must have ASSET_TXFR_ROLE"
         );
-    //^^^^^^^checks^^^^^^^^^
+        //^^^^^^^checks^^^^^^^^^
 
         uint256 tokenId = uint256(_idxHash);
 
@@ -185,11 +189,13 @@ abstract contract BASIC is
 
     /*
      * @dev Transfer any specified assetClassToken from contract
+     * //CTS:EXAMINE param
+     * //CTS:EXAMINE param
      */
-    function OO_transferACToken(address _to, uint256 _tokenID)
+    function OO_transferACToken(address _to, uint256 _tokenID) //CTS:EXAMINE not OO
         external
         virtual
-        isAdmin //-------------------------------------------------------STRICT PERMISSIONING
+        isAdmin //-------------------------------------------------------STRICT PERMISSIONING //CTS:EXAMINE comment obvious?
         nonReentrant
     {
         //^^^^^^^checks^^^^^^^^^
@@ -198,17 +204,15 @@ abstract contract BASIC is
     }
 
     /*
-     * @dev Set adress of STOR contract to interface with
+     * @dev Set adress of STOR contract to interface with //CTS:EXAMINE typo
+     * //CTS:EXAMINE param
      */
-    function OO_setStorageContract(address _storageAddress)
+    function OO_setStorageContract(address _storageAddress) //CTS:EXAMINE not OO
         external
         virtual
-        isAdmin //-------------------------------------------------------STRICT PERMISSIONING
+        isAdmin //-------------------------------------------------------STRICT PERMISSIONING //CTS:EXAMINE comment obvious?
     {
-        require(
-            _storageAddress != address(0),
-            "B:SSC: Address = 0"
-        );
+        require(_storageAddress != address(0), "B:SSC: Address = 0");
         //^^^^^^^checks^^^^^^^^^
 
         STOR = STOR_Interface(_storageAddress);
@@ -218,6 +222,11 @@ abstract contract BASIC is
     //--------------------------------------External functions--------------------------------------------//
     /*
      * @dev Compliance for erc721 reciever
+     * //CTS:EXAMINE param
+     * //CTS:EXAMINE param
+     * //CTS:EXAMINE param
+     * //CTS:EXAMINE param
+     * //CTS:EXAMINE return
      */
     function onERC721Received(
         address,
@@ -225,7 +234,7 @@ abstract contract BASIC is
         uint256,
         bytes calldata
     ) external virtual override returns (bytes4) {
-        //-------------------------------------------------------STRICT PERMISSIONING EXEMPT
+        //-------------------------------------------------------STRICT PERMISSIONING EXEMPT //CTS:EXAMINE comment obvious?
         //^^^^^^^checks^^^^^^^^^
         return this.onERC721Received.selector;
         //^^^^^^^interactions^^^^^^^^^
@@ -236,7 +245,7 @@ abstract contract BASIC is
      *
      */
     function pause() external isPauser {
-        //-------------------------------------------------------STRICT PERMISSIONING
+        //-------------------------------------------------------STRICT PERMISSIONING //CTS:EXAMINE comment obvious?
         _pause();
     }
 
@@ -245,7 +254,7 @@ abstract contract BASIC is
      */
 
     function unpause() external isPauser {
-        //-------------------------------------------------------STRICT PERMISSIONING
+        //-------------------------------------------------------STRICT PERMISSIONING //CTS:EXAMINE comment obvious?
         _unpause();
     }
 
@@ -253,6 +262,8 @@ abstract contract BASIC is
 
     /*
      * @dev Get a User type Record from AC_manager for _msgSender(), by assetClass
+     * //CTS:EXAMINE param
+     * //CTS:EXAMINE return
      */
     function getCallingUserType(uint32 _assetClass)
         internal
@@ -273,6 +284,8 @@ abstract contract BASIC is
 
     /*
      * @dev Get asset class information from AC_manager and return an AC Struct
+     * //CTS:EXAMINE param
+     * //CTS:EXAMINE return
      */
     function getACinfo(uint32 _assetClass)
         internal
@@ -291,12 +304,16 @@ abstract contract BASIC is
             AC_info.discount,
             AC_info.referenceAddress
         ) = AC_MGR.getAC_data(_assetClass);
+
         return AC_info;
         //^^^^^^^interactions^^^^^^^^^
     }
 
     /*
      * @dev Get contract information from STOR and return a ContractDataHash Struct
+     * //CTS:EXAMINE param
+     * //CTS:EXAMINE param
+     * //CTS:EXAMINE return
      */
     function getContractInfo(address _addr, uint32 _assetClass)
         internal
@@ -314,10 +331,12 @@ abstract contract BASIC is
 
     /*
      * @dev Get a Record from Storage @ idxHash and return a Record Struct
+     * //CTS:EXAMINE param
+     * //CTS:EXAMINE return
      */
     function getRecord(bytes32 _idxHash) internal returns (Record memory) {
         //^^^^^^^checks^^^^^^^^^
-        
+
         Record memory rec = STOR.retrieveRecord(_idxHash);
 
         return rec; // Returns Record struct rec
