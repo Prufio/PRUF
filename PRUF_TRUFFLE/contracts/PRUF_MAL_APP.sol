@@ -216,7 +216,7 @@ contract MAL_APP is CORE_MAL {
         rec.assetStatus = _newAssetStatus;
         //^^^^^^^effects^^^^^^^^^
 
-        STOR.setStolenOrLost(_idxHash, rec.assetStatus);
+        STOR.setLostOrStolen(_idxHash, rec.assetStatus);
 
         return rec.assetStatus;
         //^^^^^^^interactions^^^^^^^^^
@@ -338,15 +338,15 @@ contract MAL_APP is CORE_MAL {
     //     );
     //     //^^^^^^^checks^^^^^^^^^
 
-    //     // if (rec.forceModCount > _decAmount) {
-    //     //     rec.forceModCount = rec.forceModCount - (_decAmount);
+    //     // if (rec.modCount > _decAmount) {
+    //     //     rec.modCount = rec.modCount - (_decAmount);
     //     // } else {
-    //     //     rec.forceModCount = 0;
+    //     //     rec.modCount = 0;
     //     // }
     //     //^^^^^^^effects^^^^^^^^^
-    //     rec.forceModCount = rec.forceModCount - (_decAmount);
+    //     rec.modCount = rec.modCount - (_decAmount);
     //     writeRecord(_idxHash, rec);
-    //     return (rec.forceModCount);
+    //     return (rec.modCount);
     //     //^^^^^^^interactions^^^^^^^^^
     // }
                                                                                                //NEEDS TO BE MODIFIED IN STORAGE

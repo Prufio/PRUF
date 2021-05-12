@@ -87,7 +87,7 @@ contract APP is CORE {
         );
         //^^^^^^^checks^^^^^^^^^
 
-        rec.forceModCount = 170;
+        rec.modCount = 170;
         rec.assetStatus = 0;
         rec.rightsHolder = _newRgtHash;
         //^^^^^^^effects^^^^^^^^^
@@ -124,7 +124,7 @@ contract APP is CORE {
         );
         //^^^^^^^checks^^^^^^^^^
 
-        rec.forceModCount = 170;
+        rec.modCount = 170;
         rec.numberOfTransfers = 170;
         rec.assetStatus = 0;
         rec.rightsHolder = _rgtHash;
