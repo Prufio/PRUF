@@ -19,10 +19,15 @@ __/\\\\\\\\\\\\\ _____/\\\\\\\\\ _______/\\../\\ ___/\\\\\\\\\\\\\\\
 pragma solidity ^0.8.0;
 
 import "./PRUF_BASIC.sol";
-//import "./PRUF_INTERFACES.sol";
+//import "./PRUF_INTERFACES.sol"; // CTS:EXAMINE remove
 import "./Imports/utils/ReentrancyGuard.sol";
 
 contract ECR_CORE is BASIC {
+     // CTS:EXAMINE comment
+     // CTS:EXAMINE param
+     // CTS:EXAMINE param
+     // CTS:EXAMINE param
+     // CTS:EXAMINE param
     function _setEscrowData(
         bytes32 _idxHash,
         uint8 _newAssetStatus,
@@ -37,6 +42,9 @@ contract ECR_CORE is BASIC {
         );
     }
 
+     // CTS:EXAMINE comment
+     // CTS:EXAMINE param
+     // CTS:EXAMINE param
     function _setEscrowDataLight(
         bytes32 _idxHash,
         escrowDataExtLight memory escrowDataLight
@@ -45,6 +53,9 @@ contract ECR_CORE is BASIC {
         //^^^^^^^interactions^^^^^^^^^
     }
 
+     // CTS:EXAMINE comment
+     // CTS:EXAMINE param
+     // CTS:EXAMINE param
     function _setEscrowDataHeavy(
         bytes32 _idxHash,
         escrowDataExtHeavy memory escrowDataHeavy
@@ -55,6 +66,8 @@ contract ECR_CORE is BASIC {
 
     /*
      * @dev retrieves escrow data and returns escrow struct
+     // CTS:EXAMINE param
+     // CTS:EXAMINE returns
      */
     function getEscrowData(bytes32 _idxHash)
         internal
@@ -70,6 +83,8 @@ contract ECR_CORE is BASIC {
 
     /*
      * @dev retrieves extended escrow data and returns escrowDataExtLight struct
+     // CTS:EXAMINE param
+     // CTS:EXAMINE returns
      */
     function getEscrowDataLight(bytes32 _idxHash)
         internal
@@ -87,6 +102,8 @@ contract ECR_CORE is BASIC {
 
     /*
      * @dev retrieves extended escrow data and returns escrowDataExtHeavy struct
+     // CTS:EXAMINE param
+     // CTS:EXAMINE returns
      */
     function getEscrowDataHeavy(bytes32 _idxHash)
         internal
