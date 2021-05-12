@@ -444,7 +444,7 @@ interface AC_TKN_Interface {
     /*
      * @dev Address Setters
      */
-    function OO_resolveContractAddresses() external;
+    function Admin_resolveContractAddresses() external;
 
     /*
      * @dev Mints assetClass token, must be isContractAdmin
@@ -595,7 +595,7 @@ interface A_TKN_Interface {
     /*
      * @dev Address Setters
      */
-    function OO_resolveContractAddresses() external;
+    function Admin_resolveContractAddresses() external;
 
     /*
      * @dev Mint new asset token

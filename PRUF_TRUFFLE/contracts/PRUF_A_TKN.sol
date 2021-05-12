@@ -153,7 +153,7 @@ contract A_TKN is
     /*
      * @dev Address Setters //CTS:EXAMINE work on this comment
      */
-    function OO_resolveContractAddresses() external isContractAdmin { //CTS:EXAMINE not OO
+    function Admin_resolveContractAddresses() external isContractAdmin { //CTS:EXAMINE not OO
         //^^^^^^^checks^^^^^^^^^
 
         RCLR_Address = STOR.resolveContractAddress("RCLR");
