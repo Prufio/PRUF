@@ -20,7 +20,7 @@ pragma solidity ^0.8.0;
 
 struct Record {
     uint8 assetStatus; // Status - Transferrable, locked, in transfer, stolen, lost, etc.
-    uint8 forceModCount; // Number of times asset has been forceModded.
+    uint8 modCount; // Number of times asset has been forceModded.
     uint8 currency; //currency for price information (0=not for sale, 1=ETH, 2=PRUF, 3=DAI, 4=WBTC.... )
     uint16 numberOfTransfers; //number of transfers and forcemods
     uint32 assetClass; // Type of asset
@@ -1257,7 +1257,7 @@ interface STOR_Interface {
     /*
      * @dev Set an asset to stolen or lost. Allows narrow modification of status 6/12 assets, normally locked
      */
-    function setStolenOrLost(bytes32 _idxHash, uint8 _newAssetStatus) external;
+    function setLostOrStolen(bytes32 _idxHash, uint8 _newAssetStatus) external;
 
     /*
      * @dev Set an asset to escrow locked status (6/50/56).

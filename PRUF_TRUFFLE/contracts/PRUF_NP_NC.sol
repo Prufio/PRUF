@@ -174,7 +174,7 @@ contract NP_NC is CORE {
         rec.assetStatus = _newAssetStatus;
         //^^^^^^^effects^^^^^^^^^
 
-        STOR.setStolenOrLost(_idxHash, rec.assetStatus);
+        STOR.setLostOrStolen(_idxHash, rec.assetStatus);
 
         return rec.assetStatus;
         //^^^^^^^interactions^^^^^^^^^

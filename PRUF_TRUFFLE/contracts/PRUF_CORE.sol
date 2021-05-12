@@ -113,7 +113,7 @@ contract CORE is BASIC {
             _rec.rightsHolder,
             _rec.assetStatus,
             _rec.countDown,
-            _rec.forceModCount,
+            _rec.modCount,
             _rec.numberOfTransfers
         ); // Send data and writehash to storage
         //^^^^^^^interactions^^^^^^^^^
