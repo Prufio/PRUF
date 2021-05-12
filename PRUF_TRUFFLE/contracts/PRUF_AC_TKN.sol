@@ -66,31 +66,40 @@ contract AC_TKN is
         _setupRole(MINTER_ROLE, _msgSender());
         _setupRole(PAUSER_ROLE, _msgSender());
 
-        //_setBaseURI("pruf.io");
+        //_setBaseURI("pruf.io"); //CTS:EXAMINE remove?
     }
 
-    event REPORT(string _msg);
 
+    //----------------------Modifiers----------------------//
+    //CTS:EXAMINE comments
     modifier isContractAdmin() {
         require(
             hasRole(CONTRACT_ADMIN_ROLE, _msgSender()),
-            "AT:MOD-IA: Calling address does not belong to a contract admin"
+            "AT:MOD-IA: Calling address !contract admin"
         );
         _;
     }
 
+    //CTS:EXAMINE comments
     modifier isMinter() {
         require(
             hasRole(MINTER_ROLE, _msgSender()),
-            "AT:MOD-IM: Calling address does not belong to a minter"
+            "AT:MOD-IM: Calling address !minter"
         );
         _;
     }
 
+    //----------------------Events----------------------//
+    //CTS:EXAMINE comments
+    event REPORT(string _msg);
     //----------------------Admin functions / isContractAdmin or isMinter----------------------//
 
     /*
-     * @dev Mints assetClass token, must be isMinter
+     * @dev Mints assetClass token
+     * //CTS:EXAMINE param
+     * //CTS:EXAMINE param
+     * //CTS:EXAMINE param
+     * //CTS:EXAMINE returns
      */
     function mintACToken(
         address _recipientAddress,
@@ -98,6 +107,7 @@ contract AC_TKN is
         string calldata _tokenURI
     ) external isMinter nonReentrant returns (uint256) {
         //^^^^^^^checks^^^^^^^^^
+
         _safeMint(_recipientAddress, tokenId);
         _setTokenURI(tokenId, _tokenURI);
         return tokenId;
@@ -105,10 +115,14 @@ contract AC_TKN is
     }
 
     /*
-     * Authorizations
+     * Authorizations //CTS:EXAMINE??
      * @dev remint Asset Class Token
      * burns old token
      * Sends new token to specified address
+     * //CTS:EXAMINE param
+     * //CTS:EXAMINE param
+     * //CTS:EXAMINE param
+     * //CTS:EXAMINE returns
      */
     function reMintACToken(
         address _recipientAddress,
@@ -119,7 +133,7 @@ contract AC_TKN is
         require(
             keccak256(abi.encodePacked(_tokenURI)) ==
                 keccak256(abi.encodePacked(tokenURI(tokenId))),
-            "ACT:RM: _tokenURI != URI"
+            "ACT:RM:New token URI != URI"
         );
         //^^^^^^^checks^^^^^^^^^
 
@@ -203,6 +217,9 @@ contract AC_TKN is
         //^^^^^^^interactions^^^^^^^^^
     }
 
+    //CTS:EXAMINE comment?
+    //CTS:EXAMINE param
+    //CTS:EXAMINE returns
     function tokenExists(uint256 tokenId) external view returns (uint256) {
         if (_exists(tokenId)) {
             return 170;
@@ -249,6 +266,10 @@ contract AC_TKN is
         //^^^^^^^interactions^^^^^^^^^
     }
 
+    //CTS:EXAMINE comment?
+    //CTS:EXAMINE param
+    //CTS:EXAMINE param
+    //CTS:EXAMINE param
     function _beforeTokenTransfer(
         address from,
         address to,
