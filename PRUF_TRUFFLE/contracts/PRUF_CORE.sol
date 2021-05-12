@@ -12,17 +12,17 @@ __/\\\\\\\\\\\\\ _____/\\\\\\\\\ _______/\\../\\ ___/\\\\\\\\\\\\\\\
 
 /*-----------------------------------------------------------------
  *  TO DO
- *  //CTS:!!EXAMINE GLOBAL!! we need to be using pascal case for all acronyms ex. htmlButton or bigHtmlButton, except for things with tow acronyms ex. prufIO rather than prufIo !!important
+ *  //CTS:!!EXAMINE GLOBAL!! we need to be using pascal case for all acronyms ex. htmlButton or bigHtmlButton, except for things with two acronyms ex. prufIO rather than prufIo !!important
  *-----------------------------------------------------------------
  * IMPORTANT!!! NO EXTERNAL OR PUBLIC FUNCTIONS ALLOWED IN THIS CONTRACT!!!!!!!!
  *-----------------------------------------------------------------
- * PRUF core provides switches core functionality covering cost getters, payment processing, withdrawls, common test conditionals, and setters for data in storage //CTS:EXAMINE this is all over the place, add commas?
+ * PRUF core provides switches core functionality covering cost getters, payment processing, withdrawls, common test conditionals, and setters for data in storage
  *---------------------------------------------------------------*/
 
 // SPDX-License-Identifier: UNLICENSED
 pragma solidity ^0.8.0;
 
-//import "./PRUF_INTERFACES.sol"; //CTS:EXAMINE remove?
+
 import "./Imports/utils/ReentrancyGuard.sol";
 import "./PRUF_BASIC.sol";
 
@@ -78,7 +78,7 @@ contract CORE is BASIC {
             } else if (AC_info.managementType == 4) {
                 require(
                     ID_TKN.trustedLevelByAddress(_msgSender()) > 9,
-                    "C:CR:Caller does not hold sufficiently trusted ID (10+)" //CTS:EXAMINE remove "(10+)" it doesn't mean anything out of context
+                    "C:CR:Caller does not hold sufficiently trusted ID" 
                 );
             }
         }
@@ -110,7 +110,6 @@ contract CORE is BASIC {
         internal
         virtual
         whenNotPaused
-    //isAuthorized(_idxHash) //CTS:EXAMINE remove?
     {
         //^^^^^^^checks^^^^^^^^^
 
@@ -163,7 +162,6 @@ contract CORE is BASIC {
         internal
         virtual
         whenNotPaused
-    //isAuthorized(_idxHash) //CTS:EXAMINE remove?
     {
         //^^^^^^^checks^^^^^^^^^
 
