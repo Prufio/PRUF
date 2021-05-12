@@ -1,4 +1,4 @@
-/*--------------------------------------------------------PRüF0.8.0
+/**--------------------------------------------------------PRüF0.8.0
 __/\\\\\\\\\\\\\ _____/\\\\\\\\\ _______/\\../\\ ___/\\\\\\\\\\\\\\\
  _\/\\\/////////\\\ _/\\\///////\\\ ____\//..\//____\/\\\///////////__
   _\/\\\.......\/\\\.\/\\\.....\/\\\ ________________\/\\\ ____________
@@ -10,10 +10,11 @@ __/\\\\\\\\\\\\\ _____/\\\\\\\\\ _______/\\../\\ ___/\\\\\\\\\\\\\\\
         _\/// _____________\/// _______\/// __\///////// __\/// _____________
          *-------------------------------------------------------------------*/
 
-/*-----------------------------------------------------------------
+/**-----------------------------------------------------------------
  *  TO DO
  *
- * IMPORTANT!!! NO EXTERNAL OR PUBLIC FUNCTIONS (without STRICT PERMISSIONING) ALLOWED IN THIS CONTRACT!!!!!!!!
+ * IMPORTANT!!! EXTERNAL OR PUBLIC FUNCTIONS WITHOUTSTRICT PERMISSIONING NEED 
+ * TO BE CLOSELY EXAMINED IN THIS CONTRACT AS THEY WILL BE INHERITED NEARLY GLOBALLY
  *-----------------------------------------------------------------
  *-----------------------------------------------------------------
  *PRUF basic provides core data structures and functionality to PRUF contracts.
@@ -39,7 +40,7 @@ abstract contract BASIC is
         keccak256("CONTRACT_ADMIN_ROLE");
     bytes32 public constant PAUSER_ROLE = keccak256("PAUSER_ROLE");
     bytes32 public constant ASSET_TXFR_ROLE = keccak256("ASSET_TXFR_ROLE");
-    //CTS:EXAMINE how do we make this upgradable? doesn't vvv this vvv method for interfacing seem limited?
+
     address internal STOR_Address;
     STOR_Interface internal STOR;
 
@@ -81,36 +82,31 @@ abstract contract BASIC is
 
     // --------------------------------------REPORTING--------------------------------------------//
 
-    event REPORT(string _msg); //not used internally, can this be inherited?
-    // --------------------------------------Modifiers--------------------------------------------//
+    event REPORT(string _msg);
 
-    /*
-     * @dev Verify user credentials //CTS:EXAMINE this comment is hard to follow
-     * Originating Address:
-     *      Exists in registeredUsers as a usertype 1 to 9
-     *      Is authorized for asset class
-     *      asset token held by this.contract
-     * ----OR---- (comment out part that will not be used)
-     *      holds asset token
-     * //CTS:EXAMINE param
+    // --------------------------------------Modifiers--------------------------------------------//
+    /**
+     * @dev Verify user credentials
+     * function should always be overridden!!! will always throw.
+     * @param _idxHash - asset index
      */
     modifier isAuthorized(bytes32 _idxHash) virtual {
         require(
-            _idxHash == 0, //function should always be overridden!!! will throw if not //CTS:EXAMINE is there a better way to do this? Also, move up to comments
+            _idxHash == 0, //
             "B:MOD-IAUTH: Modifier must be overridden"
         );
         _;
     }
 
-    /*
+    /**
      * @dev Verify user credentials
      * Originating Address:
-     *      is admin //CTS:EXAMINE "is contract admin"
+     *      is contract admin
      */
     modifier isContractAdmin() {
         require(
             hasRole(CONTRACT_ADMIN_ROLE, _msgSender()),
-            "B:MOD:-IADM caller !CONTRACT_ADMIN_ROLE" //CTS:EXAMINE cap caller
+            "B:MOD:-IADM Caller !CONTRACT_ADMIN_ROLE"
         );
         _;
     }
@@ -124,15 +120,14 @@ abstract contract BASIC is
     }
 
     //----------------------External Admin functions / isContractAdmin----------------------//
-    /*
-     * @dev Resolve Contract Addresses from STOR //CTS:EXAMINE its okay that functions like this arent upgradable right? (cant add contracts to resolution)
+    /**
+     * @dev Resolve Contract Addresses from STOR 
      */
-    function OO_resolveContractAddresses()
+    function Admin_resolveContractAddresses()
         external
         virtual
-        //CTS:EXAMINE not OO
         nonReentrant
-        isContractAdmin //-------------------------------------------------------STRICT PERMISSIONING //CTS:EXAMINE comment obvious?
+        isContractAdmin 
     {
         //^^^^^^^checks^^^^^^^^^
         AC_TKN_Address = STOR.resolveContractAddress("AC_TKN");
@@ -165,17 +160,17 @@ abstract contract BASIC is
         //^^^^^^^effects^^^^^^^^^
     }
 
-    /*
+    /**
      * @dev Transfer any specified assetToken from contract
-     * //CTS:EXAMINE param
-     * //CTS:EXAMINE param
+     * @param _to - address to send to
+     * @param _idxHash - asset index
      */
     function transferAssetToken(address _to, bytes32 _idxHash)
         external
         virtual
         nonReentrant
     {
-        require( //-------------------------------------------------------STRICT PERMISSIONING //CTS:EXAMINE comment obvious?
+        require( 
             hasRole(ASSET_TXFR_ROLE, _msgSender()),
             "B:TX:Must have ASSET_TXFR_ROLE"
         );
@@ -187,15 +182,15 @@ abstract contract BASIC is
         //^^^^^^^interactions^^^^^^^^^
     }
 
-    /*
+    /**
      * @dev Transfer any specified assetClassToken from contract
-     * //CTS:EXAMINE param
-     * //CTS:EXAMINE param
+     * @param _to - address to send to
+     * @param _tokenID - asset class token ID
      */
-    function OO_transferACToken(address _to, uint256 _tokenID) //CTS:EXAMINE not OO
+    function Admin_transferACToken(address _to, uint256 _tokenID)
         external
         virtual
-        isContractAdmin //-------------------------------------------------------STRICT PERMISSIONING //CTS:EXAMINE comment obvious?
+        isContractAdmin 
         nonReentrant
     {
         //^^^^^^^checks^^^^^^^^^
@@ -203,14 +198,14 @@ abstract contract BASIC is
         //^^^^^^^interactions^^^^^^^^^
     }
 
-    /*
-     * @dev Set adress of STOR contract to interface with //CTS:EXAMINE typo
-     * //CTS:EXAMINE param
+    /**
+     * @dev Set address of STOR contract to interface with 
+     * @param _storageAddress address of PRUF_STOR
      */
-    function OO_setStorageContract(address _storageAddress) //CTS:EXAMINE not OO
+    function OO_setStorageContract(address _storageAddress)
         external
         virtual
-        isContractAdmin //-------------------------------------------------------STRICT PERMISSIONING //CTS:EXAMINE comment obvious?
+        isContractAdmin 
     {
         require(_storageAddress != address(0), "B:SSC: Address = 0");
         //^^^^^^^checks^^^^^^^^^
@@ -220,13 +215,9 @@ abstract contract BASIC is
     }
 
     //--------------------------------------External functions--------------------------------------------//
-    /*
+    /**
      * @dev Compliance for erc721 reciever
-     * //CTS:EXAMINE param
-     * //CTS:EXAMINE param
-     * //CTS:EXAMINE param
-     * //CTS:EXAMINE param
-     * //CTS:EXAMINE return
+     * See OZ documentation 
      */
     function onERC721Received(
         address,
@@ -234,36 +225,33 @@ abstract contract BASIC is
         uint256,
         bytes calldata
     ) external virtual override returns (bytes4) {
-        //-------------------------------------------------------STRICT PERMISSIONING EXEMPT //CTS:EXAMINE comment obvious?
         //^^^^^^^checks^^^^^^^^^
         return this.onERC721Received.selector;
         //^^^^^^^interactions^^^^^^^^^
     }
 
-    /**
+    /***
      * @dev Triggers stopped state. (pausable)
      *
      */
     function pause() external isPauser {
-        //-------------------------------------------------------STRICT PERMISSIONING //CTS:EXAMINE comment obvious?
         _pause();
     }
 
-    /**
+    /***
      * @dev Returns to normal state. (pausable)
      */
 
     function unpause() external isPauser {
-        //-------------------------------------------------------STRICT PERMISSIONING //CTS:EXAMINE comment obvious?
         _unpause();
     }
 
     //--------------------------------------------------------------------------------------INTERNAL functions
 
-    /*
+    /**
      * @dev Get a User type Record from AC_manager for _msgSender(), by assetClass
-     * //CTS:EXAMINE param
-     * //CTS:EXAMINE return
+     * @param _assetClass - to check user type in
+     * returns user authorization type of caller, from AC_MGR user mapping
      */
     function getCallingUserType(uint32 _assetClass)
         internal
@@ -282,10 +270,10 @@ abstract contract BASIC is
         //^^^^^^^interactions^^^^^^^^^
     }
 
-    /*
+    /**
      * @dev Get asset class information from AC_manager and return an AC Struct
-     * //CTS:EXAMINE param
-     * //CTS:EXAMINE return
+     * @param _assetClass - to retrireve info about
+     * returns entire AC struct (see interfaces for struct definitions)
      */
     function getACinfo(uint32 _assetClass)
         internal
@@ -309,11 +297,11 @@ abstract contract BASIC is
         //^^^^^^^interactions^^^^^^^^^
     }
 
-    /*
+    /**
      * @dev Get contract information from STOR and return a ContractDataHash Struct
-     * //CTS:EXAMINE param
-     * //CTS:EXAMINE param
-     * //CTS:EXAMINE return
+     * @param _addr address of contract to check
+     * @param _assetClass asset class to check 
+     * returns ContractDataHash struct, containing the authorization level and hashed name of a given contract X in asset class Y
      */
     function getContractInfo(address _addr, uint32 _assetClass)
         internal
@@ -329,10 +317,11 @@ abstract contract BASIC is
         //^^^^^^^interactions^^^^^^^^^
     }
 
-    /*
+    /**
      * @dev Get a Record from Storage @ idxHash and return a Record Struct
-     * //CTS:EXAMINE param
-     * //CTS:EXAMINE return
+    function getRecord(bytes32 _idxHash) internal returns (Record memory) {
+     * @param _idxHash - asset index
+     * returns entire record struct form PRUF_STOR (see interfaces for struct definitions)
      */
     function getRecord(bytes32 _idxHash) internal returns (Record memory) {
         //^^^^^^^checks^^^^^^^^^
