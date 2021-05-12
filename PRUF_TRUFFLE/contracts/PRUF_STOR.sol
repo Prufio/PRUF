@@ -16,6 +16,7 @@ __/\\\\\\\\\\\\\ _____/\\\\\\\\\ _______/\\../\\ ___/\\\\\\\\\\\\\\\
  * //CTS:EXAMINE AssetClass, asset class, assetClass->Node global
  * //CTS:EXAMINE AssetClassRoot, asset class root, root->RootNode global
  * //CTS:EXAMINE IPFS1/IPFS2->storProvider/storProvider2 global
+ * //CTS:EXAMINE idxHash->assetId global
 
  *---------------------------------------------------------------*/
 
@@ -78,7 +79,7 @@ contract STOR is AccessControl, ReentrancyGuard, Pausable {
     modifier isContractAdmin() {
         require(
             hasRole(CONTRACT_ADMIN_ROLE, _msgSender()),
-            "S:MOD-IADM: Must have CONTRACT_ADMIN_ROLE"
+            "S:MOD-IADM: Must have CONTRACT_ADMIN_ROLE" //CTS:EXAMINE "S:MOD-ICA"
         );
         _;
     }
