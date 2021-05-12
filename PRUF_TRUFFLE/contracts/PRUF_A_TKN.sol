@@ -86,7 +86,7 @@ contract A_TKN is
     }
 
     event REPORT(string _msg);
-
+    //CTS:EXAMINE comment
     modifier isContractAdmin() {
         require(
             hasRole(CONTRACT_ADMIN_ROLE, _msgSender()),
@@ -95,6 +95,7 @@ contract A_TKN is
         _;
     }
 
+    //CTS:EXAMINE comment
     modifier isMinter() {
         require(
             hasRole(MINTER_ROLE, _msgSender()),
@@ -103,14 +104,15 @@ contract A_TKN is
         _;
     }
 
+    //CTS:EXAMINE comment
     modifier isTrustedAgent() {
         require(
             hasRole(TRUSTED_AGENT_ROLE, _msgSender()),
-            "AT:MOD-ITA: must have TRUSTED_AGENT_ROLE"
+            "AT:MOD-ITA:Must have TRUSTED_AGENT_ROLE"
         );
         require(
             trustedAgentEnabled == 1,
-            "AT:MOD-ITA: Trusted Agent function permanently disabled - use allowance / transferFrom pattern"
+            "AT:MOD-ITA:Trusted Agent function permanently disabled - use allowance / transferFrom pattern"
         );
         _;
     }
@@ -125,7 +127,7 @@ contract A_TKN is
      * either ahead of time "loading up your PRUF account" or on demand with an operation. On demand will use quite a bit more gas.
      * "preloading" should be pretty gas efficient, but will add an extra step to the workflow, requiring users to have sufficient
      * PRuF "banked" in an allowance for use in the system.
-     *
+     * //CTS:EXAMINE param
      */
     function adminKillTrustedAgent(uint256 _key) external isContractAdmin {
         if (_key == 170) {
@@ -135,11 +137,12 @@ contract A_TKN is
 
     /*
      * @dev Set storage contract to interface with
+     * //CTS:EXAMINE param
      */
-    function OO_setStorageContract(address _storageAddress) external isContractAdmin {
+    function OO_setStorageContract(address _storageAddress) external isContractAdmin { //CTS:EXAMINE not OO
         require(
             _storageAddress != address(0),
-            "AT:SSC: storage address cannot be zero"
+            "AT:SSC:Storage address = 0"
         );
         //^^^^^^^checks^^^^^^^^^
 
@@ -148,9 +151,9 @@ contract A_TKN is
     }
 
     /*
-     * @dev Address Setters
+     * @dev Address Setters //CTS:EXAMINE work on this comment
      */
-    function OO_resolveContractAddresses() external isContractAdmin {
+    function OO_resolveContractAddresses() external isContractAdmin { //CTS:EXAMINE not OO
         //^^^^^^^checks^^^^^^^^^
 
         RCLR_Address = STOR.resolveContractAddress("RCLR");
@@ -187,13 +190,18 @@ contract A_TKN is
     /*
      * @dev return an adresses "cold wallet" status
      * WALLET ADDRESSES SET TO "Cold" DO NOT WORK WITH TRUSTED_AGENT FUNCTIONS
+     * //CTS:EXAMINE return
      */
     function isColdWallet(address _addr) public view returns (uint256) {
         return coldWallet[_addr];
     }
 
     /*
-     * @dev Mint new token
+     * @dev Mint new token //CTS:EXAMINE work on this comment
+     * //CTS:EXAMINE param
+     * //CTS:EXAMINE param
+     * //CTS:EXAMINE param
+     * //CTS:EXAMINE return
      */
     function mintAssetToken(
         address _recipientAddress,
@@ -202,7 +210,7 @@ contract A_TKN is
     ) external isMinter nonReentrant returns (uint256) {
         //^^^^^^^checks^^^^^^^^^
 
-        //MAKE URI ASSET SPECIFIC- has to incorporate the token ID
+        //MAKE URI ASSET SPECIFIC- has to incorporate the token ID //CTS:EXAMINE
         _safeMint(_recipientAddress, tokenId);
         _setTokenURI(tokenId, _tokenURI);
         return tokenId;
@@ -210,11 +218,14 @@ contract A_TKN is
     }
 
     /*
-     * @dev Set new token URI String  //DPS:TEST
+     * @dev Set new token URI String
+     * //CTS:EXAMINE param
+     * //CTS:EXAMINE param
+     * //CTS:EXAMINE return
      */
     function setURI(uint256 tokenId, string calldata _tokenURI)
         external
-        returns (uint256)
+        returns (uint256) //CTS:EXAMINE does this need to return anything?
     {
         bytes32 _idxHash = bytes32(tokenId);
         Record memory rec = getRecord(_idxHash);
@@ -225,18 +236,18 @@ contract A_TKN is
 
             require(
                 bytes(tokenURI).length == 0,
-                "AT:SURI:URI already set, is immutable"
+                "AT:SURI:URI is set, and immutable"
             );
 
             require(
                 AC_TKN.ownerOf(rec.assetClass) == _msgSender(),
-                "AT:SURI:URI can only be set by ACNode Holder"
+                "AT:SURI:Caller !ACTH"
             );
         }
 
         require(
             _isApprovedOrOwner(_msgSender(), tokenId),
-            "AT:SURI:caller is not owner nor approved"
+            "AT:SURI:Caller !owner nor approved"
         );
         //^^^^^^^checks^^^^^^^^^
 
@@ -245,7 +256,7 @@ contract A_TKN is
         //^^^^^^^interactions^^^^^^^^^
     }
 
-    // /* PIP IS VULNERABLE TO THE DARK FOREST
+    // /* PIP IS VULNERABLE TO THE DARK FOREST //CTS:EXAMINE
     //  * @dev Reassures user that token is minted in the PRUF system
     //  */
     // function validatePipToken(
@@ -266,8 +277,10 @@ contract A_TKN is
     //     );
     // }
 
-    /*
-     * @dev See if token exists
+    /**
+     * @dev See if asset token exists
+     * //CTS:EXAMINE param
+     * //CTS:EXAMINE return
      */
     function tokenExists(uint256 tokenId) external view returns (uint8) {
         if (_exists(tokenId)) {
@@ -295,7 +308,7 @@ contract A_TKN is
 
         require(
             _isApprovedOrOwner(_msgSender(), tokenId),
-            "AT:TF:transfer caller is not owner nor approved"
+            "AT:TF:Transfer caller is not owner nor approved"
         );
         require(
             rec.assetStatus == 51,
@@ -350,7 +363,8 @@ contract A_TKN is
     }
 
     /**
-     * @dev Safely burns a token
+     * @dev Safely burns an asset token
+     * //CTS:EXAMINE param
      */
     function trustedAgentBurn(uint256 tokenId)
         external
@@ -411,7 +425,7 @@ contract A_TKN is
 
         require(
             _isApprovedOrOwner(_msgSender(), tokenId),
-            "AT:STF: transfer caller is not owner nor approved"
+            "AT:STF:Transfer caller !owner nor approved"
         );
         require( // ensure that status 70 assets are only sent to an actual PRUF contract
             (rec.assetStatus != 70) || (isAuth > 0),
@@ -419,7 +433,7 @@ contract A_TKN is
         );
         require(
             (rec.assetStatus == 51) || (rec.assetStatus == 70),
-            "AT:STF:Asset not in transferrable status"
+            "AT:STF:Asset !in transferrable status"
         );
         require(
             to != address(0),
@@ -438,6 +452,7 @@ contract A_TKN is
 
     /**
      * @dev Safely burns a token and sets the corresponding RGT to zero in storage.
+     * //CTS:EXAMINE param
      */
     function discard(uint256 tokenId) external nonReentrant whenNotPaused {
         bytes32 _idxHash = bytes32(tokenId);
@@ -445,7 +460,7 @@ contract A_TKN is
 
         require(
             _isApprovedOrOwner(_msgSender(), tokenId),
-            "AT:D:transfer caller is not owner nor approved"
+            "AT:D:Transfer caller !owner nor approved"
         );
         //^^^^^^^checks^^^^^^^^^
 
@@ -456,6 +471,8 @@ contract A_TKN is
 
     /*
      * @dev Write a Record to Storage @ idxHash, clears price information
+     * //CTS:EXAMINE param
+     * //CTS:EXAMINE param
      */
     function writeRecord(bytes32 _idxHash, Record memory _rec)
         private
@@ -478,6 +495,8 @@ contract A_TKN is
 
     /*
      * @dev Get a Record from Storage @ idxHash and return a Record Struct
+     * //CTS:EXAMINE param
+     * //CTS:EXAMINE returns
      */
     function getRecord(bytes32 _idxHash) internal returns (Record memory) {
         //^^^^^^^checks^^^^^^^^^
@@ -491,6 +510,8 @@ contract A_TKN is
 
     /**
      * @dev Converts a `uint256` to its ASCII `string` decimal representation.
+     * //CTS:EXAMINE param
+     * //CTS:EXAMINE returns
      */
     function uint256toString(uint256 value)
         internal
@@ -559,6 +580,7 @@ contract A_TKN is
         //^^^^^^^interactions^^^^^^^^^
     }
 
+    //CTS:EXAMINE get comment from util_tkn
     function _beforeTokenTransfer(
         address _from,
         address to,
