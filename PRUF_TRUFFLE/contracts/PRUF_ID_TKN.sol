@@ -72,8 +72,7 @@ contract ID_TKN is
         //_setBaseURI("pruf.io");
     }
 
-    event REPORT(string _msg);
-
+    //----------------------Modifiers----------------------//
     modifier isContractAdmin() {
         require(
             hasRole(CONTRACT_ADMIN_ROLE, _msgSender()),
@@ -90,10 +89,17 @@ contract ID_TKN is
         _;
     }
 
+    //----------------------EVENTS----------------------//
+    event REPORT(string _msg);
+
     //----------------------Admin functions / isContractAdmin----------------------//
 
     /*
      * @dev Mint new PRUF_ID token
+     * //CTS:EXAMINE param
+     * //CTS:EXAMINE param
+     * //CTS:EXAMINE param
+     * //CTS:EXAMINE returns
      */
     function mintPRUF_IDToken(
         address _recipientAddress,
@@ -111,6 +117,7 @@ contract ID_TKN is
 
     /*
      * @dev Burn PRUF_ID token
+     * //CTS:EXAMINE param
      */
     function burnPRUF_ID(uint256 _tokenId)
         external
@@ -126,10 +133,11 @@ contract ID_TKN is
     }
 
     /*
-     * @dev remint Asset Token
-     * must set a new and unuiqe rgtHash
+     * @dev remint ID Token
      * burns old token
-     * Sends new token to original Caller
+     * //CTS:EXAMINE param
+     * //CTS:EXAMINE param
+     * //CTS:EXAMINE returns
      */
     function reMintPRUF_IDToken(address _recipientAddress, uint256 _tokenId)
         external
@@ -150,6 +158,9 @@ contract ID_TKN is
 
     /*
      * @dev Set new token URI String -- string should eventually be a B32 hash of ID info in a standardized format - verifyable against provided ID
+     * //CTS:EXAMINE param
+     * //CTS:EXAMINE param
+     * //CTS:EXAMINE returns
      */
     function setURI(uint256 _tokenId, string calldata _tokenURI)
         external
@@ -167,6 +178,9 @@ contract ID_TKN is
 
     /*
      * @dev Set new ID mapp user URI String -- string should eventually be a B32 hash of ID info in a standardized format - verifyable against provided ID
+     * //CTS:EXAMINE param
+     * //CTS:EXAMINE param
+     * //CTS:EXAMINE returns
      */
     function setIdURI(
         uint256 _tokenId,
@@ -184,7 +198,10 @@ contract ID_TKN is
     }
 
     /*
-     * @dev Set new ID mapp user URI String -- string should eventually be a B32 hash of ID info in a standardized format - verifyable against provided ID
+     * @dev Set new ID mapp user URI String -- string should eventually be a B32 hash of ID info in a standardized format - verifyable against provided ID //CTS:EXAMINE new comment
+     * //CTS:EXAMINE param
+     * //CTS:EXAMINE param
+     * //CTS:EXAMINE returns
      */
     function setUserName(
         uint256 _tokenId,
@@ -194,8 +211,8 @@ contract ID_TKN is
             ((ownerOf(_tokenId) == _msgSender()) &&
                 (keccak256(abi.encodePacked(id[_tokenId].userName)) ==
                     keccak256(abi.encodePacked("")))),
-            // || hasRole(MINTER_ROLE, _msgSender()),
-            "PIDT:SUN: Caller !hold token or userName is set" //, and is not minter"
+            // || hasRole(MINTER_ROLE, _msgSender()), //CTS:EXAMINE
+            "PIDT:SUN: Caller !hold token or userName is set"
         );
         bytes32 nameHash = keccak256(abi.encodePacked(_userName));
         require(
@@ -212,6 +229,9 @@ contract ID_TKN is
 
     /*
      * @dev Set new ID data fields
+     * //CTS:EXAMINE param
+     * //CTS:EXAMINE param
+     * //CTS:EXAMINE returns
      */
     function setTrustLevel(
         uint256 _tokenId,
@@ -226,6 +246,8 @@ contract ID_TKN is
 
     /*
      * @dev See if token exists
+     * //CTS:EXAMINE param
+     * //CTS:EXAMINE returns
      */
     function tokenExists(uint256 _tokenId) external view returns (uint8) {
         if (_exists(_tokenId)) {
@@ -237,6 +259,8 @@ contract ID_TKN is
 
     /*
      * @dev get ID data
+     * //CTS:EXAMINE param
+     * //CTS:EXAMINE returns
      */
     function IdData(uint256 _tokenId) external view returns (ID memory) {
         return id[_tokenId];
@@ -244,6 +268,8 @@ contract ID_TKN is
 
     /*
      * @dev get ID trustLevel
+     * //CTS:EXAMINE param
+     * //CTS:EXAMINE returns
      */
     function trustLevel(uint256 _tokenId) external view returns (uint256) {
         return id[_tokenId].trustLevel;
@@ -251,6 +277,8 @@ contract ID_TKN is
 
     /*
      * @dev get ID trustLevel by address (token 0 at address)
+     * //CTS:EXAMINE param
+     * //CTS:EXAMINE returns
      */
     function trustedLevelByAddress(address _addr) external view returns (uint256) {
         return id[tokenOfOwnerByIndex(_addr, 0)].trustLevel;
@@ -260,6 +288,9 @@ contract ID_TKN is
      * @dev Blocks the transfer of a given token ID to another address
      * Usage of this method is discouraged, use {safeTransferFrom} whenever possible.
      * Requires the _msgSender() to be the owner, approved, or operator.
+     * //CTS:EXAMINE param
+     * //CTS:EXAMINE param
+     * //CTS:EXAMINE param
      */
     function transferFrom(
         address from,
@@ -287,6 +318,9 @@ contract ID_TKN is
      * `bytes4(keccak256("onERC721Received(address,address,uint256,bytes)"))`; otherwise,
      * the transfer is reverted.
      * Requires the _msgSender() to be the owner, approved, or operator
+     * //CTS:EXAMINE param
+     * //CTS:EXAMINE param
+     * //CTS:EXAMINE param
      */
     function safeTransferFrom(
         address from,
@@ -317,7 +351,7 @@ contract ID_TKN is
     ) public virtual override nonReentrant whenNotPaused {
         require(
             _isApprovedOrOwner(_msgSender(), _tokenId),
-            "PIDT:STF: Transfer caller is not owner nor approved"
+            "PIDT:STF: Transfer caller !owner nor approved"
         );
         require(
             to == from,
@@ -368,6 +402,10 @@ contract ID_TKN is
         //^^^^^^^interactions^^^^^^^^^
     }
 
+     //CTS:EXAMINE comment?
+     //CTS:EXAMINE param
+     //CTS:EXAMINE param
+     //CTS:EXAMINE param
     function _beforeTokenTransfer(
         address from,
         address to,
