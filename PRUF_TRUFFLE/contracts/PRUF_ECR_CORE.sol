@@ -23,11 +23,13 @@ import "./PRUF_BASIC.sol";
 import "./Imports/utils/ReentrancyGuard.sol";
 
 contract ECR_CORE is BASIC {
-     // CTS:EXAMINE comment
-     // CTS:EXAMINE param
-     // CTS:EXAMINE param
-     // CTS:EXAMINE param
-     // CTS:EXAMINE param
+    /**
+     * Escrow Data Setter
+     * @param _idxHash - Asset ID
+     * @param _newAssetStatus - Escrow status to set
+     * @param _escrowOwnerAddressHash - Hash of escrow controller address
+     * @param _timelock - Timelock parameter for time controlled escrows
+     */
     function _setEscrowData(
         bytes32 _idxHash,
         uint8 _newAssetStatus,
@@ -42,32 +44,36 @@ contract ECR_CORE is BASIC {
         );
     }
 
-     // CTS:EXAMINE comment
-     // CTS:EXAMINE param
-     // CTS:EXAMINE param
+    /**
+     * Escrow DataLight Setter
+     * @param _idxHash - Asset ID
+     * @param _escrowDataLight - escrowDataExtLight struct (see interfaces for struct definitions)
+     */
     function _setEscrowDataLight(
         bytes32 _idxHash,
-        escrowDataExtLight memory escrowDataLight
+        escrowDataExtLight memory _escrowDataLight
     ) internal whenNotPaused {
-        ECR_MGR.setEscrowDataLight(_idxHash, escrowDataLight);
+        ECR_MGR.setEscrowDataLight(_idxHash, _escrowDataLight);
         //^^^^^^^interactions^^^^^^^^^
     }
 
-     // CTS:EXAMINE comment
-     // CTS:EXAMINE param
-     // CTS:EXAMINE param
+    /**
+     * Escrow DataHeavy Setter
+     * @param _idxHash - Asset ID
+     * @param _escrowDataHeavy - escrowDataExtHeavy struct (see interfaces for struct definitions)
+     */
     function _setEscrowDataHeavy(
         bytes32 _idxHash,
-        escrowDataExtHeavy memory escrowDataHeavy
+        escrowDataExtHeavy memory _escrowDataHeavy
     ) internal whenNotPaused {
-        ECR_MGR.setEscrowDataHeavy(_idxHash, escrowDataHeavy);
+        ECR_MGR.setEscrowDataHeavy(_idxHash, _escrowDataHeavy);
         //^^^^^^^interactions^^^^^^^^^
     }
 
-    /*
-     * @dev retrieves escrow data and returns escrow struct
-     // CTS:EXAMINE param
-     // CTS:EXAMINE returns
+    /**
+     * @dev retrieves escrow data
+     * @param _idxHash - Asset ID
+     * returns escrowData struct (see interfaces for struct definitions)
      */
     function getEscrowData(bytes32 _idxHash)
         internal
@@ -81,10 +87,10 @@ contract ECR_CORE is BASIC {
         //^^^^^^^interactions^^^^^^^^^
     }
 
-    /*
-     * @dev retrieves extended escrow data and returns escrowDataExtLight struct
-     // CTS:EXAMINE param
-     // CTS:EXAMINE returns
+    /**
+     * @dev retrieves extended escrow data
+     * @param _idxHash - Asset ID
+     * returns escrowDataExtLight struct (see interfaces for struct definitions)
      */
     function getEscrowDataLight(bytes32 _idxHash)
         internal
@@ -100,10 +106,10 @@ contract ECR_CORE is BASIC {
         //^^^^^^^interactions^^^^^^^^^
     }
 
-    /*
-     * @dev retrieves extended escrow data and returns escrowDataExtHeavy struct
-     // CTS:EXAMINE param
-     // CTS:EXAMINE returns
+    /**
+     * @dev retrieves extended escrow data
+     * @param _idxHash - Asset ID
+     * returns escrowDataExtHeavy struct (see interfaces for struct definitions)
      */
     function getEscrowDataHeavy(bytes32 _idxHash)
         internal
