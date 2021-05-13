@@ -1,4 +1,4 @@
-/*--------------------------------------------------------PRüF0.8.0
+/**--------------------------------------------------------PRüF0.8.0
 __/\\\\\\\\\\\\\ _____/\\\\\\\\\ _______/\\../\\ ___/\\\\\\\\\\\\\\\
  _\/\\\/////////\\\ _/\\\///////\\\ ____\//..\//____\/\\\///////////__
   _\/\\\.......\/\\\.\/\\\.....\/\\\ ________________\/\\\ ____________
@@ -10,7 +10,7 @@ __/\\\\\\\\\\\\\ _____/\\\\\\\\\ _______/\\../\\ ___/\\\\\\\\\\\\\\\
         _\/// _____________\/// _______\/// __\///////// __\/// _____________
          *-------------------------------------------------------------------*/
 
-/*-----------------------------------------------------------------
+/**-----------------------------------------------------------------
  *  TO DO
  *-----------------------------------------------------------------
  * PRUF ASSET NFT CONTRACT
@@ -28,7 +28,7 @@ import "./Imports/token/ERC721/ERC721Pausable.sol";
 import "./PRUF_INTERFACES.sol";
 import "./Imports/utils/ReentrancyGuard.sol";
 
-/**
+/***
  * @dev {ERC721} token, including:
  *
  *  - ability for holders to burn (destroy) their tokens
@@ -85,8 +85,15 @@ contract A_TKN is
         _setupRole(PAUSER_ROLE, _msgSender());
     }
 
+
     event REPORT(string _msg);
-    //CTS:EXAMINE comment
+
+
+    /***
+     * @dev Verify user credentials
+     * Originating Address:
+     *      has CONTRACT_ADMIN_ROLE
+     */
     modifier isContractAdmin() {
         require(
             hasRole(CONTRACT_ADMIN_ROLE, _msgSender()),
@@ -95,7 +102,11 @@ contract A_TKN is
         _;
     }
 
-    //CTS:EXAMINE comment
+    /***
+     * @dev Verify user credentials
+     * Originating Address:
+     *      has MINTER_ROLE
+     */
     modifier isMinter() {
         require(
             hasRole(MINTER_ROLE, _msgSender()),
@@ -104,7 +115,11 @@ contract A_TKN is
         _;
     }
 
-    //CTS:EXAMINE comment
+    /***
+     * @dev Verify user credentials
+     * Originating Address:
+     *      has TRUSTED_AGENT_ROLE and TA role is not disabled
+     */
     modifier isTrustedAgent() {
         require(
             hasRole(TRUSTED_AGENT_ROLE, _msgSender()),
@@ -119,7 +134,7 @@ contract A_TKN is
 
     //----------------------Admin functions / isContractAdmin ----------------------//
 
-    /*
+    /**
      * @dev ----------------------------------------PERMANANTLY !!!  Kills trusted agent and payable functions
      * this will break the functionality of current payment mechanisms.
      *
@@ -127,19 +142,19 @@ contract A_TKN is
      * either ahead of time "loading up your PRUF account" or on demand with an operation. On demand will use quite a bit more gas.
      * "preloading" should be pretty gas efficient, but will add an extra step to the workflow, requiring users to have sufficient
      * PRuF "banked" in an allowance for use in the system.
-     * //CTS:EXAMINE param
+     * @param _key - set to 170 to PERMENANTLY REMOVE TRUSTED AGENT CAPABILITY
      */
     function adminKillTrustedAgent(uint256 _key) external isContractAdmin {
         if (_key == 170) {
-            trustedAgentEnabled = 0; //-------------------THIS IS A PERMANENT ACTION AND CANNOT BE UNDONE
+            trustedAgentEnabled = 0; // !!! THIS IS A PERMANENT ACTION AND CANNOT BE UNDONE
         }
     }
 
-    /*
+    /**
      * @dev Set storage contract to interface with
-     * //CTS:EXAMINE param
+     * @param _storageAddress - Storage contract address to set
      */
-    function OO_setStorageContract(address _storageAddress) external isContractAdmin { //CTS:EXAMINE not OO
+    function Admin_setStorageContract(address _storageAddress) external isContractAdmin { 
         require(
             _storageAddress != address(0),
             "AT:SSC:Storage address = 0"
@@ -150,10 +165,10 @@ contract A_TKN is
         //^^^^^^^effects^^^^^^^^^
     }
 
-    /*
+    /**
      * @dev Address Setters //CTS:EXAMINE work on this comment
      */
-    function Admin_resolveContractAddresses() external isContractAdmin { //CTS:EXAMINE not OO
+    function Admin_resolveContractAddresses() external isContractAdmin { 
         //^^^^^^^checks^^^^^^^^^
 
         RCLR_Address = STOR.resolveContractAddress("RCLR");
@@ -169,7 +184,7 @@ contract A_TKN is
 
     ////----------------------Regular operations----------------------//
 
-    /*
+    /**
      * @dev Set calling wallet to a "cold Wallet" that cannot be manipulated by TRUSTED_AGENT or PAYABLE permissioned functions
      * WALLET ADDRESSES SET TO "Cold" DO NOT WORK WITH TRUSTED_AGENT FUNCTIONS and must be unset from cold before it can interact with
      * contract functions.
@@ -178,7 +193,7 @@ contract A_TKN is
         coldWallet[_msgSender()] = 170;
     }
 
-    /*
+    /**
      * @dev un-set calling wallet to a "cold Wallet", enabling manipulation by TRUSTED_AGENT and PAYABLE permissioned functions
      * WALLET ADDRESSES SET TO "Cold" DO NOT WORK WITH TRUSTED_AGENT FUNCTIONS and must be unset from cold before it can interact with
      * contract functions.
@@ -187,7 +202,7 @@ contract A_TKN is
         coldWallet[_msgSender()] = 0;
     }
 
-    /*
+    /**
      * @dev return an adresses "cold wallet" status
      * WALLET ADDRESSES SET TO "Cold" DO NOT WORK WITH TRUSTED_AGENT FUNCTIONS
      * //CTS:EXAMINE return
@@ -196,7 +211,7 @@ contract A_TKN is
         return coldWallet[_addr];
     }
 
-    /*
+    /**
      * @dev Mint new token //CTS:EXAMINE work on this comment
      * //CTS:EXAMINE param
      * //CTS:EXAMINE param
@@ -217,7 +232,7 @@ contract A_TKN is
         //^^^^^^^interactions^^^^^^^^^
     }
 
-    /*
+    /**
      * @dev Set new token URI String
      * //CTS:EXAMINE param
      * //CTS:EXAMINE param
@@ -256,7 +271,7 @@ contract A_TKN is
         //^^^^^^^interactions^^^^^^^^^
     }
 
-    // /* PIP IS VULNERABLE TO THE DARK FOREST //CTS:EXAMINE
+    // /** PIP IS VULNERABLE TO THE DARK FOREST //CTS:EXAMINE
     //  * @dev Reassures user that token is minted in the PRUF system
     //  */
     // function validatePipToken(
@@ -277,7 +292,7 @@ contract A_TKN is
     //     );
     // }
 
-    /**
+    /***
      * @dev See if asset token exists
      * //CTS:EXAMINE param
      * //CTS:EXAMINE return
@@ -290,7 +305,7 @@ contract A_TKN is
         }
     }
 
-    /**
+    /***
      * @dev Transfers the ownership of a given token ID to another address.
      * Usage of this method is discouraged, use {safeTransferFrom} whenever possible.
      * Requires the _msgSender() to be the owner, approved, or operator.
@@ -326,7 +341,7 @@ contract A_TKN is
         //^^^^^^^interactions^^^^^^^^^
     }
 
-    /**
+    /***
      * @dev Transfers the ownership of a given token ID to another address by a TRUSTED_AGENT.
      * Usage of this method is discouraged, use {safeTransferFrom} whenever possible.
      * Requires the _msgSender() to be the owner, approved, or operator.
@@ -362,7 +377,7 @@ contract A_TKN is
         //^^^^^^^interactions^^^^^^^^^
     }
 
-    /**
+    /***
      * @dev Safely burns an asset token
      * //CTS:EXAMINE param
      */
@@ -381,7 +396,7 @@ contract A_TKN is
         //^^^^^^^effects^^^^^^^^^
     }
 
-    /**
+    /***
      * @dev Safely transfers the ownership of a given token ID to another address
      * If the target address is a contract, it must implement {IERC721Receiver-onERC721Received},
      * which is called upon a safe transfer, and return the magic value
@@ -401,7 +416,7 @@ contract A_TKN is
         //^^^^^^^interactions^^^^^^^^^
     }
 
-    /**
+    /***
      * @dev Safely transfers the ownership of a given token ID to another address
      * If the target address is a contract, it must implement {IERC721Receiver-onERC721Received},
      * which is called upon a safe transfer, and return the magic value
@@ -450,7 +465,7 @@ contract A_TKN is
         //^^^^^^^interactions^^^^^^^^^
     }
 
-    /**
+    /***
      * @dev Safely burns a token and sets the corresponding RGT to zero in storage.
      * //CTS:EXAMINE param
      */
@@ -469,7 +484,7 @@ contract A_TKN is
         //^^^^^^^interactions^^^^^^^^^
     }
 
-    /*
+    /**
      * @dev Write a Record to Storage @ idxHash, clears price information
      * //CTS:EXAMINE param
      * //CTS:EXAMINE param
@@ -493,7 +508,7 @@ contract A_TKN is
         //^^^^^^^interactions^^^^^^^^^
     }
 
-    /*
+    /**
      * @dev Get a Record from Storage @ idxHash and return a Record Struct
      * //CTS:EXAMINE param
      * //CTS:EXAMINE returns
@@ -508,7 +523,7 @@ contract A_TKN is
         //^^^^^^^interactions^^^^^^^^^
     }
 
-    /**
+    /***
      * @dev Converts a `uint256` to its ASCII `string` decimal representation.
      * //CTS:EXAMINE param
      * //CTS:EXAMINE returns
@@ -540,7 +555,7 @@ contract A_TKN is
         return string(buffer);
     }
 
-    /**
+    /***
      * @dev Pauses all token transfers.
      *
      * See {ERC721Pausable} and {Pausable-_pause}.
@@ -560,7 +575,7 @@ contract A_TKN is
         //^^^^^^^interactions^^^^^^^^^
     }
 
-    /**
+    /***
      * @dev Unpauses all token transfers.
      *
      * See {ERC721Pausable} and {Pausable-_unpause}.

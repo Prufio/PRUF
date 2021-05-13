@@ -202,7 +202,7 @@ abstract contract BASIC is
      * @dev Set address of STOR contract to interface with 
      * @param _storageAddress address of PRUF_STOR
      */
-    function OO_setStorageContract(address _storageAddress)
+    function Admin_setStorageContract(address _storageAddress)
         external
         virtual
         isContractAdmin 
