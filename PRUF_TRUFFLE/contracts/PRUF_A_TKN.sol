@@ -85,9 +85,7 @@ contract A_TKN is
         _setupRole(PAUSER_ROLE, _msgSender());
     }
 
-
     event REPORT(string _msg);
-
 
     /***
      * @dev Verify user credentials
@@ -154,11 +152,11 @@ contract A_TKN is
      * @dev Set storage contract to interface with
      * @param _storageAddress - Storage contract address to set
      */
-    function Admin_setStorageContract(address _storageAddress) external isContractAdmin { 
-        require(
-            _storageAddress != address(0),
-            "AT:SSC:Storage address = 0"
-        );
+    function Admin_setStorageContract(address _storageAddress)
+        external
+        isContractAdmin
+    {
+        require(_storageAddress != address(0), "AT:SSC:Storage address = 0");
         //^^^^^^^checks^^^^^^^^^
 
         STOR = STOR_Interface(_storageAddress);
@@ -166,9 +164,9 @@ contract A_TKN is
     }
 
     /**
-     * @dev Address Setters //CTS:EXAMINE work on this comment
+     * @dev Address Setters  - resolves addresses from storage and sets local interfaces
      */
-    function Admin_resolveContractAddresses() external isContractAdmin { 
+    function Admin_resolveContractAddresses() external isContractAdmin {
         //^^^^^^^checks^^^^^^^^^
 
         RCLR_Address = STOR.resolveContractAddress("RCLR");
@@ -205,18 +203,18 @@ contract A_TKN is
     /**
      * @dev return an adresses "cold wallet" status
      * WALLET ADDRESSES SET TO "Cold" DO NOT WORK WITH TRUSTED_AGENT FUNCTIONS
-     * //CTS:EXAMINE return
+     * returns 170 if adress is set to "cold wallet" status
      */
     function isColdWallet(address _addr) public view returns (uint256) {
         return coldWallet[_addr];
     }
 
     /**
-     * @dev Mint new token //CTS:EXAMINE work on this comment
-     * //CTS:EXAMINE param
-     * //CTS:EXAMINE param
-     * //CTS:EXAMINE param
-     * //CTS:EXAMINE return
+     * @dev Mint an Asset token
+     * @param _recipientAddress - Address to mint token into
+     * @param tokenId - Token ID to mint
+     * @param _tokenURI - URI string to atatch to token
+     * returns Token ID of minted token
      */
     function mintAssetToken(
         address _recipientAddress,
@@ -225,7 +223,6 @@ contract A_TKN is
     ) external isMinter nonReentrant returns (uint256) {
         //^^^^^^^checks^^^^^^^^^
 
-        //MAKE URI ASSET SPECIFIC- has to incorporate the token ID //CTS:EXAMINE
         _safeMint(_recipientAddress, tokenId);
         _setTokenURI(tokenId, _tokenURI);
         return tokenId;
@@ -234,13 +231,13 @@ contract A_TKN is
 
     /**
      * @dev Set new token URI String
-     * //CTS:EXAMINE param
-     * //CTS:EXAMINE param
-     * //CTS:EXAMINE return
+     * @param tokenId - Token ID to set URI
+     * @param _tokenURI - URI string to atatch to token
+     * returns Token ID
      */
     function setURI(uint256 tokenId, string calldata _tokenURI)
         external
-        returns (uint256) //CTS:EXAMINE does this need to return anything?
+        returns (uint256)
     {
         bytes32 _idxHash = bytes32(tokenId);
         Record memory rec = getRecord(_idxHash);
@@ -271,31 +268,10 @@ contract A_TKN is
         //^^^^^^^interactions^^^^^^^^^
     }
 
-    // /** PIP IS VULNERABLE TO THE DARK FOREST //CTS:EXAMINE
-    //  * @dev Reassures user that token is minted in the PRUF system
-    //  */
-    // function validatePipToken(
-    //     uint256 tokenId,
-    //     uint32 _assetClass,
-    //     string calldata _authCode
-    // ) external view {
-    //     bytes32 _hashedAuthCode = keccak256(abi.encodePacked(_authCode));
-    //     bytes32 b32URI =
-    //         keccak256(abi.encodePacked(_hashedAuthCode, _assetClass));
-    //     string memory authString = uint256toString(uint256(b32URI));
-    //     string memory URI = tokenURI(tokenId);
-
-    //     require(
-    //         keccak256(abi.encodePacked(URI)) ==
-    //             keccak256(abi.encodePacked(authString)),
-    //         "AT:VPT:AuthCode and assetClass != URI"
-    //     );
-    // }
-
-    /***
+    /**
      * @dev See if asset token exists
-     * //CTS:EXAMINE param
-     * //CTS:EXAMINE return
+     * @param tokenId - Token ID to set URI
+     * returns 170 if token exists, otherwise 0
      */
     function tokenExists(uint256 tokenId) external view returns (uint8) {
         if (_exists(tokenId)) {
@@ -305,7 +281,7 @@ contract A_TKN is
         }
     }
 
-    /***
+    /**
      * @dev Transfers the ownership of a given token ID to another address.
      * Usage of this method is discouraged, use {safeTransferFrom} whenever possible.
      * Requires the _msgSender() to be the owner, approved, or operator.
@@ -379,7 +355,7 @@ contract A_TKN is
 
     /***
      * @dev Safely burns an asset token
-     * //CTS:EXAMINE param
+     * @param tokenId - Token ID to Burn
      */
     function trustedAgentBurn(uint256 tokenId)
         external
@@ -467,7 +443,7 @@ contract A_TKN is
 
     /***
      * @dev Safely burns a token and sets the corresponding RGT to zero in storage.
-     * //CTS:EXAMINE param
+     * @param tokenId - Token ID to discard
      */
     function discard(uint256 tokenId) external nonReentrant whenNotPaused {
         bytes32 _idxHash = bytes32(tokenId);
@@ -486,8 +462,8 @@ contract A_TKN is
 
     /**
      * @dev Write a Record to Storage @ idxHash, clears price information
-     * //CTS:EXAMINE param
-     * //CTS:EXAMINE param
+     * @param _idxHash - Asset Index
+     * @param _rec - Complete Record Struct (see interfaces for struct definitions)
      */
     function writeRecord(bytes32 _idxHash, Record memory _rec)
         private
@@ -510,8 +486,8 @@ contract A_TKN is
 
     /**
      * @dev Get a Record from Storage @ idxHash and return a Record Struct
-     * //CTS:EXAMINE param
-     * //CTS:EXAMINE returns
+     * @param _idxHash - Asset Index
+     * returns Record Struct (see interfaces for struct definitions)
      */
     function getRecord(bytes32 _idxHash) internal returns (Record memory) {
         //^^^^^^^checks^^^^^^^^^
@@ -521,38 +497,6 @@ contract A_TKN is
 
         return rec; // Returns Record struct rec
         //^^^^^^^interactions^^^^^^^^^
-    }
-
-    /***
-     * @dev Converts a `uint256` to its ASCII `string` decimal representation.
-     * //CTS:EXAMINE param
-     * //CTS:EXAMINE returns
-     */
-    function uint256toString(uint256 value)
-        internal
-        pure
-        returns (string memory)
-    {
-        // Inspired by OraclizeAPI's implementation - MIT licence
-        // https://github.com/oraclize/ethereum-api/blob/b42146b063c7d6ee1358846c198246239e9360e8/oraclizeAPI_0.4.25.sol
-        // value = uint256(0x2ce8d04a9c35987429af538825cd2438cc5c5bb5dc427955f84daaa3ea105016);
-
-        if (value == 0) {
-            return "0";
-        }
-        uint256 temp = value;
-        uint256 digits;
-        while (temp != 0) {
-            digits++;
-            temp /= 10;
-        }
-        bytes memory buffer = new bytes(digits);
-        while (value != 0) {
-            digits -= 1;
-            buffer[digits] = bytes1(uint8(48 + uint256(value % 10)));
-            value /= 10;
-        }
-        return string(buffer);
     }
 
     /***
@@ -595,12 +539,17 @@ contract A_TKN is
         //^^^^^^^interactions^^^^^^^^^
     }
 
-    //CTS:EXAMINE get comment from util_tkn
+    /**
+     * @dev all paused functions are blocked here (inside ERC720Pausable.sol)
+     * @param from - from address
+     * @param to - to address
+     * @param tokenId - token ID to transfer
+     */
     function _beforeTokenTransfer(
-        address _from,
+        address from,
         address to,
         uint256 tokenId
     ) internal virtual override(ERC721, ERC721Pausable) {
-        super._beforeTokenTransfer(_from, to, tokenId);
+        super._beforeTokenTransfer(from, to, tokenId);
     }
 }
