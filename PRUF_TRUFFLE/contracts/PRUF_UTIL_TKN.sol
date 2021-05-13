@@ -407,10 +407,10 @@ contract UTIL_TKN is
     }
 
     /**
-     * @dev all paused functions are blocked here, unless caller has "pauser" role
-     * //CTS:EXAMINE param
-     * //CTS:EXAMINE param
-     * //CTS:EXAMINE param
+     * @dev all paused functions are blocked here, unless caller has "pauser" role. prevents cap overflow
+     * @param from - from address
+     * @param to - to address
+     * @param amount - transfer amount
      */
     function _beforeTokenTransfer(
         address from,
