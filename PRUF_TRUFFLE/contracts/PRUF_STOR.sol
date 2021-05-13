@@ -18,7 +18,7 @@ __/\\\\\\\\\\\\\ _____/\\\\\\\\\ _______/\\../\\ ___/\\\\\\\\\\\\\\\
  * //CTS:EXAMINE AssetClassRoot, asset class root, root->RootNode global
  * //CTS:EXAMINE IPFS1/IPFS2->storProvider/storProvider2 global
  * //CTS:EXAMINE idxHash->assetId global
-
+ * //CTS:EXAMINE NP name change
  *---------------------------------------------------------------*/
 
 /**-----------------------------------------------------------------
