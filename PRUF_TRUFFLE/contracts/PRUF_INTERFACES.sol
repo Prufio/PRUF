@@ -439,7 +439,7 @@ interface AC_TKN_Interface {
     /*
      * @dev Set storage contract to interface with
      */
-    function OO_setStorageContract(address _storageAddress) external;
+    function Admin_setStorageContract(address _storageAddress) external;
 
     /*
      * @dev Address Setters
@@ -590,7 +590,7 @@ interface A_TKN_Interface {
     /*
      * @dev Set storage contract to interface with
      */
-    function OO_setStorageContract(address _storageAddress) external;
+    function Admin_setStorageContract(address _storageAddress) external;
 
     /*
      * @dev Address Setters
