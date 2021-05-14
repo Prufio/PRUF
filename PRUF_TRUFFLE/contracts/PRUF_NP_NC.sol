@@ -15,16 +15,18 @@ __/\\\\\\\\\\\\\ _____/\\\\\\\\\ _______/\\../\\ ___/\\\\\\\\\\\\\\\
  *
  *---------------------------------------------------------------*/
 
+ //CTS:EXAMINE quick explainer for the contract
+
 // SPDX-License-Identifier: UNLICENSED
 pragma solidity ^0.8.0;
 
 import "./PRUF_CORE.sol";
 
 contract NP_NC is CORE {
-    //
 
     /*
      * @dev Verify user credentials
+     * //CTS:EXAMINE param
      * Originating Address:
      *      holds asset token at idxHash
      */
@@ -42,6 +44,10 @@ contract NP_NC is CORE {
 
     /*
      * @dev Modify rgtHash (like forceModify)
+     * //CTS:EXAMINE param
+     * //CTS:EXAMINE param
+     * //CTS:EXAMINE returns
+     * //CTS:EXAMINE create req section
      * must be tokenholder or A_TKN
      *
      */
@@ -57,7 +63,7 @@ contract NP_NC is CORE {
             isLostOrStolen(rec.assetStatus) == 0,
             "NPNC:CR: Cannot modify asset in lost or stolen status"
         );
-        require( //STATE UNREACHABLE: CANNOT MEET STATUS IN NC CONTRACTS CTS:PREFERRED
+        require(
             needsImport(rec.assetStatus) == 0,
             "NPNC:CR: Cannot modify asset in unregistered, exported, or discarded status"
         );
@@ -74,7 +80,8 @@ contract NP_NC is CORE {
     }
 
     /*
-     *     @dev Export FROM nonCustodial - sets asset to status 70 (importable)
+     * @dev Export - sets asset to status 70 (importable) //CTS:EXAMINE we should maybe describe this better
+     * //CTS:EXAMINE param
      */
     function _exportNC(bytes32 _idxHash)
         external
@@ -104,12 +111,15 @@ contract NP_NC is CORE {
         //^^^^^^^effects^^^^^^^^^
 
         writeRecord(_idxHash, rec);
-        //STOR.changeAC(_idxHash, AC_info.assetClassRoot); //set assetClass to the root AC of the assetClass
+        //STOR.changeAC(_idxHash, AC_info.assetClassRoot); //set assetClass to the root AC of the assetClass //CTS:EXAMINE untested dont delete
         //^^^^^^^interactions^^^^^^^^^
     }
 
     /*
      * @dev Modify **Record**.assetStatus with confirmation required
+     * //CTS:EXAMINE param
+     * //CTS:EXAMINE param
+     * //CTS:EXAMINE returns
      */
     function _modStatus(bytes32 _idxHash, uint8 _newAssetStatus)
         public
@@ -120,7 +130,7 @@ contract NP_NC is CORE {
     {
         Record memory rec = getRecord(_idxHash);
 
-        require( //IMPOSSIBLE WITH CURRENT CONTRACTS CTS:PREFERRED
+        require(
             (_newAssetStatus > 49) && (rec.assetStatus > 49),
             "NPNC:SLS: Only custodial usertype can set or change status < 50"
         );
@@ -130,11 +140,11 @@ contract NP_NC is CORE {
                 (_newAssetStatus < 100),
             "NPNC:MS: Stat Rsrvd"
         );
-        require( //STATE UNREACHABLE: CANNOT MEET STATUS IN NC CONTRACTS CTS:PREFERRED
+        require(
             needsImport(_newAssetStatus) == 0,
             "NPNC:MS: Cannot place asset in unregistered, exported, or discarded status using modStatus"
         );
-        require( //STATE UNREACHABLE: CANNOT MEET STATUS IN NC CONTRACTS
+        require(
             needsImport(rec.assetStatus) == 0,
             "NPNC:MS: Asset is in an unregistered, exported, or discarded status."
         );
@@ -150,7 +160,10 @@ contract NP_NC is CORE {
     }
 
     /*
-     * @dev set **Record**.assetStatus to lost or stolen, with confirmation required.
+     * @dev set **Record**.assetStatus to lost or stolen, with confirmation required. //CTS:EXAMINE confirmation?
+     * //CTS:EXAMINE param
+     * //CTS:EXAMINE param
+     * //CTS:EXAMINE returns
      */
     function _setLostOrStolen(bytes32 _idxHash, uint8 _newAssetStatus)
         external
@@ -161,11 +174,11 @@ contract NP_NC is CORE {
     {
         Record memory rec = getRecord(_idxHash);
 
-        require( //STATE UNREACHABLE: CANNOT MEET STATUS WITH CURRENT CONTRACTS CTS:PREFERRED
+        require(
             (_newAssetStatus > 49) && (rec.assetStatus > 49),
             "NPNC:SLS: Only custodial usertype can set or change status < 50"
         );
-        require( //STATE UNREACHABLE: CANNOT MEET STATUS IN NC CONTRACTS CTS:PREFERRED
+        require(
             needsImport(rec.assetStatus) == 0,
             "NPNC:SLS: Transferred,exported,or discarded asset cannot be set to lost or stolen"
         );
@@ -181,7 +194,10 @@ contract NP_NC is CORE {
     }
 
     /*
-     * @dev Decrement **Record**.countdown with confirmation required
+     * @dev Decrement **Record**.countdown with confirmation required //CTS:EXAMINE confirmation?
+     * //CTS:EXAMINE param
+     * //CTS:EXAMINE param
+     * //CTS:EXAMINE returns
      */
     function _decCounter(bytes32 _idxHash, uint32 _decAmount)
         external
@@ -192,7 +208,7 @@ contract NP_NC is CORE {
     {
         Record memory rec = getRecord(_idxHash);
 
-        require( //STATE UNREACHABLE ASSET CANNOT MEET STATUS IN NC CONTRACTS CTS:PREFERRED
+        require(
             needsImport(rec.assetStatus) == 0,
             "NPNC:DC: Record in unregistered, exported, or discarded status"
         );
@@ -212,7 +228,11 @@ contract NP_NC is CORE {
     }
 
     /*
-     * @dev Modify **Record**.Ipfs1a with confirmation
+     * @dev Modify **Record**.Ipfs1a with confirmation //CTS:EXAMINE confirmation?
+     * //CTS:EXAMINE param
+     * //CTS:EXAMINE param
+     * //CTS:EXAMINE param
+     * //CTS:EXAMINE returns
      */
     function _modIpfs1(
         bytes32 _idxHash,
@@ -221,7 +241,7 @@ contract NP_NC is CORE {
     ) external nonReentrant whenNotPaused isAuthorized(_idxHash) {
         Record memory rec = getRecord(_idxHash);
 
-        require( //IMPOSSIBLE, ASSET CANNOT MEET STATUS IN NC CONTRACTS CTS:PREFERRED
+        require(
             needsImport(rec.assetStatus) == 0,
             "NPNC:MI1: Record in unregistered, exported, or discarded status"
         );

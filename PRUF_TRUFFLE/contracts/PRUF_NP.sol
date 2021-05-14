@@ -234,7 +234,7 @@ contract NP is CORE {
     }
 
     /*
-     * @dev Export FROM Custodial: //CTS:EXAMINE we should maybe describe this better
+     * @dev Export FROM Custodial - sets asset to status 70 (importable) //CTS:EXAMINE we should maybe describe this better
      * //CTS:EXAMINE param
      * //CTS:EXAMINE param
      * //CTS:EXAMINE returns
