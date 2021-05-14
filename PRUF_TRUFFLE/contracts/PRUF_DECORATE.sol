@@ -27,12 +27,16 @@ pragma solidity ^0.8.0;
 import "./PRUF_CORE.sol";
 import "./Imports/token/ERC721/IERC721.sol";
 
-/*
- * @dev Decorates an external ERC721 with PRüF data
- */
 contract DECORATE is CORE {
+
+    /*
+     * @dev Verify user credentials
+     * //CTS:EXAMINE param
+     * //CTS:EXAMINE param
+     * Originating Address:
+     *   require that user holds token @ ID-Contract
+     */
     modifier isTokenHolder(uint256 _tokenID, address _tokenContract) {
-        //require that user holds token @ ID-Contract
         require(
             (IERC721(_tokenContract).ownerOf(_tokenID) == _msgSender()),
             "D:MOD-ITH: caller does not hold specified token"
@@ -44,6 +48,12 @@ contract DECORATE is CORE {
 
     /*
      * @dev Decorates an external ERC721 with PRüF data
+     * //CTS:EXAMINE param
+     * //CTS:EXAMINE param
+     * //CTS:EXAMINE param
+     * //CTS:EXAMINE param
+     * //CTS:EXAMINE param
+     * //CTS:EXAMINE this one needs a req section
      */
     function decorate721(
         uint256 _tokenID,
@@ -82,6 +92,10 @@ contract DECORATE is CORE {
 
     /*
      * @dev Modify **Record**.assetStatus
+     * //CTS:EXAMINE param
+     * //CTS:EXAMINE param
+     * //CTS:EXAMINE param
+     * //CTS:EXAMINE this one needs a req section
      */
     function _modStatus(
         uint256 _tokenID,
@@ -107,7 +121,7 @@ contract DECORATE is CORE {
             "D:MS:Asset class extended data must be '0' or ERC721 contract address"
         );
         require(
-            (_newAssetStatus > 49) && (rec.assetStatus > 49),
+            (_newAssetStatus > 49) && (rec.assetStatus > 49), //CTS:EXAMINE I think this functionality is inevitably non-custodial, so only need to check for newAssetStatus. Should never be otherwise
             "D:MS: cannot change status < 49"
         );
         require(
@@ -120,7 +134,7 @@ contract DECORATE is CORE {
             needsImport(_newAssetStatus) == 0,
             "D:MS: Cannot place asset in unregistered, exported, or discarded status using modStatus"
         );
-        require( //CTS:UNREACHABLE WITH CURRENT CONTRACTS. WOULD REQUIRE ROOT CLASSES TO BE CUSTODY TYPE 5
+        require( //CTS:UNREACHABLE WITH CURRENT CONTRACTS. WOULD REQUIRE ROOT CLASSES TO BE CUSTODY TYPE 5 //CTS:EXAMINE can roots even be custody type classified?
             needsImport(rec.assetStatus) == 0,
             "D:MS: Record in unregistered, exported, or discarded status"
         );
@@ -134,7 +148,11 @@ contract DECORATE is CORE {
     }
 
     /*
-     * @dev set price and currency in rec.pricer rec.currency
+     * @dev set price and currency in rec.price rec.currency //CTS:EXAMINE less technical, describe theres only usecase for type2 currency
+     * //CTS:EXAMINE param
+     * //CTS:EXAMINE param
+     * //CTS:EXAMINE param
+     * //CTS:EXAMINE param
      */
     function _setPrice(
         uint256 _tokenID,
@@ -160,7 +178,7 @@ contract DECORATE is CORE {
                 (AC_info.referenceAddress == address(0)),
             "D:SP:Asset class extended data must be '0' or ERC721 contract address"
         );
-        require( //UNREACHABLE WITH CURRENT CONTRACTS. WOULD REQUIRE ROOT CLASSES TO BE CUSTODY TYPE 5
+        require(
             needsImport(rec.assetStatus) == 0,
             "D:SP: Record in unregistered, exported, or discarded status"
         );
@@ -171,7 +189,9 @@ contract DECORATE is CORE {
     }
 
     /*
-     * @dev set price and currency in rec.pricer rec.currency
+     * @dev set price and currency in rec.price rec.currency //CTS:EXAMINE less technical
+     * //CTS:EXAMINE param
+     * //CTS:EXAMINE param
      */
     function _clearPrice(uint256 _tokenID, address _tokenContract)
         external
@@ -205,6 +225,9 @@ contract DECORATE is CORE {
 
     /*
      * @dev Decrement **Record**.countdown
+     * //CTS:EXAMINE param
+     * //CTS:EXAMINE param
+     * //CTS:EXAMINE param
      */
     function _decCounter(
         uint256 _tokenID,
@@ -250,6 +273,10 @@ contract DECORATE is CORE {
 
     /*
      * @dev Modify **Record**.Ipfs1a
+     * //CTS:EXAMINE param
+     * //CTS:EXAMINE param
+     * //CTS:EXAMINE param
+     * //CTS:EXAMINE param
      */
     function _modIpfs1(
         uint256 _tokenID,
@@ -304,6 +331,10 @@ contract DECORATE is CORE {
 
     /*
      * @dev Modify **Record**.Ipfs2
+     * //CTS:EXAMINE param
+     * //CTS:EXAMINE param
+     * //CTS:EXAMINE param
+     * //CTS:EXAMINE param
      */
 
     function addIpfs2Note(
@@ -331,7 +362,7 @@ contract DECORATE is CORE {
             "D:AI2:Asset class extended data must be '0' or ERC721 contract address"
         );
 
-        require( //IMPOSSIBLE TO THROW REVERTS IN REQ1 CTS:PREFERRED
+        require(
             needsImport(rec.assetStatus) == 0,
             "D:AI2: Record in unregistered, exported, or discarded status"
         );
@@ -348,6 +379,8 @@ contract DECORATE is CORE {
 
     /*
      * @dev Export - sets asset to status 70 (importable)
+     * //CTS:EXAMINE param
+     * //CTS:EXAMINE param
      */
     function _export(uint256 _tokenID, address _tokenContract)
         external
@@ -367,7 +400,7 @@ contract DECORATE is CORE {
             "C:CR:Contract does not support management types > 5 or AC is locked"
         );
         if ((AC_info.managementType == 1) || (AC_info.managementType == 5)) {
-            require( //holds AC token if AC is restricted --------DPS TEST ---- NEW
+            require( //caller holds AC token if AC is restricted --------DPS TEST ---- NEW
                 (AC_TKN.ownerOf(rec.assetClass) == _msgSender()),
                 "D:E: Restricted from exporting assets from this AC - does not hold ACtoken"
             );
@@ -394,7 +427,10 @@ contract DECORATE is CORE {
 
     /*
      * @dev import **Record** (no confirmation required -
-     * posessor is considered to be owner. sets rec.assetStatus to 52.
+     * posessor is considered to be owner. sets rec.assetStatus to 51.
+     * //CTS:EXAMINE param
+     * //CTS:EXAMINE param
+     * //CTS:EXAMINE this one needs a req section
      */
     function _import(
         uint256 _tokenID,
@@ -456,7 +492,7 @@ contract DECORATE is CORE {
         }
         //^^^^^^^checks^^^^^^^^^
 
-        rec.assetStatus = 52;
+        rec.assetStatus = 51;
         //^^^^^^^effects^^^^^^^^^
 
         STOR.changeAC(idxHash, _newAssetClass);
@@ -467,6 +503,11 @@ contract DECORATE is CORE {
 
     /*
      * @dev create a Record in Storage @ idxHash (SETTER)
+     * //CTS:EXAMINE param
+     * //CTS:EXAMINE param
+     * //CTS:EXAMINE param
+     * //CTS:EXAMINE param
+     * //CTS:EXAMINE this one needs a req section
      */
     function createRecordOnly(
         bytes32 _idxHash,
@@ -477,11 +518,11 @@ contract DECORATE is CORE {
         uint256 tokenId = uint256(_idxHash);
         AC memory AC_info = getACinfo(_assetClass);
 
-        require( //CTS:PREFERRED: THROWS IN ONLY FUNCTION THAT CALLS createRecordOnly
+        require(
             A_TKN.tokenExists(tokenId) == 0,
             "D:CRO: token is already wrapped. Must discard wrapper before decorating"
         );
-        require( //CTS:PREFERRED: THROWS IN ONLY FUNCTION THAT CALLS createRecordOnly
+        require(
             AC_info.custodyType == 5,
             "D:CRO:Asset class.custodyType must be 5 (wrapped/decorated erc721)"
         );
