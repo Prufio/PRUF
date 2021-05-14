@@ -15,6 +15,8 @@ __/\\\\\\\\\\\\\ _____/\\\\\\\\\ _______/\\../\\ ___/\\\\\\\\\\\\\\\
  *
  *---------------------------------------------------------------*/
 
+ //CTS:EXAMINE quick explainer for the contract
+
 // SPDX-License-Identifier: UNLICENSED
 pragma solidity ^0.8.0;
 
@@ -28,6 +30,8 @@ contract RCLR is ECR_CORE, CORE {
 
     /*
      * @dev //gets item out of recycled status -- caller is assetToken contract
+     * //CTS:EXAMINE param
+     * //CTS:EXAMINE param
      */
     function discard(bytes32 _idxHash, address _sender)
         external
@@ -40,7 +44,7 @@ contract RCLR is ECR_CORE, CORE {
             hasRole(DISCARD_ROLE, _msgSender()),
             "R:D: Caller does not have DISCARD_ROLE"
         );
-        require((rec.assetStatus == 59), "R:D: Must be in recyclable status");
+        require(rec.assetStatus == 59, "R:D: Asset !in recyclable status");
         //^^^^^^^checks^^^^^^^^^
 
         uint256 escrowTime = block.timestamp + 31536000000; //1,000 years in the FUTURE.........
@@ -62,6 +66,10 @@ contract RCLR is ECR_CORE, CORE {
 
     /*
      * @dev reutilize a recycled asset //DPS:CHECK NEW REQUIRES!!!
+     * //CTS:EXAMINE maybe describe the reqs in this one, back us up on the security
+     * //CTS:EXAMINE param
+     * //CTS:EXAMINE param
+     * //CTS:EXAMINE param
      */
     function recycle(
         bytes32 _idxHash,
@@ -73,7 +81,7 @@ contract RCLR is ECR_CORE, CORE {
             getEscrowDataLight(_idxHash);
         Record memory rec = getRecord(_idxHash);
         AC memory AC_info = getACinfo(_assetClass);
-        require(_rgtHash != 0, "R:R: New rights holder cannot be zero");
+        require(_rgtHash != 0, "R:R: New rights holder = zero");
         require(rec.assetStatus == 60, "R:R: Asset not discarded");
         require(
             AC_MGR.isSameRootAC(_assetClass, rec.assetClass) == 170,
