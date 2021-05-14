@@ -19,6 +19,7 @@ __/\\\\\\\\\\\\\ _____/\\\\\\\\\ _______/\\../\\ ___/\\\\\\\\\\\\\\\
  * //CTS:EXAMINE IPFS1/IPFS2->storProvider/storProvider2 global
  * //CTS:EXAMINE idxHash->assetId global
  * //CTS:EXAMINE NP name change
+ * //CTS:EXAMINE Run through interfaces, make sure is up to date. 
  *---------------------------------------------------------------*/
 
 /**-----------------------------------------------------------------

@@ -16,7 +16,7 @@ __/\\\\\\\\\\\\\ _____/\\\\\\\\\ _______/\\../\\ ___/\\\\\\\\\\\\\\\
  *
  *-----------------------------------------------------------------
  */
-
+// CTS:EXAMINE provide a description of ECR_MGR
 // SPDX-License-Identifier: UNLICENSED
 pragma solidity ^0.8.0;
 
@@ -27,6 +27,11 @@ contract ECR_MGR is BASIC {
     mapping(bytes32 => escrowDataExtLight) private EscrowDataLight;
     mapping(bytes32 => escrowDataExtHeavy) private EscrowDataHeavy;
 
+    /*
+    * // CTS:EXAMINE comment
+    * // CTS:EXAMINE param
+    * // CTS:EXAMINE return
+    */
     function isLostOrStolen(uint8 _assetStatus) private pure returns (uint8) {
         if (
             (_assetStatus != 3) &&
@@ -40,6 +45,11 @@ contract ECR_MGR is BASIC {
         }
     }
 
+    /*
+    * // CTS:EXAMINE comment
+    * // CTS:EXAMINE param
+    * // CTS:EXAMINE return
+    */
     function isEscrow(uint8 _assetStatus) private pure returns (uint8) {
         if (
             (_assetStatus != 6) &&
@@ -55,6 +65,10 @@ contract ECR_MGR is BASIC {
 
     /*
      * @dev Set an asset to escrow status (6/50/56). Sets timelock for unix timestamp of escrow end.
+     * // CTS:EXAMINE param
+     * // CTS:EXAMINE param
+     * // CTS:EXAMINE param
+     * // CTS:EXAMINE param
      */
     function setEscrow(
         bytes32 _idxHash,
@@ -72,7 +86,10 @@ contract ECR_MGR is BASIC {
             "EM:SE: Escrow can only be set by an authorized escrow contract"
         );
         //^^^^^^^checks^^^^^^^^^
-        delete escrows[_idxHash];
+        //Should never be neccessary:
+        // delete escrows[_idxHash];
+        // delete EscrowDataLight[_idxHash];
+        // delete EscrowDataHeavy[_idxHash];
 
         escrows[_idxHash]
             .controllingContractNameHash = controllingContractNameHash;
@@ -86,6 +103,7 @@ contract ECR_MGR is BASIC {
 
     /*
      * @dev remove an asset from escrow status
+     * // CTS:EXAMINE param
      */
     function endEscrow(bytes32 _idxHash) external nonReentrant whenNotPaused {
         Record memory rec = getRecord(_idxHash);
@@ -94,7 +112,7 @@ contract ECR_MGR is BASIC {
 
         require(
             isEscrow(rec.assetStatus) == 170,
-            "EM:EE: Asset not in escrow status"
+            "EM:EE: Asset !in escrow status"
         );
         require(
             (contractInfo.nameHash ==
@@ -115,8 +133,11 @@ contract ECR_MGR is BASIC {
 
     /*
      * @dev Set data in EDL mapping
+     * // CTS:EXAMINE param
+     * // CTS:EXAMINE param
+     * // CTS:EXAMINE add req section
      * Must be setter contract
-     * Must be in  escrow
+     * Must be in escrow
      */
     function setEscrowDataLight(
         bytes32 _idxHash,
@@ -128,7 +149,7 @@ contract ECR_MGR is BASIC {
 
         require(
             isEscrow(rec.assetStatus) == 170,
-            "EM:SEDL: Asset not in escrow status"
+            "EM:SEDL: Asset !in escrow status"
         );
         require(
             (contractInfo.nameHash ==
@@ -142,7 +163,10 @@ contract ECR_MGR is BASIC {
     }
 
     /*
-     * @dev Set data in EDL mapping
+     * @dev Set data in EDH mapping
+     * // CTS:EXAMINE param
+     * // CTS:EXAMINE param
+     * // CTS:EXAMINE add req section
      * Must be setter contract
      * Must be in  escrow
      */
@@ -165,12 +189,13 @@ contract ECR_MGR is BASIC {
         );
         //^^^^^^^checks^^^^^^^^^
 
-        EscrowDataHeavy[_idxHash] = escrowDataHeavy; //set in EDL map
+        EscrowDataHeavy[_idxHash] = escrowDataHeavy; //set in EDH map
         //^^^^^^^effects^^^^^^^^^
     }
 
     /*
      * @dev Permissive removal of asset from escrow status after time-out
+     * // CTS:EXAMINE param
      */
     function permissiveEndEscrow(bytes32 _idxHash)
         external
@@ -181,7 +206,7 @@ contract ECR_MGR is BASIC {
             escrows[_idxHash].timelock < block.timestamp,
             "EM:PEE: Escrow not expired"
         );
-        require( // do not allow escrows with escrow.data > 199 to be ended by this function     //STATE UNREACHABLE CTS:PREFERRED
+        require( // do not allow escrows with escrow.data > 199 to be ended by this function //STATE UNREACHABLE CTS:PREFERRED
             EscrowDataLight[_idxHash].escrowData < 200,
             "EM:PEE: Escrow not endable with permissiveEndEscrow"
         );
@@ -196,6 +221,8 @@ contract ECR_MGR is BASIC {
 
     /*
      * @dev return escrow OwnerHash
+     * // CTS:EXAMINE param
+     * // CTS:EXAMINE returns
      */
     function retrieveEscrowOwner(bytes32 _idxHash)
         external
@@ -208,6 +235,8 @@ contract ECR_MGR is BASIC {
 
     /*
      * @dev return escrow data @ IDX
+     * // CTS:EXAMINE param
+     * // CTS:EXAMINE returns
      */
     function retrieveEscrowData(bytes32 _idxHash)
         external
@@ -219,6 +248,8 @@ contract ECR_MGR is BASIC {
 
     /*
      * @dev return EscrowDataLight @ IDX
+     * // CTS:EXAMINE param
+     * // CTS:EXAMINE returns
      */
     function retrieveEscrowDataLight(bytes32 _idxHash)
         external
@@ -228,6 +259,11 @@ contract ECR_MGR is BASIC {
         return EscrowDataLight[_idxHash];
     }
 
+    /*
+     * @dev return EscrowDataHeavy @ IDX
+     * // CTS:EXAMINE param
+     * // CTS:EXAMINE returns
+     */
     function retrieveEscrowDataHeavy(bytes32 _idxHash)
         external
         view
