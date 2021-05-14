@@ -23,10 +23,11 @@ pragma solidity ^0.8.0;
 import "./PRUF_CORE.sol";
 
 contract NP is CORE {
+    
     /*
      * @dev Verify user credentials
      * //CTS:EXAMINE param
-     * Originating Address:
+     * Originating Address: //CTS:EXAMINE??
      */
     modifier isAuthorized(bytes32 _idxHash) override {
         uint256 tokenId = uint256(_idxHash);

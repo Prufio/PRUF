@@ -15,6 +15,8 @@ __/\\\\\\\\\\\\\ _____/\\\\\\\\\ _______/\\../\\ ___/\\\\\\\\\\\\\\\
  *
  *---------------------------------------------------------------*/
 
+ //CTS:EXAMINE quick explainer for the contract
+
 // SPDX-License-Identifier: UNLICENSED
 pragma solidity ^0.8.0;
 
@@ -25,6 +27,7 @@ contract STAT201 is CORE {
 
     /*
      * @dev //Sets an item to reserved status 201 when called, if record links to an invalid storage type. Stat201 allows a rewrite of IPFS2
+     * //CTS:EXAMINE param
      */
     function set201(bytes32 _idxHash)
         external
@@ -34,7 +37,7 @@ contract STAT201 is CORE {
     {
         Record memory rec = getRecord(_idxHash);
         AC memory AC_info = getACinfo(rec.assetClass);
-        uint256 storageProviderStatus =AC_MGR.getStorageProviderStatus(AC_info.storageProvider);
+        uint256 storageProviderStatus = AC_MGR.getStorageProviderStatus(AC_info.storageProvider);
 
         require
             (storageProviderStatus == 0,
