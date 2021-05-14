@@ -114,7 +114,7 @@ contract APP is CORE {
     }
 
     /*
-     * @dev Modify **Record**.rightsHolder without confirmation required
+     * @dev Modify **Record**.rightsHolder without confirmation required //CTS:EXAMINE with confirmation?
      * //CTS:EXAMINE param
      * //CTS:EXAMINE param
      * //CTS:EXAMINE returns
@@ -154,7 +154,7 @@ contract APP is CORE {
     }
 
     /*
-     * @dev Transfer rights to new rightsHolder with confirmation
+     * @dev Transfer rights to new rightsHolder with confirmation //CTS:EXAMINE with confirmation?
      * //CTS:EXAMINE param
      * //CTS:EXAMINE param
      * //CTS:EXAMINE param

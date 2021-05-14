@@ -15,6 +15,8 @@ __/\\\\\\\\\\\\\ _____/\\\\\\\\\ _______/\\../\\ ___/\\\\\\\\\\\\\\\
  *
  *---------------------------------------------------------------*/
 
+ //CTS:EXAMINE quick explainer for the contract
+
 // SPDX-License-Identifier: UNLICENSED
 pragma solidity ^0.8.0;
 
@@ -23,6 +25,7 @@ import "./PRUF_CORE.sol";
 contract NP is CORE {
     /*
      * @dev Verify user credentials
+     * //CTS:EXAMINE param
      * Originating Address:
      */
     modifier isAuthorized(bytes32 _idxHash) override {
@@ -38,6 +41,10 @@ contract NP is CORE {
 
     /*
      * @dev Modify **Record**.assetStatus with confirmation required
+     * //CTS:EXAMINE param
+     * //CTS:EXAMINE param
+     * //CTS:EXAMINE param
+     * //CTS:EXAMINE returns
      */
     function _modStatus(
         bytes32 _idxHash,
@@ -55,7 +62,7 @@ contract NP is CORE {
 
         require(
             (userType > 0) && (userType < 10),
-            "NP:MS: User not auth in AC"
+            "NP:MS: User !auth in AC"
         );
         require(
             (_newAssetStatus != 7) &&
@@ -92,7 +99,11 @@ contract NP is CORE {
     }
 
     /*
-     * @dev set **Record**.assetStatus to lost or stolen, with confirmation required.
+     * @dev set **Record**.assetStatus to lost or stolen, with confirmation required. //CTS:EXAMINE with confirmation?
+     * //CTS:EXAMINE param
+     * //CTS:EXAMINE param
+     * //CTS:EXAMINE param
+     * //CTS:EXAMINE returns
      */
     function _setLostOrStolen(
         bytes32 _idxHash,
@@ -109,7 +120,7 @@ contract NP is CORE {
         uint8 userType = getCallingUserType(rec.assetClass);
         require(
             (userType > 0) && (userType < 10),
-            "NP:SLS: User not auth in AC"
+            "NP:SLS: User !auth in AC"
         );
         require(
             (rec.assetStatus > 49) ||
@@ -133,6 +144,10 @@ contract NP is CORE {
 
     /*
      * @dev Decrement **Record**.countdown with confirmation required
+     * //CTS:EXAMINE param
+     * //CTS:EXAMINE param
+     * //CTS:EXAMINE param
+     * //CTS:EXAMINE returns
      */
     function _decCounter(
         bytes32 _idxHash,
@@ -150,7 +165,7 @@ contract NP is CORE {
 
         require(
             (userType > 0) && (userType < 10),
-            "NP:DC: User not auth in AC"
+            "NP:DC: User !auth in AC"
         );
         require(
             needsImport(rec.assetStatus) == 0,
@@ -177,6 +192,10 @@ contract NP is CORE {
 
     /*
      * @dev Modify **Record**.Ipfs1
+     * //CTS:EXAMINE param
+     * //CTS:EXAMINE param
+     * //CTS:EXAMINE param
+     * //CTS:EXAMINE param
      */
     function _modIpfs1(
         bytes32 _idxHash,
@@ -193,7 +212,7 @@ contract NP is CORE {
         uint8 userType = getCallingUserType(rec.assetClass);
         require(
             (userType > 0) && (userType < 10),
-            "NP:MI1: user not auth in AC"
+            "NP:MI1: User !auth in AC"
         );
         require(
             needsImport(rec.assetStatus) == 0,
@@ -215,7 +234,10 @@ contract NP is CORE {
     }
 
     /*
-     *     @dev Export FROM Custodial:
+     * @dev Export FROM Custodial: //CTS:EXAMINE we should maybe describe this better
+     * //CTS:EXAMINE param
+     * //CTS:EXAMINE param
+     * //CTS:EXAMINE returns
      */
     function exportAsset(bytes32 _idxHash, address _addr)
         external
@@ -226,7 +248,7 @@ contract NP is CORE {
     {
         Record memory rec = getRecord(_idxHash);
         uint8 userType = getCallingUserType(rec.assetClass);
-        //AC memory AC_info = getACinfo(rec.assetClass);
+        //AC memory AC_info = getACinfo(rec.assetClass); //CTS:EXAMINE untested dont delete
 
         require(
             (userType > 0) && (userType < 10),
@@ -243,7 +265,7 @@ contract NP is CORE {
 
         APP.transferAssetToken(_addr, _idxHash);
         writeRecord(_idxHash, rec);
-        //STOR.changeAC(_idxHash, AC_info.assetClassRoot);
+        //STOR.changeAC(_idxHash, AC_info.assetClassRoot); //CTS:EXAMINE untested dont delete
 
         return rec.assetStatus;
         //^^^^^^^interactions^^^^^^^^^
