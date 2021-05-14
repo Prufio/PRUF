@@ -203,6 +203,7 @@ contract A_TKN is
     /**
      * @dev return an adresses "cold wallet" status
      * WALLET ADDRESSES SET TO "Cold" DO NOT WORK WITH TRUSTED_AGENT FUNCTIONS
+     * @param _addr - address to check
      * returns 170 if adress is set to "cold wallet" status
      */
     function isColdWallet(address _addr) public view returns (uint256) {
