@@ -1,5 +1,5 @@
-/*--------------------------------------------------------PRüF0.8.0
-__/\\\\\\\\\\\\\ _____/\\\\\\\\\ _______/\\../\\ ___/\\\\\\\\\\\\\\\
+/*--------------------------------------------------------PRuF0.7.1
+__/\\\\\\\\\\\\\ _____/\\\\\\\\\ _______/\\./\\ ___/\\\\\\\\\\\\\\\
  _\/\\\/////////\\\ _/\\\///////\\\ ____\//..\//____\/\\\///////////__
   _\/\\\.......\/\\\.\/\\\.....\/\\\ ________________\/\\\ ____________
    _\/\\\\\\\\\\\\\/__\/\\\\\\\\\\\/_____/\\\____/\\\.\/\\\\\\\\\\\ ____
@@ -12,9 +12,8 @@ __/\\\\\\\\\\\\\ _____/\\\\\\\\\ _______/\\../\\ ___/\\\\\\\\\\\\\\\
 
 /*-----------------------------------------------------------------
  *  TO DO
- * sharesShare is 0.25 share of root costs- when we transition networks this should be rewritten to become a variable share.
  *-----------------------------------------------------------------
- * PRUF UTILITY TOKEN CONTRACT
+ * UTILITY TOKEN CONTRACT
  *---------------------------------------------------------------*/
 
 // SPDX-License-Identifier: UNLICENSED
@@ -25,7 +24,6 @@ import "./PRUF_INTERFACES.sol";
 import "./Imports/access/AccessControl.sol";
 import "./Imports/token/ERC20/ERC20Burnable.sol";
 import "./Imports/utils/Pausable.sol";
- 
 import "./Imports/token/ERC20/ERC20Snapshot.sol";
 
 /**
@@ -37,6 +35,8 @@ import "./Imports/token/ERC20/ERC20Snapshot.sol";
  *  - a SNAPSHOT_ROLE that allows to take snapshots
  *  - a PAYABLE_ROLE role that allows authorized addresses to invoke the token splitting payment function (all paybale contracts)
  *  - a TRUSTED_AGENT_ROLE role that allows authorized addresses to transfer and burn tokens (AC_MGR)
+
+
 
 
  *
@@ -54,165 +54,173 @@ contract UTIL_TKN is
     Pausable,
     ERC20Snapshot
 {
-    bytes32 public constant CONTRACT_ADMIN_ROLE = keccak256("CONTRACT_ADMIN_ROLE");
     bytes32 public constant MINTER_ROLE = keccak256("MINTER_ROLE");
     bytes32 public constant PAUSER_ROLE = keccak256("PAUSER_ROLE");
     bytes32 public constant SNAPSHOT_ROLE = keccak256("SNAPSHOT_ROLE");
     bytes32 public constant PAYABLE_ROLE = keccak256("PAYABLE_ROLE");
-    bytes32 public constant TRUSTED_AGENT_ROLE = keccak256(
-        "TRUSTED_AGENT_ROLE"
-    );
+    bytes32 public constant TRUSTED_AGENT_ROLE =
+        keccak256("TRUSTED_AGENT_ROLE");
 
-    
+    //using SafeMath for uint256;
 
     uint256 private _cap = 4000000000000000000000000000; //4billion max supply
 
     address private sharesAddress = address(0);
+
+    struct LegacyInvoice {
+        //Legacyinvoice struct to facilitate payment messaging in-contract
+        address rootAddress;
+        uint256 rootPrice;
+        address ACTHaddress;
+        uint256 ACTHprice;
+    }
 
     uint256 trustedAgentEnabled = 1;
 
     mapping(address => uint256) private coldWallet;
 
     /**
-     * @dev Grants `DEFAULT_ADMIN_ROLE`, `CONTRACT_ADMIN_ROLE`, `MINTER_ROLE` and `PAUSER_ROLE` to the
+     * @dev Grants `DEFAULT_ADMIN_ROLE`, `MINTER_ROLE` and `PAUSER_ROLE` to the
      * account that deploys the contract.
      *
      * See {ERC20-constructor}.
      */
     constructor() ERC20("PRUF Network", "PRUF") {
         _setupRole(DEFAULT_ADMIN_ROLE, _msgSender());
-        _setupRole(CONTRACT_ADMIN_ROLE, _msgSender());
         _setupRole(MINTER_ROLE, _msgSender());
         _setupRole(PAUSER_ROLE, _msgSender());
     }
 
     //------------------------------------------------------------------------MODIFIERS
 
-    /*
-     * @dev Verify user credentials //CTS:EXAMINE comment kinda weak
+    /**
+     * @dev Verify user credentials
      * Originating Address:
-     *      is Admin //CTS:EXAMINE "is Contract Admin"
+     *      has DEFAULT_ADMIN_ROLE --- NOT!!  Contract admin role (legacy)
      */
-    modifier isContractAdmin() {
+    modifier isAdmin() {
         require(
-            hasRole(CONTRACT_ADMIN_ROLE, _msgSender()),
-            "PRUF:MOD-IADM: Must have CONTRACT_ADMIN_ROLE" //CTS:EXAMINE "PRUF:MOD-ICA"
+            hasRole(DEFAULT_ADMIN_ROLE, _msgSender()),
+            "PRuF:MOD: must have DEFAULT_ADMIN_ROLE"
         );
         _;
     }
 
-    /*
-     * @dev Verify user credentials //CTS:EXAMINE comment kinda weak
+    /**
+     * @dev Verify user credentials
      * Originating Address:
-     *      is Pauser
+     *      has PAUSER_ROLE
      */
     modifier isPauser() {
         require(
             hasRole(PAUSER_ROLE, _msgSender()),
-            "PRUF:MOD-IP: Must have PAUSER_ROLE"
+            "PRuF:MOD: must have PAUSER_ROLE"
         );
         _;
     }
 
-    /*
-     * @dev Verify user credentials //CTS:EXAMINE comment kinda weak
+    /**
+     * @dev Verify user credentials
      * Originating Address:
-     *      is Minter
+     *      has MINTER_ROLE
      */
     modifier isMinter() {
         require(
             hasRole(MINTER_ROLE, _msgSender()),
-            "PRUF:MOD-IM: Must have MINTER_ROLE"
+            "PRuF:MOD: must have MINTER_ROLE"
         );
         _;
     }
 
-    /*
-     * @dev Verify user credentials //CTS:EXAMINE comment kinda weak
+    /**
+     * @dev Verify user credentials
      * Originating Address:
-     *      is Payable in PRUF
+     *      has PAYABLE_ROLE and trusted agent enabled is true
      */
     modifier isPayable() {
         require(
             hasRole(PAYABLE_ROLE, _msgSender()),
-            "PRUF:MOD-IPAY: Must have PAYABLE_ROLE"
+            "PRuF:MOD: must have PAYABLE_ROLE"
         );
-        require(
+        require( //---------------------------------------------------DPS:TEST : NEW
             trustedAgentEnabled == 1,
-            "PRUF:MOD-IPAY: Trusted Payable Function permanently disabled - use allowance / transferFrom pattern"
+            "PRuF:MOD: Trusted Payable Function permanently disabled - use allowance / transferFrom pattern"
         );
         _;
     }
 
-    /*
-     * @dev Verify user credentials //CTS:EXAMINE comment kinda weak
+    /**
+     * @dev Verify user credentials
      * Originating Address:
-     *      is Trusted Agent
+     *      has TRUSTED_AGENT_ROLE and trusted agent enabled is true
      */
     modifier isTrustedAgent() {
         require(
             hasRole(TRUSTED_AGENT_ROLE, _msgSender()),
-            "PRUF:MOD-ITA: Must have TRUSTED_AGENT_ROLE"
+            "PRuF:MOD: must have TRUSTED_AGENT_ROLE"
         );
-        require(
+        require( //---------------------------------------------------DPS:TEST : NEW
             trustedAgentEnabled == 1,
-            "PRUF:MOD-ITA: Trusted Agent function permanently disabled - use allowance / transferFrom pattern"
+            "PRuF:MOD: Trusted Agent function permanently disabled - use allowance / transferFrom pattern"
         );
         _;
     }
 
-    /*
+    /**
      * @dev ----------------------------------------PERMANANTLY !!!  Kills trusted agent and payable functions
      * this will break the functionality of current payment mechanisms.
      *
      * The workaround for this is to create an allowance for pruf contracts for a single or multiple payments,
      * either ahead of time "loading up your PRUF account" or on demand with an operation. On demand will use quite a bit more gas.
      * "preloading" should be pretty gas efficient, but will add an extra step to the workflow, requiring users to have sufficient
-     * PRUF "banked" in an allowance for use in the system.
-     * //CTS:EXAMINE param
+     * PRuF "banked" in an allowance for use in the system.
+     * @param _key - set 170 to kill trusted agent role permenantly
      */
-    function adminKillTrustedAgent(uint256 _key) external isContractAdmin {
+    function adminKillTrustedAgent(uint256 _key) external isAdmin {
+        //---------------------------------------------------DPS:TEST : NEW
         if (_key == 170) {
             trustedAgentEnabled = 0; //-------------------THIS IS A PERMANENT ACTION AND CANNOT BE UNDONE
         }
     }
 
-    /*
+    /**
      * @dev Set calling wallet to a "cold Wallet" that cannot be manipulated by TRUSTED_AGENT or PAYABLE permissioned functions
      * WALLET ADDRESSES SET TO "Cold" DO NOT WORK WITH TRUSTED_AGENT FUNCTIONS and must be unset from cold before it can interact with
      * contract functions.
      */
     function setColdWallet() external {
+        //---------------------------------------------------DPS:TEST : NEW
         coldWallet[_msgSender()] = 170;
     }
 
-    /*
+    /**
      * @dev un-set calling wallet to a "cold Wallet", enabling manipulation by TRUSTED_AGENT and PAYABLE permissioned functions
      * WALLET ADDRESSES SET TO "Cold" DO NOT WORK WITH TRUSTED_AGENT FUNCTIONS and must be unset from cold before it can interact with
      * contract functions.
      */
     function unSetColdWallet() external {
+        //---------------------------------------------------DPS:TEST : NEW
         coldWallet[_msgSender()] = 0;
     }
 
-    /*
-     * @dev return an adresses "cold wallet" status //CTS:EXAMINE adress->address
+    /**
+     * @dev return an addresses "cold wallet" status
      * WALLET ADDRESSES SET TO "Cold" DO NOT WORK WITH TRUSTED_AGENT FUNCTIONS
-     * //CTS:EXAMINE param
-     * //CTS:EXAMINE return
+     * @param _addr - Address to check cold wallet
+     * returns 0 if not a cold wallet, 170 if a cold wallet
      */
     function isColdWallet(address _addr) external view returns (uint256) {
         return coldWallet[_addr];
     }
 
-    /*
+    /**
      * @dev Set address of SHARES payment contract. by default contract will use root address instead if set to zero.
-     * //CTS:EXAMINE param
+     * @param _paymentAddress - address to send shares payment to
      */
-    function AdminSetSharesAddress(address _paymentAddress) external isContractAdmin {
+    function AdminSetSharesAddress(address _paymentAddress) external isAdmin {
         require(
             _paymentAddress != address(0),
-            "PRUF:ASSA: Payment address cannot be zero"
+            "PRuF:SSA: payment address cannot be zero"
         );
 
         //^^^^^^^checks^^^^^^^^^
@@ -221,127 +229,93 @@ contract UTIL_TKN is
         //^^^^^^^effects^^^^^^^^^
     }
 
-    /* //CTS:EXAMINE what is this?
+    /**
      * @dev Deducts token payment from transaction
-     * address rootAddress;
-       uint256 rootPrice;
-       address ACTHaddress;
-       uint256 ACTHprice;
-       uint32 asset class ----this will be built out to enable staking.
-     * //CTS:EXAMINE param
-     * //CTS:EXAMINE param
+     * @param _senderAddress - address to send payment from
+     * @param _rootAddress - root address for payment
+     * @param _rootPrice - root amount for payment
+     * @param _ACTHaddress - ACTH address for payment
+     * @param _ACTHprice - ACTH amount for payment
      */
-     //------------------------- NON-LEGACY
     function payForService(
         address _senderAddress,
-        Invoice calldata invoice
-    ) external isPayable { //PREFERRED unreachable with current contracts
-        require(
+        address _rootAddress,
+        uint256 _rootPrice,
+        address _ACTHaddress,
+        uint256 _ACTHprice
+    ) external isPayable {
+        require( //---------------------------------------------------DPS:TEST : NEW
             coldWallet[_senderAddress] == 0,
-            "PRUF:PFS: Cold Wallet - Trusted payable functions prohibited"
+            "PRuF:PFS: Cold Wallet - Trusted payable functions prohibited"
         );
         require( //redundant? throws on transfer?
-            balanceOf(_senderAddress) >= (invoice.rootPrice + invoice.ACTHprice),
-            "PRUF:PFS: Insufficient balance"
+            balanceOf(_senderAddress) >= _rootPrice + (_ACTHprice),
+            "PRuF:PFS: insufficient balance"
         );
         //^^^^^^^checks^^^^^^^^^
 
         if (sharesAddress == address(0)) {
             //IF SHARES ADDRESS IS NOT SET
-            _transfer(_senderAddress, invoice.rootAddress, invoice.rootPrice);
-            _transfer(_senderAddress, invoice.ACTHaddress, invoice.ACTHprice);
+            _transfer(_senderAddress, _rootAddress, _rootPrice);
+            _transfer(_senderAddress, _ACTHaddress, _ACTHprice);
         } else {
             //IF SHARES ADDRESS IS SET
-            uint256 sharesShare = invoice.rootPrice / 4; // sharesShare is 0.25 share of root costs when we transition networks this should be a variable share.
-            uint256 rootShare = invoice.rootPrice - sharesShare; // adjust root price to be root price - 0.25 share
+            uint256 sharesShare = _rootPrice / (uint256(4)); // sharesShare is 0.25 share of root costs
+            uint256 rootShare = _rootPrice / (sharesShare); // adjust root price to be root price - 0.25 share
 
-            _transfer(_senderAddress, invoice.rootAddress, rootShare);
+            _transfer(_senderAddress, _rootAddress, rootShare);
             _transfer(_senderAddress, sharesAddress, sharesShare);
-            _transfer(_senderAddress, invoice.ACTHaddress, invoice.ACTHprice);
+            _transfer(_senderAddress, _ACTHaddress, _ACTHprice);
         }
-        //^^^^^^^effects / interactions^^^^^^^^^ //CTS:EXAMINE just interactions
+        //^^^^^^^effects / interactions^^^^^^^^^
     }
 
-    //------------------------------ LEGACY //CTS:EXAMINE remove?
-    // function payForService(
-    //     address _senderAddress,
-    //     address _rootAddress,
-    //     uint256 _rootPrice,
-    //     address _ACTHaddress,
-    //     uint256 _ACTHprice
-    // ) external isPayable {
-    //     require(
-    //         coldWallet[_senderAddress] == 0,
-    //         "PRUF:PFS: Cold Wallet - Trusted payable functions prohibited"
-    //     );
-    //     require( //redundant? throws on transfer?
-    //         balanceOf(_senderAddress) >= (_rootPrice + _ACTHprice),
-    //         "PRUF:PFS: insufficient balance"
-    //     );
-    //     //^^^^^^^checks^^^^^^^^^
-
-    //     if (sharesAddress == address(0)) {
-    //         //IF SHARES ADDRESS IS NOT SET
-    //         _transfer(_senderAddress, _rootAddress, _rootPrice);
-    //         _transfer(_senderAddress, _ACTHaddress, _ACTHprice);
-    //     } else {
-    //         //IF SHARES ADDRESS IS SET
-    //         uint256 sharesShare = _rootPrice / 4; // sharesShare is 0.25 share of root costs when we transition networks this should be a variable share.
-    //         uint256 rootShare = _rootPrice - sharesShare; // adjust root price to be root price - 0.25 share
-
-    //         _transfer(_senderAddress, _rootAddress, rootShare);
-    //         _transfer(_senderAddress, sharesAddress, sharesShare);
-    //         _transfer(_senderAddress, _ACTHaddress, _ACTHprice);
-    //     }
-    //     //^^^^^^^effects / interactions^^^^^^^^^
-    // }
-
-    /*
+    /**
      * @dev arbitrary burn (requires TRUSTED_AGENT_ROLE)   ****USE WITH CAUTION
-     * //CTS:EXAMINE param
-     * //CTS:EXAMINE param
+     * @param _addr - Address from which to burn tokens
+     * @param _amount - amount of tokens to burn
      */
     function trustedAgentBurn(address _addr, uint256 _amount)
-        external
+        public
         isTrustedAgent
     {
-        require(
+        require( //---------------------------------------------------DPS:TEST : NEW
             coldWallet[_addr] == 0,
-            "PRUF:TAB: Cold Wallet - Trusted functions prohibited"
+            "PRuF:BRN: Cold Wallet - Trusted functions prohibited"
         );
         //^^^^^^^checks^^^^^^^^^
         _burn(_addr, _amount);
         //^^^^^^^effects^^^^^^^^^
     }
 
-    /*
+    /**
      * @dev arbitrary transfer (requires TRUSTED_AGENT_ROLE)   ****USE WITH CAUTION
-     * //CTS:EXAMINE param
-     * //CTS:EXAMINE param
-     * //CTS:EXAMINE param
+     * @param _from - Address from which to send tokens
+     * @param _to - Address to send tokens to
+     * @param _amount - amount of tokens to transfer
      */
     function trustedAgentTransfer(
         address _from,
         address _to,
         uint256 _amount
-    ) external isTrustedAgent {
-        require(
+    ) public isTrustedAgent {
+        require( //---------------------------------------------------DPS:TEST : NEW
             coldWallet[_from] == 0,
-            "PRUF:TAT: Cold Wallet - Trusted functions prohibited"
+            "PRuF:TAT: Cold Wallet - Trusted functions prohibited"
         );
         //^^^^^^^checks^^^^^^^^^
         _transfer(_from, _to, _amount);
         //^^^^^^^effects^^^^^^^^^
     }
 
-    /*
+    /**
      * @dev Take a balance snapshot, returns snapshot ID
-     * //CTS:EXAMINE return
+     * returns snapshot number
      */
     function takeSnapshot() external returns (uint256) {
         require(
             hasRole(SNAPSHOT_ROLE, _msgSender()),
-            "PRUF:TS: ERC20PresetMinterPauser: must have snapshot role to take a snapshot"
+            "ERC20PresetMinterPauser: must have snapshot role to take a snapshot"
         );
         return _snapshot();
     }
@@ -354,17 +328,17 @@ contract UTIL_TKN is
      * Requirements:
      *
      * - the caller must have the `MINTER_ROLE`.
-     * //CTS:EXAMINE param
-     * //CTS:EXAMINE param
+     * @param _to - Address to send tokens to
+     * @param _amount - amount of tokens to mint
      */
-    function mint(address to, uint256 _amount) public virtual {
+    function mint(address _to, uint256 _amount) public virtual {
         require(
             hasRole(MINTER_ROLE, _msgSender()),
-            "PRUF:M: Must have MINTER_ROLE"
+            "PRuF:MOD: must have MINTER_ROLE"
         );
         //^^^^^^^checks^^^^^^^^^
 
-        _mint(to, _amount);
+        _mint(_to, _amount);
         //^^^^^^^interactions^^^^^^^^^
     }
 
@@ -400,34 +374,34 @@ contract UTIL_TKN is
 
     /**
      * @dev Returns the cap on the token's total supply.
-     * //CTS:EXAMINE return
+     * returns total cap
      */
     function cap() public view returns (uint256) {
         return _cap;
     }
 
     /**
-     * @dev all paused functions are blocked here, unless caller has "pauser" role. prevents cap overflow
-     * @param from - from address
-     * @param to - to address
-     * @param amount - transfer amount
+     * @dev all paused functions are blocked here, unless caller has "pauser" role
+     * @param _from - Address from which to send tokens
+     * @param _to - Address to send tokens to
+     * @param _amount - amount of tokens to transfer
      */
     function _beforeTokenTransfer(
-        address from,
-        address to,
-        uint256 amount
+        address _from,
+        address _to,
+        uint256 _amount
     ) internal virtual override(ERC20, ERC20Snapshot) {
-        super._beforeTokenTransfer(from, to, amount);
+        super._beforeTokenTransfer(_from, _to, _amount);
 
         require(
             (!paused()) || hasRole(PAUSER_ROLE, _msgSender()),
-            "PRUF:BTT: Function unavailble while contract is paused"
+            "ERC20Pausable: function unavailble while contract is paused"
         );
-        if (from == address(0)) {
+        if (_from == address(0)) {
             // When minting tokens
             require(
-                (totalSupply() + amount) <= _cap,
-                "PRUF:BTT: Cap exceeded"
+                totalSupply() + (_amount) <= _cap,
+                "ERC20Capped: cap exceeded"
             );
         }
     }
