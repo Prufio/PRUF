@@ -152,11 +152,19 @@ contract CORE_MAL is BASIC {
     /*
      * @dev Deducts payment from transaction
      */
-    function deductPayment(Invoice memory pricing) internal whenNotPaused {
-        if (pricing.ACTHaddress == address(0)) {
-            pricing.ACTHaddress = pricing.rootAddress;
+    function deductPayment(Invoice memory _pricing) internal whenNotPaused {
+        if (_pricing.ACTHaddress == address(0)) {
+            _pricing.ACTHaddress = _pricing.rootAddress;
         }
-        UTIL_TKN.payForService(_msgSender(), pricing);
+        //UTIL_TKN.payForService(_msgSender(), _pricing); //-- NON LEGACY TOKEN CONTRACT
+
+        UTIL_TKN.payForService( //LEGACY TOKEN CONTRACT
+            _msgSender(),
+            _pricing.rootAddress,
+            _pricing.rootPrice,
+            _pricing.ACTHaddress,
+            _pricing.ACTHprice
+        );
     }
 
     //--------------------------------------------------------------------------------------status test internal functions

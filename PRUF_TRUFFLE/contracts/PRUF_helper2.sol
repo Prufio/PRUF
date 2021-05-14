@@ -297,7 +297,7 @@ contract Helper2 is Ownable, BASIC {
 
     function helper_payForService(
         uint32 _assetClass,
-        address _senderAddress,
+        //address _senderAddress,
         address _rootAddress,
         uint256 _rootPrice,
         address _ACTHaddress,
@@ -311,7 +311,15 @@ contract Helper2 is Ownable, BASIC {
         invoice.ACTHprice = _ACTHprice;
         invoice.assetClass = _assetClass;
 
-        UTIL_TKN.payForService(_senderAddress, invoice);
+        //UTIL_TKN.payForService(_msgSender(), invoice); //-- NON LEGACY TOKEN CONTRACT
+
+        UTIL_TKN.payForService( //LEGACY TOKEN CONTRACT
+            _msgSender(),
+            invoice.rootAddress,
+            invoice.rootPrice,
+            invoice.ACTHaddress,
+            invoice.ACTHprice
+        );
     }
 
     // struct Invoice { //invoice struct to facilitate payment messaging in-contract

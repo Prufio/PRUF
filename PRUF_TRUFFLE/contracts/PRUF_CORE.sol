@@ -247,7 +247,15 @@ contract CORE is BASIC {
         }
         //^^^^^^^checks^^^^^^^^^
 
-        UTIL_TKN.payForService(_msgSender(), _pricing);
+        //UTIL_TKN.payForService(_msgSender(), _pricing); //-- NON LEGACY TOKEN CONTRACT
+
+        UTIL_TKN.payForService( //LEGACY TOKEN CONTRACT
+            _msgSender(),
+            _pricing.rootAddress,
+            _pricing.rootPrice,
+            _pricing.ACTHaddress,
+            _pricing.ACTHprice
+        );
         //^^^^^^^interactions^^^^^^^^^
     }
 
