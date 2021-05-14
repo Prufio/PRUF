@@ -65,7 +65,8 @@ struct escrowData {
     uint256 timelock;
 }
 
-struct escrowDataExtLight { //used only in recycle
+struct escrowDataExtLight {
+    //used only in recycle
     //1 slot
     uint8 escrowData; //used by recycle
     uint8 u8_1;
@@ -77,7 +78,8 @@ struct escrowDataExtLight { //used only in recycle
     address addr_1; //used by recycle
 }
 
-struct escrowDataExtHeavy { //specific uses not defined
+struct escrowDataExtHeavy {
+    //specific uses not defined
     // 5 slots
     uint32 u32_2;
     uint32 u32_3;
@@ -153,17 +155,17 @@ interface UTIL_TKN_Interface {
      * - the caller must have a pruf token balance of at least `_rootPrice + _ACTHprice`.
      */
     // ---- NON-LEGACY
-    function payForService(address _senderAddress, Invoice calldata invoice)
-        external;
+    // function payForService(address _senderAddress, Invoice calldata invoice)
+    //     external;
 
-    // ---- LEGACY
-    // function payForService(
-    //     address _senderAddress,
-    //     address _rootAddress,
-    //     uint256 _rootPrice,
-    //     address _ACTHaddress,
-    //     uint256 _ACTHprice
-    // ) external;
+    //---- LEGACY
+    function payForService(
+        address _senderAddress,
+        address _rootAddress,
+        uint256 _rootPrice,
+        address _ACTHaddress,
+        uint256 _ACTHprice
+    ) external;
 
     /*
      * @dev arbitrary burn (requires TRUSTED_AGENT_ROLE)   ****USE WITH CAUTION
@@ -439,7 +441,7 @@ interface AC_TKN_Interface {
     /*
      * @dev Set storage contract to interface with
      */
-    function Admin_setStorageContract(address _storageAddress) external;
+    function OO_setStorageContract(address _storageAddress) external;
 
     /*
      * @dev Address Setters
@@ -590,7 +592,7 @@ interface A_TKN_Interface {
     /*
      * @dev Set storage contract to interface with
      */
-    function Admin_setStorageContract(address _storageAddress) external;
+    function OO_setStorageContract(address _storageAddress) external;
 
     /*
      * @dev Address Setters
@@ -712,9 +714,12 @@ interface A_TKN_Interface {
     function discard(uint256 tokenId) external;
 
     /**
-     * @dev Converts uint256 to string form @OpenZeppelin.
+     * @dev return an adresses "cold wallet" status
+     * WALLET ADDRESSES SET TO "Cold" DO NOT WORK WITH TRUSTED_AGENT FUNCTIONS
+     * @param _addr - address to check
+     * returns 170 if adress is set to "cold wallet" status
      */
-    function uint256toString(uint256 number) external returns (string memory);
+    function isColdWallet(address _addr) external returns (uint256);
 
     /**
      * @dev Returns the owner of the `tokenId` token.
@@ -844,14 +849,10 @@ interface ID_TKN_Interface {
         bytes calldata _data
     ) external;
 
-    
     /*
      * @dev Set new ID data fields
      */
-    function setTrustLevel(
-        uint256 _tokenId,
-        uint256 _trustLevel
-    ) external;
+    function setTrustLevel(uint256 _tokenId, uint256 _trustLevel) external;
 
     /*
      * @dev get ID data
@@ -1078,7 +1079,7 @@ interface AC_MGR_Interface {
         returns (uint8);
 
     /*
-    * @dev get the authorization status of a storage type 0 = not allowed   DPS:TEST -- NEW
+     * @dev get the authorization status of a storage type 0 = not allowed   DPS:TEST -- NEW
      */
     function getStorageProviderStatus(uint8 _storageProvider)
         external
@@ -1086,7 +1087,7 @@ interface AC_MGR_Interface {
         returns (uint8);
 
     /*
-    * @dev get the authorization status of a custody type 0 = not allowed   DPS:TEST -- NEW
+     * @dev get the authorization status of a custody type 0 = not allowed   DPS:TEST -- NEW
      */
     function getCustodyTypeStatus(uint8 _custodyType)
         external
@@ -1151,13 +1152,7 @@ interface AC_MGR_Interface {
     /*
      * @dev return current AC token index pointer
      */
-    function currentACpricingInfo()
-        external
-        view
-        returns (
-            uint256,
-            uint256
-        );
+    function currentACpricingInfo() external view returns (uint256, uint256);
 
     /*
      * @dev get bit (1/0) from .switches at specified position
@@ -1322,7 +1317,9 @@ interface STOR_Interface {
     /*
      * @dev return a record from the database w/o rgt
      */
-    function retrieveShortRecord(bytes32 _idxHash) //CTS:EXAMINE, doesn't return same number of params as STOR
+    function retrieveShortRecord(
+        bytes32 _idxHash //CTS:EXAMINE, doesn't return same number of params as STOR
+    )
         external
         view
         returns (
