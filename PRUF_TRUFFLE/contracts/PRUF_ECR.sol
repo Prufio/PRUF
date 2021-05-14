@@ -17,7 +17,7 @@ __/\\\\\\\\\\\\\ _____/\\\\\\\\\ _______/\\../\\ ___/\\\\\\\\\\\\\\\
 
  //CTS:EXAMINE quick explainer for the contract
 
-// SPDX-License-Identifier: UNLICENSED
+ // SPDX-License-Identifier: UNLICENSED
 pragma solidity ^0.8.0;
 
 import "./PRUF_ECR_CORE.sol";
