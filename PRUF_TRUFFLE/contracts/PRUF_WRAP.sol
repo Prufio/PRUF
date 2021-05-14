@@ -32,8 +32,14 @@ contract WRAP is CORE {
 
     mapping(uint256 => WrappedToken) private wrapped; // pruf tokenID -> original TokenID, ContractAddress
 
+    /*
+     * @dev Verify user credentials
+     * //CTS:EXAMINE param
+     * //CTS:EXAMINE param
+     * Originating Address:
+     *    require that user holds token @ ID-Contract
+     */
     modifier isTokenHolder(uint256 _tokenID, address _tokenContract) {
-        //require that user holds token @ ID-Contract
         require(
             (IERC721(_tokenContract).ownerOf(_tokenID) == _msgSender()),
             "W:MOD-ITH: Caller does not hold specified token"
@@ -44,12 +50,18 @@ contract WRAP is CORE {
     //--------------------------------------------External Functions--------------------------
 
     /*
-     * @dev Wraps a token, takes original from caller
+     * @dev Wraps a token, takes original from caller //CTS:EXAMINE clean this up
+     * //CTS:EXAMINE param
+     * //CTS:EXAMINE param
+     * //CTS:EXAMINE param
+     * //CTS:EXAMINE param
+     * //CTS:EXAMINE param
      * Prerequisite: contract authorized for token txfr
      * Takes original 721
      * Makes a pruf record (exists?) if so does not change
      * Mints a pruf token to caller (exists?) if so ???????
-     * Asset Class? must be type 5  / enabled for contract address
+     * Asset Class? must be type 5 / enabled for contract address
+     * //CTS:EXAMINE this one needs a req section
      *
      */
     function wrap721(
@@ -71,7 +83,6 @@ contract WRAP is CORE {
         AC memory AC_info = getACinfo(_assetClass);
 
         uint256 newTokenId = uint256(idxHash);
-        // AC memory oldAC_info = getACinfo(rec.assetClass);
 
         require(
             AC_info.custodyType == 5,
@@ -93,7 +104,7 @@ contract WRAP is CORE {
             _msgSender(),
             address(this),
             _foreignTokenID
-        ); // move token to this contract
+        ); // move token to this contract //CTS:EXAMINE this wont work??? no permission
 
         if (rec.assetClass == 0) {
             //record does not exist
@@ -108,6 +119,7 @@ contract WRAP is CORE {
 
     /*
      * @dev Unwraps a token, returns original to caller
+     * //CTS:EXAMINE param
      * burns pruf token from caller wallet
      * Sends original 721 to caller
      */
@@ -124,7 +136,7 @@ contract WRAP is CORE {
         uint256 foreignTokenID = wrapped[_tokenID].tokenID;
 
         require(AC_info.custodyType == 5, "W:UW: Asset class.custodyType != 5");
-        require( // CTS:PREFERRED, STAT UNREACHABLE WITH CURRENT CONTRACTS
+        require(
             (AC_info.referenceAddress == foreignTokenContract) ||
                 (AC_info.referenceAddress == address(0)),
             "W:UW: Asset class extended data must be '0' or ERC721 contract address"
@@ -134,8 +146,6 @@ contract WRAP is CORE {
             "W:UW: Asset not in transferrable status"
         );
         //^^^^^^^checks^^^^^^^^^
-
-        //^^^^^^^effects^^^^^^^^^
 
         A_TKN.trustedAgentBurn(_tokenID);
 
@@ -150,6 +160,10 @@ contract WRAP is CORE {
 
     /*
      * @dev transfer a foreign token
+     * //CTS:EXAMINE param
+     * //CTS:EXAMINE param
+     * //CTS:EXAMINE param
+     * //CTS:EXAMINE param
      */
     function foreignTransfer(
         address _tokenContract,
@@ -162,6 +176,11 @@ contract WRAP is CORE {
 
     /*
      * @dev create a Record in Storage @ idxHash (SETTER)
+     * //CTS:EXAMINE param
+     * //CTS:EXAMINE param
+     * //CTS:EXAMINE param
+     * //CTS:EXAMINE param
+     * //CTS:EXAMINE this one needs a req section
      */
     function createRecord(
         bytes32 _idxHash,
@@ -176,7 +195,7 @@ contract WRAP is CORE {
             A_TKN.tokenExists(tokenId) == 0,
             "W:CR: Asset token already exists"
         );
-        require( //CTS:PREFERRED redundant/unreachable with current contract structure, throws in wrap.
+        require(
             (AC_info.custodyType == 5),
             "W:CR: Cannot create asset - contract not authorized for asset class custody type"
         );
@@ -209,7 +228,7 @@ contract WRAP is CORE {
         }
         //^^^^^^^checks^^^^^^^^^
 
-        A_TKN.mintAssetToken(_msgSender(), tokenId, "pruf.io");
+        A_TKN.mintAssetToken(_msgSender(), tokenId, "pruf.io"); //CTS:EXAMINE better URI
         STOR.newRecord(_idxHash, _rgtHash, _assetClass, _countDownStart);
         //^^^^^^^interactions^^^^^^^^^
     }
