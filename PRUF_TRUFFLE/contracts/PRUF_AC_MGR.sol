@@ -25,6 +25,8 @@ __/\\\\\\\\\\\\\ _____/\\\\\\\\\ _______/\\../\\ ___/\\\\\\\\\\\\\\\
  *-----------------------------------------------------------------
  */
 
+ //CTS:EXAMINE quick explainer for the contract
+
 // string name; //CTS:EXAMINE vvv remove vvv 
 // uint32 assetClassRoot;
 // uint8 custodyType;

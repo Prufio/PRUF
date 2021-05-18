@@ -15,18 +15,21 @@ __/\\\\\\\\\\\\\ _____/\\\\\\\\\ _______/\\../\\ ___/\\\\\\\\\\\\\\\
  *
  *---------------------------------------------------------------*/
 
+ //CTS:EXAMINE quick explainer for the contract
+
 // SPDX-License-Identifier: UNLICENSED
 pragma solidity ^0.8.0;
 
 import "./PRUF_CORE.sol";
 
 contract PURCHASE is CORE {
+
     /*
      * @dev Verify user credentials
+     * //CTS:EXAMINE param
      * Originating Address:
      *      holds asset token at idxHash
      */
-
     modifier isAuthorized(bytes32 _idxHash) override {
         uint256 tokenId = uint256(_idxHash);
         require(
@@ -38,10 +41,11 @@ contract PURCHASE is CORE {
 
     /*
      * @dev Purchse an item in transferrable status with price and currency set to pruf
+     * //CTS:EXAMINE param
      */
     function purchaseWithPRUF(
-        bytes32 _idxHash // CTS:OK because zero cost transactions
-    ) external whenNotPaused //isAuthorized(_idxHash) //purchaser is not holder
+        bytes32 _idxHash
+    ) external whenNotPaused
     {
         Record memory rec = getRecord(_idxHash);
         (rec.price, rec.currency) = STOR.getPriceData(_idxHash);
@@ -53,7 +57,7 @@ contract PURCHASE is CORE {
             rec.assetStatus == 51,
             "PP:P: Must be in transferrable status (51)"
         );
-        require( //THROWS IN _setPrice CTS:PREFERRED
+        require(
             rec.currency == 2,
             "PP:P: Payment must be in PRUF tokens for this contract"
         );
@@ -72,6 +76,10 @@ contract PURCHASE is CORE {
 
     /*
      * @dev set price and currency in rec.pricer rec.currency
+     * //CTS:EXAMINE param
+     * //CTS:EXAMINE param
+     * //CTS:EXAMINE param
+     * //CTS:EXAMINE param
      */
     function _setPrice(
         bytes32 _idxHash,
@@ -89,7 +97,7 @@ contract PURCHASE is CORE {
             (rec.assetStatus > 49) || (_setForSale != 170),
             "PP:SP Asset Status < 50"
         ); // Status < 50 not reachable with current contract structure, caller must hold token.
-        require(isEscrow(rec.assetStatus) == 0, "E:SP Record is in escrow");
+        require(isEscrow(rec.assetStatus) == 0, "E:SP Record in escrow");
         require(
             _currency == 2,
             "PP:SP: Price must be in PRUF tokens for this contract"
@@ -107,6 +115,7 @@ contract PURCHASE is CORE {
 
     /*
      * @dev set price and currency in rec.pricer rec.currency
+     * //CTS:EXAMINE param
      */
     function _clearPrice(bytes32 _idxHash)
         external

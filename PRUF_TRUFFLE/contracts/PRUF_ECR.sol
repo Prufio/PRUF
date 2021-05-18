@@ -15,7 +15,9 @@ __/\\\\\\\\\\\\\ _____/\\\\\\\\\ _______/\\../\\ ___/\\\\\\\\\\\\\\\
  *
  *---------------------------------------------------------------*/
 
-// SPDX-License-Identifier: UNLICENSED
+ //CTS:EXAMINE quick explainer for the contract
+
+ // SPDX-License-Identifier: UNLICENSED
 pragma solidity ^0.8.0;
 
 import "./PRUF_ECR_CORE.sol";
@@ -24,9 +26,8 @@ contract ECR is ECR_CORE {
     
     /*
      * @dev Verify user credentials
-     * Originating Address:
-     *      Exists in registeredUsers as a usertype 1 to 9
-     *      Is authorized for asset class
+     * //CTS:EXAMINE param
+     * //CTS:EXAMINE explain req
      */
     modifier isAuthorized(bytes32 _idxHash) override {
         uint256 tokenId = uint256(_idxHash);
@@ -38,7 +39,11 @@ contract ECR is ECR_CORE {
     }
 
     /*
-     * @dev Puts asset into an escrow status for a certain time period
+     * @dev Puts asset into an escrow status for a provided time period
+     * //CTS:EXAMINE param
+     * //CTS:EXAMINE param
+     * //CTS:EXAMINE param
+     * //CTS:EXAMINE param
      */
     function setEscrow(
         bytes32 _idxHash,
@@ -64,7 +69,7 @@ contract ECR is ECR_CORE {
                 ((userType > 4) && (userType < 10) && (_escrowStatus > 49)),
             "E:SE: Non supervisored agents must set escrow status within scope > 49."
         );
-        require((_escrowStatus != 60), "E:SE: Cannot set to recycled status.");
+        require(_escrowStatus != 60, "E:SE: Cannot set to recycled status.");
         //^^^^^^^checks^^^^^^^^^
 
         newEscrowStatus = _escrowStatus;
@@ -75,7 +80,11 @@ contract ECR is ECR_CORE {
     }
 
     /*
-     * @dev Puts asset into an escrow status for a certain time period
+     * @dev Puts asset into an escrow status for a provided time period //CTS:EXAMINE put the examples in setEscrow's comment section?
+     * //CTS:EXAMINE param
+     * //CTS:EXAMINE param
+     * //CTS:EXAMINE param
+     * //CTS:EXAMINE param
      * Includes sample code for setting extended data
      */
     function setEscrowExtendedData(
@@ -123,6 +132,9 @@ contract ECR is ECR_CORE {
 
     /*
      * @dev A standard function for all escrow contracts which returns all relevant data about an escrow
+     * //CTS:EXAMINE is this neccessary? Maybe put a note in getEscrowData. We're not trying to teach people how to code in solidity here
+     * //CTS:EXAMINE param
+     * //CTS:EXAMINE returns
      * in this case only the relevant escrowData struct DPS:TEST
      */
     function getEscrowParameters (bytes32 _idxHash) external returns (escrowData memory){
@@ -131,6 +143,7 @@ contract ECR is ECR_CORE {
 
     /*
      * @dev Takes asset out of excrow status if time period has resolved || is escrow issuer
+     * //CTS:EXAMINE param
      */
     function endEscrow(bytes32 _idxHash)
         external

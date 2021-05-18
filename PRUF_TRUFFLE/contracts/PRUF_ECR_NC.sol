@@ -15,6 +15,8 @@ __/\\\\\\\\\\\\\ _____/\\\\\\\\\ _______/\\../\\ ___/\\\\\\\\\\\\\\\
  *
  *---------------------------------------------------------------*/
 
+ //CTS:EXAMINE quick explainer for the contract
+
 // SPDX-License-Identifier: UNLICENSED
 pragma solidity ^0.8.0;
 
@@ -25,8 +27,9 @@ contract ECR_NC is ECR_CORE {
 
     /*
      * @dev Verify user credentials
-     * Originating Address:
+     * Originating Address: //CTS:EXAMINE maybe make this a little less confusing
      *      holds asset token at idxHash
+     * //CTS:EXAMINE param
      */
 
     modifier isAuthorized(bytes32 _idxHash) override {
@@ -41,7 +44,11 @@ contract ECR_NC is ECR_CORE {
     //--------------------------------------------External Functions--------------------------
 
     /*
-     * @dev puts asset into an escrow status for a certain time period
+     * @dev puts asset into an escrow status for a provided time period
+     * //CTS:EXAMINE param
+     * //CTS:EXAMINE param
+     * //CTS:EXAMINE param
+     * //CTS:EXAMINE param
      */
     function setEscrow(
         bytes32 _idxHash,
@@ -59,17 +66,17 @@ contract ECR_NC is ECR_CORE {
 
         require(
             contractInfo.contractType > 0,
-            "ENC:SE: ENC not auth for AC"
+            "ENC:SE:Contract not auth for AC"
         );
         require(
-            (rec.assetStatus > 49),
-            "ENC:SE: Only ACadmin authorized user can change status < 50"
+            rec.assetStatus > 49,
+            "ENC:SE: Only ACadmin authorized user can change status < 50" //CTS:EXAMINE is this still evident?
         );
         require( //REDUNDANT, THROWS CTS:PREFERRED
-            (escrowTime >= block.timestamp),
+            escrowTime >= block.timestamp,
             "ENC:SE:Escrow must be set to a time in the future"
         );
-        require( //LIMITING  CTS:PREFERRED
+        require(
             (_escrowStatus == 50) || (_escrowStatus == 56),
             "ENC:SE:Must specify a valid escrow status >49"
         );
@@ -85,6 +92,9 @@ contract ECR_NC is ECR_CORE {
 
     /*
      * @dev A standard function for all escrow contracts which returns all relevant data about an escrow
+     * //CTS:EXAMINE is this neccessary? Maybe put a note in getEscrowData. We're not trying to teach people how to code in solidity here
+     * //CTS:EXAMINE param
+     * //CTS:EXAMINE returns
      * in this case only the relevant escrowData struct DPS:TEST
      */
     function getEscrowParameters (bytes32 _idxHash) external returns (escrowData memory){
@@ -93,6 +103,7 @@ contract ECR_NC is ECR_CORE {
 
     /*
      * @dev takes asset out of excrow status if time period has resolved || is escrow issuer
+     * //CTS:EXAMINE param
      */
     function endEscrow(bytes32 _idxHash) external nonReentrant {
         bytes32 ownerHash = ECR_MGR.retrieveEscrowOwner(_idxHash);
@@ -105,9 +116,9 @@ contract ECR_NC is ECR_CORE {
 
         require(
             contractInfo.contractType > 0,
-            "ENC:EE: ENC not auth for AC"
+            "ENC:EE:Contract not auth for AC"
         );
-        require( //LIMITING, CHANGE TO >49 NOT 50 OR 56?  CTS:50||56 preferrable.
+        require(
             (rec.assetStatus == 50) || (rec.assetStatus == 56),
             "ENC:EE: Record must be in escrow status > 49"
         );

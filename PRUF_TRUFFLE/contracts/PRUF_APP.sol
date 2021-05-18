@@ -15,6 +15,8 @@ __/\\\\\\\\\\\\\ _____/\\\\\\\\\ _______/\\../\\ ___/\\\\\\\\\\\\\\\
  *
  *----------------------------------------------------------------*/
 
+ //CTS:EXAMINE quick explainer for the contract
+
 // SPDX-License-Identifier: UNLICENSED
 pragma solidity ^0.8.0;
 
@@ -24,6 +26,11 @@ contract APP is CORE {
     bytes32 public constant B320xF_ =
         0xFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFF;
 
+
+    /*
+     * //CTS:EXAMINE comment
+     * //CTS:EXAMINE param
+     */
     modifier isAuthorized(bytes32 _idxHash) override {
         //require that user is authorized and token is held by contract
         uint256 tokenId = uint256(_idxHash);
@@ -38,6 +45,10 @@ contract APP is CORE {
 
     /*
      * @dev Wrapper for newRecord
+     * //CTS:EXAMINE param
+     * //CTS:EXAMINE param
+     * //CTS:EXAMINE param
+     * //CTS:EXAMINE param
      */
     function newRecord(
         bytes32 _idxHash,
@@ -47,11 +58,9 @@ contract APP is CORE {
     ) external nonReentrant whenNotPaused {
         uint8 userType = getCallingUserType(_assetClass);
 
-        require((userType > 0) && (userType < 10), "A:NR: User not auth in AC");
-        require(userType < 5, "A:NR: User not authorized to create records");
+        require((userType > 0) && (userType < 10), "A:NR: User !auth in AC");
+        require(userType < 5, "A:NR: User !authorized to create records");
         //^^^^^^^checks^^^^^^^^^
-
-        //^^^^^^^effects^^^^^^^^^
 
         createRecord(_idxHash, _rgtHash, _assetClass, _countDownStart);
         deductServiceCosts(_assetClass, 1);
@@ -60,7 +69,11 @@ contract APP is CORE {
     }
 
     /*
-     * @dev import **Record** (no confirmation required -
+     * @dev import **Record** (no confirmation required - //CTS:EXAMINE what's up with this comment
+     * //CTS:EXAMINE param
+     * //CTS:EXAMINE param
+     * //CTS:EXAMINE param
+     * //CTS:EXAMINE returns
      * posessor is considered to be owner. sets rec.assetStatus to 0.
      */
     function importAsset(
@@ -77,8 +90,8 @@ contract APP is CORE {
         Record memory rec = getRecord(_idxHash);
         uint8 userType = getCallingUserType(_newAssetClass);
 
-        require(userType < 3, "A:IA: User not authorized to import assets");
-        require((userType > 0) && (userType < 10), "A:IA: User not auth in AC");
+        require(userType < 3, "A:IA: User !authorized to import assets");
+        require((userType > 0) && (userType < 10), "A:IA: User !auth in AC");
         require(
             (rec.assetStatus == 5) ||
                 (rec.assetStatus == 55) ||
@@ -101,7 +114,10 @@ contract APP is CORE {
     }
 
     /*
-     * @dev Modify **Record**.rightsHolder without confirmation required
+     * @dev Modify **Record**.rightsHolder without confirmation required //CTS:EXAMINE with confirmation?
+     * //CTS:EXAMINE param
+     * //CTS:EXAMINE param
+     * //CTS:EXAMINE returns
      */
     function forceModRecord(bytes32 _idxHash, bytes32 _rgtHash)
         external
@@ -113,12 +129,12 @@ contract APP is CORE {
         Record memory rec = getRecord(_idxHash);
         uint8 userType = getCallingUserType(rec.assetClass);
 
-        require(userType == 1, "A:FMR: User not auth in AC");
+        require(userType == 1, "A:FMR: User !auth in AC");
         require(
             isLostOrStolen(rec.assetStatus) == 0,
             "A:FMR: Asset marked L/S"
         );
-        require( //IMPOSSIBLE TO THROW REVERTS IN REQ1 CTS:PREFERRED
+        require(
             needsImport(rec.assetStatus) == 0,
             "A:FMR: Asset needs re-imported"
         );
@@ -138,7 +154,11 @@ contract APP is CORE {
     }
 
     /*
-     * @dev Transfer Rights to new rightsHolder with confirmation
+     * @dev Transfer rights to new rightsHolder with confirmation //CTS:EXAMINE with confirmation?
+     * //CTS:EXAMINE param
+     * //CTS:EXAMINE param
+     * //CTS:EXAMINE param
+     * //CTS:EXAMINE returns
      */
     function transferAsset(
         bytes32 _idxHash,
@@ -184,12 +204,16 @@ contract APP is CORE {
 
         deductServiceCosts(rec.assetClass, 2);
 
-        return (170);
+        return 170;
         //^^^^^^^interactions^^^^^^^^^
     }
 
     /*
-     * @dev Modify **Record**.Ipfs2 with confirmation
+     * @dev Modify **Record** Ipfs2 with confirmation //CTS:EXAMINE with confirmation?
+     * //CTS:EXAMINE param
+     * //CTS:EXAMINE param
+     * //CTS:EXAMINE param
+     * //CTS:EXAMINE param
      */
     function addIpfs2Note(
         bytes32 _idxHash,
@@ -207,7 +231,7 @@ contract APP is CORE {
 
         require((userType > 0) && (userType < 10), "A:I2: User not auth in AC");
 
-        require( //IMPOSSIBLE TO THROW REVERTS IN REQ1 CTS:PREFERRED
+        require(
             needsImport(rec.assetStatus) == 0,
             "A:I2: Asset needs re-imported"
         );

@@ -14,18 +14,21 @@ __/\\\\\\\\\\\\\ _____/\\\\\\\\\ _______/\\../\\ ___/\\\\\\\\\\\\\\\
  *  TO DO
  *---------------------------------------------------------------*/
 
+ //CTS:EXAMINE quick explainer for the contract
+
 // SPDX-License-Identifier: UNLICENSED
 pragma solidity ^0.8.0;
 
 import "./PRUF_CORE.sol";
 
 contract APP_NC is CORE {
+
     /*
      * @dev Verify user credentials
+     * //CTS:EXAMINE param
      * Originating Address:
      *      holds asset token at idxHash
      */
-
     modifier isAuthorized(bytes32 _idxHash) override {
         uint256 tokenId = uint256(_idxHash);
         require(
@@ -38,6 +41,12 @@ contract APP_NC is CORE {
     //--------------------------------------------External Functions--------------------------
     /*
      * @dev Create a  newRecord with description
+     * //CTS:EXAMINE param
+     * //CTS:EXAMINE param
+     * //CTS:EXAMINE param
+     * //CTS:EXAMINE param
+     * //CTS:EXAMINE param
+     * //CTS:EXAMINE param
      */
     function newRecordWithDescription(
         bytes32 _idxHash,
@@ -48,7 +57,7 @@ contract APP_NC is CORE {
         bytes32 _Ipfs1b
     ) external nonReentrant whenNotPaused {
         require(
-            (ID_TKN.balanceOf(_msgSender()) == 1), //_msgSender() is token holder
+            (ID_TKN.balanceOf(_msgSender()) == 1), //_msgSender() is ID token holder
             "ANC:NRWD: Caller !PRuF_ID holder"
         );
         //^^^^^^^Checks^^^^^^^^^
@@ -65,7 +74,13 @@ contract APP_NC is CORE {
     }
 
     /*
-     * @dev Create a  newRecord with description
+     * @dev Create a newRecord with description
+     * //CTS:EXAMINE param
+     * //CTS:EXAMINE param
+     * //CTS:EXAMINE param
+     * //CTS:EXAMINE param
+     * //CTS:EXAMINE param
+     * //CTS:EXAMINE param
      */
     function newRecordWithNote(
         bytes32 _idxHash,
@@ -76,7 +91,7 @@ contract APP_NC is CORE {
         bytes32 _Ipfs2b
     ) external nonReentrant whenNotPaused {
         require(
-            (ID_TKN.balanceOf(_msgSender()) == 1), //_msgSender() is token holder
+            (ID_TKN.balanceOf(_msgSender()) == 1), //_msgSender() is ID token holder
             "ANC:NRWD: Caller !PRuF_ID holder"
         );
         //^^^^^^^Checks^^^^^^^^^
@@ -94,6 +109,10 @@ contract APP_NC is CORE {
 
     /*
      * @dev Create a new record
+     * //CTS:EXAMINE param
+     * //CTS:EXAMINE param
+     * //CTS:EXAMINE param
+     * //CTS:EXAMINE param
      */
     function newRecord(
         bytes32 _idxHash,
@@ -102,7 +121,7 @@ contract APP_NC is CORE {
         uint32 _countDownStart
     ) external nonReentrant whenNotPaused {
         require(
-            (ID_TKN.balanceOf(_msgSender()) == 1), //_msgSender() is token holder
+            (ID_TKN.balanceOf(_msgSender()) == 1), //_msgSender() is ID token holder
             "ANC:NR: Caller !PRuF_ID holder"
         );
         //^^^^^^^Checks^^^^^^^^^
@@ -114,6 +133,8 @@ contract APP_NC is CORE {
 
     /*
      * @dev Import a record into a new asset class
+     * //CTS:EXAMINE param
+     * //CTS:EXAMINE param
      */
     function importAsset(bytes32 _idxHash, uint32 _newAssetClass)
         external
@@ -127,7 +148,7 @@ contract APP_NC is CORE {
         require(rec.assetStatus == 70, "ANC:IA: Asset !exported");
         require(
             AC_MGR.isSameRootAC(_newAssetClass, rec.assetClass) == 170,
-            "ANC:IA: !Change AC to new root"
+            "ANC:IA: Cannot change AC to new root"
         );
         require(
             (AC_info.managementType < 6),
@@ -158,7 +179,7 @@ contract APP_NC is CORE {
         }
         //^^^^^^^checks^^^^^^^^^
 
-        rec.assetStatus = 52;
+        rec.assetStatus = 51; //transferrable status
         //^^^^^^^effects^^^^^^^^^
 
         STOR.changeAC(_idxHash, _newAssetClass);
@@ -169,6 +190,9 @@ contract APP_NC is CORE {
 
     /*
      * @dev Modify record.Ipfs2
+     * //CTS:EXAMINE param
+     * //CTS:EXAMINE param
+     * //CTS:EXAMINE param
      */
     function addIpfs2Note(
         bytes32 _idxHash,
