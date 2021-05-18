@@ -1,4 +1,4 @@
-/*--------------------------------------------------------PRüF0.8.0
+/**--------------------------------------------------------PRüF0.8.0
 __/\\\\\\\\\\\\\ _____/\\\\\\\\\ _______/\\../\\ ___/\\\\\\\\\\\\\\\
  _\/\\\/////////\\\ _/\\\///////\\\ ____\//..\//____\/\\\///////////__
   _\/\\\.......\/\\\.\/\\\.....\/\\\ ________________\/\\\ ____________
@@ -10,7 +10,7 @@ __/\\\\\\\\\\\\\ _____/\\\\\\\\\ _______/\\../\\ ___/\\\\\\\\\\\\\\\
         _\/// _____________\/// _______\/// __\///////// __\/// _____________
          *-------------------------------------------------------------------*/
 
-/*-----------------------------------------------------------------
+/**-----------------------------------------------------------------
  *  TO DO
  *-----------------------------------------------------------------
  * PRUF USER ID NFT CONTRACT
@@ -73,6 +73,11 @@ contract ID_TKN is
     }
 
     //----------------------Modifiers----------------------//
+    /**
+     * @dev Verify user credentials
+     * Originating Address:
+     *      has CONTRACT_ADMIN_ROLE
+     */
     modifier isContractAdmin() {
         require(
             hasRole(CONTRACT_ADMIN_ROLE, _msgSender()),
@@ -81,6 +86,11 @@ contract ID_TKN is
         _;
     }
 
+    /**
+     * @dev Verify user credentials
+     * Originating Address:
+     *      has MINTER_ROLE
+     */
     modifier isMinter() {
         require(
             hasRole(MINTER_ROLE, _msgSender()),
@@ -94,30 +104,30 @@ contract ID_TKN is
 
     //----------------------Admin functions / isContractAdmin----------------------//
 
-    /*
-     * @dev Mint new PRUF_ID token
-     * //CTS:EXAMINE param
-     * //CTS:EXAMINE param
-     * //CTS:EXAMINE param
-     * //CTS:EXAMINE returns
+    /**
+     * @dev Mint an Asset token
+     * @param _recipientAddress - Address to mint token into
+     * @param _tokenId - Token ID to mint
+     * @param _tokenURI - URI string to atatch to token
+     * returns Token ID of minted token
      */
     function mintPRUF_IDToken(
         address _recipientAddress,
         uint256 _tokenId,
-        string calldata _URI
+        string calldata _tokenURI
     ) external isMinter nonReentrant whenNotPaused returns (uint256) {
         //^^^^^^^checks^^^^^^^^^
 
         //MAKE URI ASSET SPECIFIC- has to incorporate the token ID
         _safeMint(_recipientAddress, _tokenId);
-        _setTokenURI(_tokenId, _URI);
+        _setTokenURI(_tokenId, _tokenURI);
         return _tokenId;
         //^^^^^^^interactions^^^^^^^^^
     }
 
-    /*
+    /**
      * @dev Burn PRUF_ID token
-     * //CTS:EXAMINE param
+     * @param _tokenId - ID tokenID to burn
      */
     function burnPRUF_ID(uint256 _tokenId)
         external
@@ -132,19 +142,17 @@ contract ID_TKN is
         //^^^^^^^interactions^^^^^^^^^
     }
 
-    /*
+    /**
      * @dev remint ID Token
      * burns old token
-     * //CTS:EXAMINE param
-     * //CTS:EXAMINE param
-     * //CTS:EXAMINE returns
+     * @param _recipientAddress - new address for token
+     * @param _tokenId - Token ID to teleport
      */
     function reMintPRUF_IDToken(address _recipientAddress, uint256 _tokenId)
         external
         isMinter
         nonReentrant
         whenNotPaused
-        returns (uint256)
     {
         require(_exists(_tokenId), "PIDT:RM: Cannot Remint nonexistant token");
         //^^^^^^^checks^^^^^^^^^
@@ -152,15 +160,14 @@ contract ID_TKN is
         _burn(_tokenId);
         _safeMint(_recipientAddress, _tokenId);
         _setTokenURI(_tokenId, tokenURI);
-        return _tokenId;
         //^^^^^^^interactions^^^^^^^^^
     }
 
-    /*
+    /**
      * @dev Set new token URI String -- string should eventually be a B32 hash of ID info in a standardized format - verifyable against provided ID
-     * //CTS:EXAMINE param
-     * //CTS:EXAMINE param
-     * //CTS:EXAMINE returns
+     * @param _tokenId - Token ID to set URI
+     * @param _tokenURI - Token URI string to set
+     * returns token ID
      */
     function setURI(uint256 _tokenId, string calldata _tokenURI)
         external
@@ -176,42 +183,41 @@ contract ID_TKN is
         //^^^^^^^interactions^^^^^^^^^
     }
 
-    /*
+    /**
      * @dev Set new ID mapp user URI String -- string should eventually be a B32 hash of ID info in a standardized format - verifyable against provided ID
-     * //CTS:EXAMINE param
-     * //CTS:EXAMINE param
-     * //CTS:EXAMINE returns
+     * @param _tokenId - token ID to set URI
+     * @param _tokenURI - Token URI to set
      */
-    function setIdURI(
-        uint256 _tokenId,
-        bytes32 _URI 
-    ) external nonReentrant whenNotPaused returns (uint256) {
+    function setIdURI(uint256 _tokenId, bytes32 _tokenURI)
+        external
+        nonReentrant
+        whenNotPaused
+    {
         require(
             ownerOf(_tokenId) == _msgSender(),
             "PIDT:RM: Caller does not hold token"
         );
         //^^^^^^^checks^^^^^^^^^
 
-        id[_tokenId].URI = _URI;
-        return _tokenId;
+        id[_tokenId].URI = _tokenURI;
         //^^^^^^^interactions^^^^^^^^^
     }
 
-    /*
+    /**
      * @dev Set new ID mapp user URI String -- string should eventually be a B32 hash of ID info in a standardized format - verifyable against provided ID //CTS:EXAMINE new comment
-     * //CTS:EXAMINE param
-     * //CTS:EXAMINE param
-     * //CTS:EXAMINE returns
+     * @param _tokenId - token ID to set URI
+     * @param _userName - String for Name
      */
-    function setUserName(
-        uint256 _tokenId,
-        string calldata _userName 
-    ) external nonReentrant whenNotPaused returns (uint256) {
+    function setUserName(uint256 _tokenId, string calldata _userName)
+        external
+        nonReentrant
+        whenNotPaused
+    {
         require(
             ((ownerOf(_tokenId) == _msgSender()) &&
                 (keccak256(abi.encodePacked(id[_tokenId].userName)) ==
                     keccak256(abi.encodePacked("")))),
-            // || hasRole(MINTER_ROLE, _msgSender()), //CTS:EXAMINE
+            // || hasRole(MINTER_ROLE, _msgSender()), // ?DO we want this?
             "PIDT:SUN: Caller !hold token or userName is set"
         );
         bytes32 nameHash = keccak256(abi.encodePacked(_userName));
@@ -223,129 +229,132 @@ contract ID_TKN is
 
         tokenIDforName[nameHash] = _tokenId; //store namehash
         id[_tokenId].userName = _userName; //store username
-        return _tokenId;
         //^^^^^^^effects^^^^^^^^^
     }
 
-    /*
+    /**
      * @dev Set new ID data fields
-     * //CTS:EXAMINE param
-     * //CTS:EXAMINE param
-     * //CTS:EXAMINE returns
+     * @param _tokenId - ID of token to set trust level
+     * @param _trustLevel - _trustLevel to set at token _tokenId
      */
-    function setTrustLevel(
-        uint256 _tokenId,
-        uint256 _trustLevel
-    ) external nonReentrant whenNotPaused isMinter returns (uint256) {
+    function setTrustLevel(uint256 _tokenId, uint256 _trustLevel)
+        external
+        nonReentrant
+        whenNotPaused
+        isMinter
+    {
         //^^^^^^^checks^^^^^^^^^
 
         id[_tokenId].trustLevel = _trustLevel;
-        return _tokenId;
         //^^^^^^^interactions^^^^^^^^^
     }
 
-    /*
-     * @dev See if token exists
-     * //CTS:EXAMINE param
-     * //CTS:EXAMINE returns
+    /**
+     * @dev get ID data
+     * @param _tokenId - ID token to look up
+     * returns ID struct (see interfaces for struct definitions)
      */
-    function tokenExists(uint256 _tokenId) external view returns (uint8) {
-        if (_exists(_tokenId)) {
+    function IdData(uint256 _tokenId) external view returns (ID memory) {
+        return id[_tokenId];
+    }
+
+    /**
+     * @dev get ID trustLevel
+     * @param _tokenId - token ID to check
+     * returns trust level of token id
+     */
+    function trustLevel(uint256 _tokenId) external view returns (uint256) {
+        return id[_tokenId].trustLevel;
+    }
+
+    /**
+     * @dev get ID trustLevel by address (token 0 at address)
+     * @param _addr - address to look up for trust level
+     * returns trust level of address
+     */
+    function trustedLevelByAddress(address _addr)
+        external
+        view
+        returns (uint256)
+    {
+        return id[tokenOfOwnerByIndex(_addr, 0)].trustLevel;
+    }
+
+    /**
+     * @dev See if asset token exists
+     * @param tokenId - Token ID to set URI
+     * returns 170 if token exists, otherwise 0
+     */
+    function tokenExists(uint256 tokenId) external view returns (uint256) {
+        if (_exists(tokenId)) {
             return 170;
         } else {
             return 0;
         }
     }
 
-    /*
-     * @dev get ID data
-     * //CTS:EXAMINE param
-     * //CTS:EXAMINE returns
-     */
-    function IdData(uint256 _tokenId) external view returns (ID memory) {
-        return id[_tokenId];
-    }
-
-    /*
-     * @dev get ID trustLevel
-     * //CTS:EXAMINE param
-     * //CTS:EXAMINE returns
-     */
-    function trustLevel(uint256 _tokenId) external view returns (uint256) {
-        return id[_tokenId].trustLevel;
-    }
-
-    /*
-     * @dev get ID trustLevel by address (token 0 at address)
-     * //CTS:EXAMINE param
-     * //CTS:EXAMINE returns
-     */
-    function trustedLevelByAddress(address _addr) external view returns (uint256) {
-        return id[tokenOfOwnerByIndex(_addr, 0)].trustLevel;
-    }
-
     /**
-     * @dev Blocks the transfer of a given token ID to another address
+     * @dev Transfers the ownership of a given token ID to another address.
      * Usage of this method is discouraged, use {safeTransferFrom} whenever possible.
      * Requires the _msgSender() to be the owner, approved, or operator.
-     * //CTS:EXAMINE param
-     * //CTS:EXAMINE param
-     * //CTS:EXAMINE param
+     * @param _from current owner of the token
+     * @param _to address to receive the ownership of the given token ID
+     * @param _tokenId uint256 ID of the token to be transferred
      */
     function transferFrom(
-        address from,
-        address to,
-        uint256 tokenId
+        address _from,
+        address _to,
+        uint256 _tokenId
     ) public override nonReentrant whenNotPaused {
         require(
-            _isApprovedOrOwner(_msgSender(), tokenId),
+            _isApprovedOrOwner(_msgSender(), _tokenId),
             "PIDT:TF: transfer caller is not owner nor approved"
         );
         require(
-            to == from,
-            "PIDT:TF: Token not transferrable with standard ERC721 protocol. Must be reminted by admin to new address"
+            _to == _from,
+            "PIDT:TF: Token not tra_nsferrable with standard ERC721 protocol. Must be reminted by admin to new address"
         );
         //^^^^^^^checks^^^^^^^^
 
-        _transfer(from, to, tokenId);
+        _transfer(_from, _to, _tokenId);
         //^^^^^^^interactions^^^^^^^^^
     }
 
     /**
-     * @dev Safely blocks the transfer of a given token ID to another address
+     * @dev Safely transfers the ownership of a given token ID to another address
      * If the target address is a contract, it must implement {IERC721Receiver-onERC721Received},
      * which is called upon a safe transfer, and return the magic value
      * `bytes4(keccak256("onERC721Received(address,address,uint256,bytes)"))`; otherwise,
      * the transfer is reverted.
      * Requires the _msgSender() to be the owner, approved, or operator
-     * //CTS:EXAMINE param
-     * //CTS:EXAMINE param
-     * //CTS:EXAMINE param
+     * @param _from current owner of the token
+     * @param _to address to receive the ownership of the given token ID
+     * @param _tokenId uint256 ID of the token to be transferred
      */
     function safeTransferFrom(
-        address from,
-        address to,
+        address _from,
+        address _to,
         uint256 _tokenId
     ) public override {
-        safeTransferFrom(from, to, _tokenId, "");
+        safeTransferFrom(_from, _to, _tokenId, "");
         //^^^^^^^interactions^^^^^^^^^
     }
 
     /**
-     * @dev Safely blocks the transfer of a given token ID to another address
+     * @dev Safely transfers the ownership of a given token ID to another address
      * If the target address is a contract, it must implement {IERC721Receiver-onERC721Received},
      * which is called upon a safe transfer, and return the magic value
      * `bytes4(keccak256("onERC721Received(address,address,uint256,bytes)"))`; otherwise,
      * the transfer is reverted.
      * Requires the _msgSender() to be the owner, approved, or operator
-     * @param from current owner of the token
-     * @param to address to receive the ownership of the given token ID
+     * @param _from current owner of the token
+     * @param _to address to receive the ownership of the given token ID
      * @param _tokenId uint256 ID of the token to be transferred
      * @param _data bytes data to send along with a safe transfer check
      */
     function safeTransferFrom(
-        address from,
-        address to,
+        address _from,
+        address _to,
         uint256 _tokenId,
         bytes memory _data
     ) public virtual override nonReentrant whenNotPaused {
@@ -354,13 +363,13 @@ contract ID_TKN is
             "PIDT:STF: Transfer caller !owner nor approved"
         );
         require(
-            to == from,
+            _to == _from,
             "PIDT:STF: Token not transferrable with standard ERC721 protocol. Must be reminted by admin to new address"
         );
 
         //^^^^^^^checks^^^^^^^^^
 
-        _safeTransfer(from, from, _tokenId, _data);
+        _safeTransfer(_from, _from, _tokenId, _data);
         //^^^^^^^interactions^^^^^^^^^
     }
 
@@ -402,15 +411,17 @@ contract ID_TKN is
         //^^^^^^^interactions^^^^^^^^^
     }
 
-     //CTS:EXAMINE comment?
-     //CTS:EXAMINE param
-     //CTS:EXAMINE param
-     //CTS:EXAMINE param
+    /**
+     * @dev all paused functions are blocked here (inside ERC720Pausable.sol)
+     * @param _from - from address
+     * @param _to - to address
+     * @param _tokenId - token ID to transfer
+     */
     function _beforeTokenTransfer(
-        address from,
-        address to,
+        address _from,
+        address _to,
         uint256 _tokenId
     ) internal virtual override(ERC721, ERC721Pausable) {
-        super._beforeTokenTransfer(from, to, _tokenId);
+        super._beforeTokenTransfer(_from, _to, _tokenId);
     }
 }

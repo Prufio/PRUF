@@ -65,13 +65,15 @@ contract AC_TKN is
         _setupRole(CONTRACT_ADMIN_ROLE, _msgSender());
         _setupRole(MINTER_ROLE, _msgSender());
         _setupRole(PAUSER_ROLE, _msgSender());
-
-        //_setBaseURI("pruf.io"); //CTS:EXAMINE remove?
     }
 
-
     //----------------------Modifiers----------------------//
-    //CTS:EXAMINE comments
+
+    /**
+     * @dev Verify user credentials
+     * Originating Address:
+     *      has CONTRACT_ADMIN_ROLE
+     */
     modifier isContractAdmin() {
         require(
             hasRole(CONTRACT_ADMIN_ROLE, _msgSender()),
@@ -80,7 +82,11 @@ contract AC_TKN is
         _;
     }
 
-    //CTS:EXAMINE comments
+    /**
+     * @dev Verify user credentials
+     * Originating Address:
+     *      has MINTER_ROLE
+     */
     modifier isMinter() {
         require(
             hasRole(MINTER_ROLE, _msgSender()),
@@ -90,142 +96,141 @@ contract AC_TKN is
     }
 
     //----------------------Events----------------------//
-    //CTS:EXAMINE comments
     event REPORT(string _msg);
+
     //----------------------Admin functions / isContractAdmin or isMinter----------------------//
 
-    /*
-     * @dev Mints assetClass token
-     * //CTS:EXAMINE param
-     * //CTS:EXAMINE param
-     * //CTS:EXAMINE param
-     * //CTS:EXAMINE returns
+    /**
+     * @dev Mint an Asset token
+     * @param _recipientAddress - Address to mint token into
+     * @param _tokenId - Token ID to mint
+     * @param _tokenURI - URI string to atatch to token
+     * returns Token ID of minted token
      */
     function mintACToken(
         address _recipientAddress,
-        uint256 tokenId,
+        uint256 _tokenId,
         string calldata _tokenURI
     ) external isMinter nonReentrant returns (uint256) {
         //^^^^^^^checks^^^^^^^^^
 
-        _safeMint(_recipientAddress, tokenId);
-        _setTokenURI(tokenId, _tokenURI);
-        return tokenId;
+        _safeMint(_recipientAddress, _tokenId);
+        _setTokenURI(_tokenId, _tokenURI);
+        return _tokenId;
         //^^^^^^^interactions^^^^^^^^^
     }
 
-    /*
-     * Authorizations //CTS:EXAMINE??
-     * @dev remint Asset Class Token
+    /**
+     * @dev remint Asset Class Token - must be minter
      * burns old token
      * Sends new token to specified address
-     * //CTS:EXAMINE param
-     * //CTS:EXAMINE param
-     * //CTS:EXAMINE param
-     * //CTS:EXAMINE returns
+     * @param _recipientAddress - new address for token
+     * @param _tokenId - Token ID to teleport
+     * @param _tokenURI - URI to check match for safety
      */
-    function reMintACToken(
+    function teleportACToken(
         address _recipientAddress,
-        uint256 tokenId,
+        uint256 _tokenId,
         string calldata _tokenURI
-    ) external isMinter nonReentrant returns (uint256) {
-        require(_exists(tokenId), "ACT:RM: AC !exist");
+    ) external isMinter nonReentrant {
+        require(_exists(_tokenId), "ACT:RM: AC !exist");
         require(
             keccak256(abi.encodePacked(_tokenURI)) ==
-                keccak256(abi.encodePacked(tokenURI(tokenId))),
+                keccak256(abi.encodePacked(tokenURI(_tokenId))),
             "ACT:RM:New token URI != URI"
         );
         //^^^^^^^checks^^^^^^^^^
 
-        _burn(tokenId);
-        _safeMint(_recipientAddress, tokenId);
-        _setTokenURI(tokenId, tokenURI(tokenId));
-        return tokenId;
+        _burn(_tokenId);
+        _safeMint(_recipientAddress, _tokenId);
+        _setTokenURI(_tokenId, tokenURI(_tokenId));
         //^^^^^^^interactions^^^^^^^^^
     }
 
     /**
-     * @dev Transfers the ownership of a given token ID to another address.
-     * Usage of this method is discouraged, use {safeTransferFrom} whenever possible.
-     * Requires the _msgSender() to be the owner, approved, or operator.
-     * @param from current owner of the token
-     * @param to address to receive the ownership of the given token ID
-     * @param tokenId uint256 ID of the token to be transferred
+     * @dev See if asset token exists
+     * @param tokenId - Token ID to set URI
+     * returns 170 if token exists, otherwise 0
      */
-    function transferFrom(
-        address from,
-        address to,
-        uint256 tokenId
-    ) public override nonReentrant whenNotPaused {
-        require(
-            _isApprovedOrOwner(_msgSender(), tokenId),
-            "ACT:TF: Caller !ApprovedOrOwner"
-        );
-        //^^^^^^^checks^^^^^^^^^
-
-        _transfer(from, to, tokenId);
-        //^^^^^^^interactions^^^^^^^^^
-    }
-
-    /**
-     * @dev Safely transfers the ownership of a given token ID to another address
-     * If the target address is a contract, it must implement {IERC721Receiver-onERC721Received},
-     * which is called upon a safe transfer, and return the magic value
-     * `bytes4(keccak256("onERC721Received(address,address,uint256,bytes)"))`; otherwise,
-     * the transfer is reverted.
-     * Requires the _msgSender() to be the owner, approved, or operator
-     * @param from current owner of the token
-     * @param to address to receive the ownership of the given token ID
-     * @param tokenId uint256 ID of the token to be transferred
-     */
-    function safeTransferFrom(
-        address from,
-        address to,
-        uint256 tokenId
-    ) public override whenNotPaused {
-        //^^^^^^^checks^^^^^^^^^
-
-        safeTransferFrom(from, to, tokenId, "");
-        //^^^^^^^interactions^^^^^^^^^
-    }
-
-    /**
-     * @dev Safely transfers the ownership of a given token ID to another address
-     * If the target address is a contract, it must implement {IERC721Receiver-onERC721Received},
-     * which is called upon a safe transfer, and return the magic value
-     * `bytes4(keccak256("onERC721Received(address,address,uint256,bytes)"))`; otherwise,
-     * the transfer is reverted.
-     * Requires the _msgSender() to be the owner, approved, or operator
-     * @param from current owner of the token
-     * @param to address to receive the ownership of the given token ID
-     * @param tokenId uint256 ID of the token to be transferred
-     * @param _data bytes data to send along with a safe transfer check
-     */
-    function safeTransferFrom(
-        address from,
-        address to,
-        uint256 tokenId,
-        bytes memory _data
-    ) public virtual override nonReentrant whenNotPaused {
-        require(
-            _isApprovedOrOwner(_msgSender(), tokenId),
-            "ACT:STF: Caller !ApprovedOrOwner"
-        );
-        //^^^^^^^checks^^^^^^^^^
-
-        _safeTransfer(from, to, tokenId, _data);
-        //^^^^^^^interactions^^^^^^^^^
-    }
-
-    //CTS:EXAMINE comment?
-    //CTS:EXAMINE param
-    //CTS:EXAMINE returns
     function tokenExists(uint256 tokenId) external view returns (uint256) {
         if (_exists(tokenId)) {
             return 170;
         } else {
             return 0;
         }
+    }
+
+    /**
+     * @dev Transfers the ownership of a given token ID to another address.
+     * Usage of this method is discouraged, use {safeTransferFrom} whenever possible.
+     * Requires the _msgSender() to be the owner, approved, or operator.
+     * @param _from current owner of the token
+     * @param _to address to receive the ownership of the given token ID
+     * @param _tokenId uint256 ID of the token to be transferred
+     */
+    function transferFrom(
+        address _from,
+        address _to,
+        uint256 _tokenId
+    ) public override nonReentrant whenNotPaused {
+        require(
+            _isApprovedOrOwner(_msgSender(), _tokenId),
+            "ACT:TF: Caller !ApprovedOrOwner"
+        );
+        //^^^^^^^checks^^^^^^^^^
+
+        _transfer(_from, _to, _tokenId);
+        //^^^^^^^interactions^^^^^^^^^
+    }
+
+    /**
+     * @dev Safely transfers the ownership of a given token ID to another address
+     * If the target address is a contract, it must implement {IERC721Receiver-onERC721Received},
+     * which is called upon a safe transfer, and return the magic value
+     * `bytes4(keccak256("onERC721Received(address,address,uint256,bytes)"))`; otherwise,
+     * the transfer is reverted.
+     * Requires the _msgSender() to be the owner, approved, or operator
+     * @param _from current owner of the token
+     * @param _to address to receive the ownership of the given token ID
+     * @param _tokenId uint256 ID of the token to be transferred
+     */
+    function safeTransferFrom(
+        address _from,
+        address _to,
+        uint256 _tokenId
+    ) public override whenNotPaused {
+        //^^^^^^^checks^^^^^^^^^
+
+        safeTransferFrom(_from, _to, _tokenId, "");
+        //^^^^^^^interactions^^^^^^^^^
+    }
+
+    /**
+     * @dev Safely transfers the ownership of a given token ID to another address
+     * If the target address is a contract, it must implement {IERC721Receiver-onERC721Received},
+     * which is called upon a safe transfer, and return the magic value
+     * `bytes4(keccak256("onERC721Received(address,address,uint256,bytes)"))`; otherwise,
+     * the transfer is reverted.
+     * Requires the _msgSender() to be the owner, approved, or operator
+     * @param _from current owner of the token
+     * @param _to address to receive the ownership of the given token ID
+     * @param _tokenId uint256 ID of the token to be transferred
+     * @param _data bytes data to send along with a safe transfer check
+     */
+    function safeTransferFrom(
+        address _from,
+        address _to,
+        uint256 _tokenId,
+        bytes memory _data
+    ) public virtual override nonReentrant whenNotPaused {
+        require(
+            _isApprovedOrOwner(_msgSender(), _tokenId),
+            "ACT:STF: Caller !ApprovedOrOwner"
+        );
+        //^^^^^^^checks^^^^^^^^^
+
+        _safeTransfer(_from, _to, _tokenId, _data);
+        //^^^^^^^interactions^^^^^^^^^
     }
 
     /**
@@ -266,15 +271,17 @@ contract AC_TKN is
         //^^^^^^^interactions^^^^^^^^^
     }
 
-    //CTS:EXAMINE comment?
-    //CTS:EXAMINE param
-    //CTS:EXAMINE param
-    //CTS:EXAMINE param
+    /**
+     * @dev all paused functions are blocked here (inside ERC720Pausable.sol)
+     * @param _from - from address
+     * @param _to - to address
+     * @param _tokenId - token ID to transfer
+     */
     function _beforeTokenTransfer(
-        address from,
-        address to,
-        uint256 tokenId
+        address _from,
+        address _to,
+        uint256 _tokenId
     ) internal virtual override(ERC721, ERC721Pausable) {
-        super._beforeTokenTransfer(from, to, tokenId);
+        super._beforeTokenTransfer(_from, _to, _tokenId);
     }
 }

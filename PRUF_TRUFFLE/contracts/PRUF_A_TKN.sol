@@ -28,7 +28,7 @@ import "./Imports/token/ERC721/ERC721Pausable.sol";
 import "./PRUF_INTERFACES.sol";
 import "./Imports/utils/ReentrancyGuard.sol";
 
-/***
+/**
  * @dev {ERC721} token, including:
  *
  *  - ability for holders to burn (destroy) their tokens
@@ -87,7 +87,7 @@ contract A_TKN is
 
     event REPORT(string _msg);
 
-    /***
+    /**
      * @dev Verify user credentials
      * Originating Address:
      *      has CONTRACT_ADMIN_ROLE
@@ -100,7 +100,7 @@ contract A_TKN is
         _;
     }
 
-    /***
+    /**
      * @dev Verify user credentials
      * Originating Address:
      *      has MINTER_ROLE
@@ -113,7 +113,7 @@ contract A_TKN is
         _;
     }
 
-    /***
+    /**
      * @dev Verify user credentials
      * Originating Address:
      *      has TRUSTED_AGENT_ROLE and TA role is not disabled
@@ -205,6 +205,7 @@ contract A_TKN is
      * WALLET ADDRESSES SET TO "Cold" DO NOT WORK WITH TRUSTED_AGENT FUNCTIONS
      * @param _addr - address to check
      * returns 170 if adress is set to "cold wallet" status
+
      */
     function isColdWallet(address _addr) public view returns (uint256) {
         return coldWallet[_addr];
@@ -213,20 +214,20 @@ contract A_TKN is
     /**
      * @dev Mint an Asset token
      * @param _recipientAddress - Address to mint token into
-     * @param tokenId - Token ID to mint
+     * @param _tokenId - Token ID to mint
      * @param _tokenURI - URI string to atatch to token
      * returns Token ID of minted token
      */
     function mintAssetToken(
         address _recipientAddress,
-        uint256 tokenId,
+        uint256 _tokenId,
         string calldata _tokenURI
     ) external isMinter nonReentrant returns (uint256) {
         //^^^^^^^checks^^^^^^^^^
 
-        _safeMint(_recipientAddress, tokenId);
-        _setTokenURI(tokenId, _tokenURI);
-        return tokenId;
+        _safeMint(_recipientAddress, _tokenId);
+        _setTokenURI(_tokenId, _tokenURI);
+        return _tokenId;
         //^^^^^^^interactions^^^^^^^^^
     }
 
@@ -274,7 +275,7 @@ contract A_TKN is
      * @param tokenId - Token ID to set URI
      * returns 170 if token exists, otherwise 0
      */
-    function tokenExists(uint256 tokenId) external view returns (uint8) {
+    function tokenExists(uint256 tokenId) external view returns (uint256) {
         if (_exists(tokenId)) {
             return 170;
         } else {
@@ -287,19 +288,19 @@ contract A_TKN is
      * Usage of this method is discouraged, use {safeTransferFrom} whenever possible.
      * Requires the _msgSender() to be the owner, approved, or operator.
      * @param _from current owner of the token
-     * @param to address to receive the ownership of the given token ID
-     * @param tokenId uint256 ID of the token to be transferred
+     * @param _to address to receive the ownership of the given token ID
+     * @param _tokenId uint256 ID of the token to be transferred
      */
     function transferFrom(
         address _from,
-        address to,
-        uint256 tokenId
+        address _to,
+        uint256 _tokenId
     ) public override nonReentrant whenNotPaused {
-        bytes32 _idxHash = bytes32(tokenId);
+        bytes32 _idxHash = bytes32(_tokenId);
         Record memory rec = getRecord(_idxHash);
 
         require(
-            _isApprovedOrOwner(_msgSender(), tokenId),
+            _isApprovedOrOwner(_msgSender(), _tokenId),
             "AT:TF:Transfer caller is not owner nor approved"
         );
         require(
@@ -314,66 +315,11 @@ contract A_TKN is
         //^^^^^^^effects^^^^^^^^^
 
         writeRecord(_idxHash, rec);
-        _transfer(_from, to, tokenId);
+        _transfer(_from, _to, _tokenId);
         //^^^^^^^interactions^^^^^^^^^
     }
 
-    /***
-     * @dev Transfers the ownership of a given token ID to another address by a TRUSTED_AGENT.
-     * Usage of this method is discouraged, use {safeTransferFrom} whenever possible.
-     * Requires the _msgSender() to be the owner, approved, or operator.
-     * @param from current owner of the token
-     * @param to address to receive the ownership of the given token ID
-     * @param tokenId uint256 ID of the token to be transferred
-     */
-    function trustedAgentTransferFrom(
-        address from,
-        address to,
-        uint256 tokenId
-    ) public nonReentrant whenNotPaused isTrustedAgent {
-        bytes32 _idxHash = bytes32(tokenId);
-        Record memory rec = getRecord(_idxHash);
-
-        require(
-            rec.assetStatus == 51,
-            "AT:TATF:Asset not in transferrable status"
-        );
-        require(
-            isColdWallet(ownerOf(tokenId)) != 170,
-            "AT:TATF:Holder is cold Wallet"
-        );
-        //^^^^^^^checks^^^^^^^^
-
-        rec.numberOfTransfers = 170;
-
-        rec.rightsHolder = B320xF_;
-        //^^^^^^^effects^^^^^^^^^
-
-        writeRecord(_idxHash, rec);
-        _transfer(from, to, tokenId);
-        //^^^^^^^interactions^^^^^^^^^
-    }
-
-    /***
-     * @dev Safely burns an asset token
-     * @param tokenId - Token ID to Burn
-     */
-    function trustedAgentBurn(uint256 tokenId)
-        external
-        nonReentrant
-        whenNotPaused
-        isTrustedAgent
-    {
-        require(
-            isColdWallet(ownerOf(tokenId)) != 170,
-            "AT:TAB:Holder is cold Wallet"
-        );
-        //^^^^^^^checks^^^^^^^^^
-        _burn(tokenId);
-        //^^^^^^^effects^^^^^^^^^
-    }
-
-    /***
+    /**
      * @dev Safely transfers the ownership of a given token ID to another address
      * If the target address is a contract, it must implement {IERC721Receiver-onERC721Received},
      * which is called upon a safe transfer, and return the magic value
@@ -381,19 +327,19 @@ contract A_TKN is
      * the transfer is reverted.
      * Requires the _msgSender() to be the owner, approved, or operator
      * @param _from current owner of the token
-     * @param to address to receive the ownership of the given token ID
-     * @param tokenId uint256 ID of the token to be transferred
+     * @param _to address to receive the ownership of the given token ID
+     * @param _tokenId uint256 ID of the token to be transferred
      */
     function safeTransferFrom(
         address _from,
-        address to,
-        uint256 tokenId
+        address _to,
+        uint256 _tokenId
     ) public override {
-        safeTransferFrom(_from, to, tokenId, "");
+        safeTransferFrom(_from, _to, _tokenId, "");
         //^^^^^^^interactions^^^^^^^^^
     }
 
-    /***
+    /**
      * @dev Safely transfers the ownership of a given token ID to another address
      * If the target address is a contract, it must implement {IERC721Receiver-onERC721Received},
      * which is called upon a safe transfer, and return the magic value
@@ -401,22 +347,22 @@ contract A_TKN is
      * the transfer is reverted.
      * Requires the _msgSender() to be the owner, approved, or operator
      * @param _from current owner of the token
-     * @param to address to receive the ownership of the given token ID
-     * @param tokenId uint256 ID of the token to be transferred
+     * @param _to address to receive the ownership of the given token ID
+     * @param _tokenId uint256 ID of the token to be transferred
      * @param _data bytes data to send along with a safe transfer check
      */
     function safeTransferFrom(
         address _from,
-        address to,
-        uint256 tokenId,
+        address _to,
+        uint256 _tokenId,
         bytes memory _data
     ) public virtual override nonReentrant whenNotPaused {
-        bytes32 _idxHash = bytes32(tokenId);
+        bytes32 _idxHash = bytes32(_tokenId);
         Record memory rec = getRecord(_idxHash);
-        (uint8 isAuth, ) = STOR.ContractInfoHash(to, 0); // trailing comma because does not use the returned hash
+        (uint8 isAuth, ) = STOR.ContractInfoHash(_to, 0); // trailing comma because does not use the returned hash
 
         require(
-            _isApprovedOrOwner(_msgSender(), tokenId),
+            _isApprovedOrOwner(_msgSender(), _tokenId),
             "AT:STF:Transfer caller !owner nor approved"
         );
         require( // ensure that status 70 assets are only sent to an actual PRUF contract
@@ -428,7 +374,7 @@ contract A_TKN is
             "AT:STF:Asset !in transferrable status"
         );
         require(
-            to != address(0),
+            _to != address(0),
             "AT:STF:Cannot transfer asset to zero address. Use discard."
         );
         //^^^^^^^checks^^^^^^^^^
@@ -438,11 +384,66 @@ contract A_TKN is
         //^^^^^^^effects^^^^^^^^^
 
         writeRecord(_idxHash, rec);
-        _safeTransfer(_from, to, tokenId, _data);
+        _safeTransfer(_from, _to, _tokenId, _data);
         //^^^^^^^interactions^^^^^^^^^
     }
 
-    /***
+        /**
+     * @dev Transfers the ownership of a given token ID to another address by a TRUSTED_AGENT.
+     * Usage of this method is discouraged, use {safeTransferFrom} whenever possible.
+     * Requires the _msgSender() to be the owner, approved, or operator.
+     * @param _from current owner of the token
+     * @param _to address to receive the ownership of the given token ID
+     * @param _tokenId uint256 ID of the token to be transferred
+     */
+    function trustedAgentTransferFrom(
+        address _from,
+        address _to,
+        uint256 _tokenId
+    ) public nonReentrant whenNotPaused isTrustedAgent {
+        bytes32 _idxHash = bytes32(_tokenId);
+        Record memory rec = getRecord(_idxHash);
+
+        require(
+            rec.assetStatus == 51,
+            "AT:TATF:Asset not in transferrable status"
+        );
+        require(
+            isColdWallet(ownerOf(_tokenId)) != 170,
+            "AT:TATF:Holder is cold Wallet"
+        );
+        //^^^^^^^checks^^^^^^^^
+
+        rec.numberOfTransfers = 170;
+
+        rec.rightsHolder = B320xF_;
+        //^^^^^^^effects^^^^^^^^^
+
+        writeRecord(_idxHash, rec);
+        _transfer(_from, _to, _tokenId);
+        //^^^^^^^interactions^^^^^^^^^
+    }
+
+    /**
+     * @dev Safely burns an asset token
+     * @param _tokenId - Token ID to Burn
+     */
+    function trustedAgentBurn(uint256 _tokenId)
+        external
+        nonReentrant
+        whenNotPaused
+        isTrustedAgent
+    {
+        require(
+            isColdWallet(ownerOf(_tokenId)) != 170,
+            "AT:TAB:Holder is cold Wallet"
+        );
+        //^^^^^^^checks^^^^^^^^^
+        _burn(_tokenId);
+        //^^^^^^^effects^^^^^^^^^
+    }
+
+    /**
      * @dev Safely burns a token and sets the corresponding RGT to zero in storage.
      * @param tokenId - Token ID to discard
      */
@@ -500,7 +501,7 @@ contract A_TKN is
         //^^^^^^^interactions^^^^^^^^^
     }
 
-    /***
+    /**
      * @dev Pauses all token transfers.
      *
      * See {ERC721Pausable} and {Pausable-_pause}.
@@ -520,7 +521,7 @@ contract A_TKN is
         //^^^^^^^interactions^^^^^^^^^
     }
 
-    /***
+    /**
      * @dev Unpauses all token transfers.
      *
      * See {ERC721Pausable} and {Pausable-_unpause}.
@@ -542,15 +543,15 @@ contract A_TKN is
 
     /**
      * @dev all paused functions are blocked here (inside ERC720Pausable.sol)
-     * @param from - from address
-     * @param to - to address
-     * @param tokenId - token ID to transfer
+     * @param _from - from address
+     * @param _to - to address
+     * @param _tokenId - token ID to transfer
      */
     function _beforeTokenTransfer(
-        address from,
-        address to,
-        uint256 tokenId
+        address _from,
+        address _to,
+        uint256 _tokenId
     ) internal virtual override(ERC721, ERC721Pausable) {
-        super._beforeTokenTransfer(from, to, tokenId);
+        super._beforeTokenTransfer(_from, _to, _tokenId);
     }
 }

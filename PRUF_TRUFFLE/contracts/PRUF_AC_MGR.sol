@@ -58,8 +58,8 @@ contract AC_MGR is BASIC {
         5 changeStatusCost; // Extra
         6 forceModifyCost; // Cost to brute-force a record transfer
     */
-    mapping(uint32 => mapping(uint16 => Costs)) private cost; // Cost per function by asset class => Cost Type //CTS:EXAMINE cost type?
-    mapping(uint32 => AC) private AC_data; // AC info database asset class to AC struct (NAME,ACroot,CUSTODIAL/NC,uint32) //CTS:EXAMINE if you're going to define the struct in the comment, make it readable
+    mapping(uint32 => mapping(uint16 => Costs)) private cost; // Cost per function by asset class => Costs struct (see PRUF_INTERFACES for struct definitions)
+    mapping(uint32 => AC) private AC_data; // AC info database asset class to AC struct (see PRUF_INTERFACES for struct definitions)
     mapping(string => uint32) private AC_number; //name to asset class resolution map
     mapping(bytes32 => mapping(uint32 => uint8)) private registeredUsers; // Authorized recorder database by asset class, by address hash
     mapping(uint8 => uint8) private storageProvidersEnabled; //storageProvider -> status (enabled or disabled)
