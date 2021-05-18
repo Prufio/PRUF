@@ -148,7 +148,7 @@ contract STOR is AccessControl, ReentrancyGuard, Pausable {
 
     /**
      * @dev Check to see if a status matches lost or stolen status
-     * @param _assetStatus ststus to check against list
+     * @param _assetStatus status to check against list
      * returns 0 if supplied status is not a lost or stolen stat, 170 if it is
      */
     function isLostOrStolen(uint8 _assetStatus) private pure returns (uint8) {
@@ -166,7 +166,7 @@ contract STOR is AccessControl, ReentrancyGuard, Pausable {
 
     /**
      * @dev Check to see if a status matches transferred status
-     * @param _assetStatus ststus to check against list
+     * @param _assetStatus status to check against list
      * returns 0 if supplied status is not a transferred stat, 170 if it is
      */
     function isTransferred(uint8 _assetStatus) private pure returns (uint8) {
@@ -179,7 +179,7 @@ contract STOR is AccessControl, ReentrancyGuard, Pausable {
 
     /**
      * @dev Check to see if a status matches transferred status
-     * @param _assetStatus ststus to check against list
+     * @param _assetStatus status to check against list
      * returns 0 if supplied status is not an escrow stat, 170 if it is
      */
     function isEscrow(uint8 _assetStatus) private pure returns (uint8) {
