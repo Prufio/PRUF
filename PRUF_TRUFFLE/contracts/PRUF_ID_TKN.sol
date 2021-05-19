@@ -1,20 +1,20 @@
-/*--------------------------------------------------------PRüF0.8.0
-__/\\\\\\\\\\\\\ _____/\\\\\\\\\ _______/\\__/\\ ___/\\\\\\\\\\\\\\\        
- _\/\\\/////////\\\ _/\\\///////\\\ ____\//__\//____\/\\\///////////__       
-  _\/\\\_______\/\\\_\/\\\_____\/\\\ ________________\/\\\ ____________      
-   _\/\\\\\\\\\\\\\/__\/\\\\\\\\\\\/_____/\\\____/\\\_\/\\\\\\\\\\\ ____     
-    _\/\\\/////////____\/\\\//////\\\ ___\/\\\___\/\\\_\/\\\///////______    
-     _\/\\\ ____________\/\\\ ___\//\\\ __\/\\\___\/\\\_\/\\\ ____________   
-      _\/\\\ ____________\/\\\ ____\//\\\ _\/\\\___\/\\\_\/\\\ ____________  
-       _\/\\\ ____________\/\\\ _____\//\\\_\//\\\\\\\\\ _\/\\\ ____________ 
+/**--------------------------------------------------------PRüF0.8.0
+__/\\\\\\\\\\\\\ _____/\\\\\\\\\ _______/\\../\\ ___/\\\\\\\\\\\\\\\
+ _\/\\\/////////\\\ _/\\\///////\\\ ____\//..\//____\/\\\///////////__
+  _\/\\\.......\/\\\.\/\\\.....\/\\\ ________________\/\\\ ____________
+   _\/\\\\\\\\\\\\\/__\/\\\\\\\\\\\/_____/\\\____/\\\.\/\\\\\\\\\\\ ____
+    _\/\\\/////////____\/\\\//////\\\ ___\/\\\___\/\\\.\/\\\///////______
+     _\/\\\ ____________\/\\\ ___\//\\\ __\/\\\___\/\\\.\/\\\ ____________
+      _\/\\\ ____________\/\\\ ____\//\\\ _\/\\\___\/\\\.\/\\\ ____________
+       _\/\\\ ____________\/\\\ _____\//\\\.\//\\\\\\\\\ _\/\\\ ____________
         _\/// _____________\/// _______\/// __\///////// __\/// _____________
          *-------------------------------------------------------------------*/
 
-/*-----------------------------------------------------------------
+/**-----------------------------------------------------------------
  *  TO DO
  *-----------------------------------------------------------------
- * PRUF ASSET CLASS NODE NFT CONTRACT
- *-----------------------------------------------------------------*/
+ * PRUF USER ID NFT CONTRACT
+ *---------------------------------------------------------------*/
 
 // SPDX-License-Identifier: UNLICENSED
 pragma solidity ^0.8.0;
@@ -44,7 +44,7 @@ import "./Imports/utils/ReentrancyGuard.sol";
  * roles to other accounts.
  */
 
-contract AC_TKN is
+contract ID_TKN is
     ReentrancyGuard,
     Context,
     AccessControl,
@@ -58,17 +58,21 @@ contract AC_TKN is
     bytes32 public constant MINTER_ROLE = keccak256("MINTER_ROLE");
     bytes32 public constant PAUSER_ROLE = keccak256("PAUSER_ROLE");
 
+    mapping(uint256 => ID) private id; // storage for extended ID data
+    mapping(bytes32 => uint256) private tokenIDforName; // storage for name resolution to token ID
+
     Counters.Counter private _tokenIdTracker;
 
-    constructor() ERC721("PRUF Asset Class Node Token", "PRFN") {
+    constructor() ERC721("PRUF ID Token", "PRID") {
         _setupRole(DEFAULT_ADMIN_ROLE, _msgSender());
         _setupRole(CONTRACT_ADMIN_ROLE, _msgSender());
         _setupRole(MINTER_ROLE, _msgSender());
         _setupRole(PAUSER_ROLE, _msgSender());
+
+        //_setBaseURI("pruf.io");
     }
 
     //----------------------Modifiers----------------------//
-
     /**
      * @dev Verify user credentials
      * Originating Address:
@@ -77,7 +81,7 @@ contract AC_TKN is
     modifier isContractAdmin() {
         require(
             hasRole(CONTRACT_ADMIN_ROLE, _msgSender()),
-            "AT:MOD-IA: Calling address !contract admin"
+            "PIDT:MOD-IA: Calling address does not belong to an admin"
         );
         _;
     }
@@ -90,15 +94,15 @@ contract AC_TKN is
     modifier isMinter() {
         require(
             hasRole(MINTER_ROLE, _msgSender()),
-            "AT:MOD-IM: Calling address !minter"
+            "PIDT:MOD-IM: Calling address does not belong to a minter"
         );
         _;
     }
 
-    //----------------------Events----------------------//
+    //----------------------EVENTS----------------------//
     event REPORT(string _msg);
 
-    //----------------------Admin functions / isContractAdmin or isMinter----------------------//
+    //----------------------Admin functions / isContractAdmin----------------------//
 
     /**
      * @dev Mint an Asset token
@@ -107,13 +111,14 @@ contract AC_TKN is
      * @param _tokenURI - URI string to atatch to token
      * returns Token ID of minted token
      */
-    function mintACToken(
+    function mintPRUF_IDToken(
         address _recipientAddress,
         uint256 _tokenId,
         string calldata _tokenURI
-    ) external isMinter nonReentrant returns (uint256) {
+    ) external isMinter nonReentrant whenNotPaused returns (uint256) {
         //^^^^^^^checks^^^^^^^^^
 
+        //MAKE URI ASSET SPECIFIC- has to incorporate the token ID
         _safeMint(_recipientAddress, _tokenId);
         _setTokenURI(_tokenId, _tokenURI);
         return _tokenId;
@@ -121,30 +126,158 @@ contract AC_TKN is
     }
 
     /**
-     * @dev remint Asset Class Token - must be minter
+     * @dev Burn PRUF_ID token
+     * @param _tokenId - ID tokenID to burn
+     */
+    function burnPRUF_ID(uint256 _tokenId)
+        external
+        isMinter
+        nonReentrant
+        whenNotPaused
+    {
+        //^^^^^^^checks^^^^^^^^^
+        _burn(_tokenId);
+        delete tokenIDforName[keccak256(abi.encodePacked(_tokenId))]; //remove record from name registry
+        delete id[_tokenId]; //remove record from ID registry
+        //^^^^^^^interactions^^^^^^^^^
+    }
+
+    /**
+     * @dev remint ID Token
      * burns old token
-     * Sends new token to specified address
      * @param _recipientAddress - new address for token
      * @param _tokenId - Token ID to teleport
-     * @param _tokenURI - URI to check match for safety
      */
-    function teleportACToken(
-        address _recipientAddress,
-        uint256 _tokenId,
-        string calldata _tokenURI
-    ) external isMinter nonReentrant {
-        require(_exists(_tokenId), "ACT:RM: AC !exist");
+    function reMintPRUF_IDToken(address _recipientAddress, uint256 _tokenId)
+        external
+        isMinter
+        nonReentrant
+        whenNotPaused
+    {
+        require(_exists(_tokenId), "PIDT:RM: Cannot Remint nonexistant token");
+        //^^^^^^^checks^^^^^^^^^
+        string memory tokenURI = tokenURI(_tokenId);
+        _burn(_tokenId);
+        _safeMint(_recipientAddress, _tokenId);
+        _setTokenURI(_tokenId, tokenURI);
+        //^^^^^^^interactions^^^^^^^^^
+    }
+
+    /**
+     * @dev Set new token URI String -- string should eventually be a B32 hash of ID info in a standardized format - verifyable against provided ID
+     * @param _tokenId - Token ID to set URI
+     * @param _tokenURI - Token URI string to set
+     * returns token ID
+     */
+    function setURI(uint256 _tokenId, string calldata _tokenURI)
+        external
+        isMinter
+        nonReentrant
+        whenNotPaused
+        returns (uint256)
+    {
+        //^^^^^^^checks^^^^^^^^^
+
+        _setTokenURI(_tokenId, _tokenURI);
+        return _tokenId;
+        //^^^^^^^interactions^^^^^^^^^
+    }
+
+    /**
+     * @dev Set new ID mapp user URI String -- string should eventually be a B32 hash of ID info in a standardized format - verifyable against provided ID
+     * @param _tokenId - token ID to set URI
+     * @param _tokenURI - Token URI to set
+     */
+    function setIdURI(uint256 _tokenId, bytes32 _tokenURI)
+        external
+        nonReentrant
+        whenNotPaused
+    {
         require(
-            keccak256(abi.encodePacked(_tokenURI)) ==
-                keccak256(abi.encodePacked(tokenURI(_tokenId))),
-            "ACT:RM:New token URI != URI"
+            ownerOf(_tokenId) == _msgSender(),
+            "PIDT:RM: Caller does not hold token"
         );
         //^^^^^^^checks^^^^^^^^^
 
-        _burn(_tokenId);
-        _safeMint(_recipientAddress, _tokenId);
-        _setTokenURI(_tokenId, tokenURI(_tokenId));
+        id[_tokenId].URI = _tokenURI;
         //^^^^^^^interactions^^^^^^^^^
+    }
+
+    /**
+     * @dev Set new ID mapp user URI String -- string should eventually be a B32 hash of ID info in a standardized format - verifyable against provided ID //CTS:EXAMINE new comment
+     * @param _tokenId - token ID to set URI
+     * @param _userName - String for Name
+     */
+    function setUserName(uint256 _tokenId, string calldata _userName)
+        external
+        nonReentrant
+        whenNotPaused
+    {
+        require(
+            ((ownerOf(_tokenId) == _msgSender()) &&
+                (keccak256(abi.encodePacked(id[_tokenId].userName)) ==
+                    keccak256(abi.encodePacked("")))),
+            // || hasRole(MINTER_ROLE, _msgSender()), // ?DO we want this?
+            "PIDT:SUN: Caller !hold token or userName is set"
+        );
+        bytes32 nameHash = keccak256(abi.encodePacked(_userName));
+        require(
+            tokenIDforName[nameHash] == 0,
+            "PIDT:SUN: userName is already taken"
+        );
+        //^^^^^^^checks^^^^^^^^^
+
+        tokenIDforName[nameHash] = _tokenId; //store namehash
+        id[_tokenId].userName = _userName; //store username
+        //^^^^^^^effects^^^^^^^^^
+    }
+
+    /**
+     * @dev Set new ID data fields
+     * @param _tokenId - ID of token to set trust level
+     * @param _trustLevel - _trustLevel to set at token _tokenId
+     */
+    function setTrustLevel(uint256 _tokenId, uint256 _trustLevel)
+        external
+        nonReentrant
+        whenNotPaused
+        isMinter
+    {
+        //^^^^^^^checks^^^^^^^^^
+
+        id[_tokenId].trustLevel = _trustLevel;
+        //^^^^^^^interactions^^^^^^^^^
+    }
+
+    /**
+     * @dev get ID data
+     * @param _tokenId - ID token to look up
+     * returns ID struct (see interfaces for struct definitions)
+     */
+    function IdData(uint256 _tokenId) external view returns (ID memory) {
+        return id[_tokenId];
+    }
+
+    /**
+     * @dev get ID trustLevel
+     * @param _tokenId - token ID to check
+     * returns trust level of token id
+     */
+    function trustLevel(uint256 _tokenId) external view returns (uint256) {
+        return id[_tokenId].trustLevel;
+    }
+
+    /**
+     * @dev get ID trustLevel by address (token 0 at address)
+     * @param _addr - address to look up for trust level
+     * returns trust level of address
+     */
+    function trustedLevelByAddress(address _addr)
+        external
+        view
+        returns (uint256)
+    {
+        return id[tokenOfOwnerByIndex(_addr, 0)].trustLevel;
     }
 
     /**
@@ -175,9 +308,13 @@ contract AC_TKN is
     ) public override nonReentrant whenNotPaused {
         require(
             _isApprovedOrOwner(_msgSender(), _tokenId),
-            "ACT:TF: Caller !ApprovedOrOwner"
+            "PIDT:TF: transfer caller is not owner nor approved"
         );
-        //^^^^^^^checks^^^^^^^^^
+        require(
+            _to == _from,
+            "PIDT:TF: Token not tra_nsferrable with standard ERC721 protocol. Must be reminted by admin to new address"
+        );
+        //^^^^^^^checks^^^^^^^^
 
         _transfer(_from, _to, _tokenId);
         //^^^^^^^interactions^^^^^^^^^
@@ -198,9 +335,7 @@ contract AC_TKN is
         address _from,
         address _to,
         uint256 _tokenId
-    ) public override whenNotPaused {
-        //^^^^^^^checks^^^^^^^^^
-
+    ) public override {
         safeTransferFrom(_from, _to, _tokenId, "");
         //^^^^^^^interactions^^^^^^^^^
     }
@@ -225,11 +360,16 @@ contract AC_TKN is
     ) public virtual override nonReentrant whenNotPaused {
         require(
             _isApprovedOrOwner(_msgSender(), _tokenId),
-            "ACT:STF: Caller !ApprovedOrOwner"
+            "PIDT:STF: Transfer caller !owner nor approved"
         );
+        require(
+            _to == _from,
+            "PIDT:STF: Token not transferrable with standard ERC721 protocol. Must be reminted by admin to new address"
+        );
+
         //^^^^^^^checks^^^^^^^^^
 
-        _safeTransfer(_from, _to, _tokenId, _data);
+        _safeTransfer(_from, _from, _tokenId, _data);
         //^^^^^^^interactions^^^^^^^^^
     }
 
@@ -245,9 +385,9 @@ contract AC_TKN is
     function pause() public virtual {
         require(
             hasRole(PAUSER_ROLE, _msgSender()),
-            "ACT:P: Caller !have pauser role"
+            "PIDT:P: ERC721PresetMinterPauserAutoId: must have pauser role to pause"
         );
-        //^^^^^^^checks^^^^^^^^^
+        //^^^^^^^checks^^^^^^^^
         _pause();
         //^^^^^^^interactions^^^^^^^^^
     }
@@ -264,9 +404,9 @@ contract AC_TKN is
     function unpause() public virtual {
         require(
             hasRole(PAUSER_ROLE, _msgSender()),
-            "ACT:UP: Caller !have pauser role"
+            "PIDT:UP: ERC721PresetMinterPauserAutoId: must have pauser role to unpause"
         );
-        //^^^^^^^checks^^^^^^^^^
+        //^^^^^^^checks^^^^^^^^
         _unpause();
         //^^^^^^^interactions^^^^^^^^^
     }
