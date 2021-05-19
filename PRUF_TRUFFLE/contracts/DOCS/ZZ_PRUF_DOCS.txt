@@ -257,7 +257,7 @@ pragma solidity ^0.6.7;
 - -----------------------------------------------------------------
 
 *-----------------------------------------------------------------
- * ASSET CLASS Managment Types: AC_data.managmentType (AC_manager)
+ * ASSET CLASS Management Types: AC_data.managementType (AC_manager)
  *              normal ROOT ACs should be set to type 0 because non type-zero root 
  *              classes will not permit public minting of ACs inside them
  * 0   -- Unrestricted (if root not zero, ACNodes cannot be created in the root w/o root token 
@@ -267,7 +267,7 @@ pragma solidity ^0.6.7;
  * 3   -- Authorized (caller address must be user authorized type 1 in AC)
  * 4   -- Trusted (Requires ID token trust level >= 10)
  * 5   -- Remotely Managed (same as 1-restricted except ONLY ACnode hoder can change IPFS1a/b )
- * 255 -- unconfigured - No minting permitted, not yet activated (set by default on node purchase, cannot be reverted)
+ * 255 -- Unconfigured - No minting permitted, not yet activated (set by default on node purchase, cannot be reverted)
 - -----------------------------------------------------------------
 
 *-----------------------------------------------------------------
