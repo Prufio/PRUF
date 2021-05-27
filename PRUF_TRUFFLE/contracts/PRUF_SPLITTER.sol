@@ -37,16 +37,14 @@ contract SPLIT is ReentrancyGuard, Pausable, AccessControl {
 
     mapping(address => uint256) internal hasSplit;
 
-    // uint256 internal snapshotID; //this contract will only work on the first snapshot and cannot be changed
-
-    // uint256 public multiplier = 1;
+    // uint256 internal snapshotID; //this version of the contract will only work on the first snapshot and cannot be changed
 
     constructor() {
         _setupRole(DEFAULT_ADMIN_ROLE, msg.sender);
         _setupRole(CONTRACT_ADMIN_ROLE, msg.sender);
         _setupRole(PAUSER_ROLE, msg.sender);
         UTIL_TKN = UTIL_TKN_Interface(
-            0xa49811140E1d6f653dEc28037Be0924C811C4538  //DPS:CHECK drake you will have to change this to test?
+            0xa49811140E1d6f653dEc28037Be0924C811C4538 //DPS:CHECK drake you will have to change this to test?
         ); // for hard coded util tkn address
     }
 
@@ -105,16 +103,6 @@ contract SPLIT is ReentrancyGuard, Pausable, AccessControl {
 
     // snapshotID = _snapshot;
     //^^^^^^^effects^^^^^^^^^
-    // }
-
-    // /*
-    //  * @dev Set pruf doulble multiplier
-    //  * TESTING: ALL REQUIRES, ACCESS ROLE
-    //  */
-    // function ADMIN_setMultiplier(uint256 _mult) external isContractAdmin {
-    //     //^^^^^^^checks^^^^^^^^^
-    //     multiplier = _mult;
-    //     //^^^^^^^effects^^^^^^^^^
     // }
 
     /*
