@@ -239,7 +239,7 @@ contract CORE is BASIC {
     {
         require(
             _pricing.rootAddress != address(0),
-            "C:DP: root payment adress = zero address"
+            "C:DP: root payment address = zero address"
         );
         if (_pricing.ACTHaddress == address(0)) {
             //sets ACTHaddress to rootAddress if ACTHaddress is not set

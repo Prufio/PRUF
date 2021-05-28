@@ -26,26 +26,26 @@ import "./Imports/access/AccessControl.sol";
 import "./Imports/utils/Pausable.sol";
 import "./Imports/utils/ReentrancyGuard.sol";
 
-contract SPLIT is ReentrancyGuard, Pausable, AccessControl {
+contract SPLITTEST2 is ReentrancyGuard, Pausable, AccessControl {
     //----------------------------ROLE DEFINITIONS
     bytes32 public constant PAUSER_ROLE = keccak256("PAUSER_ROLE");
     bytes32 public constant CONTRACT_ADMIN_ROLE =
         keccak256("CONTRACT_ADMIN_ROLE");
 
-    //address internal UTIL_TKN_Address;
+    address internal UTIL_TKN_Address;
     UTIL_TKN_Interface internal UTIL_TKN;
 
     mapping(address => uint256) internal hasSplit;
 
-    // uint256 internal snapshotID; //this version of the contract will only work on the first snapshot and cannot be changed
+    uint256 internal snapshotID; //this version of the contract will only work on the first snapshot and cannot be changed
 
     constructor() {
         _setupRole(DEFAULT_ADMIN_ROLE, msg.sender);
         _setupRole(CONTRACT_ADMIN_ROLE, msg.sender);
         _setupRole(PAUSER_ROLE, msg.sender);
-        UTIL_TKN = UTIL_TKN_Interface(
-            0xa49811140E1d6f653dEc28037Be0924C811C4538 //DPS:CHECK drake you will have to change this to test?
-        ); // for hard coded util tkn address
+        // UTIL_TKN = UTIL_TKN_Interface(
+        //     0xa49811140E1d6f653dEc28037Be0924C811C4538 //DPS:CHECK drake you will have to change this to test?
+        // ); // for hard coded util tkn address
     }
 
     //------------------------------------------------------------------------MODIFIERS
@@ -82,40 +82,40 @@ contract SPLIT is ReentrancyGuard, Pausable, AccessControl {
      * @dev Set address of PRUF_TKN contract to interface with
      * TESTING: ALL REQUIRES, ACCESS ROLE
      */
-    // function ADMIN_setTokenContract(address _address) external isContractAdmin {
-    //     require(
-    //         _address != address(0) && UTIL_TKN_Address == address(0),
-    //         "SPLIT:ASTC: Token contract address = zero or address already set"
-    //     );
-    //     //^^^^^^^checks^^^^^^^^^
+    function ADMIN_setTokenContract(address _address) external isContractAdmin {
+        require(
+            _address != address(0) && UTIL_TKN_Address == address(0),
+            "SPLIT:ASTC: Token contract address = zero or address already set"
+        );
+        //^^^^^^^checks^^^^^^^^^
 
-    //     UTIL_TKN_Address = _address;
-    //     UTIL_TKN = UTIL_TKN_Interface(UTIL_TKN_Address);
-    //     //^^^^^^^effects^^^^^^^^^
-    // }
+        UTIL_TKN_Address = _address;
+        UTIL_TKN = UTIL_TKN_Interface(UTIL_TKN_Address);
+        //^^^^^^^effects^^^^^^^^^
+    }
 
     /*
      * @dev Set snapshot ID
      * TESTING: ALL REQUIRES, ACCESS ROLE
      */
-    // function ADMIN_setSnapshotID(uint256 _snapshot) external isContractAdmin {
-    //^^^^^^^checks^^^^^^^^^
+    function ADMIN_setSnapshotID(uint256 _snapshot) external isContractAdmin {
+    // ^^^^^^^checks^^^^^^^^^
 
-    // snapshotID = _snapshot;
-    //^^^^^^^effects^^^^^^^^^
-    // }
+    snapshotID = _snapshot;
+    // ^^^^^^^effects^^^^^^^^^
+    }
 
     /*
      * @dev pause the contract, renounce pauser role, take a snapshot,
      * TESTING: ALL REQUIRES, ACCESS ROLE
      */
-    // function ADMIN_takeSnapshot() external isContractAdmin {
-    //     //^^^^^^^checks^^^^^^^^^
-    //     // UTIL_TKN.pause();
-    //     // renounceRole(PAUSER_ROLE, address(this));
-    //     snapshotID = UTIL_TKN.takeSnapshot();
-    //     //^^^^^^^effects^^^^^^^^^
-    // }
+    function ADMIN_takeSnapshot() external isContractAdmin {
+        //^^^^^^^checks^^^^^^^^^
+        // UTIL_TKN.pause();
+        // renounceRole(PAUSER_ROLE, address(this));
+        snapshotID = UTIL_TKN.takeSnapshot();
+        //^^^^^^^effects^^^^^^^^^
+    }
 
     /*
      * @dev doubles pruf balance at snapshot snapshotID
@@ -130,8 +130,8 @@ contract SPLIT is ReentrancyGuard, Pausable, AccessControl {
             //UTIL_TKN.balanceOfAt(msg.sender, snapshotID);
             UTIL_TKN.balanceOfAt(msg.sender, 1);
 
-        balanceAtSnapshot = balanceAtSnapshot + (balanceAtSnapshot / 10); //add 10%
-        // balanceAtSnapshot = balanceAtSnapshot + balanceAtSnapshot;
+        // balanceAtSnapshot = balanceAtSnapshot + (balanceAtSnapshot / 10); //add 10%
+        balanceAtSnapshot = balanceAtSnapshot + balanceAtSnapshot;
         //^^^^^^^checks^^^^^^^^^
         hasSplit[msg.sender] = 170; //mark caller address as having been split
         //^^^^^^^effects^^^^^^^^^

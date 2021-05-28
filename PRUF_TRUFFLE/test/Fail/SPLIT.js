@@ -1,10 +1,12 @@
 const PRUF_HELPER = artifacts.require('Helper');
 const PRUF_UTIL_TKN = artifacts.require('UTIL_TKN');
-const PRUF_SPLIT = artifacts.require('SPLIT');
+const PRUF_SPLITTEST = artifacts.require('SPLITTEST');
+const PRUF_SPLITTEST2 = artifacts.require('SPLITTEST2');
 
 let UTIL_TKN;
 let Helper;
-let SPLIT;
+let SPLITTEST;
+let SPLITTEST2;
 
 let account000 = '0x0000000000000000000000000000000000000000'
 
@@ -46,34 +48,42 @@ contract('SPLIT', accounts => {
 
 
     it('Should deploy PRUF_SPLIT', async () => {
-        const PRUF_SPLITTER_TEST = await PRUF_SPLIT.deployed({ from: account1 });
+        const PRUF_SPLITTER_TEST = await PRUF_SPLITTEST.deployed({ from: account1 });
         console.log(PRUF_SPLITTER_TEST.address);
         assert(PRUF_SPLITTER_TEST.address !== '')
         SPLIT = PRUF_SPLITTER_TEST;
     })
 
-    
+
+    it('Should deploy PRUF_SPLIT2', async () => {
+        const PRUF_SPLITTER2_TEST = await PRUF_SPLITTEST2.deployed({ from: account1 });
+        console.log(PRUF_SPLITTER2_TEST.address);
+        assert(PRUF_SPLITTER2_TEST.address !== '')
+        SPLIT2 = PRUF_SPLITTER2_TEST;
+    })
+
+
     it('Should build all variables with Helper', async () => {
 
         airdropRoleB32 = await Helper.getStringHash(
-        'AIRDROP_ROLE'
-    )
-    
+            'AIRDROP_ROLE'
+        )
+
         minterRoleB32 = await Helper.getStringHash(
-        'MINTER_ROLE'
-    )
-    
+            'MINTER_ROLE'
+        )
+
         trustedAgentRoleB32 = await Helper.getStringHash(
-        'TRUSTED_AGENT_ROLE'
-    )
-    
+            'TRUSTED_AGENT_ROLE'
+        )
+
         payableRoleB32 = await Helper.getStringHash(
-        'PAYABLE_ROLE'
-    )
-    
-    snapshotRoleB32 = await Helper.getStringHash(
-    'SNAPSHOT_ROLE'
-)
+            'PAYABLE_ROLE'
+        )
+
+        snapshotRoleB32 = await Helper.getStringHash(
+            'SNAPSHOT_ROLE'
+        )
 
     })
 
@@ -81,6 +91,11 @@ contract('SPLIT', accounts => {
     it('Should authorize SPLIT with snapshotRoleB32 in UTIL_TKN', async () => {
         console.log("//**************************************BEGIN SPLIT SETUP**********************************************/")
         return UTIL_TKN.grantRole(snapshotRoleB32, SPLIT.address, { from: account1 })
+    })
+
+
+    it('Should authorize SPLIT2 with snapshotRoleB32 in UTIL_TKN', async () => {
+        return UTIL_TKN.grantRole(snapshotRoleB32, SPLIT2.address, { from: account1 })
     })
 
 
@@ -172,52 +187,30 @@ contract('SPLIT', accounts => {
         })
     })
 
-    //1
-    it('Should fail because caller is not admin', async () => {
-        console.log('//**************************END BOOTSTRAP**************************//')
-        console.log('//**************************BEGIN SPLIT FAIL BATCH (5)**************************//')
-        console.log('//**************************BEGIN ADMIN_setTokenContract FAIL BATCH**************************//')
+
+    it('Should ADMIN_setTokenContract to A_TKN', async () => {
         return SPLIT.ADMIN_setTokenContract(
             UTIL_TKN.address,
-            { from: account2 })
-    })
-
-    //2
-    it('Should fail because address cannot = 0', async () => {
-        return SPLIT.ADMIN_setTokenContract(
-            account000,
             { from: account1 })
-    })
-
-    // //3
-    // it('Should fail because caller is not admin', async () => {
-    //     console.log('//**************************END ADMIN_setTokenContract FAIL BATCH**************************//')
-    //     console.log('//**************************BEGIN ADMIN_setSnapshotID FAIL BATCH**************************//')
-    //     return SPLIT.ADMIN_setSnapshotID(
-    //         "1",
-    //         { from: account2 })
-    // })
-
-    //3
-    it('Should fail because caller is not admin', async () => {
-        console.log('//**************************END ADMIN_setSnapshotID FAIL BATCH**************************//')
-        console.log('//**************************BEGIN ADMIN_takeSnapshot FAIL BATCH**************************//')
-        return SPLIT.ADMIN_takeSnapshot(
-            { from: account2 })
     })
 
 
     it('Should ADMIN_setTokenContract to A_TKN', async () => {
-        console.log('//**************************END ADMIN_setSnapshotID FAIL BATCH**************************//')
-        console.log('//**************************BEGIN splitMyPruf FAIL BATCH**************************//')
-        return SPLIT.ADMIN_setTokenContract(
+        return SPLIT2.ADMIN_setTokenContract(
             UTIL_TKN.address,
             { from: account1 })
     })
 
 
     it('Should take snapshot and pause', async () => {
-        return SPLIT.ADMIN_takeSnapshot(
+        return SPLIT2.ADMIN_setSnapshotID(
+            '1',
+            { from: account1 })
+    })
+
+
+    it('Should take snapshot and pause', async () => {
+        return SPLIT2.ADMIN_takeSnapshot(
             { from: account1 })
     })
 
@@ -240,13 +233,16 @@ contract('SPLIT', accounts => {
         })
     })
 
-    //4
+    //1
     it('Should fail because caller already split', async () => {
+        console.log('//**************************END BOOTSTRAP**************************//')
+        console.log('//**************************BEGIN SPLIT FAIL BATCH (2)**************************//')
+        console.log('//**************************BEGIN ADMIN_setTokenContract FAIL BATCH**************************//')
         return SPLIT.splitMyPruf(
             { from: account2 })
     })
 
-    //5
+    //2
     it('Should fail because caller already split', async () => {
         console.log('//**************************END splitMyPruf FAIL BATCH**************************//')
         console.log('//**************************BEGIN checkMyAddress FAIL BATCH**************************//')

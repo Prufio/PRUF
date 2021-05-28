@@ -94,28 +94,28 @@ contract SPLITTEST is ReentrancyGuard, Pausable, AccessControl {
         //^^^^^^^effects^^^^^^^^^
     }
 
-    /*
-     * @dev Set snapshot ID
-     * TESTING: ALL REQUIRES, ACCESS ROLE
-     */
-    function ADMIN_setSnapshotID(uint256 _snapshot) external isContractAdmin {
-    // ^^^^^^^checks^^^^^^^^^
+    // /*
+    //  * @dev Set snapshot ID
+    //  * TESTING: ALL REQUIRES, ACCESS ROLE
+    //  */
+    // function ADMIN_setSnapshotID(uint256 _snapshot) external isContractAdmin {
+    // // ^^^^^^^checks^^^^^^^^^
 
-    snapshotID = _snapshot;
-    // ^^^^^^^effects^^^^^^^^^
-    }
+    // snapshotID = _snapshot;
+    // // ^^^^^^^effects^^^^^^^^^
+    // }
 
-    /*
-     * @dev pause the contract, renounce pauser role, take a snapshot,
-     * TESTING: ALL REQUIRES, ACCESS ROLE
-     */
-    function ADMIN_takeSnapshot() external isContractAdmin {
-        //^^^^^^^checks^^^^^^^^^
-        // UTIL_TKN.pause();
-        // renounceRole(PAUSER_ROLE, address(this));
-        snapshotID = UTIL_TKN.takeSnapshot();
-        //^^^^^^^effects^^^^^^^^^
-    }
+    // /*
+    //  * @dev pause the contract, renounce pauser role, take a snapshot,
+    //  * TESTING: ALL REQUIRES, ACCESS ROLE
+    //  */
+    // function ADMIN_takeSnapshot() external isContractAdmin {
+    //     //^^^^^^^checks^^^^^^^^^
+    //     // UTIL_TKN.pause();
+    //     // renounceRole(PAUSER_ROLE, address(this));
+    //     snapshotID = UTIL_TKN.takeSnapshot();
+    //     //^^^^^^^effects^^^^^^^^^
+    // }
 
     /*
      * @dev doubles pruf balance at snapshot snapshotID
@@ -130,8 +130,8 @@ contract SPLITTEST is ReentrancyGuard, Pausable, AccessControl {
             //UTIL_TKN.balanceOfAt(msg.sender, snapshotID);
             UTIL_TKN.balanceOfAt(msg.sender, 1);
 
-        // balanceAtSnapshot = balanceAtSnapshot + (balanceAtSnapshot / 10); //add 10%
-        balanceAtSnapshot = balanceAtSnapshot + balanceAtSnapshot;
+        balanceAtSnapshot = balanceAtSnapshot + (balanceAtSnapshot / 10); //add 10%
+        // balanceAtSnapshot = balanceAtSnapshot + balanceAtSnapshot;
         //^^^^^^^checks^^^^^^^^^
         hasSplit[msg.sender] = 170; //mark caller address as having been split
         //^^^^^^^effects^^^^^^^^^

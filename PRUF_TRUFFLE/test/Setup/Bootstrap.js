@@ -1370,7 +1370,7 @@ contract('BOOTSTRAP', accounts => {
 
             .then(() => {
                 console.log("Account4 => AC16")
-                return AC_MGR.addUser('1000006', account4Hash, '1', { from: account10 })
+                return AC_MGR.addUser('1000007', account4Hash, '1', { from: account10 })
             })
 
             .then(() => {
