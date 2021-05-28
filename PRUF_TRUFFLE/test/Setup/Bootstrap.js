@@ -377,17 +377,17 @@ contract('BOOTSTRAP', accounts => {
 
 
         nakedAuthCode1 = await Helper.getURIb32fromAuthcode(
-            '15',
+            '1000005',
             '1'
         )
 
         nakedAuthCode3 = await Helper.getURIb32fromAuthcode(
-            '15',
+            '1000005',
             '3'
         )
 
         nakedAuthCode7 = await Helper.getURIb32fromAuthcode(
-            '15',
+            '1000005',
             '7'
         )
 
@@ -412,7 +412,7 @@ contract('BOOTSTRAP', accounts => {
         )
 
         string14Hash = await Helper.getStringHash(
-            '14'
+            '1000004'
         )
 
 
@@ -602,7 +602,7 @@ contract('BOOTSTRAP', accounts => {
     })
 
 
-    it('Should add default contracts to storage', async () => {
+    it('Should add default contracts to storage', () => {
 
         console.log("Adding AC_MGR to default contract list")
         return STOR.addDefaultContracts("0", "AC_MGR", '1', { from: account1 })
@@ -659,7 +659,7 @@ contract('BOOTSTRAP', accounts => {
     })
 
 
-    it('Should add contract addresses to storage', async () => {
+    it('Should add contract addresses to storage', () => {
 
         console.log("Adding APP to storage for use in AC 0")
         return STOR.OO_addContract("APP", APP.address, '0', '1', { from: account1 })
@@ -756,7 +756,7 @@ contract('BOOTSTRAP', accounts => {
     })
 
 
-    it('Should add Storage to each contract', async () => {
+    it('Should add Storage to each contract', () => {
 
         console.log("Adding in APP")
         return APP.Admin_setStorageContract(STOR.address, { from: account1 })
@@ -838,7 +838,7 @@ contract('BOOTSTRAP', accounts => {
     })
 
 
-    it('Should resolve contract addresses', async () => {
+    it('Should resolve contract addresses', () => {
 
         console.log("Resolving in APP")
         return APP.Admin_resolveContractAddresses({ from: account1 })
@@ -920,7 +920,7 @@ contract('BOOTSTRAP', accounts => {
     })
 
 
-    it('Should set all permitted storage providers', async () => {
+    it('Should set all permitted storage providers', () => {
         console.log("Authorizing UNCONFIGURED")
         return AC_MGR.adminSetStorageProviders('0', '1', { from: account1 })
 
@@ -936,7 +936,7 @@ contract('BOOTSTRAP', accounts => {
     })
 
 
-    it('Should set all permitted management types', async () => {
+    it('Should set all permitted management types', () => {
         console.log("Authorizing Unrestricted")
         return AC_MGR.adminSetManagementTypes('0', '1', { from: account1 })
 
@@ -972,7 +972,7 @@ contract('BOOTSTRAP', accounts => {
     })
 
 
-    it('Should set all permitted custody types', async () => {
+    it('Should set all permitted custody types', () => {
         console.log("Authorizing NONE")
         return AC_MGR.adminSetCustodyTypes('0', '1', { from: account1 })
 
@@ -1012,7 +1012,7 @@ contract('BOOTSTRAP', accounts => {
             })
     })
 
-    it('Should authorize all minter contracts for minting A_TKN(s)', async () => {
+    it('Should authorize all minter contracts for minting A_TKN(s)', () => {
 
         console.log("Authorizing NP")
         return A_TKN.grantRole(minterRoleB32, NP.address, { from: account1 })
@@ -1038,7 +1038,7 @@ contract('BOOTSTRAP', accounts => {
             })
     })
 
-    it('Should authorize all payable contracts for transactions', async () => {
+    it('Should authorize all payable contracts for transactions', () => {
 
         console.log("Authorizing AC_MGR")
         return UTIL_TKN.grantRole(payableRoleB32, AC_MGR.address, { from: account1 })
@@ -1080,25 +1080,25 @@ contract('BOOTSTRAP', accounts => {
     })
 
 
-    it('Should authorize all minter contracts for minting AC_TKN(s)', async () => {
+    it('Should authorize all minter contracts for minting AC_TKN(s)', () => {
         console.log("Authorizing AC_MGR")
         return AC_TKN.grantRole(minterRoleB32, AC_MGR.address, { from: account1 })
     })
 
 
-    it('Should authorize all minter contracts for minting AC_TKN(s)', async () => {
+    it('Should authorize all minter contracts for minting AC_TKN(s)', () => {
         console.log("Authorizing AC_MGR")
         return APP.grantRole(assetTransferRoleB32, NP.address, { from: account1 })
     })
 
 
-    it('Should authorize all minter contracts for minting AC_TKN(s)', async () => {
+    it('Should authorize all minter contracts for minting AC_TKN(s)', () => {
         console.log("Authorizing AC_MGR")
         return RCLR.grantRole(discardRoleB32, A_TKN.address, { from: account1 })
     })
 
 
-    it('Should mint a couple of asset root tokens', async () => {
+    it('Should mint a couple of asset root tokens', () => {
 
         console.log("Minting root token 1 -C")
         return AC_MGR.createAssetClass('1', 'CUSTODIAL_ROOT', '1', '3', '0', '0', "9500", rgt000, account1, { from: account1 })
@@ -1110,7 +1110,7 @@ contract('BOOTSTRAP', accounts => {
     })
 
 
-    it("Should set costs in minted roots", async () => {
+    it("Should set costs in minted roots", () => {
 
         console.log("Setting costs in AC 1")
 
@@ -1224,14 +1224,14 @@ contract('BOOTSTRAP', accounts => {
     })
 
 
-    it("Should Mint 2 cust and 2 non-cust AC tokens in AC_ROOT 1", async () => {
+    it("Should Mint 2 cust and 2 non-cust AC tokens in AC_ROOT 1", () => {
 
         console.log("Minting PRUF to account1")
-        return UTIL_TKN.mint(account1, "1000000000000000000000000", { from: account1 })
+        return UTIL_TKN.mint(account1, "8000000000000000000000000", { from: account1 })
 
             .then(() => {
                 console.log("Minting PRUF to account10")
-                return UTIL_TKN.mint(account10, "200000000000000000000000", { from: account1 })
+                return UTIL_TKN.mint(account10, "4000000000000000000000000", { from: account1 })
             })
 
             .then(() => {
@@ -1245,113 +1245,113 @@ contract('BOOTSTRAP', accounts => {
             })
 
             .then(() => {
-                console.log("Minting AC 1000000 -C")
+                console.log("Minting AC 1000001 -C")
                 return AC_MGR.purchaseACnode("Custodial_AC1", "1", "1", rgt000, { from: account1 })
             })
 
             .then(() => {
-                console.log("Minting AC 1000001 -NC")
+                console.log("Minting AC 1000002 -NC")
                 return AC_MGR.purchaseACnode("Non_Custodial_AC2", "1", "2", rgt000, { from: account1 })
             })
 
             .then(() => {
-                console.log("Minting AC 1000002 -NC")
+                console.log("Minting AC 1000003 -NC")
                 return AC_MGR.purchaseACnode("Non_Custodial_AC3", "1", "2", rgt000, { from: account1 })
             })
 
             .then(() => {
-                console.log("Minting AC 1000003 -NC")
+                console.log("Minting AC 1000004 -NC")
                 return AC_MGR.purchaseACnode("Non_Custodial_AC4", "1", "2", rgt000, { from: account10 })
             })
     })
 
 
-    it("Should Mint 2 non-cust AC tokens in AC_ROOT 2", async () => {
+    it("Should Mint 2 non-cust AC tokens in AC_ROOT 2", () => {
 
-        console.log("Minting AC 1000005 -NC")
+        console.log("Minting AC 1000006 -NC")
         return AC_MGR.purchaseACnode("Non-Custodial_AC5", "2", "2", rgt000, { from: account1 })
 
             .then(() => {
-                console.log("Minting AC 1000006 -NC")
+                console.log("Minting AC 1000007 -NC")
                 return AC_MGR.purchaseACnode("Non_Custodial_AC6", "2", "2", rgt000, { from: account10 })
             })
     })
 
 
-    it('Should authorize APP in all relevant asset classes', async () => {
+    it('Should authorize APP in all relevant asset classes', () => {
         console.log("Authorizing APP")
-        return STOR.enableContractForAC('APP', '10', '1', { from: account1 })
+        return STOR.enableContractForAC('APP', '1000001', '1', { from: account1 })
 
             .then(() => {
-                return STOR.enableContractForAC('APP', '11', '1', { from: account1 })
+                return STOR.enableContractForAC('APP', '1000002', '1', { from: account1 })
             })
     })
 
 
-    it('Should authorize APP_NC in all relevant asset classes', async () => {
+    it('Should authorize APP_NC in all relevant asset classes', () => {
 
         console.log("Authorizing APP_NC")
-        return STOR.enableContractForAC('APP_NC', '12', '2', { from: account1 })
+        return STOR.enableContractForAC('APP_NC', '1000003', '2', { from: account1 })
 
             .then(() => {
-                return STOR.enableContractForAC('APP_NC', '13', '2', { from: account1 })
+                return STOR.enableContractForAC('APP_NC', '1000003', '2', { from: account1 })
             })
 
             .then(() => {
-                return STOR.enableContractForAC('APP_NC', '14', '2', { from: account1 })
+                return STOR.enableContractForAC('APP_NC', '1000004', '2', { from: account10 })
             })
 
             .then(() => {
-                return STOR.enableContractForAC('APP_NC', '16', '2', { from: account10 })
+                return STOR.enableContractForAC('APP_NC', '1000006', '2', { from: account10 })
             })
     })
 
 
-    it('Should authorize NP in all relevant asset classes', async () => {
+    it('Should authorize NP in all relevant asset classes', () => {
 
         console.log("Authorizing NP")
-        return STOR.enableContractForAC('NP', '10', '1', { from: account1 })
+        return STOR.enableContractForAC('NP', '1000001', '1', { from: account1 })
 
             .then(() => {
-                return STOR.enableContractForAC('NP', '11', '1', { from: account1 })
+                return STOR.enableContractForAC('NP', '1000002', '1', { from: account1 })
             })
     })
 
 
-    it('Should authorize MAL_APP in all relevant asset classes', async () => {
+    it('Should authorize MAL_APP in all relevant asset classes', () => {
 
         console.log("Authorizing MAL_APP")
-        return STOR.enableContractForAC('MAL_APP', '10', '1', { from: account1 })
+        return STOR.enableContractForAC('MAL_APP', '1000001', '1', { from: account1 })
 
             .then(() => {
-                return STOR.enableContractForAC('MAL_APP', '11', '1', { from: account1 })
+                return STOR.enableContractForAC('MAL_APP', '1000002', '1', { from: account1 })
             })
     })
 
 
-    it('Should authorize ECR in all relevant asset classes', async () => {
+    it('Should authorize ECR in all relevant asset classes', () => {
 
         console.log("Authorizing ECR")
-        return STOR.enableContractForAC('ECR', '10', '3', { from: account1 })
+        return STOR.enableContractForAC('ECR', '1000001', '3', { from: account1 })
 
             .then(() => {
-                return STOR.enableContractForAC('ECR', '11', '3', { from: account1 })
+                return STOR.enableContractForAC('ECR', '1000002', '3', { from: account1 })
             })
     })
 
 
-    it('Should authorize ECR2 in all relevant asset classes', async () => {
+    it('Should authorize ECR2 in all relevant asset classes', () => {
 
         console.log("Authorizing ECR2")
-        return STOR.enableContractForAC('ECR2', '10', '3', { from: account1 })
+        return STOR.enableContractForAC('ECR2', '1000001', '3', { from: account1 })
 
             .then(() => {
-                return STOR.enableContractForAC('ECR2', '11', '3', { from: account1 })
+                return STOR.enableContractForAC('ECR2', '1000002', '3', { from: account1 })
             })
     })
 
 
-    it('Should authorize A_TKN in all relevant asset classes', async () => {
+    it('Should authorize A_TKN in all relevant asset classes', () => {
 
         console.log("Authorizing A_TKN")
         return STOR.enableContractForAC('A_TKN', '1', '1', { from: account1 })
@@ -1362,30 +1362,30 @@ contract('BOOTSTRAP', accounts => {
     })
 
 
-    it('Should add users to AC 10-14 in AC_Manager', async () => {
+    it('Should add users to AC 1000001-1000006 in AC_Manager', () => {
 
-        console.log("//**************************************END BAdminTSTRAP**********************************************/")
+        console.log("//**************************************END BOOTSTRAP**********************************************/")
         console.log("Account2 => AC10")
-        return AC_MGR.addUser('1', account2Hash, '10', { from: account1 })
+        return AC_MGR.addUser('1000001', account4Hash, '1', { from: account1 })
 
             .then(() => {
-                console.log("Account4 => AC12")
-                return AC_MGR.addUser('1', account4Hash, '16', { from: account10 })
+                console.log("Account4 => AC16")
+                return AC_MGR.addUser('1000006', account4Hash, '1', { from: account10 })
+            })
+
+            .then(() => {
+                console.log("Account10 => AC10")
+                return AC_MGR.addUser('1000001', account10Hash, '1', { from: account1 })
             })
 
             .then(() => {
                 console.log("Account10 => AC15 (PIPMINTER)")
-                return AC_MGR.addUser('1', account10Hash, '10', { from: account1 })
+                return AC_MGR.addUser('1000005', account10Hash, '10', { from: account1 })
             })
 
             .then(() => {
                 console.log("Account10 => AC15 (PIPMINTER)")
-                return AC_MGR.addUser('10', account10Hash, '15', { from: account10 })
-            })
-
-            .then(() => {
-                console.log("Account10 => AC15 (PIPMINTER)")
-                return AC_MGR.addUser('10', account10Hash, '16', { from: account10 })
+                return AC_MGR.addUser('1000006', account10Hash, '10', { from: account10 })
             })
     })
 })

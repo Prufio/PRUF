@@ -1,10 +1,10 @@
 const PRUF_HELPER = artifacts.require('Helper');
 const PRUF_UTIL_TKN = artifacts.require('UTIL_TKN');
-const PRUF_SPLIT = artifacts.require('SPLIT');
+const PRUF_SPLITTEST = artifacts.require('SPLITTEST');
 
 let UTIL_TKN;
 let Helper;
-let SPLIT;
+let SPLITTEST;
 
 let account000 = '0x0000000000000000000000000000000000000000'
 
@@ -46,7 +46,7 @@ contract('SPLIT', accounts => {
 
 
     it('Should deploy PRUF_SPLIT', async () => {
-        const PRUF_SPLITTER_TEST = await PRUF_SPLIT.deployed({ from: account1 });
+        const PRUF_SPLITTER_TEST = await PRUF_SPLITTEST.deployed({ from: account1 });
         console.log(PRUF_SPLITTER_TEST.address);
         assert(PRUF_SPLITTER_TEST.address !== '')
         SPLIT = PRUF_SPLITTER_TEST;
