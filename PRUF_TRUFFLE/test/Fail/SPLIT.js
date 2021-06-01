@@ -215,13 +215,34 @@ contract('SPLIT', accounts => {
     })
 
 
+    it('Should check account split amount balanceOf(44000) Pruf tokens @account2', () => {
+        let Balance = SPLIT.checkMyAddress(
+            { from: account2 }).then(() => {
+                return console.log(Balance)
+            })
+    })
+
+
+    // it("Should check account split amount balanceOf(44000) Pruf tokens @account2", async () => {
+    //     var Balance = [];
+
+    //     return await SPLIT.checkMyAddress({ from: account2 }, function (_err, _result) {
+    //         if (_err) { }
+    //         else {
+    //             Balance = Object.values(_result)
+    //             console.log(Balance)
+    //         }
+    //     })
+    // })
+
+
     it('Should splitMyPruf for account2', async () => {
         return SPLIT.splitMyPruf(
             { from: account2 })
     })
 
 
-    it("Should retrieve balanceOf(40000) Pruf tokens @account2", async () => {
+    it("Should retrieve balanceOf(84000) Pruf tokens @account2", async () => {
         var Balance = [];
 
         return await UTIL_TKN.balanceOf(account2, { from: account1 }, function (_err, _result) {
