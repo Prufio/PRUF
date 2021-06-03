@@ -12,6 +12,7 @@ __/\\\\\\\\\\\\\ _____/\\\\\\\\\ _______/\\__/\\ ___/\\\\\\\\\\\\\\\
 
 /**-----------------------------------------------------------------
  *  TO DO
+ * Check and see if A_TKN can be permitted in all AC's to prevent safeTransferFrom->writeRecord conflict due to it not being a default authorized contract for AC's
  *-----------------------------------------------------------------
  * PRUF ASSET NFT CONTRACT
  *---------------------------------------------------------------*/
