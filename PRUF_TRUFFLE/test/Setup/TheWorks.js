@@ -1002,6 +1002,11 @@ contract('The Works', accounts => {
                 console.log("Authorizing RCLR")
                 return A_TKN.grantRole(minterRoleB32, RCLR.address, { from: account1 })
             })
+
+            .then(() => {
+                console.log("Authorizing PURCHASE")
+                return A_TKN.grantRole(trustedAgentRoleB32, PURCHASE.address, { from: account1 })
+            })
     })
 
     it('Should authorize all payable contracts for transactions', () => {
@@ -1030,6 +1035,11 @@ contract('The Works', accounts => {
             })
 
             .then(() => {
+                console.log("Authorizing AC_MGR")
+                return UTIL_TKN.grantRole(trustedAgentRoleB32, AC_MGR.address, { from: account1 })
+            })
+
+            .then(() => {
                 console.log("Authorizing NP")
                 return UTIL_TKN.grantRole(payableRoleB32, NP.address, { from: account1 })
             })
@@ -1037,6 +1047,16 @@ contract('The Works', accounts => {
             .then(() => {
                 console.log("Authorizing NP_NC")
                 return UTIL_TKN.grantRole(payableRoleB32, NP_NC.address, { from: account1 })
+            })
+
+            .then(() => {
+                console.log("Authorizing PURCHASE")
+                return UTIL_TKN.grantRole(payableRoleB32, PURCHASE.address, { from: account1 })
+            })
+
+            .then(() => {
+                console.log("Authorizing PURCHASE")
+                return UTIL_TKN.grantRole(trustedAgentRoleB32, PURCHASE.address, { from: account1 })
             })
     })
 
@@ -2062,16 +2082,16 @@ contract('The Works', accounts => {
     })
 
 
-    it('Should change status of asset12 to status(59)', async () => {
+    it('Should change status of asset12 to status(51)', async () => {
         return NP._modStatus(
             asset12,
             rgt12,
-            '59',
+            '51',
             { from: account2 }
         )
     })
 
-    it("Should retrieve asset12 @newStaus(59)", async () => {
+    it("Should retrieve asset12 @newStaus(51)", async () => {
         var Record = [];
 
         return await STOR.retrieveShortRecord(asset12, { from: account2 }, function (_err, _result) {
@@ -2751,6 +2771,118 @@ contract('The Works', accounts => {
             if (_err) { }
             else {
                 Record = Object.values(_result)
+                console.log(Record)
+            }
+        })
+    })
+
+
+    it('Should change status of asset12 to status(51)', async () => {
+        return NP_NC._modStatus(
+            asset13,
+            '51',
+            { from: account4 }
+        )
+    })
+
+    it("Should retrieve asset12 @newStaus(51)", async () => {
+        var Record = [];
+
+        return await STOR.retrieveShortRecord(asset13, { from: account2 }, function (_err, _result) {
+            if (_err) { }
+            else {
+                Record = Object.values(_result)
+                console.log(Record)
+            }
+        })
+    })
+
+
+    it('Should set asset12 for sale for 10 pruf', async () => {
+        return PURCHASE._setPrice(
+            asset13,
+            '10000000000000000000',
+            '2',
+            '0',
+            { from: account4 }
+        )
+    })
+
+    it("Should retrieve asset12 @newStaus(51)", async () => {
+        var Record = [];
+
+        return await STOR.retrieveShortRecord(asset13, { from: account2 }, function (_err, _result) {
+            if (_err) { }
+            else {
+                Record = Object.values(_result)
+                console.log(Record)
+            }
+        })
+    })
+
+    it("Should retrieve asset12 PriceData", async () => {
+        var Record = [];
+
+        return await STOR.getPriceData(asset13, { from: account2 }, function (_err, _result) {
+            if (_err) { }
+            else {
+                Record = Object.values(_result)
+                console.log(Record)
+            }
+        })
+    })
+
+    it("Should retrieve account2 ü bal", async () => {
+        var Record = [];
+
+        return await UTIL_TKN.balanceOf(account4, { from: account2 }, function (_err, _result) {
+            if (_err) { }
+            else {
+                Record = _result
+                console.log(Record)
+            }
+        })
+    })
+
+
+    it('account2 should purchase asset12 for 10 pruf', async () => {
+        return PURCHASE.purchaseWithPRUF(
+            asset13,
+            { from: account4 }
+        )
+    })
+
+    it("Should retrieve asset12 @newStaus(51)", async () => {
+        var Record = [];
+
+        return await STOR.retrieveShortRecord(asset13, { from: account2 }, function (_err, _result) {
+            if (_err) { }
+            else {
+                Record = Object.values(_result)
+                console.log(Record)
+            }
+        })
+    })
+
+    it("Should retrieve asset12 PriceData", async () => {
+        var Record = [];
+
+        return await STOR.getPriceData(asset13, { from: account2 }, function (_err, _result) {
+            if (_err) { }
+            else {
+                Record = Object.values(_result)
+                console.log(Record)
+            }
+        })
+    })
+
+    it("Should retrieve account2 ü bal", async () => {
+        var Record = [];
+
+        return await UTIL_TKN.balanceOf(account4, { from: account2 }, function (_err, _result) {
+            if (_err) { }
+            else {
+                Record = _result
                 console.log(Record)
             }
         })
