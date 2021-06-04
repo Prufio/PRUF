@@ -525,7 +525,7 @@ contract AC_MGR is BASIC {
     ) external isACtokenHolderOfClass(_assetClass) whenNotPaused {
         require(
             AC_data[_assetClass].managementType == 255,
-            "ACM:UACI: Immutable AC data aleady set"
+            "ACM:UACI: Immutable AC data already set"
         );
         require(
             _managementType != 255,
