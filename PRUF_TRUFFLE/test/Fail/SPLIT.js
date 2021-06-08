@@ -236,15 +236,6 @@ contract('SPLIT', accounts => {
     })
 
 
-    it('Should check account split amount balanceOf(44000) Pruf tokens @account2', () => {
-        let Balance = SPLIT.checkMyAddress(
-            account2,
-            {from: account2}).then(() => {
-                return console.log(Balance)
-            })
-    })
-
-
     it('Should splitMyPruf for account2', async () => {
         return SPLIT.splitMyPruf(
             { from: account2 })
@@ -296,18 +287,9 @@ contract('SPLIT', accounts => {
     it('Should fail because caller already split', async () => {
         console.log('//**************************END splitMyPruf FAIL BATCH**************************//')
         console.log('//**************************BEGIN splitPrufAtAddress FAIL BATCH**************************//')
+        console.log('//**************************END SPLIT FAIL BATCH**************************//')
         return SPLIT.splitPrufAtAddress(
             account5,
-            { from: account2 })
-    })
-
-    //3
-    it('Should fail because caller already split', async () => {
-        console.log('//**************************END splitPrufAtAddress FAIL BATCH**************************//')
-        console.log('//**************************BEGIN checkMyAddress FAIL BATCH**************************//')
-        console.log('//**************************END SPLIT FAIL BATCH**************************//')
-        return SPLIT.checkMyAddress(
-            account2,
             { from: account2 })
     })
 
