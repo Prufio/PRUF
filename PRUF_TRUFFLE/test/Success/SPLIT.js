@@ -236,13 +236,34 @@ contract('SPLIT', accounts => {
     })
 
 
+    it('Should transfer 10000 PRUF to account5', async () => {
+        return UTIL_TKN.transfer(
+            account5,
+            "10000000000000000000000",
+            { from: account1 })
+    })
+
+
+    it("Should retrieve balanceOf(0) Pruf tokens @account1", async () => {
+        var Balance = [];
+
+        return await UTIL_TKN.balanceOf(account1, { from: account1 }, function (_err, _result) {
+            if (_err) { }
+            else {
+                Balance = Object.values(_result)
+                console.log(Balance)
+            }
+        })
+    })
+
+
     it('Should splitMyPruf for account1', async () => {
         return SPLIT.splitMyPruf(
             { from: account1 })
     })
 
 
-    it("Should retrieve balanceOf(21000) Pruf tokens @account1", async () => {
+    it("Should retrieve balanceOf(11000) Pruf tokens @account1", async () => {
         var Balance = [];
 
         return await UTIL_TKN.balanceOf(account1, { from: account1 }, function (_err, _result) {
@@ -319,7 +340,7 @@ contract('SPLIT', accounts => {
     })
 
 
-    it("Should retrieve balanceOf(105000) Pruf tokens @account5", async () => {
+    it("Should retrieve balanceOf(115000) Pruf tokens @account5", async () => {
         var Balance = [];
 
         return await UTIL_TKN.balanceOf(account5, { from: account1 }, function (_err, _result) {
