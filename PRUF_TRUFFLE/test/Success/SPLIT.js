@@ -187,6 +187,27 @@ contract('SPLIT', accounts => {
         })
     })
 
+    it('Should mint 50000 tokens to account5', async () => {
+        return UTIL_TKN.mint(
+            account5,
+            '50000000000000000000000',
+            { from: account1 }
+        )
+    })
+
+
+    it("Should retrieve balanceOf(50000) Pruf tokens @account5", async () => {
+        var Balance = [];
+
+        return await UTIL_TKN.balanceOf(account5, { from: account1 }, function (_err, _result) {
+            if (_err) { }
+            else {
+                Balance = Object.values(_result)
+                console.log(Balance)
+            }
+        })
+    })
+
 
     it('Should ADMIN_setTokenContract to A_TKN', async () => {
         return SPLIT.ADMIN_setTokenContract(
@@ -282,6 +303,26 @@ contract('SPLIT', accounts => {
         var Balance = [];
 
         return await UTIL_TKN.balanceOf(account4, { from: account1 }, function (_err, _result) {
+            if (_err) { }
+            else {
+                Balance = Object.values(_result)
+                console.log(Balance)
+            }
+        })
+    })
+
+
+    it('Should splitMyPruf for account5', async () => {
+        return SPLIT.splitPrufAtAddress(
+            account5,
+            { from: account4 })
+    })
+
+
+    it("Should retrieve balanceOf(105000) Pruf tokens @account5", async () => {
+        var Balance = [];
+
+        return await UTIL_TKN.balanceOf(account5, { from: account1 }, function (_err, _result) {
             if (_err) { }
             else {
                 Balance = Object.values(_result)

@@ -187,6 +187,27 @@ contract('SPLIT', accounts => {
         })
     })
 
+    it('Should mint 50000 tokens to account5', async () => {
+        return UTIL_TKN.mint(
+            account5,
+            '50000000000000000000000',
+            { from: account1 }
+        )
+    })
+
+
+    it("Should retrieve balanceOf(50000) Pruf tokens @account5", async () => {
+        var Balance = [];
+
+        return await UTIL_TKN.balanceOf(account5, { from: account1 }, function (_err, _result) {
+            if (_err) { }
+            else {
+                Balance = Object.values(_result)
+                console.log(Balance)
+            }
+        })
+    })
+
 
     it('Should ADMIN_setTokenContract to A_TKN', async () => {
         return SPLIT.ADMIN_setTokenContract(
@@ -223,19 +244,6 @@ contract('SPLIT', accounts => {
     })
 
 
-    // it("Should check account split amount balanceOf(44000) Pruf tokens @account2", async () => {
-    //     var Balance = [];
-
-    //     return await SPLIT.checkMyAddress({ from: account2 }, function (_err, _result) {
-    //         if (_err) { }
-    //         else {
-    //             Balance = Object.values(_result)
-    //             console.log(Balance)
-    //         }
-    //     })
-    // })
-
-
     it('Should splitMyPruf for account2', async () => {
         return SPLIT.splitMyPruf(
             { from: account2 })
@@ -254,11 +262,31 @@ contract('SPLIT', accounts => {
         })
     })
 
+
+    it('Should splitMyPruf for account5', async () => {
+        return SPLIT.splitPrufAtAddress(
+            account5,
+            { from: account4 })
+    })
+
+
+    it("Should retrieve balanceOf(105000) Pruf tokens @account5", async () => {
+        var Balance = [];
+
+        return await UTIL_TKN.balanceOf(account5, { from: account1 }, function (_err, _result) {
+            if (_err) { }
+            else {
+                Balance = Object.values(_result)
+                console.log(Balance)
+            }
+        })
+    })
+
     //1
     it('Should fail because caller already split', async () => {
         console.log('//**************************END BOOTSTRAP**************************//')
-        console.log('//**************************BEGIN SPLIT FAIL BATCH (2)**************************//')
-        console.log('//**************************BEGIN ADMIN_setTokenContract FAIL BATCH**************************//')
+        console.log('//**************************BEGIN SPLIT FAIL BATCH (3)**************************//')
+        console.log('//**************************BEGIN splitMyPruf FAIL BATCH**************************//')
         return SPLIT.splitMyPruf(
             { from: account2 })
     })
@@ -266,6 +294,15 @@ contract('SPLIT', accounts => {
     //2
     it('Should fail because caller already split', async () => {
         console.log('//**************************END splitMyPruf FAIL BATCH**************************//')
+        console.log('//**************************BEGIN splitPrufAtAddress FAIL BATCH**************************//')
+        return SPLIT.splitPrufAtAddress(
+            account5,
+            { from: account2 })
+    })
+
+    //3
+    it('Should fail because caller already split', async () => {
+        console.log('//**************************END splitPrufAtAddress FAIL BATCH**************************//')
         console.log('//**************************BEGIN checkMyAddress FAIL BATCH**************************//')
         console.log('//**************************END SPLIT FAIL BATCH**************************//')
         return SPLIT.checkMyAddress(

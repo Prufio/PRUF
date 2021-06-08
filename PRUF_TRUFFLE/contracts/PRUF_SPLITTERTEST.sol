@@ -140,6 +140,26 @@ contract SPLITTEST is ReentrancyGuard, Pausable, AccessControl {
         //^^^^^^^Interactions^^^^^^^^^
     }
 
+    /**
+     * @dev doubles pruf balance at snapshot snapshotID
+     * @param _address - address to be split
+     */
+    function splitPrufAtAddress(address _address) external whenNotPaused {
+        require(
+            hasSplit[_address] == 0,
+            "SPLIT:SMP: Caller address has already been split"
+        );
+        //^^^^^^^checks^^^^^^^^^
+
+        uint256 balanceAtSnapshot = UTIL_TKN.balanceOfAt(_address, 1);
+        balanceAtSnapshot = balanceAtSnapshot + (balanceAtSnapshot / 10); //add 10%
+        hasSplit[_address] = 170; //mark caller address as having been split
+        //^^^^^^^effects^^^^^^^^^
+
+        UTIL_TKN.mint(_address, balanceAtSnapshot); //mint the new tokens to caller address
+        //^^^^^^^Interactions^^^^^^^^^
+    }
+
     /*
      * @dev checks address for available split, returns balance of pruf to be split
      * TESTING: ALL REQUIRES, ACCESS ROLE, PAUSABLE
