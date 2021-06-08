@@ -113,13 +113,13 @@ contract SPLIT is ReentrancyGuard, Pausable, AccessControl { //CTS:EXAMINE clean
     /**
      * @dev checks address for available split, returns balance of pruf to be split
      */
-    function checkMyAddress() external returns (uint256) {
+    function checkMyAddress(address _address) external returns (uint256) {
         require(
-            hasSplit[msg.sender] == 0,
+            hasSplit[_address] == 0,
             "SPLIT:CMA: Caller address has already been split"
         );
         //^^^^^^^checks^^^^^^^^^
-        return UTIL_TKN.balanceOfAt(msg.sender, 1);
+        return UTIL_TKN.balanceOfAt(_address, 1);
         //^^^^^^^Interactions^^^^^^^^^
     }
 
