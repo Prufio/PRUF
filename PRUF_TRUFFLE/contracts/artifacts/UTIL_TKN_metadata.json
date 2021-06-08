@@ -189,19 +189,6 @@
 			},
 			{
 				"inputs": [],
-				"name": "CONTRACT_ADMIN_ROLE",
-				"outputs": [
-					{
-						"internalType": "bytes32",
-						"name": "",
-						"type": "bytes32"
-					}
-				],
-				"stateMutability": "view",
-				"type": "function"
-			},
-			{
-				"inputs": [],
 				"name": "DEFAULT_ADMIN_ROLE",
 				"outputs": [
 					{
@@ -614,7 +601,7 @@
 				"inputs": [
 					{
 						"internalType": "address",
-						"name": "to",
+						"name": "_to",
 						"type": "address"
 					},
 					{
@@ -669,36 +656,24 @@
 						"type": "address"
 					},
 					{
-						"components": [
-							{
-								"internalType": "uint32",
-								"name": "assetClass",
-								"type": "uint32"
-							},
-							{
-								"internalType": "address",
-								"name": "rootAddress",
-								"type": "address"
-							},
-							{
-								"internalType": "address",
-								"name": "ACTHaddress",
-								"type": "address"
-							},
-							{
-								"internalType": "uint256",
-								"name": "rootPrice",
-								"type": "uint256"
-							},
-							{
-								"internalType": "uint256",
-								"name": "ACTHprice",
-								"type": "uint256"
-							}
-						],
-						"internalType": "struct Invoice",
-						"name": "invoice",
-						"type": "tuple"
+						"internalType": "address",
+						"name": "_rootAddress",
+						"type": "address"
+					},
+					{
+						"internalType": "uint256",
+						"name": "_rootPrice",
+						"type": "uint256"
+					},
+					{
+						"internalType": "address",
+						"name": "_ACTHaddress",
+						"type": "address"
+					},
+					{
+						"internalType": "uint256",
+						"name": "_ACTHprice",
+						"type": "uint256"
 					}
 				],
 				"name": "payForService",
@@ -920,6 +895,18 @@
 			"details": "{ERC20} token, including:  - ability for holders to burn (destroy) their tokens  - a MINTER_ROLE that allows for token minting (creation)  - a PAUSER_ROLE that allows to stop all token transfers  - a SNAPSHOT_ROLE that allows to take snapshots  - a PAYABLE_ROLE role that allows authorized addresses to invoke the token splitting payment function (all paybale contracts)  - a TRUSTED_AGENT_ROLE role that allows authorized addresses to transfer and burn tokens (AC_MGR) This contract uses {AccessControl} to lock permissioned functions using the different roles - head to its documentation for details. The account that deploys the contract will be granted the minter and pauser roles, as well as the default admin role, which will let it grant both minter and pauser roles to other accounts.",
 			"kind": "dev",
 			"methods": {
+				"AdminSetSharesAddress(address)": {
+					"details": "Set address of SHARES payment contract. by default contract will use root address instead if set to zero.",
+					"params": {
+						"_paymentAddress": "- address to send shares payment to"
+					}
+				},
+				"adminKillTrustedAgent(uint256)": {
+					"details": "----------------------------------------PERMANANTLY !!!  Kills trusted agent and payable functions this will break the functionality of current payment mechanisms. The workaround for this is to create an allowance for pruf contracts for a single or multiple payments, either ahead of time \"loading up your PRUF account\" or on demand with an operation. On demand will use quite a bit more gas. \"preloading\" should be pretty gas efficient, but will add an extra step to the workflow, requiring users to have sufficient PRuF \"banked\" in an allowance for use in the system.",
+					"params": {
+						"_key": "- set 170 to kill trusted agent role permenantly"
+					}
+				},
 				"allowance(address,address)": {
 					"details": "See {IERC20-allowance}."
 				},
@@ -939,10 +926,10 @@
 					"details": "Destroys `amount` tokens from `account`, deducting from the caller's allowance. See {ERC20-_burn} and {ERC20-allowance}. Requirements: - the caller must have allowance for ``accounts``'s tokens of at least `amount`."
 				},
 				"cap()": {
-					"details": "Returns the cap on the token's total supply."
+					"details": "Returns the cap on the token's total supply. returns total cap"
 				},
 				"constructor": {
-					"details": "Grants `DEFAULT_ADMIN_ROLE`, `CONTRACT_ADMIN_ROLE`, `MINTER_ROLE` and `PAUSER_ROLE` to the account that deploys the contract. See {ERC20-constructor}."
+					"details": "Grants `DEFAULT_ADMIN_ROLE`, `MINTER_ROLE` and `PAUSER_ROLE` to the account that deploys the contract. See {ERC20-constructor}."
 				},
 				"decimals()": {
 					"details": "Returns the number of decimals used to get its user representation. For example, if `decimals` equals `2`, a balance of `505` tokens should be displayed to a user as `5,05` (`505 / 10 ** 2`). Tokens usually opt for a value of 18, imitating the relationship between Ether and Wei. This is the value {ERC20} uses, unless this function is overloaded; NOTE: This information is only used for _display_ purposes: it in no way affects any of the arithmetic of the contract, including {IERC20-balanceOf} and {IERC20-transfer}."
@@ -968,8 +955,18 @@
 				"increaseAllowance(address,uint256)": {
 					"details": "Atomically increases the allowance granted to `spender` by the caller. This is an alternative to {approve} that can be used as a mitigation for problems described in {IERC20-approve}. Emits an {Approval} event indicating the updated allowance. Requirements: - `spender` cannot be the zero address."
 				},
+				"isColdWallet(address)": {
+					"details": "return an addresses \"cold wallet\" status WALLET ADDRESSES SET TO \"Cold\" DO NOT WORK WITH TRUSTED_AGENT FUNCTIONS",
+					"params": {
+						"_addr": "- Address to check cold wallet returns 0 if not a cold wallet, 170 if a cold wallet"
+					}
+				},
 				"mint(address,uint256)": {
-					"details": "Creates `_amount` new tokens for `to`. See {ERC20-_mint}. Requirements: - the caller must have the `MINTER_ROLE`."
+					"details": "Creates `_amount` new tokens for `to`. See {ERC20-_mint}. Requirements: - the caller must have the `MINTER_ROLE`.",
+					"params": {
+						"_amount": "- amount of tokens to mint",
+						"_to": "- Address to send tokens to"
+					}
 				},
 				"name()": {
 					"details": "Returns the name of the token."
@@ -980,14 +977,30 @@
 				"paused()": {
 					"details": "Returns true if the contract is paused, and false otherwise."
 				},
+				"payForService(address,address,uint256,address,uint256)": {
+					"details": "Deducts token payment from transaction",
+					"params": {
+						"_ACTHaddress": "- ACTH address for payment",
+						"_ACTHprice": "- ACTH amount for payment",
+						"_rootAddress": "- root address for payment",
+						"_rootPrice": "- root amount for payment",
+						"_senderAddress": "- address to send payment from"
+					}
+				},
 				"renounceRole(bytes32,address)": {
 					"details": "Revokes `role` from the calling account. Roles are often managed via {grantRole} and {revokeRole}: this function's purpose is to provide a mechanism for accounts to lose their privileges if they are compromised (such as when a trusted device is misplaced). If the calling account had been granted `role`, emits a {RoleRevoked} event. Requirements: - the caller must be `account`."
 				},
 				"revokeRole(bytes32,address)": {
 					"details": "Revokes `role` from `account`. If `account` had been granted `role`, emits a {RoleRevoked} event. Requirements: - the caller must have ``role``'s admin role."
 				},
+				"setColdWallet()": {
+					"details": "Set calling wallet to a \"cold Wallet\" that cannot be manipulated by TRUSTED_AGENT or PAYABLE permissioned functions WALLET ADDRESSES SET TO \"Cold\" DO NOT WORK WITH TRUSTED_AGENT FUNCTIONS and must be unset from cold before it can interact with contract functions."
+				},
 				"symbol()": {
 					"details": "Returns the symbol of the token, usually a shorter version of the name."
+				},
+				"takeSnapshot()": {
+					"details": "Take a balance snapshot, returns snapshot ID returns snapshot number"
 				},
 				"totalSupply()": {
 					"details": "See {IERC20-totalSupply}."
@@ -1000,6 +1013,24 @@
 				},
 				"transferFrom(address,address,uint256)": {
 					"details": "See {IERC20-transferFrom}. Emits an {Approval} event indicating the updated allowance. This is not required by the EIP. See the note at the beginning of {ERC20}. Requirements: - `sender` and `recipient` cannot be the zero address. - `sender` must have a balance of at least `amount`. - the caller must have allowance for ``sender``'s tokens of at least `amount`."
+				},
+				"trustedAgentBurn(address,uint256)": {
+					"details": "arbitrary burn (requires TRUSTED_AGENT_ROLE)   ****USE WITH CAUTION",
+					"params": {
+						"_addr": "- Address from which to burn tokens",
+						"_amount": "- amount of tokens to burn"
+					}
+				},
+				"trustedAgentTransfer(address,address,uint256)": {
+					"details": "arbitrary transfer (requires TRUSTED_AGENT_ROLE)   ****USE WITH CAUTION",
+					"params": {
+						"_amount": "- amount of tokens to transfer",
+						"_from": "- Address from which to send tokens",
+						"_to": "- Address to send tokens to"
+					}
+				},
+				"unSetColdWallet()": {
+					"details": "un-set calling wallet to a \"cold Wallet\", enabling manipulation by TRUSTED_AGENT and PAYABLE permissioned functions WALLET ADDRESSES SET TO \"Cold\" DO NOT WORK WITH TRUSTED_AGENT FUNCTIONS and must be unset from cold before it can interact with contract functions."
 				},
 				"unpause()": {
 					"details": "Unpauses all token transfers. See {ERC20Pausable} and {Pausable-_unpause}. Requirements: - the caller must have the `PAUSER_ROLE`."
@@ -1015,7 +1046,7 @@
 	},
 	"settings": {
 		"compilationTarget": {
-			"PRUF_TRUFFLE/contracts/PRUF_UTIL_TKN.sol": "UTIL_TKN"
+			"Documents/DEV/PRUF/PRUF_TRUFFLE/contracts/PRUF_UTIL_TKN.sol": "UTIL_TKN"
 		},
 		"evmVersion": "istanbul",
 		"libraries": {},
@@ -1023,13 +1054,13 @@
 			"bytecodeHash": "ipfs"
 		},
 		"optimizer": {
-			"enabled": true,
+			"enabled": false,
 			"runs": 200
 		},
 		"remappings": []
 	},
 	"sources": {
-		"PRUF_TRUFFLE/contracts/Imports/access/AccessControl.sol": {
+		"Documents/DEV/PRUF/PRUF_TRUFFLE/contracts/Imports/access/AccessControl.sol": {
 			"keccak256": "0x6e98c0d315f562a98d915414f948e041531138284dd633b4cdb0361a7172cd97",
 			"license": "MIT",
 			"urls": [
@@ -1037,7 +1068,7 @@
 				"dweb:/ipfs/QmSWUiJXUDFQbno6WgsadapBtYnQwn1iKuCo1z6A5qHjEV"
 			]
 		},
-		"PRUF_TRUFFLE/contracts/Imports/math/Math.sol": {
+		"Documents/DEV/PRUF/PRUF_TRUFFLE/contracts/Imports/math/Math.sol": {
 			"keccak256": "0xa1477864def7febd9826918e50482a1ee7068b337b03804a7e0e98c674ac57c2",
 			"license": "MIT",
 			"urls": [
@@ -1045,7 +1076,7 @@
 				"dweb:/ipfs/QmSv235N45Ub3wFXdTLNiS3k4b7FAudtEL8s6g1PwcsCcS"
 			]
 		},
-		"PRUF_TRUFFLE/contracts/Imports/token/ERC20/ERC20.sol": {
+		"Documents/DEV/PRUF/PRUF_TRUFFLE/contracts/Imports/token/ERC20/ERC20.sol": {
 			"keccak256": "0x9ceb78a9b6a714543241044d035c2588aa38e2a505e778bc1827c58bc8475065",
 			"license": "MIT",
 			"urls": [
@@ -1053,7 +1084,7 @@
 				"dweb:/ipfs/QmRYNw8SfzmpUkBYkUSUUaF9EF8Vxej4WCp1AWrTtmPDPM"
 			]
 		},
-		"PRUF_TRUFFLE/contracts/Imports/token/ERC20/ERC20Burnable.sol": {
+		"Documents/DEV/PRUF/PRUF_TRUFFLE/contracts/Imports/token/ERC20/ERC20Burnable.sol": {
 			"keccak256": "0x0d693f242d205b79a58d312e1dbee59278f7b5a3ae72fc12dcb426039054358a",
 			"license": "MIT",
 			"urls": [
@@ -1061,7 +1092,7 @@
 				"dweb:/ipfs/Qmdb2jEts4E3goBAMno2CL9wy8CCEXqfKaNS4qdFJAH9WT"
 			]
 		},
-		"PRUF_TRUFFLE/contracts/Imports/token/ERC20/ERC20Snapshot.sol": {
+		"Documents/DEV/PRUF/PRUF_TRUFFLE/contracts/Imports/token/ERC20/ERC20Snapshot.sol": {
 			"keccak256": "0x6708f760f909a783fbc5830f71c684f2590d5dda459e2ac46171f9b465415bda",
 			"license": "MIT",
 			"urls": [
@@ -1069,7 +1100,7 @@
 				"dweb:/ipfs/QmYxepXZA33GAGbWeWZorc3h5e9WhCAQuXF2YM6GVTnfTW"
 			]
 		},
-		"PRUF_TRUFFLE/contracts/Imports/token/ERC20/IERC20.sol": {
+		"Documents/DEV/PRUF/PRUF_TRUFFLE/contracts/Imports/token/ERC20/IERC20.sol": {
 			"keccak256": "0xf8e8d118a7a8b2e134181f7da655f6266aa3a0f9134b2605747139fcb0c5d835",
 			"license": "MIT",
 			"urls": [
@@ -1077,7 +1108,7 @@
 				"dweb:/ipfs/QmaG3R2J9cz92YT77vFjYrjMNU2wHp4ypwYD62HqDUqS5U"
 			]
 		},
-		"PRUF_TRUFFLE/contracts/Imports/utils/Address.sol": {
+		"Documents/DEV/PRUF/PRUF_TRUFFLE/contracts/Imports/utils/Address.sol": {
 			"keccak256": "0x069b2631bb5b5193a58ccf7a06266c7361bd2c20095667af4402817605627f45",
 			"license": "MIT",
 			"urls": [
@@ -1085,7 +1116,7 @@
 				"dweb:/ipfs/QmXmxubE3jnatFgZuN8ay1VV6hZ8WRmhvUjNpeVjki15HX"
 			]
 		},
-		"PRUF_TRUFFLE/contracts/Imports/utils/Arrays.sol": {
+		"Documents/DEV/PRUF/PRUF_TRUFFLE/contracts/Imports/utils/Arrays.sol": {
 			"keccak256": "0xed54c5e05aa07caf1a2f6c459b82af719a4edece1798b8d2d100fde470fb6201",
 			"license": "MIT",
 			"urls": [
@@ -1093,7 +1124,7 @@
 				"dweb:/ipfs/QmTtk84cRxiLywJ2VMHXF9y6SBLmhkyEkhXzAHJraZTa9f"
 			]
 		},
-		"PRUF_TRUFFLE/contracts/Imports/utils/Context.sol": {
+		"Documents/DEV/PRUF/PRUF_TRUFFLE/contracts/Imports/utils/Context.sol": {
 			"keccak256": "0xf930d2df426bfcfc1f7415be724f04081c96f4fb9ec8d0e3a521c07692dface0",
 			"license": "MIT",
 			"urls": [
@@ -1101,7 +1132,7 @@
 				"dweb:/ipfs/QmTbFya18786ckJfLYUoWau9jBTKfmWnWm5XSViWvB7PXN"
 			]
 		},
-		"PRUF_TRUFFLE/contracts/Imports/utils/Counters.sol": {
+		"Documents/DEV/PRUF/PRUF_TRUFFLE/contracts/Imports/utils/Counters.sol": {
 			"keccak256": "0x62d306ff0499a11913bc60b5939eec619509b5c67b30e86ebf8b8bda0b7a7fee",
 			"license": "MIT",
 			"urls": [
@@ -1109,7 +1140,7 @@
 				"dweb:/ipfs/QmZ92pU9DJ3h1qREMFvDQhArSy6fh6zA983NeLFHRs1qKJ"
 			]
 		},
-		"PRUF_TRUFFLE/contracts/Imports/utils/EnumerableSet.sol": {
+		"Documents/DEV/PRUF/PRUF_TRUFFLE/contracts/Imports/utils/EnumerableSet.sol": {
 			"keccak256": "0x71e0d1cc75b67306382e055b789b6d3ffe34a9e2e55380d3c9895a36a42229e1",
 			"license": "MIT",
 			"urls": [
@@ -1117,7 +1148,7 @@
 				"dweb:/ipfs/QmdwRX791f2gdkxLfzQLcyx3ZLvSjGd2wdX8gXFi8sH2uW"
 			]
 		},
-		"PRUF_TRUFFLE/contracts/Imports/utils/Pausable.sol": {
+		"Documents/DEV/PRUF/PRUF_TRUFFLE/contracts/Imports/utils/Pausable.sol": {
 			"keccak256": "0xc6e9bea1d943d97521f0a73f2667eccc2eb0f740c209574d113ec5addb617472",
 			"license": "MIT",
 			"urls": [
@@ -1125,20 +1156,20 @@
 				"dweb:/ipfs/QmXfPZ8XDfMDMWD4uajioE21AhQhndDdo5tqbMpaM51scV"
 			]
 		},
-		"PRUF_TRUFFLE/contracts/PRUF_INTERFACES.sol": {
-			"keccak256": "0x1560cb07854831ebafb4d308aac4f08c0b03c5866989fde61454f9535b34a36b",
+		"Documents/DEV/PRUF/PRUF_TRUFFLE/contracts/PRUF_INTERFACES.sol": {
+			"keccak256": "0x66e6967a8f94167e08948944d2854df5f78135883614cb59bbec53b037d6f8f8",
 			"license": "UNLICENSED",
 			"urls": [
-				"bzz-raw://2750bf4f4bd262e86b1e79c2f25a028384344128efee8bb98d2c5d74121befe8",
-				"dweb:/ipfs/QmepNjaPw6E1dDXALHL7DteUhFutTRQ7YeQ2jYbrwQgwbn"
+				"bzz-raw://4f122a913d9e59e5b05ee18b279c5ed87fac1d60cec23e8a048a19fb03c94e15",
+				"dweb:/ipfs/QmaQuLeATNGTVsvr7sULRwapFFqgVnWuYYM856U2i1zBhB"
 			]
 		},
-		"PRUF_TRUFFLE/contracts/PRUF_UTIL_TKN.sol": {
-			"keccak256": "0x9f80473be2d51a27da5fb285d8c990b51df024bbad0d761280517059f7e6341d",
+		"Documents/DEV/PRUF/PRUF_TRUFFLE/contracts/PRUF_UTIL_TKN.sol": {
+			"keccak256": "0x697a1f03aaf2176e4bcd8de42c77801a7a0bad167d9e83933df9f2623f126d32",
 			"license": "UNLICENSED",
 			"urls": [
-				"bzz-raw://920abc238d987c9d1a5b552ed35c0f172813da617eb9e989a92b7690f8400780",
-				"dweb:/ipfs/QmaGynwD3JwFopprpr4vy9cyYkr3HQkz2XiVXH9MAMfCen"
+				"bzz-raw://10662ea8a5301de6e6aa61623afc248354e773b5d54275cda661a4e186fa63a0",
+				"dweb:/ipfs/QmWc7qnQsJw1LbmofkqTZNg34w27b8CcBzdxCN4VEkdEs8"
 			]
 		}
 	},

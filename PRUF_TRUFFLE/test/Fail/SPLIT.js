@@ -238,7 +238,8 @@ contract('SPLIT', accounts => {
 
     it('Should check account split amount balanceOf(44000) Pruf tokens @account2', () => {
         let Balance = SPLIT.checkMyAddress(
-            { from: account2 }).then(() => {
+            account2,
+            {from: account2}).then(() => {
                 return console.log(Balance)
             })
     })
@@ -306,6 +307,7 @@ contract('SPLIT', accounts => {
         console.log('//**************************BEGIN checkMyAddress FAIL BATCH**************************//')
         console.log('//**************************END SPLIT FAIL BATCH**************************//')
         return SPLIT.checkMyAddress(
+            account2,
             { from: account2 })
     })
 

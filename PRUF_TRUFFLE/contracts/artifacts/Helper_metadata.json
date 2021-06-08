@@ -153,6 +153,44 @@
 			},
 			{
 				"inputs": [],
+				"name": "Admin_resolveContractAddresses",
+				"outputs": [],
+				"stateMutability": "nonpayable",
+				"type": "function"
+			},
+			{
+				"inputs": [
+					{
+						"internalType": "address",
+						"name": "_storageAddress",
+						"type": "address"
+					}
+				],
+				"name": "Admin_setStorageContract",
+				"outputs": [],
+				"stateMutability": "nonpayable",
+				"type": "function"
+			},
+			{
+				"inputs": [
+					{
+						"internalType": "address",
+						"name": "_to",
+						"type": "address"
+					},
+					{
+						"internalType": "uint256",
+						"name": "_tokenID",
+						"type": "uint256"
+					}
+				],
+				"name": "Admin_transferACToken",
+				"outputs": [],
+				"stateMutability": "nonpayable",
+				"type": "function"
+			},
+			{
+				"inputs": [],
 				"name": "CONTRACT_ADMIN_ROLE",
 				"outputs": [
 					{
@@ -175,44 +213,6 @@
 					}
 				],
 				"stateMutability": "view",
-				"type": "function"
-			},
-			{
-				"inputs": [],
-				"name": "OO_resolveContractAddresses",
-				"outputs": [],
-				"stateMutability": "nonpayable",
-				"type": "function"
-			},
-			{
-				"inputs": [
-					{
-						"internalType": "address",
-						"name": "_storageAddress",
-						"type": "address"
-					}
-				],
-				"name": "OO_setStorageContract",
-				"outputs": [],
-				"stateMutability": "nonpayable",
-				"type": "function"
-			},
-			{
-				"inputs": [
-					{
-						"internalType": "address",
-						"name": "_to",
-						"type": "address"
-					},
-					{
-						"internalType": "uint256",
-						"name": "_tokenID",
-						"type": "uint256"
-					}
-				],
-				"name": "OO_transferACToken",
-				"outputs": [],
-				"stateMutability": "nonpayable",
 				"type": "function"
 			},
 			{
@@ -881,11 +881,6 @@
 					},
 					{
 						"internalType": "address",
-						"name": "_senderAddress",
-						"type": "address"
-					},
-					{
-						"internalType": "address",
 						"name": "_rootAddress",
 						"type": "address"
 					},
@@ -1094,6 +1089,22 @@
 		"devdoc": {
 			"kind": "dev",
 			"methods": {
+				"Admin_resolveContractAddresses()": {
+					"details": "Resolve Contract Addresses from STOR "
+				},
+				"Admin_setStorageContract(address)": {
+					"details": "Set address of STOR contract to interface with ",
+					"params": {
+						"_storageAddress": "address of PRUF_STOR"
+					}
+				},
+				"Admin_transferACToken(address,uint256)": {
+					"details": "Transfer any specified assetClassToken from contract",
+					"params": {
+						"_to": "- address to send to",
+						"_tokenID": "- asset class token ID"
+					}
+				},
 				"getRoleAdmin(bytes32)": {
 					"details": "Returns the admin role that controls `role`. See {grantRole} and {revokeRole}. To change a role's admin, use {_setRoleAdmin}."
 				},
@@ -1109,11 +1120,11 @@
 				"hasRole(bytes32,address)": {
 					"details": "Returns `true` if `account` has been granted `role`."
 				},
+				"onERC721Received(address,address,uint256,bytes)": {
+					"details": "Compliance for erc721 reciever See OZ documentation "
+				},
 				"owner()": {
 					"details": "Returns the address of the current owner."
-				},
-				"pause()": {
-					"details": "Triggers stopped state. (pausable)"
 				},
 				"paused()": {
 					"details": "Returns true if the contract is paused, and false otherwise."
@@ -1127,11 +1138,15 @@
 				"revokeRole(bytes32,address)": {
 					"details": "Revokes `role` from `account`. If `account` had been granted `role`, emits a {RoleRevoked} event. Requirements: - the caller must have ``role``'s admin role."
 				},
+				"transferAssetToken(address,bytes32)": {
+					"details": "Transfer any specified assetToken from contract",
+					"params": {
+						"_idxHash": "- asset index",
+						"_to": "- address to send to"
+					}
+				},
 				"transferOwnership(address)": {
 					"details": "Transfers ownership of the contract to a new account (`newOwner`). Can only be called by the current owner."
-				},
-				"unpause()": {
-					"details": "Returns to normal state. (pausable)"
 				}
 			},
 			"version": 1
@@ -1144,7 +1159,7 @@
 	},
 	"settings": {
 		"compilationTarget": {
-			"PRUF_helper.sol": "Helper"
+			"Documents/DEV/PRUF/PRUF_TRUFFLE/contracts/test_PRUF_helper.sol": "Helper"
 		},
 		"evmVersion": "istanbul",
 		"libraries": {},
@@ -1152,13 +1167,13 @@
 			"bytecodeHash": "ipfs"
 		},
 		"optimizer": {
-			"enabled": true,
+			"enabled": false,
 			"runs": 200
 		},
 		"remappings": []
 	},
 	"sources": {
-		"Imports/access/AccessControl.sol": {
+		"Documents/DEV/PRUF/PRUF_TRUFFLE/contracts/Imports/access/AccessControl.sol": {
 			"keccak256": "0x6e98c0d315f562a98d915414f948e041531138284dd633b4cdb0361a7172cd97",
 			"license": "MIT",
 			"urls": [
@@ -1166,7 +1181,7 @@
 				"dweb:/ipfs/QmSWUiJXUDFQbno6WgsadapBtYnQwn1iKuCo1z6A5qHjEV"
 			]
 		},
-		"Imports/access/Ownable.sol": {
+		"Documents/DEV/PRUF/PRUF_TRUFFLE/contracts/Imports/access/Ownable.sol": {
 			"keccak256": "0x1cae4f85f114ff17b90414f5da67365b1d00337abb5bce9bf944eb78a2c0673c",
 			"license": "MIT",
 			"urls": [
@@ -1174,7 +1189,7 @@
 				"dweb:/ipfs/QmRD1rAZEqQ73C33cdA3QoUyBDMEWnNKNMc6PNkAZWHeQQ"
 			]
 		},
-		"Imports/token/ERC721/IERC721Receiver.sol": {
+		"Documents/DEV/PRUF/PRUF_TRUFFLE/contracts/Imports/token/ERC721/IERC721Receiver.sol": {
 			"keccak256": "0x96877bb2eb8ca360e949ee1bd77b47a14e92e42f79897c350f088f87a3c231d4",
 			"license": "MIT",
 			"urls": [
@@ -1182,7 +1197,7 @@
 				"dweb:/ipfs/QmdAPS8uLrzPJEeFZyJVkwTtaL3KB9jo9wJm1UcoJP55wT"
 			]
 		},
-		"Imports/utils/Address.sol": {
+		"Documents/DEV/PRUF/PRUF_TRUFFLE/contracts/Imports/utils/Address.sol": {
 			"keccak256": "0x069b2631bb5b5193a58ccf7a06266c7361bd2c20095667af4402817605627f45",
 			"license": "MIT",
 			"urls": [
@@ -1190,7 +1205,7 @@
 				"dweb:/ipfs/QmXmxubE3jnatFgZuN8ay1VV6hZ8WRmhvUjNpeVjki15HX"
 			]
 		},
-		"Imports/utils/Context.sol": {
+		"Documents/DEV/PRUF/PRUF_TRUFFLE/contracts/Imports/utils/Context.sol": {
 			"keccak256": "0xf930d2df426bfcfc1f7415be724f04081c96f4fb9ec8d0e3a521c07692dface0",
 			"license": "MIT",
 			"urls": [
@@ -1198,7 +1213,7 @@
 				"dweb:/ipfs/QmTbFya18786ckJfLYUoWau9jBTKfmWnWm5XSViWvB7PXN"
 			]
 		},
-		"Imports/utils/EnumerableSet.sol": {
+		"Documents/DEV/PRUF/PRUF_TRUFFLE/contracts/Imports/utils/EnumerableSet.sol": {
 			"keccak256": "0x71e0d1cc75b67306382e055b789b6d3ffe34a9e2e55380d3c9895a36a42229e1",
 			"license": "MIT",
 			"urls": [
@@ -1206,7 +1221,7 @@
 				"dweb:/ipfs/QmdwRX791f2gdkxLfzQLcyx3ZLvSjGd2wdX8gXFi8sH2uW"
 			]
 		},
-		"Imports/utils/Pausable.sol": {
+		"Documents/DEV/PRUF/PRUF_TRUFFLE/contracts/Imports/utils/Pausable.sol": {
 			"keccak256": "0xc6e9bea1d943d97521f0a73f2667eccc2eb0f740c209574d113ec5addb617472",
 			"license": "MIT",
 			"urls": [
@@ -1214,7 +1229,7 @@
 				"dweb:/ipfs/QmXfPZ8XDfMDMWD4uajioE21AhQhndDdo5tqbMpaM51scV"
 			]
 		},
-		"Imports/utils/ReentrancyGuard.sol": {
+		"Documents/DEV/PRUF/PRUF_TRUFFLE/contracts/Imports/utils/ReentrancyGuard.sol": {
 			"keccak256": "0x1278c76b840063ff5e14a2d7c5707812c1eabc2342ed040bf862c2d7552102fe",
 			"license": "MIT",
 			"urls": [
@@ -1222,28 +1237,28 @@
 				"dweb:/ipfs/Qmdg6rbPsShpnzvqKmPVuFk7eYU53oXTPxqUJXd9WLD4vg"
 			]
 		},
-		"PRUF_BASIC.sol": {
-			"keccak256": "0x466d5ea8e4922dbd5e938a76d37d5940c46372a533f8baa19fbf937a7e2fbc37",
+		"Documents/DEV/PRUF/PRUF_TRUFFLE/contracts/PRUF_BASIC.sol": {
+			"keccak256": "0xc5b723f74e8269a41ef1049b270f88e5574b73729d5a8ee799e6ac93e38ee1e2",
 			"license": "UNLICENSED",
 			"urls": [
-				"bzz-raw://39b6ffba3a023e17ab305cea942a240d2b782c1c2a26be0013526a34695adb7e",
-				"dweb:/ipfs/QmemLkz26NDEqTaYwH3vgRtMDDtk8ZuoSRR2QcMYD1BwDD"
+				"bzz-raw://7f0f9ef0c601bf2696ea154e0bc47fa9e93e10c370ea47af7882ada1615eb0f5",
+				"dweb:/ipfs/QmegTSMeEg9JtKzHKp131NUpQS9jrtYmUXLYNnNcYS1h9U"
 			]
 		},
-		"PRUF_INTERFACES.sol": {
-			"keccak256": "0x6a47babcbcc039bc0c9ea3e9b83907c94ec2cfffe4317e7fa2085ec1c2d195a1",
+		"Documents/DEV/PRUF/PRUF_TRUFFLE/contracts/PRUF_INTERFACES.sol": {
+			"keccak256": "0x66e6967a8f94167e08948944d2854df5f78135883614cb59bbec53b037d6f8f8",
 			"license": "UNLICENSED",
 			"urls": [
-				"bzz-raw://501fab5cb8df56da99760a326711cda2a12d603e0d8c85694beaa09d6e46acf7",
-				"dweb:/ipfs/QmcdmtMsUuCs9ekJEih21DUA3Xykv1rtyynUpUTrLtQXuy"
+				"bzz-raw://4f122a913d9e59e5b05ee18b279c5ed87fac1d60cec23e8a048a19fb03c94e15",
+				"dweb:/ipfs/QmaQuLeATNGTVsvr7sULRwapFFqgVnWuYYM856U2i1zBhB"
 			]
 		},
-		"PRUF_helper.sol": {
-			"keccak256": "0x5a6a4fc6d4808aa6518e372c157893e2a2d8ef9ced1ddcd0241877616b49fe46",
+		"Documents/DEV/PRUF/PRUF_TRUFFLE/contracts/test_PRUF_helper.sol": {
+			"keccak256": "0xde0b197f70da6d041cb0053bf4ffbe7a4ce717f789fd5a79333298a2b80d0867",
 			"license": "UNLICENSED",
 			"urls": [
-				"bzz-raw://fecfd69ca7dd92516515a32a3354c7f11597ae614d795df5f7eb8f92ead2099c",
-				"dweb:/ipfs/QmbGSZtf1rqNC6HnFyUgegFHTgLYHzgojivvosNkUEpzKf"
+				"bzz-raw://ff0c866cb6a62c32e645f3e399364c8fd98b6462ae735e445d994858e4dc8935",
+				"dweb:/ipfs/QmV3xdo9C76LvhvP8MBjcMNhubJaFCgoY9QMWCRWnd6juh"
 			]
 		}
 	},
