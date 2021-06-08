@@ -82,7 +82,6 @@ contract SPLIT is ReentrancyGuard, Pausable, AccessControl { //CTS:EXAMINE clean
         //^^^^^^^checks^^^^^^^^^
 
         uint256 balanceAtSnapshot = UTIL_TKN.balanceOfAt(msg.sender, 1);
-        balanceAtSnapshot = balanceAtSnapshot + (balanceAtSnapshot / 10); //add 10%
         hasSplit[msg.sender] = 170; //mark caller address as having been split
         //^^^^^^^effects^^^^^^^^^
 
@@ -102,7 +101,6 @@ contract SPLIT is ReentrancyGuard, Pausable, AccessControl { //CTS:EXAMINE clean
         //^^^^^^^checks^^^^^^^^^
 
         uint256 balanceAtSnapshot = UTIL_TKN.balanceOfAt(_address, 1);
-        //balanceAtSnapshot = balanceAtSnapshot + (balanceAtSnapshot / 10); //add 10%
         hasSplit[_address] = 170; //mark caller address as having been split
         //^^^^^^^effects^^^^^^^^^
 
@@ -113,7 +111,7 @@ contract SPLIT is ReentrancyGuard, Pausable, AccessControl { //CTS:EXAMINE clean
     /**
      * @dev checks address for available split, returns balance of pruf to be split
      */
-    function checkMyAddress(address _address) external returns (uint256) {
+    function checkMyAddress(address _address) external view returns (uint256) {
         return hasSplit[_address];
     }
 
