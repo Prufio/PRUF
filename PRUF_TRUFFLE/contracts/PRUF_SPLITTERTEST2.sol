@@ -130,8 +130,7 @@ contract SPLITTEST2 is ReentrancyGuard, Pausable, AccessControl {
             //UTIL_TKN.balanceOfAt(msg.sender, snapshotID);
             UTIL_TKN.balanceOfAt(msg.sender, 1);
 
-        // balanceAtSnapshot = balanceAtSnapshot + (balanceAtSnapshot / 10); //add 10%
-        balanceAtSnapshot = balanceAtSnapshot + balanceAtSnapshot;
+        balanceAtSnapshot = balanceAtSnapshot;
         //^^^^^^^checks^^^^^^^^^
         hasSplit[msg.sender] = 170; //mark caller address as having been split
         //^^^^^^^effects^^^^^^^^^
