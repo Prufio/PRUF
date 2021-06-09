@@ -263,7 +263,7 @@ contract('SPLIT', accounts => {
     })
 
 
-    it("Should retrieve balanceOf(11000) Pruf tokens @account1", async () => {
+    it("Should retrieve balanceOf(10000) Pruf tokens @account1", async () => {
         var Balance = [];
 
         return await UTIL_TKN.balanceOf(account1, { from: account1 }, function (_err, _result) {
@@ -282,7 +282,7 @@ contract('SPLIT', accounts => {
     })
 
 
-    it("Should retrieve balanceOf(42000) Pruf tokens @account2", async () => {
+    it("Should retrieve balanceOf(40000) Pruf tokens @account2", async () => {
         var Balance = [];
 
         return await UTIL_TKN.balanceOf(account2, { from: account1 }, function (_err, _result) {
@@ -301,7 +301,7 @@ contract('SPLIT', accounts => {
     })
 
 
-    it("Should retrieve balanceOf(63000) Pruf tokens @account3", async () => {
+    it("Should retrieve balanceOf(60000) Pruf tokens @account3", async () => {
         var Balance = [];
 
         return await UTIL_TKN.balanceOf(account3, { from: account1 }, function (_err, _result) {
@@ -320,7 +320,7 @@ contract('SPLIT', accounts => {
     })
 
 
-    it("Should retrieve balanceOf(84000) Pruf tokens @account4", async () => {
+    it("Should retrieve balanceOf(80000) Pruf tokens @account4", async () => {
         var Balance = [];
 
         return await UTIL_TKN.balanceOf(account4, { from: account1 }, function (_err, _result) {
@@ -340,7 +340,7 @@ contract('SPLIT', accounts => {
     })
 
 
-    it("Should retrieve balanceOf(115000) Pruf tokens @account5", async () => {
+    it("Should retrieve balanceOf(110000) Pruf tokens @account5", async () => {
         var Balance = [];
 
         return await UTIL_TKN.balanceOf(account5, { from: account1 }, function (_err, _result) {

@@ -242,7 +242,7 @@ contract('SPLIT', accounts => {
     })
 
 
-    it("Should retrieve balanceOf(84000) Pruf tokens @account2", async () => {
+    it("Should retrieve balanceOf(40000) Pruf tokens @account2", async () => {
         var Balance = [];
 
         return await UTIL_TKN.balanceOf(account2, { from: account1 }, function (_err, _result) {
@@ -262,7 +262,7 @@ contract('SPLIT', accounts => {
     })
 
 
-    it("Should retrieve balanceOf(105000) Pruf tokens @account5", async () => {
+    it("Should retrieve balanceOf(100000) Pruf tokens @account5", async () => {
         var Balance = [];
 
         return await UTIL_TKN.balanceOf(account5, { from: account1 }, function (_err, _result) {
