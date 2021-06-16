@@ -1,0 +1,106 @@
+/**--------------------------------------------------------PRüF0.8.0
+__/\\\\\\\\\\\\\ _____/\\\\\\\\\ _______/\\__/\\ ___/\\\\\\\\\\\\\\\        
+ _\/\\\/////////\\\ _/\\\///////\\\ ____\//__\//____\/\\\///////////__       
+  _\/\\\_______\/\\\_\/\\\_____\/\\\ ________________\/\\\ ____________      
+   _\/\\\\\\\\\\\\\/__\/\\\\\\\\\\\/_____/\\\____/\\\_\/\\\\\\\\\\\ ____     
+    _\/\\\/////////____\/\\\//////\\\ ___\/\\\___\/\\\_\/\\\///////______    
+     _\/\\\ ____________\/\\\ ___\//\\\ __\/\\\___\/\\\_\/\\\ ____________   
+      _\/\\\ ____________\/\\\ ____\//\\\ _\/\\\___\/\\\_\/\\\ ____________  
+       _\/\\\ ____________\/\\\ _____\//\\\_\//\\\\\\\\\ _\/\\\ ____________ 
+        _\/// _____________\/// _______\/// __\///////// __\/// _____________
+         *-------------------------------------------------------------------*/
+
+/**-----------------------------------------------------------------
+ *  TO DO
+ *
+ *-----------------------------------------------------------------
+ *-----------------------------------------------------------------
+ * Early Access Staking Specification V0.1
+ * EO Staking is a straght time-return staking model, based on Tokenized stakes.
+ * Each "stake" is a staking "contract" with the following params:
+ * amount  - Amount of stake
+ * interval - maturity interval of stake - also time to first maturity at formation
+ * startTime - Last Cycle - stake begin time or last paid time
+ * endTime - end of the current cycle (may be in the past in the case of post-maturity stakes)
+ * bonus - incentive paid per cycle
+ * 
+ * ----Behavior-----
+ *
+ * 1: Create the stake - Stake NFT is issued to the creator. A unuiqe stake is formed with the face value, bonus, start time, and interval chosen. (becomes tokenHolder)
+ * 2: payment can be taken at any time - will be the full amount or the fraction of the bonus amount (tokenholder)
+ * 3: At any time after the end of the stake, the stake can be broken. Breaking the stake pays all tokens and bonus to the stakeHolder, and destroys the stake token. (tokenholder)
+ * 
+ *---------------------------------------------------------------*/
+
+
+
+PRUF_EO_STAKING contract:
+
+Data structures: 
+stakes (amount, mintTime, startTime, interval, bonus)
+map "stake" tokenID -> stakes 
+
+Create misc front end functions for different stake minimums, times, and rewards. These call newStake.
+
+#this will be an internal function with external front ends made with various specs and minimums to form the stake offering variations
+newStake(amount, interval, endTime, bonus) #private 
+    stakeNumber ++
+    Mints a token to caller address with tokenId = stakeNumber
+
+    calls stakeVault.takeStake (stakeNumber, amount)
+
+    records stake[stakeNumber].amount, mintTime = now, starttime = now, interval, bonus
+
+takeBonus (tokenId) #require be tokenHolder , (now - starttime) > 24 hours #public
+    calls eligibleRewards to get payAmount
+    sets startTime = now
+
+    tokensLeft = rewardsVault.tokensInFund
+    if payAmount > tokensLeft payAmount = tokensLeft
+
+    calls rewardsVault.payRewards (tokenID,payAmount) 
+
+
+breakStake (tokenId) #require be tokenHolder , now > (mintTime + interval)  //must wait 24 hours since last takeBonus call or will throw in takeBonus #public
+    calls takeBonus (tokenId)
+    calls stakeVault.releaseStake(tokenId)
+    burn (tokenId)
+
+
+
+eligibleRewards (tokenId) #view
+    elapsed_micro-intervals = ( ( ( now-starttime ) * 1,000,000 )  / interval ) 
+
+            #if the collection perieod exceeds 1,000,000 intervals, there will be losses, 
+            #the fund will be exhausted so no problem of perpetuity overflowing the time calculations
+
+    rewards = (micro-intervals * bonus) / 1,000,000  
+    returns rewards
+
+stakeInfo(tokenId) #view
+    returns stake[tokenId] #maybe broken out into individual vars
+
+ ****************************************************************OTHER CONTRACTS REQUIRED
+ * PRUF_UTIL_TKN - StakeVault contract must have TRUSTED_AGENT role
+ *
+ * stakeToken - almost standard erc721 token. #Give minter and burn capability (MINTER_BURNER role) to PRUF_EO_STAKING contract.
+ *
+ * rewardsVault contract #is a contract that holds PRUF to send to stakers. It is funded by the team with the stake rewards amount as needed
+ *      payRewards(tokenId, amount) requires STAKE_PAYER role
+ *          Sends (amount) pruf to ownerOf(tokenId) 
+ *
+ *      #it will report its holdings using the tokensInFund function, which merely returns this.contract balance
+ * 
+ * stakeVault contract # holds stakes that were placed into its care.
+ *                     # keeps a map of tokenID to tokens moved mapping "stakedAmount" tokenID -> balance
+ *      takeStake(tokenID, amount), requires STAKE_ADMIN role
+ *          moves (amount)tokens from holder of(tokenID) into itself using trustedAgentTransfer.
+ *          stakedAmount[tokenId] = amount 
+ *      
+ *      releaseStake(tokenId), requires STAKE_ADMIN role
+ *          sends stakedAmount[tokenId] tokens to ownerOf(tokenId).
+ *          stakedAmount[tokenId] = 0 or delete stakedAmount[tokenId]
+ *          
+ *      #Allows inspection of stakes for each tokenID
+ * 
+ *      #it will report its holdings using the tokensInFund function, which merely returns this.contract balance
