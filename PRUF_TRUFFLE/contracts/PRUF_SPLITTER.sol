@@ -10,7 +10,7 @@ __/\\\\\\\\\\\\\ _____/\\\\\\\\\ _______/\\__/\\ ___/\\\\\\\\\\\\\\\
         _\/// _____________\/// _______\/// __\///////// __\/// _____________
          *-------------------------------------------------------------------*/
 
- /*-----------------------------------------------------------------
+/*-----------------------------------------------------------------
  * PRUF DOUBLER CONTRACT  -- requires MINTER_ROLE, (SNAPSHOT_ROLE), PAUSER_ROLE in UTIL_TKN
  *---------------------------------------------------------------*/
 
@@ -22,7 +22,7 @@ import "./Imports/access/AccessControl.sol";
 import "./Imports/utils/Pausable.sol";
 import "./Imports/utils/ReentrancyGuard.sol";
 
-contract SPLIT is ReentrancyGuard, Pausable, AccessControl { //CTS:EXAMINE cleaned up, added new function
+contract SPLIT is ReentrancyGuard, Pausable, AccessControl {
     //----------------------------ROLE DEFINITIONS
     bytes32 public constant PAUSER_ROLE = keccak256("PAUSER_ROLE");
     bytes32 public constant CONTRACT_ADMIN_ROLE =
@@ -51,7 +51,7 @@ contract SPLIT is ReentrancyGuard, Pausable, AccessControl { //CTS:EXAMINE clean
     modifier isContractAdmin() {
         require(
             hasRole(CONTRACT_ADMIN_ROLE, msg.sender),
-            "SPLIT:MOD-IA: must have CONTRACT_ADMIN_ROLE"
+            "SPLIT:MOD-ICA: must have CONTRACT_ADMIN_ROLE"
         );
         _;
     }
@@ -72,7 +72,7 @@ contract SPLIT is ReentrancyGuard, Pausable, AccessControl { //CTS:EXAMINE clean
     //----------------------External functions---------------------//
 
     /**
-     * @dev doubles pruf balance at snapshot snapshotID
+     * @dev doubles pruf balance at snapshotID(1)
      */
     function splitMyPruf() external whenNotPaused {
         require(
@@ -90,13 +90,13 @@ contract SPLIT is ReentrancyGuard, Pausable, AccessControl { //CTS:EXAMINE clean
     }
 
     /**
-     * @dev doubles pruf balance at snapshot snapshotID
+     * @dev doubles pruf balance at snapshotID(1)
      * @param _address - address to be split
      */
     function splitPrufAtAddress(address _address) external whenNotPaused {
         require(
             hasSplit[_address] == 0,
-            "SPLIT:SMP: Caller address has already been split"
+            "SPLIT:SMPAA: Caller address has already been split"
         );
         //^^^^^^^checks^^^^^^^^^
 
@@ -110,6 +110,7 @@ contract SPLIT is ReentrancyGuard, Pausable, AccessControl { //CTS:EXAMINE clean
 
     /**
      * @dev checks address for available split, returns balance of pruf to be split
+     * @param _address - address to be checked if eligible for split
      */
     function checkMyAddress(address _address) external view returns (uint256) {
         return hasSplit[_address];
