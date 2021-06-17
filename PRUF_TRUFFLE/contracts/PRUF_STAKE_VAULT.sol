@@ -60,20 +60,6 @@ contract STAKE_VAULT is
 
     /**
      * @dev Verify user credentials
-     * @param _tokenId token to check
-     * Originating Address:
-     *   require that user holds STAKE_TKN(_tokenId)
-     */
-    modifier isStakeHolder(uint256 _tokenId) {
-        require(
-            (STAKE_TKN.ownerOf(_tokenId) == _msgSender()),
-            "D:MOD-ITH: caller does not hold stake token"
-        );
-        _;
-    }
-
-    /**
-     * @dev Verify user credentials
      * Originating Address:
      *      Has role
      */
@@ -142,20 +128,21 @@ contract STAKE_VAULT is
 
     //--------------------------------------External functions--------------------------------------------//
 
-
-
     /**
      * @dev moves (amount)tokens from holder of(tokenID) into itself using trustedAgentTransfer, records the amount in stake map
      * @param _tokenId token to get stake for
      * @param _amount amount of stake to pull
      */
-    function takeStake(uint256 _tokenId, uint256 _amount) external isStakeAdmin nonReentrant {
+    function takeStake(uint256 _tokenId, uint256 _amount)
+        external
+        isStakeAdmin
+        nonReentrant
+    {
         address staker = STAKE_TKN.ownerOf(_tokenId);
 
         UTIL_TKN.trustedAgentTransfer(staker, address(this), _amount);
         stake[_tokenId] = _amount;
     }
-
 
     /**
      * @dev sends stakedAmount[tokenId] tokens to ownerOf(tokenId). updates the stake map
@@ -168,17 +155,11 @@ contract STAKE_VAULT is
         UTIL_TKN.transfer(staker, amount);
     }
 
-
     /**
      * @dev Returns the amount of tokens staked on (tokenId)
      * @param _tokenId token to check
      */
-    function stakeOfToken(uint256 _tokenId)
-        external view
-        returns (
-            uint256 
-        )
-    {
+    function stakeOfToken(uint256 _tokenId) external view returns (uint256) {
         return stake[_tokenId];
     }
 
