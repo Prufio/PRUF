@@ -438,7 +438,6 @@ interface UTIL_TKN_Interface {
     import "./Imports/utils/ReentrancyGuard.sol";
  */
 interface AC_TKN_Interface {
-
     /*
      * @dev Mints assetClass token, must be isContractAdmin
      */
@@ -447,7 +446,6 @@ interface AC_TKN_Interface {
         uint256 tokenId,
         string calldata _tokenURI
     ) external returns (uint256);
-
 
     /**
      * @dev Transfers the ownership of a given token ID to another address.
@@ -570,16 +568,20 @@ interface AC_TKN_Interface {
     import "./Imports/utils/ReentrancyGuard.sol";
  */
 interface STAKE_TKN_Interface {
-
-    /*
-     * @dev Mints assetClass token, must be isContractAdmin
+    /**
+     * @dev Mints Stake Token * Requires the _msgSender() to have MINTER_ROLE
+     * @param _recipientAddress address to receive the token
+     * @param _tokenId Token ID to mint
      */
-    function mintStakeToken(
-        address _recipientAddress,
-        uint256 tokenId,
-        string calldata _tokenURI
-    ) external returns (uint256);
+    function mintStakeToken(address _recipientAddress, uint256 _tokenId)
+        external
+        returns (uint256);
 
+    /**
+     * @dev Burn a stake token
+     * @param _tokenId - Token ID to burn
+     */
+    function burnStakeToken(uint256 _tokenId) external returns (uint256);
 
     /**
      * @dev Transfers the ownership of a given token ID to another address.
@@ -720,7 +722,6 @@ interface A_TKN_Interface {
         uint256 tokenId,
         string calldata _tokenURI
     ) external returns (uint256);
-
 
     /*
      * @dev Set new token URI String
