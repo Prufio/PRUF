@@ -69,19 +69,6 @@ contract STAKE_TKN is
 
     //----------------------Modifiers----------------------//
 
-    // /**
-    //  * @dev Verify user credentials
-    //  * Originating Address:
-    //  *      has CONTRACT_ADMIN_ROLE
-    //  */
-    // modifier isContractAdmin() {
-    //     require(
-    //         hasRole(CONTRACT_ADMIN_ROLE, _msgSender()),
-    //         "AT:MOD-IA: Calling address !contract admin"
-    //     );
-    //     _;
-    // }
-
     /**
      * @dev Verify user credentials
      * Originating Address:
@@ -106,17 +93,18 @@ contract STAKE_TKN is
      * @param _tokenId - Token ID to mint
      * returns Token ID of minted token
      */
-    function mintStakeToken(
-        address _recipientAddress,
-        uint256 _tokenId
-    ) external isMinter nonReentrant returns (uint256) {
+    function mintStakeToken(address _recipientAddress, uint256 _tokenId)
+        external
+        isMinter
+        nonReentrant
+        returns (uint256)
+    {
         //^^^^^^^checks^^^^^^^^^
 
         _safeMint(_recipientAddress, _tokenId);
         return _tokenId;
         //^^^^^^^interactions^^^^^^^^^
     }
-
 
     /**
      * @dev Transfers the ownership of a given token ID to another address.
