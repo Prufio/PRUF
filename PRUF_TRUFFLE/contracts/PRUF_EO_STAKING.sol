@@ -12,7 +12,7 @@ __/\\\\\\\\\\\\\ _____/\\\\\\\\\ _______/\\__/\\ ___/\\\\\\\\\\\\\\\
 
 /**-----------------------------------------------------------------
  *  TO DO
- *
+ * flesh out functions , Create misc front end functions for different stake minimums, times, and rewards. These call newStake.
  *-----------------------------------------------------------------
  *-----------------------------------------------------------------
  * Early Access Staking Specification V0.1
@@ -23,28 +23,14 @@ __/\\\\\\\\\\\\\ _____/\\\\\\\\\ _______/\\__/\\ ___/\\\\\\\\\\\\\\\
  * startTime - Last Cycle - stake begin time or last paid time
  * endTime - end of the current cycle (may be in the past in the case of post-maturity stakes)
  * bonus - incentive paid per cycle
- * 
+ *
  * ----Behavior-----
  *
  * 1: Create the stake - Stake NFT is issued to the creator. A unuiqe stake is formed with the face value, bonus, start time, and interval chosen. (becomes tokenHolder)
  * 2: payment can be taken at any time - will be the full amount or the fraction of the bonus amount (tokenholder)
  * 3: At any time after the end of the stake, the stake can be broken. Breaking the stake pays all tokens and bonus to the stakeHolder, and destroys the stake token. (tokenholder)
- * 
- *---------------------------------------------------------------
-
-
-
-PRUF_EO_STAKING contract:
-
-Data structures: 
-stakes (amount, mintTime, startTime, interval, bonus)
-map "stake" tokenID -> stakes 
-
-Create misc front end functions for different stake minimums, times, and rewards. These call newStake.
-
-#this will be an internal function with external front ends made with various specs and minimums to form the stake offering variations
-
-*/
+ *
+ *---------------------------------------------------------------*/
 
 // SPDX-License-Identifier: UNLICENSED
 pragma solidity ^0.8.0;
@@ -168,7 +154,7 @@ contract EO_STAKING is
 
     calls rewardsVault.payRewards (tokenID,payAmount) 
     */
-    function takeBonus (uint256 _tokenId) isStakeHolder(_tokenId) public {}
+    function takeBonus(uint256 _tokenId) public isStakeHolder(_tokenId) {}
 
     /**
     breakStake (tokenId) #require be tokenHolder , now > (mintTime + interval)  //must wait 24 hours since last takeBonus call or will throw in takeBonus #public
@@ -177,7 +163,7 @@ contract EO_STAKING is
     burn (tokenId)
 
     */
-    function breakStake (uint256 _tokenId) isStakeHolder(_tokenId) public {}
+    function breakStake(uint256 _tokenId) public isStakeHolder(_tokenId) {}
 
     /**
     eligibleRewards (tokenId) #view
@@ -190,14 +176,13 @@ contract EO_STAKING is
     returns rewards
     
     */
-    function eligibleRewards (uint256 _tokenId) view public {}
+    function eligibleRewards(uint256 _tokenId) public view {}
 
     /**
     stakeInfo(tokenId) #view
     returns stake[tokenId] #maybe broken out into individual vars
     */
-    function stakeInfo (uint256 _tokenId) view public {}
-
+    function stakeInfo(uint256 _tokenId) public view {}
 
     /**
      * @dev Compliance for erc721 reciever
@@ -241,5 +226,10 @@ contract EO_STAKING is
 
     records stake[stakeNumber].amount, mintTime = now, starttime = now, interval, bonus
     */
-    function newStake(uint256 _amount, uint256 _interval, uint256 _endTime, uint256 _bonus) private {}
+    function newStake(
+        uint256 _amount,
+        uint256 _interval,
+        uint256 _endTime,
+        uint256 _bonus
+    ) private {}
 }
