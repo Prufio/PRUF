@@ -89,7 +89,7 @@ stakeInfo(tokenId) #view
  *      payRewards(tokenId, amount) requires STAKE_PAYER role
  *          Sends (amount) pruf to ownerOf(tokenId) 
  *
- *      #it will report its holdings using the tokensInFund function, which merely returns this.contract balance
+ *      #it will report its holdings using the totalInFund function, which merely returns this.contract balance
  * 
  * stakeVault contract # holds stakes that were placed into its care.
  *                     # keeps a map of tokenID to tokens moved mapping "stakedAmount" tokenID -> balance
@@ -103,4 +103,4 @@ stakeInfo(tokenId) #view
  *          
  *      #Allows inspection of stakes for each tokenID
  * 
- *      #it will report its holdings using the tokensInFund function, which merely returns this.contract balance
+ *      #it will report its holdings using the totalInFund function, which merely returns this.contract balance
