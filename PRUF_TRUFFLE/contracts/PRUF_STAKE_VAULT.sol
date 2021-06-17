@@ -17,24 +17,8 @@ __/\\\\\\\\\\\\\ _____/\\\\\\\\\ _______/\\__/\\ ___/\\\\\\\\\\\\\\\
  * TO BE CLOSELY EXAMINED IN THIS CONTRACT AS THEY WILL BE INHERITED NEARLY GLOBALLY
  *-----------------------------------------------------------------
  *-----------------------------------------------------------------
- *PRUF basic provides core data structures and functionality to PRUF contracts.
- *Features include contract name resolution, and getters for records, users, and asset class information.
- *---------------------------------------------------------------
- *
- * stakeVault contract # holds stakes that were placed into its care.
- *                     # keeps a map of tokenID to tokens moved mapping "stakedAmount" tokenID -> balance
- *      takeStake(tokenID, amount), requires STAKE_ADMIN role
- *          moves (amount)tokens from holder of(tokenID) into itself using trustedAgentTransfer.
- *          stakedAmount[tokenId] = amount 
- *      
- *      releaseStake(tokenId), requires STAKE_ADMIN role
- *          sends stakedAmount[tokenId] tokens to ownerOf(tokenId).
- *          stakedAmount[tokenId] = 0 or delete stakedAmount[tokenId]
- *          
- *      #Allows inspection of stakes for each tokenID
- * 
- *      #it will report its holdings using the totalInFund function, which merely returns this.contract balance
- */
+ *PRUF stakeVault holds stakes that were placed into its care.
+ *---------------------------------------------------------------*/
 
 // SPDX-License-Identifier: UNLICENSED
 pragma solidity ^0.8.0;
@@ -52,9 +36,12 @@ contract STAKE_VAULT is
     IERC721Receiver,
     Pausable
 {
+    mapping(uint256 => uint256) private stake; // holds the stake parameters for each stake tokenId
+
     bytes32 public constant CONTRACT_ADMIN_ROLE =
         keccak256("CONTRACT_ADMIN_ROLE");
     bytes32 public constant PAUSER_ROLE = keccak256("PAUSER_ROLE");
+    bytes32 public constant STAKE_ADMIN_ROLE = keccak256("STAKE_ADMIN_ROLE");
     bytes32 public constant ASSET_TXFR_ROLE = keccak256("ASSET_TXFR_ROLE");
 
     address internal UTIL_TKN_Address;
@@ -71,16 +58,15 @@ contract STAKE_VAULT is
 
     // --------------------------------------Modifiers--------------------------------------------//
 
-    /*
+    /**
      * @dev Verify user credentials
-     * //CTS:EXAMINE param
-     * //CTS:EXAMINE param
+     * @param _tokenId token to check
      * Originating Address:
-     *   require that user holds token @ ID-Contract
+     *   require that user holds STAKE_TKN(_tokenId)
      */
-    modifier isStakeHolder(uint256 _tokenID) {
+    modifier isStakeHolder(uint256 _tokenId) {
         require(
-            (STAKE_TKN.ownerOf(_tokenID) == _msgSender()),
+            (STAKE_TKN.ownerOf(_tokenId) == _msgSender()),
             "D:MOD-ITH: caller does not hold stake token"
         );
         _;
@@ -89,12 +75,20 @@ contract STAKE_VAULT is
     /**
      * @dev Verify user credentials
      * Originating Address:
-     *      is contract admin
+     *      Has role
      */
     modifier isContractAdmin() {
         require(
             hasRole(CONTRACT_ADMIN_ROLE, _msgSender()),
             "B:MOD:-IADM Caller !CONTRACT_ADMIN_ROLE"
+        );
+        _;
+    }
+
+    modifier isStakeAdmin() {
+        require(
+            hasRole(STAKE_ADMIN_ROLE, _msgSender()),
+            "B:MOD:-IADM Caller !STAKE_ADMIN_ROLE"
         );
         _;
     }
@@ -147,6 +141,47 @@ contract STAKE_VAULT is
     }
 
     //--------------------------------------External functions--------------------------------------------//
+
+
+
+    /**
+     * @dev moves (amount)tokens from holder of(tokenID) into itself using trustedAgentTransfer, records the amount in stake map
+     * @param _tokenId token to get stake for
+     * @param _amount amount of stake to pull
+     */
+    function takeStake(uint256 _tokenId, uint256 _amount) external isStakeAdmin nonReentrant {
+        address staker = STAKE_TKN.ownerOf(_tokenId);
+
+        UTIL_TKN.trustedAgentTransfer(staker, address(this), _amount);
+        stake[_tokenId] = _amount;
+    }
+
+
+    /**
+     * @dev sends stakedAmount[tokenId] tokens to ownerOf(tokenId). updates the stake map
+     * @param _tokenId token to get stake for
+     */
+    function releaseStake(uint256 _tokenId) external isStakeAdmin nonReentrant {
+        address staker = STAKE_TKN.ownerOf(_tokenId);
+        uint256 amount = stake[_tokenId];
+        delete stake[_tokenId];
+        UTIL_TKN.transfer(staker, amount);
+    }
+
+
+    /**
+     * @dev Returns the amount of tokens staked on (tokenId)
+     * @param _tokenId token to check
+     */
+    function stakeOfToken(uint256 _tokenId)
+        external view
+        returns (
+            uint256 
+        )
+    {
+        return stake[_tokenId];
+    }
+
     /**
      * @dev Compliance for erc721 reciever
      * See OZ documentation
@@ -162,7 +197,7 @@ contract STAKE_VAULT is
         //^^^^^^^interactions^^^^^^^^^
     }
 
-    /***
+    /**
      * @dev Triggers stopped state. (pausable)
      *
      */
@@ -170,12 +205,16 @@ contract STAKE_VAULT is
         _pause();
     }
 
-    /***
+    /**
      * @dev Returns to normal state. (pausable)
      */
 
     function unpause() external isPauser {
         _unpause();
+    }
+
+    function totalInFund() public {
+        UTIL_TKN.balanceOf(address(this));
     }
 
     //--------------------------------------------------------------------------------------INTERNAL functions
