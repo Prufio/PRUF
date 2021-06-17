@@ -9,17 +9,17 @@ __/\\\\\\\\\\\\\ _____/\\\\\\\\\ _______/\\__/\\ ___/\\\\\\\\\\\\\\\
        _\/\\\ ____________\/\\\ _____\//\\\_\//\\\\\\\\\ _\/\\\ ____________ 
         _\/// _____________\/// _______\/// __\///////// __\/// _____________
          *-------------------------------------------------------------------*/
-         
+
 /**-----------------------------------------------------------------
-*  TO DO
-*
-* IMPORTANT!!! EXTERNAL OR PUBLIC FUNCTIONS WITHOUTSTRICT PERMISSIONING NEED 
-* TO BE CLOSELY EXAMINED IN THIS CONTRACT AS THEY WILL BE INHERITED NEARLY GLOBALLY
-*-----------------------------------------------------------------
-*-----------------------------------------------------------------
-*PRUF basic provides core data structures and functionality to PRUF contracts.
-*Features include contract name resolution, and getters for records, users, and asset class information.
-*---------------------------------------------------------------*/
+ *  TO DO
+ *
+ * IMPORTANT!!! EXTERNAL OR PUBLIC FUNCTIONS WITHOUTSTRICT PERMISSIONING NEED
+ * TO BE CLOSELY EXAMINED IN THIS CONTRACT AS THEY WILL BE INHERITED NEARLY GLOBALLY
+ *-----------------------------------------------------------------
+ *-----------------------------------------------------------------
+ *PRUF basic provides core data structures and functionality to PRUF contracts.
+ *Features include contract name resolution, and getters for records, users, and asset class information.
+ *---------------------------------------------------------------*/
 
 // SPDX-License-Identifier: UNLICENSED
 pragma solidity ^0.8.0;
@@ -31,7 +31,7 @@ import "./Imports/utils/ReentrancyGuard.sol";
 import "./Imports/token/ERC721/IERC721.sol";
 import "./Imports/token/ERC721/IERC721Receiver.sol";
 
-contract R_VAULT is
+contract REWARDS_VAULT is
     ReentrancyGuard,
     AccessControl,
     IERC721Receiver,
@@ -55,7 +55,6 @@ contract R_VAULT is
     }
 
     // --------------------------------------Modifiers--------------------------------------------//
-
 
     /*
      * @dev Verify user credentials
@@ -101,12 +100,12 @@ contract R_VAULT is
      * @param _tokenId - token ID
      * @param _ERC721Contract - token contract address
      */
-    function transferERC721Token(address _to, uint256 _tokenId, address _ERC721Contract)
-        external
-        virtual
-        nonReentrant
-    {
-        require( 
+    function transferERC721Token(
+        address _to,
+        uint256 _tokenId,
+        address _ERC721Contract
+    ) external virtual nonReentrant {
+        require(
             hasRole(ASSET_TXFR_ROLE, _msgSender()),
             "B:TX:Must have ASSET_TXFR_ROLE"
         );
@@ -116,17 +115,15 @@ contract R_VAULT is
         //^^^^^^^interactions^^^^^^^^^
     }
 
-
     /**
-     * @dev Set address of STOR contract to interface with 
+     * @dev Set address of STOR contract to interface with
      * @param _utilAddress address of UTIL_TKN
      * @param _stakeAddress address of STAKE_TKN
      */
-    function Admin_setTokenContracts(address _utilAddress, address _stakeAddress)
-        external
-        virtual
-        isContractAdmin 
-    {
+    function Admin_setTokenContracts(
+        address _utilAddress,
+        address _stakeAddress
+    ) external virtual isContractAdmin {
         //^^^^^^^checks^^^^^^^^^
 
         UTIL_TKN = UTIL_TKN_Interface(_utilAddress);
@@ -137,7 +134,7 @@ contract R_VAULT is
     //--------------------------------------External functions--------------------------------------------//
     /**
      * @dev Compliance for erc721 reciever
-     * See OZ documentation 
+     * See OZ documentation
      */
     function onERC721Received(
         address,
@@ -167,9 +164,4 @@ contract R_VAULT is
     }
 
     //--------------------------------------------------------------------------------------INTERNAL functions
-
-
-
-
-
 }
