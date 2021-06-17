@@ -123,6 +123,7 @@ contract REWARDS_VAULT is
         nonReentrant
     {
         //^^^^^^^checks^^^^^^^^^
+
         address recipient = STAKE_TKN.ownerOf(_tokenId);
         UTIL_TKN.transferFrom(address(this), recipient, _amount);
         //^^^^^^^interactions^^^^^^^^
