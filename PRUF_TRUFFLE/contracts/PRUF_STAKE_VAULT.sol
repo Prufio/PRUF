@@ -19,7 +19,22 @@ __/\\\\\\\\\\\\\ _____/\\\\\\\\\ _______/\\__/\\ ___/\\\\\\\\\\\\\\\
  *-----------------------------------------------------------------
  *PRUF basic provides core data structures and functionality to PRUF contracts.
  *Features include contract name resolution, and getters for records, users, and asset class information.
- *---------------------------------------------------------------*/
+ *---------------------------------------------------------------
+ *
+ * stakeVault contract # holds stakes that were placed into its care.
+ *                     # keeps a map of tokenID to tokens moved mapping "stakedAmount" tokenID -> balance
+ *      takeStake(tokenID, amount), requires STAKE_ADMIN role
+ *          moves (amount)tokens from holder of(tokenID) into itself using trustedAgentTransfer.
+ *          stakedAmount[tokenId] = amount 
+ *      
+ *      releaseStake(tokenId), requires STAKE_ADMIN role
+ *          sends stakedAmount[tokenId] tokens to ownerOf(tokenId).
+ *          stakedAmount[tokenId] = 0 or delete stakedAmount[tokenId]
+ *          
+ *      #Allows inspection of stakes for each tokenID
+ * 
+ *      #it will report its holdings using the totalInFund function, which merely returns this.contract balance
+ */
 
 // SPDX-License-Identifier: UNLICENSED
 pragma solidity ^0.8.0;
@@ -31,7 +46,7 @@ import "./Imports/utils/ReentrancyGuard.sol";
 import "./Imports/token/ERC721/IERC721.sol";
 import "./Imports/token/ERC721/IERC721Receiver.sol";
 
-contract REWARDS_VAULT is
+contract STAKE_VAULT is
     ReentrancyGuard,
     AccessControl,
     IERC721Receiver,
