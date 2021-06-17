@@ -1591,3 +1591,56 @@ interface APP_Interface {
 interface APP_NC_Interface {
     function transferAssetToken(address _to, bytes32 _idxHash) external;
 }
+
+/*
+ * @dev Interface for EO_STAKING
+ * INHERIANCE:
+    import "./Imports/access/AccessControl.sol";
+    import "./Imports/utils/Pausable.sol";
+    import "./Imports/utils/ReentrancyGuard.sol";
+    import "./Imports/token/ERC721/IERC721.sol";
+    import "./Imports/token/ERC721/IERC721Receiver.sol";
+ */
+interface EO_STAKING_Interface {
+    function takeBonus(uint256 _tokenId) external;
+
+    function breakStake(uint256 _tokenId) external;
+
+    function eligibleRewards(uint256 _tokenId) external;
+
+    function stakeInfo(uint256 _tokenId) external;
+}
+
+/*
+ * @dev Interface for STAKE_VAULT
+ * INHERIANCE:
+    import "./Imports/access/AccessControl.sol";
+    import "./Imports/utils/Pausable.sol";
+    import "./Imports/utils/ReentrancyGuard.sol";
+    import "./Imports/token/ERC721/IERC721.sol";
+    import "./Imports/token/ERC721/IERC721Receiver.sol";
+ */
+interface STAKE_VAULT_Interface {
+    function takeStake(uint256 _tokenID, uint256 _amount) external;
+
+    function releaseStake(uint256 _tokenID) external;
+
+    function stakeForToken(uint256 _tokenID) external returns (uint256);
+
+    function totalInFund() external returns (uint256);
+}
+
+/*
+ * @dev Interface for REWARDS_VAULT
+ * INHERIANCE:
+    import "./Imports/access/AccessControl.sol";
+    import "./Imports/utils/Pausable.sol";
+    import "./Imports/utils/ReentrancyGuard.sol";
+    import "./Imports/token/ERC721/IERC721.sol";
+    import "./Imports/token/ERC721/IERC721Receiver.sol";
+ */
+interface REWARDS_VAULT_Interface {
+    function payRewards(uint256 _tokenId, uint256 _amount) external;
+
+    function totalInFund() external returns (uint256);
+}
