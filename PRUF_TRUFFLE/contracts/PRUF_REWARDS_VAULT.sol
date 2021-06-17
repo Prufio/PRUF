@@ -134,6 +134,7 @@ contract REWARDS_VAULT is
         external
         isStakePayer
         whenNotPaused
+        nonReentrant
     {
         //^^^^^^^checks^^^^^^^^^
         address recipient = STAKE_TKN.ownerOf(_tokenId);
