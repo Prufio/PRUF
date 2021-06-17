@@ -31,10 +31,9 @@ import "./Imports/utils/ReentrancyGuard.sol";
 /**
  * @dev {ERC721} token, including:
  *
- *  - ability for holders to burn (destroy) their tokens
+ *  - ability for the minter to burn (destroy) their tokens
  *  - a minter role that allows for token minting (creation)
  *  - a pauser role that allows to stop all token transfers
- *  - token ID and URI autogeneration
  *
  * This contract uses {AccessControl} to lock permissioned functions using the
  * different roles - head to its documentation for details.
@@ -85,13 +84,12 @@ contract STAKE_TKN is
     //----------------------Events----------------------//
     event REPORT(string _msg);
 
-    //----------------------Admin functions / isContractAdmin or isMinter----------------------//
+    //---------------------- isMinter ----------------------//
 
     /**
-     * @dev Mint an Asset token
+     * @dev Mint a stake token
      * @param _recipientAddress - Address to mint token into
      * @param _tokenId - Token ID to mint
-     * returns Token ID of minted token
      */
     function mintStakeToken(address _recipientAddress, uint256 _tokenId)
         external
@@ -102,6 +100,23 @@ contract STAKE_TKN is
         //^^^^^^^checks^^^^^^^^^
 
         _safeMint(_recipientAddress, _tokenId);
+        return _tokenId;
+        //^^^^^^^interactions^^^^^^^^^
+    }
+
+    /**
+     * @dev Burn a stake token
+     * @param _tokenId - Token ID to burn
+     */
+    function burnStakeToken(uint256 _tokenId)
+        external
+        isMinter
+        nonReentrant
+        returns (uint256)
+    {
+        //^^^^^^^checks^^^^^^^^^
+
+        _burn(_tokenId);
         return _tokenId;
         //^^^^^^^interactions^^^^^^^^^
     }
