@@ -138,10 +138,14 @@ contract STAKE_VAULT is
         isStakeAdmin
         nonReentrant
     {
+        //^^^^^^^checks^^^^^^^^^
+
         address staker = STAKE_TKN.ownerOf(_tokenId);
+        stake[_tokenId] = _amount;
+        //^^^^^^^effects^^^^^^^^^
 
         UTIL_TKN.trustedAgentTransfer(staker, address(this), _amount);
-        stake[_tokenId] = _amount;
+        //^^^^^^^interactions^^^^^^^^^
     }
 
     /**
@@ -149,10 +153,15 @@ contract STAKE_VAULT is
      * @param _tokenId token to get stake for
      */
     function releaseStake(uint256 _tokenId) external isStakeAdmin nonReentrant {
+        //^^^^^^^checks^^^^^^^^^
+
         address staker = STAKE_TKN.ownerOf(_tokenId);
         uint256 amount = stake[_tokenId];
         delete stake[_tokenId];
+        //^^^^^^^effects^^^^^^^^^
+
         UTIL_TKN.transfer(staker, amount);
+        //^^^^^^^interactions^^^^^^^^^
     }
 
     /**
@@ -161,6 +170,7 @@ contract STAKE_VAULT is
      */
     function stakeOfToken(uint256 _tokenId) external view returns (uint256) {
         return stake[_tokenId];
+        //^^^^^^^interactions^^^^^^^^^
     }
 
     /**
@@ -174,6 +184,7 @@ contract STAKE_VAULT is
         bytes calldata
     ) external virtual override returns (bytes4) {
         //^^^^^^^checks^^^^^^^^^
+
         return this.onERC721Received.selector;
         //^^^^^^^interactions^^^^^^^^^
     }
@@ -192,10 +203,6 @@ contract STAKE_VAULT is
 
     function unpause() external isPauser {
         _unpause();
-    }
-
-    function totalInFund() public {
-        UTIL_TKN.balanceOf(address(this));
     }
 
     //--------------------------------------------------------------------------------------INTERNAL functions

@@ -179,8 +179,4 @@ contract REWARDS_VAULT is
     function unpause() external isPauser {
         _unpause();
     }
-
-    function totalInFund() public {
-        UTIL_TKN.balanceOf(address(this));
-    }
 }

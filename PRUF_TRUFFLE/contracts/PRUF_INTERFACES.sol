@@ -1634,8 +1634,6 @@ interface STAKE_VAULT_Interface {
     function releaseStake(uint256 _tokenID) external;
 
     function stakeOfToken(uint256 _tokenID) external returns (uint256 stake);
-
-    function totalInFund() external returns (uint256);
 }
 
 /*
@@ -1649,6 +1647,4 @@ interface STAKE_VAULT_Interface {
  */
 interface REWARDS_VAULT_Interface {
     function payRewards(uint256 _tokenId, uint256 _amount) external;
-
-    function totalInFund() external returns (uint256);
 }
