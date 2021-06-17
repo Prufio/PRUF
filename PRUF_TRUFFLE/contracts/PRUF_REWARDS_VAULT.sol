@@ -63,20 +63,6 @@ contract REWARDS_VAULT is
 
     /**
      * @dev Verify user credentials
-     * @param _tokenID Stake token ID
-     * Originating Address:
-     *   require that user holds token @ ID-Contract
-     */
-    modifier isStakeHolder(uint256 _tokenID) {
-        require(
-            (STAKE_TKN.ownerOf(_tokenID) == _msgSender()),
-            "D:MOD-ITH: caller does not hold stake token"
-        );
-        _;
-    }
-
-    /**
-     * @dev Verify user credentials
      * Originating Address:
      *      Has appropriate role
      */
