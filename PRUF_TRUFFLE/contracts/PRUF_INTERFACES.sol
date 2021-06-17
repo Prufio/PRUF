@@ -1633,7 +1633,7 @@ interface STAKE_VAULT_Interface {
 
     function releaseStake(uint256 _tokenID) external;
 
-    function stakeByToken(uint256 _tokenID) external returns (uint256 stake);
+    function stakeOfToken(uint256 _tokenID) external returns (uint256 stake);
 
     function totalInFund() external returns (uint256);
 }
