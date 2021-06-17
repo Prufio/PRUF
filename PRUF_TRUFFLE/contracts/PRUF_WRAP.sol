@@ -104,7 +104,7 @@ contract WRAP is CORE {
             _msgSender(),
             address(this),
             _foreignTokenID
-        ); // move token to this contract //CTS:EXAMINE this wont work??? no permission
+        ); // move token to this contract 
 
         if (rec.assetClass == 0) {
             //record does not exist
