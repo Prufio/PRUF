@@ -113,6 +113,14 @@ struct ID {
     string userName; //admin only///caller address match can set
 }
 
+struct Stakes {
+        uint256 stakedAmount; //tokens in stake
+        uint256 mintTime; //blocktime of creation
+        uint256 startTime; //blocktime of creation or most recent payout
+        uint256 interval; //staking interval in seconds
+        uint256 bonus; //bonus tokens earned per interval
+}
+
 /*
  * @dev Interface for UTIL_TKN
  * INHERIANCE:
