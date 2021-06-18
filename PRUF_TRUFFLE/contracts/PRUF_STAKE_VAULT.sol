@@ -145,10 +145,10 @@ contract STAKE_VAULT is
         //^^^^^^^checks^^^^^^^^^
 
         address staker = STAKE_TKN.ownerOf(_tokenId);
-        stake[_tokenId] = _amount;
         //^^^^^^^effects^^^^^^^^^
 
         UTIL_TKN.trustedAgentTransfer(staker, address(this), _amount);
+        stake[_tokenId] = _amount;
         //^^^^^^^interactions^^^^^^^^^
     }
 
