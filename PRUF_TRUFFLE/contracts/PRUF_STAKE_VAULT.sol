@@ -111,7 +111,7 @@ contract STAKE_VAULT is
     }
 
     /**
-     * @dev Set address of STOR contract to interface with
+     * @dev Set address of contracts to interface with
      * @param _utilAddress address of UTIL_TKN
      * @param _stakeAddress address of STAKE_TKN
      */
@@ -121,8 +121,11 @@ contract STAKE_VAULT is
     ) external virtual isContractAdmin {
         //^^^^^^^checks^^^^^^^^^
 
-        UTIL_TKN = UTIL_TKN_Interface(_utilAddress);
-        STAKE_TKN = STAKE_TKN_Interface(_stakeAddress);
+        UTIL_TKN_Address = _utilAddress;
+        UTIL_TKN = UTIL_TKN_Interface(UTIL_TKN_Address);
+
+        STAKE_TKN_Address = _stakeAddress;
+        STAKE_TKN = STAKE_TKN_Interface(STAKE_TKN_Address);
         //^^^^^^^effects^^^^^^^^^
     }
 
