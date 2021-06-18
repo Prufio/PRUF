@@ -140,6 +140,7 @@ contract STAKE_VAULT is
         external
         isStakeAdmin
         nonReentrant
+        whenNotPaused
     {
         //^^^^^^^checks^^^^^^^^^
 
@@ -155,7 +156,12 @@ contract STAKE_VAULT is
      * @dev sends stakedAmount[tokenId] tokens to ownerOf(tokenId). updates the stake map
      * @param _tokenId token to get stake for
      */
-    function releaseStake(uint256 _tokenId) external isStakeAdmin nonReentrant {
+    function releaseStake(uint256 _tokenId)
+        external
+        isStakeAdmin
+        nonReentrant
+        whenNotPaused
+    {
         //^^^^^^^checks^^^^^^^^^
 
         address staker = STAKE_TKN.ownerOf(_tokenId);
