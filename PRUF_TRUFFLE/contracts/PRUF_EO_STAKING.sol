@@ -69,6 +69,19 @@ contract EO_STAKING is
 
     mapping(uint256 => Stake) private stake; // stake data
 
+    struct StakingTier {
+        uint256 minimum;
+        uint256 maximum;
+        uint256 interval;
+        uint256 bonus;
+    }
+    //--------------------------------------------------------------------------------------------CHECK before deploying!!!!
+    uint256 constant seconds_in_a_day = 1; //adjust for test contracts only. normal = 86400           !!!!!!!!!!!!!!!!
+    //uint256 constant seconds_in_a_day = 86400;   //adjust for test contracts only. normal = 86400     !!!!!!!!!!!!!!!!
+    //--------------------------------------------------------------------------------------------CHECK before deploying!!!!
+
+    mapping(uint256 => StakingTier) private stakeTier; //stake level parameters
+
     constructor() {
         _setupRole(DEFAULT_ADMIN_ROLE, _msgSender());
         _setupRole(CONTRACT_ADMIN_ROLE, _msgSender());
@@ -161,7 +174,55 @@ contract EO_STAKING is
         //^^^^^^^effects^^^^^^^^^
     }
 
+    /**
+     * @dev Set stake parameters
+     * @param _stakeTier Staking level to set
+     * @param _min Minumum stake
+     * @param _max Maximum stake
+     * @param _interval staking interval, in dayUnits - set to 1 second for testing, 86400 for production
+     * @param _bonus bonus in tenths of a pervent: 15 = 1.5% or 15/1000 per interval. Calculated to a fixed amount of tokens in the actual stake
+     */
+    function Admin_setStakeLevels(
+        uint256 _stakeTier,
+        uint256 _min,
+        uint256 _max,
+        uint256 _interval,
+        uint256 _bonus
+    ) external virtual isContractAdmin {
+        require(
+            _interval >= 2,
+            "PES:SMT: minumum allwable time for stake is 2 days"
+        );
+        //^^^^^^^checks^^^^^^^^^
+        stakeTier[_stakeTier].minimum = _min;
+        stakeTier[_stakeTier].maximum = _max;
+        stakeTier[_stakeTier].interval = _interval;
+        stakeTier[_stakeTier].bonus = _bonus;
+        //^^^^^^^effects^^^^^^^^^
+    }
+
     //--------------------------------------External functions--------------------------------------------//
+
+    /**
+     * @dev Create a new stake
+     * @param _amount stake token amount
+     */
+    function stakeMyTokens(uint256 _amount, uint256 _stakeTier) external {
+        StakingTier memory thisStakeTier = stakeTier[_stakeTier];
+        require(thisStakeTier.maximum > 0, "PES:SMT: Inactive Staking tier");
+        require(
+            _amount <= thisStakeTier.maximum,
+            "PES:SMT: Stake above maximum for this tier."
+        );
+        require(
+            _amount >= thisStakeTier.minimum,
+            "PES:SMT: Stake below minumum for this tier."
+        );
+
+        uint256 thisBonus = (_amount / 1000) * thisStakeTier.bonus; // calculate the fixed number of tokens to be paid each interval
+
+        newStake(_amount, thisStakeTier.interval, thisBonus);
+    }
 
     /**
      * @dev Transfers eligible rewards to staker, resets last payment time
@@ -194,9 +255,8 @@ contract EO_STAKING is
         //^^^^^^^interactions^^^^^^^^^
     }
 
-
     /**
-     * @dev Transfers eligible rewards to staker, resets last payment time, 
+     * @dev Transfers eligible rewards to staker, resets last payment time,
      * @param _tokenId token id to check
      */
     function breakStake(uint256 _tokenId)
@@ -209,7 +269,8 @@ contract EO_STAKING is
         Stake memory thisStake = stake[_tokenId];
 
         require(
-            block.timestamp > (thisStake.mintTime + thisStake.interval), // 1 day in seconds
+            block.timestamp >
+                (thisStake.mintTime + (thisStake.interval * seconds_in_a_day)),
             "PES:BS: must wait until stake period has elapsed"
         );
         require(
@@ -242,11 +303,32 @@ contract EO_STAKING is
 
         uint256 elapsedMicroIntervals =
             (((block.timestamp - thisStake.startTime) * 1000000) /
-                thisStake.interval); //microIntervals since stake start or last payout
+                (thisStake.interval * seconds_in_a_day)); //microIntervals since stake start or last payout
 
         uint256 reward = (elapsedMicroIntervals * thisStake.bonus) / 1000000;
 
         return (reward);
+    }
+
+    /**
+     * @dev Check eligible rewards amount for a stake, for verification (may want to remove for production)
+     * returns reward + microIntervals
+     * @param _tokenId token id to check
+     */
+    function checkEligibleRewards(uint256 _tokenId)
+        public
+        view
+        returns (uint256, uint256)
+    {
+        Stake memory thisStake = stake[_tokenId];
+
+        uint256 elapsedMicroIntervals =
+            (((block.timestamp - thisStake.startTime) * 1000000) /
+                (thisStake.interval * seconds_in_a_day)); //microIntervals since stake start or last payout
+
+        uint256 reward = (elapsedMicroIntervals * thisStake.bonus) / 1000000;
+
+        return (reward, elapsedMicroIntervals); //reward amount and millionths of a reward period that have passed
     }
 
     /**
@@ -274,13 +356,26 @@ contract EO_STAKING is
     }
 
     /**
-    struct Stake {
-    uint256 stakedAmount; //tokens in stake
-    uint256 mintTime; //blocktime of creation
-    uint256 startTime; //blocktime of creation or most recent payout
-    uint256 interval; //staking interval in seconds
-    uint256 bonus; //bonus tokens earned per interval
-    } */
+     * @dev Return Sa stakeTier specification
+     * @param _stakeTier stake level to inspect
+     */
+    function getStakeLevel(uint256 _stakeTier)
+        external
+        view
+        returns (
+            uint256,
+            uint256,
+            uint256,
+            uint256
+        )
+    {
+        return (
+            stakeTier[_stakeTier].minimum,
+            stakeTier[_stakeTier].maximum,
+            stakeTier[_stakeTier].interval,
+            stakeTier[_stakeTier].bonus
+        );
+    }
 
     /**
      * @dev Compliance for erc721 reciever
@@ -318,7 +413,7 @@ contract EO_STAKING is
     /**
      * @dev Create a new stake
      * @param _amount stake token amount
-     * @param _interval stake maturity interval, in seconds
+     * @param _interval stake maturity interval, in "days"
      * @param _bonus bonus tokens paid, per _interval
      */
     function newStake(
@@ -332,7 +427,7 @@ contract EO_STAKING is
         );
 
         require(
-            _amount > 999999999999999999999, //1000 pruf
+            _amount > 99999999999999999999, //100 pruf
             "PES:NS: Staked amount < 1000"
         );
         //^^^^^^^checks^^^^^^^^^
