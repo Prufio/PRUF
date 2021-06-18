@@ -1610,7 +1610,7 @@ interface APP_NC_Interface {
     import "./Imports/token/ERC721/IERC721Receiver.sol";
  */
 interface EO_STAKING_Interface {
-    function takeBonus(uint256 _tokenId) external;
+    function claimBonus(uint256 _tokenId) external;
 
     function breakStake(uint256 _tokenId) external;
 
