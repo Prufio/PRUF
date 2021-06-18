@@ -113,7 +113,7 @@ struct ID {
     string userName; //admin only///caller address match can set
 }
 
-struct Stakes {
+struct Stake {
     uint256 stakedAmount; //tokens in stake
     uint256 mintTime; //blocktime of creation
     uint256 startTime; //blocktime of creation or most recent payout
