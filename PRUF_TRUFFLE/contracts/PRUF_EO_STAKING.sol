@@ -12,7 +12,7 @@ __/\\\\\\\\\\\\\ _____/\\\\\\\\\ _______/\\__/\\ ___/\\\\\\\\\\\\\\\
 
 /**-----------------------------------------------------------------
  *  TO DO
- * flesh out functions , Create misc front end functions for different stake minimums, times, and rewards. These call newStake.
+ * Create misc front end functions for different stake minimums, times, and rewards. These call newStake.
  *-----------------------------------------------------------------
  *-----------------------------------------------------------------
  * Early Access Staking Specification V0.1
@@ -164,51 +164,87 @@ contract EO_STAKING is
     //--------------------------------------External functions--------------------------------------------//
 
     /**
-    takeBonus (tokenId) #require be tokenHolder , (now - starttime) > 24 hours #public
-    calls eligibleRewards to get payAmount
-    sets startTime = now
-
-    tokensLeft = rewardsVault.tokensInFund
-    if payAmount > tokensLeft payAmount = tokensLeft
-
-    calls rewardsVault.payRewards (tokenID,payAmount) 
-    */
-
-    /**
-     * @dev Verify user credentials
+     * @dev Transfers eligible rewards to staker, resets last payment time
      * @param _tokenId token id to check
      */
-    function takeBonus(uint256 _tokenId) public isStakeHolder(_tokenId) {}
-
-    /**
-    breakStake (tokenId) #require be tokenHolder , now > (mintTime + interval)  //must wait 24 hours since last takeBonus call or will throw in takeBonus #public
-    calls takeBonus (tokenId)
-    calls stakeVault.releaseStake(tokenId)
-    burn (tokenId)
-
-    */
-    /**
-     * @dev Verify user credentials
-     * @param _tokenId token id to check
-     */
-    function breakStake(uint256 _tokenId) public isStakeHolder(_tokenId) {}
-
-
-    /**
-     * @dev Verify user credentials
-     * @param _tokenId token id to check
-     */
-    function eligibleRewards(uint256 _tokenId) public returns (uint256) {
-        Stake memory thisStake = stake[_tokenId];
+    function claimBonus(uint256 _tokenId)
+        public
+        isStakeHolder(_tokenId)
+        whenNotPaused
+        nonReentrant
+    {
         uint256 availableRewards = UTIL_TKN.balanceOf(REWARDS_VAULT_Address);
-        uint256 elapsedMicroIntervals =
-            (((block.timestamp - thisStake.startTime) * 1000000) /
-                thisStake.interval); //microIntervals since stake start or last payout
-        uint256 reward = (elapsedMicroIntervals * thisStake.bonus) / 1000000;
+        Stake memory thisStake = stake[_tokenId];
+
+        require(
+            (block.timestamp - thisStake.startTime) > 86399, // 1 day in seconds
+            "PES:CB: must wait 24h from creation/last claim"
+        );
+        //^^^^^^^checks^^^^^^^^^
+
+        uint256 reward = eligibleRewards(_tokenId);
+        thisStake.startTime = block.timestamp;
 
         if (reward > availableRewards) {
             reward = availableRewards;
         }
+        //^^^^^^^effects^^^^^^^^^
+
+        REWARDS_VAULT.payRewards(_tokenId, reward);
+        //^^^^^^^interactions^^^^^^^^^
+    }
+
+
+    /**
+     * @dev Transfers eligible rewards to staker, resets last payment time, 
+     * @param _tokenId token id to check
+     */
+    function breakStake(uint256 _tokenId)
+        public
+        isStakeHolder(_tokenId)
+        whenNotPaused
+        nonReentrant
+    {
+        uint256 availableRewards = UTIL_TKN.balanceOf(REWARDS_VAULT_Address);
+        Stake memory thisStake = stake[_tokenId];
+
+        require(
+            block.timestamp > (thisStake.mintTime + thisStake.interval), // 1 day in seconds
+            "PES:BS: must wait until stake period has elapsed"
+        );
+        require(
+            (block.timestamp - thisStake.startTime) > 86399, // 1 day in seconds
+            "PES:BS: must wait 24h from creation/last claim"
+        );
+        //^^^^^^^checks^^^^^^^^^
+
+        uint256 reward = eligibleRewards(_tokenId);
+        thisStake.startTime = block.timestamp;
+
+        if (reward > availableRewards) {
+            reward = availableRewards;
+        }
+        //^^^^^^^effects^^^^^^^^^
+
+        REWARDS_VAULT.payRewards(_tokenId, reward);
+        STAKE_VAULT.releaseStake(_tokenId);
+        STAKE_TKN.burnStakeToken(_tokenId);
+        delete stake[_tokenId];
+        //^^^^^^^interactions^^^^^^^^^
+    }
+
+    /**
+     * @dev Check eligible rewards amount for a stake
+     * @param _tokenId token id to check
+     */
+    function eligibleRewards(uint256 _tokenId) public view returns (uint256) {
+        Stake memory thisStake = stake[_tokenId];
+
+        uint256 elapsedMicroIntervals =
+            (((block.timestamp - thisStake.startTime) * 1000000) /
+                thisStake.interval); //microIntervals since stake start or last payout
+
+        uint256 reward = (elapsedMicroIntervals * thisStake.bonus) / 1000000;
 
         return (reward);
     }
@@ -289,7 +325,7 @@ contract EO_STAKING is
         uint256 _amount,
         uint256 _interval,
         uint256 _bonus
-    ) private {
+    ) private whenNotPaused nonReentrant {
         require(
             _interval > 172800, // 2 days in seconds
             "PES:NS: Stake <= 172800 sec"
