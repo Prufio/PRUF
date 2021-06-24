@@ -50,9 +50,6 @@ contract REWARDS_VAULT is
     address internal STAKE_TKN_Address;
     STAKE_TKN_Interface internal STAKE_TKN;
 
-    address internal EO_STAKING_Address;
-    EO_STAKING_Interface internal EO_STAKING;
-
     constructor() {
         _setupRole(DEFAULT_ADMIN_ROLE, _msgSender());
         _setupRole(CONTRACT_ADMIN_ROLE, _msgSender());
@@ -91,20 +88,21 @@ contract REWARDS_VAULT is
     //----------------------External Admin functions / isContractAdmin----------------------//
 
     /**
-     * @dev Set address of STOR contract to interface with
+     * @dev Set address of contracts to interface with
      * @param _utilAddress address of UTIL_TKN
      * @param _stakeAddress address of STAKE_TKN
      */
     function Admin_setTokenContracts(
         address _utilAddress,
-        address _stakeAddress,
-        address _eoStakingAdress
+        address _stakeAddress
     ) external virtual isContractAdmin {
         //^^^^^^^checks^^^^^^^^^
 
-        UTIL_TKN = UTIL_TKN_Interface(_utilAddress);
-        STAKE_TKN = STAKE_TKN_Interface(_stakeAddress);
-        EO_STAKING = EO_STAKING_Interface(_eoStakingAdress);
+        UTIL_TKN_Address = _utilAddress;
+        UTIL_TKN = UTIL_TKN_Interface(UTIL_TKN_Address);
+
+        STAKE_TKN_Address = _stakeAddress;
+        STAKE_TKN = STAKE_TKN_Interface(STAKE_TKN_Address);
         //^^^^^^^effects^^^^^^^^^
     }
 
