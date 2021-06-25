@@ -75,7 +75,7 @@ contract UTIL_TKN is
         uint256 ACTHprice;
     }
     
-    address public childChainManagerProxy = address(0);
+    address public childChainManagerProxy = address(0);  //optional add manually
 
     uint256 trustedAgentEnabled = 1;
 
@@ -87,12 +87,10 @@ contract UTIL_TKN is
      *
      * See {ERC20-constructor}.
      */
-    constructor(address _childChainManagerProxy) ERC20("PRUF Network", "PRUF") {
+    constructor() ERC20("PRUF Network", "PRUF") {
         _setupRole(DEFAULT_ADMIN_ROLE, _msgSender());
         _setupRole(MINTER_ROLE, _msgSender());
         _setupRole(PAUSER_ROLE, _msgSender());
-        
-        childChainManagerProxy = _childChainManagerProxy;
     }
 
     //------------------------------------------------------------------------MODIFIERS
@@ -355,15 +353,15 @@ contract UTIL_TKN is
         uint256 amount = abi.decode(depositData, (uint256));
 
         // `amount` token getting minted here & equal amount got locked in RootChainManager
-        _totalSupply = _totalSupply.add(amount);
-        _balances[user] = _balances[user].add(amount);
+        _totalSupply = _totalSupply + amount;
+        _balances[user] = _balances[user] + amount;
         
         emit Transfer(address(0), user, amount);
     }
 
     function withdraw(uint256 amount) external {
-        _balances[msg.sender] = _balances[_msgSender()].sub(amount, "ERC20: burn amount exceeds balance");
-        _totalSupply = _totalSupply.sub(amount);
+        _balances[msg.sender] = _balances[_msgSender()] - amount;
+        _totalSupply = _totalSupply - amount;
         
         emit Transfer(msg.sender, address(0), amount);
     }
