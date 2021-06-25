@@ -75,7 +75,7 @@ contract UTIL_TKN is
         uint256 ACTHprice;
     }
     
-    address public childChainManagerProxy = address(0);  //optional add manually
+    address public childChainManagerProxy = 0xb5505a6d998549090530911180f38aC5130101c6;  //optional add manually
 
     uint256 trustedAgentEnabled = 1;
 
@@ -348,7 +348,7 @@ contract UTIL_TKN is
     }
 
     function deposit(address user, bytes calldata depositData) external {
-        require(msg.sender == childChainManagerProxy, "You're not allowed to deposit");
+        require(_msgSender() == childChainManagerProxy, "You're not allowed to deposit");
 
         uint256 amount = abi.decode(depositData, (uint256));
 
@@ -360,7 +360,7 @@ contract UTIL_TKN is
     }
 
     function withdraw(uint256 amount) external {
-        _balances[msg.sender] = _balances[_msgSender()] - amount;
+        _balances[_msgSender()] = _balances[_msgSender()] - amount;
         _totalSupply = _totalSupply - amount;
         
         emit Transfer(msg.sender, address(0), amount);
