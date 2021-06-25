@@ -14,6 +14,7 @@ let airdropRoleB32;
 let minterRoleB32;
 let trustedAgentRoleB32;
 let payableRoleB32;
+let pauserRoleB32;
 
 contract('SPLIT', accounts => {
 
@@ -85,12 +86,25 @@ contract('SPLIT', accounts => {
             'SNAPSHOT_ROLE'
         )
 
-    })
+        pauserRoleB32 = await Helper.getStringHash(
+            'PAUSER_ROLE'
+        )
 
+    })
 
     it('Should authorize SPLIT with snapshotRoleB32 in UTIL_TKN', async () => {
         console.log("//**************************************BEGIN SPLIT SETUP**********************************************/")
         return UTIL_TKN.grantRole(snapshotRoleB32, SPLIT.address, { from: account1 })
+    })
+
+
+    it('Should authorize SPLIT with minterRoleB32 in UTIL_TKN', async () => {
+        return UTIL_TKN.grantRole(minterRoleB32, SPLIT.address, { from: account1 })
+    })
+
+
+    it('Should authorize SPLIT with minterRoleB32 in UTIL_TKN', async () => {
+        return UTIL_TKN.grantRole(pauserRoleB32, SPLIT.address, { from: account1 })
     })
 
 
@@ -99,8 +113,10 @@ contract('SPLIT', accounts => {
     })
 
 
-    it('Should authorize SPLIT with minterRoleB32 in UTIL_TKN', async () => {
-        return UTIL_TKN.grantRole(minterRoleB32, SPLIT.address, { from: account1 })
+    it('Should pause UTIL_TKN', async () => {
+        return UTIL_TKN.pause(
+            { from: account1 }
+        )
     })
 
 

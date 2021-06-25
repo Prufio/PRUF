@@ -113,6 +113,14 @@ struct ID {
     string userName; //admin only///caller address match can set
 }
 
+struct Stake {
+    uint256 stakedAmount; //tokens in stake
+    uint256 mintTime; //blocktime of creation
+    uint256 startTime; //blocktime of creation or most recent payout
+    uint256 interval; //staking interval in seconds
+    uint256 bonus; //bonus tokens earned per interval
+}
+
 /*
  * @dev Interface for UTIL_TKN
  * INHERIANCE:
@@ -439,16 +447,6 @@ interface UTIL_TKN_Interface {
  */
 interface AC_TKN_Interface {
     /*
-     * @dev Set storage contract to interface with
-     */
-    function OO_setStorageContract(address _storageAddress) external;
-
-    /*
-     * @dev Address Setters
-     */
-    function Admin_resolveContractAddresses() external;
-
-    /*
      * @dev Mints assetClass token, must be isContractAdmin
      */
     function mintACToken(
@@ -457,6 +455,141 @@ interface AC_TKN_Interface {
         string calldata _tokenURI
     ) external returns (uint256);
 
+    /**
+     * @dev Transfers the ownership of a given token ID to another address.
+     * Usage of this method is discouraged, use {safeTransferFrom} whenever possible.
+     * Requires the _msgSender() to be the owner, approved, or operator.
+     * @param from current owner of the token
+     * @param to address to receive the ownership of the given token ID
+     * @param tokenId uint256 ID of the token to be transferred
+     */
+    function transferFrom(
+        address from,
+        address to,
+        uint256 tokenId
+    ) external;
+
+    /**
+     * @dev Safely transfers the ownership of a given token ID to another address
+     * If the target address is a contract, it must implement {IERC721Receiver-onERC721Received},
+     * which is called upon a safe transfer, and return the magic value
+     * `bytes4(keccak256("onERC721Received(address,address,uint256,bytes)"))`; otherwise,
+     * the transfer is reverted.
+     * Requires the _msgSender() to be the owner, approved, or operator
+     * @param from current owner of the token
+     * @param to address to receive the ownership of the given token ID
+     * @param tokenId uint256 ID of the token to be transferred
+     */
+    function safeTransferFrom(
+        address from,
+        address to,
+        uint256 tokenId
+    ) external;
+
+    /**
+     * @dev Safely transfers the ownership of a given token ID to another address
+     * If the target address is a contract, it must implement {IERC721Receiver-onERC721Received},
+     * which is called upon a safe transfer, and return the magic value
+     * `bytes4(keccak256("onERC721Received(address,address,uint256,bytes)"))`; otherwise,
+     * the transfer is reverted.
+     * Requires the _msgSender() to be the owner, approved, or operator
+     * @param from current owner of the token
+     * @param to address to receive the ownership of the given token ID
+     * @param tokenId uint256 ID of the token to be transferred
+     * @param _data bytes data to send along with a safe transfer check
+     */
+    function safeTransferFrom(
+        address from,
+        address to,
+        uint256 tokenId,
+        bytes calldata _data
+    ) external;
+
+    /**
+     * @dev Returns the owner of the `tokenId` token.
+     *
+     * Requirements:
+     *
+     * - `tokenId` must exist.
+     */
+    function ownerOf(uint256 tokenId)
+        external
+        view
+        returns (address tokenHolderAdress);
+
+    /**
+     * @dev Returns 170 if the specified token exists, otherwise zero
+     *
+     */
+    function tokenExists(uint256 tokenId) external view returns (uint256);
+
+    /**
+     * @dev Returns the amount of tokens owned by `account`.
+     */
+    function balanceOf(address account) external returns (uint256);
+
+    /**
+     * @dev Returns the name of the token.
+     */
+    function name() external view returns (string memory tokenName);
+
+    /**
+     * @dev Returns the token collection symbol.
+     */
+    function symbol() external view returns (string memory tokenSymbol);
+
+    /**
+     * @dev Returns the Uniform Resource Identifier (URI) for `tokenId` token.
+     */
+    function tokenURI(uint256 tokenId)
+        external
+        view
+        returns (string memory URI);
+
+    /**
+     * @dev Returns the total amount of tokens stored by the contract.
+     */
+    function totalSupply() external view returns (uint256);
+
+    /**
+     * @dev Returns a token ID owned by `owner` at a given `index` of its token list.
+     * Use along with {balanceOf} to enumerate all of ``owner``'s tokens.
+     */
+    function tokenOfOwnerByIndex(address owner, uint256 index)
+        external
+        view
+        returns (uint256 tokenId);
+
+    /**
+     * @dev Returns a token ID at a given `index` of all the tokens stored by the contract.
+     * Use along with {totalSupply} to enumerate all tokens.
+     */
+    function tokenByIndex(uint256 index) external view returns (uint256);
+}
+
+//------------------------------------------------------------------------------------------------
+/*
+ * @dev Interface for AC_TKN
+ * INHERIANCE:
+    import "./Imports/token/ERC721/ERC721.sol";
+    import "./Imports/access/Ownable.sol";
+    import "./Imports/utils/ReentrancyGuard.sol";
+ */
+interface STAKE_TKN_Interface {
+    /**
+     * @dev Mints Stake Token * Requires the _msgSender() to have MINTER_ROLE
+     * @param _recipientAddress address to receive the token
+     * @param _tokenId Token ID to mint
+     */
+    function mintStakeToken(address _recipientAddress, uint256 _tokenId)
+        external
+        returns (uint256);
+
+    /**
+     * @dev Burn a stake token
+     * @param _tokenId - Token ID to burn
+     */
+    function burnStakeToken(uint256 _tokenId) external returns (uint256);
 
     /**
      * @dev Transfers the ownership of a given token ID to another address.
@@ -597,7 +730,6 @@ interface A_TKN_Interface {
         uint256 tokenId,
         string calldata _tokenURI
     ) external returns (uint256);
-
 
     /*
      * @dev Set new token URI String
@@ -1466,4 +1598,53 @@ interface APP_Interface {
  */
 interface APP_NC_Interface {
     function transferAssetToken(address _to, bytes32 _idxHash) external;
+}
+
+/*
+ * @dev Interface for EO_STAKING
+ * INHERIANCE:
+    import "./Imports/access/AccessControl.sol";
+    import "./Imports/utils/Pausable.sol";
+    import "./Imports/utils/ReentrancyGuard.sol";
+    import "./Imports/token/ERC721/IERC721.sol";
+    import "./Imports/token/ERC721/IERC721Receiver.sol";
+ */
+interface EO_STAKING_Interface {
+    function claimBonus(uint256 _tokenId) external;
+
+    function breakStake(uint256 _tokenId) external;
+
+    function eligibleRewards(uint256 _tokenId) external;
+
+    function stakeInfo(uint256 _tokenId) external;
+}
+
+/*
+ * @dev Interface for STAKE_VAULT
+ * INHERIANCE:
+    import "./Imports/access/AccessControl.sol";
+    import "./Imports/utils/Pausable.sol";
+    import "./Imports/utils/ReentrancyGuard.sol";
+    import "./Imports/token/ERC721/IERC721.sol";
+    import "./Imports/token/ERC721/IERC721Receiver.sol";
+ */
+interface STAKE_VAULT_Interface {
+    function takeStake(uint256 _tokenID, uint256 _amount) external;
+
+    function releaseStake(uint256 _tokenID) external;
+
+    function stakeOfToken(uint256 _tokenID) external returns (uint256 stake);
+}
+
+/*
+ * @dev Interface for REWARDS_VAULT
+ * INHERIANCE:
+    import "./Imports/access/AccessControl.sol";
+    import "./Imports/utils/Pausable.sol";
+    import "./Imports/utils/ReentrancyGuard.sol";
+    import "./Imports/token/ERC721/IERC721.sol";
+    import "./Imports/token/ERC721/IERC721Receiver.sol";
+ */
+interface REWARDS_VAULT_Interface {
+    function payRewards(uint256 _tokenId, uint256 _amount) external;
 }

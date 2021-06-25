@@ -1,4 +1,4 @@
-/**--------------------------------------------------------PRüF0.8.0
+/*--------------------------------------------------------PRüF0.8.0
 __/\\\\\\\\\\\\\ _____/\\\\\\\\\ _______/\\__/\\ ___/\\\\\\\\\\\\\\\        
  _\/\\\/////////\\\ _/\\\///////\\\ ____\//__\//____\/\\\///////////__       
   _\/\\\_______\/\\\_\/\\\_____\/\\\ ________________\/\\\ ____________      
@@ -9,17 +9,17 @@ __/\\\\\\\\\\\\\ _____/\\\\\\\\\ _______/\\__/\\ ___/\\\\\\\\\\\\\\\
        _\/\\\ ____________\/\\\ _____\//\\\_\//\\\\\\\\\ _\/\\\ ____________ 
         _\/// _____________\/// _______\/// __\///////// __\/// _____________
          *-------------------------------------------------------------------*/
-
+         
 /**-----------------------------------------------------------------
- *  TO DO
- *
- * IMPORTANT!!! EXTERNAL OR PUBLIC FUNCTIONS WITHOUTSTRICT PERMISSIONING NEED 
- * TO BE CLOSELY EXAMINED IN THIS CONTRACT AS THEY WILL BE INHERITED NEARLY GLOBALLY
- *-----------------------------------------------------------------
- *-----------------------------------------------------------------
- *PRUF basic provides core data structures and functionality to PRUF contracts.
- *Features include contract name resolution, and getters for records, users, and asset class information.
- *---------------------------------------------------------------*/
+*  TO DO
+*
+* IMPORTANT!!! EXTERNAL OR PUBLIC FUNCTIONS WITHOUTSTRICT PERMISSIONING NEED 
+* TO BE CLOSELY EXAMINED IN THIS CONTRACT AS THEY WILL BE INHERITED NEARLY GLOBALLY
+*-----------------------------------------------------------------
+*-----------------------------------------------------------------
+*PRUF basic provides core data structures and functionality to PRUF contracts.
+*Features include contract name resolution, and getters for records, users, and asset class information.
+*---------------------------------------------------------------*/
 
 // SPDX-License-Identifier: UNLICENSED
 pragma solidity ^0.8.0;
