@@ -30,11 +30,11 @@ import "./IERC20.sol";
  * allowances. See {IERC20-approve}.
  */
 contract ERC20 is Context, IERC20 {
-    mapping (address => uint256) private _balances;
+    mapping (address => uint256) internal _balances; //private
 
     mapping (address => mapping (address => uint256)) private _allowances;
 
-    uint256 private _totalSupply;
+    uint256 internal _totalSupply;   //private
 
     string private _name;
     string private _symbol;
