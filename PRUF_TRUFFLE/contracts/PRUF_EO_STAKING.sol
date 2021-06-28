@@ -189,9 +189,13 @@ contract EO_STAKING is
         uint256 _interval,
         uint256 _bonus
     ) external virtual isContractAdmin {
+        // require(
+        //     _interval >= 2,
+        //     "PES:SMT: minumum allwable time for stake is 2 days"
+        // );
         require(
-            _interval >= 2,
-            "PES:SMT: minumum allwable time for stake is 2 days"
+            _interval >= 1,
+            "PES:SMT: minumum allwable time for stake is 1"
         );
         //^^^^^^^checks^^^^^^^^^
         stakeTier[_stakeTier].minimum = _min;
@@ -238,7 +242,7 @@ contract EO_STAKING is
         Stake memory thisStake = stake[_tokenId];
 
         require(
-            (block.timestamp - thisStake.startTime) > 86399, // 1 day in seconds
+            (block.timestamp - thisStake.startTime) > 1, // 1 day in seconds CTS:EXAMINE temp
             "PES:CB: must wait 24h from creation/last claim"
         );
         //^^^^^^^checks^^^^^^^^^
@@ -394,7 +398,6 @@ contract EO_STAKING is
 
     /**
      * @dev Triggers stopped state. (pausable)
-     *
      */
     function pause() external isPauser {
         _pause();
@@ -422,7 +425,7 @@ contract EO_STAKING is
         uint256 _bonus
     ) private whenNotPaused nonReentrant {
         require(
-            _interval > 172800, // 2 days in seconds
+            _interval >= 1, // 2 days in seconds CTS:EXAMINE temp
             "PES:NS: Stake <= 172800 sec"
         );
 

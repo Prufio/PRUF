@@ -143,7 +143,6 @@ contract STAKE_VAULT is
         whenNotPaused
     {
         //^^^^^^^checks^^^^^^^^^
-
         address staker = STAKE_TKN.ownerOf(_tokenId);
         //^^^^^^^effects^^^^^^^^^
 

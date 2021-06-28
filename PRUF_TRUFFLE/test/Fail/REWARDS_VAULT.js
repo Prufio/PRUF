@@ -13,12 +13,16 @@ __/\\\\\\\\\\\\\ _____/\\\\\\\\\ _______/\\__/\\ ___/\\\\\\\\\\\\\\\
 const PRUF_UTIL_TKN = artifacts.require("UTIL_TKN");
 const PRUF_STAKE_TKN = artifacts.require("STAKE_TKN");
 const PRUF_STAKE_VAULT = artifacts.require("STAKE_VAULT");
-const PRUF_REWARD_VAULT = artifacts.require("REWARD_VAULT");
+const PRUF_REWARD_VAULT = artifacts.require("REWARDS_VAULT");
+const PRUF_EO_STAKING = artifacts.require("EO_STAKING");
+const PRUF_HELPER = artifacts.require('Helper');
 
 let UTIL_TKN;
 let STAKE_TKN;
 let STAKE_VAULT;
-let REWARD_VAULT;
+let REWARDS_VAULT;
+let EO_STAKING;
+let Helper;
 
 let account1Hash;
 let account2Hash;
@@ -93,7 +97,16 @@ contract("REWARDS_VAULT", (accounts) => {
     });
     console.log(PRUF_REWARD_VAULT_TEST.address);
     assert(PRUF_REWARD_VAULT_TEST.address !== "");
-    REWARD_VAULT = PRUF_REWARD_VAULT_TEST;
+    REWARDS_VAULT = PRUF_REWARD_VAULT_TEST;
+  });
+
+  it("Should deploy PRUF_EO_STAKING", async () => {
+    const PRUF_EO_STAKING_TEST = await PRUF_EO_STAKING.deployed({
+      from: account1,
+    });
+    console.log(PRUF_EO_STAKING_TEST.address);
+    assert(PRUF_EO_STAKING_TEST.address !== "");
+    EO_STAKING = PRUF_EO_STAKING_TEST;
   });
 
   it("Should build variables", async () => {
@@ -130,10 +143,44 @@ contract("REWARDS_VAULT", (accounts) => {
     discardRoleB32 = await Helper.getStringHash("DISCARD_ROLE");
   });
 
-  it("Should set SharesAddress", async () => {
-    console.log("//**************************************BEGIN RCLR TEST**********************************************/");
-    console.log("//**************************************BEGIN RCLR Setup**********************************************/");
-    return STAKE_VAULT.Admin_setTokenContracts(UTIL_TKN.address, STAKE_TKN.address, { from: account1 });
+  //1
+  it("Should fail because caller !contractAdmin", async () => {
+    console.log("//**************************************END BOOTSTRAP**********************************************/");
+    console.log("//**************************************BEGIN REWARDS_VAULT TEST**********************************************/");
+    console.log("//**************************************BEGIN REWARDS_VAULT Fail Batch**********************************************/");
+    console.log("//**************************************BEGIN Admin_setTokenContracts Fail Batch**********************************************/");
+    return REWARDS_VAULT.Admin_setTokenContracts(UTIL_TKN.address, STAKE_TKN.address, { from: account2 });
+  });
+
+
+  it("Should pause stake_vault", async () => {
+    return REWARDS_VAULT.pause({ from: account1 });
+  });
+
+  //2
+  it("Should fail because contract is paused and caller !have pauser_role", async () => {
+    console.log("//**************************************END Admin_setTokenContracts Fail Batch**********************************************/");
+    console.log("//**************************************BEGIN payRewards Fail Batch**********************************************/");
+    return REWARDS_VAULT.payRewards('1', "10000000000000000000000", { from: account2 });
+  });
+  
+
+  it("Should unpause stake_vault", async () => {
+    return REWARDS_VAULT.unpause({ from: account1 });
+  });
+  
+  //3
+  it("Should fail because caller !stakePayer", async () => {
+    console.log("//**************************************END Admin_setTokenContracts Fail Batch**********************************************/");
+    console.log("//**************************************BEGIN payRewards Fail Batch**********************************************/");
+    return REWARDS_VAULT.payRewards('1', "10000000000000000000000", { from: account1 });
+  });
+
+  //4
+  it("Should fail because caller !have ASSET_TXFR_ROLE", async () => {
+    console.log("//**************************************END payRewards Fail Batch**********************************************/");
+    console.log("//**************************************BEGIN transferERC721Token Fail Batch**********************************************/");
+    return REWARDS_VAULT.transferERC721Token(account2, '1', STAKE_TKN.address, { from: account1 });
   });
 
 });

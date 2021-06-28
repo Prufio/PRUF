@@ -116,9 +116,9 @@ contract REWARDS_VAULT is
      */
     function payRewards(uint256 _tokenId, uint256 _amount)
         external
-        isStakePayer
         whenNotPaused
         nonReentrant
+        isStakePayer
     {
         //^^^^^^^checks^^^^^^^^^
 
