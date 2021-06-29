@@ -147,7 +147,7 @@ contract("REWARDS_VAULT", (accounts) => {
   it("Should fail because caller !contractAdmin", async () => {
     console.log("//**************************************END BOOTSTRAP**********************************************/");
     console.log("//**************************************BEGIN REWARDS_VAULT TEST**********************************************/");
-    console.log("//**************************************BEGIN REWARDS_VAULT Fail Batch**********************************************/");
+    console.log("//**************************************BEGIN REWARDS_VAULT Fail Batch(4)**********************************************/");
     console.log("//**************************************BEGIN Admin_setTokenContracts Fail Batch**********************************************/");
     return REWARDS_VAULT.Admin_setTokenContracts(UTIL_TKN.address, STAKE_TKN.address, { from: account2 });
   });

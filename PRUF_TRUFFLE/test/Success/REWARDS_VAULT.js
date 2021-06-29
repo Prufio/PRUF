@@ -44,6 +44,7 @@ let assetTransferRoleB32;
 let discardRoleB32;
 let stakeRoleB32;
 let stakePayerRoleB32;
+
 contract("REWARDS_VAULT", (accounts) => {
   console.log(
     "//**************************BEGIN BOOTSTRAP**************************//"
@@ -150,7 +151,6 @@ contract("REWARDS_VAULT", (accounts) => {
 
 
   it("Should authorize STAKE_VAULT for trusted agent functions in UTIL_TKN", async () => {
-    console.log("Authorizing AC_MGR");
     return UTIL_TKN.grantRole(trustedAgentRoleB32, STAKE_VAULT.address, {
       from: account1,
     });
@@ -158,7 +158,6 @@ contract("REWARDS_VAULT", (accounts) => {
 
 
   it("Should authorize EO_STAKING to mint STAKE_TKNs", async () => {
-    console.log("Authorizing AC_MGR");
     return STAKE_TKN.grantRole(minterRoleB32, EO_STAKING.address, {
       from: account1,
     });
@@ -166,7 +165,6 @@ contract("REWARDS_VAULT", (accounts) => {
 
 
   it("Should authorize EO_STAKING to pay rewards", async () => {
-    console.log("Authorizing AC_MGR");
     return REWARDS_VAULT.grantRole(stakePayerRoleB32, EO_STAKING.address, {
       from: account1,
     });
@@ -174,7 +172,6 @@ contract("REWARDS_VAULT", (accounts) => {
 
   
   it("Should authorize EO_STAKING to take stakes out of the STAKE_VAULT", async () => {
-    console.log("Authorizing AC_MGR");
     return STAKE_VAULT.grantRole(stakeRoleB32, EO_STAKING.address, {
       from: account1,
     });
