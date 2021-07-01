@@ -123,7 +123,7 @@ contract REWARDS_VAULT is
         //^^^^^^^checks^^^^^^^^^
 
         address recipient = STAKE_TKN.ownerOf(_tokenId);
-        UTIL_TKN.transferFrom(address(this), recipient, _amount);
+        UTIL_TKN.transfer(recipient, _amount);
         //^^^^^^^interactions^^^^^^^^
     }
 
