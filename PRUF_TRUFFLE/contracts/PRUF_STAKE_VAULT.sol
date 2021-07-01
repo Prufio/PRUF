@@ -28,14 +28,8 @@ import "./Imports/access/AccessControl.sol";
 import "./Imports/utils/Pausable.sol";
 import "./Imports/utils/ReentrancyGuard.sol";
 import "./Imports/token/ERC721/IERC721.sol";
-import "./Imports/token/ERC721/IERC721Receiver.sol";
 
-contract STAKE_VAULT is
-    ReentrancyGuard,
-    AccessControl,
-    IERC721Receiver,
-    Pausable
-{
+contract STAKE_VAULT is ReentrancyGuard, AccessControl, Pausable {
     mapping(uint256 => uint256) private stake; // holds the stake parameters for each stake tokenId
 
     bytes32 public constant CONTRACT_ADMIN_ROLE =
@@ -178,22 +172,6 @@ contract STAKE_VAULT is
      */
     function stakeOfToken(uint256 _tokenId) external view returns (uint256) {
         return stake[_tokenId];
-        //^^^^^^^interactions^^^^^^^^^
-    }
-
-    /**
-     * @dev Compliance for erc721 reciever
-     * See OZ documentation
-     */
-    function onERC721Received(
-        address,
-        address,
-        uint256,
-        bytes calldata
-    ) external virtual override returns (bytes4) {
-        //^^^^^^^checks^^^^^^^^^
-
-        return this.onERC721Received.selector;
         //^^^^^^^interactions^^^^^^^^^
     }
 
