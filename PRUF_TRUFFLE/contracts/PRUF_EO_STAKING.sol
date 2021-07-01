@@ -75,6 +75,16 @@ contract EO_STAKING is
         uint256 interval;
         uint256 bonus;
     }
+/*
+    struct Stake {
+    uint256 stakedAmount; //tokens in stake
+    uint256 mintTime; //blocktime of creation
+    uint256 startTime; //blocktime of creation or most recent payout
+    uint256 interval; //staking interval in seconds
+    uint256 bonus; //bonus tokens earned per interval
+    }
+*/
+
     //--------------------------------------------------------------------------------------------CHECK before deploying!!!!
     uint256 constant seconds_in_a_day = 1; //adjust for test contracts only. normal = 86400           !!!!!!!!!!!!!!!!
     //uint256 constant seconds_in_a_day = 86400;   //adjust for test contracts only. normal = 86400     !!!!!!!!!!!!!!!!
@@ -179,8 +189,8 @@ contract EO_STAKING is
      * @param _stakeTier Staking level to set
      * @param _min Minumum stake
      * @param _max Maximum stake
-     * @param _interval staking interval, in dayUnits - set to 1 second for testing, 86400 for production
-     * @param _bonus bonus in tenths of a pervent: 15 = 1.5% or 15/1000 per interval. Calculated to a fixed amount of tokens in the actual stake
+     * @param _interval staking interval, in dayUnits - set to the number of days that the stake and reward interval will be based on.
+     * @param _bonus bonus in tenths of a percent: 15 = 1.5% or 15/1000 per interval. Calculated to a fixed amount of tokens in the actual stake
      */
     function Admin_setStakeLevels(
         uint256 _stakeTier,
