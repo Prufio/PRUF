@@ -15,7 +15,7 @@ const PRUF_STAKE_TKN = artifacts.require("STAKE_TKN");
 const PRUF_STAKE_VAULT = artifacts.require("STAKE_VAULT");
 const PRUF_REWARD_VAULT = artifacts.require("REWARDS_VAULT");
 const PRUF_EO_STAKING = artifacts.require("EO_STAKING");
-const PRUF_HELPER = artifacts.require('Helper');
+const PRUF_HELPER = artifacts.require("Helper");
 
 let UTIL_TKN;
 let STAKE_TKN;
@@ -42,6 +42,8 @@ let minterRoleB32;
 let trustedAgentRoleB32;
 let assetTransferRoleB32;
 let discardRoleB32;
+let stakeRoleB32;
+let stakePayerRoleB32;
 
 contract("REWARDS_VAULT", (accounts) => {
   console.log(
@@ -141,46 +143,185 @@ contract("REWARDS_VAULT", (accounts) => {
     assetTransferRoleB32 = await Helper.getStringHash("ASSET_TXFR_ROLE");
 
     discardRoleB32 = await Helper.getStringHash("DISCARD_ROLE");
-  });
 
-  //1
-  it("Should fail because caller !contractAdmin", async () => {
-    console.log("//**************************************END BOOTSTRAP**********************************************/");
-    console.log("//**************************************BEGIN REWARDS_VAULT TEST**********************************************/");
-    console.log("//**************************************BEGIN REWARDS_VAULT Fail Batch(4)**********************************************/");
-    console.log("//**************************************BEGIN Admin_setTokenContracts Fail Batch**********************************************/");
-    return REWARDS_VAULT.Admin_setTokenContracts(UTIL_TKN.address, STAKE_TKN.address, { from: account2 });
+    stakeRoleB32 = await Helper.getStringHash("STAKE_ADMIN_ROLE");
+
+    stakePayerRoleB32 = await Helper.getStringHash("STAKE_PAYER_ROLE");
   });
 
 
-  it("Should pause stake_vault", async () => {
-    return REWARDS_VAULT.pause({ from: account1 });
+  it("Should authorize STAKE_VAULT for trusted agent functions in UTIL_TKN", async () => {
+    return UTIL_TKN.grantRole(trustedAgentRoleB32, STAKE_VAULT.address, {
+      from: account1,
+    });
   });
 
-  //2
-  it("Should fail because contract is paused and caller !have pauser_role", async () => {
-    console.log("//**************************************END Admin_setTokenContracts Fail Batch**********************************************/");
-    console.log("//**************************************BEGIN payRewards Fail Batch**********************************************/");
-    return REWARDS_VAULT.payRewards('1', "10000000000000000000000", { from: account2 });
+
+  it("Should authorize EO_STAKING to mint STAKE_TKNs", async () => {
+    return STAKE_TKN.grantRole(minterRoleB32, EO_STAKING.address, {
+      from: account1,
+    });
   });
+
+
+  it("Should authorize EO_STAKING to pay rewards", async () => {
+    return REWARDS_VAULT.grantRole(stakePayerRoleB32, EO_STAKING.address, {
+      from: account1,
+    });
+  });
+
   
-
-  it("Should unpause stake_vault", async () => {
-    return REWARDS_VAULT.unpause({ from: account1 });
+  it("Should authorize EO_STAKING to take stakes out of the STAKE_VAULT", async () => {
+    return STAKE_VAULT.grantRole(stakeRoleB32, EO_STAKING.address, {
+      from: account1,
+    });
   });
+
+
+  it("Should mint 300000000 tokens to REWARDS_VAULT", async () => {
+    return UTIL_TKN.mint(REWARDS_VAULT.address, "300000000000000000000000000", {
+      from: account1,
+    });
+  });
+
+
+  it("Should retrieve balanceOf(300000000) Pruf tokens REWARDS_VAULT", async () => {
+      var Balance = [];
+
+      return await UTIL_TKN.balanceOf(REWARDS_VAULT.address, { from: account1 }, function (_err, _result) {
+          if (_err) { }
+          else {
+              Balance = Object.values(_result)
+              console.log(Balance)
+          }
+      })
+  })
+
+
+  it("Should mint 300000 tokens to account2", async () => {
+    return UTIL_TKN.mint(account2, "300000000000000000000000", {
+      from: account1,
+    });
+  });
+
+
+  it("Should retrieve balanceOf(300000) Pruf tokens @account2", async () => {
+      var Balance = [];
+
+      return await UTIL_TKN.balanceOf(account2, { from: account1 }, function (_err, _result) {
+          if (_err) { }
+          else {
+              Balance = Object.values(_result)
+              console.log(Balance)
+          }
+      })
+  })
+
+
+  function timeout(ms) {
+      return new Promise(resolve => setTimeout(resolve, ms));
+  }
+
+
+  it("Should set token contracts in REWARDS_VAULT", async () => {
+    console.log(
+      "//**************************************END BOOTSTRAP**********************************************/"
+    );
+    console.log(
+      "//**************************************BEGIN REWARDS_VAULT TEST**********************************************/"
+    );
+    return REWARDS_VAULT.Admin_setTokenContracts(
+      UTIL_TKN.address,
+      STAKE_TKN.address,
+      { from: account1 }
+    );
+  });
+
+
+  it("Should set token contracts in STAKE_VAULT", async () => {
+    return STAKE_VAULT.Admin_setTokenContracts(
+      UTIL_TKN.address,
+      STAKE_TKN.address,
+      { from: account1 }
+    );
+  });
+
+
+  it("Should set token contracts in EO_STAKING", async () => {
+    return EO_STAKING.Admin_setTokenContracts(
+      UTIL_TKN.address,
+      STAKE_TKN.address,
+      STAKE_VAULT.address,
+      REWARDS_VAULT.address,
+      { from: account1 }
+    );
+  });
+
+
+  it("Should set stake level 1", async () => {
+    return EO_STAKING.Admin_setStakeLevels("1", "1000000000000000000000", "100000000000000000000000", "1", "50", {
+      from: account1,
+    });
+  });
+
+
+//   it("Should mint stake token 1", async () => {
+//     return STAKE_TKN.mintStakeToken(account2, '1', {
+//       from: account1,
+//     });
+//   });
+
+
+//     it("Should see if token exists", async () => {
+//         var Balance = [];
   
-  //3
-  it("Should fail because caller !stakePayer", async () => {
-    console.log("//**************************************END Admin_setTokenContracts Fail Batch**********************************************/");
-    console.log("//**************************************BEGIN payRewards Fail Batch**********************************************/");
-    return REWARDS_VAULT.payRewards('1', "10000000000000000000000", { from: account1 });
+//         return await STAKE_TKN.ownerOf('1', { from: account1 }, function (_err, _result) {
+//             if (_err) { }
+//             else {
+//                 Balance = Object.values(_result)
+//                 console.log(Balance)
+//             }
+//         })
+//     })
+
+
+  it("Should stake 100000 tokens on stakeTier1 on account2", async () => {
+    return EO_STAKING.stakeMyTokens("100000000000000000000000", '1', {
+      from: account2,
+    });
   });
 
-  //4
-  it("Should fail because caller !have ASSET_TXFR_ROLE", async () => {
-    console.log("//**************************************END payRewards Fail Batch**********************************************/");
-    console.log("//**************************************BEGIN transferERC721Token Fail Batch**********************************************/");
-    return REWARDS_VAULT.transferERC721Token(account2, '1', STAKE_TKN.address, { from: account1 });
+
+  it("Should retrieve balanceOf(200000) Pruf tokens @account2", async () => {
+      var Balance = [];
+
+      return await UTIL_TKN.balanceOf(account2, { from: account1 }, function (_err, _result) {
+          if (_err) { }
+          else {
+              Balance = Object.values(_result)
+              console.log(Balance)
+          }
+      })
+  })
+
+
+  it("Should cliam rewards for stake to account2", async () => {
+    await timeout(5000);
+    return EO_STAKING.claimBonus("1",{
+      from: account2,
+    });
   });
 
+
+  it("Should retrieve balanceOf(??) Pruf tokens @account2", async () => {
+      var Balance = [];
+
+      return await UTIL_TKN.balanceOf(account2, { from: account1 }, function (_err, _result) {
+          if (_err) { }
+          else {
+              Balance = Object.values(_result)
+              console.log(Balance)
+          }
+      })
+  })
 });

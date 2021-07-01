@@ -189,9 +189,13 @@ contract EO_STAKING is
         uint256 _interval,
         uint256 _bonus
     ) external virtual isContractAdmin {
-        require(
-            _interval >= 2,
-            "PES:SMT: minumum allwable time for stake is 2 days"
+        // require( temp
+        //     _interval >= 2,
+        //     "PES:SMT: minumum allowable time for stake is 2 days"
+        // );
+        require( //CTS:EXAMINE already checked in newStake?
+            _interval >= 1,
+            "PES:SMT: minumum allowable time for stake is 1"
         );
         //^^^^^^^checks^^^^^^^^^
         stakeTier[_stakeTier].minimum = _min;
@@ -206,6 +210,7 @@ contract EO_STAKING is
     /**
      * @dev Create a new stake
      * @param _amount stake token amount
+     * @param _stakeTier staking tier
      */
     function stakeMyTokens(uint256 _amount, uint256 _stakeTier) external {
         StakingTier memory thisStakeTier = stakeTier[_stakeTier];
@@ -238,7 +243,7 @@ contract EO_STAKING is
         Stake memory thisStake = stake[_tokenId];
 
         require(
-            (block.timestamp - thisStake.startTime) > 86399, // 1 day in seconds
+            (block.timestamp - thisStake.startTime) > 1, // 1 day in seconds CTS:EXAMINE temp
             "PES:CB: must wait 24h from creation/last claim"
         );
         //^^^^^^^checks^^^^^^^^^
@@ -268,13 +273,14 @@ contract EO_STAKING is
         uint256 availableRewards = UTIL_TKN.balanceOf(REWARDS_VAULT_Address);
         Stake memory thisStake = stake[_tokenId];
 
-        require(
+        require( // 
             block.timestamp >
                 (thisStake.mintTime + (thisStake.interval * seconds_in_a_day)),
             "PES:BS: must wait until stake period has elapsed"
         );
+
         require(
-            (block.timestamp - thisStake.startTime) > 86399, // 1 day in seconds
+            (block.timestamp - thisStake.startTime) > 2, // 1 day in seconds CTS:EXAMINE temp
             "PES:BS: must wait 24h from creation/last claim"
         );
         //^^^^^^^checks^^^^^^^^^
@@ -394,7 +400,6 @@ contract EO_STAKING is
 
     /**
      * @dev Triggers stopped state. (pausable)
-     *
      */
     function pause() external isPauser {
         _pause();
@@ -422,14 +427,14 @@ contract EO_STAKING is
         uint256 _bonus
     ) private whenNotPaused nonReentrant {
         require(
-            _interval > 172800, // 2 days in seconds
-            "PES:NS: Stake <= 172800 sec"
+            _interval >= 1, // 2 days in seconds temp CTS:EXAMINE unreachable? throws in Admin_setStakeLevels
+            "PES:NS: Interval <= 1"
         );
 
-        require(
+        require( //CTS:EXAMINE shouldn't this throw in Admin_setStakeLevels and not here?
             _amount > 99999999999999999999, //100 pruf
-            "PES:NS: Staked amount < 1000"
-        );
+            "PES:NS: Staked amount < 100"
+        ); 
         //^^^^^^^checks^^^^^^^^^
 
         currentStake++;
