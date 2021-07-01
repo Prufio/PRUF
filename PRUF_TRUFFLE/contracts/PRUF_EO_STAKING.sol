@@ -40,12 +40,10 @@ import "./Imports/access/AccessControl.sol";
 import "./Imports/utils/Pausable.sol";
 import "./Imports/utils/ReentrancyGuard.sol";
 import "./Imports/token/ERC721/IERC721.sol";
-import "./Imports/token/ERC721/IERC721Receiver.sol";
 
 contract EO_STAKING is
     ReentrancyGuard,
     AccessControl,
-    IERC721Receiver,
     Pausable
 {
     bytes32 public constant CONTRACT_ADMIN_ROLE =
@@ -75,7 +73,7 @@ contract EO_STAKING is
         uint256 interval;
         uint256 bonus;
     }
-/*
+    /*
     struct Stake {
     uint256 stakedAmount; //tokens in stake
     uint256 mintTime; //blocktime of creation
@@ -253,13 +251,14 @@ contract EO_STAKING is
         Stake memory thisStake = stake[_tokenId];
 
         require(
-            (block.timestamp - thisStake.startTime) > 1, // 1 day in seconds CTS:EXAMINE temp
+            (block.timestamp - thisStake.startTime) > seconds_in_a_day, // 1 day in seconds CTS:EXAMINE temp
             "PES:CB: must wait 24h from creation/last claim"
         );
         //^^^^^^^checks^^^^^^^^^
 
-        uint256 reward = eligibleRewards(_tokenId);
-        thisStake.startTime = block.timestamp;
+        uint256 reward = eligibleRewards(_tokenId); //gets reward for current reward period
+
+        stake[_tokenId].startTime = block.timestamp; //resets interval start for next reward period
 
         if (reward > availableRewards) {
             reward = availableRewards;
@@ -283,7 +282,7 @@ contract EO_STAKING is
         uint256 availableRewards = UTIL_TKN.balanceOf(REWARDS_VAULT_Address);
         Stake memory thisStake = stake[_tokenId];
 
-        require( // 
+        require( //
             block.timestamp >
                 (thisStake.mintTime + (thisStake.interval * seconds_in_a_day)),
             "PES:BS: must wait until stake period has elapsed"
@@ -317,9 +316,9 @@ contract EO_STAKING is
     function eligibleRewards(uint256 _tokenId) public view returns (uint256) {
         Stake memory thisStake = stake[_tokenId];
 
-        uint256 elapsedMicroIntervals =
-            (((block.timestamp - thisStake.startTime) * 1000000) /
-                (thisStake.interval * seconds_in_a_day)); //microIntervals since stake start or last payout
+        uint256 elapsedMicroIntervals = (((block.timestamp -
+            thisStake.startTime) * 1000000) /
+            (thisStake.interval * seconds_in_a_day)); //microIntervals since stake start or last payout
 
         uint256 reward = (elapsedMicroIntervals * thisStake.bonus) / 1000000;
 
@@ -338,9 +337,9 @@ contract EO_STAKING is
     {
         Stake memory thisStake = stake[_tokenId];
 
-        uint256 elapsedMicroIntervals =
-            (((block.timestamp - thisStake.startTime) * 1000000) /
-                (thisStake.interval * seconds_in_a_day)); //microIntervals since stake start or last payout
+        uint256 elapsedMicroIntervals = (((block.timestamp -
+            thisStake.startTime) * 1000000) /
+            (thisStake.interval * seconds_in_a_day)); //microIntervals since stake start or last payout
 
         uint256 reward = (elapsedMicroIntervals * thisStake.bonus) / 1000000;
 
@@ -394,21 +393,6 @@ contract EO_STAKING is
     }
 
     /**
-     * @dev Compliance for erc721 reciever
-     * See OZ documentation
-     */
-    function onERC721Received(
-        address,
-        address,
-        uint256,
-        bytes calldata
-    ) external virtual override returns (bytes4) {
-        //^^^^^^^checks^^^^^^^^^
-        return this.onERC721Received.selector;
-        //^^^^^^^interactions^^^^^^^^^
-    }
-
-    /**
      * @dev Triggers stopped state. (pausable)
      */
     function pause() external isPauser {
@@ -444,7 +428,7 @@ contract EO_STAKING is
         require( //CTS:EXAMINE shouldn't this throw in Admin_setStakeLevels and not here?
             _amount > 99999999999999999999, //100 pruf
             "PES:NS: Staked amount < 100"
-        ); 
+        );
         //^^^^^^^checks^^^^^^^^^
 
         currentStake++;
