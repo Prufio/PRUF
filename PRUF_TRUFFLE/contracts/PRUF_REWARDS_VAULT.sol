@@ -30,14 +30,8 @@ import "./Imports/access/AccessControl.sol";
 import "./Imports/utils/Pausable.sol";
 import "./Imports/utils/ReentrancyGuard.sol";
 import "./Imports/token/ERC721/IERC721.sol";
-import "./Imports/token/ERC721/IERC721Receiver.sol";
 
-contract REWARDS_VAULT is
-    ReentrancyGuard,
-    AccessControl,
-    IERC721Receiver,
-    Pausable
-{
+contract REWARDS_VAULT is ReentrancyGuard, AccessControl, Pausable {
     bytes32 public constant CONTRACT_ADMIN_ROLE =
         keccak256("CONTRACT_ADMIN_ROLE");
     bytes32 public constant PAUSER_ROLE = keccak256("PAUSER_ROLE");
@@ -145,21 +139,6 @@ contract REWARDS_VAULT is
         //^^^^^^^checks^^^^^^^^^
 
         IERC721(_ERC721Contract).safeTransferFrom(address(this), _to, _tokenId);
-        //^^^^^^^interactions^^^^^^^^^
-    }
-
-    /**
-     * @dev Compliance for erc721 reciever
-     * See OZ documentation
-     */
-    function onERC721Received(
-        address,
-        address,
-        uint256,
-        bytes calldata
-    ) external virtual override returns (bytes4) {
-        //^^^^^^^checks^^^^^^^^^
-        return this.onERC721Received.selector;
         //^^^^^^^interactions^^^^^^^^^
     }
 
