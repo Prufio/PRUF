@@ -1,6 +1,6 @@
 {
 	"compiler": {
-		"version": "0.8.0+commit.c7dfd78e"
+		"version": "0.8.1+commit.df193b15"
 	},
 	"language": "Solidity",
 	"output": {
@@ -1054,8 +1054,8 @@
 			"bytecodeHash": "ipfs"
 		},
 		"optimizer": {
-			"enabled": true,
-			"runs": 3000
+			"enabled": false,
+			"runs": 200
 		},
 		"remappings": []
 	},
@@ -1077,11 +1077,11 @@
 			]
 		},
 		"Documents/DEV/PRUF/PRUF_TRUFFLE/contracts/Imports/token/ERC20/ERC20.sol": {
-			"keccak256": "0x9ceb78a9b6a714543241044d035c2588aa38e2a505e778bc1827c58bc8475065",
+			"keccak256": "0xfff5dcb535e50e90437f0dbed6f37812e1acf8b8c19003e3484a530b07350683",
 			"license": "MIT",
 			"urls": [
-				"bzz-raw://30b951a809acb9744ac5a544da40f30f29b73dead91cc92b84c0bf73f92a53c5",
-				"dweb:/ipfs/QmRYNw8SfzmpUkBYkUSUUaF9EF8Vxej4WCp1AWrTtmPDPM"
+				"bzz-raw://9eaa8fbc69d78c9b17876d1c94f412bb66e6b12c0c8d7abacb3caacdb2ea46a0",
+				"dweb:/ipfs/QmeuzwcW2fetwuNhnrGausjNcTdfXnVCMYjVtKpzNUDX9K"
 			]
 		},
 		"Documents/DEV/PRUF/PRUF_TRUFFLE/contracts/Imports/token/ERC20/ERC20Burnable.sol": {
@@ -1157,11 +1157,11 @@
 			]
 		},
 		"Documents/DEV/PRUF/PRUF_TRUFFLE/contracts/PRUF_INTERFACES.sol": {
-			"keccak256": "0x66e6967a8f94167e08948944d2854df5f78135883614cb59bbec53b037d6f8f8",
+			"keccak256": "0xa003c0219361a6ce0b1fb1c0940b04014fa52425998b708846987c30300171c9",
 			"license": "UNLICENSED",
 			"urls": [
-				"bzz-raw://4f122a913d9e59e5b05ee18b279c5ed87fac1d60cec23e8a048a19fb03c94e15",
-				"dweb:/ipfs/QmaQuLeATNGTVsvr7sULRwapFFqgVnWuYYM856U2i1zBhB"
+				"bzz-raw://44757101dd999979004bdfcd84305663efc4704d20c14a963d51ed70197fd01d",
+				"dweb:/ipfs/Qmbz4kKcSxfDaWZRKwSqC4YHd57Kgi1Qrx3qPYZdfaCf1b"
 			]
 		},
 		"Documents/DEV/PRUF/PRUF_TRUFFLE/contracts/PRUF_UTIL_TKN.sol": {

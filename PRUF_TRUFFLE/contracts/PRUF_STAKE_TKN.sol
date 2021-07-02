@@ -89,7 +89,7 @@ contract STAKE_TKN is
     /**
      * @dev Mint a stake token
      * @param _recipientAddress - Address to mint token into
-     * @param _tokenId - Token ID to mint
+     * @param _tokenId - Token ID to mint //CTS:EXAMINE do we want whenNotPaused on this?
      */
     function mintStakeToken(address _recipientAddress, uint256 _tokenId)
         external
@@ -106,7 +106,7 @@ contract STAKE_TKN is
 
     /**
      * @dev Burn a stake token
-     * @param _tokenId - Token ID to burn
+     * @param _tokenId - Token ID to burn //CTS:EXAMINE do we want whenNotPaused on this?
      */
     function burnStakeToken(uint256 _tokenId)
         external

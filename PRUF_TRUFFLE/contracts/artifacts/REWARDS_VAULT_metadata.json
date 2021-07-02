@@ -1,0 +1,562 @@
+{
+	"compiler": {
+		"version": "0.8.1+commit.df193b15"
+	},
+	"language": "Solidity",
+	"output": {
+		"abi": [
+			{
+				"inputs": [],
+				"stateMutability": "nonpayable",
+				"type": "constructor"
+			},
+			{
+				"anonymous": false,
+				"inputs": [
+					{
+						"indexed": false,
+						"internalType": "address",
+						"name": "account",
+						"type": "address"
+					}
+				],
+				"name": "Paused",
+				"type": "event"
+			},
+			{
+				"anonymous": false,
+				"inputs": [
+					{
+						"indexed": true,
+						"internalType": "bytes32",
+						"name": "role",
+						"type": "bytes32"
+					},
+					{
+						"indexed": true,
+						"internalType": "bytes32",
+						"name": "previousAdminRole",
+						"type": "bytes32"
+					},
+					{
+						"indexed": true,
+						"internalType": "bytes32",
+						"name": "newAdminRole",
+						"type": "bytes32"
+					}
+				],
+				"name": "RoleAdminChanged",
+				"type": "event"
+			},
+			{
+				"anonymous": false,
+				"inputs": [
+					{
+						"indexed": true,
+						"internalType": "bytes32",
+						"name": "role",
+						"type": "bytes32"
+					},
+					{
+						"indexed": true,
+						"internalType": "address",
+						"name": "account",
+						"type": "address"
+					},
+					{
+						"indexed": true,
+						"internalType": "address",
+						"name": "sender",
+						"type": "address"
+					}
+				],
+				"name": "RoleGranted",
+				"type": "event"
+			},
+			{
+				"anonymous": false,
+				"inputs": [
+					{
+						"indexed": true,
+						"internalType": "bytes32",
+						"name": "role",
+						"type": "bytes32"
+					},
+					{
+						"indexed": true,
+						"internalType": "address",
+						"name": "account",
+						"type": "address"
+					},
+					{
+						"indexed": true,
+						"internalType": "address",
+						"name": "sender",
+						"type": "address"
+					}
+				],
+				"name": "RoleRevoked",
+				"type": "event"
+			},
+			{
+				"anonymous": false,
+				"inputs": [
+					{
+						"indexed": false,
+						"internalType": "address",
+						"name": "account",
+						"type": "address"
+					}
+				],
+				"name": "Unpaused",
+				"type": "event"
+			},
+			{
+				"inputs": [],
+				"name": "ASSET_TXFR_ROLE",
+				"outputs": [
+					{
+						"internalType": "bytes32",
+						"name": "",
+						"type": "bytes32"
+					}
+				],
+				"stateMutability": "view",
+				"type": "function"
+			},
+			{
+				"inputs": [
+					{
+						"internalType": "address",
+						"name": "_utilAddress",
+						"type": "address"
+					},
+					{
+						"internalType": "address",
+						"name": "_stakeAddress",
+						"type": "address"
+					}
+				],
+				"name": "Admin_setTokenContracts",
+				"outputs": [],
+				"stateMutability": "nonpayable",
+				"type": "function"
+			},
+			{
+				"inputs": [],
+				"name": "CONTRACT_ADMIN_ROLE",
+				"outputs": [
+					{
+						"internalType": "bytes32",
+						"name": "",
+						"type": "bytes32"
+					}
+				],
+				"stateMutability": "view",
+				"type": "function"
+			},
+			{
+				"inputs": [],
+				"name": "DEFAULT_ADMIN_ROLE",
+				"outputs": [
+					{
+						"internalType": "bytes32",
+						"name": "",
+						"type": "bytes32"
+					}
+				],
+				"stateMutability": "view",
+				"type": "function"
+			},
+			{
+				"inputs": [],
+				"name": "PAUSER_ROLE",
+				"outputs": [
+					{
+						"internalType": "bytes32",
+						"name": "",
+						"type": "bytes32"
+					}
+				],
+				"stateMutability": "view",
+				"type": "function"
+			},
+			{
+				"inputs": [],
+				"name": "STAKE_PAYER_ROLE",
+				"outputs": [
+					{
+						"internalType": "bytes32",
+						"name": "",
+						"type": "bytes32"
+					}
+				],
+				"stateMutability": "view",
+				"type": "function"
+			},
+			{
+				"inputs": [
+					{
+						"internalType": "bytes32",
+						"name": "role",
+						"type": "bytes32"
+					}
+				],
+				"name": "getRoleAdmin",
+				"outputs": [
+					{
+						"internalType": "bytes32",
+						"name": "",
+						"type": "bytes32"
+					}
+				],
+				"stateMutability": "view",
+				"type": "function"
+			},
+			{
+				"inputs": [
+					{
+						"internalType": "bytes32",
+						"name": "role",
+						"type": "bytes32"
+					},
+					{
+						"internalType": "uint256",
+						"name": "index",
+						"type": "uint256"
+					}
+				],
+				"name": "getRoleMember",
+				"outputs": [
+					{
+						"internalType": "address",
+						"name": "",
+						"type": "address"
+					}
+				],
+				"stateMutability": "view",
+				"type": "function"
+			},
+			{
+				"inputs": [
+					{
+						"internalType": "bytes32",
+						"name": "role",
+						"type": "bytes32"
+					}
+				],
+				"name": "getRoleMemberCount",
+				"outputs": [
+					{
+						"internalType": "uint256",
+						"name": "",
+						"type": "uint256"
+					}
+				],
+				"stateMutability": "view",
+				"type": "function"
+			},
+			{
+				"inputs": [
+					{
+						"internalType": "bytes32",
+						"name": "role",
+						"type": "bytes32"
+					},
+					{
+						"internalType": "address",
+						"name": "account",
+						"type": "address"
+					}
+				],
+				"name": "grantRole",
+				"outputs": [],
+				"stateMutability": "nonpayable",
+				"type": "function"
+			},
+			{
+				"inputs": [
+					{
+						"internalType": "bytes32",
+						"name": "role",
+						"type": "bytes32"
+					},
+					{
+						"internalType": "address",
+						"name": "account",
+						"type": "address"
+					}
+				],
+				"name": "hasRole",
+				"outputs": [
+					{
+						"internalType": "bool",
+						"name": "",
+						"type": "bool"
+					}
+				],
+				"stateMutability": "view",
+				"type": "function"
+			},
+			{
+				"inputs": [],
+				"name": "pause",
+				"outputs": [],
+				"stateMutability": "nonpayable",
+				"type": "function"
+			},
+			{
+				"inputs": [],
+				"name": "paused",
+				"outputs": [
+					{
+						"internalType": "bool",
+						"name": "",
+						"type": "bool"
+					}
+				],
+				"stateMutability": "view",
+				"type": "function"
+			},
+			{
+				"inputs": [
+					{
+						"internalType": "uint256",
+						"name": "_tokenId",
+						"type": "uint256"
+					},
+					{
+						"internalType": "uint256",
+						"name": "_amount",
+						"type": "uint256"
+					}
+				],
+				"name": "payRewards",
+				"outputs": [],
+				"stateMutability": "nonpayable",
+				"type": "function"
+			},
+			{
+				"inputs": [
+					{
+						"internalType": "bytes32",
+						"name": "role",
+						"type": "bytes32"
+					},
+					{
+						"internalType": "address",
+						"name": "account",
+						"type": "address"
+					}
+				],
+				"name": "renounceRole",
+				"outputs": [],
+				"stateMutability": "nonpayable",
+				"type": "function"
+			},
+			{
+				"inputs": [
+					{
+						"internalType": "bytes32",
+						"name": "role",
+						"type": "bytes32"
+					},
+					{
+						"internalType": "address",
+						"name": "account",
+						"type": "address"
+					}
+				],
+				"name": "revokeRole",
+				"outputs": [],
+				"stateMutability": "nonpayable",
+				"type": "function"
+			},
+			{
+				"inputs": [
+					{
+						"internalType": "address",
+						"name": "_to",
+						"type": "address"
+					},
+					{
+						"internalType": "uint256",
+						"name": "_tokenId",
+						"type": "uint256"
+					},
+					{
+						"internalType": "address",
+						"name": "_ERC721Contract",
+						"type": "address"
+					}
+				],
+				"name": "transferERC721Token",
+				"outputs": [],
+				"stateMutability": "nonpayable",
+				"type": "function"
+			},
+			{
+				"inputs": [],
+				"name": "unpause",
+				"outputs": [],
+				"stateMutability": "nonpayable",
+				"type": "function"
+			}
+		],
+		"devdoc": {
+			"kind": "dev",
+			"methods": {
+				"Admin_setTokenContracts(address,address)": {
+					"details": "Set address of contracts to interface with",
+					"params": {
+						"_stakeAddress": "address of STAKE_TKN",
+						"_utilAddress": "address of UTIL_TKN"
+					}
+				},
+				"getRoleAdmin(bytes32)": {
+					"details": "Returns the admin role that controls `role`. See {grantRole} and {revokeRole}. To change a role's admin, use {_setRoleAdmin}."
+				},
+				"getRoleMember(bytes32,uint256)": {
+					"details": "Returns one of the accounts that have `role`. `index` must be a value between 0 and {getRoleMemberCount}, non-inclusive. Role bearers are not sorted in any particular way, and their ordering may change at any point. WARNING: When using {getRoleMember} and {getRoleMemberCount}, make sure you perform all queries on the same block. See the following https://forum.openzeppelin.com/t/iterating-over-elements-on-enumerableset-in-openzeppelin-contracts/2296[forum post] for more information."
+				},
+				"getRoleMemberCount(bytes32)": {
+					"details": "Returns the number of accounts that have `role`. Can be used together with {getRoleMember} to enumerate all bearers of a role."
+				},
+				"grantRole(bytes32,address)": {
+					"details": "Grants `role` to `account`. If `account` had not been already granted `role`, emits a {RoleGranted} event. Requirements: - the caller must have ``role``'s admin role."
+				},
+				"hasRole(bytes32,address)": {
+					"details": "Returns `true` if `account` has been granted `role`."
+				},
+				"paused()": {
+					"details": "Returns true if the contract is paused, and false otherwise."
+				},
+				"payRewards(uint256,uint256)": {
+					"details": "Sends (amount) pruf to ownerOf(tokenId)",
+					"params": {
+						"_amount": "- amount to pay to owner of (tokenId)",
+						"_tokenId": "- token ID"
+					}
+				},
+				"renounceRole(bytes32,address)": {
+					"details": "Revokes `role` from the calling account. Roles are often managed via {grantRole} and {revokeRole}: this function's purpose is to provide a mechanism for accounts to lose their privileges if they are compromised (such as when a trusted device is misplaced). If the calling account had been granted `role`, emits a {RoleRevoked} event. Requirements: - the caller must be `account`."
+				},
+				"revokeRole(bytes32,address)": {
+					"details": "Revokes `role` from `account`. If `account` had been granted `role`, emits a {RoleRevoked} event. Requirements: - the caller must have ``role``'s admin role."
+				},
+				"transferERC721Token(address,uint256,address)": {
+					"details": "Transfer any specified ERC721 Token from contract",
+					"params": {
+						"_ERC721Contract": "- token contract address",
+						"_to": "- address to send to",
+						"_tokenId": "- token ID"
+					}
+				}
+			},
+			"version": 1
+		},
+		"userdoc": {
+			"kind": "user",
+			"methods": {},
+			"version": 1
+		}
+	},
+	"settings": {
+		"compilationTarget": {
+			"Documents/DEV/PRUF/PRUF_TRUFFLE/contracts/PRUF_REWARDS_VAULT.sol": "REWARDS_VAULT"
+		},
+		"evmVersion": "istanbul",
+		"libraries": {},
+		"metadata": {
+			"bytecodeHash": "ipfs"
+		},
+		"optimizer": {
+			"enabled": false,
+			"runs": 200
+		},
+		"remappings": []
+	},
+	"sources": {
+		"Documents/DEV/PRUF/PRUF_TRUFFLE/contracts/Imports/access/AccessControl.sol": {
+			"keccak256": "0x6e98c0d315f562a98d915414f948e041531138284dd633b4cdb0361a7172cd97",
+			"license": "MIT",
+			"urls": [
+				"bzz-raw://f3ac13bc98c98c9b6e76df744de59d5cb42b3018ec1f281951781a81786c82d7",
+				"dweb:/ipfs/QmSWUiJXUDFQbno6WgsadapBtYnQwn1iKuCo1z6A5qHjEV"
+			]
+		},
+		"Documents/DEV/PRUF/PRUF_TRUFFLE/contracts/Imports/introspection/IERC165.sol": {
+			"keccak256": "0xa28007762d9da9db878dd421960c8cb9a10471f47ab5c1b3309bfe48e9e79ff4",
+			"license": "MIT",
+			"urls": [
+				"bzz-raw://796ab6e88af7bf0e78def0f059310c903af6a312b565344e0ff524a0f26e81c6",
+				"dweb:/ipfs/QmcsVgLgzWdor3UnAztUkXKNGcysm1MPneWksF72AvnwBx"
+			]
+		},
+		"Documents/DEV/PRUF/PRUF_TRUFFLE/contracts/Imports/token/ERC721/IERC721.sol": {
+			"keccak256": "0xe75db2fa62af4f543d39e1d718f77b5091aaf032988329e48839ce3410996fde",
+			"license": "MIT",
+			"urls": [
+				"bzz-raw://9ab14ad99b5a6cacc0a738eade19f4603a0be59bd943f7ff9d1b553716ef9fe1",
+				"dweb:/ipfs/QmcDS45TqG1DaaDbM9khBPV3FU2qi3ztgVGZWF133qujLd"
+			]
+		},
+		"Documents/DEV/PRUF/PRUF_TRUFFLE/contracts/Imports/utils/Address.sol": {
+			"keccak256": "0x069b2631bb5b5193a58ccf7a06266c7361bd2c20095667af4402817605627f45",
+			"license": "MIT",
+			"urls": [
+				"bzz-raw://6a4c96fafff76deda5697c3c5c98cade6e6e1b178254544c106bf360c079ce4e",
+				"dweb:/ipfs/QmXmxubE3jnatFgZuN8ay1VV6hZ8WRmhvUjNpeVjki15HX"
+			]
+		},
+		"Documents/DEV/PRUF/PRUF_TRUFFLE/contracts/Imports/utils/Context.sol": {
+			"keccak256": "0xf930d2df426bfcfc1f7415be724f04081c96f4fb9ec8d0e3a521c07692dface0",
+			"license": "MIT",
+			"urls": [
+				"bzz-raw://fc2bfdea0d2562c76fb3c4cf70a86c6ba25c5a30e8f8515c95aafdf8383f8395",
+				"dweb:/ipfs/QmTbFya18786ckJfLYUoWau9jBTKfmWnWm5XSViWvB7PXN"
+			]
+		},
+		"Documents/DEV/PRUF/PRUF_TRUFFLE/contracts/Imports/utils/EnumerableSet.sol": {
+			"keccak256": "0x71e0d1cc75b67306382e055b789b6d3ffe34a9e2e55380d3c9895a36a42229e1",
+			"license": "MIT",
+			"urls": [
+				"bzz-raw://ea28aa69470f0f5bb38095c59d2d68db03fc52faa5640de4486a188ecc168870",
+				"dweb:/ipfs/QmdwRX791f2gdkxLfzQLcyx3ZLvSjGd2wdX8gXFi8sH2uW"
+			]
+		},
+		"Documents/DEV/PRUF/PRUF_TRUFFLE/contracts/Imports/utils/Pausable.sol": {
+			"keccak256": "0xc6e9bea1d943d97521f0a73f2667eccc2eb0f740c209574d113ec5addb617472",
+			"license": "MIT",
+			"urls": [
+				"bzz-raw://e73ef310f3ccad0932c646fcde4f5e1c2777a93c3f603b52181181f4b29acdd1",
+				"dweb:/ipfs/QmXfPZ8XDfMDMWD4uajioE21AhQhndDdo5tqbMpaM51scV"
+			]
+		},
+		"Documents/DEV/PRUF/PRUF_TRUFFLE/contracts/Imports/utils/ReentrancyGuard.sol": {
+			"keccak256": "0x1278c76b840063ff5e14a2d7c5707812c1eabc2342ed040bf862c2d7552102fe",
+			"license": "MIT",
+			"urls": [
+				"bzz-raw://b9989233808b8f475395f71ea757e277fa167cdac8a24d10f9784783defd313c",
+				"dweb:/ipfs/Qmdg6rbPsShpnzvqKmPVuFk7eYU53oXTPxqUJXd9WLD4vg"
+			]
+		},
+		"Documents/DEV/PRUF/PRUF_TRUFFLE/contracts/PRUF_INTERFACES.sol": {
+			"keccak256": "0xa003c0219361a6ce0b1fb1c0940b04014fa52425998b708846987c30300171c9",
+			"license": "UNLICENSED",
+			"urls": [
+				"bzz-raw://44757101dd999979004bdfcd84305663efc4704d20c14a963d51ed70197fd01d",
+				"dweb:/ipfs/Qmbz4kKcSxfDaWZRKwSqC4YHd57Kgi1Qrx3qPYZdfaCf1b"
+			]
+		},
+		"Documents/DEV/PRUF/PRUF_TRUFFLE/contracts/PRUF_REWARDS_VAULT.sol": {
+			"keccak256": "0xe2eb023e5de5c2b71161578c6225f78f9ce953ae45711f9f09452c68b2d55b8e",
+			"license": "UNLICENSED",
+			"urls": [
+				"bzz-raw://94636ef20b1f33afee0cd0a272a05706bb414ca17d34c858e737f762f65b606c",
+				"dweb:/ipfs/QmWHu7wH9S5CzNNngM6kVj7a6tdqG2THVKy2QdTcwf4mQ4"
+			]
+		}
+	},
+	"version": 1
+}
