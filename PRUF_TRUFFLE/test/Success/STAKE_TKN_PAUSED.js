@@ -44,6 +44,7 @@ __/\\\\\\\\\\\\\ _____/\\\\\\\\\ _______/\\__/\\ ___/\\\\\\\\\\\\\\\
         let discardRoleB32;
         let stakeRoleB32;
         let stakePayerRoleB32;
+        let pauserRoleB32;
         
         contract("STAKE_TKN", (accounts) => {
           console.log(
@@ -147,6 +148,8 @@ __/\\\\\\\\\\\\\ _____/\\\\\\\\\ _______/\\__/\\ ___/\\\\\\\\\\\\\\\
             stakeRoleB32 = await Helper.getStringHash("STAKE_ADMIN_ROLE");
         
             stakePayerRoleB32 = await Helper.getStringHash("STAKE_PAYER_ROLE");
+
+            pauserRoleB32 = await Helper.getStringHash("PAUSER_ROLE");
           });
         
           it("Should authorize STAKE_VAULT for trusted agent functions in UTIL_TKN", async () => {
@@ -178,6 +181,18 @@ __/\\\\\\\\\\\\\ _____/\\\\\\\\\ _______/\\__/\\ ___/\\\\\\\\\\\\\\\
         
           it("Should authorize EO_STAKING to take stakes out of the STAKE_VAULT", async () => {
             return STAKE_VAULT.grantRole(stakeRoleB32, EO_STAKING.address, {
+              from: account1,
+            });
+          });
+
+          it("Should authorize EO_STAKING to take stakes out of the STAKE_VAULT", async () => {
+            return UTIL_TKN.grantRole(pauserRoleB32, STAKE_VAULT.address, {
+              from: account1,
+            });
+          });
+
+          it("Should authorize EO_STAKING to take stakes out of the STAKE_VAULT", async () => {
+            return UTIL_TKN.grantRole(pauserRoleB32, REWARDS_VAULT.address, {
               from: account1,
             });
           });
@@ -250,6 +265,10 @@ __/\\\\\\\\\\\\\ _____/\\\\\\\\\ _______/\\__/\\ ___/\\\\\\\\\\\\\\\
               REWARDS_VAULT.address,
               { from: account1 }
             );
+          });
+
+          it("Should pause UTIL_TKN", async () => {
+            return UTIL_TKN.pause({ from: account1 });
           });
         
           function timeout(ms) {

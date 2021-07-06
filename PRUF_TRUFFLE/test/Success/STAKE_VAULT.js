@@ -45,7 +45,7 @@ __/\\\\\\\\\\\\\ _____/\\\\\\\\\ _______/\\__/\\ ___/\\\\\\\\\\\\\\\
         let stakeRoleB32;
         let stakePayerRoleB32;
         
-        contract("STAKE_TKN", (accounts) => {
+        contract("STAKE_VAULT", (accounts) => {
           console.log(
             "//**************************BEGIN BOOTSTRAP**************************//"
           );
@@ -154,10 +154,10 @@ __/\\\\\\\\\\\\\ _____/\\\\\\\\\ _______/\\__/\\ ___/\\\\\\\\\\\\\\\
               "//**************************************END BOOTSTRAP**********************************************/"
             );
             console.log(
-              "//**************************************BEGIN STAKE_TKN TEST**********************************************/"
+              "//**************************************BEGIN STAKE_VAULT TEST**********************************************/"
             );
             console.log(
-              "//**************************************BEGIN STAKE_TKN SETUP**********************************************/"
+              "//**************************************BEGIN STAKE_VAULT SETUP**********************************************/"
             );
             return UTIL_TKN.grantRole(trustedAgentRoleB32, STAKE_VAULT.address, {
               from: account1,
@@ -254,60 +254,188 @@ __/\\\\\\\\\\\\\ _____/\\\\\\\\\ _______/\\__/\\ ___/\\\\\\\\\\\\\\\
         
           function timeout(ms) {
             console.log(
-              "//**************************************END STAKE_TKN SETUP**********************************************/"
+              "//**************************************END STAKE_VAULT SETUP**********************************************/"
             );
             return new Promise((resolve) => setTimeout(resolve, ms));
           }
-        
-          it("Should mint a stake_tkn(1)", async () => {
-            return STAKE_TKN.mintStakeToken(
-                account2,
-                '1',
-              { from: account1 }
-            );
-          });
 
-          it("Should burn stake_tkn(1)", async () => {
-            return STAKE_TKN.burnStakeToken(
-                '1',
-              { from: account1 }
+          it("Should set stake level1", async () => {
+            console.log("//**************************************BEGIN STAKE_VAULT TEST**********************************************/");
+            return EO_STAKING.Admin_setStakeLevels(
+              "1",
+              "1000000000000000000000",
+              "100000000000000000000000",
+              "10",
+              "50",
+              {
+                from: account1,
+              }
             );
           });
         
-          it("Should mint a stake_tkn(1)", async () => {
-            return STAKE_TKN.mintStakeToken(
-                account2,
-                '1',
-              { from: account1 }
+          it("Should stake 100000ü on account2", async () => {
+            return EO_STAKING.stakeMyTokens("100000000000000000000000", "1", {
+              from: account2,
+            });
+          });
+        
+          it("Should retrieve balanceOf(100000) Pruf tokens @stake_tkn(2)", async () => {
+            var Balance = [];
+        
+            return await STAKE_VAULT.stakeOfToken(
+              '1',
+              { from: account1 },
+              function (_err, _result) {
+                if (_err) {
+                } else {
+                  Balance = Object.values(_result);
+                  console.log(Balance);
+                }
+              }
             );
+          });
+        
+          it("Should retrieve balanceOf(200000) Pruf tokens @account2", async () => {
+            var Balance = [];
+        
+            return await UTIL_TKN.balanceOf(
+              account2,
+              { from: account1 },
+              function (_err, _result) {
+                if (_err) {
+                } else {
+                  Balance = Object.values(_result);
+                  console.log(Balance);
+                }
+              }
+            );
+          });
+        
+          it("Should authorize account1 as STAKE_ADMIN", async () => {
+            return STAKE_VAULT.grantRole(stakeRoleB32, account1, {
+              from: account1,
+            });
           });
           
-          it("Should transfer stake_tkn(1) from account2 to account1", async () => {
+          it("Should release stake", async () => {
+            return STAKE_VAULT.releaseStake(
+                '1',
+              { from: account1 }
+            );
+          });
+        
+          it("Should retrieve balanceOf(300000) Pruf tokens @account2", async () => {
+            var Balance = [];
+        
+            return await UTIL_TKN.balanceOf(
+              account2,
+              { from: account1 },
+              function (_err, _result) {
+                if (_err) {
+                } else {
+                  Balance = Object.values(_result);
+                  console.log(Balance);
+                }
+              }
+            );
+          });
+        
+          it("Should unauthorize account1 as STAKE_ADMIN", async () => {
+            return STAKE_VAULT.revokeRole(stakeRoleB32, account1, {
+              from: account1,
+            });
+          });
+        
+          it("Should stake 100000ü on account2", async () => {
+            return EO_STAKING.stakeMyTokens("100000000000000000000000", "1", {
+              from: account2,
+            });
+          });
+          
+          it("Should transfer stake_tkn(1) to STAKE_VAULT", async () => {
             return STAKE_TKN.transferFrom(
                 account2,
-                account1,
-                '1',
+                STAKE_VAULT.address,
+                '2',
               { from: account2 }
             );
           });
-
-          it("Should transfer stake_tkn(1) from account1 to account2", async () => {
-            return STAKE_TKN.safeTransferFrom(
-                account1,
+        
+          it("Should authorize account1 to transfer ERC721s", async () => {
+            return STAKE_VAULT.grantRole(assetTransferRoleB32, account1, {
+              from: account1,
+            });
+          });
+          
+          it("Should transfer stake_tkn(2) back to account2", async () => {
+            return STAKE_VAULT.transferERC721Token(
                 account2,
-                '1',
+                '2',
+                STAKE_TKN.address,
+              { from: account1 }
+            );
+          });
+        
+          it("Should authorize account1 as STAKE_ADMIN", async () => {
+            return STAKE_VAULT.grantRole(stakeRoleB32, account1, {
+              from: account1,
+            });
+          });
+          
+          it("Should give STAKE_VAULT 100000 tokens", async () => {
+            return STAKE_VAULT.takeStake(
+                '2',
+                '100000000000000000000000',
+              { from: account1 }
+            );
+          });
+        
+          it("Should retrieve balanceOf(100000) Pruf tokens @STAKE_VAULT", async () => {
+            var Balance = [];
+        
+            return await UTIL_TKN.balanceOf(
+              account2,
+              { from: account1 },
+              function (_err, _result) {
+                if (_err) {
+                } else {
+                  Balance = Object.values(_result);
+                  console.log(Balance);
+                }
+              }
+            );
+          });
+        
+          it("Should retrieve balanceOf(100000) Pruf tokens @account2", async () => {
+            var Balance = [];
+        
+            return await UTIL_TKN.balanceOf(
+              account2,
+              { from: account1 },
+              function (_err, _result) {
+                if (_err) {
+                } else {
+                  Balance = Object.values(_result);
+                  console.log(Balance);
+                }
+              }
+            );
+          });
+        
+          it("Should unauthorize account1 as STAKE_ADMIN", async () => {
+            return STAKE_VAULT.revokeRole(stakeRoleB32, account1, {
+              from: account1,
+            });
+          });
+          
+          it("Should pause STAKE_VAULT", async () => {
+            return STAKE_VAULT.pause(
               { from: account1 }
             );
           });
           
-          it("Should pause STAKE_TKN", async () => {
-            return STAKE_TKN.pause(
-              { from: account1 }
-            );
-          });
-          
-          it("Should unpause STAKE_TKN", async () => {
-            return STAKE_TKN.unpause(
+          it("Should unpause STAKE_VAULT", async () => {
+            return STAKE_VAULT.unpause(
               { from: account1 }
             );
           });
