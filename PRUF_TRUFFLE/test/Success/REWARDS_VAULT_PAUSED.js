@@ -278,7 +278,7 @@ contract("REWARDS_VAULT", (accounts) => {
 
 
   it("Should set stake level 1", async () => {
-    return EO_STAKING.Admin_setStakeLevels("1", "1000000000000000000000", "100000000000000000000000", "1", "50", {
+    return EO_STAKING.setStakeLevels("1", "1000000000000000000000", "100000000000000000000000", "1", "50", {
       from: account1,
     });
   });

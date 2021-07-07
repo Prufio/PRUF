@@ -280,7 +280,7 @@ __/\\\\\\\\\\\\\ _____/\\\\\\\\\ _______/\\__/\\ ___/\\\\\\\\\\\\\\\
 
           it("Should set stake level1", async () => {
             console.log("//**************************************BEGIN STAKE_VAULT TEST**********************************************/");
-            return EO_STAKING.Admin_setStakeLevels(
+            return EO_STAKING.setStakeLevels(
               "1",
               "1000000000000000000000",
               "100000000000000000000000",

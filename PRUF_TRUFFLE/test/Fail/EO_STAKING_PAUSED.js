@@ -314,9 +314,9 @@ contract("EO_STAKING", (accounts) => {
       "//**************************************END Admin_setTokenContracts Fail Batch**********************************************/"
     );
     console.log(
-      "//**************************************BEGIN Admin_setStakeLevels Fail Batch**********************************************/"
+      "//**************************************BEGIN setStakeLevels Fail Batch**********************************************/"
     );
-    return EO_STAKING.Admin_setStakeLevels(
+    return EO_STAKING.setStakeLevels(
       "1",
       "1000000000000000000000",
       "100000000000000000000000",
@@ -330,7 +330,7 @@ contract("EO_STAKING", (accounts) => {
 
   //4
   it("Should fail because interval !>=1", async () => {
-    return EO_STAKING.Admin_setStakeLevels(
+    return EO_STAKING.setStakeLevels(
       "1",
       "1000000000000000000000",
       "100000000000000000000000",
@@ -345,7 +345,7 @@ contract("EO_STAKING", (accounts) => {
   //5
   it("Should fail because staking tier is inactive", async () => {
     console.log(
-      "//**************************************END Admin_setStakeLevels Fail Batch**********************************************/"
+      "//**************************************END setStakeLevels Fail Batch**********************************************/"
     );
     console.log(
       "//**************************************BEGIN stakeMyTokens Fail Batch**********************************************/"
@@ -356,7 +356,7 @@ contract("EO_STAKING", (accounts) => {
   });
 
   it("Should create staking tier 1", async () => {
-    return EO_STAKING.Admin_setStakeLevels(
+    return EO_STAKING.setStakeLevels(
       "1",
       "1000000000000000000000",
       "100000000000000000000000",
@@ -415,7 +415,7 @@ contract("EO_STAKING", (accounts) => {
   });
 
   it("Should create staking tier 2", async () => {
-    return EO_STAKING.Admin_setStakeLevels(
+    return EO_STAKING.setStakeLevels(
       "2",
       "1000000000000000000000",
       "100000000000000000000000",
@@ -479,7 +479,7 @@ contract("EO_STAKING", (accounts) => {
     console.log(
       "//**************************************BEGIN newStake(internal) Fail Batch**********************************************/"
     );
-    return EO_STAKING.Admin_setStakeLevels(
+    return EO_STAKING.setStakeLevels(
       "3",
       "1000000000000000000",
       "100000000000000000000000",

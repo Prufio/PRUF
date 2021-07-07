@@ -11,22 +11,20 @@ __/\\\\\\\\\\\\\ _____/\\\\\\\\\ _______/\\__/\\ ___/\\\\\\\\\\\\\\\
          *-------------------------------------------------------------------*/
 
 /*-----------------------------------------------------------------
- *  TO DO
- *-----------------------------------------------------------------
  * PRUF ASSET CLASS NODE NFT CONTRACT
  *-----------------------------------------------------------------*/
 
 // SPDX-License-Identifier: UNLICENSED
 pragma solidity ^0.8.0;
 
+import "./PRUF_INTERFACES.sol";
 import "./Imports/access/AccessControl.sol";
 import "./Imports/utils/Context.sol";
 import "./Imports/utils/Counters.sol";
+import "./Imports/utils/ReentrancyGuard.sol";
 import "./Imports/token/ERC721/ERC721.sol";
 import "./Imports/token/ERC721/ERC721Burnable.sol";
 import "./Imports/token/ERC721/ERC721Pausable.sol";
-import "./PRUF_INTERFACES.sol";
-import "./Imports/utils/ReentrancyGuard.sol";
 
 /**
  * @dev {ERC721} token, including:
@@ -59,9 +57,8 @@ contract STAKE_TKN is
 
     Counters.Counter private _tokenIdTracker;
 
-    constructor() ERC721("PRUF Asset Class Node Token", "PRFN") {
+    constructor() ERC721("PRUF Staking Token", "PRST") { //CTS:EXAMINE work on the name a little bit?
         _setupRole(DEFAULT_ADMIN_ROLE, _msgSender());
-        //_setupRole(CONTRACT_ADMIN_ROLE, _msgSender());
         _setupRole(MINTER_ROLE, _msgSender());
         _setupRole(PAUSER_ROLE, _msgSender());
     }
@@ -76,15 +73,12 @@ contract STAKE_TKN is
     modifier isMinter() {
         require(
             hasRole(MINTER_ROLE, _msgSender()),
-            "AT:MOD-IM: Calling address !minter"
+            "ST:MOD-IM: Calling address !minter"
         );
         _;
     }
 
-    //----------------------Events----------------------//
-    event REPORT(string _msg);
-
-    //---------------------- isMinter ----------------------//
+    //---------------------- External Functions ----------------------//
 
     /**
      * @dev Mint a stake token
@@ -121,6 +115,8 @@ contract STAKE_TKN is
         //^^^^^^^interactions^^^^^^^^^
     }
 
+    //---------------------- Public Functions ----------------------//
+
     /**
      * @dev Transfers the ownership of a given token ID to another address.
      * Usage of this method is discouraged, use {safeTransferFrom} whenever possible.
@@ -136,7 +132,7 @@ contract STAKE_TKN is
     ) public override nonReentrant whenNotPaused {
         require(
             _isApprovedOrOwner(_msgSender(), _tokenId),
-            "ACT:TF: Caller !ApprovedOrOwner"
+            "ST:TF: Caller !ApprovedOrOwner"
         );
         //^^^^^^^checks^^^^^^^^^
 
@@ -186,7 +182,7 @@ contract STAKE_TKN is
     ) public virtual override nonReentrant whenNotPaused {
         require(
             _isApprovedOrOwner(_msgSender(), _tokenId),
-            "ACT:STF: Caller !ApprovedOrOwner"
+            "ST:STF: Caller !ApprovedOrOwner"
         );
         //^^^^^^^checks^^^^^^^^^
 
@@ -198,15 +194,11 @@ contract STAKE_TKN is
      * @dev Pauses all token transfers.
      *
      * See {ERC721Pausable} and {Pausable-_pause}.
-     *
-     * Requirements:
-     *
-     * - the caller must have the `PAUSER_ROLE`.
      */
     function pause() public virtual {
         require(
             hasRole(PAUSER_ROLE, _msgSender()),
-            "ACT:P: Caller !have pauser role"
+            "ST:P: Caller !have pauser role"
         );
         //^^^^^^^checks^^^^^^^^^
         _pause();
@@ -217,20 +209,18 @@ contract STAKE_TKN is
      * @dev Unpauses all token transfers.
      *
      * See {ERC721Pausable} and {Pausable-_unpause}.
-     *
-     * Requirements:
-     *
-     * - the caller must have the `PAUSER_ROLE`.
      */
     function unpause() public virtual {
         require(
             hasRole(PAUSER_ROLE, _msgSender()),
-            "ACT:UP: Caller !have pauser role"
+            "ST:UP: Caller !have pauser role"
         );
         //^^^^^^^checks^^^^^^^^^
         _unpause();
         //^^^^^^^interactions^^^^^^^^^
     }
+
+    //---------------------- Internal Functions ----------------------//
 
     /**
      * @dev all paused functions are blocked here (inside ERC720Pausable.sol)

@@ -11,13 +11,7 @@ __/\\\\\\\\\\\\\ _____/\\\\\\\\\ _______/\\__/\\ ___/\\\\\\\\\\\\\\\
          *-------------------------------------------------------------------*/
 
 /**-----------------------------------------------------------------
- *  TO DO
- *
- * IMPORTANT!!! EXTERNAL OR PUBLIC FUNCTIONS WITHOUTSTRICT PERMISSIONING NEED
- * TO BE CLOSELY EXAMINED IN THIS CONTRACT AS THEY WILL BE INHERITED NEARLY GLOBALLY
- *-----------------------------------------------------------------
- *-----------------------------------------------------------------
- *PRUF rewardsVault holds PRUF to send to stakers.
+ *PRUF Rewards Vault holds PRUF to send to stakers.
  *It is funded by the team with the stake rewards amount as needed
  *---------------------------------------------------------------
  */
@@ -60,21 +54,21 @@ contract REWARDS_VAULT is ReentrancyGuard, AccessControl, Pausable {
     modifier isContractAdmin() {
         require(
             hasRole(CONTRACT_ADMIN_ROLE, _msgSender()),
-            "B:MOD:-IADM Caller !CONTRACT_ADMIN_ROLE"
+            "RV:MOD:-ICA Caller !CONTRACT_ADMIN_ROLE"
         );
         _;
     }
     modifier isPauser() {
         require(
             hasRole(PAUSER_ROLE, _msgSender()),
-            "B:MOD-IP: Caller !PAUSER_ROLE"
+            "RV:MOD-IP: Caller !PAUSER_ROLE"
         );
         _;
     }
     modifier isStakePayer() {
         require(
             hasRole(STAKE_PAYER_ROLE, _msgSender()),
-            "B:MOD-ISP: Caller !STAKE_PAYER_ROLE"
+            "RV:MOD-ISP: Caller !STAKE_PAYER_ROLE"
         );
         _;
     }
@@ -102,7 +96,6 @@ contract REWARDS_VAULT is ReentrancyGuard, AccessControl, Pausable {
 
     //--------------------------------------External functions--------------------------------------------//
 
-    //payRewards(tokenId) requires STAKE_PAYER role Sends (amount) pruf to ownerOf(tokenId)
     /**
      * @dev Sends (amount) pruf to ownerOf(tokenId)
      * @param _tokenId - token ID
@@ -134,7 +127,7 @@ contract REWARDS_VAULT is ReentrancyGuard, AccessControl, Pausable {
     ) external virtual nonReentrant {
         require(
             hasRole(ASSET_TXFR_ROLE, _msgSender()),
-            "B:TX:Must have ASSET_TXFR_ROLE"
+            "RV:TET:Must have ASSET_TXFR_ROLE"
         );
         //^^^^^^^checks^^^^^^^^^
 
@@ -143,15 +136,14 @@ contract REWARDS_VAULT is ReentrancyGuard, AccessControl, Pausable {
     }
 
     /***
-     * @dev Triggers stopped state. (pausable)
-     *
+     * @dev Triggers stopped state.
      */
     function pause() external isPauser {
         _pause();
     }
 
     /***
-     * @dev Returns to normal state. (pausable)
+     * @dev Returns to normal state.
      */
 
     function unpause() external isPauser {

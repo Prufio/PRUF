@@ -279,7 +279,7 @@ contract("EO_STAKING", (accounts) => {
   }
 
   it("Should set stake level1", async () => {
-    return EO_STAKING.Admin_setStakeLevels(
+    return EO_STAKING.setStakeLevels(
       "1",
       "1000000000000000000000",
       "100000000000000000000000",
@@ -292,7 +292,7 @@ contract("EO_STAKING", (accounts) => {
   });
 
   it("Should set stake level2", async () => {
-    return EO_STAKING.Admin_setStakeLevels(
+    return EO_STAKING.setStakeLevels(
       "2",
       "2000000000000000000000",
       "100000000000000000000000",

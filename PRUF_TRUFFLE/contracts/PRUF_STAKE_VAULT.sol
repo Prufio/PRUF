@@ -11,12 +11,6 @@ __/\\\\\\\\\\\\\ _____/\\\\\\\\\ _______/\\__/\\ ___/\\\\\\\\\\\\\\\
          *-------------------------------------------------------------------*/
 
 /**-----------------------------------------------------------------
- *  TO DO
- *
- * IMPORTANT!!! EXTERNAL OR PUBLIC FUNCTIONS WITHOUTSTRICT PERMISSIONING NEED
- * TO BE CLOSELY EXAMINED IN THIS CONTRACT AS THEY WILL BE INHERITED NEARLY GLOBALLY
- *-----------------------------------------------------------------
- *-----------------------------------------------------------------
  *PRUF stakeVault holds stakes that were placed into its care.
  *---------------------------------------------------------------*/
 
@@ -53,30 +47,40 @@ contract STAKE_VAULT is ReentrancyGuard, AccessControl, Pausable {
     // --------------------------------------Modifiers--------------------------------------------//
 
     /**
-     * @dev Verify user credentials
+     * @dev Verify caller credentials
      * Originating Address:
-     *      Has role
+     *      Has CONTRACT_ADMIN_ROLE
      */
     modifier isContractAdmin() {
         require(
             hasRole(CONTRACT_ADMIN_ROLE, _msgSender()),
-            "B:MOD:-IADM Caller !CONTRACT_ADMIN_ROLE"
+            "SV:MOD:-ICA: Caller !CONTRACT_ADMIN_ROLE"
         );
         _;
     }
 
+    /**
+     * @dev Verify caller credentials
+     * Originating Address:
+     *      Has STAKE_ADMIN_ROLE
+     */
     modifier isStakeAdmin() {
         require(
             hasRole(STAKE_ADMIN_ROLE, _msgSender()),
-            "B:MOD:-IADM Caller !STAKE_ADMIN_ROLE"
+            "SV:MOD:-ISA: Caller !STAKE_ADMIN_ROLE"
         );
         _;
     }
 
+    /**
+     * @dev Verify caller credentials
+     * Originating Address:
+     *      Has PAUSER_ROLE
+     */
     modifier isPauser() {
         require(
             hasRole(PAUSER_ROLE, _msgSender()),
-            "B:MOD-IP:Calling address is not pauser"
+            "SV:MOD-IP:Calling address !pauser"
         );
         _;
     }
@@ -96,7 +100,7 @@ contract STAKE_VAULT is ReentrancyGuard, AccessControl, Pausable {
     ) external virtual nonReentrant {
         require(
             hasRole(ASSET_TXFR_ROLE, _msgSender()),
-            "B:TX:Must have ASSET_TXFR_ROLE"
+            "SV:TET:Must have ASSET_TXFR_ROLE"
         );
         //^^^^^^^checks^^^^^^^^^
 
@@ -106,8 +110,8 @@ contract STAKE_VAULT is ReentrancyGuard, AccessControl, Pausable {
 
     /**
      * @dev Set address of contracts to interface with
-     * @param _utilAddress address of UTIL_TKN
-     * @param _stakeAddress address of STAKE_TKN
+     * @param _utilAddress address of UTIL_TKN contract
+     * @param _stakeAddress address of STAKE_TKN contract
      */
     function Admin_setTokenContracts(
         address _utilAddress,
@@ -126,8 +130,8 @@ contract STAKE_VAULT is ReentrancyGuard, AccessControl, Pausable {
     //--------------------------------------External functions--------------------------------------------//
 
     /**
-     * @dev moves (amount)tokens from holder of(tokenID) into itself using trustedAgentTransfer, records the amount in stake map
-     * @param _tokenId token to get stake for
+     * @dev moves tokens(amount) from holder(tokenID) into itself using trustedAgentTransfer, records the amount in stake map
+     * @param _tokenId stake token to take stake for
      * @param _amount amount of stake to pull
      */
     function takeStake(uint256 _tokenId, uint256 _amount)
@@ -141,13 +145,13 @@ contract STAKE_VAULT is ReentrancyGuard, AccessControl, Pausable {
         //^^^^^^^effects^^^^^^^^^
 
         UTIL_TKN.trustedAgentTransfer(staker, address(this), _amount);
-        stake[_tokenId] = _amount;
+        stake[_tokenId] = _amount; //CTS:EXAMINE can this be moved up to effects?
         //^^^^^^^interactions^^^^^^^^^
     }
 
     /**
-     * @dev sends stakedAmount[tokenId] tokens to ownerOf(tokenId). updates the stake map
-     * @param _tokenId token to get stake for
+     * @dev sends stakedAmount[tokenId] tokens to ownerOf(tokenId), updates the stake map.
+     * @param _tokenId stake token to release stake for
      */
     function releaseStake(uint256 _tokenId)
         external
@@ -157,7 +161,7 @@ contract STAKE_VAULT is ReentrancyGuard, AccessControl, Pausable {
     {
         //^^^^^^^checks^^^^^^^^^
 
-        address staker = STAKE_TKN.ownerOf(_tokenId);
+        address staker = STAKE_TKN.ownerOf(_tokenId); //CTS:EXAMINE can this be moved to interactions?
         uint256 amount = stake[_tokenId];
         delete stake[_tokenId];
         //^^^^^^^effects^^^^^^^^^
@@ -176,17 +180,15 @@ contract STAKE_VAULT is ReentrancyGuard, AccessControl, Pausable {
     }
 
     /**
-     * @dev Triggers stopped state. (pausable)
-     *
+     * @dev Triggers stopped state.
      */
     function pause() external isPauser {
         _pause();
     }
 
     /**
-     * @dev Returns to normal state. (pausable)
+     * @dev Returns to normal state.
      */
-
     function unpause() external isPauser {
         _unpause();
     }
