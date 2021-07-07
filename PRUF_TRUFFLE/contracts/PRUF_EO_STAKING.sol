@@ -413,7 +413,7 @@ contract EO_STAKING is ReentrancyGuard, AccessControl, Pausable {
         uint256 _bonus
     ) private whenNotPaused nonReentrant {
         require(
-            _interval >= 1, // 2 days in seconds temp CTS:EXAMINE unreachable? throws in setStakeLevels
+            _interval >= 172800, // 2 days in seconds CTS:EXAMINE unreachable? throws in setStakeLevels
             "PES:NS: Interval <= 1"
         );
 
