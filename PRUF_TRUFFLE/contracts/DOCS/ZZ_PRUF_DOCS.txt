@@ -279,7 +279,7 @@ pragma solidity ^0.6.7;
 - -----------------------------------------------------------------
 
 *-----------------------------------------------------------------
- * ASSET CLASS option switches, 1 or 0 : AC_data.switches (AC_manager)  //DPS:TEST
+ * ASSET CLASS option switches, 1 or 0 : AC_data.switches (AC_manager)
  *             Switches will be duplicated from root 
  * bit1  -- If set, cannot change URI after initial setting
  * bit2  --
@@ -429,11 +429,26 @@ Private Provenance
 
 */
 
+/*-----------------------------------------------------------------
+ * ---------------- PRUF struct definitions -----------------
+ *-----------------------------------------------------------------
+ * SEE ZZ_DEPLOY.txt
+ /*-----------------------------------------------------------------
 
 /*-----------------------------------------------------------------
  * ---------------- PRUF SETUP PROTOCOL -----------------
  *-----------------------------------------------------------------
- * SEE ZZ_DEPLOY.txt
+ * AC_data {
+// string name;
+// uint32 assetClassRoot;
+// uint8 custodyType;
+// uint8 managementType;
+// uint8 storageProvider;
+// uint32 discount;
+// address referenceAddress;
+// uint8 switches;
+// bytes32 IPFS;
+ }
  /*-----------------------------------------------------------------
 
 contract test {
