@@ -83,7 +83,7 @@ contract AC_MGR is BASIC {
 
     /**
      * @dev Set pricing CTS:EXAMINE describe this better
-     * @param newACprice - cost per assetClass
+     * @param newACprice - cost per assetClass CTS:EXAMINE 18 decimals?
      */
     function adminSetACpricing(uint256 newACprice) external isContractAdmin {
         //^^^^^^^checks^^^^^^^^^
@@ -96,7 +96,7 @@ contract AC_MGR is BASIC {
     }
 
     /**
-     * !! to be used with great caution !! //CTS:EXAMINE to be removed in next gen?
+     * !! to be used with great caution !! //CTS:EXAMINE to be removed in next gen? this is referring to this line
      * This breaks decentralization and must eventually be given over to some kind of governance contract. //CTS:EXAMINE to be removed in next gen?
      * @dev Increases (but cannot decrease) price share for a given AC
      * @param _assetClass - assetClass in which cost share is being modified
@@ -524,7 +524,7 @@ contract AC_MGR is BASIC {
      * @dev get the status of a specific management type
      * @param _managementType - management type associated with quiry (see docs)
      *
-     * @return: 1 or 0 (enabled or disabled)
+     * @return 1 or 0 (enabled or disabled)
      */
     function getManagementTypeStatus(uint8 _managementType)
         external
@@ -554,7 +554,7 @@ contract AC_MGR is BASIC {
 
     /**
      * @dev get the status of a specific custody type
-     * @param _custodytype - custody type associated with quiry (see docs)
+     * @param _custodyType - custody type associated with quiry (see docs)
      *
      * @return 1 or 0 (enabled or disabled)
      */
