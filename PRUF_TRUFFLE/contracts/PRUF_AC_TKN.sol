@@ -11,21 +11,19 @@ __/\\\\\\\\\\\\\ _____/\\\\\\\\\ _______/\\__/\\ ___/\\\\\\\\\\\\\\\
          *-------------------------------------------------------------------*/
 
 /*-----------------------------------------------------------------
- *  TO DO
- *-----------------------------------------------------------------
  * PRUF ASSET CLASS NODE NFT CONTRACT
  *-----------------------------------------------------------------*/
 
 // SPDX-License-Identifier: UNLICENSED
 pragma solidity ^0.8.0;
 
+import "./PRUF_INTERFACES.sol";
 import "./Imports/access/AccessControl.sol";
 import "./Imports/utils/Context.sol";
 import "./Imports/utils/Counters.sol";
 import "./Imports/token/ERC721/ERC721.sol";
 import "./Imports/token/ERC721/ERC721Burnable.sol";
 import "./Imports/token/ERC721/ERC721Pausable.sol";
-import "./PRUF_INTERFACES.sol";
 import "./Imports/utils/ReentrancyGuard.sol";
 
 /**
@@ -95,17 +93,15 @@ contract AC_TKN is
         _;
     }
 
-    //----------------------Events----------------------//
-    event REPORT(string _msg);
-
-    //----------------------Admin functions / isContractAdmin or isMinter----------------------//
+    //----------------------Admin functions - isContractAdmin or isMinter----------------------//
 
     /**
-     * @dev Mint an Asset token
+     * @dev Mint a Node token
      * @param _recipientAddress - Address to mint token into
      * @param _tokenId - Token ID to mint
      * @param _tokenURI - URI string to atatch to token
-     * returns Token ID of minted token
+     *
+     * @return Token ID of minted token
      */
     function mintACToken(
         address _recipientAddress,
@@ -148,9 +144,10 @@ contract AC_TKN is
     }
 
     /**
-     * @dev See if asset token exists
+     * @dev See if node token exists
      * @param tokenId - Token ID to set URI
-     * returns 170 if token exists, otherwise 0
+     *
+     * @return 170 or 0 (true or false)
      */
     function tokenExists(uint256 tokenId) external view returns (uint256) {
         if (_exists(tokenId)) {
