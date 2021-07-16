@@ -87,12 +87,12 @@ abstract contract BASIC is
     // --------------------------------------Modifiers--------------------------------------------//
     /**
      * @dev Verify user credentials
-     * function should always be overridden!!! will always throw.
-     * @param _idxHash - asset index
+     * modifier should always be overridden!!! will always throw.
+     * @param _idxHash - asset index hash
      */
     modifier isAuthorized(bytes32 _idxHash) virtual {
         require(
-            _idxHash == 0, //
+            _idxHash == 0,
             "B:MOD-IAUTH: Modifier must be overridden"
         );
         _;
@@ -101,7 +101,7 @@ abstract contract BASIC is
     /**
      * @dev Verify user credentials
      * Originating Address:
-     *      is contract admin
+     *      has CONTRACT_ADMIN_ROLE
      */
     modifier isContractAdmin() {
         require(
@@ -251,7 +251,7 @@ abstract contract BASIC is
     /**
      * @dev Get a User type Record from AC_manager for _msgSender(), by assetClass
      * @param _assetClass - to check user type in
-     * returns user authorization type of caller, from AC_MGR user mapping
+     * @return user authorization type of caller, from AC_MGR user mapping
      */
     function getCallingUserType(uint32 _assetClass)
         internal
@@ -273,7 +273,7 @@ abstract contract BASIC is
     /**
      * @dev Get asset class information from AC_manager and return an AC Struct
      * @param _assetClass - to retrireve info about
-     * returns entire AC struct (see interfaces for struct definitions)
+     * @return entire AC struct (see interfaces for struct definitions)
      */
     function getACinfo(uint32 _assetClass)
         internal
@@ -301,7 +301,7 @@ abstract contract BASIC is
      * @dev Get contract information from STOR and return a ContractDataHash Struct
      * @param _addr address of contract to check
      * @param _assetClass asset class to check 
-     * returns ContractDataHash struct, containing the authorization level and hashed name of a given contract X in asset class Y
+     * @return ContractDataHash struct, containing the authorization level and hashed name of a given contract X in asset class Y
      */
     function getContractInfo(address _addr, uint32 _assetClass)
         internal
@@ -321,7 +321,7 @@ abstract contract BASIC is
      * @dev Get a Record from Storage @ idxHash and return a Record Struct
     function getRecord(bytes32 _idxHash) internal returns (Record memory) {
      * @param _idxHash - asset index
-     * returns entire record struct form PRUF_STOR (see interfaces for struct definitions)
+     * @return entire record struct form PRUF_STOR (see interfaces for struct definitions)
      */
     function getRecord(bytes32 _idxHash) internal returns (Record memory) {
         //^^^^^^^checks^^^^^^^^^
