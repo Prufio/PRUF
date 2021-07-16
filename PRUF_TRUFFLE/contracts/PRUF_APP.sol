@@ -1,21 +1,18 @@
 /*--------------------------------------------------------PRüF0.8.0
 __/\\\\\\\\\\\\\ _____/\\\\\\\\\ _______/\\__/\\ ___/\\\\\\\\\\\\\\\        
- _\/\\\/////////\\\ _/\\\///////\\\ ____\//__\//____\/\\\///////////__       
-  _\/\\\_______\/\\\_\/\\\_____\/\\\ ________________\/\\\ ____________      
-   _\/\\\\\\\\\\\\\/__\/\\\\\\\\\\\/_____/\\\____/\\\_\/\\\\\\\\\\\ ____     
-    _\/\\\/////////____\/\\\//////\\\ ___\/\\\___\/\\\_\/\\\///////______    
-     _\/\\\ ____________\/\\\ ___\//\\\ __\/\\\___\/\\\_\/\\\ ____________   
-      _\/\\\ ____________\/\\\ ____\//\\\ _\/\\\___\/\\\_\/\\\ ____________  
-       _\/\\\ ____________\/\\\ _____\//\\\_\//\\\\\\\\\ _\/\\\ ____________ 
-        _\/// _____________\/// _______\/// __\///////// __\/// _____________
-         *-------------------------------------------------------------------*/
+__\/\\\/////////\\\ _/\\\///////\\\ ____\//__\//____\/\\\///////////__       
+___\/\\\_______\/\\\_\/\\\_____\/\\\ ________________\/\\\ ____________      
+____\/\\\\\\\\\\\\\/__\/\\\\\\\\\\\/_____/\\\____/\\\_\/\\\\\\\\\\\ ____     
+_____\/\\\/////////____\/\\\//////\\\ ___\/\\\___\/\\\_\/\\\///////______
+______\/\\\ ____________\/\\\ ___\//\\\ __\/\\\___\/\\\_\/\\\ ____________
+_______\/\\\ ____________\/\\\ ____\//\\\ _\/\\\___\/\\\_\/\\\ ____________
+________\/\\\ ____________\/\\\ _____\//\\\_\//\\\\\\\\\ _\/\\\ ____________
+_________\/// _____________\/// _______\/// __\///////// __\/// _____________
+*---------------------------------------------------------------------------*/
 
 /*-----------------------------------------------------------------
- *  TO DO
- *
+ *  CTS:EXAMINE description of contract
  *----------------------------------------------------------------*/
-
- //CTS:EXAMINE quick explainer for the contract
 
 // SPDX-License-Identifier: UNLICENSED
 pragma solidity ^0.8.0;
@@ -27,14 +24,13 @@ contract APP is CORE {
         0xFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFF;
 
 
-    /*
+    /**
      * //CTS:EXAMINE comment
-     * //CTS:EXAMINE param
+     * @param _idxHash - idxHash of asset to compare to caller for authority
      */
     modifier isAuthorized(bytes32 _idxHash) override {
-        //require that user is authorized and token is held by contract
         uint256 tokenId = uint256(_idxHash);
-        require(
+        require( //require that user is authorized and token is held by contract
             (A_TKN.ownerOf(tokenId) == address(this)),
             "A:MOD-IA: APP contract !token holder"
         );
@@ -43,12 +39,12 @@ contract APP is CORE {
 
     //--------------------------------------------External Functions--------------------------
 
-    /*
-     * @dev Wrapper for newRecord
-     * //CTS:EXAMINE param
-     * //CTS:EXAMINE param
-     * //CTS:EXAMINE param
-     * //CTS:EXAMINE param
+    /**
+     * @dev Wrapper for newRecord CTS:EXAMINE better description
+     * @param _idxHash - hash of asset information created by frontend inputs
+     * @param _rgtHash - hash of rightsholder information created by frontend inputs
+     * @param _assetClass - assetClass the asset will be created in
+     * @param _countDownStart - decremental counter for an assets lifecycle
      */
     function newRecord(
         bytes32 _idxHash,
@@ -68,23 +64,23 @@ contract APP is CORE {
         //^^^^^^^interactions^^^^^^^^^
     }
 
-    /*
+    /**
      * @dev import **Record** (no confirmation required - //CTS:EXAMINE what's up with this comment
-     * //CTS:EXAMINE param
-     * //CTS:EXAMINE param
-     * //CTS:EXAMINE param
-     * //CTS:EXAMINE returns
      * posessor is considered to be owner. sets rec.assetStatus to 0.
+     * @param _idxHash - hash of asset information created by frontend inputs
+     * @param _newRgtHash - hash of new rightsholder information created by frontend inputs
+     * @param _newAssetClass - assetClass the asset will be imported into
+     * @return status of asset post-import
      */
     function importAsset(
         bytes32 _idxHash,
-        bytes32 _newRgtHash,
+        bytes32 _newRgtHash, //CTS:EXAMINE should this be new? or normal
         uint32 _newAssetClass
     )
         external
         nonReentrant
         whenNotPaused
-        isAuthorized(_idxHash) //contract holds token (user sent to contract)
+        isAuthorized(_idxHash) ///contract holds token (user sent to contract)
         returns (uint8)
     {
         Record memory rec = getRecord(_idxHash);
@@ -109,15 +105,15 @@ contract APP is CORE {
         writeRecord(_idxHash, rec);
         deductServiceCosts(_newAssetClass, 1);
 
-        return rec.assetStatus;
+        return rec.assetStatus; //CTS:EXAMINE is this neccessary
         //^^^^^^^interactions^^^^^^^^^
     }
 
-    /*
-     * @dev Modify **Record**.rightsHolder without confirmation required //CTS:EXAMINE with confirmation?
-     * //CTS:EXAMINE param
-     * //CTS:EXAMINE param
-     * //CTS:EXAMINE returns
+    /**
+     * @dev Modify **Record**.rightsHolder without confirmation required //CTS:EXAMINE with confirmation? work on this
+     * @param _idxHash - hash of asset information created by frontend inputs
+     * @param _rgtHash - hash of new rightsholder information created by frontend inputs
+     * @return 170 CTS:EXAMINE is this neccessary? if so, describe why here
      */
     function forceModRecord(bytes32 _idxHash, bytes32 _rgtHash)
         external
@@ -134,7 +130,7 @@ contract APP is CORE {
             isLostOrStolen(rec.assetStatus) == 0,
             "A:FMR: Asset marked L/S"
         );
-        require(
+        require( //CTS:EXAMINE impossible to reach, APP needs to hold token
             needsImport(rec.assetStatus) == 0,
             "A:FMR: Asset needs re-imported"
         );
@@ -153,12 +149,12 @@ contract APP is CORE {
         //^^^^^^^interactions^^^^^^^^^
     }
 
-    /*
+    /**
      * @dev Transfer rights to new rightsHolder with confirmation //CTS:EXAMINE with confirmation?
-     * //CTS:EXAMINE param
-     * //CTS:EXAMINE param
-     * //CTS:EXAMINE param
-     * //CTS:EXAMINE returns
+     * @param _idxHash - hash of asset information created by frontend inputs
+     * @param _rgtHash - hash of rightsholder information created by frontend inputs
+     * @param _newrgtHash - hash of targeted reciever information created by frontend inputs
+     * @return 170 CTS:EXAMINE is this neccessary? if so, describe why here
      */
     function transferAsset(
         bytes32 _idxHash,
@@ -208,12 +204,12 @@ contract APP is CORE {
         //^^^^^^^interactions^^^^^^^^^
     }
 
-    /*
+    /**
      * @dev Modify **Record** Ipfs2 with confirmation //CTS:EXAMINE with confirmation?
-     * //CTS:EXAMINE param
-     * //CTS:EXAMINE param
-     * //CTS:EXAMINE param
-     * //CTS:EXAMINE param
+     * @param _idxHash - hash of asset information created by frontend inputs
+     * @param _rgtHash - hash of rightsholder information created by frontend inputs
+     * @param _Ipfs2a - field for permanent external asset data
+     * @param _Ipfs2b - field for permanent external asset data
      */
     function addIpfs2Note(
         bytes32 _idxHash,
@@ -231,7 +227,7 @@ contract APP is CORE {
 
         require((userType > 0) && (userType < 10), "A:I2: User not auth in AC");
 
-        require(
+        require( //CTS:EXAMINE impossible to reach, APP needs to hold token
             needsImport(rec.assetStatus) == 0,
             "A:I2: Asset needs re-imported"
         );
