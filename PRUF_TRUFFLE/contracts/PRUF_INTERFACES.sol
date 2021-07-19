@@ -1353,6 +1353,7 @@ interface STOR_Interface {
         bytes32 _rgtHash,
         uint8 _newAssetStatus,
         uint32 _countDown,
+        uint32 _int32temp,
         uint256 _incrementForceModCount,
         uint256 _incrementNumberOfTransfers
     ) external;

@@ -19,7 +19,7 @@ __/\\\\\\\\\\\\\ _____/\\\\\\\\\ _______/\\__/\\ ___/\\\\\\\\\\\\\\\
  * //CTS:EXAMINE IPFS1/IPFS2->storProvider/storProvider2 global
  * //CTS:EXAMINE idxHash->assetId global
  * //CTS:EXAMINE NP name change
- * //CTS:EXAMINE Run through interfaces, make sure is up to date. 
+ * //CTS:EXAMINE Run through interfaces, make sure is up to date.
  *---------------------------------------------------------------*/
 
 /**-----------------------------------------------------------------
@@ -105,8 +105,9 @@ contract STOR is AccessControl, ReentrancyGuard, Pausable {
      * @param _assetClass asset class to check address auth
      */
     modifier isAuthorized(uint32 _assetClass) {
-        uint8 auth =
-            contractInfo[contractAddressToName[msg.sender]][_assetClass];
+        uint8 auth = contractInfo[contractAddressToName[msg.sender]][
+            _assetClass
+        ];
         require(
             ((auth > 0) && (auth < 5)) || (auth == 10),
             "S:MOD-IAUT: Contract not authorized"
@@ -436,6 +437,7 @@ contract STOR is AccessControl, ReentrancyGuard, Pausable {
         bytes32 _rgtHash,
         uint8 _newAssetStatus,
         uint32 _countDown,
+        uint32 _int32temp,
         uint256 _incrementModCount,
         uint256 _incrementNumberOfTransfers
     )
@@ -466,6 +468,7 @@ contract STOR is AccessControl, ReentrancyGuard, Pausable {
 
         rec.rightsHolder = _rgtHash;
         rec.countDown = _countDown;
+        rec.int32temp = _int32temp;
         rec.assetStatus = _newAssetStatus;
 
         if ((_incrementModCount == 170) && (rec.modCount < 255)) {
