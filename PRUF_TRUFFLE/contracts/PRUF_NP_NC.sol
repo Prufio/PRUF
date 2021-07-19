@@ -12,10 +12,9 @@ _________\/// _____________\/// _______\/// __\///////// __\/// _____________
 
 /**-----------------------------------------------------------------
  *  TO DO
- *
+ *  NonCustodial protocol functions
  *---------------------------------------------------------------*/
 
-//CTS:EXAMINE quick explainer for the contract
 
 // SPDX-License-Identifier: UNLICENSED
 pragma solidity ^0.8.0;
@@ -156,7 +155,7 @@ contract NP_NC is CORE {
     }
 
     /**
-     * @dev set **Record**.assetStatus to lost or stolen, with confirmation required. //CTS:EXAMINE confirmation?
+     * @dev set **Record**.assetStatus to lost or stolen, with confirmation of matching rgthash required.
      * @param _idxHash idx of asset to Modify
      * @param _newAssetStatus Updated status
      */
@@ -186,7 +185,7 @@ contract NP_NC is CORE {
     }
 
     /**
-     * @dev Decrement **Record**.countdown with confirmation required //CTS:EXAMINE confirmation?
+     * @dev Decrement **Record**.countdown with confirmation of matching rgthash required.
      * @param _idxHash idx of asset to Modify
      * @param _decAmount Amount to decrement
      */
@@ -217,7 +216,7 @@ contract NP_NC is CORE {
     }
 
     /**
-     * @dev Modify **Record**.Ipfs1a with confirmation //CTS:EXAMINE confirmation?
+     * @dev Modify **Record**.Ipfs1a with confirmation of matching rgthash required.
      * @param _idxHash idx of asset to Modify
      * @param _Ipfs1a content adressable storage adress part 1
      * @param _Ipfs1b content adressable storage adress part 2
