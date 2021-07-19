@@ -45,8 +45,6 @@ contract NP_NC is CORE {
      * @dev Modify rgtHash (like forceModify)
      * @param _idxHash idx of asset to Modify
      * @param _newRgtHash rew rgtHash to apply
-     * Requires asset status is valid for operation
-     * must be tokenholder of A_TKN
      *
      */
     function _changeRgt(bytes32 _idxHash, bytes32 _newRgtHash)
@@ -79,8 +77,6 @@ contract NP_NC is CORE {
      * @dev exportTo - sets asset to status 70 (importable) and defines the AC that the item can be imported into
      * @param _idxHash idx of asset to Modify
      * @param _exportAssetClass AC target for export
-     * Requires asset status is valid for operation
-     * must be tokenholder of A_TKN
      */
      //DPS:TEST
     function _exportTo(bytes32 _idxHash, uint32 _exportAssetClass)
@@ -92,7 +88,7 @@ contract NP_NC is CORE {
         AC memory AC_info = getACinfo(rec.assetClass);
 
         require(
-            (rec.assetStatus == 51) || (rec.assetStatus == 70), //DPS check
+            (rec.assetStatus == 51) || (rec.assetStatus == 70), //DPS:check
             "NPNC:EXT: Must be in transferrable status (51)"
         );
         require(
@@ -104,7 +100,7 @@ contract NP_NC is CORE {
             "NPNC:EXT: Contract does not support management types > 5 or AC is locked"
         );
         if ((AC_info.managementType == 1) || (AC_info.managementType == 5)) {
-            require( //holds AC token if AC is restricted --------DPS TEST ---- NEW
+            require( //holds AC token if AC is restricted --------DPS:TEST ---- NEW
                 (AC_TKN.ownerOf(rec.assetClass) == _msgSender()),
                 "NPNC:EXT: Restricted from exporting assets from this AC - does not hold ACtoken"
             );
