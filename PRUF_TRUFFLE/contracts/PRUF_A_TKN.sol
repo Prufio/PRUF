@@ -391,7 +391,7 @@ contract A_TKN is
         //^^^^^^^interactions^^^^^^^^^
     }
 
-        /**
+    /**
      * @dev Transfers the ownership of a given token ID to another address by a TRUSTED_AGENT.
      * Usage of this method is discouraged, use {safeTransferFrom} whenever possible.
      * Requires the _msgSender() to be the owner, approved, or operator.
@@ -482,6 +482,7 @@ contract A_TKN is
             _rec.rightsHolder,
             _rec.assetStatus,
             _rec.countDown,
+            _rec.int32temp,
             _rec.modCount,
             _rec.numberOfTransfers
         ); // Send data and writehash to storage
