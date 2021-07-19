@@ -12,6 +12,7 @@ __/\\\\\\\\\\\\\ _____/\\\\\\\\\ _______/\\__/\\ ___/\\\\\\\\\\\\\\\
 
 /*-----------------------------------------------------------------
  *  TO DO
+ //black forest / survillence ransom hole CTS DPS FIX BROKEN!
  *---------------------------------------------------------------*/
 
  //CTS:EXAMINE quick explainer for the contract
@@ -159,7 +160,7 @@ contract APP_NC is CORE {
             (AC_info.managementType == 2) ||
             (AC_info.managementType == 5)
         ) {
-            require(
+            require( //black forest / survillence ransom hole CTS DPS FIX BROKEN!
                 (AC_TKN.ownerOf(_newAssetClass) == _msgSender()),
                 "ANC:IA: Cannot create asset in AC mgmt type 1||2||5 - caller does not hold AC token"
             );
