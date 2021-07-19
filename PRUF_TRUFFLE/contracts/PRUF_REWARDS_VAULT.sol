@@ -1,23 +1,17 @@
 /*--------------------------------------------------------PRüF0.8.0
 __/\\\\\\\\\\\\\ _____/\\\\\\\\\ _______/\\__/\\ ___/\\\\\\\\\\\\\\\        
- _\/\\\/////////\\\ _/\\\///////\\\ ____\//__\//____\/\\\///////////__       
-  _\/\\\_______\/\\\_\/\\\_____\/\\\ ________________\/\\\ ____________      
-   _\/\\\\\\\\\\\\\/__\/\\\\\\\\\\\/_____/\\\____/\\\_\/\\\\\\\\\\\ ____     
-    _\/\\\/////////____\/\\\//////\\\ ___\/\\\___\/\\\_\/\\\///////______    
-     _\/\\\ ____________\/\\\ ___\//\\\ __\/\\\___\/\\\_\/\\\ ____________   
-      _\/\\\ ____________\/\\\ ____\//\\\ _\/\\\___\/\\\_\/\\\ ____________  
-       _\/\\\ ____________\/\\\ _____\//\\\_\//\\\\\\\\\ _\/\\\ ____________ 
-        _\/// _____________\/// _______\/// __\///////// __\/// _____________
-         *-------------------------------------------------------------------*/
+__\/\\\/////////\\\ _/\\\///////\\\ ____\//__\//____\/\\\///////////__       
+___\/\\\_______\/\\\_\/\\\_____\/\\\ ________________\/\\\ ____________      
+____\/\\\\\\\\\\\\\/__\/\\\\\\\\\\\/_____/\\\____/\\\_\/\\\\\\\\\\\ ____     
+_____\/\\\/////////____\/\\\//////\\\ ___\/\\\___\/\\\_\/\\\///////______
+______\/\\\ ____________\/\\\ ___\//\\\ __\/\\\___\/\\\_\/\\\ ____________
+_______\/\\\ ____________\/\\\ ____\//\\\ _\/\\\___\/\\\_\/\\\ ____________
+________\/\\\ ____________\/\\\ _____\//\\\_\//\\\\\\\\\ _\/\\\ ____________
+_________\/// _____________\/// _______\/// __\///////// __\/// _____________
+*---------------------------------------------------------------------------*/
 
 /**-----------------------------------------------------------------
- *  TO DO
- *
- * IMPORTANT!!! EXTERNAL OR PUBLIC FUNCTIONS WITHOUTSTRICT PERMISSIONING NEED
- * TO BE CLOSELY EXAMINED IN THIS CONTRACT AS THEY WILL BE INHERITED NEARLY GLOBALLY
- *-----------------------------------------------------------------
- *-----------------------------------------------------------------
- *PRUF rewardsVault holds PRUF to send to stakers.
+ *PRUF Rewards Vault holds PRUF to send to stakers.
  *It is funded by the team with the stake rewards amount as needed
  *---------------------------------------------------------------
  */
@@ -60,21 +54,21 @@ contract REWARDS_VAULT is ReentrancyGuard, AccessControl, Pausable {
     modifier isContractAdmin() {
         require(
             hasRole(CONTRACT_ADMIN_ROLE, _msgSender()),
-            "B:MOD:-IADM Caller !CONTRACT_ADMIN_ROLE"
+            "RV:MOD:-ICA Caller !CONTRACT_ADMIN_ROLE"
         );
         _;
     }
     modifier isPauser() {
         require(
             hasRole(PAUSER_ROLE, _msgSender()),
-            "B:MOD-IP: Caller !PAUSER_ROLE"
+            "RV:MOD-IP: Caller !PAUSER_ROLE"
         );
         _;
     }
     modifier isStakePayer() {
         require(
             hasRole(STAKE_PAYER_ROLE, _msgSender()),
-            "B:MOD-ISP: Caller !STAKE_PAYER_ROLE"
+            "RV:MOD-ISP: Caller !STAKE_PAYER_ROLE"
         );
         _;
     }
@@ -102,7 +96,6 @@ contract REWARDS_VAULT is ReentrancyGuard, AccessControl, Pausable {
 
     //--------------------------------------External functions--------------------------------------------//
 
-    //payRewards(tokenId) requires STAKE_PAYER role Sends (amount) pruf to ownerOf(tokenId)
     /**
      * @dev Sends (amount) pruf to ownerOf(tokenId)
      * @param _tokenId - token ID
@@ -134,7 +127,7 @@ contract REWARDS_VAULT is ReentrancyGuard, AccessControl, Pausable {
     ) external virtual nonReentrant {
         require(
             hasRole(ASSET_TXFR_ROLE, _msgSender()),
-            "B:TX:Must have ASSET_TXFR_ROLE"
+            "RV:TET:Must have ASSET_TXFR_ROLE"
         );
         //^^^^^^^checks^^^^^^^^^
 
@@ -143,15 +136,14 @@ contract REWARDS_VAULT is ReentrancyGuard, AccessControl, Pausable {
     }
 
     /***
-     * @dev Triggers stopped state. (pausable)
-     *
+     * @dev Triggers stopped state.
      */
     function pause() external isPauser {
         _pause();
     }
 
     /***
-     * @dev Returns to normal state. (pausable)
+     * @dev Returns to normal state.
      */
 
     function unpause() external isPauser {

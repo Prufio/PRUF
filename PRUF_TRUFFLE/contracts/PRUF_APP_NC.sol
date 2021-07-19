@@ -1,21 +1,20 @@
 /*--------------------------------------------------------PRüF0.8.0
 __/\\\\\\\\\\\\\ _____/\\\\\\\\\ _______/\\__/\\ ___/\\\\\\\\\\\\\\\        
- _\/\\\/////////\\\ _/\\\///////\\\ ____\//__\//____\/\\\///////////__       
-  _\/\\\_______\/\\\_\/\\\_____\/\\\ ________________\/\\\ ____________      
-   _\/\\\\\\\\\\\\\/__\/\\\\\\\\\\\/_____/\\\____/\\\_\/\\\\\\\\\\\ ____     
-    _\/\\\/////////____\/\\\//////\\\ ___\/\\\___\/\\\_\/\\\///////______    
-     _\/\\\ ____________\/\\\ ___\//\\\ __\/\\\___\/\\\_\/\\\ ____________   
-      _\/\\\ ____________\/\\\ ____\//\\\ _\/\\\___\/\\\_\/\\\ ____________  
-       _\/\\\ ____________\/\\\ _____\//\\\_\//\\\\\\\\\ _\/\\\ ____________ 
-        _\/// _____________\/// _______\/// __\///////// __\/// _____________
-         *-------------------------------------------------------------------*/
+__\/\\\/////////\\\ _/\\\///////\\\ ____\//__\//____\/\\\///////////__       
+___\/\\\_______\/\\\_\/\\\_____\/\\\ ________________\/\\\ ____________      
+____\/\\\\\\\\\\\\\/__\/\\\\\\\\\\\/_____/\\\____/\\\_\/\\\\\\\\\\\ ____     
+_____\/\\\/////////____\/\\\//////\\\ ___\/\\\___\/\\\_\/\\\///////______
+______\/\\\ ____________\/\\\ ___\//\\\ __\/\\\___\/\\\_\/\\\ ____________
+_______\/\\\ ____________\/\\\ ____\//\\\ _\/\\\___\/\\\_\/\\\ ____________
+________\/\\\ ____________\/\\\ _____\//\\\_\//\\\\\\\\\ _\/\\\ ____________
+_________\/// _____________\/// _______\/// __\///////// __\/// _____________
+*---------------------------------------------------------------------------*/
 
 /*-----------------------------------------------------------------
  *  TO DO
  //black forest / survillence ransom hole CTS DPS FIX BROKEN!
  *---------------------------------------------------------------*/
 
- //CTS:EXAMINE quick explainer for the contract
 
 // SPDX-License-Identifier: UNLICENSED
 pragma solidity ^0.8.0;
@@ -24,9 +23,9 @@ import "./PRUF_CORE.sol";
 
 contract APP_NC is CORE {
 
-    /*
+    /**
      * @dev Verify user credentials
-     * //CTS:EXAMINE param
+     * @param _idxHash - ID of asset token to be verified
      * Originating Address:
      *      holds asset token at idxHash
      */
@@ -39,15 +38,16 @@ contract APP_NC is CORE {
         _;
     }
 
-    //--------------------------------------------External Functions--------------------------
-    /*
-     * @dev Create a  newRecord with description
-     * //CTS:EXAMINE param
-     * //CTS:EXAMINE param
-     * //CTS:EXAMINE param
-     * //CTS:EXAMINE param
-     * //CTS:EXAMINE param
-     * //CTS:EXAMINE param
+    //---------------------------------------External Functions-------------------------------
+
+    /**
+     * @dev Create a newRecord with description
+     * @param _idxHash - hash of asset information created by frontend inputs
+     * @param _rgtHash - hash of rightsholder information created by frontend inputs
+     * @param _assetClass - assetClass the asset will be created in
+     * @param _countDownStart - decremental counter for an assets lifecycle
+     * @param _Ipfs1a - field for external asset data
+     * @param _Ipfs1b - field for external asset data
      */
     function newRecordWithDescription(
         bytes32 _idxHash,
@@ -74,14 +74,14 @@ contract APP_NC is CORE {
         //^^^^^^^interactions^^^^^^^^^
     }
 
-    /*
-     * @dev Create a newRecord with description
-     * //CTS:EXAMINE param
-     * //CTS:EXAMINE param
-     * //CTS:EXAMINE param
-     * //CTS:EXAMINE param
-     * //CTS:EXAMINE param
-     * //CTS:EXAMINE param
+    /**
+     * @dev Create a newRecord with permanent description
+     * @param _idxHash - hash of asset information created by frontend inputs
+     * @param _rgtHash - hash of rightsholder information created by frontend inputs
+     * @param _assetClass - assetClass the asset will be created in
+     * @param _countDownStart - decremental counter for an assets lifecycle
+     * @param _Ipfs2a - field for permanent external asset data
+     * @param _Ipfs2b - field for permanent external asset data
      */
     function newRecordWithNote(
         bytes32 _idxHash,
@@ -108,12 +108,12 @@ contract APP_NC is CORE {
         //^^^^^^^interactions^^^^^^^^^
     }
 
-    /*
-     * @dev Create a new record
-     * //CTS:EXAMINE param
-     * //CTS:EXAMINE param
-     * //CTS:EXAMINE param
-     * //CTS:EXAMINE param
+    /**
+     * @dev Create a newRecord
+     * @param _idxHash - hash of asset information created by frontend inputs
+     * @param _rgtHash - hash of rightsholder information created by frontend inputs
+     * @param _assetClass - assetClass the asset will be created in
+     * @param _countDownStart - decremental counter for an assets lifecycle
      */
     function newRecord(
         bytes32 _idxHash,
@@ -132,10 +132,10 @@ contract APP_NC is CORE {
         //^^^^^^^interactions^^^^^^^^^
     }
 
-    /*
+    /**
      * @dev Import a record into a new asset class
-     * //CTS:EXAMINE param
-     * //CTS:EXAMINE param
+     * @param _idxHash - hash of asset information created by frontend inputs
+     * @param _newAssetClass - assetClass the asset will be created in
      */
     function importAsset(bytes32 _idxHash, uint32 _newAssetClass)
         external
@@ -189,11 +189,11 @@ contract APP_NC is CORE {
         //^^^^^^^interactions^^^^^^^^^^^^
     }
 
-    /*
-     * @dev Modify record.Ipfs2
-     * //CTS:EXAMINE param
-     * //CTS:EXAMINE param
-     * //CTS:EXAMINE param
+    /**
+     * @dev Modify record.Ipfs2 //CTS:EXAMINE better description
+     * @param _idxHash - hash of asset information created by frontend inputs
+     * @param _Ipfs2a - field for permanent external asset data
+     * @param _Ipfs2b - field for permanent external asset data
      */
     function addIpfs2Note(
         bytes32 _idxHash,

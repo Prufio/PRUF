@@ -1,14 +1,14 @@
 /*--------------------------------------------------------PRüF0.8.0
 __/\\\\\\\\\\\\\ _____/\\\\\\\\\ _______/\\__/\\ ___/\\\\\\\\\\\\\\\        
- _\/\\\/////////\\\ _/\\\///////\\\ ____\//__\//____\/\\\///////////__       
-  _\/\\\_______\/\\\_\/\\\_____\/\\\ ________________\/\\\ ____________      
-   _\/\\\\\\\\\\\\\/__\/\\\\\\\\\\\/_____/\\\____/\\\_\/\\\\\\\\\\\ ____     
-    _\/\\\/////////____\/\\\//////\\\ ___\/\\\___\/\\\_\/\\\///////______    
-     _\/\\\ ____________\/\\\ ___\//\\\ __\/\\\___\/\\\_\/\\\ ____________   
-      _\/\\\ ____________\/\\\ ____\//\\\ _\/\\\___\/\\\_\/\\\ ____________  
-       _\/\\\ ____________\/\\\ _____\//\\\_\//\\\\\\\\\ _\/\\\ ____________ 
-        _\/// _____________\/// _______\/// __\///////// __\/// _____________
-         *-------------------------------------------------------------------*/
+__\/\\\/////////\\\ _/\\\///////\\\ ____\//__\//____\/\\\///////////__       
+___\/\\\_______\/\\\_\/\\\_____\/\\\ ________________\/\\\ ____________      
+____\/\\\\\\\\\\\\\/__\/\\\\\\\\\\\/_____/\\\____/\\\_\/\\\\\\\\\\\ ____     
+_____\/\\\/////////____\/\\\//////\\\ ___\/\\\___\/\\\_\/\\\///////______
+______\/\\\ ____________\/\\\ ___\//\\\ __\/\\\___\/\\\_\/\\\ ____________
+_______\/\\\ ____________\/\\\ ____\//\\\ _\/\\\___\/\\\_\/\\\ ____________
+________\/\\\ ____________\/\\\ _____\//\\\_\//\\\\\\\\\ _\/\\\ ____________
+_________\/// _____________\/// _______\/// __\///////// __\/// _____________
+*---------------------------------------------------------------------------*/
 
 /**-----------------------------------------------------------------
  *  TO DO
@@ -41,11 +41,7 @@ import "./Imports/utils/Pausable.sol";
 import "./Imports/utils/ReentrancyGuard.sol";
 import "./Imports/token/ERC721/IERC721.sol";
 
-contract EO_STAKING is
-    ReentrancyGuard,
-    AccessControl,
-    Pausable
-{
+contract EO_STAKING is ReentrancyGuard, AccessControl, Pausable {
     bytes32 public constant CONTRACT_ADMIN_ROLE =
         keccak256("CONTRACT_ADMIN_ROLE");
     bytes32 public constant PAUSER_ROLE = keccak256("PAUSER_ROLE");
@@ -73,7 +69,7 @@ contract EO_STAKING is
         uint256 interval;
         uint256 bonus;
     }
-    /*
+    /* //CTS:EXAMINE remove?
     struct Stake {
     uint256 stakedAmount; //tokens in stake
     uint256 mintTime; //blocktime of creation
@@ -83,10 +79,7 @@ contract EO_STAKING is
     }
 */
 
-    //--------------------------------------------------------------------------------------------CHECK before deploying!!!!
-    uint256 constant seconds_in_a_day = 1; //adjust for test contracts only. normal = 86400           !!!!!!!!!!!!!!!!
-    //uint256 constant seconds_in_a_day = 86400;   //adjust for test contracts only. normal = 86400     !!!!!!!!!!!!!!!!
-    //--------------------------------------------------------------------------------------------CHECK before deploying!!!!
+    uint256 constant seconds_in_a_day = 86400;
 
     mapping(uint256 => StakingTier) private stakeTier; //stake level parameters
 
@@ -113,7 +106,7 @@ contract EO_STAKING is
     /**
      * @dev Verify user credentials
      * Originating Address:
-     *      Has Role
+     *      Has CONTRACT_ADMIN_ROLE
      */
     modifier isContractAdmin() {
         require(
@@ -126,7 +119,7 @@ contract EO_STAKING is
     modifier isPauser() {
         require(
             hasRole(PAUSER_ROLE, _msgSender()),
-            "PES:MOD-IP:Calling address is not pauser"
+            "PES:MOD-IP:Calling address !pauser"
         );
         _;
     }
@@ -156,6 +149,7 @@ contract EO_STAKING is
 
     /**
      * @dev Set address of contracts to interface with
+     * @param _stakeAddress address of UTIL_TKN(PRUF)
      * @param _stakeAddress address of STAKE_TKN
      * @param _stakeVaultAddress address of STAKE_VAULT
      * @param _rewardsVaultAddress address of REWARDS_VAULT
@@ -190,20 +184,16 @@ contract EO_STAKING is
      * @param _interval staking interval, in dayUnits - set to the number of days that the stake and reward interval will be based on.
      * @param _bonus bonus in tenths of a percent: 15 = 1.5% or 15/1000 per interval. Calculated to a fixed amount of tokens in the actual stake
      */
-    function Admin_setStakeLevels(
+    function setStakeLevels(
         uint256 _stakeTier,
         uint256 _min,
         uint256 _max,
         uint256 _interval,
         uint256 _bonus
     ) external virtual isContractAdmin {
-        // require( temp
-        //     _interval >= 2,
-        //     "PES:SMT: minumum allowable time for stake is 2 days"
-        // );
-        require( //CTS:EXAMINE already checked in newStake?
-            _interval >= 1,
-            "PES:SMT: minumum allowable time for stake is 1"
+        require(
+            _interval >= 2,
+            "PES:SSL: minumum allowable time for stake is 2 days"
         );
         //^^^^^^^checks^^^^^^^^^
         stakeTier[_stakeTier].minimum = _min;
@@ -237,6 +227,8 @@ contract EO_STAKING is
         newStake(_amount, thisStakeTier.interval, thisBonus);
     }
 
+    //--------------------------------------Public functions--------------------------------------------//
+
     /**
      * @dev Transfers eligible rewards to staker, resets last payment time
      * @param _tokenId token id to check
@@ -247,11 +239,11 @@ contract EO_STAKING is
         whenNotPaused
         nonReentrant
     {
-        uint256 availableRewards = UTIL_TKN.balanceOf(REWARDS_VAULT_Address);
+        uint256 availableRewards = UTIL_TKN.balanceOf(REWARDS_VAULT_Address); //CTS:EXAMINE move to effects?
         Stake memory thisStake = stake[_tokenId];
 
         require(
-            (block.timestamp - thisStake.startTime) > seconds_in_a_day, // 1 day in seconds CTS:EXAMINE temp
+            (block.timestamp - thisStake.startTime) > seconds_in_a_day, // 1 day in seconds
             "PES:CB: must wait 24h from creation/last claim"
         );
         //^^^^^^^checks^^^^^^^^^
@@ -279,17 +271,17 @@ contract EO_STAKING is
         whenNotPaused
         nonReentrant
     {
-        uint256 availableRewards = UTIL_TKN.balanceOf(REWARDS_VAULT_Address);
+        uint256 availableRewards = UTIL_TKN.balanceOf(REWARDS_VAULT_Address); //CTS:EXAMINE move to effects?
         Stake memory thisStake = stake[_tokenId];
 
-        require( //
+        require(
             block.timestamp >
                 (thisStake.mintTime + (thisStake.interval * seconds_in_a_day)),
             "PES:BS: must wait until stake period has elapsed"
         );
 
         require(
-            (block.timestamp - thisStake.startTime) > 2, // 1 day in seconds CTS:EXAMINE temp
+            (block.timestamp - thisStake.startTime) > seconds_in_a_day, // 1 day in seconds
             "PES:BS: must wait 24h from creation/last claim"
         );
         //^^^^^^^checks^^^^^^^^^
@@ -407,7 +399,7 @@ contract EO_STAKING is
         _unpause();
     }
 
-    //--------------------------------------------------------------------------------------INTERNAL functions
+    //--------------------------------------------------------------------------------------Internal/Private functions
 
     /**
      * @dev Create a new stake
@@ -421,11 +413,11 @@ contract EO_STAKING is
         uint256 _bonus
     ) private whenNotPaused nonReentrant {
         require(
-            _interval >= 1, // 2 days in seconds temp CTS:EXAMINE unreachable? throws in Admin_setStakeLevels
+            _interval >= 172800, // 2 days in seconds CTS:EXAMINE unreachable? throws in setStakeLevels
             "PES:NS: Interval <= 1"
         );
 
-        require( //CTS:EXAMINE shouldn't this throw in Admin_setStakeLevels and not here?
+        require( //CTS:EXAMINE shouldn't this be put in setStakeLevels and not here?
             _amount > 99999999999999999999, //100 pruf
             "PES:NS: Staked amount < 100"
         );

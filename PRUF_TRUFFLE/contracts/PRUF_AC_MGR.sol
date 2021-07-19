@@ -1,4 +1,4 @@
-/*--------------------------------------------------------PRüF0.8.0
+/**--------------------------------------------------------PRüF0.8.0
 __/\\\\\\\\\\\\\ _____/\\\\\\\\\ _______/\\__/\\ ___/\\\\\\\\\\\\\\\        
  _\/\\\/////////\\\ _/\\\///////\\\ ____\//__\//____\/\\\///////////__       
   _\/\\\_______\/\\\_\/\\\_____\/\\\ ________________\/\\\ ____________      
@@ -10,7 +10,7 @@ __/\\\\\\\\\\\\\ _____/\\\\\\\\\ _______/\\__/\\ ___/\\\\\\\\\\\\\\\
         _\/// _____________\/// _______\/// __\///////// __\/// _____________
          *-------------------------------------------------------------------*/
 
-/*-----------------------------------------------------------------
+/**-----------------------------------------------------------------
  * STATEMENT OF TERMS OF SERVICE (TOS):
  * User agrees not to intentionally claim any namespace that is a recognized or registered brand name, trade mark,
  * or other Intellectual property not belonging to the user, and agrees to voluntarily remove any name or brand found to be
@@ -20,22 +20,12 @@ __/\\\\\\\\\\\\\ _____/\\\\\\\\\ _______/\\__/\\ ___/\\\\\\\\\\\\\\\
  *-----------------------------------------------------------------
  */
 
-/*-----------------------------------------------------------------
+/**-----------------------------------------------------------------
  *  TO DO
  *-----------------------------------------------------------------
  */
 
- //CTS:EXAMINE quick explainer for the contract
-
-// string name; //CTS:EXAMINE vvv remove vvv 
-// uint32 assetClassRoot;
-// uint8 custodyType;
-// uint8 managementType;
-// uint8 storageProvider;
-// uint32 discount;
-// address referenceAddress;
-// uint8 switches;
-// bytes32 IPFS;
+//CTS:EXAMINE quick explainer for the contract
 
 // SPDX-License-Identifier: UNLICENSED
 pragma solidity ^0.8.0;
@@ -51,15 +41,6 @@ contract AC_MGR is BASIC {
     uint256 private ACtokenIndex = 1000000; //Starting index for purchased ACnode tokens
     uint256 public AC_Price = 200000 ether;
     uint32 private constant startingDiscount = 9500; // Purchased nodes start with 95% profit share
-    /* //CTS:EXAMINE I believe there are now 8? some are unused though.(check NP)
-        Cost indexes
-        1 newRecordCost; // Cost to create a new record
-        2 transferAssetCost; // Cost to transfer a record from known rights holder to a new one
-        3 createNoteCost; // Cost to add a static note to an asset
-        4 reMintRecordCost; // Extra
-        5 changeStatusCost; // Extra
-        6 forceModifyCost; // Cost to brute-force a record transfer
-    */
     mapping(uint32 => mapping(uint16 => Costs)) private cost; // Cost per function by asset class => Costs struct (see PRUF_INTERFACES for struct definitions)
     mapping(uint32 => AC) private AC_data; // AC info database asset class to AC struct (see PRUF_INTERFACES for struct definitions)
     mapping(string => uint32) private AC_number; //name to asset class resolution map
@@ -73,10 +54,10 @@ contract AC_MGR is BASIC {
         AC_number[""] = 4294967295; //points the blank string name to AC 4294967295 to make "" owned
     }
 
-    /*
+    /**
      * @dev Verify user credentials
      * Originating Address:
-     *      is Node Minter
+     *      has NODE_MINTER_ROLE
      */
     modifier isNodeMinter() {
         require(
@@ -86,9 +67,9 @@ contract AC_MGR is BASIC {
         _;
     }
 
-    /*
+    /**
      * @dev Verify caller holds ACtoken of passed assetClass
-     * //CTS:EXAMINE param
+     * @param _assetClass - assetClass in which caller is queried for ownership
      */
     modifier isACtokenHolderOfClass(uint32 _assetClass) {
         require(
@@ -100,9 +81,9 @@ contract AC_MGR is BASIC {
 
     //--------------------------------------------ADMIN only Functions--------------------------
 
-    /*
+    /**
      * @dev Set pricing CTS:EXAMINE describe this better
-     * //CTS:EXAMINE param
+     * @param newACprice - cost per assetClass CTS:EXAMINE 18 decimals?
      */
     function adminSetACpricing(uint256 newACprice) external isContractAdmin {
         //^^^^^^^checks^^^^^^^^^
@@ -114,12 +95,12 @@ contract AC_MGR is BASIC {
         //^^^^^^^interactions^^^^^^^^^
     }
 
-    /*
-     * @dev Increases (but cannot decrease) price share for a given AC
-     * !! to be used with great caution
+    /**
+     * !! to be used with great caution !! //CTS:EXAMINE to be removed in next gen? this is referring to this line
      * This breaks decentralization and must eventually be given over to some kind of governance contract. //CTS:EXAMINE to be removed in next gen?
-     * //CTS:EXAMINE param
-     * //CTS:EXAMINE param
+     * @dev Increases (but cannot decrease) price share for a given AC
+     * @param _assetClass - assetClass in which cost share is being modified
+     * @param _newDiscount - discount(1% == 100, 10000 == max)
      */
     function adminIncreaseShare(uint32 _assetClass, uint32 _newDiscount)
         external
@@ -140,11 +121,11 @@ contract AC_MGR is BASIC {
         //^^^^^^^effects^^^^^^^^^
     }
 
-    /* //CTS:EXAMINE make sure standards are properly defined in the docs
-     * //CTS:EXAMINE untested
-     * Sets the valid storage type providers. DPS:TEST NEW **REQUIRED CONFIGURATION**
-     * //CTS:EXAMINE param
-     * //CTS:EXAMINE param
+    /**
+     *
+     * @dev Sets the valid storage type providers.
+     * @param _storageProvider - uint position for storage provider
+     * @param _status - uint position for custody type status
      */
     function adminSetStorageProviders(uint8 _storageProvider, uint8 _status)
         external
@@ -155,11 +136,10 @@ contract AC_MGR is BASIC {
         //^^^^^^^effects^^^^^^^^^
     }
 
-    /* //CTS:EXAMINE make sure standards are properly defined in the docs
-     * //CTS:EXAMINE untested
-     * Sets the valid management types.  DPS:TEST NEW **REQUIRED CONFIGURATION**
-     * //CTS:EXAMINE param
-     * //CTS:EXAMINE param
+    /**
+     * @dev Sets the valid management types.
+     * @param _managementType - uint position for management type
+     * @param _status - uint position for custody type status
      */
     function adminSetManagementTypes(uint8 _managementType, uint8 _status)
         external
@@ -170,11 +150,10 @@ contract AC_MGR is BASIC {
         //^^^^^^^effects^^^^^^^^^
     }
 
-    /* //CTS:EXAMINE make sure standards are properly defined in the docs
-     * //CTS:EXAMINE untested
-     * Sets the valid custody types.  DPS:TEST NEW **REQUIRED CONFIGURATION**
-     * //CTS:EXAMINE param
-     * //CTS:EXAMINE param
+    /**
+     * @dev Sets the valid custody types.
+     * @param _custodyType - uint position for custody type
+     * @param _status - uint position for custody type status
      */
     function adminSetCustodyTypes(uint8 _custodyType, uint8 _status)
         external
@@ -185,52 +164,48 @@ contract AC_MGR is BASIC {
         //^^^^^^^effects^^^^^^^^^
     }
 
-
-    /*
+    /**
+     * !! -------- to be used with great caution and only as a result of community governance action ----------- //CTS:EXAMINE to be removed in next gen?
      * @dev Transfers a name from one asset class to another
-     * !! -------- to be used with great caution and only as a result of community governance action -----------
-     * Designed to remedy brand infringement issues. This breaks decentralization and must eventually be given
-     * over to some kind of governance contract.
-     * Destination AC must have IPFS Set to 0xFFF.....
-     * //CTS:EXAMINE param
-     * //CTS:EXAMINE param
-     * //CTS:EXAMINE param
+     *   -Designed to remedy brand infringement issues. This breaks decentralization and must eventually be given
+     *   -over to some kind of governance contract.
+     * @param _assetClassSource - source assetClass
+     * @param _assetClassDest - destination assetClass
+     * @param _name - name to be transferred
      */
     function transferName(
-        uint32 _assetClass_source,
-        uint32 _assetClass_dest,
+        uint32 _assetClassSource,
+        uint32 _assetClassDest,
         string calldata _name
     ) external isContractAdmin {
         require(
-            AC_number[_name] == _assetClass_source,
+            AC_number[_name] == _assetClassSource,
             "ACM:TN: Name not in source AC"
         ); //source AC_Name must match name given
 
         require(
-            (AC_data[_assetClass_dest].IPFS == B320xF_), //dest AC must have ipfs set to 0xFFFF.....
+            (AC_data[_assetClassDest].IPFS == B320xF_), //dest AC must have ipfs set to 0xFFFF.....
             "ACM:TN: Destination AC not prepared for name transfer"
         );
         //^^^^^^^checks^^^^^^^^^
 
-        AC_number[_name] = _assetClass_dest;
-        AC_data[_assetClass_dest].name = _name;
-        AC_data[_assetClass_source].name = "";
+        AC_number[_name] = _assetClassDest;
+        AC_data[_assetClassDest].name = _name;
+        AC_data[_assetClassSource].name = "";
         //^^^^^^^effects^^^^^^^^^
     }
 
-    /*
+    /**
+     * !! -------- to be used with great caution ----------- //CTS:EXAMINE to be removed in next gen?
      * @dev Modifies an asset class with minimal controls
-     * !! -------- to be used with great caution -----------
-     * You can really break things with this. The frontend for this must have extensive checks.  //DPS:TEST Removed parameter
-     * //CTS:EXAMINE untested
-     * //CTS:EXAMINE param
-     * //CTS:EXAMINE param
-     * //CTS:EXAMINE param
-     * //CTS:EXAMINE param
-     * //CTS:EXAMINE param
-     * //CTS:EXAMINE param
-     * //CTS:EXAMINE param
-     * //CTS:EXAMINE param
+     * @param _assetClass - assetClass to be modified
+     * @param _assetClassRoot - root of assetClass
+     * @param _custodyType - custodyType of assetClass (see docs)
+     * @param _managementType - managementType of assetClass (see docs)
+     * @param _storageProvider - storageProvider of assetClass (see docs)
+     * @param _discount - discount of assetClass (100 == 1%, 10000 == max)
+     * @param _refAddress - referance address associated with an assetClass
+     * @param _IPFS - any external data attatched to assetClass
      */
     function AdminModAssetClass(
         uint32 _assetClass,
@@ -265,14 +240,13 @@ contract AC_MGR is BASIC {
         //^^^^^^^effects^^^^^^^^^
     }
 
-    /*
-     * @dev Modifies AC.switches bitwise DPS:TEST
-     * //CTS:EXAMINE untested
-     * //CTS:EXAMINE param
-     * //CTS:EXAMINE param
-     * //CTS:EXAMINE param
+    /**
+     * @dev Modifies AC.switches bitwise CTS:EXAMINE explain better
+     * @param _assetClass - assetClass to be modified
+     * @param _position - uint position of bit to be modified
+     * @param _bit - switch - 1 or 0 (true or false)
      */
-    function AdminModAssetClassSwitches(
+    function adminModAssetClassSwitches(
         uint32 _assetClass,
         uint8 _position,
         uint8 _bit
@@ -301,22 +275,17 @@ contract AC_MGR is BASIC {
 
     //--------------------------------------------NODEMINTER only Functions--------------------------
 
-    /*
-     * @dev Mints asset class token and creates an assetClass. Mints to @address
-     * //CTS:EXAMINE param
-     * //CTS:EXAMINE param
-     * //CTS:EXAMINE param
-     * //CTS:EXAMINE param
-     * //CTS:EXAMINE param
-     * //CTS:EXAMINE param
-     * //CTS:EXAMINE param
-     * //CTS:EXAMINE param
-     * //CTS:EXAMINE param
-     * Requires that:
-     *  name is unuiqe
-     *  AC is not provisioned with a root (proxy for not yet registered)
-     *  that ACtoken does not exist
-     *  _discount 10000 = 100 percent price share , cannot exceed
+    /**
+     * @dev Mints asset class token and creates an assetClass.
+     * @param _assetClass - assetClass to be created (unique)
+     * @param _name - name to be configured to assetClass (unique)
+     * @param _assetClassRoot - root of assetClass
+     * @param _custodyType - custodyType of new assetClass (see docs)
+     * @param _managementType - managementType of new assetClass (see docs)
+     * @param _storageProvider - storageProvider of new assetClass (see docs)
+     * @param _discount - discount of assetClass (100 == 1%, 10000 == max)
+     * @param _IPFS - any external data attatched to assetClass
+     * @param _recipientAddress - address to recieve assetClass
      */
     function createAssetClass(
         uint32 _assetClass,
@@ -348,14 +317,11 @@ contract AC_MGR is BASIC {
 
     /**
      * @dev Burns (amount) tokens and mints a new asset class token to the calling address
-     * //CTS:EXAMINE param
-     * //CTS:EXAMINE param
-     * //CTS:EXAMINE param
-     * //CTS:EXAMINE param
-     * //CTS:EXAMINE returns
-     *
-     * Requirements:
-     * - the caller must have a balance of at least `amount`.
+     * @param _name - chosen name of assetClass
+     * @param _assetClassRoot - chosen root of assetClass
+     * @param _custodyType - chosen custodyType of assetClass (see docs)
+     * @param _IPFS any external data attatched to assetClass
+     * CTS:EXAMINE whenNotPaused is redundant, throws in _createAssetClass
      */
     function purchaseACnode(
         string calldata _name,
@@ -407,12 +373,12 @@ contract AC_MGR is BASIC {
         //^^^^^^^effects/interactions^^^^^^^^^
     }
 
-    /*
-     * @dev Authorize / Deauthorize users for an address be permitted to make record modifications
+    /**
      * //CTS:EXAMINE maybe describe that this is only for custodyType 1?
-     * //CTS:EXAMINE param
-     * //CTS:EXAMINE param
-     * //CTS:EXAMINE param
+     * @dev Authorize / Deauthorize users for an address be permitted to make record modifications
+     * @param _assetClass - assetClass that user is being authorized in
+     * @param _addrHash - hash of address belonging to user being authorized
+     * @param _userType - authority level for user (see docs)
      */
     function addUser(
         uint32 _assetClass,
@@ -436,14 +402,10 @@ contract AC_MGR is BASIC {
         //^^^^^^^interactions^^^^^^^^^
     }
 
-    /*
-     * @dev Modifies an assetClass
-     * Sets a new AC name.
-     * //CTS:EXAMINE param
-     * //CTS:EXAMINE param
-     * Requires that:
-     *  caller holds ACtoken
-     *  name is unuiqe or same as old name
+    /**
+     * @dev Modifies an assetClass CTS:EXAMINE better explanation
+     * @param _assetClass - assetClass being modified
+     * @param _name - updated name associated with assetClass (unique)
      */
     function updateACname(uint32 _assetClass, string calldata _name)
         external
@@ -454,7 +416,7 @@ contract AC_MGR is BASIC {
             (AC_number[_name] == 0) || //name is unassigned
                 (keccak256(abi.encodePacked(_name)) == //name is same as old name
                     (keccak256(abi.encodePacked(AC_data[_assetClass].name)))),
-            "ACM:UACN: Name already in use"
+            "ACM:UACN: Name already in use or is same as the previous"
         );
         //^^^^^^^checks^^^^^^^^^
 
@@ -465,18 +427,15 @@ contract AC_MGR is BASIC {
         //^^^^^^^effects^^^^^^^^^
     }
 
-    /*
-     * @dev Modifies an assetClass
-     * Sets a new AC IPFS Address.
-     * //CTS:EXAMINE param
-     * //CTS:EXAMINE param
-     * Requires that:
-     *  caller holds ACtoken
+    /**
+     * @dev Modifies an assetClass CTS:EXAMINE better explanation
+     * @param _assetClass - assetClass being modified
+     * @param _IPFS any updated external data attatched to assetClass
      */
     function updateACipfs(uint32 _assetClass, bytes32 _IPFS)
         external
-        isACtokenHolderOfClass(_assetClass)
         whenNotPaused
+        isACtokenHolderOfClass(_assetClass)
     {
         //^^^^^^^checks^^^^^^^^^
 
@@ -484,12 +443,12 @@ contract AC_MGR is BASIC {
         //^^^^^^^effects^^^^^^^^^
     }
 
-    /*
+    /**
      * @dev Set function costs and payment address per asset class, in PRUF(18 decimals) //CTS:EXAMINE maybe figure out a better way to explain this last part? in params maybe
-     * //CTS:EXAMINE param
-     * //CTS:EXAMINE param
-     * //CTS:EXAMINE param
-     * //CTS:EXAMINE param
+     * @param _assetClass - assetClass being modified
+     * @param _service - service number being modified (see docs)
+     * @param _serviceCost - 18 decimal fee associated with specified service
+     * @param _paymentAddress - address to have _serviceCost paid to
      */
     function ACTH_setCosts(
         uint32 _assetClass,
@@ -506,23 +465,19 @@ contract AC_MGR is BASIC {
 
     //-------------------------------------------Functions dealing with immutable data ----------------------------------------------
 
-    /*
+    /**
      * @dev Modifies an assetClass //CTS:EXAMINE work out this comment
-     * Sets the immutable data on an ACNode
-     * //CTS:EXAMINE param
-     * //CTS:EXAMINE param
-     * //CTS:EXAMINE param
-     * //CTS:EXAMINE param
-     * Requires that:
-     *  caller holds ACtoken
-     *  ACnode is managementType 255 (unconfigured)
+     * @param _assetClass - assetClass being modified
+     * @param _managementType - managementType of assetClass (see docs)
+     * @param _storageProvider - storageProvider of assetClass (see docs)
+     * @param _refAddress - address permanently tied to assetClass
      */
     function updateACImmutable(
         uint32 _assetClass,
         uint8 _managementType,
         uint8 _storageProvider,
         address _refAddress
-    ) external isACtokenHolderOfClass(_assetClass) whenNotPaused {
+    ) external whenNotPaused isACtokenHolderOfClass(_assetClass) {
         require(
             AC_data[_assetClass].managementType == 255,
             "ACM:UACI: Immutable AC data already set"
@@ -548,11 +503,12 @@ contract AC_MGR is BASIC {
     }
 
     //-------------------------------------------Read-only functions ----------------------------------------------
-    /*
-     * @dev get a User Record
-     * //CTS:EXAMINE param
-     * //CTS:EXAMINE param
-     * //CTS:EXAMINE returns
+    /**
+     * @dev get a User Record CTS:EXAMINE fix this explanation
+     * @param _userHash - hash of selected user
+     * @param _assetClass - assetClass of quiry
+     *
+     * @return type of user @ _assetClass (see docs)
      */
     function getUserType(bytes32 _userHash, uint32 _assetClass)
         external
@@ -561,14 +517,14 @@ contract AC_MGR is BASIC {
     {
         //^^^^^^^checks^^^^^^^^^
         return (registeredUsers[_userHash][_assetClass]);
-        //^^^^^^^interactions^^^^^^^^^
+        //^^^^^^^effects^^^^^^^^^
     }
 
-    /*
-     * @dev get the authorization status of a management type 0 = not allowed  DPS:TEST -- NEW
-     * //CTS:EXAMINE untested
-     * //CTS:EXAMINE param
-     * //CTS:EXAMINE returns
+    /**
+     * @dev get the status of a specific management type
+     * @param _managementType - management type associated with quiry (see docs)
+     *
+     * @return 1 or 0 (enabled or disabled)
      */
     function getManagementTypeStatus(uint8 _managementType)
         external
@@ -577,14 +533,14 @@ contract AC_MGR is BASIC {
     {
         //^^^^^^^checks^^^^^^^^^
         return (managementTypesEnabled[_managementType]);
-        //^^^^^^^interactions^^^^^^^^^
+        //^^^^^^^effects^^^^^^^^^
     }
 
-    /*
-    * @dev get the authorization status of a storage type 0 = not allowed   DPS:TEST -- NEW
-     * //CTS:EXAMINE untested
-     * //CTS:EXAMINE param
-     * //CTS:EXAMINE returns
+    /**
+     * @dev get the status of a specific storage provider
+     * @param _storageProvider - storage provider associated with quiry (see docs)
+     *
+     * @return 1 or 0 (enabled or disabled)
      */
     function getStorageProviderStatus(uint8 _storageProvider)
         external
@@ -593,14 +549,14 @@ contract AC_MGR is BASIC {
     {
         //^^^^^^^checks^^^^^^^^^
         return (storageProvidersEnabled[_storageProvider]);
-        //^^^^^^^interactions^^^^^^^^^
+        //^^^^^^^effects^^^^^^^^^
     }
 
-    /*
-     * @dev get the authorization status of a custody type 0 = not allowed   DPS:TEST -- NEW
-     * //CTS:EXAMINE untested
-     * //CTS:EXAMINE param
-     * //CTS:EXAMINE returns
+    /**
+     * @dev get the status of a specific custody type
+     * @param _custodyType - custody type associated with quiry (see docs)
+     *
+     * @return 1 or 0 (enabled or disabled)
      */
     function getCustodyTypeStatus(uint8 _custodyType)
         external
@@ -609,17 +565,20 @@ contract AC_MGR is BASIC {
     {
         //^^^^^^^checks^^^^^^^^^
         return (custodyTypesEnabled[_custodyType]);
-        //^^^^^^^interactions^^^^^^^^^
+        //^^^^^^^effects^^^^^^^^^
     }
 
-    /*
+    /**
      * @dev Retrieve AC_data @ _assetClass
-     * //CTS:EXAMINE param
-     * //CTS:EXAMINE returns
-     * //CTS:EXAMINE returns
-     * //CTS:EXAMINE returns
-     * //CTS:EXAMINE returns
-     * //CTS:EXAMINE returns
+     * @param _assetClass - assetClass associated with quiry
+     *
+     * @return {
+         assetClassRoot: root assetClass @ _assetClass
+         custodyType: custody type @ _assetClass (see docs)
+         managementType: management type @ _assetClass (see docs)
+         discount: percentage of rewards distribution @ _assetClass
+         referenceAddress: referance address @ _assetClass
+     }
      */
     function getAC_data(uint32 _assetClass)
         external
@@ -643,10 +602,11 @@ contract AC_MGR is BASIC {
         //^^^^^^^interactions^^^^^^^^^
     }
 
-    /*
+    /**
      * @dev Retrieve extended AC_data @ _assetClass
-     * //CTS:EXAMINE param
-     * //CTS:EXAMINE returns
+     * @param _assetClass - assetClass associated with quiry
+     *
+     * @return AC_data (see docs)
      */
     function getExtAC_data(uint32 _assetClass)
         external
@@ -655,14 +615,15 @@ contract AC_MGR is BASIC {
     {
         //^^^^^^^checks^^^^^^^^^
         return (AC_data[_assetClass]);
-        //^^^^^^^interactions^^^^^^^^^
+        //^^^^^^^effects^^^^^^^^^
     }
 
-    /*
-     * @dev compare the root of two asset classes
-     * //CTS:EXAMINE param
-     * //CTS:EXAMINE param
-     * //CTS:EXAMINE returns
+    /**
+     * @dev verify the root of two asset classes are equal
+     * @param _assetClass1 - first assetClass associated with quiry
+     * @param _assetClass2 - second assetClass associated with quiry
+     *
+     * @return 170 or 0 (true or false)
      */
     function isSameRootAC(uint32 _assetClass1, uint32 _assetClass2)
         external
@@ -678,26 +639,28 @@ contract AC_MGR is BASIC {
         } else {
             return uint8(0);
         }
-        //^^^^^^^interactions^^^^^^^^^
+        //^^^^^^^effects^^^^^^^^^
     }
 
-    /*
+    /**
      * @dev Retrieve AC_name @ _tokenId
-     * //CTS:EXAMINE param
-     * //CTS:EXAMINE returns
+     * @param _tokenId - tokenId associated with quiry
+     *
+     * @return name of token @ _tokenID
      */
     function getAC_name(uint32 _tokenId) external view returns (string memory) {
         //^^^^^^^checks^^^^^^^^^
 
-        uint32 assetClass = _tokenId; //check for overflow andf throw
+        uint32 assetClass = _tokenId; //CTS:EXAMINE what??? shouldnt param _tokenId just be changed to _assetClass? they're both uint32s.
         return (AC_data[assetClass].name);
-        //^^^^^^^interactions^^^^^^^^^
+        //^^^^^^^effects^^^^^^^^^
     }
 
-    /*
-     * @dev Retrieve AC_number @ AC_name
-     * //CTS:EXAMINE param
-     * //CTS:EXAMINE returns
+    /**
+     * @dev Retrieve assetClass @ AC_name
+     * @param _name - name of assetClass for assetClassNumber quiry
+     *
+     * @return assetClass number @ _name
      */
     function resolveAssetClass(string calldata _name)
         external
@@ -706,35 +669,31 @@ contract AC_MGR is BASIC {
     {
         //^^^^^^^checks^^^^^^^^^
         return (AC_number[_name]);
-        //^^^^^^^interactions^^^^^^^^^
+        //^^^^^^^effects^^^^^^^^^
     }
 
-    /*
+    /**
      * @dev return current AC token index pointer //CTS:EXAMINE maybe describe this a little better?
-     * //CTS:EXAMINE returns
-     * //CTS:EXAMINE returns
+     *
+     * @return {
+         ACtokenIndex: current token number
+         AC_price: current price per assetClass
+     }
      */
-    function currentACpricingInfo()
-        external
-        view
-        returns (
-            uint256,
-            uint256
-        )
-    {
+    function currentACpricingInfo() external view returns (uint256, uint256) {
         //^^^^^^^checks^^^^^^^^^
 
         //uint256 numberOfTokensSold = ACtokenIndex - uint256(1000000); //CTS:EXAMINE remove?
         return (ACtokenIndex, AC_Price);
-        //^^^^^^^effects/interactions^^^^^^^^^
+        //^^^^^^^effects^^^^^^^^^
     }
 
-    /*
-     * @dev get bit from .switches at specified position //DPS:TEST
-     * //CTS:EXAMINE untested
-     * //CTS:EXAMINE param
-     * //CTS:EXAMINE param
-     * //CTS:EXAMINE returns
+    /**
+     * @dev get bit from .switches at specified position
+     * @param _assetClass - assetClass associated with quiry
+     * @param _position - bit position associated with quiry
+     *
+     * @return 1 or 0 (enabled or disabled)
      */
     function getSwitchAt(uint32 _assetClass, uint8 _position)
         external
@@ -752,16 +711,23 @@ contract AC_MGR is BASIC {
         } else {
             return 0;
         }
-        //^^^^^^^effects/interactions^^^^^^^^^
+        //^^^^^^^effects^^^^^^^^^
     }
 
     //-------------------------------------------functions for payment calculations----------------------------------------------
 
-    /*
+    /**
      * @dev Retrieve function costs per asset class, per service type in PRUF(18 decimals) //CTS:EXAMINE maybe figure out a better way to explain this? in params maybe
-     * //CTS:EXAMINE param
-     * //CTS:EXAMINE param
-     * //CTS:EXAMINE returns
+     * @param _assetClass - assetClass associated with quiry
+     * @param _service - service number associated with quiry (see docs)
+     *
+     * @return invoice{
+         rootAddress: @ _assetClass root payment address @ _service
+         rootPrice: @ _assetClass root service cost @ _service
+         ACTHaddress: @ _assetClass payment address tied @ _service
+         ACTHprice: @ _assetClass service cost @ _service
+         assetClass: _assetClass
+     }
      */
     function getServiceCosts(uint32 _assetClass, uint16 _service)
         external
@@ -789,10 +755,11 @@ contract AC_MGR is BASIC {
         //^^^^^^^effects^^^^^^^^^
     }
 
-    /*
+    /**
      * @dev Retrieve AC_discount @ _assetClass
-     * //CTS:EXAMINE param
-     * //CTS:EXAMINE returns
+     * @param _assetClass - assetClass associated with quiry
+     *
+     * @return percentage of rewards distribution @ _assetClass
      */
     function getAC_discount(uint32 _assetClass) external view returns (uint32) {
         //^^^^^^^checks^^^^^^^^^
@@ -802,18 +769,17 @@ contract AC_MGR is BASIC {
 
     //-------------------------------------------INTERNAL / PRIVATE functions ----------------------------------------------
 
-    /*
-     * @dev creates an assetClass
-     * makes ACdata record with new name, mints token //CTS:EXAMINE this confuses me
-     * //CTS:EXAMINE param
-     * //CTS:EXAMINE param
-     * //CTS:EXAMINE param
-     * //CTS:EXAMINE param
-     * //CTS:EXAMINE param
-     * //CTS:EXAMINE param
-     * //CTS:EXAMINE param
-     * //CTS:EXAMINE param
-     * //CTS:EXAMINE param
+    /**
+     * @dev creates an assetClass makes ACdata record with new name, mints token //CTS:EXAMINE this confuses me, fix
+     * @param _assetClass - assetClass to be created (unique)
+     * @param _recipientAddress - address to recieve assetClass
+     * @param _name - name to be configured to assetClass (unique)
+     * @param _assetClassRoot - root of assetClass
+     * @param _custodyType - custodyType of new assetClass (see docs)
+     * @param _managementType - managementType of new assetClass (see docs)
+     * @param _storageProvider - storageProvider of new assetClass (see docs)
+     * @param _discount - discount of assetClass (100 == 1%, 10000 == max)
+     * @param _IPFS - any external data attatched to assetClass
      */
     function _createAssetClass(
         uint32 _assetClass,
@@ -832,11 +798,13 @@ contract AC_MGR is BASIC {
         require((tokenId != 0), "ACM:CAC: AC = 0"); //sanity check inputs //CTS:EXAMINE remove extra ()
         require(_discount <= 10000, "ACM:CAC: Discount > 10000 (100%)");
         require( //_ac.managementType is a valid type or explicitly unset (255)
-            (managementTypesEnabled[_managementType] > 0) || (_managementType == 255),
+            (managementTypesEnabled[_managementType] > 0) ||
+                (_managementType == 255),
             "ACM:CAC: Management type is invalid (0)"
         );
         require( //_ac.storageProvider is a valid type or not specified (0)
-            (storageProvidersEnabled[_storageProvider] > 0) || (_storageProvider == 0),
+            (storageProvidersEnabled[_storageProvider] > 0) ||
+                (_storageProvider == 0),
             "ACM:CAC: Storage Provider is invalid (0)"
         );
         require( //_ac.custodyType is a valid type or specifically unset (255)

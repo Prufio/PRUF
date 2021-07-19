@@ -117,7 +117,7 @@ contract A_TKN is
     /**
      * @dev Verify user credentials
      * Originating Address:
-     *      has TRUSTED_AGENT_ROLE and TA role is not disabled
+     *      has TRUSTED_AGENT_ROLE and Trusted Agent role is not disabled
      */
     modifier isTrustedAgent() {
         require(
@@ -291,6 +291,7 @@ contract A_TKN is
      * @param _from current owner of the token
      * @param _to address to receive the ownership of the given token ID
      * @param _tokenId uint256 ID of the token to be transferred
+    //CTS:EXAMINE whenNotPaused redundant throws in writeRecord
      */
     function transferFrom(
         address _from,
@@ -351,6 +352,7 @@ contract A_TKN is
      * @param _to address to receive the ownership of the given token ID
      * @param _tokenId uint256 ID of the token to be transferred
      * @param _data bytes data to send along with a safe transfer check
+    //CTS:EXAMINE whenNotPaused redundant throws in writeRecord
      */
     function safeTransferFrom(
         address _from,
@@ -396,6 +398,7 @@ contract A_TKN is
      * @param _from current owner of the token
      * @param _to address to receive the ownership of the given token ID
      * @param _tokenId uint256 ID of the token to be transferred
+    //CTS:EXAMINE whenNotPaused redundant throws in writeRecord
      */
     function trustedAgentTransferFrom(
         address _from,

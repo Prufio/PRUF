@@ -1,31 +1,29 @@
 /*--------------------------------------------------------PRüF0.8.0
 __/\\\\\\\\\\\\\ _____/\\\\\\\\\ _______/\\__/\\ ___/\\\\\\\\\\\\\\\        
- _\/\\\/////////\\\ _/\\\///////\\\ ____\//__\//____\/\\\///////////__       
-  _\/\\\_______\/\\\_\/\\\_____\/\\\ ________________\/\\\ ____________      
-   _\/\\\\\\\\\\\\\/__\/\\\\\\\\\\\/_____/\\\____/\\\_\/\\\\\\\\\\\ ____     
-    _\/\\\/////////____\/\\\//////\\\ ___\/\\\___\/\\\_\/\\\///////______    
-     _\/\\\ ____________\/\\\ ___\//\\\ __\/\\\___\/\\\_\/\\\ ____________   
-      _\/\\\ ____________\/\\\ ____\//\\\ _\/\\\___\/\\\_\/\\\ ____________  
-       _\/\\\ ____________\/\\\ _____\//\\\_\//\\\\\\\\\ _\/\\\ ____________ 
-        _\/// _____________\/// _______\/// __\///////// __\/// _____________
-         *-------------------------------------------------------------------*/
+__\/\\\/////////\\\ _/\\\///////\\\ ____\//__\//____\/\\\///////////__       
+___\/\\\_______\/\\\_\/\\\_____\/\\\ ________________\/\\\ ____________      
+____\/\\\\\\\\\\\\\/__\/\\\\\\\\\\\/_____/\\\____/\\\_\/\\\\\\\\\\\ ____     
+_____\/\\\/////////____\/\\\//////\\\ ___\/\\\___\/\\\_\/\\\///////______
+______\/\\\ ____________\/\\\ ___\//\\\ __\/\\\___\/\\\_\/\\\ ____________
+_______\/\\\ ____________\/\\\ ____\//\\\ _\/\\\___\/\\\_\/\\\ ____________
+________\/\\\ ____________\/\\\ _____\//\\\_\//\\\\\\\\\ _\/\\\ ____________
+_________\/// _____________\/// _______\/// __\///////// __\/// _____________
+*---------------------------------------------------------------------------*/
 
 /*-----------------------------------------------------------------
- *  TO DO
- *-----------------------------------------------------------------
  * PRUF ASSET CLASS NODE NFT CONTRACT
  *-----------------------------------------------------------------*/
 
 // SPDX-License-Identifier: UNLICENSED
 pragma solidity ^0.8.0;
 
+import "./PRUF_INTERFACES.sol";
 import "./Imports/access/AccessControl.sol";
 import "./Imports/utils/Context.sol";
 import "./Imports/utils/Counters.sol";
 import "./Imports/token/ERC721/ERC721.sol";
 import "./Imports/token/ERC721/ERC721Burnable.sol";
 import "./Imports/token/ERC721/ERC721Pausable.sol";
-import "./PRUF_INTERFACES.sol";
 import "./Imports/utils/ReentrancyGuard.sol";
 
 /**
@@ -95,17 +93,15 @@ contract AC_TKN is
         _;
     }
 
-    //----------------------Events----------------------//
-    event REPORT(string _msg);
-
-    //----------------------Admin functions / isContractAdmin or isMinter----------------------//
+    //----------------------Admin functions - isContractAdmin or isMinter----------------------//
 
     /**
-     * @dev Mint an Asset token
+     * @dev Mint a Node token
      * @param _recipientAddress - Address to mint token into
      * @param _tokenId - Token ID to mint
      * @param _tokenURI - URI string to atatch to token
-     * returns Token ID of minted token
+     *
+     * @return Token ID of minted token
      */
     function mintACToken(
         address _recipientAddress,
@@ -148,9 +144,10 @@ contract AC_TKN is
     }
 
     /**
-     * @dev See if asset token exists
+     * @dev See if node token exists
      * @param tokenId - Token ID to set URI
-     * returns 170 if token exists, otherwise 0
+     *
+     * @return 170 or 0 (true or false)
      */
     function tokenExists(uint256 tokenId) external view returns (uint256) {
         if (_exists(tokenId)) {
