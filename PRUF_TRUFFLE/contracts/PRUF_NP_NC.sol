@@ -15,7 +15,7 @@ _________\/// _____________\/// _______\/// __\///////// __\/// _____________
  *
  *---------------------------------------------------------------*/
 
- //CTS:EXAMINE quick explainer for the contract
+//CTS:EXAMINE quick explainer for the contract
 
 // SPDX-License-Identifier: UNLICENSED
 pragma solidity ^0.8.0;
@@ -23,7 +23,6 @@ pragma solidity ^0.8.0;
 import "./PRUF_CORE.sol";
 
 contract NP_NC is CORE {
-
     /*
      * @dev Verify user credentials
      * //CTS:EXAMINE param
@@ -79,44 +78,9 @@ contract NP_NC is CORE {
         //^^^^^^^interactions^^^^^^^^^
     }
 
-    /*
-     * @dev Export - sets asset to status 70 (importable) //CTS:EXAMINE we should maybe describe this better
-     * //CTS:EXAMINE param
-     */
-    function _exportNC(bytes32 _idxHash)
-        external
-        whenNotPaused
-        isAuthorized(_idxHash)
-    {
-        Record memory rec = getRecord(_idxHash);
-        AC memory AC_info = getACinfo(rec.assetClass);
-
-        require(
-            rec.assetStatus == 51,
-            "NPNC:EX: Must be in transferrable status (51)"
-        );
-        require(
-            (AC_info.managementType < 6),
-            "NPNC:EX: Contract does not support management types > 5 or AC is locked"
-        );
-        if ((AC_info.managementType == 1) || (AC_info.managementType == 5)) {
-            require( //holds AC token if AC is restricted --------DPS TEST ---- NEW
-                (AC_TKN.ownerOf(rec.assetClass) == _msgSender()),
-                "NPNC:EX: Restricted from exporting assets from this AC - does not hold ACtoken"
-            );
-        }
-        //^^^^^^^checks^^^^^^^^^
-
-        rec.assetStatus = 70; // Set status to 70 (exported)
-        //^^^^^^^effects^^^^^^^^^
-
-        writeRecord(_idxHash, rec);
-        //STOR.changeAC(_idxHash, AC_info.assetClassRoot); //set assetClass to the root AC of the assetClass //CTS:EXAMINE untested dont delete
-        //^^^^^^^interactions^^^^^^^^^
-    }
 
     /*
-     * @dev exportTo - sets asset to status 70 (importable) //CTS:EXAMINE we should maybe describe this better
+     * @dev exportTo - sets asset to status 70 (importable) and defines the AC that the item can be imported into
      * //CTS:EXAMINE param
      */
     function _exportTo(bytes32 _idxHash, uint32 _newAssetClass)
@@ -129,29 +93,29 @@ contract NP_NC is CORE {
 
         require(
             rec.assetStatus == 51,
-            "NPNC:EX: Must be in transferrable status (51)"
+            "NPNC:EXT: Must be in transferrable status (51)"
         );
         require(
             AC_MGR.isSameRootAC(_newAssetClass, rec.assetClass) == 170,
-            "NPNC:EX: Cannot change AC to new root"
+            "NPNC:EXT: Cannot change AC to new root"
         );
         require(
             (AC_info.managementType < 6),
-            "NPNC:EX: Contract does not support management types > 5 or AC is locked"
+            "NPNC:EXT: Contract does not support management types > 5 or AC is locked"
         );
         if ((AC_info.managementType == 1) || (AC_info.managementType == 5)) {
             require( //holds AC token if AC is restricted --------DPS TEST ---- NEW
                 (AC_TKN.ownerOf(rec.assetClass) == _msgSender()),
-                "NPNC:EX: Restricted from exporting assets from this AC - does not hold ACtoken"
+                "NPNC:EXT: Restricted from exporting assets from this AC - does not hold ACtoken"
             );
         }
         //^^^^^^^checks^^^^^^^^^
 
         rec.assetStatus = 70; // Set status to 70 (exported)
+        rec.int32temp = _newAssetClass; //set permitted AC for import
         //^^^^^^^effects^^^^^^^^^
 
         writeRecord(_idxHash, rec);
-        //STOR.changeAC(_idxHash, AC_info.assetClassRoot); //set assetClass to the root AC of the assetClass //CTS:EXAMINE untested dont delete
         //^^^^^^^interactions^^^^^^^^^
     }
 

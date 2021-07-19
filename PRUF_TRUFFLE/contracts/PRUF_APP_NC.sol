@@ -148,6 +148,10 @@ contract APP_NC is CORE {
 
         require(rec.assetStatus == 70, "ANC:IA: Asset !exported");
         require(
+            _newAssetClass == rec.int32temp,
+            "ANC:IA: Cannot change AC except to specified AC"
+        );
+        require(
             AC_MGR.isSameRootAC(_newAssetClass, rec.assetClass) == 170,
             "ANC:IA: Cannot change AC to new root"
         );
@@ -160,7 +164,7 @@ contract APP_NC is CORE {
             (AC_info.managementType == 2) ||
             (AC_info.managementType == 5)
         ) {
-            require( //black forest / survillence ransom hole CTS DPS FIX BROKEN!
+            require(
                 (AC_TKN.ownerOf(_newAssetClass) == _msgSender()),
                 "ANC:IA: Cannot create asset in AC mgmt type 1||2||5 - caller does not hold AC token"
             );
