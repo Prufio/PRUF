@@ -101,7 +101,7 @@ contract CORE is BASIC {
         //^^^^^^^interactions^^^^^^^^^
     }
 
-    /**
+    /** DPS:CHECK - new param int32temp
      * @dev Write a Record to Storage @ idxHash (SETTER)
      * @param _idxHash - Asset Index
      * @param _rec - a Record Struct (see interfaces for struct definitions)
