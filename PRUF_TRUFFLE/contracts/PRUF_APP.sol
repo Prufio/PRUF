@@ -11,7 +11,7 @@ _________\/// _____________\/// _______\/// __\///////// __\/// _____________
 *---------------------------------------------------------------------------*/
 
 /*-----------------------------------------------------------------
- *  CTS:EXAMINE description of contract
+ *
  *----------------------------------------------------------------*/
 
 // SPDX-License-Identifier: UNLICENSED
@@ -106,7 +106,7 @@ contract APP is CORE {
     }
 
     /**
-     * @dev Modify rec.rightsHolder with confirmation
+     * @dev Modify rec.rightsHolder
      * @param _idxHash - hash of asset information created by frontend inputs
      * @param _rgtHash - hash of new rightsholder information created by frontend inputs
      */
@@ -124,7 +124,7 @@ contract APP is CORE {
             isLostOrStolen(rec.assetStatus) == 0,
             "A:FMR: Asset marked L/S"
         );
-        require( //CTS:EXAMINE impossible to reach, APP needs to hold token
+        require( //impossible to reach, APP needs to hold token
             needsImport(rec.assetStatus) == 0,
             "A:FMR: Asset needs re-imported"
         );
@@ -142,7 +142,7 @@ contract APP is CORE {
     }
 
     /**
-     * @dev Transfer rights to new rightsHolder with confirmation //CTS:EXAMINE with confirmation?
+     * @dev Transfer rights to new rightsHolder with confirmation of matching rgthash
      * @param _idxHash - hash of asset information created by frontend inputs
      * @param _rgtHash - hash of rightsholder information created by frontend inputs
      * @param _newrgtHash - hash of targeted reciever information created by frontend inputs
@@ -193,7 +193,7 @@ contract APP is CORE {
     }
 
     /**
-     * @dev Modify **Record** Ipfs2 with confirmation //CTS:EXAMINE with confirmation?
+     * @dev Modify **Record** Ipfs2 with confirmation of matching rgthash
      * @param _idxHash - hash of asset information created by frontend inputs
      * @param _rgtHash - hash of rightsholder information created by frontend inputs
      * @param _Ipfs2a - field for permanent external asset data
@@ -210,7 +210,7 @@ contract APP is CORE {
 
         require((userType > 0) && (userType < 10), "A:I2: User not auth in AC");
 
-        require( //CTS:EXAMINE impossible to reach, APP needs to hold token
+        require( //impossible? to reach
             needsImport(rec.assetStatus) == 0,
             "A:I2: Asset needs re-imported"
         );
