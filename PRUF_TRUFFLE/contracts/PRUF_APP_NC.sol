@@ -12,7 +12,6 @@ _________\/// _____________\/// _______\/// __\///////// __\/// _____________
 
 /*-----------------------------------------------------------------
  *  TO DO
- //black forest / survillence ransom hole CTS DPS FIX BROKEN!
  *---------------------------------------------------------------*/
 
 
@@ -194,7 +193,7 @@ contract APP_NC is CORE {
     }
 
     /**
-     * @dev Modify record.Ipfs2 //CTS:EXAMINE better description
+     * @dev record IPFS2 data 
      * @param _idxHash - hash of asset information created by frontend inputs
      * @param _Ipfs2a - field for permanent external asset data
      * @param _Ipfs2b - field for permanent external asset data
