@@ -193,7 +193,7 @@ contract NP is CORE {
      * //CTS:EXAMINE param
      * //CTS:EXAMINE returns
      */
-    function exportAssetTo(
+    function _exportAssetTo(
         bytes32 _idxHash,
         uint32 _exportTo,
         address _addr
