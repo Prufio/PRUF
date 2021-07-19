@@ -15,7 +15,6 @@ _________\/// _____________\/// _______\/// __\///////// __\/// _____________
  *  NonCustodial protocol functions
  *---------------------------------------------------------------*/
 
-
 // SPDX-License-Identifier: UNLICENSED
 pragma solidity ^0.8.0;
 
@@ -71,14 +70,13 @@ contract NP_NC is CORE {
         //^^^^^^^interactions^^^^^^^^^
     }
 
-
     /**
      * @dev exportTo - sets asset to status 70 (importable) and defines the AC that the item can be imported into
      * @param _idxHash idx of asset to Modify
-     * @param _exportAssetClass AC target for export
+     * @param _exportTo AC target for export
      */
-     //DPS:TEST
-    function _exportTo(bytes32 _idxHash, uint32 _exportAssetClass)
+    //DPS:TEST
+    function _exportAssetTo(bytes32 _idxHash, uint32 _exportTo)
         external
         whenNotPaused
         isAuthorized(_idxHash)
@@ -91,7 +89,7 @@ contract NP_NC is CORE {
             "NPNC:EXT: Must be in transferrable status (51)"
         );
         require(
-            AC_MGR.isSameRootAC(_exportAssetClass, rec.assetClass) == 170,
+            AC_MGR.isSameRootAC(_exportTo, rec.assetClass) == 170,
             "NPNC:EXT: Cannot change AC to new root"
         );
         require(
@@ -107,7 +105,7 @@ contract NP_NC is CORE {
         //^^^^^^^checks^^^^^^^^^
 
         rec.assetStatus = 70; // Set status to 70 (exported)
-        rec.int32temp = _exportAssetClass; //set permitted AC for import
+        rec.int32temp = _exportTo; //set permitted AC for import
         //^^^^^^^effects^^^^^^^^^
 
         writeRecord(_idxHash, rec);
