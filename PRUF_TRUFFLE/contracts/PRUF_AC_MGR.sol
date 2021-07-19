@@ -644,7 +644,7 @@ contract AC_MGR is BASIC {
 
     /**
      * @dev Retrieve AC_name @ _tokenId
-     * @param _tokenId - tokenId associated with quiry
+     * @param _tokenId - tokenId associated with query
      *
      * @return name of token @ _tokenID
      */
