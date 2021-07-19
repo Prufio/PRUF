@@ -412,7 +412,7 @@ contract STOR is AccessControl, ReentrancyGuard, Pausable {
 
         rec.assetClass = _assetClass;
         rec.countDown = _countDownStart;
-        rec.countDownStart = _countDownStart;
+        //rec.countDownStart = _countDownStart;
         rec.rightsHolder = _rgtHash;
 
         database[_idxHash] = rec;
@@ -796,7 +796,7 @@ contract STOR is AccessControl, ReentrancyGuard, Pausable {
             rec.modCount,
             rec.assetClass,
             rec.countDown,
-            rec.countDownStart,
+            rec.int32temp,
             rec.Ipfs1a,
             rec.Ipfs1b,
             rec.Ipfs2a,

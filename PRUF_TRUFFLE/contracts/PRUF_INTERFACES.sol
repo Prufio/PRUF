@@ -25,7 +25,7 @@ struct Record {
     uint16 numberOfTransfers; //number of transfers and forcemods
     uint32 assetClass; // Type of asset
     uint32 countDown; // Variable that can only be dencreased from countDownStart
-    uint32 countDownStart; // Starting point for countdown variable (set once)
+    uint32 int32temp; // int32 for pesisting transitional data
     uint120 price; //price set for items offered for sale
     bytes32 Ipfs1a; // Publically viewable asset description
     bytes32 Ipfs2a; // Publically viewable immutable notes
