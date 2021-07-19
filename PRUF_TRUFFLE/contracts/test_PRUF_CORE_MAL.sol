@@ -100,6 +100,7 @@ contract CORE_MAL is BASIC {
             _rec.rightsHolder,
             _rec.assetStatus,
             _rec.countDown,
+            _rec.int32temp,
             _rec.modCount,
             _rec.numberOfTransfers
         ); // Send data and writehash to storage
