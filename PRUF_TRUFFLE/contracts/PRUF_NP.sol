@@ -15,7 +15,7 @@ _________\/// _____________\/// _______\/// __\///////// __\/// _____________
  *
  *---------------------------------------------------------------*/
 
- //CTS:EXAMINE quick explainer for the contract
+//CTS:EXAMINE quick explainer for the contract
 
 // SPDX-License-Identifier: UNLICENSED
 pragma solidity ^0.8.0;
@@ -23,7 +23,6 @@ pragma solidity ^0.8.0;
 import "./PRUF_CORE.sol";
 
 contract NP is CORE {
-    
     /*
      * @dev Verify user credentials
      * //CTS:EXAMINE param
@@ -61,15 +60,12 @@ contract NP is CORE {
         Record memory rec = getRecord(_idxHash);
         uint8 userType = getCallingUserType(rec.assetClass);
 
-        require(
-            (userType > 0) && (userType < 10),
-            "NP:MS: User !auth in AC"
-        );
+        require((userType > 0) && (userType < 10), "NP:MS: User !auth in AC");
         require(
             (_newAssetStatus != 7) &&
-            (_newAssetStatus != 57) &&
-            (_newAssetStatus != 58) &&
-            (_newAssetStatus < 100),
+                (_newAssetStatus != 57) &&
+                (_newAssetStatus != 58) &&
+                (_newAssetStatus < 100),
             "NP:MS: Stat Rsrvd"
         );
         require(
@@ -119,10 +115,7 @@ contract NP is CORE {
     {
         Record memory rec = getRecord(_idxHash);
         uint8 userType = getCallingUserType(rec.assetClass);
-        require(
-            (userType > 0) && (userType < 10),
-            "NP:SLS: User !auth in AC"
-        );
+        require((userType > 0) && (userType < 10), "NP:SLS: User !auth in AC");
         require(
             (rec.assetStatus > 49) ||
                 ((_newAssetStatus < 50) && (userType < 5)),
@@ -164,10 +157,7 @@ contract NP is CORE {
         Record memory rec = getRecord(_idxHash);
         uint8 userType = getCallingUserType(rec.assetClass);
 
-        require(
-            (userType > 0) && (userType < 10),
-            "NP:DC: User !auth in AC"
-        );
+        require((userType > 0) && (userType < 10), "NP:DC: User !auth in AC");
         require(
             needsImport(rec.assetStatus) == 0,
             "NP:DC Record in unregistered, exported, or discarded status"
@@ -203,18 +193,10 @@ contract NP is CORE {
         bytes32 _rgtHash,
         bytes32 _Ipfs1a,
         bytes32 _Ipfs1b
-    )
-        external
-        nonReentrant
-        whenNotPaused
-        isAuthorized(_idxHash)
-    {
+    ) external nonReentrant whenNotPaused isAuthorized(_idxHash) {
         Record memory rec = getRecord(_idxHash);
         uint8 userType = getCallingUserType(rec.assetClass);
-        require(
-            (userType > 0) && (userType < 10),
-            "NP:MI1: User !auth in AC"
-        );
+        require((userType > 0) && (userType < 10), "NP:MI1: User !auth in AC");
         require(
             needsImport(rec.assetStatus) == 0,
             "NP:MI1: Record in unregistered, exported, or discarded status"
@@ -240,7 +222,11 @@ contract NP is CORE {
      * //CTS:EXAMINE param
      * //CTS:EXAMINE returns
      */
-    function exportAsset(bytes32 _idxHash, address _addr)
+    function exportAssetTo(
+        bytes32 _idxHash,
+        uint32 _exportTo,
+        address _addr
+    )
         external
         nonReentrant
         whenNotPaused
@@ -259,9 +245,14 @@ contract NP is CORE {
             rec.assetStatus == 51,
             "NP:EA: Asset status must be 51 to export"
         );
+        require(
+            AC_MGR.isSameRootAC(_exportTo, rec.assetClass) == 170,
+            "A:IA: Cannot export AC to new root"
+        );
         //^^^^^^^checks^^^^^^^^^
 
         rec.assetStatus = 70; // Set status to 70 (exported)
+        rec.int32temp = _exportTo;
         //^^^^^^^effects^^^^^^^^^
 
         APP.transferAssetToken(_addr, _idxHash);

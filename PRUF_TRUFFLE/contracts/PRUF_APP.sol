@@ -23,7 +23,6 @@ contract APP is CORE {
     bytes32 public constant B320xF_ =
         0xFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFF;
 
-
     /**
      * //CTS:EXAMINE comment
      * @param _idxHash - idxHash of asset to compare to caller for authority
@@ -68,15 +67,10 @@ contract APP is CORE {
      * @dev import **Record** (no confirmation required - //CTS:EXAMINE what's up with this comment
      * posessor is considered to be owner. sets rec.assetStatus to 0.
      * @param _idxHash - hash of asset information created by frontend inputs
-     * @param _newRgtHash - hash of new rightsholder information created by frontend inputs
      * @param _newAssetClass - assetClass the asset will be imported into
      * @return status of asset post-import
      */
-    function importAsset(
-        bytes32 _idxHash,
-        bytes32 _newRgtHash, //CTS:EXAMINE should this be new? or normal
-        uint32 _newAssetClass
-    )
+    function importAsset(bytes32 _idxHash, uint32 _newAssetClass)
         external
         nonReentrant
         whenNotPaused
@@ -94,11 +88,18 @@ contract APP is CORE {
                 (rec.assetStatus == 70),
             "A:IA: Only Transferred or exported assets can be imported"
         );
+        require(
+            _newAssetClass == rec.int32temp,
+            "A:IA: new AC must match authorized AC"
+        );
+        require(
+            AC_MGR.isSameRootAC(_newAssetClass, rec.assetClass) == 170,
+            "ANC:IA: Cannot change AC to new root"
+        );
         //^^^^^^^checks^^^^^^^^^
 
         rec.modCount = 170;
         rec.assetStatus = 0;
-        rec.rightsHolder = _newRgtHash;
         //^^^^^^^effects^^^^^^^^^
 
         STOR.changeAC(_idxHash, _newAssetClass);
@@ -216,12 +217,7 @@ contract APP is CORE {
         bytes32 _rgtHash,
         bytes32 _Ipfs2a,
         bytes32 _Ipfs2b
-    )
-        external
-        nonReentrant
-        whenNotPaused
-        isAuthorized(_idxHash)
-    {
+    ) external nonReentrant whenNotPaused isAuthorized(_idxHash) {
         Record memory rec = getRecord(_idxHash);
         uint8 userType = getCallingUserType(rec.assetClass);
 
