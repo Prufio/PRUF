@@ -24,7 +24,7 @@ contract APP is CORE {
         0xFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFF;
 
     /**
-     * //CTS:EXAMINE comment
+     * Checks that contract holds token
      * @param _idxHash - idxHash of asset to compare to caller for authority
      */
     modifier isAuthorized(bytes32 _idxHash) override {
@@ -39,7 +39,7 @@ contract APP is CORE {
     //--------------------------------------------External Functions--------------------------
 
     /**
-     * @dev Wrapper for newRecord CTS:EXAMINE better description
+     * @dev Creates a new record  DPS:CHECK no longer sets rec.countDOWNSTART
      * @param _idxHash - hash of asset information created by frontend inputs
      * @param _rgtHash - hash of rightsholder information created by frontend inputs
      * @param _assetClass - assetClass the asset will be created in
@@ -59,23 +59,20 @@ contract APP is CORE {
 
         createRecord(_idxHash, _rgtHash, _assetClass, _countDownStart);
         deductServiceCosts(_assetClass, 1);
-
         //^^^^^^^interactions^^^^^^^^^
     }
 
     /**
-     * @dev import **Record** (no confirmation required - //CTS:EXAMINE what's up with this comment
+     * @dev import Rercord, must match export AC //DPS:TEST
      * posessor is considered to be owner. sets rec.assetStatus to 0.
      * @param _idxHash - hash of asset information created by frontend inputs
      * @param _newAssetClass - assetClass the asset will be imported into
-     * @return status of asset post-import
      */
     function importAsset(bytes32 _idxHash, uint32 _newAssetClass)
         external
         nonReentrant
         whenNotPaused
         isAuthorized(_idxHash) ///contract holds token (user sent to contract)
-        returns (uint8)
     {
         Record memory rec = getRecord(_idxHash);
         uint8 userType = getCallingUserType(_newAssetClass);
@@ -90,7 +87,7 @@ contract APP is CORE {
         );
         require(
             _newAssetClass == rec.int32temp,
-            "A:IA: new AC must match authorized AC"
+            "A:IA: new AC must match AC authorized for import"
         );
         require(
             AC_MGR.isSameRootAC(_newAssetClass, rec.assetClass) == 170,
@@ -105,23 +102,19 @@ contract APP is CORE {
         STOR.changeAC(_idxHash, _newAssetClass);
         writeRecord(_idxHash, rec);
         deductServiceCosts(_newAssetClass, 1);
-
-        return rec.assetStatus; //CTS:EXAMINE is this neccessary
         //^^^^^^^interactions^^^^^^^^^
     }
 
     /**
-     * @dev Modify **Record**.rightsHolder without confirmation required //CTS:EXAMINE with confirmation? work on this
+     * @dev Modify rec.rightsHolder with confirmation
      * @param _idxHash - hash of asset information created by frontend inputs
      * @param _rgtHash - hash of new rightsholder information created by frontend inputs
-     * @return 170 CTS:EXAMINE is this neccessary? if so, describe why here
      */
     function forceModRecord(bytes32 _idxHash, bytes32 _rgtHash)
         external
         nonReentrant
         whenNotPaused
         isAuthorized(_idxHash)
-        returns (uint8)
     {
         Record memory rec = getRecord(_idxHash);
         uint8 userType = getCallingUserType(rec.assetClass);
@@ -145,8 +138,6 @@ contract APP is CORE {
 
         writeRecord(_idxHash, rec);
         deductServiceCosts(rec.assetClass, 6);
-
-        return 170;
         //^^^^^^^interactions^^^^^^^^^
     }
 
@@ -155,8 +146,8 @@ contract APP is CORE {
      * @param _idxHash - hash of asset information created by frontend inputs
      * @param _rgtHash - hash of rightsholder information created by frontend inputs
      * @param _newrgtHash - hash of targeted reciever information created by frontend inputs
-     * @return 170 CTS:EXAMINE is this neccessary? if so, describe why here
      */
+
     function transferAsset(
         bytes32 _idxHash,
         bytes32 _rgtHash,
@@ -166,7 +157,6 @@ contract APP is CORE {
         nonReentrant
         whenNotPaused
         isAuthorized(_idxHash)
-        returns (uint8)
     {
         Record memory rec = getRecord(_idxHash);
         uint8 userType = getCallingUserType(rec.assetClass);
@@ -198,10 +188,7 @@ contract APP is CORE {
         //^^^^^^^effects^^^^^^^^^
 
         writeRecord(_idxHash, rec);
-
         deductServiceCosts(rec.assetClass, 2);
-
-        return 170;
         //^^^^^^^interactions^^^^^^^^^
     }
 
