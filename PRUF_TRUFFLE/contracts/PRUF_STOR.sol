@@ -81,7 +81,7 @@ contract STOR is AccessControl, ReentrancyGuard, Pausable {
     modifier isContractAdmin() {
         require(
             hasRole(CONTRACT_ADMIN_ROLE, _msgSender()),
-            "S:MOD-IADM: Must have CONTRACT_ADMIN_ROLE" //CTS:EXAMINE "S:MOD-ICA"
+            "S:MOD-ICA: Must have CONTRACT_ADMIN_ROLE"
         );
         _;
     }
@@ -423,13 +423,13 @@ contract STOR is AccessControl, ReentrancyGuard, Pausable {
 
     /**  //DPS:CHECK (NEW PARAM _int32temp)
      * @dev Modify a record, writing to the 'database' mapping with updates to multiple fields
-     * @param   _idxHash - record asset ID
-     * @param   _rgtHash - record owner ID hash
-     * @param   _newAssetStatus - New Status to set
-     * @param   _countDown - New countdown value (must be <= old value)
-     * @param   _int32temp - temp value
-     * @param   _incrementModCount - 0 = no 170 = yes
-     * @param   _incrementNumberOfTransfers - 0 = no 170 = yes
+     * @param _idxHash - record asset ID
+     * @param _rgtHash - record owner ID hash
+     * @param _newAssetStatus - New Status to set
+     * @param _countDown - New countdown value (must be <= old value)
+     * @param _int32temp - temp value
+     * @param _incrementModCount - 0 = no 170 = yes
+     * @param _incrementNumberOfTransfers - 0 = no 170 = yes
      */
     function modifyRecord(
         bytes32 _idxHash,
@@ -489,8 +489,8 @@ contract STOR is AccessControl, ReentrancyGuard, Pausable {
 
     /**
      * @dev Change asset class of an asset - writes to assetClass in the 'Record' struct of the 'database' at _idxHash
-     * @param    _idxHash - record asset ID
-     * @param    _newAssetClass - Aseet Class to change to
+     * @param _idxHash - record asset ID
+     * @param _newAssetClass - Aseet Class to change to
      */
     function changeAC(bytes32 _idxHash, uint32 _newAssetClass)
         external
@@ -521,8 +521,8 @@ contract STOR is AccessControl, ReentrancyGuard, Pausable {
 
     /**
      * @dev Set an asset to Lost Or Stolen. Allows narrow modification of status 6/12 assets, normally locked
-     * @param  _idxHash - record asset ID
-     * @param  _newAssetStatus - Status to change to
+     * @param _idxHash - record asset ID
+     * @param _newAssetStatus - Status to change to
      */
     function setLostOrStolen(bytes32 _idxHash, uint8 _newAssetStatus)
         external
@@ -540,7 +540,7 @@ contract STOR is AccessControl, ReentrancyGuard, Pausable {
         require( //asset cannot be set L/S if in transferred or locked escrow status
             (rec.assetStatus != 5) &&
                 (rec.assetStatus != 50) &&
-                (rec.assetStatus != 55), //STATE UNREACHABLE TO SET TO STAT 55 IN CURRENT CONTRACTS
+                (rec.assetStatus != 55), //UNREACHABLE
             "S:SSL: Txfr or ecr-locked asset"
         );
         //^^^^^^^checks^^^^^^^^^
@@ -552,8 +552,8 @@ contract STOR is AccessControl, ReentrancyGuard, Pausable {
 
     /**
      * @dev Set an asset to escrow locked status (6/50/56).
-     * @param   _idxHash - record asset ID
-     * @param   _newAssetStatus - New Status to set
+     * @param _idxHash - record asset ID
+     * @param _newAssetStatus - New Status to set
      */
     function setEscrow(bytes32 _idxHash, uint8 _newAssetStatus)
         external
@@ -582,7 +582,7 @@ contract STOR is AccessControl, ReentrancyGuard, Pausable {
 
     /**
      * @dev remove an asset from escrow status. Implicitly trusts escrowManager ECR_MGR contract
-     * @param  _idxHash - record asset ID
+     * @param _idxHash - record asset ID
      */
     function endEscrow(bytes32 _idxHash)
         external
@@ -708,9 +708,9 @@ contract STOR is AccessControl, ReentrancyGuard, Pausable {
 
     /**
      * @dev Modify record Ipfs1 data
-     * @param  _idxHash - record asset ID
-     * @param  _Ipfs2a - first half of content adressable storage location
-     * @param  _Ipfs2b - second half of content adressable storage location
+     * @param _idxHash - record asset ID
+     * @param _Ipfs2a - first half of content adressable storage location
+     * @param _Ipfs2b - second half of content adressable storage location
      */
     function modifyIpfs2(
         bytes32 _idxHash,
@@ -763,7 +763,7 @@ contract STOR is AccessControl, ReentrancyGuard, Pausable {
 
     /**
      * @dev return a record from the database w/o rgt
-     * @param  _idxHash - record asset ID
+     * @param _idxHash - record asset ID
      * returns rec.assetStatus,
                 rec.modCount,
                 rec.assetClass,
@@ -809,7 +809,7 @@ contract STOR is AccessControl, ReentrancyGuard, Pausable {
 
     /**
      * @dev return the pricing and currency data from a record
-     * @param  _idxHash - record asset ID
+     * @param _idxHash - record asset ID
      * returns rec.price,
                 rec.currency
      */
@@ -824,8 +824,8 @@ contract STOR is AccessControl, ReentrancyGuard, Pausable {
 
     /**
      * @dev Compare record.rightsholder with supplied bytes32 rightsholder
-     * @param  _idxHash - record asset ID
-     * @param  _rgtHash - record owner ID hash
+     * @param _idxHash - record asset ID
+     * @param _rgtHash - record owner ID hash
      * returns 170 if matches, 0 if not
      */
     function _verifyRightsHolder(bytes32 _idxHash, bytes32 _rgtHash)
@@ -843,8 +843,8 @@ contract STOR is AccessControl, ReentrancyGuard, Pausable {
 
     /**
      * @dev Compare record.rightsholder with supplied bytes32 rightsholder (writes an emit in blockchain for independant verification)
-     * @param  _idxHash - record asset ID
-     * @param  _rgtHash - record owner ID hash
+     * @param _idxHash - record asset ID
+     * @param _rgtHash - record owner ID hash
      * returns 170 if matches, 0 if not
      */
     function blockchainVerifyRightsHolder(bytes32 _idxHash, bytes32 _rgtHash)
