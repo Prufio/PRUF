@@ -153,7 +153,7 @@ contract NP is CORE {
     }
 
     /**
-     * @dev Modify **Record**.Ipfs1
+     * @dev Modify rec.Ipfs1 field
      * @param _idxHash idx of asset to Modify
      * @param _rgtHash rgthash to match in front end
      * @param _Ipfs1a content adressable storage adress part 1
@@ -188,10 +188,11 @@ contract NP is CORE {
     }
 
     /**
-     * @dev Export FROM Custodial - sets asset to status 70 (importable) //CTS:EXAMINE we should maybe describe this better
-     * //CTS:EXAMINE param
-     * //CTS:EXAMINE param
-     * //CTS:EXAMINE returns
+     * @dev Export FROM Custodial - sets asset to status 70 (importable) for export
+     * @dev exportTo - sets asset to status 70 (importable) and defines the AC that the item can be imported into
+     * @param _idxHash idx of asset to Modify
+     * @param _exportTo AC target for export
+     * @param _addr adress to send asset to
      */
     function _exportAssetTo(
         bytes32 _idxHash,
@@ -200,7 +201,6 @@ contract NP is CORE {
     ) external nonReentrant whenNotPaused isAuthorized(_idxHash) {
         Record memory rec = getRecord(_idxHash);
         uint8 userType = getCallingUserType(rec.assetClass);
-        //AC memory AC_info = getACinfo(rec.assetClass); //CTS:EXAMINE untested dont delete
 
         require(
             (userType > 0) && (userType < 10),
