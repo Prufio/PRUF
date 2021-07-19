@@ -1,4 +1,4 @@
-/*--------------------------------------------------------PRüF0.8.0
+/**--------------------------------------------------------PRüF0.8.0
 __/\\\\\\\\\\\\\ _____/\\\\\\\\\ _______/\\__/\\ ___/\\\\\\\\\\\\\\\        
 __\/\\\/////////\\\ _/\\\///////\\\ ____\//__\//____\/\\\///////////__       
 ___\/\\\_______\/\\\_\/\\\_____\/\\\ ________________\/\\\ ____________      
@@ -10,7 +10,7 @@ ________\/\\\ ____________\/\\\ _____\//\\\_\//\\\\\\\\\ _\/\\\ ____________
 _________\/// _____________\/// _______\/// __\///////// __\/// _____________
 *---------------------------------------------------------------------------*/
 
-/*-----------------------------------------------------------------
+/**-----------------------------------------------------------------
  *  TO DO
  *
  *---------------------------------------------------------------*/
@@ -23,9 +23,9 @@ pragma solidity ^0.8.0;
 import "./PRUF_CORE.sol";
 
 contract NP_NC is CORE {
-    /*
+    /**
      * @dev Verify user credentials
-     * //CTS:EXAMINE param
+     * @param _idxHash idx of asset to check
      * Originating Address:
      *      holds asset token at idxHash
      */
@@ -41,13 +41,12 @@ contract NP_NC is CORE {
 
     //--------------------------------------------External Functions--------------------------
 
-    /*
+    /**
      * @dev Modify rgtHash (like forceModify)
-     * //CTS:EXAMINE param
-     * //CTS:EXAMINE param
-     * //CTS:EXAMINE returns
-     * //CTS:EXAMINE create req section
-     * must be tokenholder or A_TKN
+     * @param _idxHash idx of asset to Modify
+     * @param _newRgtHash rew rgtHash to apply
+     * Requires asset status is valid for operation
+     * must be tokenholder of A_TKN
      *
      */
     function _changeRgt(bytes32 _idxHash, bytes32 _newRgtHash)
@@ -55,7 +54,6 @@ contract NP_NC is CORE {
         nonReentrant
         whenNotPaused
         isAuthorized(_idxHash)
-        returns (bytes32)
     {
         Record memory rec = getRecord(_idxHash);
         require(
@@ -73,17 +71,19 @@ contract NP_NC is CORE {
 
         writeRecord(_idxHash, rec);
         deductServiceCosts(rec.assetClass, 6);
-
-        return _idxHash;
         //^^^^^^^interactions^^^^^^^^^
     }
 
 
-    /*
+    /**
      * @dev exportTo - sets asset to status 70 (importable) and defines the AC that the item can be imported into
-     * //CTS:EXAMINE param
+     * @param _idxHash idx of asset to Modify
+     * @param _exportAssetClass AC target for export
+     * Requires asset status is valid for operation
+     * must be tokenholder of A_TKN
      */
-    function _exportTo(bytes32 _idxHash, uint32 _newAssetClass)
+     //DPS:TEST
+    function _exportTo(bytes32 _idxHash, uint32 _exportAssetClass)
         external
         whenNotPaused
         isAuthorized(_idxHash)
@@ -92,11 +92,11 @@ contract NP_NC is CORE {
         AC memory AC_info = getACinfo(rec.assetClass);
 
         require(
-            rec.assetStatus == 51,
+            (rec.assetStatus == 51) || (rec.assetStatus == 70), //DPS check
             "NPNC:EXT: Must be in transferrable status (51)"
         );
         require(
-            AC_MGR.isSameRootAC(_newAssetClass, rec.assetClass) == 170,
+            AC_MGR.isSameRootAC(_exportAssetClass, rec.assetClass) == 170,
             "NPNC:EXT: Cannot change AC to new root"
         );
         require(
@@ -112,25 +112,23 @@ contract NP_NC is CORE {
         //^^^^^^^checks^^^^^^^^^
 
         rec.assetStatus = 70; // Set status to 70 (exported)
-        rec.int32temp = _newAssetClass; //set permitted AC for import
+        rec.int32temp = _exportAssetClass; //set permitted AC for import
         //^^^^^^^effects^^^^^^^^^
 
         writeRecord(_idxHash, rec);
         //^^^^^^^interactions^^^^^^^^^
     }
 
-    /*
+    /**
      * @dev Modify **Record**.assetStatus with confirmation required
-     * //CTS:EXAMINE param
-     * //CTS:EXAMINE param
-     * //CTS:EXAMINE returns
+     * @param _idxHash idx of asset to Modify
+     * @param _newAssetStatus Updated status
      */
     function _modStatus(bytes32 _idxHash, uint8 _newAssetStatus)
         public
         nonReentrant
         whenNotPaused
         isAuthorized(_idxHash)
-        returns (uint8)
     {
         Record memory rec = getRecord(_idxHash);
 
@@ -158,23 +156,19 @@ contract NP_NC is CORE {
         //^^^^^^^effects^^^^^^^^^
         deductServiceCosts(rec.assetClass, 5);
         writeRecord(_idxHash, rec);
-
-        return rec.assetStatus;
         //^^^^^^^interactions^^^^^^^^^
     }
 
-    /*
+    /**
      * @dev set **Record**.assetStatus to lost or stolen, with confirmation required. //CTS:EXAMINE confirmation?
-     * //CTS:EXAMINE param
-     * //CTS:EXAMINE param
-     * //CTS:EXAMINE returns
+     * @param _idxHash idx of asset to Modify
+     * @param _newAssetStatus Updated status
      */
     function _setLostOrStolen(bytes32 _idxHash, uint8 _newAssetStatus)
         external
         nonReentrant
         whenNotPaused
         isAuthorized(_idxHash)
-        returns (uint8)
     {
         Record memory rec = getRecord(_idxHash);
 
@@ -192,23 +186,19 @@ contract NP_NC is CORE {
         //^^^^^^^effects^^^^^^^^^
 
         STOR.setLostOrStolen(_idxHash, rec.assetStatus);
-
-        return rec.assetStatus;
         //^^^^^^^interactions^^^^^^^^^
     }
 
-    /*
+    /**
      * @dev Decrement **Record**.countdown with confirmation required //CTS:EXAMINE confirmation?
-     * //CTS:EXAMINE param
-     * //CTS:EXAMINE param
-     * //CTS:EXAMINE returns
+     * @param _idxHash idx of asset to Modify
+     * @param _decAmount Amount to decrement
      */
     function _decCounter(bytes32 _idxHash, uint32 _decAmount)
         external
         nonReentrant
         whenNotPaused
         isAuthorized(_idxHash)
-        returns (uint32)
     {
         Record memory rec = getRecord(_idxHash);
 
@@ -227,16 +217,14 @@ contract NP_NC is CORE {
 
         writeRecord(_idxHash, rec);
         deductServiceCosts(rec.assetClass, 7);
-        return (rec.countDown);
         //^^^^^^^interactions^^^^^^^^^
     }
 
-    /*
+    /**
      * @dev Modify **Record**.Ipfs1a with confirmation //CTS:EXAMINE confirmation?
-     * //CTS:EXAMINE param
-     * //CTS:EXAMINE param
-     * //CTS:EXAMINE param
-     * //CTS:EXAMINE returns
+     * @param _idxHash idx of asset to Modify
+     * @param _Ipfs1a content adressable storage adress part 1
+     * @param _Ipfs1b content adressable storage adress part 2
      */
     function _modIpfs1(
         bytes32 _idxHash,
