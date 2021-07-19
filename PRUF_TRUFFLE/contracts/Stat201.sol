@@ -11,11 +11,10 @@ _________\/// _____________\/// _______\/// __\///////// __\/// _____________
 *---------------------------------------------------------------------------*/
 
 /*-----------------------------------------------------------------
- *  TO DO DPS:CHECK this requires this contract to be an authorized 1 in storage.
- *
+ *  TO DO
+ * Sets asset status to 201 in the case that a storage provider becomes invalid, 
+ * to proviion for the rescuing of assets whose storage provider is no longer valid
  *---------------------------------------------------------------*/
-
- //CTS:EXAMINE quick explainer for the contract
 
 // SPDX-License-Identifier: UNLICENSED
 pragma solidity ^0.8.0;
@@ -25,9 +24,9 @@ import "./PRUF_CORE.sol";
 contract STAT201 is CORE {
 
 
-    /*
+    /**
      * @dev //Sets an item to reserved status 201 when called, if record links to an invalid storage type. Stat201 allows a rewrite of IPFS2
-     * //CTS:EXAMINE param
+     * @param _idxHash asset ID of the asset being rescued 
      */
     function set201(bytes32 _idxHash)
         external
