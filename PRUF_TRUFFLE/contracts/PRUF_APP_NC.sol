@@ -132,7 +132,7 @@ contract APP_NC is CORE {
         //^^^^^^^interactions^^^^^^^^^
     }
 
-    /**
+    /** DPS TEST-NEW FUNCTIONALITY
      * @dev Import a record into a new asset class
      * @param _idxHash - hash of asset information created by frontend inputs
      * @param _newAssetClass - assetClass the asset will be created in
@@ -147,11 +147,11 @@ contract APP_NC is CORE {
         AC memory AC_info = getACinfo(_newAssetClass);
 
         require(rec.assetStatus == 70, "ANC:IA: Asset !exported");
-        require(
+        require( //DPS:TEST NEW
             _newAssetClass == rec.int32temp,
             "ANC:IA: Cannot change AC except to specified AC"
         );
-        require(
+        require( 
             AC_MGR.isSameRootAC(_newAssetClass, rec.assetClass) == 170,
             "ANC:IA: Cannot change AC to new root"
         );
