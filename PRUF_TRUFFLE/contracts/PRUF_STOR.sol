@@ -378,7 +378,7 @@ contract STOR is AccessControl, ReentrancyGuard, Pausable {
 
     //--------------------------------External "write" contract functions / authuser---------------------------------//
 
-    /**
+    /** //DPS:CHECK (no longer sets rec.countDownStart (nonexist))
      * @dev Make a new record, writing to the 'database' mapping with basic initial asset data
      * @param   _idxHash - asset ID
      * @param   _rgtHash - rightsholder id hash
@@ -421,12 +421,13 @@ contract STOR is AccessControl, ReentrancyGuard, Pausable {
         //^^^^^^^interactions^^^^^^^^^
     }
 
-    /**
+    /**  //DPS:CHECK (NEW PARAM _int32temp)
      * @dev Modify a record, writing to the 'database' mapping with updates to multiple fields
      * @param   _idxHash - record asset ID
      * @param   _rgtHash - record owner ID hash
      * @param   _newAssetStatus - New Status to set
      * @param   _countDown - New countdown value (must be <= old value)
+     * @param   _int32temp - temp value
      * @param   _incrementModCount - 0 = no 170 = yes
      * @param   _incrementNumberOfTransfers - 0 = no 170 = yes
      */
