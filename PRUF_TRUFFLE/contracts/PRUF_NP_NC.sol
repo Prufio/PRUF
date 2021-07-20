@@ -216,8 +216,8 @@ contract NP_NC is CORE {
     /**
      * @dev Modify **Record**.Ipfs1a with confirmation of matching rgthash required.
      * @param _idxHash idx of asset to Modify
-     * @param _Ipfs1a content adressable storage adress part 1
-     * @param _Ipfs1b content adressable storage adress part 2
+     * @param _Ipfs1a content addressable storage address part 1
+     * @param _Ipfs1b content addressable storage address part 2
      */
     function _modIpfs1(
         bytes32 _idxHash,

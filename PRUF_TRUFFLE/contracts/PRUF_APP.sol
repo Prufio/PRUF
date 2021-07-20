@@ -39,7 +39,7 @@ contract APP is CORE {
     //--------------------------------------------External Functions--------------------------
 
     /**
-     * @dev Creates a new record  DPS:CHECK no longer sets rec.countDOWNSTART
+     * @dev Creates a new record  DPS:CHECK no longer sets rec.countDownStart
      * @param _idxHash - hash of asset information created by frontend inputs
      * @param _rgtHash - hash of rightsholder information created by frontend inputs
      * @param _assetClass - assetClass the asset will be created in

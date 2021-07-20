@@ -11,7 +11,7 @@ _________\/// _____________\/// _______\/// __\///////// __\/// _____________
 *---------------------------------------------------------------------------*/
 
 /*-----------------------------------------------------------------
- * Decorates ERC721 compliant tokens with a PRUF record CTS:EXAMINE better explanation
+ * Decorates ERC721 compliant tokens with a PRUF record CTS:EXAMINE better explanation o_o
  *----------------------------------------------------------------*/
 
 // Must set up a custodyType 5 asset class for decorated assets and auth this contract type 1. Root must be private to class.
@@ -44,12 +44,12 @@ contract DECORATE is CORE {
     //--------------------------------------------External Functions--------------------------
 
     /**
-     * @dev Decorates an external ERC721 with PRüF data
-     * @param _tokenID
-     * @param
-     * @param
-     * @param
-     * @param
+     * @dev Decorates an external ERC721 with PRüF data //CTS:EXAMINE better explainer
+     * @param _tokenID - tokenID of token being decorated from @_tokenContract
+     * @param _tokenContract - token contract for @_tokenID
+     * @param _rgtHash - hash of new rightsholder information created by frontend inputs
+     * @param _assetClass - assetClass the @_tokenID will be decorated in
+     * @param _countDownStart - decremental counter for an assets lifecycle
      */
     function decorate721(
         uint256 _tokenID,
@@ -78,7 +78,7 @@ contract DECORATE is CORE {
             "D:D:Wrapper, decoration, or record already exists"
         );
 
-        //^^^^^^^effects^^^^^^^^^
+        //^^^^^^^checks^^^^^^^^^
 
         createRecordOnly(idxHash, _rgtHash, _assetClass, _countDownStart);
         deductServiceCosts(_assetClass, 1);
@@ -86,11 +86,11 @@ contract DECORATE is CORE {
         //^^^^^^^interactions^^^^^^^^^
     }
 
-    /*
-     * @dev Modify **Record**.assetStatus
-     * //CTS:EXAMINE param
-     * //CTS:EXAMINE param
-     * //CTS:EXAMINE param
+    /**
+     * @dev Modify **Record**.assetStatus //CTS:EXAMINE better explainer, what are statuses?
+     * @param _tokenID - tokenID of assets token @_tokenContract
+     * @param _tokenContract - token contract of _tokenID
+     * @param _newAssetStatus - new status of decorated token (see docs)
      */
     function _modStatus(
         uint256 _tokenID,
@@ -142,12 +142,12 @@ contract DECORATE is CORE {
         //^^^^^^^interactions^^^^^^^^^
     }
 
-    /*
-     * @dev set price and currency in rec.price rec.currency //CTS:EXAMINE less technical, describe theres only usecase for type2 currency
-     * //CTS:EXAMINE param
-     * //CTS:EXAMINE param
-     * //CTS:EXAMINE param
-     * //CTS:EXAMINE param
+    /**
+     * @dev set price and currency in rec.price rec.currency //CTS:EXAMINE less technical, describe theres only usecase for type2 currency ATM
+     * @param _tokenID - tokenID of assets token @_tokenContract
+     * @param _tokenContract - token contract of _tokenID
+     * @param _price - desired cost of selected asset
+     * @param _currency - currency in which the asset is set for sale (see docs)
      */
     function _setPrice(
         uint256 _tokenID,
@@ -183,10 +183,10 @@ contract DECORATE is CORE {
         //^^^^^^^interactions^^^^^^^^^
     }
 
-    /*
-     * @dev set price and currency in rec.price rec.currency //CTS:EXAMINE less technical
-     * //CTS:EXAMINE param
-     * //CTS:EXAMINE param
+    /**
+     * @dev clear price and currency in rec.price rec.currency //CTS:EXAMINE less technical, man
+     * @param _tokenID - tokenID of assets token @_tokenContract
+     * @param _tokenContract - token contract of _tokenID
      */
     function _clearPrice(uint256 _tokenID, address _tokenContract)
         external
@@ -218,11 +218,11 @@ contract DECORATE is CORE {
         //^^^^^^^interactions^^^^^^^^^
     }
 
-    /*
-     * @dev Decrement **Record**.countdown
-     * //CTS:EXAMINE param
-     * //CTS:EXAMINE param
-     * //CTS:EXAMINE param
+    /**
+     * @dev Decrement **Record**.countdown //CTS:EXAMINE come on
+     * @param _tokenID - tokenID of assets token @_tokenContract
+     * @param _tokenContract - token contract of _tokenID
+     * @param _decAmount - desired amount to deduct from countDownStart of asset
      */
     function _decCounter(
         uint256 _tokenID,
@@ -248,7 +248,7 @@ contract DECORATE is CORE {
             "D:DC:Asset class extended data must be '0' or ERC721 contract address"
         );
 
-        require( //CTS:UNREACHABLE WITH CURRENT CONTRACTS. WOULD REQUIRE ROOT CLASSES TO BE CUSTODY TYPE 5
+        require( //CTS:UNREACHABLE WITH CURRENT CONTRACTS. WOULD REQUIRE ROOT CLASSES TO BE CUSTODY TYPE 5 !!!
             needsImport(rec.assetStatus) == 0,
             "D:DC: Record in unregistered, exported, or discarded status"
         );
@@ -266,12 +266,12 @@ contract DECORATE is CORE {
         //^^^^^^^interactions^^^^^^^^^
     }
 
-    /*
-     * @dev Modify **Record**.Ipfs1a
-     * //CTS:EXAMINE param
-     * //CTS:EXAMINE param
-     * //CTS:EXAMINE param
-     * //CTS:EXAMINE param
+    /**
+     * @dev Modify **Record**.Ipfs1a CTS:EXAMINE . . .
+     * @param _tokenID - tokenID of assets token @_tokenContract
+     * @param _tokenContract - token contract of _tokenID
+     * @param _Ipfs1a - field for external asset data
+     * @param _Ipfs1b - field for external asset data
      */
     function _modIpfs1(
         uint256 _tokenID,
@@ -324,14 +324,13 @@ contract DECORATE is CORE {
         //^^^^^^^interactions^^^^^^^^^
     }
 
-    /*
-     * @dev Modify **Record**.Ipfs2
-     * //CTS:EXAMINE param
-     * //CTS:EXAMINE param
-     * //CTS:EXAMINE param
-     * //CTS:EXAMINE param
+    /**
+     * @dev Modify **Record**.Ipfs2 CTS:EXAMINE . . .
+     * @param _tokenID - tokenID of assets token @_tokenContract
+     * @param _tokenContract - token contract of _tokenID
+     * @param _Ipfs2a - field for permanent external asset data
+     * @param _Ipfs2b - field for permanent external asset data
      */
-
     function addIpfs2Note(
         uint256 _tokenID,
         address _tokenContract,
@@ -372,10 +371,10 @@ contract DECORATE is CORE {
         //^^^^^^^interactions^^^^^^^^^
     }
 
-    /*
+    /**
      * @dev Export - sets asset to status 70 (importable)
-     * //CTS:EXAMINE param
-     * //CTS:EXAMINE param
+     * @param _tokenID - tokenID of assets token @_tokenContract
+     * @param _tokenContract - token contract of _tokenID
      */
     function _export(uint256 _tokenID, address _tokenContract)
         external
@@ -395,7 +394,7 @@ contract DECORATE is CORE {
             "C:CR:Contract does not support management types > 5 or AC is locked"
         );
         if ((AC_info.managementType == 1) || (AC_info.managementType == 5)) {
-            require( //caller holds AC token if AC is restricted --------DPS TEST ---- NEW
+            require(
                 (AC_TKN.ownerOf(rec.assetClass) == _msgSender()),
                 "D:E: Restricted from exporting assets from this AC - does not hold ACtoken"
             );
@@ -420,12 +419,11 @@ contract DECORATE is CORE {
         //^^^^^^^interactions^^^^^^^^^
     }
 
-    /*
-     * @dev import **Record** (no confirmation required -
-     * posessor is considered to be owner. sets rec.assetStatus to 51.
-     * //CTS:EXAMINE param
-     * //CTS:EXAMINE param
-     * //CTS:EXAMINE this one needs a req section
+    /**
+     * @dev import **Record** CTS:EXAMINE what is import? import into what?(no confirmation required - posessor is considered to be owner. sets rec.assetStatus to 51.
+     * @param _tokenID - tokenID of assets token @_tokenContract
+     * @param _tokenContract - token contract of _tokenID
+     * @param _newAssetClass - new assetClass of decorated token
      */
     function _import(
         uint256 _tokenID,
@@ -496,13 +494,14 @@ contract DECORATE is CORE {
         //^^^^^^^interactions^^^^^^^^^
     }
 
-    /*
+    //--------------------------------------------External Functions--------------------------
+
+    /**
      * @dev create a Record in Storage @ idxHash (SETTER)
-     * //CTS:EXAMINE param
-     * //CTS:EXAMINE param
-     * //CTS:EXAMINE param
-     * //CTS:EXAMINE param
-     * //CTS:EXAMINE this one needs a req section
+     * @param _idxHash - hash of asset information created by frontend inputs
+     * @param _rgtHash - hash of rightsholder information created by frontend inputs
+     * @param _assetClass - assetClass the asset will be created in
+     * @param _countDownStart - decremental counter for an assets lifecycle
      */
     function createRecordOnly(
         bytes32 _idxHash,
