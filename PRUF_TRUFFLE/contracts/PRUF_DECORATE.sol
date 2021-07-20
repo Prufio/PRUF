@@ -11,10 +11,7 @@ _________\/// _____________\/// _______\/// __\///////// __\/// _____________
 *---------------------------------------------------------------------------*/
 
 /*-----------------------------------------------------------------
- *  TO DO ---
- *
- *-----------------------------------------------------------------
- * Decorates ERC721 compliant tokens with a PRUF record
+ * Decorates ERC721 compliant tokens with a PRUF record CTS:EXAMINE better explanation
  *----------------------------------------------------------------*/
 
 // Must set up a custodyType 5 asset class for decorated assets and auth this contract type 1. Root must be private to class.
@@ -29,12 +26,12 @@ import "./Imports/token/ERC721/IERC721.sol";
 
 contract DECORATE is CORE {
 
-    /*
+    /**
      * @dev Verify user credentials
-     * //CTS:EXAMINE param
-     * //CTS:EXAMINE param
+     * @param _tokenID - tokenID of token @_tokenContract caller is trying to interact with
+     * @param _tokenContract - token contract used to query _tokenID for owner identity
      * Originating Address:
-     *   require that user holds token @ ID-Contract
+     *   require that user holds token @ _tokencontract
      */
     modifier isTokenHolder(uint256 _tokenID, address _tokenContract) {
         require(
@@ -46,14 +43,13 @@ contract DECORATE is CORE {
 
     //--------------------------------------------External Functions--------------------------
 
-    /*
+    /**
      * @dev Decorates an external ERC721 with PRüF data
-     * //CTS:EXAMINE param
-     * //CTS:EXAMINE param
-     * //CTS:EXAMINE param
-     * //CTS:EXAMINE param
-     * //CTS:EXAMINE param
-     * //CTS:EXAMINE this one needs a req section
+     * @param
+     * @param
+     * @param
+     * @param
+     * @param
      */
     function decorate721(
         uint256 _tokenID,
@@ -95,7 +91,6 @@ contract DECORATE is CORE {
      * //CTS:EXAMINE param
      * //CTS:EXAMINE param
      * //CTS:EXAMINE param
-     * //CTS:EXAMINE this one needs a req section
      */
     function _modStatus(
         uint256 _tokenID,
