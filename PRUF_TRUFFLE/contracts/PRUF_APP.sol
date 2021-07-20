@@ -11,7 +11,7 @@ _________\/// _____________\/// _______\/// __\///////// __\/// _____________
 *---------------------------------------------------------------------------*/
 
 /*-----------------------------------------------------------------
- *  CTS:EXAMINE description of contract
+ *
  *----------------------------------------------------------------*/
 
 // SPDX-License-Identifier: UNLICENSED
@@ -23,9 +23,8 @@ contract APP is CORE {
     bytes32 public constant B320xF_ =
         0xFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFF;
 
-
     /**
-     * //CTS:EXAMINE comment
+     * Checks that contract holds token
      * @param _idxHash - idxHash of asset to compare to caller for authority
      */
     modifier isAuthorized(bytes32 _idxHash) override {
@@ -40,7 +39,7 @@ contract APP is CORE {
     //--------------------------------------------External Functions--------------------------
 
     /**
-     * @dev Wrapper for newRecord CTS:EXAMINE better description
+     * @dev Creates a new record  DPS:CHECK no longer sets rec.countDOWNSTART
      * @param _idxHash - hash of asset information created by frontend inputs
      * @param _rgtHash - hash of rightsholder information created by frontend inputs
      * @param _assetClass - assetClass the asset will be created in
@@ -60,28 +59,20 @@ contract APP is CORE {
 
         createRecord(_idxHash, _rgtHash, _assetClass, _countDownStart);
         deductServiceCosts(_assetClass, 1);
-
         //^^^^^^^interactions^^^^^^^^^
     }
 
     /**
-     * @dev import **Record** (no confirmation required - //CTS:EXAMINE what's up with this comment
+     * @dev import Rercord, must match export AC //DPS:TEST
      * posessor is considered to be owner. sets rec.assetStatus to 0.
      * @param _idxHash - hash of asset information created by frontend inputs
-     * @param _newRgtHash - hash of new rightsholder information created by frontend inputs
      * @param _newAssetClass - assetClass the asset will be imported into
-     * @return status of asset post-import
      */
-    function importAsset(
-        bytes32 _idxHash,
-        bytes32 _newRgtHash, //CTS:EXAMINE should this be new? or normal
-        uint32 _newAssetClass
-    )
+    function importAsset(bytes32 _idxHash, uint32 _newAssetClass)
         external
         nonReentrant
         whenNotPaused
         isAuthorized(_idxHash) ///contract holds token (user sent to contract)
-        returns (uint8)
     {
         Record memory rec = getRecord(_idxHash);
         uint8 userType = getCallingUserType(_newAssetClass);
@@ -94,33 +85,36 @@ contract APP is CORE {
                 (rec.assetStatus == 70),
             "A:IA: Only Transferred or exported assets can be imported"
         );
+        require(
+            _newAssetClass == rec.int32temp,
+            "A:IA: new AC must match AC authorized for import"
+        );
+        require(
+            AC_MGR.isSameRootAC(_newAssetClass, rec.assetClass) == 170,
+            "ANC:IA: Cannot change AC to new root"
+        );
         //^^^^^^^checks^^^^^^^^^
 
         rec.modCount = 170;
         rec.assetStatus = 0;
-        rec.rightsHolder = _newRgtHash;
         //^^^^^^^effects^^^^^^^^^
 
         STOR.changeAC(_idxHash, _newAssetClass);
         writeRecord(_idxHash, rec);
         deductServiceCosts(_newAssetClass, 1);
-
-        return rec.assetStatus; //CTS:EXAMINE is this neccessary
         //^^^^^^^interactions^^^^^^^^^
     }
 
     /**
-     * @dev Modify **Record**.rightsHolder without confirmation required //CTS:EXAMINE with confirmation? work on this
+     * @dev Modify rec.rightsHolder
      * @param _idxHash - hash of asset information created by frontend inputs
      * @param _rgtHash - hash of new rightsholder information created by frontend inputs
-     * @return 170 CTS:EXAMINE is this neccessary? if so, describe why here
      */
     function forceModRecord(bytes32 _idxHash, bytes32 _rgtHash)
         external
         nonReentrant
         whenNotPaused
         isAuthorized(_idxHash)
-        returns (uint8)
     {
         Record memory rec = getRecord(_idxHash);
         uint8 userType = getCallingUserType(rec.assetClass);
@@ -130,7 +124,7 @@ contract APP is CORE {
             isLostOrStolen(rec.assetStatus) == 0,
             "A:FMR: Asset marked L/S"
         );
-        require( //CTS:EXAMINE impossible to reach, APP needs to hold token
+        require( //impossible to reach, APP needs to hold token
             needsImport(rec.assetStatus) == 0,
             "A:FMR: Asset needs re-imported"
         );
@@ -144,18 +138,16 @@ contract APP is CORE {
 
         writeRecord(_idxHash, rec);
         deductServiceCosts(rec.assetClass, 6);
-
-        return 170;
         //^^^^^^^interactions^^^^^^^^^
     }
 
     /**
-     * @dev Transfer rights to new rightsHolder with confirmation //CTS:EXAMINE with confirmation?
+     * @dev Transfer rights to new rightsHolder with confirmation of matching rgthash
      * @param _idxHash - hash of asset information created by frontend inputs
      * @param _rgtHash - hash of rightsholder information created by frontend inputs
      * @param _newrgtHash - hash of targeted reciever information created by frontend inputs
-     * @return 170 CTS:EXAMINE is this neccessary? if so, describe why here
      */
+
     function transferAsset(
         bytes32 _idxHash,
         bytes32 _rgtHash,
@@ -165,7 +157,6 @@ contract APP is CORE {
         nonReentrant
         whenNotPaused
         isAuthorized(_idxHash)
-        returns (uint8)
     {
         Record memory rec = getRecord(_idxHash);
         uint8 userType = getCallingUserType(rec.assetClass);
@@ -197,15 +188,12 @@ contract APP is CORE {
         //^^^^^^^effects^^^^^^^^^
 
         writeRecord(_idxHash, rec);
-
         deductServiceCosts(rec.assetClass, 2);
-
-        return 170;
         //^^^^^^^interactions^^^^^^^^^
     }
 
     /**
-     * @dev Modify **Record** Ipfs2 with confirmation //CTS:EXAMINE with confirmation?
+     * @dev Modify **Record** Ipfs2 with confirmation of matching rgthash
      * @param _idxHash - hash of asset information created by frontend inputs
      * @param _rgtHash - hash of rightsholder information created by frontend inputs
      * @param _Ipfs2a - field for permanent external asset data
@@ -216,18 +204,13 @@ contract APP is CORE {
         bytes32 _rgtHash,
         bytes32 _Ipfs2a,
         bytes32 _Ipfs2b
-    )
-        external
-        nonReentrant
-        whenNotPaused
-        isAuthorized(_idxHash)
-    {
+    ) external nonReentrant whenNotPaused isAuthorized(_idxHash) {
         Record memory rec = getRecord(_idxHash);
         uint8 userType = getCallingUserType(rec.assetClass);
 
         require((userType > 0) && (userType < 10), "A:I2: User not auth in AC");
 
-        require( //CTS:EXAMINE impossible to reach, APP needs to hold token
+        require( //impossible? to reach
             needsImport(rec.assetStatus) == 0,
             "A:I2: Asset needs re-imported"
         );

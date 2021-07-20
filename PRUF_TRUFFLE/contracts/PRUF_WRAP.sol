@@ -1,4 +1,4 @@
-/*--------------------------------------------------------PRüF0.8.0
+/**--------------------------------------------------------PRüF0.8.0
 __/\\\\\\\\\\\\\ _____/\\\\\\\\\ _______/\\__/\\ ___/\\\\\\\\\\\\\\\        
 __\/\\\/////////\\\ _/\\\///////\\\ ____\//__\//____\/\\\///////////__       
 ___\/\\\_______\/\\\_\/\\\_____\/\\\ ________________\/\\\ ____________      
@@ -10,7 +10,7 @@ ________\/\\\ ____________\/\\\ _____\//\\\_\//\\\\\\\\\ _\/\\\ ____________
 _________\/// _____________\/// _______\/// __\///////// __\/// _____________
 *---------------------------------------------------------------------------*/
 
-/*-----------------------------------------------------------------
+/**-----------------------------------------------------------------
  *  TO DO --- 
  *
  *-----------------------------------------------------------------
@@ -32,10 +32,10 @@ contract WRAP is CORE {
 
     mapping(uint256 => WrappedToken) private wrapped; // pruf tokenID -> original TokenID, ContractAddress
 
-    /*
+    /**
      * @dev Verify user credentials
-     * //CTS:EXAMINE param
-     * //CTS:EXAMINE param
+     * @param _tokenID tokenID of token
+     * @param _tokenContract Contract to check
      * Originating Address:
      *    require that user holds token @ ID-Contract
      */
@@ -49,19 +49,19 @@ contract WRAP is CORE {
 
     //--------------------------------------------External Functions--------------------------
 
-    /*
-     * @dev Wraps a token, takes original from caller //CTS:EXAMINE clean this up
-     * //CTS:EXAMINE param
-     * //CTS:EXAMINE param
-     * //CTS:EXAMINE param
-     * //CTS:EXAMINE param
-     * //CTS:EXAMINE param
+    /**
+     * @dev Wraps a token, takes original from caller 
+     * @param _foreignTokenID tokenID of token to wrap
+     * @param _foreignTokenContract contract address for token to wrap
+     * @param _rgtHash - hash of rightsholder information created by frontend inputs
+     * @param _assetClass - assetClass the asset will be created in
+     * @param _countDownStart - decremental counter for an assets lifecycle
      * Prerequisite: contract authorized for token txfr
      * Takes original 721
      * Makes a pruf record (exists?) if so does not change
      * Mints a pruf token to caller (exists?) if so ???????
-     * Asset Class? must be type 5 / enabled for contract address
-     * //CTS:EXAMINE this one needs a req section
+     * Asset class.custodyType must be 5 (wrapped/decorated erc721) / enabled for contract address
+     * referenceAddress must be '0' or ERC721 contract address
      *
      */
     function wrap721(
@@ -86,12 +86,12 @@ contract WRAP is CORE {
 
         require(
             AC_info.custodyType == 5,
-            "W:W: Asset class.custodyType must be 5 (wrapped/decorated erc721)"
+            "W:W:custodyType must be 5 (wrapped/decorated erc721)"
         );
         require(
             (AC_info.referenceAddress == _foreignTokenContract) ||
                 (AC_info.referenceAddress == address(0)),
-            "W:W: Asset class extended data must be '0' or ERC721 contract address"
+            "W:W:referenceAddress must be '0' or ERC721 contract address"
         );
         //^^^^^^^checks^^^^^^^^^
 
@@ -117,10 +117,10 @@ contract WRAP is CORE {
         //^^^^^^^interactions^^^^^^^^^
     }
 
-    /*
+    /**
      * @dev Unwraps a token, returns original to caller
-     * //CTS:EXAMINE param
-     * burns pruf token from caller wallet
+     * @param _tokenID tokenID of PRUF token being unwrapped
+     * burns pruf asset from caller wallet
      * Sends original 721 to caller
      */
     function unWrap721(uint256 _tokenID)
@@ -158,12 +158,12 @@ contract WRAP is CORE {
         //^^^^^^^interactions^^^^^^^^^
     }
 
-    /*
+    /**
      * @dev transfer a foreign token
-     * //CTS:EXAMINE param
-     * //CTS:EXAMINE param
-     * //CTS:EXAMINE param
-     * //CTS:EXAMINE param
+     * @param _tokenContract Address of foreign token contract
+     * @param _from origin
+     * @param _to destination
+     * @param _tokenID Token ID
      */
     function foreignTransfer(
         address _tokenContract,
@@ -174,13 +174,14 @@ contract WRAP is CORE {
         IERC721(_tokenContract).transferFrom(_from, _to, _tokenID);
     }
 
-    /*
+    /**
      * @dev create a Record in Storage @ idxHash (SETTER)
-     * //CTS:EXAMINE param
-     * //CTS:EXAMINE param
-     * //CTS:EXAMINE param
-     * //CTS:EXAMINE param
-     * //CTS:EXAMINE this one needs a req section
+     * @param _idxHash Asset ID
+     * @param _rgtHash Hash or user data
+     * @param _assetClass Node ID
+     * @param _countDownStart Initial counter value
+     * Asset token already exists
+     * depending on custody type/management type, caller ID token or address myst be authorized
      */
     function createRecord(
         bytes32 _idxHash,

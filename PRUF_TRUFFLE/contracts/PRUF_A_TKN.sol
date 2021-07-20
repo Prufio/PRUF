@@ -82,7 +82,7 @@ contract A_TKN is
     constructor() ERC721("PRUF Asset Token", "PRAT") {
         _setupRole(DEFAULT_ADMIN_ROLE, _msgSender());
         _setupRole(CONTRACT_ADMIN_ROLE, _msgSender());
-        _setupRole(MINTER_ROLE, _msgSender()); //ALL CONTRACTS THAT MINT ASSET TOKENS
+        _setupRole(MINTER_ROLE, _msgSender()); //ALL contracts THAT MINT ASSET TOKENS
         _setupRole(PAUSER_ROLE, _msgSender());
     }
 
@@ -291,13 +291,12 @@ contract A_TKN is
      * @param _from current owner of the token
      * @param _to address to receive the ownership of the given token ID
      * @param _tokenId uint256 ID of the token to be transferred
-    //CTS:EXAMINE whenNotPaused redundant throws in writeRecord
      */
     function transferFrom(
         address _from,
         address _to,
         uint256 _tokenId
-    ) public override nonReentrant whenNotPaused {
+    ) public override nonReentrant {
         bytes32 _idxHash = bytes32(_tokenId);
         Record memory rec = getRecord(_idxHash);
 
@@ -352,14 +351,13 @@ contract A_TKN is
      * @param _to address to receive the ownership of the given token ID
      * @param _tokenId uint256 ID of the token to be transferred
      * @param _data bytes data to send along with a safe transfer check
-    //CTS:EXAMINE whenNotPaused redundant throws in writeRecord
      */
     function safeTransferFrom(
         address _from,
         address _to,
         uint256 _tokenId,
         bytes memory _data
-    ) public virtual override nonReentrant whenNotPaused {
+    ) public virtual override nonReentrant {
         bytes32 _idxHash = bytes32(_tokenId);
         Record memory rec = getRecord(_idxHash);
         (uint8 isAuth, ) = STOR.ContractInfoHash(_to, 0); // trailing comma because does not use the returned hash
@@ -391,20 +389,19 @@ contract A_TKN is
         //^^^^^^^interactions^^^^^^^^^
     }
 
-        /**
+    /**
      * @dev Transfers the ownership of a given token ID to another address by a TRUSTED_AGENT.
      * Usage of this method is discouraged, use {safeTransferFrom} whenever possible.
      * Requires the _msgSender() to be the owner, approved, or operator.
      * @param _from current owner of the token
      * @param _to address to receive the ownership of the given token ID
      * @param _tokenId uint256 ID of the token to be transferred
-    //CTS:EXAMINE whenNotPaused redundant throws in writeRecord
      */
     function trustedAgentTransferFrom(
         address _from,
         address _to,
         uint256 _tokenId
-    ) public nonReentrant whenNotPaused isTrustedAgent {
+    ) public nonReentrant isTrustedAgent {
         bytes32 _idxHash = bytes32(_tokenId);
         Record memory rec = getRecord(_idxHash);
 
@@ -482,6 +479,7 @@ contract A_TKN is
             _rec.rightsHolder,
             _rec.assetStatus,
             _rec.countDown,
+            _rec.int32temp,
             _rec.modCount,
             _rec.numberOfTransfers
         ); // Send data and writehash to storage

@@ -11,7 +11,7 @@ _________\/// _____________\/// _______\/// __\///////// __\/// _____________
 *---------------------------------------------------------------------------*/
 
 /*-----------------------------------------------------------------
- //CTS:EXAMINE quick explainer for the contract
+ *  TO DO
  *---------------------------------------------------------------*/
 
 
@@ -131,7 +131,7 @@ contract APP_NC is CORE {
         //^^^^^^^interactions^^^^^^^^^
     }
 
-    /**
+    /** DPS TEST-NEW FUNCTIONALITY
      * @dev Import a record into a new asset class
      * @param _idxHash - hash of asset information created by frontend inputs
      * @param _newAssetClass - assetClass the asset will be created in
@@ -146,7 +146,11 @@ contract APP_NC is CORE {
         AC memory AC_info = getACinfo(_newAssetClass);
 
         require(rec.assetStatus == 70, "ANC:IA: Asset !exported");
-        require(
+        require( //DPS:TEST NEW
+            _newAssetClass == rec.int32temp,
+            "ANC:IA: Cannot change AC except to specified AC"
+        );
+        require( 
             AC_MGR.isSameRootAC(_newAssetClass, rec.assetClass) == 170,
             "ANC:IA: Cannot change AC to new root"
         );
@@ -189,7 +193,7 @@ contract APP_NC is CORE {
     }
 
     /**
-     * @dev Modify record.Ipfs2 //CTS:EXAMINE better description
+     * @dev record IPFS2 data 
      * @param _idxHash - hash of asset information created by frontend inputs
      * @param _Ipfs2a - field for permanent external asset data
      * @param _Ipfs2b - field for permanent external asset data

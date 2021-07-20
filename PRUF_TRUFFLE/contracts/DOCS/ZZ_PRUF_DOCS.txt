@@ -36,7 +36,8 @@ pragma solidity ^0.6.7;
  * zero root costs when ACTHcosts are zero? (-NOPE-)
  *
  * staking, 2% to stskers, 3% to root_address
- * 
+ *
+ *      * hash AC with IDX for chain specific stuff?
  *
  *      * 25% staker rewards on nodes, nodeholders can stake.
  *      
@@ -54,7 +55,7 @@ pragma solidity ^0.6.7;
  *
  *      * Define / document protocol
  *
- *      *0xFF for transferred costs more gas than 0x0....fix this?
+ *      * 0xFF for transferred costs more gas than 0x0....fix this?
  *
  *      FIX token URI's TO MAKE REAL ASSET URLs
  *
@@ -187,7 +188,7 @@ pragma solidity ^0.6.7;
 - -----------------------------------------------------------------
 
 *-----------------------------------------------------------------
-* Cost indexes:
+* Service types 
 * 1: newRecordCost // Cost to create a new record
 * 2: transferAssetCost // Cost to transfer a record from known rights holder to a new one
 * 3: createNoteCost // Cost to add a static note to an asset

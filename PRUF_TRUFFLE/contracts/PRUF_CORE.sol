@@ -101,7 +101,7 @@ contract CORE is BASIC {
         //^^^^^^^interactions^^^^^^^^^
     }
 
-    /**
+    /** DPS:CHECK - new param int32temp
      * @dev Write a Record to Storage @ idxHash (SETTER)
      * @param _idxHash - Asset Index
      * @param _rec - a Record Struct (see interfaces for struct definitions)
@@ -118,6 +118,7 @@ contract CORE is BASIC {
             _rec.rightsHolder,
             _rec.assetStatus,
             _rec.countDown,
+            _rec.int32temp,
             _rec.modCount,
             _rec.numberOfTransfers
         ); // Send data to storage
@@ -180,8 +181,8 @@ contract CORE is BASIC {
         virtual
         whenNotPaused
     {
-        uint256 ACTHnetPercent =
-            uint256(AC_MGR.getAC_discount(_assetClass)) / uint256(100);
+        uint256 ACTHnetPercent = uint256(AC_MGR.getAC_discount(_assetClass)) /
+            uint256(100);
         require( //IMPOSSIBLE TO REACH unless stuff is really broken, still ensures sanity
             (ACTHnetPercent >= 0) && (ACTHnetPercent <= 100),
             "C:DSC:invalid discount value for price calculation"

@@ -341,12 +341,21 @@ contract UTIL_TKN is
         //^^^^^^^interactions^^^^^^^^^
     }
     
+     /** @dev Logic for Polygon integration
+     *
+     * @param newChildChainManagerProxy - Address of CCM proxy
+     */
     function updateChildChainManager(address newChildChainManagerProxy) external isAdmin {
         require(newChildChainManagerProxy != address(0), "Bad ChildChainManagerProxy address");
 
         childChainManagerProxy = newChildChainManagerProxy;
     }
 
+    /** @dev Logic for Polygon integration
+     *
+     * @param user address to recieve tokens
+     * @param depositData ABI encoded deposit amount
+     */
     function deposit(address user, bytes calldata depositData) external {
         require(_msgSender() == childChainManagerProxy, "You're not allowed to deposit");
 
@@ -359,6 +368,10 @@ contract UTIL_TKN is
         emit Transfer(address(0), user, amount);
     }
 
+    /** @dev Logic for Polygon integration
+     *
+     * @param amount amount to withdraw
+     */
     function withdraw(uint256 amount) external {
         _balances[_msgSender()] = _balances[_msgSender()] - amount;
         _totalSupply = _totalSupply - amount;

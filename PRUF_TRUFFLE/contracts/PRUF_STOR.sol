@@ -19,7 +19,7 @@ __/\\\\\\\\\\\\\ _____/\\\\\\\\\ _______/\\__/\\ ___/\\\\\\\\\\\\\\\
  * //CTS:EXAMINE IPFS1/IPFS2->storProvider/storProvider2 global
  * //CTS:EXAMINE idxHash->assetId global
  * //CTS:EXAMINE NP name change
- * //CTS:EXAMINE Run through interfaces, make sure is up to date. 
+ * //CTS:EXAMINE Run through interfaces, make sure is up to date.
  *---------------------------------------------------------------*/
 
 /**-----------------------------------------------------------------
@@ -81,7 +81,7 @@ contract STOR is AccessControl, ReentrancyGuard, Pausable {
     modifier isContractAdmin() {
         require(
             hasRole(CONTRACT_ADMIN_ROLE, _msgSender()),
-            "S:MOD-IADM: Must have CONTRACT_ADMIN_ROLE" //CTS:EXAMINE "S:MOD-ICA"
+            "S:MOD-ICA: Must have CONTRACT_ADMIN_ROLE"
         );
         _;
     }
@@ -105,8 +105,9 @@ contract STOR is AccessControl, ReentrancyGuard, Pausable {
      * @param _assetClass asset class to check address auth
      */
     modifier isAuthorized(uint32 _assetClass) {
-        uint8 auth =
-            contractInfo[contractAddressToName[msg.sender]][_assetClass];
+        uint8 auth = contractInfo[contractAddressToName[msg.sender]][
+            _assetClass
+        ];
         require(
             ((auth > 0) && (auth < 5)) || (auth == 10),
             "S:MOD-IAUT: Contract not authorized"
@@ -377,7 +378,7 @@ contract STOR is AccessControl, ReentrancyGuard, Pausable {
 
     //--------------------------------External "write" contract functions / authuser---------------------------------//
 
-    /**
+    /** //DPS:CHECK (no longer sets rec.countDownStart (nonexist))
      * @dev Make a new record, writing to the 'database' mapping with basic initial asset data
      * @param   _idxHash - asset ID
      * @param   _rgtHash - rightsholder id hash
@@ -412,30 +413,30 @@ contract STOR is AccessControl, ReentrancyGuard, Pausable {
 
         rec.assetClass = _assetClass;
         rec.countDown = _countDownStart;
-        rec.countDownStart = _countDownStart;
         rec.rightsHolder = _rgtHash;
 
         database[_idxHash] = rec;
         //^^^^^^^effects^^^^^^^^^
 
-        //emit REPORT("NEW REC", _idxHash);
         //^^^^^^^interactions^^^^^^^^^
     }
 
-    /**
+    /**  //DPS:CHECK (NEW PARAM _int32temp)
      * @dev Modify a record, writing to the 'database' mapping with updates to multiple fields
-     * @param   _idxHash - record asset ID
-     * @param   _rgtHash - record owner ID hash
-     * @param   _newAssetStatus - New Status to set
-     * @param   _countDown - New countdown value (must be <= old value)
-     * @param   _incrementModCount - 0 = no 170 = yes
-     * @param   _incrementNumberOfTransfers - 0 = no 170 = yes
+     * @param _idxHash - record asset ID
+     * @param _rgtHash - record owner ID hash
+     * @param _newAssetStatus - New Status to set
+     * @param _countDown - New countdown value (must be <= old value)
+     * @param _int32temp - temp value
+     * @param _incrementModCount - 0 = no 170 = yes
+     * @param _incrementNumberOfTransfers - 0 = no 170 = yes
      */
     function modifyRecord(
         bytes32 _idxHash,
         bytes32 _rgtHash,
         uint8 _newAssetStatus,
         uint32 _countDown,
+        uint32 _int32temp,
         uint256 _incrementModCount,
         uint256 _incrementNumberOfTransfers
     )
@@ -466,6 +467,7 @@ contract STOR is AccessControl, ReentrancyGuard, Pausable {
 
         rec.rightsHolder = _rgtHash;
         rec.countDown = _countDown;
+        rec.int32temp = _int32temp;
         rec.assetStatus = _newAssetStatus;
 
         if ((_incrementModCount == 170) && (rec.modCount < 255)) {
@@ -487,8 +489,8 @@ contract STOR is AccessControl, ReentrancyGuard, Pausable {
 
     /**
      * @dev Change asset class of an asset - writes to assetClass in the 'Record' struct of the 'database' at _idxHash
-     * @param    _idxHash - record asset ID
-     * @param    _newAssetClass - Aseet Class to change to
+     * @param _idxHash - record asset ID
+     * @param _newAssetClass - Aseet Class to change to
      */
     function changeAC(bytes32 _idxHash, uint32 _newAssetClass)
         external
@@ -519,8 +521,8 @@ contract STOR is AccessControl, ReentrancyGuard, Pausable {
 
     /**
      * @dev Set an asset to Lost Or Stolen. Allows narrow modification of status 6/12 assets, normally locked
-     * @param  _idxHash - record asset ID
-     * @param  _newAssetStatus - Status to change to
+     * @param _idxHash - record asset ID
+     * @param _newAssetStatus - Status to change to
      */
     function setLostOrStolen(bytes32 _idxHash, uint8 _newAssetStatus)
         external
@@ -538,7 +540,7 @@ contract STOR is AccessControl, ReentrancyGuard, Pausable {
         require( //asset cannot be set L/S if in transferred or locked escrow status
             (rec.assetStatus != 5) &&
                 (rec.assetStatus != 50) &&
-                (rec.assetStatus != 55), //STATE UNREACHABLE TO SET TO STAT 55 IN CURRENT CONTRACTS
+                (rec.assetStatus != 55), //UNREACHABLE
             "S:SSL: Txfr or ecr-locked asset"
         );
         //^^^^^^^checks^^^^^^^^^
@@ -550,8 +552,8 @@ contract STOR is AccessControl, ReentrancyGuard, Pausable {
 
     /**
      * @dev Set an asset to escrow locked status (6/50/56).
-     * @param   _idxHash - record asset ID
-     * @param   _newAssetStatus - New Status to set
+     * @param _idxHash - record asset ID
+     * @param _newAssetStatus - New Status to set
      */
     function setEscrow(bytes32 _idxHash, uint8 _newAssetStatus)
         external
@@ -575,13 +577,12 @@ contract STOR is AccessControl, ReentrancyGuard, Pausable {
         rec.assetStatus = _newAssetStatus;
         database[_idxHash] = rec;
         //^^^^^^^effects^^^^^^^^^
-        //emit REPORT("ECR SET", _idxHash);
         //^^^^^^^interactions^^^^^^^^^
     }
 
     /**
      * @dev remove an asset from escrow status. Implicitly trusts escrowManager ECR_MGR contract
-     * @param  _idxHash - record asset ID
+     * @param _idxHash - record asset ID
      */
     function endEscrow(bytes32 _idxHash)
         external
@@ -707,9 +708,9 @@ contract STOR is AccessControl, ReentrancyGuard, Pausable {
 
     /**
      * @dev Modify record Ipfs1 data
-     * @param  _idxHash - record asset ID
-     * @param  _Ipfs2a - first half of content adressable storage location
-     * @param  _Ipfs2b - second half of content adressable storage location
+     * @param _idxHash - record asset ID
+     * @param _Ipfs2a - first half of content adressable storage location
+     * @param _Ipfs2b - second half of content adressable storage location
      */
     function modifyIpfs2(
         bytes32 _idxHash,
@@ -762,7 +763,7 @@ contract STOR is AccessControl, ReentrancyGuard, Pausable {
 
     /**
      * @dev return a record from the database w/o rgt
-     * @param  _idxHash - record asset ID
+     * @param _idxHash - record asset ID
      * returns rec.assetStatus,
                 rec.modCount,
                 rec.assetClass,
@@ -796,7 +797,7 @@ contract STOR is AccessControl, ReentrancyGuard, Pausable {
             rec.modCount,
             rec.assetClass,
             rec.countDown,
-            rec.countDownStart,
+            rec.int32temp,
             rec.Ipfs1a,
             rec.Ipfs1b,
             rec.Ipfs2a,
@@ -808,7 +809,7 @@ contract STOR is AccessControl, ReentrancyGuard, Pausable {
 
     /**
      * @dev return the pricing and currency data from a record
-     * @param  _idxHash - record asset ID
+     * @param _idxHash - record asset ID
      * returns rec.price,
                 rec.currency
      */
@@ -823,8 +824,8 @@ contract STOR is AccessControl, ReentrancyGuard, Pausable {
 
     /**
      * @dev Compare record.rightsholder with supplied bytes32 rightsholder
-     * @param  _idxHash - record asset ID
-     * @param  _rgtHash - record owner ID hash
+     * @param _idxHash - record asset ID
+     * @param _rgtHash - record owner ID hash
      * returns 170 if matches, 0 if not
      */
     function _verifyRightsHolder(bytes32 _idxHash, bytes32 _rgtHash)
@@ -842,8 +843,8 @@ contract STOR is AccessControl, ReentrancyGuard, Pausable {
 
     /**
      * @dev Compare record.rightsholder with supplied bytes32 rightsholder (writes an emit in blockchain for independant verification)
-     * @param  _idxHash - record asset ID
-     * @param  _rgtHash - record owner ID hash
+     * @param _idxHash - record asset ID
+     * @param _rgtHash - record owner ID hash
      * returns 170 if matches, 0 if not
      */
     function blockchainVerifyRightsHolder(bytes32 _idxHash, bytes32 _rgtHash)
