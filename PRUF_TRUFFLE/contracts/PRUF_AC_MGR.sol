@@ -11,6 +11,8 @@ __/\\\\\\\\\\\\\ _____/\\\\\\\\\ _______/\\__/\\ ___/\\\\\\\\\\\\\\\
          *-------------------------------------------------------------------*/
 
 /**-----------------------------------------------------------------
+ * Contract for minting and managing AC Nodes
+ *
  * STATEMENT OF TERMS OF SERVICE (TOS):
  * User agrees not to intentionally claim any namespace that is a recognized or registered brand name, trade mark,
  * or other Intellectual property not belonging to the user, and agrees to voluntarily remove any name or brand found to be
@@ -24,8 +26,6 @@ __/\\\\\\\\\\\\\ _____/\\\\\\\\\ _______/\\__/\\ ___/\\\\\\\\\\\\\\\
  *  TO DO
  *-----------------------------------------------------------------
  */
-
-//CTS:EXAMINE quick explainer for the contract
 
 // SPDX-License-Identifier: UNLICENSED
 pragma solidity ^0.8.0;
@@ -82,8 +82,8 @@ contract AC_MGR is BASIC {
     //--------------------------------------------ADMIN only Functions--------------------------
 
     /**
-     * @dev Set pricing CTS:EXAMINE describe this better
-     * @param newACprice - cost per assetClass CTS:EXAMINE 18 decimals?
+     * @dev Set pricing for AC Nodes
+     * @param newACprice - cost per assetClass (18 decimals)
      */
     function adminSetACpricing(uint256 newACprice) external isContractAdmin {
         //^^^^^^^checks^^^^^^^^^
@@ -91,13 +91,13 @@ contract AC_MGR is BASIC {
         AC_Price = newACprice;
         //^^^^^^^effects^^^^^^^^^
 
-        emit REPORT("ACnode pricing Changed!"); //report access to internal parameter //CTS:EXAMINE remove?
+        emit REPORT("ACnode pricing Changed!"); //report access to internal parameter (KEEP THIS)
         //^^^^^^^interactions^^^^^^^^^
     }
 
     /**
-     * !! to be used with great caution !! //CTS:EXAMINE to be removed in next gen? this is referring to this line
-     * This breaks decentralization and must eventually be given over to some kind of governance contract. //CTS:EXAMINE to be removed in next gen?
+     * !! to be used with great caution !!
+     * This potentially breaks decentralization and must eventually be given over to some kind of governance contract.
      * @dev Increases (but cannot decrease) price share for a given AC
      * @param _assetClass - assetClass in which cost share is being modified
      * @param _newDiscount - discount(1% == 100, 10000 == max)
@@ -165,7 +165,7 @@ contract AC_MGR is BASIC {
     }
 
     /**
-     * !! -------- to be used with great caution and only as a result of community governance action ----------- //CTS:EXAMINE to be removed in next gen?
+     * !! -------- to be used with great caution and only as a result of community governance action ----------- 
      * @dev Transfers a name from one asset class to another
      *   -Designed to remedy brand infringement issues. This breaks decentralization and must eventually be given
      *   -over to some kind of governance contract.
@@ -196,7 +196,7 @@ contract AC_MGR is BASIC {
     }
 
     /**
-     * !! -------- to be used with great caution ----------- //CTS:EXAMINE to be removed in next gen?
+     * !! -------- to be used with great caution -----------
      * @dev Modifies an asset class with minimal controls
      * @param _assetClass - assetClass to be modified
      * @param _assetClassRoot - root of assetClass
@@ -241,7 +241,7 @@ contract AC_MGR is BASIC {
     }
 
     /**
-     * @dev Modifies AC.switches bitwise CTS:EXAMINE explain better
+     * @dev Modifies AC.switches bitwise (see ASSET CLASS option switches in ZZ_PRUF_DOCS)
      * @param _assetClass - assetClass to be modified
      * @param _position - uint position of bit to be modified
      * @param _bit - switch - 1 or 0 (true or false)
@@ -321,14 +321,13 @@ contract AC_MGR is BASIC {
      * @param _assetClassRoot - chosen root of assetClass
      * @param _custodyType - chosen custodyType of assetClass (see docs)
      * @param _IPFS any external data attatched to assetClass
-     * CTS:EXAMINE whenNotPaused is redundant, throws in _createAssetClass
      */
     function purchaseACnode(
         string calldata _name,
         uint32 _assetClassRoot,
         uint8 _custodyType,
         bytes32 _IPFS
-    ) external whenNotPaused nonReentrant returns (uint256) {
+    ) external nonReentrant returns (uint256) {
         require(
             ACtokenIndex < 4294000000,
             "ACM:PACN: Only 4294000000 AC tokens allowed"
@@ -339,19 +338,18 @@ contract AC_MGR is BASIC {
         );
         //^^^^^^^checks^^^^^^^^^
 
-        if (ACtokenIndex < 4294000000) ACtokenIndex++; //increment ACtokenIndex up to last one //CTS:EXAMINE if() redundant because of req? increment always
+        ACtokenIndex++;
 
         address rootPaymentAddress = cost[_assetClassRoot][1].paymentAddress; //payment for upgrade goes to root AC payment address specified for service (1)
 
         //mint an asset class token to _msgSender(), at tokenID ACtokenIndex, with URI = root asset Class #
 
         UTIL_TKN.trustedAgentBurn(_msgSender(), AC_Price / 2);
-        UTIL_TKN.trustedAgentTransfer( //CTS:EXAMINE I thought we were burning the whole thing? not sure about this
+        UTIL_TKN.trustedAgentTransfer( 
             _msgSender(),
             rootPaymentAddress,
             AC_Price - (AC_Price / 2)
-        );
-
+        ); //burning 50% so we have tokens to incentivise outreach performance
         _createAssetClass(
             uint32(ACtokenIndex),
             _msgSender(),
@@ -374,8 +372,8 @@ contract AC_MGR is BASIC {
     }
 
     /**
-     * //CTS:EXAMINE maybe describe that this is only for custodyType 1?
      * @dev Authorize / Deauthorize users for an address be permitted to make record modifications
+     * @dev only useful for custody types that designate user adresses (type1...)
      * @param _assetClass - assetClass that user is being authorized in
      * @param _addrHash - hash of address belonging to user being authorized
      * @param _userType - authority level for user (see docs)
@@ -398,12 +396,11 @@ contract AC_MGR is BASIC {
         }
 
         //^^^^^^^effects^^^^^^^^^
-        emit REPORT("Internal user database access!"); //report access to the internal user database //CTS:EXAMINE remove? not applicable, not internal
         //^^^^^^^interactions^^^^^^^^^
     }
 
     /**
-     * @dev Modifies an assetClass CTS:EXAMINE better explanation
+     * @dev Modifies an AC Node name for its exclusive namespace 
      * @param _assetClass - assetClass being modified
      * @param _name - updated name associated with assetClass (unique)
      */
@@ -427,8 +424,8 @@ contract AC_MGR is BASIC {
         //^^^^^^^effects^^^^^^^^^
     }
 
-    /**
-     * @dev Modifies an assetClass CTS:EXAMINE better explanation
+    /** CTS:EXAMINE Need 2 IPFS fields
+     * @dev Modifies an AC Node IPFS data pointer 
      * @param _assetClass - assetClass being modified
      * @param _IPFS any updated external data attatched to assetClass
      */
@@ -444,10 +441,10 @@ contract AC_MGR is BASIC {
     }
 
     /**
-     * @dev Set function costs and payment address per asset class, in PRUF(18 decimals) //CTS:EXAMINE maybe figure out a better way to explain this last part? in params maybe
-     * @param _assetClass - assetClass being modified
-     * @param _service - service number being modified (see docs)
-     * @param _serviceCost - 18 decimal fee associated with specified service
+     * @dev Set function costs and payment address per asset class, in PRUF(18 decimals) 
+     * @param _assetClass - assetClass to set service costs
+     * @param _service - service type being modified (see service types in ZZ_PRUF_DOCS)
+     * @param _serviceCost - 18 decimal fee in PRUF associated with specified service
      * @param _paymentAddress - address to have _serviceCost paid to
      */
     function ACTH_setCosts(
@@ -466,7 +463,7 @@ contract AC_MGR is BASIC {
     //-------------------------------------------Functions dealing with immutable data ----------------------------------------------
 
     /**
-     * @dev Modifies an assetClass //CTS:EXAMINE work out this comment
+     * @dev Configure the immutable data in an asset class one time 
      * @param _assetClass - assetClass being modified
      * @param _managementType - managementType of assetClass (see docs)
      * @param _storageProvider - storageProvider of assetClass (see docs)
@@ -506,7 +503,7 @@ contract AC_MGR is BASIC {
     /**
      * @dev get a User Record CTS:EXAMINE fix this explanation
      * @param _userHash - hash of selected user
-     * @param _assetClass - assetClass of quiry
+     * @param _assetClass - assetClass of query
      *
      * @return type of user @ _assetClass (see docs)
      */
