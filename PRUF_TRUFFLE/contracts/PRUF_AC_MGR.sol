@@ -207,7 +207,7 @@ contract AC_MGR is BASIC {
      * @param _refAddress - referance address associated with an assetClass
      * @param _IPFS - any external data attatched to assetClass
      */
-    function AdminModAssetClass(
+    function adminModAssetClass(
         uint32 _assetClass,
         uint32 _assetClassRoot,
         uint8 _custodyType,
@@ -501,7 +501,7 @@ contract AC_MGR is BASIC {
 
     //-------------------------------------------Read-only functions ----------------------------------------------
     /**
-     * @dev get a User Record CTS:EXAMINE fix this explanation
+     * @dev get an AC Node User type for a specified address
      * @param _userHash - hash of selected user
      * @param _assetClass - assetClass of query
      *
@@ -519,7 +519,7 @@ contract AC_MGR is BASIC {
 
     /**
      * @dev get the status of a specific management type
-     * @param _managementType - management type associated with quiry (see docs)
+     * @param _managementType - management type associated with query (see docs)
      *
      * @return 1 or 0 (enabled or disabled)
      */
@@ -535,7 +535,7 @@ contract AC_MGR is BASIC {
 
     /**
      * @dev get the status of a specific storage provider
-     * @param _storageProvider - storage provider associated with quiry (see docs)
+     * @param _storageProvider - storage provider associated with query (see docs)
      *
      * @return 1 or 0 (enabled or disabled)
      */
@@ -551,7 +551,7 @@ contract AC_MGR is BASIC {
 
     /**
      * @dev get the status of a specific custody type
-     * @param _custodyType - custody type associated with quiry (see docs)
+     * @param _custodyType - custody type associated with query (see docs)
      *
      * @return 1 or 0 (enabled or disabled)
      */
@@ -567,7 +567,7 @@ contract AC_MGR is BASIC {
 
     /**
      * @dev Retrieve AC_data @ _assetClass
-     * @param _assetClass - assetClass associated with quiry
+     * @param _assetClass - assetClass associated with query
      *
      * @return {
          assetClassRoot: root assetClass @ _assetClass
@@ -601,7 +601,7 @@ contract AC_MGR is BASIC {
 
     /**
      * @dev Retrieve extended AC_data @ _assetClass
-     * @param _assetClass - assetClass associated with quiry
+     * @param _assetClass - assetClass associated with query
      *
      * @return AC_data (see docs)
      */
@@ -617,8 +617,8 @@ contract AC_MGR is BASIC {
 
     /**
      * @dev verify the root of two asset classes are equal
-     * @param _assetClass1 - first assetClass associated with quiry
-     * @param _assetClass2 - second assetClass associated with quiry
+     * @param _assetClass1 - first assetClass associated with query
+     * @param _assetClass2 - second assetClass associated with query
      *
      * @return 170 or 0 (true or false)
      */
@@ -640,22 +640,21 @@ contract AC_MGR is BASIC {
     }
 
     /**
-     * @dev Retrieve AC_name @ _tokenId
-     * @param _tokenId - tokenId associated with query
+     * @dev Retrieve AC_name @ _tokenId or ACnode
+     * @param assetClass - tokenId associated with query
      *
      * @return name of token @ _tokenID
      */
-    function getAC_name(uint32 _tokenId) external view returns (string memory) {
+    function getAC_name(uint32 assetClass) external view returns (string memory) {
         //^^^^^^^checks^^^^^^^^^
 
-        uint32 assetClass = _tokenId; //CTS:EXAMINE what??? shouldnt param _tokenId just be changed to _assetClass? they're both uint32s.
         return (AC_data[assetClass].name);
         //^^^^^^^effects^^^^^^^^^
     }
 
     /**
      * @dev Retrieve assetClass @ AC_name
-     * @param _name - name of assetClass for assetClassNumber quiry
+     * @param _name - name of assetClass for assetClassNumber query
      *
      * @return assetClass number @ _name
      */
@@ -670,7 +669,7 @@ contract AC_MGR is BASIC {
     }
 
     /**
-     * @dev return current AC token index pointer //CTS:EXAMINE maybe describe this a little better?
+     * @dev return current AC token index and price
      *
      * @return {
          ACtokenIndex: current token number
@@ -679,16 +678,14 @@ contract AC_MGR is BASIC {
      */
     function currentACpricingInfo() external view returns (uint256, uint256) {
         //^^^^^^^checks^^^^^^^^^
-
-        //uint256 numberOfTokensSold = ACtokenIndex - uint256(1000000); //CTS:EXAMINE remove?
         return (ACtokenIndex, AC_Price);
         //^^^^^^^effects^^^^^^^^^
     }
 
     /**
      * @dev get bit from .switches at specified position
-     * @param _assetClass - assetClass associated with quiry
-     * @param _position - bit position associated with quiry
+     * @param _assetClass - assetClass associated with query
+     * @param _position - bit position associated with query
      *
      * @return 1 or 0 (enabled or disabled)
      */
@@ -714,9 +711,9 @@ contract AC_MGR is BASIC {
     //-------------------------------------------functions for payment calculations----------------------------------------------
 
     /**
-     * @dev Retrieve function costs per asset class, per service type in PRUF(18 decimals) //CTS:EXAMINE maybe figure out a better way to explain this? in params maybe
-     * @param _assetClass - assetClass associated with quiry
-     * @param _service - service number associated with quiry (see docs)
+     * @dev Retrieve function costs per asset class, per service type in PRUF(18 decimals)
+     * @param _assetClass - assetClass associated with query
+     * @param _service - service number associated with query (see service types in ZZ_PRUF_DOCS)
      *
      * @return invoice{
          rootAddress: @ _assetClass root payment address @ _service
@@ -754,7 +751,7 @@ contract AC_MGR is BASIC {
 
     /**
      * @dev Retrieve AC_discount @ _assetClass
-     * @param _assetClass - assetClass associated with quiry
+     * @param _assetClass - assetClass associated with query
      *
      * @return percentage of rewards distribution @ _assetClass
      */
