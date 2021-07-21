@@ -1232,36 +1232,36 @@ _________\/// _____________\/// _______\/// __\///////// __\/// _____________
         
           it("Should finalize all ACs", () => {
             console.log("Authorizing AC Switch 1");
-            return AC_MGR.AdminModAssetClassSwitches("1000001", "1", "1", {
+            return AC_MGR.adminModAssetClassSwitches("1000001", "1", "1", {
               from: account1,
             })
         
               .then(() => {
-                return AC_MGR.AdminModAssetClassSwitches("1000002", "3", "1", {
+                return AC_MGR.adminModAssetClassSwitches("1000002", "3", "1", {
                   from: account1,
                 });
               })
         
               .then(() => {
-                return AC_MGR.AdminModAssetClassSwitches("1000003", "3", "1", {
+                return AC_MGR.adminModAssetClassSwitches("1000003", "3", "1", {
                   from: account1,
                 });
               })
         
               .then(() => {
-                return AC_MGR.AdminModAssetClassSwitches("1000004", "3", "1", {
+                return AC_MGR.adminModAssetClassSwitches("1000004", "3", "1", {
                   from: account1,
                 });
               })
         
               .then(() => {
-                return AC_MGR.AdminModAssetClassSwitches("1000005", "3", "1", {
+                return AC_MGR.adminModAssetClassSwitches("1000005", "3", "1", {
                   from: account1,
                 });
               })
         
               .then(() => {
-                return AC_MGR.AdminModAssetClassSwitches("1000006", "3", "1", {
+                return AC_MGR.adminModAssetClassSwitches("1000006", "3", "1", {
                   from: account1,
                 });
               });
@@ -1944,7 +1944,7 @@ it('Should authorize all minter contracts for minting A_TKN(s)', async () => {
     })
 
 
-    it('Should write record in AC 10 @ IDX&RGT(1)', async () => {
+    it('Should set shares address', async () => {
         console.log("//**************************************END A_TKN TEST**********************************************/")
         console.log(
           "//**************************************BEGIN THE WORKS CUSTODIAL**********************************************/"

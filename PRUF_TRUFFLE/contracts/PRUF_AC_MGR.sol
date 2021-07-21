@@ -460,7 +460,7 @@ contract AC_MGR is BASIC {
         //^^^^^^^effects^^^^^^^^^
     }
 
-    //-------------------------------------------Functions dealing with immutable data ----------------------------------------------
+    //-------------------------------------------Functions dealing with immutable data ---------------------------------------------
 
     /**
      * @dev Configure the immutable data in an asset class one time 

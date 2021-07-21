@@ -11,8 +11,10 @@ _________\/// _____________\/// _______\/// __\///////// __\/// _____________
 *---------------------------------------------------------------------------*/
 
 /*-----------------------------------------------------------------
- * Decorates ERC721 compliant tokens with a PRUF record CTS:EXAMINE better explanation o_o
+ * CTS EXAMINE, export still pushes asset into root class
+ * Decorates ERC721 compliant tokens with a PRUF record CTS:EXAMINE better explanation
  *----------------------------------------------------------------*/
+
 
 // Must set up a custodyType 5 asset class for decorated assets and auth this contract type 1. Root must be private to class.
 // Extended Data for ACnodes must be set to 0 <works with any ERC721>
@@ -41,7 +43,7 @@ contract DECORATE is CORE {
         _;
     }
 
-    //--------------------------------------------External Functions--------------------------
+    //-----------------------------------------External Functions--------------------------
 
     /**
      * @dev Decorates an external ERC721 with PRüF data //CTS:EXAMINE better explainer
@@ -71,7 +73,7 @@ contract DECORATE is CORE {
         require(
             (AC_info.referenceAddress == _tokenContract) ||
                 (AC_info.referenceAddress == address(0)),
-            "D:D:Asset class extended data must be '0' or ERC721 contract address"
+            "D:D:Asset class reference address must be '0' or ERC721 contract address"
         );
         require(
             rec.assetClass == 0,
@@ -129,7 +131,7 @@ contract DECORATE is CORE {
             needsImport(_newAssetStatus) == 0,
             "D:MS: Cannot place asset in unregistered, exported, or discarded status using modStatus"
         );
-        require( //CTS:UNREACHABLE WITH CURRENT CONTRACTS. WOULD REQUIRE ROOT CLASSES TO BE CUSTODY TYPE 5 //CTS:EXAMINE can roots even be custody type classified?
+        require(
             needsImport(rec.assetStatus) == 0,
             "D:MS: Record in unregistered, exported, or discarded status"
         );
@@ -168,12 +170,12 @@ contract DECORATE is CORE {
             AC_info.custodyType == 5,
             "D:SP:Asset class.custodyType != 5 & record must exist"
         );
-        require(
+        require( //CTS:EXAMINE unreachable, asset would already need to exist, which requires that this is already the case. Or import, where this also applies
             (AC_info.referenceAddress == _tokenContract) ||
                 (AC_info.referenceAddress == address(0)),
             "D:SP:Asset class extended data must be '0' or ERC721 contract address"
         );
-        require(
+        require( //CTS:UNREACHABLE WITH CURRENT CONTRACTS. WOULD REQUIRE ROOT CLASSES TO BE CUSTODY TYPE 5 //CTS:EXAMINE can roots even be custody type classified?
             needsImport(rec.assetStatus) == 0,
             "D:SP: Record in unregistered, exported, or discarded status"
         );
@@ -202,13 +204,13 @@ contract DECORATE is CORE {
             AC_info.custodyType == 5,
             "D:CP:Asset class.custodyType != 5 & record must exist"
         );
-        require(
+        require( //CTS:EXAMINE unreachable, asset would already need to exist, which requires that this is already the case. Or import, where this also applies
             (AC_info.referenceAddress == _tokenContract) ||
                 (AC_info.referenceAddress == address(0)),
             "D:CP:Asset class extended data must be '0' or ERC721 contract address"
         );
 
-        require( //CTS:UNREACHABLE WITH CURRENT CONTRACTS. WOULD REQUIRE ROOT CLASSES TO BE CUSTODY TYPE 5
+        require(
             needsImport(rec.assetStatus) == 0,
             "D:CP: Record in unregistered, exported, or discarded status"
         );

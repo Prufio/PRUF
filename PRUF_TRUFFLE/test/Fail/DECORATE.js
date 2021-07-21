@@ -1145,7 +1145,7 @@ contract("DECORATE", (accounts) => {
 
       .then(() => {
         console.log("Minting AC 1000003 -NC");
-        return AC_MGR.purchaseACnode("Non_Custodial_AC3", "1", "2", rgt000, {
+        return AC_MGR.purchaseACnode("Non_Custodial_AC3", "5", "2", rgt000, {
           from: account1,
         });
       })
@@ -1196,7 +1196,7 @@ contract("DECORATE", (accounts) => {
           "1000003",
           "3",
           "1",
-          "0x0000000000000000000000000000000000000000",
+          rgt1,
           { from: account1 }
         );
       })
@@ -1522,6 +1522,35 @@ contract("DECORATE", (accounts) => {
         )
     })
 
+    it('Should mint external 721 4', async () => {
+        return Foreign721.mint(
+            account1,
+            { from: account1 }
+        )
+    })
+
+    it('Should decorate asset4', async () => {
+        return DECORATE.decorate721(
+            "4",
+            Foreign721.address,
+            rgt1,
+            "1000004",
+            "5000",
+            { from: account1 }
+        )
+    })
+
+    it('Should export asset4', async () => {
+        return DECORATE.export(
+            "4",
+            Foreign721.address,
+            rgt1,
+            "1000004",
+            "5000",
+            { from: account1 }
+        )
+    })
+
     it('Should modStat of asset3 to 52', async () => {
         return DECORATE._modStatus(
             "3",
@@ -1561,8 +1590,14 @@ contract("DECORATE", (accounts) => {
         )
     })
 
+    it('Should pause DECORATE', async () => {
+        return DECORATE.pause(
+            { from: account1 }
+        )
+    })
+
     //1
-    it('Should fail because caller is not token holder', async () => {
+    it('Should fail because DECORATE is paused', async () => {
 
         console.log("//**************************************END DECORATE TEST SETUP**********************************************/")
         console.log("//**************************************BEGIN DECORATE FAIL BATCH (26)**********************************************/")
@@ -1577,7 +1612,25 @@ contract("DECORATE", (accounts) => {
         )
     })
 
+    it('Should unpause DECORATE', async () => {
+        return DECORATE.unpause(
+            { from: account1 }
+        )
+    })
+
     //2
+    it('Should fail because caller is not token holder', async () => {
+        return DECORATE.decorate721(
+            "0",
+            Foreign721.address,
+            rgt1,
+            "1000004",
+            "5000",
+            { from: account2 }
+        )
+    })
+
+    //3
     it('Should fail because AC is not custodyType 5', async () => {
         return DECORATE.decorate721(
             "0",
@@ -1590,6 +1643,18 @@ contract("DECORATE", (accounts) => {
     })
 
     //4
+    it('Should fail because reference address is not set correctly', async () => {
+        return DECORATE.decorate721(
+            "0",
+            Foreign721.address,
+            rgt1,
+            "1000003",
+            "5000",
+            { from: account1 }
+        )
+    })
+
+    //5
     it('Should fail because record already exists', async () => {
         return DECORATE.decorate721(
             "0",
@@ -1613,11 +1678,33 @@ contract("DECORATE", (accounts) => {
         )
     })
 
-    //5
-    it('Should fail because caller is not token holder', async () => {
+    it('Should pause DECORATE', async () => {
+        return DECORATE.pause(
+            { from: account1 }
+        )
+    })
 
-        console.log("//**************************************END decorate721 FAIL BATCH**********************************************/")
-        console.log("//**************************************BEGIN _modStatus BATCH**********************************************/")
+    //6
+    it('Should fail because DECORATE is paused', async () => {
+
+      console.log("//**************************************END decorate721 FAIL BATCH**********************************************/")
+      console.log("//**************************************BEGIN _modStatus BATCH**********************************************/")
+      return DECORATE._modStatus(
+          "0",
+          Foreign721.address,
+          "52",
+          { from: account1 }
+      )
+    })
+
+    it('Should unpause DECORATE', async () => {
+        return DECORATE.unpause(
+            { from: account1 }
+        )
+    })
+
+    //7
+    it('Should fail because caller is not token holder', async () => {
         return DECORATE._modStatus(
             "0",
             Foreign721.address,
@@ -1626,7 +1713,7 @@ contract("DECORATE", (accounts) => {
         )
     })
 
-    //6
+    //8
     it('Should fail because record AC cust type !== 5', async () => {
         return DECORATE._modStatus(
             "0",
@@ -1636,7 +1723,7 @@ contract("DECORATE", (accounts) => {
         )
     })
 
-    //7
+    //9
     it('Should fail because newAssetStatus = 57 (stat rsvrd)', async () => {
         return DECORATE._modStatus(
             "1",
@@ -1646,7 +1733,7 @@ contract("DECORATE", (accounts) => {
         )
     })
 
-    //8
+    //10
     it('Should fail because newAssetStatus = 58 (stat rsvrd)', async () => {
         return DECORATE._modStatus(
             "1",
@@ -1656,7 +1743,7 @@ contract("DECORATE", (accounts) => {
         )
     })
 
-    //9
+    //11
     it('Should fail because newAssetStatus => 100 (stat rsvrd)', async () => {
         return DECORATE._modStatus(
             "1",
@@ -1666,7 +1753,7 @@ contract("DECORATE", (accounts) => {
         )
     })
 
-    //10
+    //12
     it('Should fail because newAssetStatus = exported', async () => {
         return DECORATE._modStatus(
             "1",
@@ -1676,11 +1763,34 @@ contract("DECORATE", (accounts) => {
         )
     })
 
-    //11
-    it('Should fail because caller is not token holder', async () => {
+    it('Should pause DECORATE', async () => {
+        return DECORATE.pause(
+            { from: account1 }
+        )
+    })
 
-        console.log("//**************************************END _modStatus FAIL BATCH**********************************************/")
-        console.log("//**************************************BEGIN _setPrice BATCH**********************************************/")
+    //13
+    it('Should fail because DECORATE is paused', async () => {
+
+      console.log("//**************************************END _modStatus FAIL BATCH**********************************************/")
+      console.log("//**************************************BEGIN _setPrice BATCH**********************************************/")
+      return DECORATE._setPrice(
+          "0",
+          Foreign721.address,
+          "500000000000000000000",
+          "2",
+          { from: account1 }
+      )
+    })
+
+    it('Should unpause DECORATE', async () => {
+        return DECORATE.unpause(
+            { from: account1 }
+        )
+    })
+
+    //14
+    it('Should fail because caller is not token holder', async () => {
         return DECORATE._setPrice(
             "0",
             Foreign721.address,
@@ -1689,7 +1799,7 @@ contract("DECORATE", (accounts) => {
             { from: account2 }
         )
     })
-    //12
+    //15
     it('Should fail because record AC cust type !== 5', async () => {
         return DECORATE._setPrice(
             "0",
