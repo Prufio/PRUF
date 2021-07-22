@@ -11,8 +11,7 @@ _________\/// _____________\/// _______\/// __\///////// __\/// _____________
 *---------------------------------------------------------------------------*/
 
 /*-----------------------------------------------------------------
- * CTS EXAMINE, export still pushes asset into root class
- * Decorates ERC721 compliant tokens with a PRUF record CTS:EXAMINE better explanation
+ * Decorates ERC721 compliant tokens with a PRUF record
  *----------------------------------------------------------------*/
 
 
