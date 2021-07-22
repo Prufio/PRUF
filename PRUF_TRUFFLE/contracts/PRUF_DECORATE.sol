@@ -64,7 +64,7 @@ contract DECORATE is CORE {
         nonReentrant
         whenNotPaused
         isTokenHolder(_tokenID, _tokenContract)
-    {
+    {   //DPS:TEST
         bytes32 idxHash = keccak256(abi.encodePacked(_tokenID, _tokenContract));
         Record memory rec = getRecord(idxHash);
         AC memory AC_info = getACinfo(_assetClass);
@@ -79,6 +79,33 @@ contract DECORATE is CORE {
             rec.assetClass == 0,
             "D:D:Wrapper, decoration, or record already exists"
         );
+        require( //DPS:TEST NEW
+            (AC_info.managementType < 6),
+            "ANC:IA: Contract does not support management types > 5 or AC is locked"
+        );
+        if (    //DPS:TEST NEW
+            (AC_info.managementType == 1) ||
+            (AC_info.managementType == 2) ||
+            (AC_info.managementType == 5)
+        ) {
+            require(    //DPS:TEST NEW
+                (AC_TKN.ownerOf(_assetClass) == _msgSender()),
+                "ANC:IA: Cannot create asset in AC mgmt type 1||2||5 - caller does not hold AC token"
+            );
+        } else if (AC_info.managementType == 3) {
+            require(    //DPS:TEST NEW
+                AC_MGR.getUserType(
+                    keccak256(abi.encodePacked(_msgSender())),
+                    _assetClass
+                ) == 1,
+                "ANC:IA: Cannot create asset - caller address !authorized"
+            );
+        } else if (AC_info.managementType == 4) {
+            require(    //DPS:TEST NEW
+                ID_TKN.trustedLevelByAddress(_msgSender()) > 10,
+                "ANC:IA: Caller !trusted ID holder"
+            );
+        }
 
         //^^^^^^^checks^^^^^^^^^
 
@@ -377,12 +404,14 @@ contract DECORATE is CORE {
      * @dev Export - sets asset to status 70 (importable)
      * @param _tokenID - tokenID of assets token @_tokenContract
      * @param _tokenContract - token contract of _tokenID
+     * @param _exportTo - destination assetClass of decorated token
+     * DPS:TEST added destination ACNODE parameter
      */
-    function _export(uint256 _tokenID, address _tokenContract)
+    function _exportAssetTo(uint256 _tokenID, address _tokenContract, uint32 _exportTo)
         external
         whenNotPaused
         isTokenHolder(_tokenID, _tokenContract)
-    {
+    {   
         bytes32 idxHash = keccak256(abi.encodePacked(_tokenID, _tokenContract));
         Record memory rec = getRecord(idxHash);
         AC memory AC_info = getACinfo(rec.assetClass);
@@ -408,24 +437,29 @@ contract DECORATE is CORE {
         );
 
         require(
-            rec.assetStatus == 51,
-            "D:E: Must be in transferrable status (51)"
+            (rec.assetStatus == 51) || (rec.assetStatus == 70), //DPS:check
+            "D:E: Must be in transferrable status (51/70)"
+        );
+        require(
+            AC_MGR.isSameRootAC(_exportTo, rec.assetClass) == 170,
+            "D:E: Cannot change AC to new root"
         );
         //^^^^^^^checks^^^^^^^^^
 
         rec.assetStatus = 70; // Set status to 70 (exported)
+        rec.int32temp = _exportTo; //set permitted AC for import
         //^^^^^^^effects^^^^^^^^^
 
         writeRecord(idxHash, rec);
-        STOR.changeAC(idxHash, AC_info.assetClassRoot); //set assetClass to the root AC of the assetClass
         //^^^^^^^interactions^^^^^^^^^
     }
 
     /**
-     * @dev import **Record** CTS:EXAMINE what is import? import into what?(no confirmation required - posessor is considered to be owner. sets rec.assetStatus to 51.
+     * @dev import a decoration into a new asset class. posessor is considered to be owner. sets rec.assetStatus to 51.
      * @param _tokenID - tokenID of assets token @_tokenContract
      * @param _tokenContract - token contract of _tokenID
      * @param _newAssetClass - new assetClass of decorated token
+     * DPS:TEST
      */
     function _import(
         uint256 _tokenID,
@@ -457,6 +491,10 @@ contract DECORATE is CORE {
         require(
             AC_MGR.isSameRootAC(_newAssetClass, rec.assetClass) == 170,
             "D:I:Cannot change AC to new root"
+        );
+        require( //DPS:TEST NEW
+            _newAssetClass == rec.int32temp,
+            "ANC:IA: Cannot change AC except to specified AC"
         );
         require(
             (newAC_info.managementType < 6),
