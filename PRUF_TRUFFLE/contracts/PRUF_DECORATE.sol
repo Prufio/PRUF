@@ -496,7 +496,7 @@ contract DECORATE is CORE {
             _newAssetClass == rec.int32temp,
             "ANC:IA: Cannot change AC except to specified AC"
         );
-        require(
+        require( //DPS:TEST NEW
             (newAC_info.managementType < 6),
             "D:I: Contract does not support management types > 5 or AC is locked"
         );
@@ -505,12 +505,12 @@ contract DECORATE is CORE {
             (newAC_info.managementType == 2) ||
             (newAC_info.managementType == 5)
         ) {
-            require(
+            require( //DPS:TEST NEW
                 (AC_TKN.ownerOf(_newAssetClass) == _msgSender()),
                 "D:I: Cannot create asset in AC mgmt type 1||2||5 - caller does not hold AC token"
             );
         } else if (newAC_info.managementType == 3) {
-            require(
+            require( //DPS:TEST NEW
                 AC_MGR.getUserType(
                     keccak256(abi.encodePacked(_msgSender())),
                     _newAssetClass
@@ -518,7 +518,7 @@ contract DECORATE is CORE {
                 "D:I: Cannot create asset - caller address !authorized"
             );
         } else if (newAC_info.managementType == 4) {
-            require(
+            require( //DPS:TEST NEW
                 ID_TKN.trustedLevelByAddress(_msgSender()) > 10,
                 "D:I: Caller !trusted ID holder"
             );
