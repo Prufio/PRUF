@@ -70,7 +70,7 @@ contract WRAP is CORE {
         bytes32 _rgtHash,
         uint32 _assetClass,
         uint32 _countDownStart
-    )
+    ) ///DPS:TEST
         external
         nonReentrant
         whenNotPaused
@@ -93,6 +93,33 @@ contract WRAP is CORE {
                 (AC_info.referenceAddress == address(0)),
             "W:W:referenceAddress must be '0' or ERC721 contract address"
         );
+        require( //DPS:TEST NEW
+            (AC_info.managementType < 6),
+            "ANC:IA: Contract does not support management types > 5 or AC is locked"
+        );
+        if (    //DPS:TEST NEW
+            (AC_info.managementType == 1) ||
+            (AC_info.managementType == 2) ||
+            (AC_info.managementType == 5)
+        ) {
+            require(    //DPS:TEST NEW
+                (AC_TKN.ownerOf(_assetClass) == _msgSender()),
+                "ANC:IA: Cannot create asset in AC mgmt type 1||2||5 - caller does not hold AC token"
+            );
+        } else if (AC_info.managementType == 3) {
+            require(    //DPS:TEST NEW
+                AC_MGR.getUserType(
+                    keccak256(abi.encodePacked(_msgSender())),
+                    _assetClass
+                ) == 1,
+                "ANC:IA: Cannot create asset - caller address !authorized"
+            );
+        } else if (AC_info.managementType == 4) {
+            require(    //DPS:TEST NEW
+                ID_TKN.trustedLevelByAddress(_msgSender()) > 10,
+                "ANC:IA: Caller !trusted ID holder"
+            );
+        }
         //^^^^^^^checks^^^^^^^^^
 
         wrapped[newTokenId].tokenID = _foreignTokenID;
