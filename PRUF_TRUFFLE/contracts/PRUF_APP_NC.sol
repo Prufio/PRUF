@@ -134,7 +134,7 @@ contract APP_NC is CORE {
     /** DPS TEST-NEW FUNCTIONALITY
      * @dev Import a record into a new asset class
      * @param _idxHash - hash of asset information created by frontend inputs
-     * @param _newAssetClass - assetClass the asset will be created in
+     * @param _newAssetClass - assetClass the asset will be imported into
      */
     function importAsset(bytes32 _idxHash, uint32 _newAssetClass)
         external

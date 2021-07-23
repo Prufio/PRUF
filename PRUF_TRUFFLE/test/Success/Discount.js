@@ -526,11 +526,6 @@ contract("Discount", (accounts) => {
           });
         })
 
-        // .then(() => {
-        //     console.log("Adding in AC_TKN")
-        //     return AC_TKN.Admin_setStorageContract(STOR.address, { from: account1 })
-        // })
-
         .then(() => {
           console.log("Adding in A_TKN");
           return A_TKN.Admin_setStorageContract(STOR.address, {

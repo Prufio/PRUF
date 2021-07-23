@@ -11,11 +11,9 @@ _________\/// _____________\/// _______\/// __\///////// __\/// _____________
 *---------------------------------------------------------------------------*/
 
 /*-----------------------------------------------------------------
- *  TO DO
- *
+ //CTS:EXAMINE quick explainer of the contract
  *---------------------------------------------------------------*/
 
- //CTS:EXAMINE quick explainer for the contract
 
 // SPDX-License-Identifier: UNLICENSED
 pragma solidity ^0.8.0;
@@ -27,11 +25,11 @@ import "./Imports/utils/ReentrancyGuard.sol";
 contract ECR_CORE is BASIC {
     
     /**
-     * Escrow Data Setter
-     * @param _idxHash - Asset ID
-     * @param _newAssetStatus - Escrow status to set
-     * @param _escrowOwnerAddressHash - Hash of escrow controller address
-     * @param _timelock - Timelock parameter for time controlled escrows
+     * @dev Escrow Data Setter CTS:EXAMINE better
+     * @param _idxHash - hash of asset information created by frontend inputs
+     * @param _newAssetStatus - new escrow status of asset (see docs)
+     * @param _escrowOwnerAddressHash - hash of escrow controller address
+     * @param _timelock - timelock parameter for time controlled escrows
      */
     function _setEscrowData(
         bytes32 _idxHash,
@@ -48,8 +46,8 @@ contract ECR_CORE is BASIC {
     }
 
     /**
-     * Escrow DataLight Setter
-     * @param _idxHash - Asset ID
+     * @dev Escrow DataLight Setter CTS:EXAMINE better
+     * @param _idxHash - hash of asset information created by frontend inputs
      * @param _escrowDataLight - escrowDataExtLight struct (see interfaces for struct definitions)
      */
     function _setEscrowDataLight(
@@ -61,8 +59,8 @@ contract ECR_CORE is BASIC {
     }
 
     /**
-     * Escrow DataHeavy Setter
-     * @param _idxHash - Asset ID
+     * @dev Escrow DataHeavy Setter CTS:EXAMINE better
+     * @param _idxHash - hash of asset information created by frontend inputs
      * @param _escrowDataHeavy - escrowDataExtHeavy struct (see interfaces for struct definitions)
      */
     function _setEscrowDataHeavy(
@@ -75,8 +73,8 @@ contract ECR_CORE is BASIC {
 
     /**
      * @dev retrieves escrow data
-     * @param _idxHash - Asset ID
-     * returns escrowData struct (see interfaces for struct definitions)
+     * @param _idxHash - hash of asset information created by frontend inputs
+     * @return escrowData struct (see interfaces for struct definitions)
      */
     function getEscrowData(bytes32 _idxHash)
         internal
@@ -92,8 +90,8 @@ contract ECR_CORE is BASIC {
 
     /**
      * @dev retrieves extended escrow data
-     * @param _idxHash - Asset ID
-     * returns escrowDataExtLight struct (see interfaces for struct definitions)
+     * @param _idxHash - hash of asset information created by frontend inputs
+     * @return escrowDataExtLight struct (see interfaces for struct definitions)
      */
     function getEscrowDataLight(bytes32 _idxHash)
         internal
@@ -111,8 +109,8 @@ contract ECR_CORE is BASIC {
 
     /**
      * @dev retrieves extended escrow data
-     * @param _idxHash - Asset ID
-     * returns escrowDataExtHeavy struct (see interfaces for struct definitions)
+     * @param _idxHash - hash of asset information created by frontend inputs
+     * @return escrowDataExtHeavy struct (see interfaces for struct definitions)
      */
     function getEscrowDataHeavy(bytes32 _idxHash)
         internal
