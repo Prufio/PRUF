@@ -764,7 +764,7 @@ contract AC_MGR is BASIC {
     //-------------------------------------------INTERNAL / PRIVATE functions ----------------------------------------------
 
     /**
-     * @dev creates an assetClass makes ACdata record with new name, mints token //CTS:EXAMINE this confuses me, fix
+     * @dev creates an ACnode and its corresponding namespace and data fields
      * @param _assetClass - assetClass to be created (unique)
      * @param _recipientAddress - address to recieve assetClass
      * @param _name - name to be configured to assetClass (unique)
@@ -789,7 +789,7 @@ contract AC_MGR is BASIC {
         AC memory _ac = AC_data[_assetClassRoot];
         uint256 tokenId = uint256(_assetClass);
 
-        require((tokenId != 0), "ACM:CAC: AC = 0"); //sanity check inputs //CTS:EXAMINE remove extra ()
+        require(tokenId != 0, "ACM:CAC: AC = 0"); //sanity check inputs
         require(_discount <= 10000, "ACM:CAC: Discount > 10000 (100%)");
         require( //_ac.managementType is a valid type or explicitly unset (255)
             (managementTypesEnabled[_managementType] > 0) ||
@@ -809,10 +809,6 @@ contract AC_MGR is BASIC {
             (_ac.custodyType == 3) || (_assetClassRoot == _assetClass),
             "ACM:CAC: Root !exist"
         );
-        // require( //CTS:EXAMINE remove?
-        //     (ID_TKN.balanceOf(_msgSender()) == 1), //_msgSender() is ID token holder
-        //     "ACM:MOD-IA: Caller does not hold a valid PRuF_ID token"
-        // );
         if (_ac.managementType != 0) {
             require( //holds root token if root is restricted
                 (AC_TKN.ownerOf(_assetClassRoot) == _msgSender()),
