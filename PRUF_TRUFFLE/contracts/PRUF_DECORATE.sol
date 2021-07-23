@@ -45,7 +45,7 @@ contract DECORATE is CORE {
     //-----------------------------------------External Functions--------------------------
 
     /**
-     * @dev Decorates an external ERC721 with PRüF data //CTS:EXAMINE better explainer
+     * @dev Decorates an external ERC721 with a PRüF data record 
      * @param _tokenID - tokenID of token being decorated from @_tokenContract
      * @param _tokenContract - token contract for @_tokenID
      * @param _rgtHash - hash of new rightsholder information created by frontend inputs
@@ -115,7 +115,7 @@ contract DECORATE is CORE {
     }
 
     /**
-     * @dev Modify **Record**.assetStatus //CTS:EXAMINE better explainer, what are statuses?
+     * @dev Modify Record.assetStatus 
      * @param _tokenID - tokenID of assets token @_tokenContract
      * @param _tokenContract - token contract of _tokenID
      * @param _newAssetStatus - new status of decorated token (see docs)
@@ -144,7 +144,7 @@ contract DECORATE is CORE {
             "D:MS:Asset class extended data must be '0' or ERC721 contract address"
         );
         require(
-            (_newAssetStatus > 49) && (rec.assetStatus > 49), //CTS:EXAMINE I think this functionality is inevitably non-custodial, so only need to check for newAssetStatus. Should never be otherwise
+            (_newAssetStatus > 49) && (rec.assetStatus > 49), //Preferred
             "D:MS: cannot change status < 49"
         );
         require(
@@ -171,7 +171,8 @@ contract DECORATE is CORE {
     }
 
     /**
-     * @dev set price and currency in rec.price rec.currency //CTS:EXAMINE less technical, describe theres only usecase for type2 currency ATM
+     * @dev set an item "for sale" by setting price and currency in rec.price rec.currency 
+     * right now only type2 (PRUF tokens) currency is implemented.
      * @param _tokenID - tokenID of assets token @_tokenContract
      * @param _tokenContract - token contract of _tokenID
      * @param _price - desired cost of selected asset
@@ -196,12 +197,12 @@ contract DECORATE is CORE {
             AC_info.custodyType == 5,
             "D:SP:Asset class.custodyType != 5 & record must exist"
         );
-        require( //CTS:EXAMINE unreachable, asset would already need to exist, which requires that this is already the case. Or import, where this also applies
+        require( //DPS test unreachable reason does not make sense UNREACHABLE-Preferred, asset would already need to exist, which requires that this is already the case. Or import, where this also applies
             (AC_info.referenceAddress == _tokenContract) ||
                 (AC_info.referenceAddress == address(0)),
             "D:SP:Asset class extended data must be '0' or ERC721 contract address"
         );
-        require( //CTS:UNREACHABLE WITH CURRENT CONTRACTS. WOULD REQUIRE ROOT CLASSES TO BE CUSTODY TYPE 5 //CTS:EXAMINE can roots even be custody type classified?
+        require( //DPS:TEST unreachable reason does not make sense UNREACHABLE-Preferred requires root to be type5
             needsImport(rec.assetStatus) == 0,
             "D:SP: Record in unregistered, exported, or discarded status"
         );
@@ -212,7 +213,7 @@ contract DECORATE is CORE {
     }
 
     /**
-     * @dev clear price and currency in rec.price rec.currency //CTS:EXAMINE less technical, man
+     * @dev clear price and currency in rec.price rec.currency, making an item no longer for sale.
      * @param _tokenID - tokenID of assets token @_tokenContract
      * @param _tokenContract - token contract of _tokenID
      */
@@ -230,7 +231,7 @@ contract DECORATE is CORE {
             AC_info.custodyType == 5,
             "D:CP:Asset class.custodyType != 5 & record must exist"
         );
-        require( //CTS:EXAMINE unreachable, asset would already need to exist, which requires that this is already the case. Or import, where this also applies
+        require( //DPS:TEST Retest reason for unreachable does not make sense UNREACHABLE, asset would already need to exist, which requires that this is already the case. Or import, where this also applies
             (AC_info.referenceAddress == _tokenContract) ||
                 (AC_info.referenceAddress == address(0)),
             "D:CP:Asset class extended data must be '0' or ERC721 contract address"
@@ -247,7 +248,7 @@ contract DECORATE is CORE {
     }
 
     /**
-     * @dev Decrement **Record**.countdown //CTS:EXAMINE come on
+     * @dev Decrement rec.countdown one-way counter
      * @param _tokenID - tokenID of assets token @_tokenContract
      * @param _tokenContract - token contract of _tokenID
      * @param _decAmount - desired amount to deduct from countDownStart of asset
@@ -276,7 +277,7 @@ contract DECORATE is CORE {
             "D:DC:Asset class extended data must be '0' or ERC721 contract address"
         );
 
-        require( //CTS:UNREACHABLE WITH CURRENT CONTRACTS. WOULD REQUIRE ROOT CLASSES TO BE CUSTODY TYPE 5 !!!
+        require( //DPS:TEST Retest reason for unreachable does not make sense
             needsImport(rec.assetStatus) == 0,
             "D:DC: Record in unregistered, exported, or discarded status"
         );
@@ -295,7 +296,7 @@ contract DECORATE is CORE {
     }
 
     /**
-     * @dev Modify **Record**.Ipfs1a CTS:EXAMINE . . .
+     * @dev Modify rec.Ipfs1a/b content adressable storage pointer
      * @param _tokenID - tokenID of assets token @_tokenContract
      * @param _tokenContract - token contract of _tokenID
      * @param _Ipfs1a - field for external asset data
@@ -336,7 +337,7 @@ contract DECORATE is CORE {
             "D:MI1:Asset class extended data must be '0' or ERC721 contract address"
         );
 
-        require( //CTS:UNREACHABLE WITH CURRENT CONTRACTS. WOULD REQUIRE ROOT CLASSES TO BE CUSTODY TYPE 5
+        require( //DPS:TEST unreachable reason does not make sense:UNREACHABLE. WOULD REQUIRE ROOT CLASSES TO BE CUSTODY TYPE 5
             needsImport(rec.assetStatus) == 0,
             "D:MI1: Record in unregistered, exported, or discarded status"
         );
@@ -353,7 +354,7 @@ contract DECORATE is CORE {
     }
 
     /**
-     * @dev Modify **Record**.Ipfs2 CTS:EXAMINE . . .
+     * @dev SET rec.Ipfs2a/b (immutable) content adressable storage pointer
      * @param _tokenID - tokenID of assets token @_tokenContract
      * @param _tokenContract - token contract of _tokenID
      * @param _Ipfs2a - field for permanent external asset data
