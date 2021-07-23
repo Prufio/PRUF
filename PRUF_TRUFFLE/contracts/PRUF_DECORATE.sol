@@ -11,8 +11,7 @@ _________\/// _____________\/// _______\/// __\///////// __\/// _____________
 *---------------------------------------------------------------------------*/
 
 /*-----------------------------------------------------------------
- * CTS EXAMINE, export still pushes asset into root class
- * Decorates ERC721 compliant tokens with a PRUF record CTS:EXAMINE better explanation
+ * Decorates ERC721 compliant tokens with a PRUF record
  *----------------------------------------------------------------*/
 
 
@@ -46,7 +45,7 @@ contract DECORATE is CORE {
     //-----------------------------------------External Functions--------------------------
 
     /**
-     * @dev Decorates an external ERC721 with PRüF data //CTS:EXAMINE better explainer
+     * @dev Decorates an external ERC721 with a PRüF data record 
      * @param _tokenID - tokenID of token being decorated from @_tokenContract
      * @param _tokenContract - token contract for @_tokenID
      * @param _rgtHash - hash of new rightsholder information created by frontend inputs
@@ -64,7 +63,7 @@ contract DECORATE is CORE {
         nonReentrant
         whenNotPaused
         isTokenHolder(_tokenID, _tokenContract)
-    {
+    {   //DPS:TEST
         bytes32 idxHash = keccak256(abi.encodePacked(_tokenID, _tokenContract));
         Record memory rec = getRecord(idxHash);
         AC memory AC_info = getACinfo(_assetClass);
@@ -79,6 +78,33 @@ contract DECORATE is CORE {
             rec.assetClass == 0,
             "D:D:Wrapper, decoration, or record already exists"
         );
+        require( //DPS:TEST NEW
+            (AC_info.managementType < 6),
+            "ANC:IA: Contract does not support management types > 5 or AC is locked"
+        );
+        if (    //DPS:TEST NEW
+            (AC_info.managementType == 1) ||
+            (AC_info.managementType == 2) ||
+            (AC_info.managementType == 5)
+        ) {
+            require(    //DPS:TEST NEW
+                (AC_TKN.ownerOf(_assetClass) == _msgSender()),
+                "ANC:IA: Cannot create asset in AC mgmt type 1||2||5 - caller does not hold AC token"
+            );
+        } else if (AC_info.managementType == 3) {
+            require(    //DPS:TEST NEW
+                AC_MGR.getUserType(
+                    keccak256(abi.encodePacked(_msgSender())),
+                    _assetClass
+                ) == 1,
+                "ANC:IA: Cannot create asset - caller address !authorized"
+            );
+        } else if (AC_info.managementType == 4) {
+            require(    //DPS:TEST NEW
+                ID_TKN.trustedLevelByAddress(_msgSender()) > 10,
+                "ANC:IA: Caller !trusted ID holder"
+            );
+        }
 
         //^^^^^^^checks^^^^^^^^^
 
@@ -89,7 +115,7 @@ contract DECORATE is CORE {
     }
 
     /**
-     * @dev Modify **Record**.assetStatus //CTS:EXAMINE better explainer, what are statuses?
+     * @dev Modify Record.assetStatus 
      * @param _tokenID - tokenID of assets token @_tokenContract
      * @param _tokenContract - token contract of _tokenID
      * @param _newAssetStatus - new status of decorated token (see docs)
@@ -118,7 +144,7 @@ contract DECORATE is CORE {
             "D:MS:Asset class extended data must be '0' or ERC721 contract address"
         );
         require(
-            (_newAssetStatus > 49) && (rec.assetStatus > 49), //CTS:EXAMINE I think this functionality is inevitably non-custodial, so only need to check for newAssetStatus. Should never be otherwise
+            (_newAssetStatus > 49) && (rec.assetStatus > 49), //Preferred
             "D:MS: cannot change status < 49"
         );
         require(
@@ -145,7 +171,8 @@ contract DECORATE is CORE {
     }
 
     /**
-     * @dev set price and currency in rec.price rec.currency //CTS:EXAMINE less technical, describe theres only usecase for type2 currency ATM
+     * @dev set an item "for sale" by setting price and currency in rec.price rec.currency 
+     * right now only type2 (PRUF tokens) currency is implemented.
      * @param _tokenID - tokenID of assets token @_tokenContract
      * @param _tokenContract - token contract of _tokenID
      * @param _price - desired cost of selected asset
@@ -170,12 +197,12 @@ contract DECORATE is CORE {
             AC_info.custodyType == 5,
             "D:SP:Asset class.custodyType != 5 & record must exist"
         );
-        require( //CTS:EXAMINE unreachable, asset would already need to exist, which requires that this is already the case. Or import, where this also applies
+        require( //DPS test unreachable reason does not make sense UNREACHABLE-Preferred, asset would already need to exist, which requires that this is already the case. Or import, where this also applies
             (AC_info.referenceAddress == _tokenContract) ||
                 (AC_info.referenceAddress == address(0)),
             "D:SP:Asset class extended data must be '0' or ERC721 contract address"
         );
-        require( //CTS:UNREACHABLE WITH CURRENT CONTRACTS. WOULD REQUIRE ROOT CLASSES TO BE CUSTODY TYPE 5 //CTS:EXAMINE can roots even be custody type classified?
+        require( //DPS:TEST unreachable reason does not make sense UNREACHABLE-Preferred requires root to be type5
             needsImport(rec.assetStatus) == 0,
             "D:SP: Record in unregistered, exported, or discarded status"
         );
@@ -186,7 +213,7 @@ contract DECORATE is CORE {
     }
 
     /**
-     * @dev clear price and currency in rec.price rec.currency //CTS:EXAMINE less technical, man
+     * @dev clear price and currency in rec.price rec.currency, making an item no longer for sale.
      * @param _tokenID - tokenID of assets token @_tokenContract
      * @param _tokenContract - token contract of _tokenID
      */
@@ -204,7 +231,7 @@ contract DECORATE is CORE {
             AC_info.custodyType == 5,
             "D:CP:Asset class.custodyType != 5 & record must exist"
         );
-        require( //CTS:EXAMINE unreachable, asset would already need to exist, which requires that this is already the case. Or import, where this also applies
+        require( //DPS:TEST Retest reason for unreachable does not make sense UNREACHABLE, asset would already need to exist, which requires that this is already the case. Or import, where this also applies
             (AC_info.referenceAddress == _tokenContract) ||
                 (AC_info.referenceAddress == address(0)),
             "D:CP:Asset class extended data must be '0' or ERC721 contract address"
@@ -221,7 +248,7 @@ contract DECORATE is CORE {
     }
 
     /**
-     * @dev Decrement **Record**.countdown //CTS:EXAMINE come on
+     * @dev Decrement rec.countdown one-way counter
      * @param _tokenID - tokenID of assets token @_tokenContract
      * @param _tokenContract - token contract of _tokenID
      * @param _decAmount - desired amount to deduct from countDownStart of asset
@@ -250,7 +277,7 @@ contract DECORATE is CORE {
             "D:DC:Asset class extended data must be '0' or ERC721 contract address"
         );
 
-        require( //CTS:UNREACHABLE WITH CURRENT CONTRACTS. WOULD REQUIRE ROOT CLASSES TO BE CUSTODY TYPE 5 !!!
+        require( //DPS:TEST Retest reason for unreachable does not make sense
             needsImport(rec.assetStatus) == 0,
             "D:DC: Record in unregistered, exported, or discarded status"
         );
@@ -269,7 +296,7 @@ contract DECORATE is CORE {
     }
 
     /**
-     * @dev Modify **Record**.Ipfs1a CTS:EXAMINE . . .
+     * @dev Modify rec.Ipfs1a/b content adressable storage pointer
      * @param _tokenID - tokenID of assets token @_tokenContract
      * @param _tokenContract - token contract of _tokenID
      * @param _Ipfs1a - field for external asset data
@@ -310,7 +337,7 @@ contract DECORATE is CORE {
             "D:MI1:Asset class extended data must be '0' or ERC721 contract address"
         );
 
-        require( //CTS:UNREACHABLE WITH CURRENT CONTRACTS. WOULD REQUIRE ROOT CLASSES TO BE CUSTODY TYPE 5
+        require( //DPS:TEST unreachable reason does not make sense:UNREACHABLE. WOULD REQUIRE ROOT CLASSES TO BE CUSTODY TYPE 5
             needsImport(rec.assetStatus) == 0,
             "D:MI1: Record in unregistered, exported, or discarded status"
         );
@@ -327,7 +354,7 @@ contract DECORATE is CORE {
     }
 
     /**
-     * @dev Modify **Record**.Ipfs2 CTS:EXAMINE . . .
+     * @dev SET rec.Ipfs2a/b (immutable) content adressable storage pointer
      * @param _tokenID - tokenID of assets token @_tokenContract
      * @param _tokenContract - token contract of _tokenID
      * @param _Ipfs2a - field for permanent external asset data
@@ -377,12 +404,14 @@ contract DECORATE is CORE {
      * @dev Export - sets asset to status 70 (importable)
      * @param _tokenID - tokenID of assets token @_tokenContract
      * @param _tokenContract - token contract of _tokenID
+     * @param _exportTo - destination assetClass of decorated token
+     * DPS:TEST added destination ACNODE parameter
      */
-    function _export(uint256 _tokenID, address _tokenContract)
+    function _exportAssetTo(uint256 _tokenID, address _tokenContract, uint32 _exportTo)
         external
         whenNotPaused
         isTokenHolder(_tokenID, _tokenContract)
-    {
+    {   
         bytes32 idxHash = keccak256(abi.encodePacked(_tokenID, _tokenContract));
         Record memory rec = getRecord(idxHash);
         AC memory AC_info = getACinfo(rec.assetClass);
@@ -408,24 +437,29 @@ contract DECORATE is CORE {
         );
 
         require(
-            rec.assetStatus == 51,
-            "D:E: Must be in transferrable status (51)"
+            (rec.assetStatus == 51) || (rec.assetStatus == 70), //DPS:check
+            "D:E: Must be in transferrable status (51/70)"
+        );
+        require(
+            AC_MGR.isSameRootAC(_exportTo, rec.assetClass) == 170,
+            "D:E: Cannot change AC to new root"
         );
         //^^^^^^^checks^^^^^^^^^
 
         rec.assetStatus = 70; // Set status to 70 (exported)
+        rec.int32temp = _exportTo; //set permitted AC for import
         //^^^^^^^effects^^^^^^^^^
 
         writeRecord(idxHash, rec);
-        STOR.changeAC(idxHash, AC_info.assetClassRoot); //set assetClass to the root AC of the assetClass
         //^^^^^^^interactions^^^^^^^^^
     }
 
     /**
-     * @dev import **Record** CTS:EXAMINE what is import? import into what?(no confirmation required - posessor is considered to be owner. sets rec.assetStatus to 51.
+     * @dev import a decoration into a new asset class. posessor is considered to be owner. sets rec.assetStatus to 51.
      * @param _tokenID - tokenID of assets token @_tokenContract
      * @param _tokenContract - token contract of _tokenID
      * @param _newAssetClass - new assetClass of decorated token
+     * DPS:TEST
      */
     function _import(
         uint256 _tokenID,
@@ -458,7 +492,11 @@ contract DECORATE is CORE {
             AC_MGR.isSameRootAC(_newAssetClass, rec.assetClass) == 170,
             "D:I:Cannot change AC to new root"
         );
-        require(
+        require( //DPS:TEST NEW
+            _newAssetClass == rec.int32temp,
+            "ANC:IA: Cannot change AC except to specified AC"
+        );
+        require( //DPS:TEST NEW
             (newAC_info.managementType < 6),
             "D:I: Contract does not support management types > 5 or AC is locked"
         );
@@ -467,12 +505,12 @@ contract DECORATE is CORE {
             (newAC_info.managementType == 2) ||
             (newAC_info.managementType == 5)
         ) {
-            require(
+            require( //DPS:TEST NEW
                 (AC_TKN.ownerOf(_newAssetClass) == _msgSender()),
                 "D:I: Cannot create asset in AC mgmt type 1||2||5 - caller does not hold AC token"
             );
         } else if (newAC_info.managementType == 3) {
-            require(
+            require( //DPS:TEST NEW
                 AC_MGR.getUserType(
                     keccak256(abi.encodePacked(_msgSender())),
                     _newAssetClass
@@ -480,7 +518,7 @@ contract DECORATE is CORE {
                 "D:I: Cannot create asset - caller address !authorized"
             );
         } else if (newAC_info.managementType == 4) {
-            require(
+            require( //DPS:TEST NEW
                 ID_TKN.trustedLevelByAddress(_msgSender()) > 10,
                 "D:I: Caller !trusted ID holder"
             );
