@@ -59,7 +59,6 @@ struct AC {
     uint8 switches; // bitwise Flags for AC control                          //immutable
     bytes32 CAS1; //content adressable storage pointer 1 
     bytes32 CAS2; //content adressable storage pointer 1 
-
 }
 
 struct ContractDataHash {
