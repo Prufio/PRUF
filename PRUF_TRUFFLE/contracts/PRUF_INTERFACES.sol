@@ -57,8 +57,8 @@ struct AC {
     uint32 discount; // price sharing //internal admin                                      //immutable
     address referenceAddress; // Used with wrap / decorate
     uint8 switches; // bitwise Flags for AC control                          //immutable
-    bytes32 CAS1; //content adressable storage pointer 1 
-    bytes32 CAS2; //content adressable storage pointer 1 
+    bytes32 CAS1; //content adressable storage pointer 1
+    bytes32 CAS2; //content adressable storage pointer 1
 }
 
 struct ContractDataHash {
@@ -1064,19 +1064,6 @@ interface ID_TKN_Interface {
  */
 interface AC_MGR_Interface {
     /*
-     * @dev Set pricing
-     */
-    function OO_SetACpricing(uint256 _L1) external;
-
-    /*
-     * @dev Tincreases (but cannot decrease) price share for a given AC
-     * !! to be used with great caution
-     * This breaks decentralization and must eventually be given over to some kind of governance contract.
-     */
-    function adminIncreaseShare(uint32 _assetClass, uint32 _newDiscount)
-        external;
-
-    /*
      * @dev Transfers a name from one asset class to another
      * !! -------- to be used with great caution and only as a result of community governance action -----------
      * Designed to remedy brand infringement issues. This breaks decentralization and must eventually be given
@@ -1103,7 +1090,8 @@ interface AC_MGR_Interface {
         uint32 _discount,
         address _refAddress,
         uint8 _switches,
-        bytes32 _IPFS
+        bytes32 _CAS1,
+        bytes32 _CAS2
     ) external;
 
     /*
@@ -1120,8 +1108,10 @@ interface AC_MGR_Interface {
         uint32 _assetClassRoot,
         uint8 _custodyType,
         uint8 _managementType,
+        uint8 _storageProvider,
         uint32 _discount,
-        bytes32 _IPFS,
+        bytes32 _CAS1,
+        bytes32 _CAS2,
         address _recipientAddress
     ) external;
 
@@ -1135,7 +1125,8 @@ interface AC_MGR_Interface {
         string calldata _name,
         uint32 _assetClassRoot,
         uint8 _custodyType,
-        bytes32 _IPFS
+        bytes32 _CAS1,
+        bytes32 _CAS2
     ) external returns (uint256);
 
     /*
@@ -1162,7 +1153,11 @@ interface AC_MGR_Interface {
      * Requires that:
      *  caller holds ACtoken
      */
-    function updateACipfs(uint32 _assetClass, bytes32 _IPFS) external;
+    function updateNodeCAS(
+        uint32 _assetClass,
+        bytes32 _CAS1,
+        bytes32 _CAS2
+    ) external;
 
     /*
      * @dev Set function costs and payment address per asset class, in Wei
@@ -1189,6 +1184,18 @@ interface AC_MGR_Interface {
     ) external;
 
     //-------------------------------------------Read-only functions ----------------------------------------------
+
+    /**
+     * @dev get bit from .switches at specified position
+     * @param _assetClass - assetClass associated with query
+     * @param _position - bit position associated with query
+     *
+     * @return 1 or 0 (enabled or disabled)
+     */
+    function getSwitchAt(uint32 _assetClass, uint8 _position)
+        external
+        returns (uint256);
+
     /*
      * @dev get a User Record
      */
@@ -1242,19 +1249,6 @@ interface AC_MGR_Interface {
         view
         returns (AC memory);
 
-    /* CAN'T RETURN A STRUCT WITH A STRING WITHOUT WIERDNESS-0.8.1
-     * @dev Retrieve AC_data @ _assetClass
-     */
-    function getExtAC_data_nostruct(uint32 _assetClass)
-        external
-        view
-        returns (
-            uint8,
-            address,
-            uint8,
-            bytes32
-        );
-
     /*
      * @dev compare the root of two asset classes
      */
@@ -1280,14 +1274,6 @@ interface AC_MGR_Interface {
      * @dev return current AC token index pointer
      */
     function currentACpricingInfo() external view returns (uint256, uint256);
-
-    /*
-     * @dev get bit (1/0) from .switches at specified position
-     */
-    function getSwitchAt(uint32 _assetClass, uint8 _position)
-        external
-        view
-        returns (uint256);
 
     /*
      * @dev Retrieve function costs per asset class, per service type, in Wei

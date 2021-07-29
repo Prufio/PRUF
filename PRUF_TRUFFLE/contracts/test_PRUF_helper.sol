@@ -264,7 +264,7 @@ contract Helper is Ownable, BASIC {
         //^^^^^^^interactions^^^^^^^^^
     }
 
-    /*
+/*
      * @dev Retrieve AC_data @ _assetClass
      */
     function helper_getExtAC_data_nostruct(uint32 _assetClass)
@@ -272,25 +272,20 @@ contract Helper is Ownable, BASIC {
         view
         returns (
             uint8,
-            uint8,
             address,
+            uint8,
+            bytes32,
             bytes32
         )
     {
-        AC memory asset_data;
-        //^^^^^^^checks^^^^^^^^^
-        (
-            asset_data.storageProvider,
-            asset_data.referenceAddress,
-            asset_data.switches,
-            asset_data.IPFS
-        ) = AC_MGR.getExtAC_data_nostruct(_assetClass);
+        AC memory nodeData = AC_MGR.getExtAC_data(_assetClass);
 
         return (
-            asset_data.storageProvider,
-            asset_data.switches,
-            asset_data.referenceAddress,
-            asset_data.IPFS
+            nodeData.storageProvider,
+            nodeData.referenceAddress,
+            nodeData.switches,
+            nodeData.CAS1,
+            nodeData.CAS2
         );
         //^^^^^^^interactions^^^^^^^^^
     }
