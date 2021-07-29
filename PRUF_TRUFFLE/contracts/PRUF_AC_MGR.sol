@@ -586,14 +586,7 @@ contract AC_MGR is BASIC {
     /**
      * @dev Retrieve AC_data @ _assetClass
      * @param _assetClass - assetClass associated with query
-     *
-     * @return {
-         assetClassRoot: root assetClass @ _assetClass
-         custodyType: custody type @ _assetClass (see docs)
-         managementType: management type @ _assetClass (see docs)
-         discount: percentage of rewards distribution @ _assetClass
-         referenceAddress: referance address @ _assetClass
-     }
+     * DPS:THIS FUNCTION REMAINS FOR EXTERNAL TESTING ACCESS. try using getExtAcData, it should be depricated prior to production.
      */
     function getAC_data(uint32 _assetClass)
         external
