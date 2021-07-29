@@ -1221,18 +1221,18 @@ interface AC_MGR_Interface {
         view
         returns (uint8);
 
-    /*
-     * @dev Retrieve AC_data @ _assetClass
-     */
-    function getAC_data(uint32 _assetClass)
-        external
-        returns (
-            uint32,
-            uint8,
-            uint8,
-            uint32,
-            address
-        );
+    // /*
+    //  * @dev Retrieve AC_data @ _assetClass
+    //  */
+    // function getAC_data(uint32 _assetClass)
+    //     external
+    //     returns (
+    //         uint32,
+    //         uint8,
+    //         uint8,
+    //         uint32,
+    //         address
+    //     );
 
     /* CAN'T RETURN A STRUCT WITH A STRING WITHOUT WIERDNESS-0.8.1
      * @dev Retrieve AC_data @ _assetClass
