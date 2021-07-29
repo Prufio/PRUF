@@ -309,17 +309,13 @@ contract AC_MGR is BASIC {
         _AC.name = _name;
         _AC.assetClassRoot = _assetClassRoot;
         _AC.custodyType = _custodyType;
-        _AC.managementType = _managementType; 
-        _AC.storageProvider = _storageProvider; 
+        _AC.managementType = _managementType;
+        _AC.storageProvider = _storageProvider;
         _AC.discount = _discount;
         _AC.CAS1 = _CAS1;
         _AC.CAS2 = _CAS2;
 
-        _createAssetClass(
-            _AC,
-            _assetClass,
-            _recipientAddress
-        );
+        _createAssetClass(_AC, _assetClass, _recipientAddress);
         //^^^^^^^effects^^^^^^^^^
     }
 
@@ -372,12 +368,7 @@ contract AC_MGR is BASIC {
         _AC.CAS1 = _CAS1;
         _AC.CAS2 = _CAS2;
 
-
-        _createAssetClass(
-            _AC,
-            uint32(ACtokenIndex),
-            _msgSender()
-        );
+        _createAssetClass(_AC, uint32(ACtokenIndex), _msgSender());
 
         //Set the default 11 authorized contracts
         if (_custodyType == 2) {
@@ -447,11 +438,15 @@ contract AC_MGR is BASIC {
      * @param _CAS1 - any external data attatched to assetClass 1/2
      * @param _CAS2 - any external data attatched to assetClass 2/2
      */
-    function updateACipfs(
+    function updateNodeCAS(
         uint32 _assetClass,
         bytes32 _CAS1,
         bytes32 _CAS2
     ) external whenNotPaused isACtokenHolderOfClass(_assetClass) {
+        require(
+            getSwitchAt(_assetClass, 1) == 0,
+            "ACM:UNC: CAS for node is locked and cannot be written"
+        );
         //^^^^^^^checks^^^^^^^^^
         AC_data[_assetClass].CAS1 = _CAS1;
         AC_data[_assetClass].CAS2 = _CAS2;
@@ -518,6 +513,33 @@ contract AC_MGR is BASIC {
     }
 
     //-------------------------------------------Read-only functions ----------------------------------------------
+
+    /**
+     * @dev get bit from .switches at specified position
+     * @param _assetClass - assetClass associated with query
+     * @param _position - bit position associated with query
+     *
+     * @return 1 or 0 (enabled or disabled)
+     */
+    function getSwitchAt(uint32 _assetClass, uint8 _position)
+        public
+        view
+        returns (uint256)
+    {
+        require(
+            (_position > 0) && (_position < 9),
+            "AM:GSA: bit position must be between 1 and 8"
+        );
+        //^^^^^^^checks^^^^^^^^^
+
+        if ((AC_data[_assetClass].switches & (1 << (_position - 1))) > 0) {
+            return 1;
+        } else {
+            return 0;
+        }
+        //^^^^^^^effects^^^^^^^^^
+    }
+
     /**
      * @dev get an AC Node User type for a specified address
      * @param _userHash - hash of selected user
@@ -697,32 +719,6 @@ contract AC_MGR is BASIC {
         //^^^^^^^effects^^^^^^^^^
     }
 
-    /**
-     * @dev get bit from .switches at specified position
-     * @param _assetClass - assetClass associated with query
-     * @param _position - bit position associated with query
-     *
-     * @return 1 or 0 (enabled or disabled)
-     */
-    function getSwitchAt(uint32 _assetClass, uint8 _position)
-        external
-        view
-        returns (uint256)
-    {
-        require(
-            (_position > 0) && (_position < 9),
-            "AM:GSA: bit position must be between 1 and 8"
-        );
-        //^^^^^^^checks^^^^^^^^^
-
-        if ((AC_data[_assetClass].switches & (1 << (_position - 1))) > 0) {
-            return 1;
-        } else {
-            return 0;
-        }
-        //^^^^^^^effects^^^^^^^^^
-    }
-
     //-------------------------------------------functions for payment calculations----------------------------------------------
 
     /**
@@ -785,10 +781,9 @@ contract AC_MGR is BASIC {
      * @param _recipientAddress - address to recieve Node
      */
     function _createAssetClass(
-        AC memory _AC, 
+        AC memory _AC,
         uint32 _assetClass,
         address _recipientAddress
-
     ) private whenNotPaused {
         AC memory _RootNodeData = AC_data[_AC.assetClassRoot];
         uint256 tokenId = uint256(_assetClass);
@@ -806,11 +801,13 @@ contract AC_MGR is BASIC {
             "ACM:CAC: Storage Provider is invalid (0)"
         );
         require( //_ac.custodyType is a valid type or specifically unset (255)
-            (custodyTypesEnabled[_AC.custodyType] > 0) || (_AC.custodyType == 255),
+            (custodyTypesEnabled[_AC.custodyType] > 0) ||
+                (_AC.custodyType == 255),
             "ACM:CAC: Custody type is invalid (0)"
         );
         require( //has valid root
-            (_RootNodeData.custodyType == 3) || (_AC.assetClassRoot == _assetClass),
+            (_RootNodeData.custodyType == 3) ||
+                (_AC.assetClassRoot == _assetClass),
             "ACM:CAC: Root !exist"
         );
         if (_RootNodeData.managementType != 0) {
