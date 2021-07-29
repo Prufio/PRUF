@@ -24,8 +24,8 @@ struct Record {
     uint8 currency; //currency for price information (0=not for sale, 1=ETH, 2=PRUF, 3=DAI, 4=WBTC.... )
     uint16 numberOfTransfers; //number of transfers and forcemods
     uint32 assetClass; // Type of asset
-    uint32 countDown; // Variable that can only be dencreased from countDownStart
-    uint32 int32temp; // int32 for pesisting transitional data
+    uint32 countDown; // Variable that can only be decreased from countDownStart
+    uint32 int32temp; // int32 for persisting transitional data
     uint120 price; //price set for items offered for sale
     bytes32 Ipfs1a; // Publically viewable asset description
     bytes32 Ipfs2a; // Publically viewable immutable notes
@@ -33,6 +33,19 @@ struct Record {
     bytes32 Ipfs2b; // Publically viewable immutable notes
     bytes32 rightsHolder; // KEK256 Registered owner
 }
+
+//     proposed ISO standardized
+//     struct Record {
+//     uint8 assetStatus; // Status - Transferrable, locked, in transfer, stolen, lost, etc.
+//     uint32 assetClass; // Type of asset
+//     uint32 countDown; // Variable that can only be decreased from countDownStart
+//     uint32 int32temp; // int32 for persisting transitional data
+//     bytes32 Ipfs1a; // Publically viewable asset description
+//     bytes32 Ipfs2a; // Publically viewable immutable notes
+//     bytes32 Ipfs1b; // Publically viewable asset description
+//     bytes32 Ipfs2b; // Publically viewable immutable notes
+//     bytes32 rightsHolder; // KEK256  owner
+// }
 
 struct AC {
     //Struct for holding and manipulating assetClass data
