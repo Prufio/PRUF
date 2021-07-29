@@ -57,7 +57,9 @@ struct AC {
     uint32 discount; // price sharing //internal admin                                      //immutable
     address referenceAddress; // Used with wrap / decorate
     uint8 switches; // bitwise Flags for AC control                          //immutable
-    bytes32 IPFS; //IPFS data for defining idxHash creation attribute fields
+    bytes32 CAS1; //content adressable storage pointer 1 
+    bytes32 CAS2; //content adressable storage pointer 1 
+
 }
 
 struct ContractDataHash {
