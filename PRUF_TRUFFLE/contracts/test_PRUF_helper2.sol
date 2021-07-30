@@ -1,4 +1,4 @@
-/*--------------------------------------------------------PRüF0.8.0
+/*--------------------------------------------------------PRüF0.8.6
 __/\\\\\\\\\\\\\ _____/\\\\\\\\\ _______/\\__/\\ ___/\\\\\\\\\\\\\\\        
 __\/\\\/////////\\\ _/\\\///////\\\ ____\//__\//____\/\\\///////////__       
 ___\/\\\_______\/\\\_\/\\\_____\/\\\ ________________\/\\\ ____________      
@@ -274,23 +274,18 @@ contract Helper2 is Ownable, BASIC {
             uint8,
             address,
             uint8,
+            bytes32,
             bytes32
         )
     {
-        AC memory asset_data;
-        //^^^^^^^checks^^^^^^^^^
-        (
-            asset_data.storageProvider,
-            asset_data.referenceAddress,
-            asset_data.switches,
-            asset_data.IPFS
-        ) = AC_MGR.getExtAC_data_nostruct(_assetClass);
+        AC memory nodeData = AC_MGR.getExtAC_data(_assetClass);
 
         return (
-            asset_data.storageProvider,
-            asset_data.referenceAddress,
-            asset_data.switches,
-            asset_data.IPFS
+            nodeData.storageProvider,
+            nodeData.referenceAddress,
+            nodeData.switches,
+            nodeData.CAS1,
+            nodeData.CAS2
         );
         //^^^^^^^interactions^^^^^^^^^
     }

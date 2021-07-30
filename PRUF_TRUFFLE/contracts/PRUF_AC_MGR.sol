@@ -1,4 +1,4 @@
-/**--------------------------------------------------------PRüF0.8.0
+/**--------------------------------------------------------PRüF0.8.6
 __/\\\\\\\\\\\\\ _____/\\\\\\\\\ _______/\\__/\\ ___/\\\\\\\\\\\\\\\        
  _\/\\\/////////\\\ _/\\\///////\\\ ____\//__\//____\/\\\///////////__       
   _\/\\\_______\/\\\_\/\\\_____\/\\\ ________________\/\\\ ____________      
@@ -165,7 +165,7 @@ contract AC_MGR is BASIC {
     }
 
     /**
-     * !! -------- to be used with great caution and only as a result of community governance action ----------- 
+     * !! -------- to be used with great caution and only as a result of community governance action -----------
      * @dev Transfers a name from one asset class to another
      *   -Designed to remedy brand infringement issues. This breaks decentralization and must eventually be given
      *   -over to some kind of governance contract.
@@ -184,7 +184,7 @@ contract AC_MGR is BASIC {
         ); //source AC_Name must match name given
 
         require(
-            (AC_data[_assetClassDest].IPFS == B320xF_), //dest AC must have ipfs set to 0xFFFF.....
+            (AC_data[_assetClassDest].CAS1 == B320xF_), //dest AC must have CAS1 set to 0xFFFF.....
             "ACM:TN: Destination AC not prepared for name transfer"
         );
         //^^^^^^^checks^^^^^^^^^
@@ -205,7 +205,8 @@ contract AC_MGR is BASIC {
      * @param _storageProvider - storageProvider of assetClass (see docs)
      * @param _discount - discount of assetClass (100 == 1%, 10000 == max)
      * @param _refAddress - referance address associated with an assetClass
-     * @param _IPFS - any external data attatched to assetClass
+     * @param _CAS1 - any external data attatched to assetClass 1/2
+     * @param _CAS2 - any external data attatched to assetClass 2/2
      */
     function adminModAssetClass(
         uint32 _assetClass,
@@ -215,7 +216,8 @@ contract AC_MGR is BASIC {
         uint8 _storageProvider,
         uint32 _discount,
         address _refAddress,
-        bytes32 _IPFS
+        bytes32 _CAS1,
+        bytes32 _CAS2
     ) external isContractAdmin nonReentrant {
         AC memory _ac = AC_data[_assetClassRoot];
         uint256 tokenId = uint256(_assetClass);
@@ -236,7 +238,8 @@ contract AC_MGR is BASIC {
         AC_data[_assetClass].managementType = _managementType;
         AC_data[_assetClass].storageProvider = _storageProvider;
         AC_data[_assetClass].referenceAddress = _refAddress;
-        AC_data[_assetClass].IPFS = _IPFS;
+        AC_data[_assetClass].CAS1 = _CAS1;
+        AC_data[_assetClass].CAS2 = _CAS2;
         //^^^^^^^effects^^^^^^^^^
     }
 
@@ -284,7 +287,8 @@ contract AC_MGR is BASIC {
      * @param _managementType - managementType of new assetClass (see docs)
      * @param _storageProvider - storageProvider of new assetClass (see docs)
      * @param _discount - discount of assetClass (100 == 1%, 10000 == max)
-     * @param _IPFS - any external data attatched to assetClass
+     * @param _CAS1 - any external data attatched to assetClass 1/2
+     * @param _CAS2 - any external data attatched to assetClass 2/2
      * @param _recipientAddress - address to recieve assetClass
      */
     function createAssetClass(
@@ -295,21 +299,23 @@ contract AC_MGR is BASIC {
         uint8 _managementType,
         uint8 _storageProvider,
         uint32 _discount,
-        bytes32 _IPFS,
+        bytes32 _CAS1,
+        bytes32 _CAS2,
         address _recipientAddress
     ) external isNodeMinter nonReentrant {
         //^^^^^^^checks^^^^^^^^^
-        _createAssetClass(
-            _assetClass,
-            _recipientAddress,
-            _name,
-            _assetClassRoot,
-            _custodyType,
-            _managementType,
-            _storageProvider,
-            _discount,
-            _IPFS
-        );
+
+        AC memory _AC;
+        _AC.name = _name;
+        _AC.assetClassRoot = _assetClassRoot;
+        _AC.custodyType = _custodyType;
+        _AC.managementType = _managementType;
+        _AC.storageProvider = _storageProvider;
+        _AC.discount = _discount;
+        _AC.CAS1 = _CAS1;
+        _AC.CAS2 = _CAS2;
+
+        _createAssetClass(_AC, _assetClass, _recipientAddress);
         //^^^^^^^effects^^^^^^^^^
     }
 
@@ -320,13 +326,15 @@ contract AC_MGR is BASIC {
      * @param _name - chosen name of assetClass
      * @param _assetClassRoot - chosen root of assetClass
      * @param _custodyType - chosen custodyType of assetClass (see docs)
-     * @param _IPFS any external data attatched to assetClass
+     * @param _CAS1 - any external data attatched to assetClass 1/2
+     * @param _CAS2 - any external data attatched to assetClass 2/2
      */
     function purchaseACnode(
         string calldata _name,
         uint32 _assetClassRoot,
         uint8 _custodyType,
-        bytes32 _IPFS
+        bytes32 _CAS1,
+        bytes32 _CAS2
     ) external nonReentrant returns (uint256) {
         require(
             ACtokenIndex < 4294000000,
@@ -345,22 +353,22 @@ contract AC_MGR is BASIC {
         //mint an asset class token to _msgSender(), at tokenID ACtokenIndex, with URI = root asset Class #
 
         UTIL_TKN.trustedAgentBurn(_msgSender(), AC_Price / 2);
-        UTIL_TKN.trustedAgentTransfer( 
+        UTIL_TKN.trustedAgentTransfer(
             _msgSender(),
             rootPaymentAddress,
             AC_Price - (AC_Price / 2)
         ); //burning 50% so we have tokens to incentivise outreach performance
-        _createAssetClass(
-            uint32(ACtokenIndex),
-            _msgSender(),
-            _name,
-            _assetClassRoot,
-            _custodyType,
-            255, //creates ACNODES at managementType 255 = not yet usable(disabled),
-            0, //creates ACNODES at storageType 0 = not yet usable(disabled),
-            startingDiscount,
-            _IPFS
-        );
+        AC memory _AC;
+        _AC.name = _name;
+        _AC.assetClassRoot = _assetClassRoot;
+        _AC.custodyType = _custodyType;
+        _AC.managementType = 255; //creates ACNODES at managementType 255 = not yet usable(disabled),
+        _AC.storageProvider = 0; //creates ACNODES at storageType 0 = not yet usable(disabled),
+        _AC.discount = startingDiscount;
+        _AC.CAS1 = _CAS1;
+        _AC.CAS2 = _CAS2;
+
+        _createAssetClass(_AC, uint32(ACtokenIndex), _msgSender());
 
         //Set the default 11 authorized contracts
         if (_custodyType == 2) {
@@ -400,7 +408,7 @@ contract AC_MGR is BASIC {
     }
 
     /**
-     * @dev Modifies an AC Node name for its exclusive namespace 
+     * @dev Modifies an AC Node name for its exclusive namespace
      * @param _assetClass - assetClass being modified
      * @param _name - updated name associated with assetClass (unique)
      */
@@ -425,23 +433,28 @@ contract AC_MGR is BASIC {
     }
 
     /** CTS:EXAMINE Need 2 IPFS fields
-     * @dev Modifies an AC Node IPFS data pointer 
+     * @dev Modifies an AC Node IPFS data pointer
      * @param _assetClass - assetClass being modified
-     * @param _IPFS any updated external data attatched to assetClass
+     * @param _CAS1 - any external data attatched to assetClass 1/2
+     * @param _CAS2 - any external data attatched to assetClass 2/2
      */
-    function updateACipfs(uint32 _assetClass, bytes32 _IPFS)
-        external
-        whenNotPaused
-        isACtokenHolderOfClass(_assetClass)
-    {
+    function updateNodeCAS(
+        uint32 _assetClass,
+        bytes32 _CAS1,
+        bytes32 _CAS2
+    ) external whenNotPaused isACtokenHolderOfClass(_assetClass) {
+        require(
+            getSwitchAt(_assetClass, 1) == 0,
+            "ACM:UNC: CAS for node is locked and cannot be written"
+        );
         //^^^^^^^checks^^^^^^^^^
-
-        AC_data[_assetClass].IPFS = _IPFS;
+        AC_data[_assetClass].CAS1 = _CAS1;
+        AC_data[_assetClass].CAS2 = _CAS2;
         //^^^^^^^effects^^^^^^^^^
     }
 
     /**
-     * @dev Set function costs and payment address per asset class, in PRUF(18 decimals) 
+     * @dev Set function costs and payment address per asset class, in PRUF(18 decimals)
      * @param _assetClass - assetClass to set service costs
      * @param _service - service type being modified (see service types in ZZ_PRUF_DOCS)
      * @param _serviceCost - 18 decimal fee in PRUF associated with specified service
@@ -463,7 +476,7 @@ contract AC_MGR is BASIC {
     //-------------------------------------------Functions dealing with immutable data ---------------------------------------------
 
     /**
-     * @dev Configure the immutable data in an asset class one time 
+     * @dev Configure the immutable data in an asset class one time
      * @param _assetClass - assetClass being modified
      * @param _managementType - managementType of assetClass (see docs)
      * @param _storageProvider - storageProvider of assetClass (see docs)
@@ -500,6 +513,33 @@ contract AC_MGR is BASIC {
     }
 
     //-------------------------------------------Read-only functions ----------------------------------------------
+
+    /**
+     * @dev get bit from .switches at specified position
+     * @param _assetClass - assetClass associated with query
+     * @param _position - bit position associated with query
+     *
+     * @return 1 or 0 (enabled or disabled)
+     */
+    function getSwitchAt(uint32 _assetClass, uint8 _position)
+        public
+        view
+        returns (uint256)
+    {
+        require(
+            (_position > 0) && (_position < 9),
+            "AM:GSA: bit position must be between 1 and 8"
+        );
+        //^^^^^^^checks^^^^^^^^^
+
+        if ((AC_data[_assetClass].switches & (1 << (_position - 1))) > 0) {
+            return 1;
+        } else {
+            return 0;
+        }
+        //^^^^^^^effects^^^^^^^^^
+    }
+
     /**
      * @dev get an AC Node User type for a specified address
      * @param _userHash - hash of selected user
@@ -568,14 +608,7 @@ contract AC_MGR is BASIC {
     /**
      * @dev Retrieve AC_data @ _assetClass
      * @param _assetClass - assetClass associated with query
-     *
-     * @return {
-         assetClassRoot: root assetClass @ _assetClass
-         custodyType: custody type @ _assetClass (see docs)
-         managementType: management type @ _assetClass (see docs)
-         discount: percentage of rewards distribution @ _assetClass
-         referenceAddress: referance address @ _assetClass
-     }
+     * DPS:THIS FUNCTION REMAINS FOR EXTERNAL TESTING ACCESS. try using getExtAcData, it should be depricated prior to production.
      */
     function getAC_data(uint32 _assetClass)
         external
@@ -645,7 +678,11 @@ contract AC_MGR is BASIC {
      *
      * @return name of token @ _tokenID
      */
-    function getAC_name(uint32 assetClass) external view returns (string memory) {
+    function getAC_name(uint32 assetClass)
+        external
+        view
+        returns (string memory)
+    {
         //^^^^^^^checks^^^^^^^^^
 
         return (AC_data[assetClass].name);
@@ -679,32 +716,6 @@ contract AC_MGR is BASIC {
     function currentACpricingInfo() external view returns (uint256, uint256) {
         //^^^^^^^checks^^^^^^^^^
         return (ACtokenIndex, AC_Price);
-        //^^^^^^^effects^^^^^^^^^
-    }
-
-    /**
-     * @dev get bit from .switches at specified position
-     * @param _assetClass - assetClass associated with query
-     * @param _position - bit position associated with query
-     *
-     * @return 1 or 0 (enabled or disabled)
-     */
-    function getSwitchAt(uint32 _assetClass, uint8 _position)
-        external
-        view
-        returns (uint256)
-    {
-        require(
-            (_position > 0) && (_position < 9),
-            "AM:GSA: bit position must be between 1 and 8"
-        );
-        //^^^^^^^checks^^^^^^^^^
-
-        if ((AC_data[_assetClass].switches & (1 << (_position - 1))) > 0) {
-            return 1;
-        } else {
-            return 0;
-        }
         //^^^^^^^effects^^^^^^^^^
     }
 
@@ -765,71 +776,62 @@ contract AC_MGR is BASIC {
 
     /**
      * @dev creates an ACnode and its corresponding namespace and data fields
-     * @param _assetClass - assetClass to be created (unique)
-     * @param _recipientAddress - address to recieve assetClass
-     * @param _name - name to be configured to assetClass (unique)
-     * @param _assetClassRoot - root of assetClass
-     * @param _custodyType - custodyType of new assetClass (see docs)
-     * @param _managementType - managementType of new assetClass (see docs)
-     * @param _storageProvider - storageProvider of new assetClass (see docs)
-     * @param _discount - discount of assetClass (100 == 1%, 10000 == max)
-     * @param _IPFS - any external data attatched to assetClass
+     * @param _AC - creation Data for new Node
+     * @param _assetClass - Node to be created (unique)
+     * @param _recipientAddress - address to recieve Node
      */
     function _createAssetClass(
+        AC memory _AC,
         uint32 _assetClass,
-        address _recipientAddress,
-        string calldata _name,
-        uint32 _assetClassRoot,
-        uint8 _custodyType,
-        uint8 _managementType,
-        uint8 _storageProvider,
-        uint32 _discount,
-        bytes32 _IPFS
+        address _recipientAddress
     ) private whenNotPaused {
-        AC memory _ac = AC_data[_assetClassRoot];
+        AC memory _RootNodeData = AC_data[_AC.assetClassRoot];
         uint256 tokenId = uint256(_assetClass);
 
         require(tokenId != 0, "ACM:CAC: AC = 0"); //sanity check inputs
-        require(_discount <= 10000, "ACM:CAC: Discount > 10000 (100%)");
+        require(_AC.discount <= 10000, "ACM:CAC: Discount > 10000 (100%)");
         require( //_ac.managementType is a valid type or explicitly unset (255)
-            (managementTypesEnabled[_managementType] > 0) ||
-                (_managementType == 255),
+            (managementTypesEnabled[_AC.managementType] > 0) ||
+                (_AC.managementType == 255),
             "ACM:CAC: Management type is invalid (0)"
         );
         require( //_ac.storageProvider is a valid type or not specified (0)
-            (storageProvidersEnabled[_storageProvider] > 0) ||
-                (_storageProvider == 0),
+            (storageProvidersEnabled[_AC.storageProvider] > 0) ||
+                (_AC.storageProvider == 0),
             "ACM:CAC: Storage Provider is invalid (0)"
         );
         require( //_ac.custodyType is a valid type or specifically unset (255)
-            (custodyTypesEnabled[_custodyType] > 0) || (_custodyType == 255),
+            (custodyTypesEnabled[_AC.custodyType] > 0) ||
+                (_AC.custodyType == 255),
             "ACM:CAC: Custody type is invalid (0)"
         );
         require( //has valid root
-            (_ac.custodyType == 3) || (_assetClassRoot == _assetClass),
+            (_RootNodeData.custodyType == 3) ||
+                (_AC.assetClassRoot == _assetClass),
             "ACM:CAC: Root !exist"
         );
-        if (_ac.managementType != 0) {
+        if (_RootNodeData.managementType != 0) {
             require( //holds root token if root is restricted
-                (AC_TKN.ownerOf(_assetClassRoot) == _msgSender()),
+                (AC_TKN.ownerOf(_AC.assetClassRoot) == _msgSender()),
                 "ACM:CAC: Restricted from creating AC's in this root - caller !hold root token"
             );
         }
-        require(AC_number[_name] == 0, "ACM:CAC: AC name exists");
+        require(AC_number[_AC.name] == 0, "ACM:CAC: AC name exists");
         require(
             (AC_data[_assetClass].assetClassRoot == 0),
             "ACM:CAC: AC already exists"
         );
         //^^^^^^^checks^^^^^^^^^
 
-        AC_number[_name] = _assetClass;
-        AC_data[_assetClass].name = _name;
-        AC_data[_assetClass].assetClassRoot = _assetClassRoot;
-        AC_data[_assetClass].discount = _discount;
-        AC_data[_assetClass].custodyType = _custodyType;
-        AC_data[_assetClass].managementType = _managementType;
-        AC_data[_assetClass].switches = _ac.switches;
-        AC_data[_assetClass].IPFS = _IPFS;
+        AC_number[_AC.name] = _assetClass;
+        AC_data[_assetClass].name = _AC.name;
+        AC_data[_assetClass].assetClassRoot = _AC.assetClassRoot;
+        AC_data[_assetClass].discount = _AC.discount;
+        AC_data[_assetClass].custodyType = _AC.custodyType;
+        AC_data[_assetClass].managementType = _AC.managementType;
+        AC_data[_assetClass].switches = _RootNodeData.switches;
+        AC_data[_assetClass].CAS1 = _AC.CAS1;
+        AC_data[_assetClass].CAS2 = _AC.CAS2;
         //^^^^^^^effects^^^^^^^^^
 
         AC_TKN.mintACToken(

@@ -282,7 +282,7 @@ pragma solidity ^0.6.7;
 *-----------------------------------------------------------------
  * ASSET CLASS option switches, 1 or 0 : AC_data.switches (AC_manager)
  *             Switches will be duplicated from root 
- * bit1  -- If set, cannot change URI after initial setting
+ * bit1  -- If set, cannot change URI or CAS data after initial setting
  * bit2  --
  * bit3  --
  * bit4  --

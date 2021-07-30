@@ -1,4 +1,4 @@
-/*--------------------------------------------------------PRüF0.8.0
+/*--------------------------------------------------------PRüF0.8.6
 __/\\\\\\\\\\\\\ _____/\\\\\\\\\ _______/\\__/\\ ___/\\\\\\\\\\\\\\\        
 __\/\\\/////////\\\ _/\\\///////\\\ ____\//__\//____\/\\\///////////__       
 ___\/\\\_______\/\\\_\/\\\_____\/\\\ ________________\/\\\ ____________      
@@ -24,8 +24,8 @@ struct Record {
     uint8 currency; //currency for price information (0=not for sale, 1=ETH, 2=PRUF, 3=DAI, 4=WBTC.... )
     uint16 numberOfTransfers; //number of transfers and forcemods
     uint32 assetClass; // Type of asset
-    uint32 countDown; // Variable that can only be dencreased from countDownStart
-    uint32 int32temp; // int32 for pesisting transitional data
+    uint32 countDown; // Variable that can only be decreased from countDownStart
+    uint32 int32temp; // int32 for persisting transitional data
     uint120 price; //price set for items offered for sale
     bytes32 Ipfs1a; // Publically viewable asset description
     bytes32 Ipfs2a; // Publically viewable immutable notes
@@ -33,6 +33,19 @@ struct Record {
     bytes32 Ipfs2b; // Publically viewable immutable notes
     bytes32 rightsHolder; // KEK256 Registered owner
 }
+
+//     proposed ISO standardized
+//     struct Record {
+//     uint8 assetStatus; // Status - Transferrable, locked, in transfer, stolen, lost, etc.
+//     uint32 assetClass; // Type of asset
+//     uint32 countDown; // Variable that can only be decreased from countDownStart
+//     uint32 int32temp; // int32 for persisting transitional data
+//     bytes32 Ipfs1a; // Publically viewable asset description
+//     bytes32 Ipfs2a; // Publically viewable immutable notes
+//     bytes32 Ipfs1b; // Publically viewable asset description
+//     bytes32 Ipfs2b; // Publically viewable immutable notes
+//     bytes32 rightsHolder; // KEK256  owner
+// }
 
 struct AC {
     //Struct for holding and manipulating assetClass data
@@ -44,7 +57,8 @@ struct AC {
     uint32 discount; // price sharing //internal admin                                      //immutable
     address referenceAddress; // Used with wrap / decorate
     uint8 switches; // bitwise Flags for AC control                          //immutable
-    bytes32 IPFS; //IPFS data for defining idxHash creation attribute fields
+    bytes32 CAS1; //content adressable storage pointer 1
+    bytes32 CAS2; //content adressable storage pointer 1
 }
 
 struct ContractDataHash {
@@ -1050,19 +1064,6 @@ interface ID_TKN_Interface {
  */
 interface AC_MGR_Interface {
     /*
-     * @dev Set pricing
-     */
-    function OO_SetACpricing(uint256 _L1) external;
-
-    /*
-     * @dev Tincreases (but cannot decrease) price share for a given AC
-     * !! to be used with great caution
-     * This breaks decentralization and must eventually be given over to some kind of governance contract.
-     */
-    function adminIncreaseShare(uint32 _assetClass, uint32 _newDiscount)
-        external;
-
-    /*
      * @dev Transfers a name from one asset class to another
      * !! -------- to be used with great caution and only as a result of community governance action -----------
      * Designed to remedy brand infringement issues. This breaks decentralization and must eventually be given
@@ -1089,7 +1090,8 @@ interface AC_MGR_Interface {
         uint32 _discount,
         address _refAddress,
         uint8 _switches,
-        bytes32 _IPFS
+        bytes32 _CAS1,
+        bytes32 _CAS2
     ) external;
 
     /*
@@ -1106,8 +1108,10 @@ interface AC_MGR_Interface {
         uint32 _assetClassRoot,
         uint8 _custodyType,
         uint8 _managementType,
+        uint8 _storageProvider,
         uint32 _discount,
-        bytes32 _IPFS,
+        bytes32 _CAS1,
+        bytes32 _CAS2,
         address _recipientAddress
     ) external;
 
@@ -1121,7 +1125,8 @@ interface AC_MGR_Interface {
         string calldata _name,
         uint32 _assetClassRoot,
         uint8 _custodyType,
-        bytes32 _IPFS
+        bytes32 _CAS1,
+        bytes32 _CAS2
     ) external returns (uint256);
 
     /*
@@ -1148,7 +1153,11 @@ interface AC_MGR_Interface {
      * Requires that:
      *  caller holds ACtoken
      */
-    function updateACipfs(uint32 _assetClass, bytes32 _IPFS) external;
+    function updateNodeCAS(
+        uint32 _assetClass,
+        bytes32 _CAS1,
+        bytes32 _CAS2
+    ) external;
 
     /*
      * @dev Set function costs and payment address per asset class, in Wei
@@ -1175,6 +1184,18 @@ interface AC_MGR_Interface {
     ) external;
 
     //-------------------------------------------Read-only functions ----------------------------------------------
+
+    /**
+     * @dev get bit from .switches at specified position
+     * @param _assetClass - assetClass associated with query
+     * @param _position - bit position associated with query
+     *
+     * @return 1 or 0 (enabled or disabled)
+     */
+    function getSwitchAt(uint32 _assetClass, uint8 _position)
+        external
+        returns (uint256);
+
     /*
      * @dev get a User Record
      */
@@ -1207,18 +1228,18 @@ interface AC_MGR_Interface {
         view
         returns (uint8);
 
-    /*
-     * @dev Retrieve AC_data @ _assetClass
-     */
-    function getAC_data(uint32 _assetClass)
-        external
-        returns (
-            uint32,
-            uint8,
-            uint8,
-            uint32,
-            address
-        );
+    // /*
+    //  * @dev Retrieve AC_data @ _assetClass
+    //  */
+    // function getAC_data(uint32 _assetClass)
+    //     external
+    //     returns (
+    //         uint32,
+    //         uint8,
+    //         uint8,
+    //         uint32,
+    //         address
+    //     );
 
     /* CAN'T RETURN A STRUCT WITH A STRING WITHOUT WIERDNESS-0.8.1
      * @dev Retrieve AC_data @ _assetClass
@@ -1227,19 +1248,6 @@ interface AC_MGR_Interface {
         external
         view
         returns (AC memory);
-
-    /* CAN'T RETURN A STRUCT WITH A STRING WITHOUT WIERDNESS-0.8.1
-     * @dev Retrieve AC_data @ _assetClass
-     */
-    function getExtAC_data_nostruct(uint32 _assetClass)
-        external
-        view
-        returns (
-            uint8,
-            address,
-            uint8,
-            bytes32
-        );
 
     /*
      * @dev compare the root of two asset classes
@@ -1266,14 +1274,6 @@ interface AC_MGR_Interface {
      * @dev return current AC token index pointer
      */
     function currentACpricingInfo() external view returns (uint256, uint256);
-
-    /*
-     * @dev get bit (1/0) from .switches at specified position
-     */
-    function getSwitchAt(uint32 _assetClass, uint8 _position)
-        external
-        view
-        returns (uint256);
 
     /*
      * @dev Retrieve function costs per asset class, per service type, in Wei

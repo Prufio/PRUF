@@ -1,4 +1,4 @@
-/**--------------------------------------------------------PRüF0.8.0
+/**--------------------------------------------------------PRüF0.8.6
 __/\\\\\\\\\\\\\ _____/\\\\\\\\\ _______/\\__/\\ ___/\\\\\\\\\\\\\\\        
 __\/\\\/////////\\\ _/\\\///////\\\ ____\//__\//____\/\\\///////////__       
 ___\/\\\_______\/\\\_\/\\\_____\/\\\ ________________\/\\\ ____________      
@@ -153,7 +153,7 @@ contract NP is CORE {
     }
 
     /**
-     * @dev Modify rec.Ipfs1 field
+     * @dev Modify rec.Ipfs1 field with rghHash confirmation
      * @param _idxHash idx of asset to Modify
      * @param _rgtHash rgthash to match in front end
      * @param _Ipfs1a content adressable storage adress part 1
@@ -193,11 +193,13 @@ contract NP is CORE {
      * @param _idxHash idx of asset to Modify
      * @param _exportTo AC target for export
      * @param _addr adress to send asset to
+     * @param _rgtHash rgthash to match in front end
      */
-    function _exportAssetTo(
+    function _exportAssetTo( //DPS:TEST
         bytes32 _idxHash,
         uint32 _exportTo,
-        address _addr
+        address _addr,
+        bytes32 _rgtHash
     ) external nonReentrant whenNotPaused isAuthorized(_idxHash) {
         Record memory rec = getRecord(_idxHash);
         uint8 userType = getCallingUserType(rec.assetClass);
@@ -213,6 +215,10 @@ contract NP is CORE {
         require(
             AC_MGR.isSameRootAC(_exportTo, rec.assetClass) == 170,
             "A:IA: Cannot export AC to new root"
+        );
+        require(
+            rec.rightsHolder == _rgtHash,
+            "NP:MI1: Rightsholder does not match supplied data"
         );
         //^^^^^^^checks^^^^^^^^^
 
