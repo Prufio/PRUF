@@ -1475,11 +1475,11 @@ contract("A_TKN", (accounts) => {
   });
 
   it("Should export asset2", async () => {
-    return NP_NC._exportNC(asset2, { from: account4 });
+    return NP_NC._exportAssetTo(asset2, "1000003", { from: account4 });
   });
 
   it("Should set assetClass 13 switch to 1:1", async () => {
-    return AC_MGR.AdminModAssetClassSwitches("1000004", "1", "1", {
+    return AC_MGR.adminModAssetClassSwitches("1000004", "1", "1", {
       from: account1,
     });
   });
@@ -1639,7 +1639,7 @@ contract("A_TKN", (accounts) => {
   });
 
   it("Should export asset2", async () => {
-    return NP_NC._exportNC(asset2, { from: account4 });
+    return NP_NC._exportAssetTo(asset2, '1000003', { from: account4 });
   });
 
   //14
@@ -2019,7 +2019,7 @@ contract("A_TKN", (accounts) => {
   });
 
   it("Should export asset12 to account2", async () => {
-    return NP.exportAsset(asset12, account2, { from: account2 });
+    return NP._exportAssetTo(asset12, '1000003', account2, { from: account2 });
   });
 
   it("Should retrieve asset12 @newStatus(70(exported)) && +1 N.O.T", async () => {
@@ -2221,7 +2221,7 @@ contract("A_TKN", (accounts) => {
   });
 
   it("Should export asset12(status70)", async () => {
-    return NP_NC._exportNC(asset12, { from: account2 });
+    return NP_NC._exportAssetTo(asset12, "1000001", { from: account2 });
   });
 
   it("Should retrieve asset12 @newAC (root(1)) && @newStatus(exported(70))", async () => {
@@ -2263,7 +2263,7 @@ contract("A_TKN", (accounts) => {
   });
 
   it("Should import asset12 to AC(10)", async () => {
-    return APP.importAsset(asset12, rgt12, "1000001", { from: account2 });
+    return APP.importAsset(asset12, "1000001", { from: account2 });
   });
 
   it("Should retrieve asset12 @newAC(1000001) && +1 FMRcount", async () => {
@@ -2613,7 +2613,7 @@ contract("A_TKN", (accounts) => {
 
   ///
   it("Should export asset13 to account4", async () => {
-    return NP_NC._exportNC(asset13, { from: account4 });
+    return NP_NC._exportNC(asset13, "1000001", { from: account4 });
   });
 
   it("Should retrieve asset13 @newStatus(70(exported))", async () => {
@@ -2875,7 +2875,7 @@ contract("A_TKN", (accounts) => {
   });
 
   it("Should export asset13(status70)", async () => {
-    return NP.exportAsset(asset13, account4, { from: account4 });
+    return NP.exportAsset(asset13, "1000003", account4, { from: account4 });
   });
   ///
 
