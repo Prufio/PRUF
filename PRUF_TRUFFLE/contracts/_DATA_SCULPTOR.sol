@@ -57,7 +57,7 @@ contract SCULPTOR is AccessControl, BASIC{
 
     /*
      * @dev Creates a contract for a new artifact for A_token(unit256(idxHash))
-     * caller must hod the asset token and the AC token
+     * caller must hod the asset token and the node token
      */
     function createArtiifact(bytes32 _idxHash) external isAuthorized(_idxHash) {
         Record memory rec = getRecord( _idxHash);

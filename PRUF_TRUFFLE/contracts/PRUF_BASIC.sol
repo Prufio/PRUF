@@ -271,9 +271,9 @@ abstract contract BASIC is
     }
 
     /**
-     * @dev Get asset class information from AC_manager and return an AC Struct
+     * @dev Get asset class information from AC_manager and return an node Struct
      * @param _assetClass - to retrireve info about
-     * @return entire AC struct (see interfaces for struct definitions)
+     * @return entire node struct (see interfaces for struct definitions)
      */
     function getACinfo(uint32 _assetClass)
         internal

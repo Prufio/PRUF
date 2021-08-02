@@ -50,7 +50,7 @@ contract NP is CORE {
         Record memory rec = getRecord(_idxHash);
         uint8 userType = getCallingUserType(rec.assetClass);
 
-        require((userType > 0) && (userType < 10), "NP:MS: User !auth in AC");
+        require((userType > 0) && (userType < 10), "NP:MS: User !auth in node");
         require(
             (_newAssetStatus != 7) &&
                 (_newAssetStatus != 57) &&
@@ -96,7 +96,7 @@ contract NP is CORE {
     ) external nonReentrant whenNotPaused isAuthorized(_idxHash) {
         Record memory rec = getRecord(_idxHash);
         uint8 userType = getCallingUserType(rec.assetClass);
-        require((userType > 0) && (userType < 10), "NP:SLS: User !auth in AC");
+        require((userType > 0) && (userType < 10), "NP:SLS: User !auth in node");
         require(
             (rec.assetStatus > 49) ||
                 ((_newAssetStatus < 50) && (userType < 5)),
@@ -129,7 +129,7 @@ contract NP is CORE {
         Record memory rec = getRecord(_idxHash);
         uint8 userType = getCallingUserType(rec.assetClass);
 
-        require((userType > 0) && (userType < 10), "NP:DC: User !auth in AC");
+        require((userType > 0) && (userType < 10), "NP:DC: User !auth in node");
         require(
             needsImport(rec.assetStatus) == 0,
             "NP:DC Record in unregistered, exported, or discarded status"
@@ -167,7 +167,7 @@ contract NP is CORE {
     ) external nonReentrant whenNotPaused isAuthorized(_idxHash) {
         Record memory rec = getRecord(_idxHash);
         uint8 userType = getCallingUserType(rec.assetClass);
-        require((userType > 0) && (userType < 10), "NP:MI1: User !auth in AC");
+        require((userType > 0) && (userType < 10), "NP:MI1: User !auth in node");
         require(
             needsImport(rec.assetStatus) == 0,
             "NP:MI1: Record in unregistered, exported, or discarded status"
@@ -189,9 +189,9 @@ contract NP is CORE {
 
     /**
      * @dev Export FROM Custodial - sets asset to status 70 (importable) for export
-     * @dev exportTo - sets asset to status 70 (importable) and defines the AC that the item can be imported into
+     * @dev exportTo - sets asset to status 70 (importable) and defines the node that the item can be imported into
      * @param _idxHash idx of asset to Modify
-     * @param _exportTo AC target for export
+     * @param _exportTo node target for export
      * @param _addr adress to send asset to
      * @param _rgtHash rgthash to match in front end
      */
@@ -206,7 +206,7 @@ contract NP is CORE {
 
         require(
             (userType > 0) && (userType < 10),
-            "NP:EA: user not auth in AC"
+            "NP:EA: user not auth in node"
         );
         require( // require transferrable (51) status
             (rec.assetStatus == 51) || (rec.assetStatus == 70),
@@ -214,7 +214,7 @@ contract NP is CORE {
         );
         require(
             NODE_MGR.isSameRootAC(_exportTo, rec.assetClass) == 170,
-            "A:IA: Cannot export AC to new root"
+            "A:IA: Cannot export node to new root"
         );
         require(
             rec.rightsHolder == _rgtHash,

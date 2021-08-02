@@ -148,15 +148,15 @@ contract APP_NC is CORE {
         require(rec.assetStatus == 70, "ANC:IA: Asset !exported");
         require( //DPS:TEST NEW
             _newAssetClass == rec.int32temp,
-            "ANC:IA: Cannot change AC except to specified AC"
+            "ANC:IA: Cannot change node except to specified node"
         );
         require( 
             NODE_MGR.isSameRootAC(_newAssetClass, rec.assetClass) == 170,
-            "ANC:IA: Cannot change AC to new root"
+            "ANC:IA: Cannot change node to new root"
         );
         require(
             (node_info.managementType < 6),
-            "ANC:IA: Contract does not support management types > 5 or AC is locked"
+            "ANC:IA: Contract does not support management types > 5 or node is locked"
         );
         if (
             (node_info.managementType == 1) ||
@@ -165,7 +165,7 @@ contract APP_NC is CORE {
         ) {
             require(
                 (NODE_TKN.ownerOf(_newAssetClass) == _msgSender()),
-                "ANC:IA: Cannot create asset in AC mgmt type 1||2||5 - caller does not hold AC token"
+                "ANC:IA: Cannot create asset in node mgmt type 1||2||5 - caller does not hold node token"
             );
         } else if (node_info.managementType == 3) {
             require(

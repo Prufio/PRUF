@@ -95,7 +95,7 @@ contract WRAP is CORE {
         );
         require( //DPS:TEST NEW
             (node_info.managementType < 6),
-            "ANC:IA: Contract does not support management types > 5 or AC is locked"
+            "ANC:IA: Contract does not support management types > 5 or node is locked"
         );
         if (    //DPS:TEST NEW
             (node_info.managementType == 1) ||
@@ -104,7 +104,7 @@ contract WRAP is CORE {
         ) {
             require(    //DPS:TEST NEW
                 (NODE_TKN.ownerOf(_assetClass) == _msgSender()),
-                "ANC:IA: Cannot create asset in AC mgmt type 1||2||5 - caller does not hold AC token"
+                "ANC:IA: Cannot create asset in node mgmt type 1||2||5 - caller does not hold node token"
             );
         } else if (node_info.managementType == 3) {
             require(    //DPS:TEST NEW
@@ -229,7 +229,7 @@ contract WRAP is CORE {
         );
         require(
             (node_info.managementType < 6),
-            "W:CR: Contract does not support management types > 5 or AC is locked"
+            "W:CR: Contract does not support management types > 5 or node is locked"
         );
         if (
             (node_info.managementType == 1) ||
@@ -238,7 +238,7 @@ contract WRAP is CORE {
         ) {
             require(
                 (NODE_TKN.ownerOf(_assetClass) == _msgSender()),
-                "W:CR: Cannot create asset in AC mgmt type 1||2||5 - caller does not hold AC token"
+                "W:CR: Cannot create asset in node mgmt type 1||2||5 - caller does not hold node token"
             );
         } else if (node_info.managementType == 3) {
             require(

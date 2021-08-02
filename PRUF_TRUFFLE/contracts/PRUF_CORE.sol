@@ -54,7 +54,7 @@ contract CORE is BASIC {
         );
         require(
             (node_info.managementType < 6),
-            "C:CR:Contract does not support management types > 5 or AC is locked"
+            "C:CR:Contract does not support management types > 5 or node is locked"
         );
         if (node_info.custodyType != 1) {
             if (
@@ -64,7 +64,7 @@ contract CORE is BASIC {
             ) {
                 require(
                     (NODE_TKN.ownerOf(_assetClass) == _msgSender()),
-                    "C:CR:Cannot create asset in AC mgmt type 1||2||5 - caller does not hold AC token"
+                    "C:CR:Cannot create asset in node mgmt type 1||2||5 - caller does not hold node token"
                 );
             } else if (node_info.managementType == 3) {
                 require(
@@ -139,7 +139,7 @@ contract CORE is BASIC {
 
         require(
             (node_info.managementType < 6),
-            "C:CR:Contract does not support management types > 5 or AC is locked"
+            "C:CR:Contract does not support management types > 5 or node is locked"
         );
         if ((node_info.custodyType != 1) && (node_info.managementType == 5)) {
             require(

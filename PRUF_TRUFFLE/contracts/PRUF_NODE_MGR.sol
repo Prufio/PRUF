@@ -11,7 +11,7 @@ __/\\\\\\\\\\\\\ _____/\\\\\\\\\ _______/\\__/\\ ___/\\\\\\\\\\\\\\\
          *-------------------------------------------------------------------*/
 
 /**-----------------------------------------------------------------
- * Contract for minting and managing AC Nodes
+ * Contract for minting and managing node Nodes
  *
  * STATEMENT OF TERMS OF SERVICE (TOS):
  * User agrees not to intentionally claim any namespace that is a recognized or registered brand name, trade mark,
@@ -42,7 +42,7 @@ contract NODE_MGR is BASIC {
     uint256 public node_price = 200000 ether;
     uint32 private constant startingDiscount = 9500; // Purchased nodes start with 95% profit share
     mapping(uint32 => mapping(uint16 => Costs)) private cost; // Cost per function by asset class => Costs struct (see PRUF_INTERFACES for struct definitions)
-    mapping(uint32 => Node) private node_data; // AC info database asset class to AC struct (see PRUF_INTERFACES for struct definitions)
+    mapping(uint32 => Node) private node_data; // node info database asset class to node struct (see PRUF_INTERFACES for struct definitions)
     mapping(string => uint32) private node_index; //name to asset class resolution map
     mapping(bytes32 => mapping(uint32 => uint8)) private registeredUsers; // Authorized recorder database by asset class, by address hash
     mapping(uint8 => uint8) private validStorageProviders; //storageProvider -> status (enabled or disabled)
@@ -51,7 +51,7 @@ contract NODE_MGR is BASIC {
 
     constructor() {
         _setupRole(NODE_MINTER_ROLE, _msgSender());
-        node_index[""] = 4294967295; //points the blank string name to AC 4294967295 to make "" owned
+        node_index[""] = 4294967295; //points the blank string name to node 4294967295 to make "" owned
     }
 
     /**
@@ -82,7 +82,7 @@ contract NODE_MGR is BASIC {
     //--------------------------------------------ADMIN only Functions--------------------------
 
     /**
-     * @dev Set pricing for AC Nodes
+     * @dev Set pricing for Nodes
      * @param newACprice - cost per assetClass (18 decimals)
      */
     function adminSetACpricing(uint256 newACprice) external isContractAdmin {
@@ -98,7 +98,7 @@ contract NODE_MGR is BASIC {
     /**
      * !! to be used with great caution !!
      * This potentially breaks decentralization and must eventually be given over to some kind of governance contract.
-     * @dev Increases (but cannot decrease) price share for a given AC
+     * @dev Increases (but cannot decrease) price share for a given node
      * @param _assetClass - assetClass in which cost share is being modified
      * @param _newDiscount - discount(1% == 100, 10000 == max)
      */
@@ -108,7 +108,7 @@ contract NODE_MGR is BASIC {
     {
         require(
             (node_data[_assetClass].assetClassRoot != 0),
-            "ACM:AIS: AC !exist"
+            "ACM:AIS: node !exist"
         );
         require(
             _newDiscount >= node_data[_assetClass].discount,
@@ -180,12 +180,12 @@ contract NODE_MGR is BASIC {
     ) external isContractAdmin {
         require(
             node_index[_name] == _assetClassSource,
-            "ACM:TN: Name not in source AC"
+            "ACM:TN: Name not in source node"
         ); //source AC_Name must match name given
 
         require(
-            (node_data[_assetClassDest].CAS1 == B320xF_), //dest AC must have CAS1 set to 0xFFFF.....
-            "ACM:TN: Destination AC not prepared for name transfer"
+            (node_data[_assetClassDest].CAS1 == B320xF_), //dest node must have CAS1 set to 0xFFFF.....
+            "ACM:TN: Destination node not prepared for name transfer"
         );
         //^^^^^^^checks^^^^^^^^^
 
@@ -222,7 +222,7 @@ contract NODE_MGR is BASIC {
         Node memory _ac = node_data[_assetClassRoot];
         uint256 tokenId = uint256(_assetClass);
 
-        require((tokenId != 0), "ACM:AMAC: AC = 0"); //sanity check inputs
+        require((tokenId != 0), "ACM:AMAC: node = 0"); //sanity check inputs
         require(_discount <= 10000, "ACM:AMAC: Discount > 10000 (100%)");
         require( //has valid root
             (_ac.custodyType == 3) || (_assetClassRoot == _assetClass),
@@ -244,7 +244,7 @@ contract NODE_MGR is BASIC {
     }
 
     /**
-     * @dev Modifies AC.switches bitwise (see ASSET CLASS option switches in ZZ_PRUF_DOCS)
+     * @dev Modifies node.switches bitwise (see ASSET CLASS option switches in ZZ_PRUF_DOCS)
      * @param _assetClass - assetClass to be modified
      * @param _position - uint position of bit to be modified
      * @param _bit - switch - 1 or 0 (true or false)
@@ -338,7 +338,7 @@ contract NODE_MGR is BASIC {
     ) external nonReentrant returns (uint256) {
         require(
             nodeTokenIndex < 4294000000,
-            "ACM:PACN: Only 4294000000 AC tokens allowed"
+            "ACM:PACN: Only 4294000000 node tokens allowed"
         );
         require(
             (ID_TKN.balanceOf(_msgSender()) == 1),
@@ -348,7 +348,7 @@ contract NODE_MGR is BASIC {
 
         nodeTokenIndex++;
 
-        address rootPaymentAddress = cost[_assetClassRoot][1].paymentAddress; //payment for upgrade goes to root AC payment address specified for service (1)
+        address rootPaymentAddress = cost[_assetClassRoot][1].paymentAddress; //payment for upgrade goes to root node payment address specified for service (1)
 
         //mint an asset class token to _msgSender(), at tokenID nodeTokenIndex, with URI = root asset Class #
 
@@ -408,7 +408,7 @@ contract NODE_MGR is BASIC {
     }
 
     /**
-     * @dev Modifies an AC Node name for its exclusive namespace
+     * @dev Modifies an node Node name for its exclusive namespace
      * @param _assetClass - assetClass being modified
      * @param _name - updated name associated with assetClass (unique)
      */
@@ -417,7 +417,7 @@ contract NODE_MGR is BASIC {
         whenNotPaused
         isACtokenHolderOfClass(_assetClass)
     {
-        require( //should pass if name is same as old name or name is unassigned. Should fail if name is assigned to other AC
+        require( //should pass if name is same as old name or name is unassigned. Should fail if name is assigned to other node
             (node_index[_name] == 0) || //name is unassigned
                 (keccak256(abi.encodePacked(_name)) == //name is same as old name
                     (keccak256(abi.encodePacked(node_data[_assetClass].name)))),
@@ -433,7 +433,7 @@ contract NODE_MGR is BASIC {
     }
 
     /** CTS:EXAMINE Need 2 IPFS fields
-     * @dev Modifies an AC Node IPFS data pointer
+     * @dev Modifies an node Node IPFS data pointer
      * @param _assetClass - assetClass being modified
      * @param _CAS1 - any external data attatched to assetClass 1/2
      * @param _CAS2 - any external data attatched to assetClass 2/2
@@ -490,7 +490,7 @@ contract NODE_MGR is BASIC {
     ) external whenNotPaused isACtokenHolderOfClass(_assetClass) {
         require(
             node_data[_assetClass].managementType == 255,
-            "ACM:UACI: Immutable AC data already set"
+            "ACM:UACI: Immutable node data already set"
         );
         require(
             _managementType != 255,
@@ -541,7 +541,7 @@ contract NODE_MGR is BASIC {
     }
 
     /**
-     * @dev get an AC Node User type for a specified address
+     * @dev get an node Node User type for a specified address
      * @param _userHash - hash of selected user
      * @param _assetClass - assetClass of query
      *
@@ -706,7 +706,7 @@ contract NODE_MGR is BASIC {
     }
 
     /**
-     * @dev return current AC token index and price
+     * @dev return current node token index and price
      *
      * @return {
          nodeTokenIndex: current token number
@@ -740,7 +740,7 @@ contract NODE_MGR is BASIC {
         returns (Invoice memory)
     {
         Node memory node_info = node_data[_assetClass];
-        require(node_info.assetClassRoot != 0, "ACM:GSC: AC !exist");
+        require(node_info.assetClassRoot != 0, "ACM:GSC: node !exist");
 
         require(_service != 0, "ACM:GSC: Service type = 0");
         //^^^^^^^checks^^^^^^^^^
@@ -788,7 +788,7 @@ contract NODE_MGR is BASIC {
         Node memory _RootNodeData = node_data[_AC.assetClassRoot];
         uint256 tokenId = uint256(_assetClass);
 
-        require(tokenId != 0, "ACM:CAC: AC = 0"); //sanity check inputs
+        require(tokenId != 0, "ACM:CAC: node = 0"); //sanity check inputs
         require(_AC.discount <= 10000, "ACM:CAC: Discount > 10000 (100%)");
         require( //_ac.managementType is a valid type or explicitly unset (255)
             (validManagementTypes[_AC.managementType] > 0) ||
@@ -813,13 +813,13 @@ contract NODE_MGR is BASIC {
         if (_RootNodeData.managementType != 0) {
             require( //holds root token if root is restricted
                 (NODE_TKN.ownerOf(_AC.assetClassRoot) == _msgSender()),
-                "ACM:CAC: Restricted from creating AC's in this root - caller !hold root token"
+                "ACM:CAC: Restricted from creating node in this root - caller !hold root token"
             );
         }
-        require(node_index[_AC.name] == 0, "ACM:CAC: AC name exists");
+        require(node_index[_AC.name] == 0, "ACM:CAC: node name exists");
         require(
             (node_data[_assetClass].assetClassRoot == 0),
-            "ACM:CAC: AC already exists"
+            "ACM:CAC: node already exists"
         );
         //^^^^^^^checks^^^^^^^^^
 

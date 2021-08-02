@@ -324,7 +324,7 @@ contract Helper2 is Ownable, BASIC {
     // uint256 ACTHprice;
 
     /*
-    struct AC {
+    struct node {
     //Struct for holding and manipulating assetClass data
     string name; // NameHash for assetClass
     uint32 assetClassRoot; // asset type root (bycyles - USA Bicycles)

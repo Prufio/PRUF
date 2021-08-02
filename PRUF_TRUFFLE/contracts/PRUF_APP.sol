@@ -53,7 +53,7 @@ contract APP is CORE {
     ) external nonReentrant whenNotPaused {
         uint8 userType = getCallingUserType(_assetClass);
 
-        require((userType > 0) && (userType < 10), "A:NR: User !auth in AC");
+        require((userType > 0) && (userType < 10), "A:NR: User !auth in node");
         require(userType < 5, "A:NR: User !authorized to create records");
         //^^^^^^^checks^^^^^^^^^
 
@@ -63,7 +63,7 @@ contract APP is CORE {
     }
 
     /**
-     * @dev import Rercord, must match export AC //DPS:TEST
+     * @dev import Rercord, must match export node //DPS:TEST
      * posessor is considered to be owner. sets rec.assetStatus to 0.
      * @param _idxHash - hash of asset information created by frontend inputs
      * @param _newAssetClass - assetClass the asset will be imported into
@@ -78,7 +78,7 @@ contract APP is CORE {
         uint8 userType = getCallingUserType(_newAssetClass);
 
         require(userType < 3, "A:IA: User !authorized to import assets");
-        require((userType > 0) && (userType < 10), "A:IA: User !auth in AC");
+        require((userType > 0) && (userType < 10), "A:IA: User !auth in node");
         require(
             (rec.assetStatus == 5) ||
                 (rec.assetStatus == 55) ||
@@ -87,11 +87,11 @@ contract APP is CORE {
         );
         require(
             _newAssetClass == rec.int32temp,
-            "A:IA: new AC must match AC authorized for import"
+            "A:IA: new node must match node authorized for import"
         );
         require(
             NODE_MGR.isSameRootAC(_newAssetClass, rec.assetClass) == 170,
-            "ANC:IA: Cannot change AC to new root"
+            "ANC:IA: Cannot change node to new root"
         );
         //^^^^^^^checks^^^^^^^^^
 
@@ -119,7 +119,7 @@ contract APP is CORE {
         Record memory rec = getRecord(_idxHash);
         uint8 userType = getCallingUserType(rec.assetClass);
 
-        require(userType == 1, "A:FMR: User !auth in AC");
+        require(userType == 1, "A:FMR: User !auth in node");
         require(
             isLostOrStolen(rec.assetStatus) == 0,
             "A:FMR: Asset marked L/S"
@@ -161,7 +161,7 @@ contract APP is CORE {
         Record memory rec = getRecord(_idxHash);
         uint8 userType = getCallingUserType(rec.assetClass);
 
-        require((userType > 0) && (userType < 10), "A:TA: User not auth in AC");
+        require((userType > 0) && (userType < 10), "A:TA: User not auth in node");
         require(
             (rec.assetStatus > 49) || (userType < 5),
             "A:TA:Only usertype < 5 can change status < 50"
@@ -208,7 +208,7 @@ contract APP is CORE {
         Record memory rec = getRecord(_idxHash);
         uint8 userType = getCallingUserType(rec.assetClass);
 
-        require((userType > 0) && (userType < 10), "A:I2: User not auth in AC");
+        require((userType > 0) && (userType < 10), "A:I2: User not auth in node");
 
         require( //impossible? to reach
             needsImport(rec.assetStatus) == 0,

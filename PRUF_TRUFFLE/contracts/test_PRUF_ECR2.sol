@@ -57,7 +57,7 @@ contract ECR2 is ECR_CORE {
 
         require(
             contractInfo.contractType > 0,
-            "E:SE: This contract not authorized for specified AC"
+            "E:SE: This contract not authorized for specified node"
         );
         require((rec.assetClass != 0), "E:SE: Record does not exist");
         require(
@@ -135,7 +135,7 @@ contract ECR2 is ECR_CORE {
 
         require(
             contractInfo.contractType > 0,
-            "E:EE: This contract not authorized for specified AC"
+            "E:EE: This contract not authorized for specified node"
         );
 
         require((rec.assetClass != 0), "E:EE: Record does not exist");

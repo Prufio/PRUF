@@ -13,7 +13,7 @@ _________\/// _____________\/// _______\/// __\///////// __\/// _____________
 /*-----------------------------------------------------------------
  *  TO DO
  * PIP IS VULNERABLE TO THE DARK FOREST, needs to be completely rewritten
- * PIP NEEDS TO BE DONE BY A SERVER USING AUTH MINTER IN AC ADDRESS, USING IPFS FOR DATA STORAGE.
+ * PIP NEEDS TO BE DONE BY A SERVER USING AUTH MINTER IN node ADDRESS, USING IPFS FOR DATA STORAGE.
  * Perhaps this can work with some kind of ZK auth? Doubt?
  *
  *---------------------------------------------------------------*/
@@ -49,8 +49,8 @@ contract PIP is CORE {
         uint8 userType = getCallingUserType(_assetClass);
 
         require(
-            (NODE_TKN.ownerOf(_assetClass) == _msgSender()), //_msgSender() is AC token holder
-            "P:MPA: Caller does not hold AC token"
+            (NODE_TKN.ownerOf(_assetClass) == _msgSender()), //_msgSender() is node token holder
+            "P:MPA: Caller does not hold node token"
         );
         require(userType == 10, "P:MPA: User not authorized to mint PIP assets");
         require(

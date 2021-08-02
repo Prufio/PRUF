@@ -85,11 +85,11 @@ contract RCLR is ECR_CORE, CORE {
         require(rec.assetStatus == 60, "R:R: Asset not discarded");
         require(
             NODE_MGR.isSameRootAC(_assetClass, rec.assetClass) == 170,
-            "R:R: !Change AC to new root"
+            "R:R: !Change node to new root"
         );
         require(
             (node_info.managementType < 6),
-            "R:R: Contract does not support management types > 5 or AC is locked"
+            "R:R: Contract does not support management types > 5 or node is locked"
         );
         if (
             (node_info.managementType == 1) ||
@@ -98,7 +98,7 @@ contract RCLR is ECR_CORE, CORE {
         ) {
             require(
                 (NODE_TKN.ownerOf(_assetClass) == _msgSender()),
-                "R:R: Cannot create asset in AC mgmt type 1||2||5 - caller does not hold AC token"
+                "R:R: Cannot create asset in node mgmt type 1||2||5 - caller does not hold node token"
             );
         } else if (node_info.managementType == 3) {
             require(

@@ -71,9 +71,9 @@ contract NP_NC is CORE {
     }
 
     /**
-     * @dev exportTo - sets asset to status 70 (importable) and defines the AC that the item can be imported into
+     * @dev exportTo - sets asset to status 70 (importable) and defines the node that the item can be imported into
      * @param _idxHash idx of asset to Modify
-     * @param _exportTo AC target for export
+     * @param _exportTo node target for export
      */
     //DPS:TEST
     function _exportAssetTo(bytes32 _idxHash, uint32 _exportTo)
@@ -90,22 +90,22 @@ contract NP_NC is CORE {
         );
         require(
             NODE_MGR.isSameRootAC(_exportTo, rec.assetClass) == 170,
-            "NPNC:EXT: Cannot change AC to new root"
+            "NPNC:EXT: Cannot change node to new root"
         );
         require(
             (node_info.managementType < 6),
-            "NPNC:EXT: Contract does not support management types > 5 or AC is locked"
+            "NPNC:EXT: Contract does not support management types > 5 or node is locked"
         );
         if ((node_info.managementType == 1) || (node_info.managementType == 5)) {
-            require( //holds AC token if AC is restricted --------DPS:TEST ---- NEW
+            require( //holds node token if node is restricted --------DPS:TEST ---- NEW
                 (NODE_TKN.ownerOf(rec.assetClass) == _msgSender()),
-                "NPNC:EXT: Restricted from exporting assets from this AC - does not hold ACtoken"
+                "NPNC:EXT: Restricted from exporting assets from this node - does not hold ACtoken"
             );
         }
         //^^^^^^^checks^^^^^^^^^
 
         rec.assetStatus = 70; // Set status to 70 (exported)
-        rec.int32temp = _exportTo; //set permitted AC for import
+        rec.int32temp = _exportTo; //set permitted node for import
         //^^^^^^^effects^^^^^^^^^
 
         writeRecord(_idxHash, rec);

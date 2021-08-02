@@ -53,10 +53,10 @@ contract STOR is AccessControl, ReentrancyGuard, Pausable {
     bytes32 public constant B320xF_ =
         0xFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFF;
 
-    mapping(string => mapping(uint32 => uint8)) internal contractInfo; // name=>AC=>authorization level
+    mapping(string => mapping(uint32 => uint8)) internal contractInfo; // name=>node=>authorization level
     mapping(address => string) private contractAddressToName; // Authorized contract addresses, indexed by address, with auth level 0-255
     mapping(string => address) private contractNameToAddress; // Authorized contract addresses, indexed by name
-    mapping(uint256 => DefaultContract) private defaultContracts; //default contracts for AC creation
+    mapping(uint256 => DefaultContract) private defaultContracts; //default contracts for node creation
     mapping(bytes32 => Record) private database; // Main Data Storage
 
     //address private NODE_TKN_Address;
@@ -230,7 +230,7 @@ contract STOR is AccessControl, ReentrancyGuard, Pausable {
         uint32 _assetClass,
         uint8 _contractAuthLevel
     ) external isContractAdmin {
-        require(_assetClass == 0, "S:AC: AC !=0");
+        require(_assetClass == 0, "S:node: node !=0");
         //^^^^^^^checks^^^^^^^^^
 
         contractInfo[_contractName][_assetClass] = _contractAuthLevel; //does not pose a partial record overwrite risk
@@ -398,7 +398,7 @@ contract STOR is AccessControl, ReentrancyGuard, Pausable {
         );
         require(database[_idxHash].assetClass == 0, "S:NR: Rec already exists");
         require(_rgtHash != 0, "S:NR: RGT = 0");
-        require(_assetClass != 0, "S:NR: AC = 0");
+        require(_assetClass != 0, "S:NR: node = 0");
         //^^^^^^^checks^^^^^^^^^
 
         Record memory rec;
@@ -502,10 +502,10 @@ contract STOR is AccessControl, ReentrancyGuard, Pausable {
     {
         Record memory rec = database[_idxHash];
 
-        require(_newAssetClass != 0, "S:CAC: Cannot set AC=0");
+        require(_newAssetClass != 0, "S:CAC: Cannot set node=0");
         require( //require new assetClass is in the same root as old assetClass
             NODE_MGR.isSameRootAC(_newAssetClass, rec.assetClass) == 170,
-            "S:CAC: Cannot mod AC to new root"
+            "S:CAC: Cannot mod node to new root"
         );
         require(isLostOrStolen(rec.assetStatus) == 0, "S:CAC: L/S asset"); //asset cannot be in lost or stolen status
         require(isTransferred(rec.assetStatus) == 0, "S:CAC: Txfrd asset"); //asset cannot be in transferred status
@@ -515,7 +515,7 @@ contract STOR is AccessControl, ReentrancyGuard, Pausable {
         database[_idxHash] = rec;
         //^^^^^^^effects^^^^^^^^^
 
-        //emit REPORT("UPD AC", _idxHash);
+        //emit REPORT("UPD node", _idxHash);
         //^^^^^^^interactions^^^^^^^^^
     }
 

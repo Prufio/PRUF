@@ -56,7 +56,7 @@ struct Node {
     uint8 storageProvider; // Storage Provider
     uint32 discount; // price sharing //internal admin                                      //immutable
     address referenceAddress; // Used with wrap / decorate
-    uint8 switches; // bitwise Flags for AC control                          //immutable
+    uint8 switches; // bitwise Flags for node control                          //immutable
     bytes32 CAS1; //content adressable storage pointer 1
     bytes32 CAS2; //content adressable storage pointer 1
 }
@@ -1068,7 +1068,7 @@ interface NODE_MGR_Interface {
      * !! -------- to be used with great caution and only as a result of community governance action -----------
      * Designed to remedy brand infringement issues. This breaks decentralization and must eventually be given
      * over to some kind of governance contract.
-     * Destination AC must have IPFS Set to 0xFFF.....
+     * Destination node must have IPFS Set to 0xFFF.....
      *
      */
     function transferName(
@@ -1098,7 +1098,7 @@ interface NODE_MGR_Interface {
      * @dev Mints asset class token and creates an assetClass. Mints to @address
      * Requires that:
      *  name is unuiqe
-     *  AC is not provisioned with a root (proxy for not yet registered)
+     *  node is not provisioned with a root (proxy for not yet registered)
      *  that ACtoken does not exist
      *  _discount 10000 = 100 percent price share , cannot exceed
      */
@@ -1140,7 +1140,7 @@ interface NODE_MGR_Interface {
 
     /*
      * @dev Modifies an assetClass
-     * Sets a new AC name. Asset Classes cannot be moved to a new root or custody type.
+     * Sets a new node name. Asset Classes cannot be moved to a new root or custody type.
      * Requires that:
      *  caller holds ACtoken
      *  name is unuiqe or same as old name
@@ -1149,7 +1149,7 @@ interface NODE_MGR_Interface {
 
     /*
      * @dev Modifies an assetClass
-     * Sets a new AC IPFS Address. Asset Classes cannot be moved to a new root or custody type.
+     * Sets a new node IPFS Address. Asset Classes cannot be moved to a new root or custody type.
      * Requires that:
      *  caller holds ACtoken
      */
@@ -1271,7 +1271,7 @@ interface NODE_MGR_Interface {
         returns (uint32);
 
     /*
-     * @dev return current AC token index pointer
+     * @dev return current node token index pointer
      */
     function currentACpricingInfo() external view returns (uint256, uint256);
 

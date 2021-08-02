@@ -58,8 +58,8 @@ contract ECR is ECR_CORE {
         ContractDataHash memory contractInfo =
             getContractInfo(address(this), rec.assetClass);
 
-        require(contractInfo.contractType > 0, "E:SE: Contract not auth in AC");
-        require((userType > 0) && (userType < 10), "E:SE: User not auth in AC");
+        require(contractInfo.contractType > 0, "E:SE: Contract not auth in node");
+        require((userType > 0) && (userType < 10), "E:SE: User not auth in node");
         require( //REDUNDANT, THROWS IN SAFEMATH CTS:PREFERRED
             (escrowTime >= block.timestamp),
             "E:SE: Escrow must be set to a time in the future"
@@ -100,8 +100,8 @@ contract ECR is ECR_CORE {
         ContractDataHash memory contractInfo =
             getContractInfo(address(this), rec.assetClass);
 
-        require(contractInfo.contractType > 0, "E:SEED: Contract not auth in AC");
-        require((userType > 0) && (userType < 10), "E:SEED: User not auth in AC");
+        require(contractInfo.contractType > 0, "E:SEED: Contract not auth in node");
+        require((userType > 0) && (userType < 10), "E:SEED: User not auth in node");
         require( //REDUNDANT, THROWS IN SAFEMATH CTS:PREFERRED
             (escrowTime >= block.timestamp),
             "E:SEED: Escrow must be set to a time in the future"
@@ -157,8 +157,8 @@ contract ECR is ECR_CORE {
         uint8 userType = getCallingUserType(rec.assetClass);
         bytes32 ownerHash = ECR_MGR.retrieveEscrowOwner(_idxHash);
 
-        require(contractInfo.contractType > 0, "E:EE: Contract not auth in AC");
-        require((userType > 0) && (userType < 10), "E:EE: User not auth in AC");
+        require(contractInfo.contractType > 0, "E:EE: Contract not auth in node");
+        require((userType > 0) && (userType < 10), "E:EE: User not auth in node");
         require( //STATE UNREACHABLE CTS:PREFERRED
             (rec.assetStatus != 60),
             "E:EE: Asset is discarded, use Recycle"

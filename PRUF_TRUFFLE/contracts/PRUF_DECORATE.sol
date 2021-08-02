@@ -80,7 +80,7 @@ contract DECORATE is CORE {
         );
         require( //DPS:TEST NEW
             (node_info.managementType < 6),
-            "ANC:IA: Contract does not support management types > 5 or AC is locked"
+            "ANC:IA: Contract does not support management types > 5 or node is locked"
         );
         if (    //DPS:TEST NEW
             (node_info.managementType == 1) ||
@@ -89,7 +89,7 @@ contract DECORATE is CORE {
         ) {
             require(    //DPS:TEST NEW
                 (NODE_TKN.ownerOf(_assetClass) == _msgSender()),
-                "ANC:IA: Cannot create asset in AC mgmt type 1||2||5 - caller does not hold AC token"
+                "ANC:IA: Cannot create asset in node mgmt type 1||2||5 - caller does not hold node token"
             );
         } else if (node_info.managementType == 3) {
             require(    //DPS:TEST NEW
@@ -323,7 +323,7 @@ contract DECORATE is CORE {
         );
         require(
             (node_info.managementType < 6),
-            "C:CR:Contract does not support management types > 5 or AC is locked"
+            "C:CR:Contract does not support management types > 5 or node is locked"
         );
         if ((node_info.custodyType != 1) && (node_info.managementType == 5)) {
             require(
@@ -422,12 +422,12 @@ contract DECORATE is CORE {
         );
         require(
             (node_info.managementType < 6),
-            "C:CR:Contract does not support management types > 5 or AC is locked"
+            "C:CR:Contract does not support management types > 5 or node is locked"
         );
         if ((node_info.managementType == 1) || (node_info.managementType == 5)) {
             require(
                 (NODE_TKN.ownerOf(rec.assetClass) == _msgSender()),
-                "D:E: Restricted from exporting assets from this AC - does not hold ACtoken"
+                "D:E: Restricted from exporting assets from this node - does not hold ACtoken"
             );
         }
         require(
@@ -442,12 +442,12 @@ contract DECORATE is CORE {
         );
         require(
             NODE_MGR.isSameRootAC(_exportTo, rec.assetClass) == 170,
-            "D:E: Cannot change AC to new root"
+            "D:E: Cannot change node to new root"
         );
         //^^^^^^^checks^^^^^^^^^
 
         rec.assetStatus = 70; // Set status to 70 (exported)
-        rec.int32temp = _exportTo; //set permitted AC for import
+        rec.int32temp = _exportTo; //set permitted node for import
         //^^^^^^^effects^^^^^^^^^
 
         writeRecord(idxHash, rec);
@@ -485,20 +485,20 @@ contract DECORATE is CORE {
                 (node_info.referenceAddress == address(0))) &&
                 ((newAC_info.referenceAddress == _tokenContract) ||
                     (newAC_info.referenceAddress == address(0))),
-            "D:I:Asset class extended data must be '0' or ERC721 contract address" //if AC has a contract erc721address specified, it must match
+            "D:I:Asset class extended data must be '0' or ERC721 contract address" //if node has a contract erc721address specified, it must match
         );
         require(rec.assetStatus == 70, "D:I: Asset not exported");
         require(
             NODE_MGR.isSameRootAC(_newAssetClass, rec.assetClass) == 170,
-            "D:I:Cannot change AC to new root"
+            "D:I:Cannot change node to new root"
         );
         require( //DPS:TEST NEW
             _newAssetClass == rec.int32temp,
-            "ANC:IA: Cannot change AC except to specified AC"
+            "ANC:IA: Cannot change node except to specified node"
         );
         require( //DPS:TEST NEW
             (newAC_info.managementType < 6),
-            "D:I: Contract does not support management types > 5 or AC is locked"
+            "D:I: Contract does not support management types > 5 or node is locked"
         );
         if (
             (newAC_info.managementType == 1) ||
@@ -507,7 +507,7 @@ contract DECORATE is CORE {
         ) {
             require( //DPS:TEST NEW
                 (NODE_TKN.ownerOf(_newAssetClass) == _msgSender()),
-                "D:I: Cannot create asset in AC mgmt type 1||2||5 - caller does not hold AC token"
+                "D:I: Cannot create asset in node mgmt type 1||2||5 - caller does not hold node token"
             );
         } else if (newAC_info.managementType == 3) {
             require( //DPS:TEST NEW
@@ -562,7 +562,7 @@ contract DECORATE is CORE {
         );
         require(
             (node_info.managementType < 5),
-            "D:CRO:Contract does not support management types > 5 or AC is locked"
+            "D:CRO:Contract does not support management types > 5 or node is locked"
         );
         if (
             (node_info.managementType == 1) ||
@@ -571,7 +571,7 @@ contract DECORATE is CORE {
         ) {
             require(
                 (NODE_TKN.ownerOf(_assetClass) == _msgSender()),
-                "D:CRO:Cannot create asset in AC mgmt type 1||2||5 - caller does not hold AC token"
+                "D:CRO:Cannot create asset in node mgmt type 1||2||5 - caller does not hold node token"
             );
         } else if (node_info.managementType == 3) {
             require(

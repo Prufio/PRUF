@@ -66,7 +66,7 @@ contract ECR_NC is ECR_CORE {
 
         require(
             contractInfo.contractType > 0,
-            "ENC:SE:Contract not auth for AC"
+            "ENC:SE:Contract not auth for node"
         );
         require(
             rec.assetStatus > 49,
@@ -116,7 +116,7 @@ contract ECR_NC is ECR_CORE {
 
         require(
             contractInfo.contractType > 0,
-            "ENC:EE:Contract not auth for AC"
+            "ENC:EE:Contract not auth for node"
         );
         require(
             (rec.assetStatus == 50) || (rec.assetStatus == 56),

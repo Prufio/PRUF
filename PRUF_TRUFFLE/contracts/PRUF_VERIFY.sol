@@ -78,9 +78,9 @@ contract VERIFY is CORE {
 
     /*
      * @dev:authorize an asset token _idxHash as a wallet token in verify
-     *      the caller must posess AC token for given asset Class (reverts)
-     *      AC must be VERIFY custody type (4) (reverts)
-     *      AC of Asset token to be approved must be of the same assetClass as the held ACtoken (reverts)
+     *      the caller must posess node token for given asset Class (reverts)
+     *      node must be VERIFY custody type (4) (reverts)
+     *      node of Asset token to be approved must be of the same assetClass as the held ACtoken (reverts)
      */
     function authorizeTokenForVerify(
         bytes32 _idxHash,
@@ -92,12 +92,12 @@ contract VERIFY is CORE {
 
         require(
             NODE_TKN.ownerOf(uint256(_assetClass)) == _msgSender(),
-            "VFY:ATFV: caller does not hold AC token"
+            "VFY:ATFV: caller does not hold node token"
         );
-        require(ACdata.custodyType == 4, "VFY:ATFV: AC not VERIFY enabled");
+        require(ACdata.custodyType == 4, "VFY:ATFV: node not VERIFY enabled");
         require(
             rec.assetClass == _assetClass,
-            "VFY:ATFV: AC of Asset Token does not match supplied AC "
+            "VFY:ATFV: node of Asset Token does not match supplied node "
         );
         //^^^^^^^checks^^^^^^^^^
 
@@ -275,7 +275,7 @@ contract VERIFY is CORE {
 
     /*
      * @dev:Mark an item with a status (see docs at top of contract)
-     *      the caller must posess Asset token, must pass isAuth and user must be auth as a 3 in that AC (reverts)
+     *      the caller must posess Asset token, must pass isAuth and user must be auth as a 3 in that node (reverts)
      *      item must be listed as "in" the callers wallet (reverts)
      *      Other than that, unrestricted power to change ststus of held items
      */
@@ -328,8 +328,8 @@ contract VERIFY is CORE {
  *  TESTING
  *
 /*-----------------------------------------------------------------
- Make a 2 Verify AC's (custody type 4)
- make 2 assets in each new AC (1,2) (3,4)
+ Make a 2 Verify node's (custody type 4)
+ make 2 assets in each new node (1,2) (3,4)
  verify all 4 Assets as pruf verify wallets | 1 = 1 | 2 = 1 | 3 = 2 | 4 = 3 |
 
  put an item A in wallet 1 (should succeed)

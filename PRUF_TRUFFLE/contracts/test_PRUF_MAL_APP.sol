@@ -58,7 +58,7 @@ contract MAL_APP is CORE_MAL {
 
         // require(
         //     contractInfo.contractType > 0,
-        //     "A:NR: This contract not authorized for specified AC"
+        //     "A:NR: This contract not authorized for specified node"
         // );
         // require(
         //     (userType > 0) && (userType < 10),
@@ -104,7 +104,7 @@ contract MAL_APP is CORE_MAL {
 
         // require(
         //     contractInfo.contractType > 0,
-        //     "NP:MS: This contract not authorized for specified AC"
+        //     "NP:MS: This contract not authorized for specified node"
         // );
         // require(
         //     (userType > 0) && (userType < 10),
@@ -180,7 +180,7 @@ contract MAL_APP is CORE_MAL {
 
         // require(
         //     contractInfo.contractType > 0,
-        //     "NP:SLS: This contract not authorized for specified AC"
+        //     "NP:SLS: This contract not authorized for specified node"
         // );
         // require(
         //     (rec.rightsHolder != 0),
@@ -245,7 +245,7 @@ contract MAL_APP is CORE_MAL {
 
         // require(
         //     contractInfo.contractType > 0,
-        //     "NP:DC: This contract not authorized for specified AC"
+        //     "NP:DC: This contract not authorized for specified node"
         // );
 
         // require(
@@ -311,7 +311,7 @@ contract MAL_APP is CORE_MAL {
 
     //     // require(
     //     //     contractInfo.contractType > 0,
-    //     //     "NP:DC: This contract not authorized for specified AC"
+    //     //     "NP:DC: This contract not authorized for specified node"
     //     // );
 
     //     // require(
@@ -370,7 +370,7 @@ contract MAL_APP is CORE_MAL {
 
     //     // require(
     //     //     contractInfo.contractType > 0,
-    //     //     "NP:DC: This contract not authorized for specified AC"
+    //     //     "NP:DC: This contract not authorized for specified node"
     //     // );
 
     //     // require(
@@ -431,7 +431,7 @@ contract MAL_APP is CORE_MAL {
 
         // require(
         //     contractInfo.contractType > 0,
-        //     "NP:MI1: This contract not authorized for specified AC"
+        //     "NP:MI1: This contract not authorized for specified node"
         // );
         // require(
         //     (rec.rightsHolder != 0),
@@ -488,7 +488,7 @@ contract MAL_APP is CORE_MAL {
 
         // require(
         //     contractInfo.contractType > 0,
-        //     "A:I2: This contract not authorized for specified AC"
+        //     "A:I2: This contract not authorized for specified node"
         // );
         // require(
         //     (rec.rightsHolder != 0),
@@ -550,7 +550,7 @@ contract MAL_APP is CORE_MAL {
 
         // require(
         //     contractInfo.contractType > 0,
-        //     "A:MS: This contract not authorized for specified AC"
+        //     "A:MS: This contract not authorized for specified node"
         // );
         // require(
         //     (userType > 0) && (userType < 10),
@@ -595,7 +595,7 @@ contract MAL_APP is CORE_MAL {
 
         // require(                                                                   //Storage IA mod takes care of it?
         //     contractInfo.contractType > 0,
-        //     "E:SE: This contract not authorized for specified AC"
+        //     "E:SE: This contract not authorized for specified node"
         // );
         // require((rec.assetClass != 0), "E:SE: Record does not exist");
         // require(
@@ -663,7 +663,7 @@ contract MAL_APP is CORE_MAL {
 
         // require(                                                                   //Storage IA mod takes care of it?
         //     contractInfo.contractType > 0,
-        //     "E:SE: This contract not authorized for specified AC"
+        //     "E:SE: This contract not authorized for specified node"
         // );
         // require((rec.assetClass != 0), "E:SE: Record does not exist");
         // require(
@@ -730,7 +730,7 @@ contract MAL_APP is CORE_MAL {
 
         // require(                                                                 //Storage IA mod takes care of it?
         //     contractInfo.contractType > 0,
-        //     "E:EE: This contract not authorized for specified AC"
+        //     "E:EE: This contract not authorized for specified node"
         // );
 
         // require((rec.assetClass != 0), "E:EE: Record does not exist");
@@ -776,7 +776,7 @@ contract MAL_APP is CORE_MAL {
 
         // require(                                                                 //Storage IA mod takes care of it?
         //     contractInfo.contractType > 0,
-        //     "E:EE: This contract not authorized for specified AC"
+        //     "E:EE: This contract not authorized for specified node"
         // );
 
         // require((rec.assetClass != 0), "E:EE: Record does not exist");

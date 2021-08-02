@@ -129,7 +129,7 @@ contract NODE_TKN is
         uint256 _tokenId,
         string calldata _tokenURI
     ) external isMinter nonReentrant {
-        require(_exists(_tokenId), "ACT:RM: AC !exist");
+        require(_exists(_tokenId), "ACT:RM: node !exist");
         require(
             keccak256(abi.encodePacked(_tokenURI)) ==
                 keccak256(abi.encodePacked(tokenURI(_tokenId))),
