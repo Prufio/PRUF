@@ -59,8 +59,8 @@ contract STOR is AccessControl, ReentrancyGuard, Pausable {
     mapping(uint256 => DefaultContract) private defaultContracts; //default contracts for AC creation
     mapping(bytes32 => Record) private database; // Main Data Storage
 
-    //address private AC_TKN_Address;
-    AC_TKN_Interface private AC_TKN; //erc721_token prototype initialization
+    //address private NODE_TKN_Address;
+    NODE_TKN_Interface private AC_TKN; //erc721_token prototype initialization
 
     //address internal NODE_MGR_Address;
     NODE_MGR_Interface internal NODE_MGR; // Set up external contract interface for NODE_MGR
@@ -237,7 +237,7 @@ contract STOR is AccessControl, ReentrancyGuard, Pausable {
         contractNameToAddress[_contractName] = _contractAddr;
         contractAddressToName[_contractAddr] = _contractName;
 
-        AC_TKN = AC_TKN_Interface(contractNameToAddress["AC_TKN"]); // cheaper than keking to check
+        AC_TKN = NODE_TKN_Interface(contractNameToAddress["AC_TKN"]); // cheaper than keking to check
         NODE_MGR = NODE_MGR_Interface(contractNameToAddress["NODE_MGR"]); // cheaper than keking to check
         //^^^^^^^effects^^^^^^^^^
 

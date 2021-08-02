@@ -459,7 +459,7 @@ interface UTIL_TKN_Interface {
     import "./Imports/access/Ownable.sol";
     import "./Imports/utils/ReentrancyGuard.sol";
  */
-interface AC_TKN_Interface {
+interface NODE_TKN_Interface {
     /*
      * @dev Mints assetClass token, must be isContractAdmin
      */
