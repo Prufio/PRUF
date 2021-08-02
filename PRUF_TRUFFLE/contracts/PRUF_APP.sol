@@ -90,7 +90,7 @@ contract APP is CORE {
             "A:IA: new node must match node authorized for import"
         );
         require(
-            NODE_MGR.isSameRootAC(_newNode, rec.node) == 170,
+            NODE_MGR.isSameRootNode(_newNode, rec.node) == 170,
             "ANC:IA: Cannot change node to new root"
         );
         //^^^^^^^checks^^^^^^^^^

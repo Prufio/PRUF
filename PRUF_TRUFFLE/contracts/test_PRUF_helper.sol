@@ -327,7 +327,7 @@ contract Helper is Ownable, BASIC {
     struct node {
     //Struct for holding and manipulating node data
     string name; // NameHash for node
-    uint32 assetClassRoot; // asset type root (bycyles - USA Bicycles)
+    uint32 nodeRoot; // asset type root (bycyles - USA Bicycles)
     uint8 custodyType; // custodial or noncustodial, special asset types
     uint32 discount; // price sharing
     uint8 storageProvider; // Future Use

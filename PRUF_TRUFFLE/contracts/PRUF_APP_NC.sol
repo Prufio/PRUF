@@ -151,7 +151,7 @@ contract APP_NC is CORE {
             "ANC:IA: Cannot change node except to specified node"
         );
         require( 
-            NODE_MGR.isSameRootAC(_newNode, rec.node) == 170,
+            NODE_MGR.isSameRootNode(_newNode, rec.node) == 170,
             "ANC:IA: Cannot change node to new root"
         );
         require(

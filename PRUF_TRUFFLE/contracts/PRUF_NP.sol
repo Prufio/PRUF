@@ -213,7 +213,7 @@ contract NP is CORE {
             "NP:EA: Asset status must be 51 to export"
         );
         require(
-            NODE_MGR.isSameRootAC(_exportTo, rec.node) == 170,
+            NODE_MGR.isSameRootNode(_exportTo, rec.node) == 170,
             "A:IA: Cannot export node to new root"
         );
         require(

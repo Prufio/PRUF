@@ -1072,8 +1072,8 @@ interface NODE_MGR_Interface {
      *
      */
     function transferName(
-        uint32 _assetClass_source,
-        uint32 _assetClass_dest,
+        uint32 _fromNode,
+        uint32 _toNode,
         string calldata _name
     ) external;
 
@@ -1252,7 +1252,7 @@ interface NODE_MGR_Interface {
     /*
      * @dev compare the root of two asset classes
      */
-    function isSameRootAC(uint32 _assetClass1, uint32 _assetClass2)
+    function isSameRootNode(uint32 _node1, uint32 _node2)
         external
         view
         returns (uint8);

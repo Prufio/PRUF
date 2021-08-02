@@ -503,7 +503,7 @@ contract STOR is AccessControl, ReentrancyGuard, Pausable {
 
         require(_newNode != 0, "S:CAC: Cannot set node=0");
         require( //require new node is in the same root as old node
-            NODE_MGR.isSameRootAC(_newNode, rec.node) == 170,
+            NODE_MGR.isSameRootNode(_newNode, rec.node) == 170,
             "S:CAC: Cannot mod node to new root"
         );
         require(isLostOrStolen(rec.assetStatus) == 0, "S:CAC: L/S asset"); //asset cannot be in lost or stolen status

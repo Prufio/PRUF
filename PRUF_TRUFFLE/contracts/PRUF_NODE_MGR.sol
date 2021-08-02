@@ -650,20 +650,20 @@ contract NODE_MGR is BASIC {
 
     /**
      * @dev verify the root of two asset classes are equal
-     * @param _assetClass1 - first node associated with query
-     * @param _assetClass2 - second node associated with query
+     * @param _node1 - first node associated with query
+     * @param _node2 - second node associated with query
      *
      * @return 170 or 0 (true or false)
      */
-    function isSameRootAC(uint32 _assetClass1, uint32 _assetClass2)
+    function isSameRootNode(uint32 _node1, uint32 _node2)
         external
         view
         returns (uint8)
     {
         //^^^^^^^checks^^^^^^^^^
         if (
-            node_data[_assetClass1].nodeRoot ==
-            node_data[_assetClass2].nodeRoot
+            node_data[_node1].nodeRoot ==
+            node_data[_node2].nodeRoot
         ) {
             return uint8(170);
         } else {
@@ -691,7 +691,7 @@ contract NODE_MGR is BASIC {
 
     /**
      * @dev Retrieve node @ AC_name
-     * @param _name - name of node for assetClassNumber query
+     * @param _name - name of node for nodeNumber query
      *
      * @return node number @ _name
      */
@@ -837,7 +837,7 @@ contract NODE_MGR is BASIC {
         NODE_TKN.mintACToken(
             _recipientAddress,
             tokenId,
-            "pruf.io/assetClassToken"
+            "pruf.io/nodeToken"
         );
         //^^^^^^^interactions^^^^^^^^^
     }

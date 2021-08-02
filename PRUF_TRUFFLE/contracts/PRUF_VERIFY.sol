@@ -231,7 +231,7 @@ contract VERIFY is CORE {
 
         require(items[_itemHash] == _idxHash, "VFY:T: Item not held by caller"); //check to see if held by _idxHash
         require( //must move to same node root
-            NODE_MGR.isSameRootAC(rec.node, newRec.node) == 170,
+            NODE_MGR.isSameRootNode(rec.node, newRec.node) == 170,
             "VFY:T: Wallet is not in the same node root"
         );
         require(
