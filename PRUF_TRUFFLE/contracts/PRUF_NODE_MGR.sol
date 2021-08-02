@@ -71,7 +71,7 @@ contract NODE_MGR is BASIC {
      * @dev Verify caller holds ACtoken of passed node
      * @param _node - node in which caller is queried for ownership
      */
-    modifier isACtokenHolderOfClass(uint32 _node) {
+    modifier isNodeHoldertokenHolderOfClass(uint32 _node) {
         require(
             (NODE_TKN.ownerOf(_node) == _msgSender()),
             "ACM:MOD-IACTHoC: _msgSender() not authorized in Node"
@@ -102,7 +102,7 @@ contract NODE_MGR is BASIC {
      * @param _node - node in which cost share is being modified
      * @param _newDiscount - discount(1% == 100, 10000 == max)
      */
-    function adminIncreaseShare(uint32 _node, uint32 _newDiscount)
+    function increaseShare(uint32 _node, uint32 _newDiscount)
         external
         isContractAdmin
     {
@@ -127,7 +127,7 @@ contract NODE_MGR is BASIC {
      * @param _storageProvider - uint position for storage provider
      * @param _status - uint position for custody type status
      */
-    function adminSetStorageProviders(uint8 _storageProvider, uint8 _status)
+    function setStorageProviders(uint8 _storageProvider, uint8 _status)
         external
         isContractAdmin
     {
@@ -141,7 +141,7 @@ contract NODE_MGR is BASIC {
      * @param _managementType - uint position for management type
      * @param _status - uint position for custody type status
      */
-    function adminSetManagementTypes(uint8 _managementType, uint8 _status)
+    function setManagementTypes(uint8 _managementType, uint8 _status)
         external
         isContractAdmin
     {
@@ -155,7 +155,7 @@ contract NODE_MGR is BASIC {
      * @param _custodyType - uint position for custody type
      * @param _status - uint position for custody type status
      */
-    function adminSetCustodyTypes(uint8 _custodyType, uint8 _status)
+    function setCustodyTypes(uint8 _custodyType, uint8 _status)
         external
         isContractAdmin
     {
@@ -390,7 +390,7 @@ contract NODE_MGR is BASIC {
         uint32 _node,
         bytes32 _addrHash,
         uint8 _userType
-    ) external whenNotPaused isACtokenHolderOfClass(_node) {
+    ) external whenNotPaused isNodeHoldertokenHolderOfClass(_node) {
         //^^^^^^^checks^^^^^^^^^
 
         registeredUsers[_addrHash][_node] = _userType;
@@ -415,7 +415,7 @@ contract NODE_MGR is BASIC {
     function updateACname(uint32 _node, string calldata _name)
         external
         whenNotPaused
-        isACtokenHolderOfClass(_node)
+        isNodeHoldertokenHolderOfClass(_node)
     {
         require( //should pass if name is same as old name or name is unassigned. Should fail if name is assigned to other node
             (node_index[_name] == 0) || //name is unassigned
@@ -432,8 +432,8 @@ contract NODE_MGR is BASIC {
         //^^^^^^^effects^^^^^^^^^
     }
 
-    /** CTS:EXAMINE Need 2 IPFS fields
-     * @dev Modifies an node Node IPFS data pointer
+    /** CTS:EXAMINE Need 2 content adressable storage fields
+     * @dev Modifies an node Node content adressable storage data pointer
      * @param _node - node being modified
      * @param _CAS1 - any external data attatched to node 1/2
      * @param _CAS2 - any external data attatched to node 2/2
@@ -442,7 +442,7 @@ contract NODE_MGR is BASIC {
         uint32 _node,
         bytes32 _CAS1,
         bytes32 _CAS2
-    ) external whenNotPaused isACtokenHolderOfClass(_node) {
+    ) external whenNotPaused isNodeHoldertokenHolderOfClass(_node) {
         require(
             getSwitchAt(_node, 1) == 0,
             "ACM:UNC: CAS for node is locked and cannot be written"
@@ -465,7 +465,7 @@ contract NODE_MGR is BASIC {
         uint16 _service,
         uint256 _serviceCost,
         address _paymentAddress
-    ) external whenNotPaused isACtokenHolderOfClass(_node) {
+    ) external whenNotPaused isNodeHoldertokenHolderOfClass(_node) {
         //^^^^^^^checks^^^^^^^^^
 
         cost[_node][_service].serviceCost = _serviceCost;
@@ -487,7 +487,7 @@ contract NODE_MGR is BASIC {
         uint8 _managementType,
         uint8 _storageProvider,
         address _refAddress
-    ) external whenNotPaused isACtokenHolderOfClass(_node) {
+    ) external whenNotPaused isNodeHoldertokenHolderOfClass(_node) {
         require(
             node_data[_node].managementType == 255,
             "ACM:UACI: Immutable node data already set"

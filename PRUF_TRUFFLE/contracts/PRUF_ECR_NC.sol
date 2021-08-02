@@ -70,7 +70,7 @@ contract ECR_NC is ECR_CORE {
         );
         require(
             rec.assetStatus > 49,
-            "ENC:SE: Only ACadmin authorized user can change status < 50" //CTS:EXAMINE is this still evident?
+            "ENC:SE: Only node admin authorized user can change status < 50" //CTS:EXAMINE is this still evident?
         );
         require( //REDUNDANT, THROWS CTS:PREFERRED
             escrowTime >= block.timestamp,

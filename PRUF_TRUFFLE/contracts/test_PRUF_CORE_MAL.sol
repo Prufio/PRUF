@@ -108,26 +108,26 @@ contract CORE_MAL is BASIC {
     }
 
     /*
-     * @dev Write an Ipfs Record to Storage @ idxHash
+     * @dev Write an content adressable storage Record to Storage @ idxHash
      */
-    function writeRecordIpfs1(bytes32 _idxHash, Record memory _rec)
+    function writeMutableStorage(bytes32 _idxHash, Record memory _rec)
         internal
         whenNotPaused
     {
         //^^^^^^^Checks^^^^^^^^^
 
-        STOR.modifyIpfs1(_idxHash, _rec.Ipfs1a, _rec.Ipfs1b); // Send data to storage
+        STOR.modifyMutableStorage(_idxHash, _rec.mutableStorage1, _rec.mutableStorage2); // Send data to storage
         //^^^^^^^interactions^^^^^^^^^
     }
 
-    function writeRecordIpfs2(bytes32 _idxHash, Record memory _rec)
+    function writeNonMutableStorage(bytes32 _idxHash, Record memory _rec)
         internal
         whenNotPaused
     //isAuthorized(_idxHash)
     {
         //^^^^^^^checks^^^^^^^^^
 
-        STOR.modifyIpfs2(_idxHash, _rec.Ipfs2a, _rec.Ipfs2b); // Send data to storage
+        STOR.modifyNonMutableStorage(_idxHash, _rec.nonMutableStorage1, _rec.nonMutableStorage2); // Send data to storage
         //^^^^^^^interactions^^^^^^^^^
     }
 

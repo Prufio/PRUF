@@ -47,7 +47,7 @@ contract SCULPTOR is AccessControl, BASIC{
     // /*
     //  * @dev Verify caller holds ACtoken of passed node
     //  */
-    // modifier isACtokenHolderOfClass(uint32 _node) {
+    // modifier isNodeHoldertokenHolderOfClass(uint32 _node) {
     //     require(
     //         (NODE_TKN.ownerOf(_node) == _msgSender()),
     //         "ACM:MOD-IACTHoC:_msgSender() not authorized in node"
@@ -67,11 +67,11 @@ contract SCULPTOR is AccessControl, BASIC{
         );
 
         /*  create a new contract for the arifiact
-        *   map the address to the artifact's asset token (set the token IPFS2 to contract address of artifact)
+        *   map the address to the artifact's asset token (set the token NonMutableStorage to contract address of artifact)
         *       
         *   artifact has structure:
         *       key 0 : EOF key number (5 in this case)
-        *       key 1 : IPFS2 reference (IPFS file to reference - should ideally be the same hex file, less keys 0,1,and X))
+        *       key 1 : NonMutableStorage reference (content adressable storage file to reference - should ideally be the same hex file, less keys 0,1,and X))
         *       key 2 : start of Data
         *       key 3 : Data
         *       key 4 : end of Data

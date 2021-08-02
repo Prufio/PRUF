@@ -334,7 +334,7 @@ contract Helper is Ownable, BASIC {
     uint8 switches; // Future Use
     uint8 byte3; // Future Use
     address referenceAddress; // Used with wrap / decorate
-    bytes32 IPFS; //IPFS data for defining idxHash creation attribute fields
+    bytes32 content adressable storage; //content adressable storage data for defining idxHash creation attribute fields
 }
     */
 }

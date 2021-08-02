@@ -410,12 +410,12 @@ contract MAL_APP is CORE_MAL {
     // }
 
     /*
-     * @dev Modify **Record**.Ipfs1a with confirmation
+     * @dev Modify **Record**.mutableStorage1 with confirmation
      */
-    function _modIpfs1(
+    function _modMutableStorage(
         bytes32 _idxHash,
-        bytes32 _Ipfs1a,
-        bytes32 _Ipfs1b
+        bytes32 _mutableStorage1,
+        bytes32 _mutableStorage2
     )
         external
         // nonReentrant
@@ -441,7 +441,7 @@ contract MAL_APP is CORE_MAL {
         //     (userType > 0) && (userType < 10),
         //     "NP:MI1: User not authorized to modify records in specified node"
         // );
-        // require(rec.Ipfs1a != _IpfsHash, "NP:MI1: New data same as old");
+        // require(rec.mutableStorage1 != _content adressable storageHash, "NP:MI1: New data same as old");
 
         // require(
         //     isEscrow(rec.assetStatus) == 0,
@@ -457,21 +457,21 @@ contract MAL_APP is CORE_MAL {
         // );
         //^^^^^^^checks^^^^^^^^^
 
-        rec.Ipfs1a = _Ipfs1a;
-        rec.Ipfs1b = _Ipfs1b;
+        rec.mutableStorage1 = _mutableStorage1;
+        rec.mutableStorage2 = _mutableStorage2;
         //^^^^^^^effects^^^^^^^^^
 
-        writeRecordIpfs1(_idxHash, rec);
+        writeMutableStorage(_idxHash, rec);
         //^^^^^^^interactions^^^^^^^^^
     }
 
     /*
-     * @dev Modify **Record**.Ipfs2 with confirmation
+     * @dev Modify **Record**.NonMutableStorage with confirmation
      */
-    function addIpfs2Note(
+    function addNonMutableNote(
         bytes32 _idxHash,
-        bytes32 _Ipfs2a,
-        bytes32 _Ipfs2b
+        bytes32 _nonMutableStorage1,
+        bytes32 _nonMutableStorage2
     )
         external
         
@@ -511,8 +511,8 @@ contract MAL_APP is CORE_MAL {
         //     "A:FMR: Asset needs re-imported"
         // );
         // require(
-        //     rec.Ipfs2a == 0,
-        //     "A:I2: Ipfs2a has data already. Overwrite not permitted"
+        //     rec.nonMutableStorage1 == 0,
+        //     "A:I2: nonMutableStorage1 has data already. Overwrite not permitted"
         // );
         // require(
         //     rec.rightsHolder == _rgtHash,
@@ -520,11 +520,11 @@ contract MAL_APP is CORE_MAL {
         // );
         //^^^^^^^checks^^^^^^^^^
 
-        rec.Ipfs2a = _Ipfs2a;
-        rec.Ipfs2b = _Ipfs2b;
+        rec.nonMutableStorage1 = _nonMutableStorage1;
+        rec.nonMutableStorage2 = _nonMutableStorage2;
         //^^^^^^^effects^^^^^^^^^
 
-        writeRecordIpfs2(_idxHash, rec);
+        writeNonMutableStorage(_idxHash, rec);
 
         deductServiceCosts(rec.node, 3);
         //^^^^^^^interactions^^^^^^^^^

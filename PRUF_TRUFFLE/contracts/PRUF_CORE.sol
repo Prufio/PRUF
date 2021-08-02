@@ -126,11 +126,11 @@ contract CORE is BASIC {
     }
 
     /**
-     * @dev Write an Ipfs1 Record to Storage @ idxHash (SETTER)
+     * @dev Write an Mutable Storage Record to Storage @ idxHash (SETTER)
      * @param _idxHash - Asset Index
      * @param _rec - a Record Struct (see interfaces for struct definitions)
      */
-    function writeRecordIpfs1(bytes32 _idxHash, Record memory _rec)
+    function writeMutableStorage(bytes32 _idxHash, Record memory _rec)
         internal
         virtual
         whenNotPaused
@@ -144,28 +144,28 @@ contract CORE is BASIC {
         if ((node_info.custodyType != 1) && (node_info.managementType == 5)) {
             require(
                 (NODE_TKN.ownerOf(_rec.node) == _msgSender()),
-                "C:WIPFS1: Caller must hold node (management type 5)"
+                "C:WRMS: Caller must hold node (management type 5)"
             );
         }
         //^^^^^^^Checks^^^^^^^^^
 
-        STOR.modifyIpfs1(_idxHash, _rec.Ipfs1a, _rec.Ipfs1b); // Send IPFS1 data to storage
+        STOR.modifyMutableStorage(_idxHash, _rec.mutableStorage1, _rec.mutableStorage2); // Send MutableStorage data to storage
         //^^^^^^^interactions^^^^^^^^^
     }
 
     /**
-     * @dev Write an Ipfs2 Record to Storage @ idxHash (SETTER)
+     * @dev Write an NonMutableStorage Record to Storage @ idxHash (SETTER)
      * @param _idxHash - Asset Index
      * @param _rec - a Record Struct (see interfaces for struct definitions)
      */
-    function writeRecordIpfs2(bytes32 _idxHash, Record memory _rec)
+    function writeNonMutableStorage(bytes32 _idxHash, Record memory _rec)
         internal
         virtual
         whenNotPaused
     {
         //^^^^^^^checks^^^^^^^^^
 
-        STOR.modifyIpfs2(_idxHash, _rec.Ipfs2a, _rec.Ipfs2b); // Send IPFS2 data to storage
+        STOR.modifyNonMutableStorage(_idxHash, _rec.nonMutableStorage1, _rec.nonMutableStorage2); // Send NonMutableStorage data to storage
         //^^^^^^^interactions^^^^^^^^^
     }
 

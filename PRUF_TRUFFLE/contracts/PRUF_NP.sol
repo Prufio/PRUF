@@ -153,17 +153,17 @@ contract NP is CORE {
     }
 
     /**
-     * @dev Modify rec.Ipfs1 field with rghHash confirmation
+     * @dev Modify rec.MutableStorage field with rghHash confirmation
      * @param _idxHash idx of asset to Modify
      * @param _rgtHash rgthash to match in front end
-     * @param _Ipfs1a content adressable storage adress part 1
-     * @param _Ipfs1b content adressable storage adress part 2
+     * @param _mutableStorage1 content adressable storage adress part 1
+     * @param _mutableStorage2 content adressable storage adress part 2
      */
-    function _modIpfs1(
+    function _modMutableStorage(
         bytes32 _idxHash,
         bytes32 _rgtHash,
-        bytes32 _Ipfs1a,
-        bytes32 _Ipfs1b
+        bytes32 _mutableStorage1,
+        bytes32 _mutableStorage2
     ) external nonReentrant whenNotPaused isAuthorized(_idxHash) {
         Record memory rec = getRecord(_idxHash);
         uint8 userType = getCallingUserType(rec.node);
@@ -178,11 +178,11 @@ contract NP is CORE {
         );
         //^^^^^^^checks^^^^^^^^^
 
-        rec.Ipfs1a = _Ipfs1a;
-        rec.Ipfs1b = _Ipfs1b;
+        rec.mutableStorage1 = _mutableStorage1;
+        rec.mutableStorage2 = _mutableStorage2;
         //^^^^^^^effects^^^^^^^^^
 
-        writeRecordIpfs1(_idxHash, rec);
+        writeMutableStorage(_idxHash, rec);
         deductServiceCosts(rec.node, 8);
         //^^^^^^^interactions^^^^^^^^^
     }

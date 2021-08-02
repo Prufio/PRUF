@@ -14,7 +14,7 @@ __/\\\\\\\\\\\\\ _____/\\\\\\\\\ _______/\\__/\\ ___/\\\\\\\\\\\\\\\
  *  TO DO
  * //CTS:EXAMINE all params/returns defined in comments global
  * //CTS:EXAMINE ACTH->NTH global
- * //CTS:EXAMINE IPFS1/IPFS2->storProvider/storProvider2 global
+ * //CTS:EXAMINE MutableStorage/NonMutableStorage->storProvider/storProvider2 global
  * //CTS:EXAMINE idxHash->assetId global
  * //CTS:EXAMINE NP name change
  * //CTS:EXAMINE Run through interfaces, make sure is up to date.
@@ -669,15 +669,15 @@ contract STOR is AccessControl, ReentrancyGuard, Pausable {
     }
 
     /**
-     * @dev Modify record Ipfs1 data
+     * @dev Modify record MutableStorage data
      * @param  _idxHash - record asset ID
-     * @param  _Ipfs1a - first half of content adressable storage location
-     * @param  _Ipfs1b - second half of content adressable storage location
+     * @param  _mutableStorage1 - first half of content adressable storage location
+     * @param  _mutableStorage2 - second half of content adressable storage location
      */
-    function modifyIpfs1(
+    function modifyMutableStorage(
         bytes32 _idxHash,
-        bytes32 _Ipfs1a,
-        bytes32 _Ipfs1b
+        bytes32 _mutableStorage1,
+        bytes32 _mutableStorage2
     )
         external
         nonReentrant
@@ -690,13 +690,13 @@ contract STOR is AccessControl, ReentrancyGuard, Pausable {
         require(isTransferred(rec.assetStatus) == 0, "S:MI1: Txfrd asset"); //STAT UNREACHABLE
 
         require(
-            (rec.Ipfs1a != _Ipfs1a) || (rec.Ipfs1b != _Ipfs1b),
+            (rec.mutableStorage1 != _mutableStorage1) || (rec.mutableStorage2 != _mutableStorage2),
             "S:MI1: New value = old"
         );
         //^^^^^^^checks^^^^^^^^^
 
-        rec.Ipfs1a = _Ipfs1a;
-        rec.Ipfs1b = _Ipfs1b;
+        rec.mutableStorage1 = _mutableStorage1;
+        rec.mutableStorage2 = _mutableStorage2;
 
         database[_idxHash] = rec;
         //^^^^^^^effects^^^^^^^^^
@@ -705,15 +705,15 @@ contract STOR is AccessControl, ReentrancyGuard, Pausable {
     }
 
     /**
-     * @dev Modify record Ipfs1 data
+     * @dev Modify NonMutableStorage data
      * @param _idxHash - record asset ID
-     * @param _Ipfs2a - first half of content adressable storage location
-     * @param _Ipfs2b - second half of content adressable storage location
+     * @param _nonMutableStorage1 - first half of content adressable storage location
+     * @param _nonMutableStorage2 - second half of content adressable storage location
      */
-    function modifyIpfs2(
+    function modifyNonMutableStorage(
         bytes32 _idxHash,
-        bytes32 _Ipfs2a,
-        bytes32 _Ipfs2b
+        bytes32 _nonMutableStorage1,
+        bytes32 _nonMutableStorage2
     )
         external
         nonReentrant
@@ -723,18 +723,18 @@ contract STOR is AccessControl, ReentrancyGuard, Pausable {
         notEscrow(_idxHash) // asset must not be held in escrow status
     {
         Record memory rec = database[_idxHash];
-        require(isLostOrStolen(rec.assetStatus) == 0, "S:MI2: L/S asset"); //asset cannot be in lost or stolen status
-        require(isTransferred(rec.assetStatus) == 0, "S:MI2: Txfrd. asset"); //asset cannot be in transferred status
+        require(isLostOrStolen(rec.assetStatus) == 0, "S:MNMS: L/S asset"); //asset cannot be in lost or stolen status
+        require(isTransferred(rec.assetStatus) == 0, "S:MNMS: Txfrd. asset"); //asset cannot be in transferred status
 
         require(
-            ((rec.Ipfs2a == 0) && (rec.Ipfs2b == 0)) ||
+            ((rec.nonMutableStorage1 == 0) && (rec.nonMutableStorage2 == 0)) ||
                 (rec.assetStatus == 201),
-            "S:MI2: Cannot overwrite I2"
-        ); //IPFS2 record is immutable after first write unless status 201 is set (Storage provider has died)
+            "S:MNMS: Cannot overwrite NM Storage"
+        ); //NonMutableStorage record is immutable after first write unless status 201 is set (Storage provider has died)
         //^^^^^^^checks^^^^^^^^^
 
-        rec.Ipfs2a = _Ipfs2a;
-        rec.Ipfs2b = _Ipfs2b;
+        rec.nonMutableStorage1 = _nonMutableStorage1;
+        rec.nonMutableStorage2 = _nonMutableStorage2;
 
         database[_idxHash] = rec;
         //^^^^^^^effects^^^^^^^^^
@@ -767,10 +767,10 @@ contract STOR is AccessControl, ReentrancyGuard, Pausable {
                 rec.node,
                 rec.countDown,
                 rec.countDownStart,
-                rec.Ipfs1a,
-                rec.Ipfs1b,
-                rec.Ipfs2a,
-                rec.Ipfs2b,
+                rec.mutableStorage1,
+                rec.mutableStorage2,
+                rec.nonMutableStorage1,
+                rec.nonMutableStorage2,
      */
     function retrieveShortRecord(bytes32 _idxHash)
         external
@@ -796,10 +796,10 @@ contract STOR is AccessControl, ReentrancyGuard, Pausable {
             rec.node,
             rec.countDown,
             rec.int32temp,
-            rec.Ipfs1a,
-            rec.Ipfs1b,
-            rec.Ipfs2a,
-            rec.Ipfs2b,
+            rec.mutableStorage1,
+            rec.mutableStorage2,
+            rec.nonMutableStorage1,
+            rec.nonMutableStorage2,
             rec.numberOfTransfers
         );
         //^^^^^^^interactions^^^^^^^^^
