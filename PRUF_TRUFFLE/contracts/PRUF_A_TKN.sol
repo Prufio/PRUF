@@ -72,7 +72,7 @@ contract A_TKN is
     STOR_Interface internal STOR;
     RCLR_Interface internal RCLR;
     NODE_MGR_Interface internal NODE_MGR;
-    NODE_TKN_Interface internal AC_TKN;
+    NODE_TKN_Interface internal NODE_TKN;
 
     bytes32 public constant B320xF_ =
         0xFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFF;
@@ -176,8 +176,8 @@ contract A_TKN is
         NODE_MGR_Address = STOR.resolveContractAddress("NODE_MGR");
         NODE_MGR = NODE_MGR_Interface(NODE_MGR_Address);
 
-        NODE_TKN_Address = STOR.resolveContractAddress("AC_TKN");
-        AC_TKN = NODE_TKN_Interface(NODE_TKN_Address);
+        NODE_TKN_Address = STOR.resolveContractAddress("NODE_TKN");
+        NODE_TKN = NODE_TKN_Interface(NODE_TKN_Address);
         //^^^^^^^effects^^^^^^^^^
     }
 

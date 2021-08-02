@@ -453,7 +453,7 @@ interface UTIL_TKN_Interface {
 
 //------------------------------------------------------------------------------------------------
 /*
- * @dev Interface for AC_TKN
+ * @dev Interface for NODE_TKN
  * INHERIANCE:
     import "./Imports/token/ERC721/ERC721.sol";
     import "./Imports/access/Ownable.sol";
@@ -583,7 +583,7 @@ interface NODE_TKN_Interface {
 
 //------------------------------------------------------------------------------------------------
 /*
- * @dev Interface for AC_TKN
+ * @dev Interface for NODE_TKN
  * INHERIANCE:
     import "./Imports/token/ERC721/ERC721.sol";
     import "./Imports/access/Ownable.sol";
