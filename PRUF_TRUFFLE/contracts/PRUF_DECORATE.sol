@@ -474,17 +474,17 @@ contract DECORATE is CORE {
         bytes32 idxHash = keccak256(abi.encodePacked(_tokenID, _tokenContract));
         Record memory rec = getRecord(idxHash);
         Node memory node_info =getNodeinfo(rec.node);
-        Node memory newAC_info =getNodeinfo(_newNode);
+        Node memory newNodeInfo =getNodeinfo(_newNode);
 
         require(
-            (node_info.custodyType == 5) && (newAC_info.custodyType == 5), //only allow import of other wrappers
+            (node_info.custodyType == 5) && (newNodeInfo.custodyType == 5), //only allow import of other wrappers
             "D:I:Node.custodyType != 5 & record must exist"
         );
         require(
             ((node_info.referenceAddress == _tokenContract) ||
                 (node_info.referenceAddress == address(0))) &&
-                ((newAC_info.referenceAddress == _tokenContract) ||
-                    (newAC_info.referenceAddress == address(0))),
+                ((newNodeInfo.referenceAddress == _tokenContract) ||
+                    (newNodeInfo.referenceAddress == address(0))),
             "D:I:Node extended data must be '0' or ERC721 contract address" //if node has a contract erc721address specified, it must match
         );
         require(rec.assetStatus == 70, "D:I: Asset not exported");
@@ -497,19 +497,19 @@ contract DECORATE is CORE {
             "ANC:IA: Cannot change node except to specified node"
         );
         require( //DPS:TEST NEW
-            (newAC_info.managementType < 6),
+            (newNodeInfo.managementType < 6),
             "D:I: Contract does not support management types > 5 or node is locked"
         );
         if (
-            (newAC_info.managementType == 1) ||
-            (newAC_info.managementType == 2) ||
-            (newAC_info.managementType == 5)
+            (newNodeInfo.managementType == 1) ||
+            (newNodeInfo.managementType == 2) ||
+            (newNodeInfo.managementType == 5)
         ) {
             require( //DPS:TEST NEW
                 (NODE_TKN.ownerOf(_newNode) == _msgSender()),
                 "D:I: Cannot create asset in node mgmt type 1||2||5 - caller does not hold node token"
             );
-        } else if (newAC_info.managementType == 3) {
+        } else if (newNodeInfo.managementType == 3) {
             require( //DPS:TEST NEW
                 NODE_MGR.getUserType(
                     keccak256(abi.encodePacked(_msgSender())),
@@ -517,7 +517,7 @@ contract DECORATE is CORE {
                 ) == 1,
                 "D:I: Cannot create asset - caller address !authorized"
             );
-        } else if (newAC_info.managementType == 4) {
+        } else if (newNodeInfo.managementType == 4) {
             require( //DPS:TEST NEW
                 ID_TKN.trustedLevelByAddress(_msgSender()) > 10,
                 "D:I: Caller !trusted ID holder"

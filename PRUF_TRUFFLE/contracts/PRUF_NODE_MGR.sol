@@ -678,7 +678,7 @@ contract NODE_MGR is BASIC {
      *
      * @return name of token @ _tokenID
      */
-    function getAC_name(uint32 node)
+    function getNodeName(uint32 node)
         external
         view
         returns (string memory)

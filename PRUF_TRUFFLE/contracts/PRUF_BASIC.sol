@@ -249,7 +249,7 @@ abstract contract BASIC is
     //--------------------------------------------------------------------------------------INTERNAL functions
 
     /**
-     * @dev Get a User type Record from AC_manager for _msgSender(), by node
+     * @dev Get a User type Record from Node Manager for _msgSender(), by node
      * @param _node - to check user type in
      * @return user authorization type of caller, from NODE_MGR user mapping
      */
@@ -271,7 +271,7 @@ abstract contract BASIC is
     }
 
     /**
-     * @dev Get node information from AC_manager and return an node Struct
+     * @dev Get node information from Node Manager and return an node Struct
      * @param _node - to retrireve info about
      * @return entire node struct (see interfaces for struct definitions)
      */
