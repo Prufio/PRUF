@@ -291,7 +291,7 @@ abstract contract BASIC is
         //     node_info.managementType,
         //     node_info.discount,
         //     node_info.referenceAddress
-        // ) = NODE_MGR.getAC_data(_node);
+        // ) = NODE_MGR.getNodeData(_node);
 
         // return node_info;
         return NODE_MGR.getExtendedNodeData(_node);

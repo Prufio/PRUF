@@ -610,7 +610,7 @@ contract NODE_MGR is BASIC {
      * @param _node - node associated with query
      * DPS:THIS FUNCTION REMAINS FOR EXTERNAL TESTING ACCESS. try using getExtAcData, it should be depricated prior to production.
      */
-    function getAC_data(uint32 _node)
+    function getNodeData(uint32 _node)
         external
         view
         returns (
