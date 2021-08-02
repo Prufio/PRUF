@@ -740,76 +740,76 @@ _________\/// _____________\/// _______\/// __\///////// __\/// _____________
             it('Should add Storage to each contract', () => {
         
                 console.log("Adding in APP")
-                return APP.Admin_setStorageContract(STOR.address, { from: account1 })
+                return APP.setStorageContract(STOR.address, { from: account1 })
         
                     .then(() => {
                         console.log("Adding in NP")
-                        return NP.Admin_setStorageContract(STOR.address, { from: account1 })
+                        return NP.setStorageContract(STOR.address, { from: account1 })
                     })
         
                     .then(() => {
                         console.log("Adding in MAL_APP")
-                        return MAL_APP.Admin_setStorageContract(STOR.address, { from: account1 })
+                        return MAL_APP.setStorageContract(STOR.address, { from: account1 })
                     })
         
                     .then(() => {
                         console.log("Adding in NODE_MGR")
-                        return NODE_MGR.Admin_setStorageContract(STOR.address, { from: account1 })
+                        return NODE_MGR.setStorageContract(STOR.address, { from: account1 })
                     })
         
                     .then(() => {
                         console.log("Adding in A_TKN")
-                        return A_TKN.Admin_setStorageContract(STOR.address, { from: account1 })
+                        return A_TKN.setStorageContract(STOR.address, { from: account1 })
                     })
         
                     .then(() => {
                         console.log("Adding in ECR_MGR")
-                        return ECR_MGR.Admin_setStorageContract(STOR.address, { from: account1 })
+                        return ECR_MGR.setStorageContract(STOR.address, { from: account1 })
                     })
         
                     .then(() => {
                         console.log("Adding in ECR")
-                        return ECR.Admin_setStorageContract(STOR.address, { from: account1 })
+                        return ECR.setStorageContract(STOR.address, { from: account1 })
                     })
         
                     .then(() => {
                         console.log("Adding in ECR2")
-                        return ECR2.Admin_setStorageContract(STOR.address, { from: account1 })
+                        return ECR2.setStorageContract(STOR.address, { from: account1 })
                     })
         
                     .then(() => {
                         console.log("Adding in APP_NC")
-                        return APP_NC.Admin_setStorageContract(STOR.address, { from: account1 })
+                        return APP_NC.setStorageContract(STOR.address, { from: account1 })
                     })
         
                     .then(() => {
                         console.log("Adding in NP_NC")
-                        return NP_NC.Admin_setStorageContract(STOR.address, { from: account1 })
+                        return NP_NC.setStorageContract(STOR.address, { from: account1 })
                     })
         
                     .then(() => {
                         console.log("Adding in ECR_NC")
-                        return ECR_NC.Admin_setStorageContract(STOR.address, { from: account1 })
+                        return ECR_NC.setStorageContract(STOR.address, { from: account1 })
                     })
         
                     .then(() => {
                         console.log("Adding in RCLR")
-                        return RCLR.Admin_setStorageContract(STOR.address, { from: account1 })
+                        return RCLR.setStorageContract(STOR.address, { from: account1 })
                     })
         
                     .then(() => {
                         console.log("Adding in PURCHASE")
-                        return PURCHASE.Admin_setStorageContract(STOR.address, { from: account1 })
+                        return PURCHASE.setStorageContract(STOR.address, { from: account1 })
                     })
         
                     .then(() => {
                         console.log("Adding in DECORATE")
-                        return DECORATE.Admin_setStorageContract(STOR.address, { from: account1 })
+                        return DECORATE.setStorageContract(STOR.address, { from: account1 })
                     })
         
                     .then(() => {
                         console.log("Adding in WRAP")
-                        return WRAP.Admin_setStorageContract(STOR.address, { from: account1 })
+                        return WRAP.setStorageContract(STOR.address, { from: account1 })
                     })
             })
         
@@ -817,76 +817,76 @@ _________\/// _____________\/// _______\/// __\///////// __\/// _____________
             it('Should resolve contract addresses', () => {
         
                 console.log("Resolving in APP")
-                return APP.Admin_resolveContractAddresses({ from: account1 })
+                return APP.resolveContractAddresses({ from: account1 })
         
                     .then(() => {
                         console.log("Resolving in NP")
-                        return NP.Admin_resolveContractAddresses({ from: account1 })
+                        return NP.resolveContractAddresses({ from: account1 })
                     })
         
                     .then(() => {
                         console.log("Resolving in MAL_APP")
-                        return MAL_APP.Admin_resolveContractAddresses({ from: account1 })
+                        return MAL_APP.resolveContractAddresses({ from: account1 })
                     })
         
                     .then(() => {
                         console.log("Resolving in NODE_MGR")
-                        return NODE_MGR.Admin_resolveContractAddresses({ from: account1 })
+                        return NODE_MGR.resolveContractAddresses({ from: account1 })
                     })
         
                     .then(() => {
                         console.log("Resolving in A_TKN")
-                        return A_TKN.Admin_resolveContractAddresses({ from: account1 })
+                        return A_TKN.resolveContractAddresses({ from: account1 })
                     })
         
                     .then(() => {
                         console.log("Resolving in ECR_MGR")
-                        return ECR_MGR.Admin_resolveContractAddresses({ from: account1 })
+                        return ECR_MGR.resolveContractAddresses({ from: account1 })
                     })
         
                     .then(() => {
                         console.log("Resolving in ECR")
-                        return ECR.Admin_resolveContractAddresses({ from: account1 })
+                        return ECR.resolveContractAddresses({ from: account1 })
                     })
         
                     .then(() => {
                         console.log("Resolving in ECR2")
-                        return ECR2.Admin_resolveContractAddresses({ from: account1 })
+                        return ECR2.resolveContractAddresses({ from: account1 })
                     })
         
                     .then(() => {
                         console.log("Resolving in APP_NC")
-                        return APP_NC.Admin_resolveContractAddresses({ from: account1 })
+                        return APP_NC.resolveContractAddresses({ from: account1 })
                     })
         
                     .then(() => {
                         console.log("Resolving in NP_NC")
-                        return NP_NC.Admin_resolveContractAddresses({ from: account1 })
+                        return NP_NC.resolveContractAddresses({ from: account1 })
                     })
         
                     .then(() => {
                         console.log("Resolving in ECR_NC")
-                        return ECR_NC.Admin_resolveContractAddresses({ from: account1 })
+                        return ECR_NC.resolveContractAddresses({ from: account1 })
                     })
         
                     .then(() => {
                         console.log("Resolving in RCLR")
-                        return RCLR.Admin_resolveContractAddresses({ from: account1 })
+                        return RCLR.resolveContractAddresses({ from: account1 })
                     })
         
                     .then(() => {
                         console.log("Resolving in PURCHASE")
-                        return PURCHASE.Admin_resolveContractAddresses({ from: account1 })
+                        return PURCHASE.resolveContractAddresses({ from: account1 })
                     })
         
                     .then(() => {
                         console.log("Resolving in DECORATE")
-                        return DECORATE.Admin_resolveContractAddresses({ from: account1 })
+                        return DECORATE.resolveContractAddresses({ from: account1 })
                     })
         
                     .then(() => {
                         console.log("Resolving in WRAP")
-                        return WRAP.Admin_resolveContractAddresses({ from: account1 })
+                        return WRAP.resolveContractAddresses({ from: account1 })
                     })
             })
         
@@ -1263,22 +1263,22 @@ _________\/// _____________\/// _______\/// __\///////// __\/// _____________
         
                     .then(() => {
                         console.log("Minting AC 1000001 -C")
-                        return NODE_MGR.purchaseACnode("Custodial_AC1", "1", "1", rgt000, { from: account1 })
+                        return NODE_MGR.purchaseNode("Custodial_AC1", "1", "1", rgt000, { from: account1 })
                     })
         
                     .then(() => {
                         console.log("Minting AC 1000002 -NC")
-                        return NODE_MGR.purchaseACnode("Non_Custodial_AC2", "1", "2", rgt000, { from: account1 })
+                        return NODE_MGR.purchaseNode("Non_Custodial_AC2", "1", "2", rgt000, { from: account1 })
                     })
         
                     .then(() => {
                         console.log("Minting AC 1000003 -NC")
-                        return NODE_MGR.purchaseACnode("Non_Custodial_AC3", "1", "2", rgt000, { from: account1 })
+                        return NODE_MGR.purchaseNode("Non_Custodial_AC3", "1", "2", rgt000, { from: account1 })
                     })
         
                     .then(() => {
                         console.log("Minting AC 1000004 -NC")
-                        return NODE_MGR.purchaseACnode("Non_Custodial_AC4", "1", "2", rgt000, { from: account10 })
+                        return NODE_MGR.purchaseNode("Non_Custodial_AC4", "1", "2", rgt000, { from: account10 })
                     })
             })
         
@@ -1286,11 +1286,11 @@ _________\/// _____________\/// _______\/// __\///////// __\/// _____________
             it("Should Mint 2 non-cust AC tokens in AC_ROOT 2", () => {
         
                 console.log("Minting AC 1000005 -NC")
-                return NODE_MGR.purchaseACnode("Non-Custodial_AC5", "2", "2", rgt000, { from: account1 })
+                return NODE_MGR.purchaseNode("Non-Custodial_AC5", "2", "2", rgt000, { from: account1 })
         
                     .then(() => {
                         console.log("Minting AC 1000006 -NC")
-                        return NODE_MGR.purchaseACnode("Non_Custodial_AC6", "2", "2", rgt000, { from: account10 })
+                        return NODE_MGR.purchaseNode("Non_Custodial_AC6", "2", "2", rgt000, { from: account10 })
                     })
             })
         
@@ -1347,7 +1347,7 @@ _________\/// _____________\/// _______\/// __\///////// __\/// _____________
             })
         
         
-            it('Should authorize APP in all relevant asset classes', () => {
+            it('Should authorize APP in all relevant nodes', () => {
                 console.log("Authorizing APP")
                 return STOR.enableContractForAC('APP', '1000001', '1', { from: account1 })
         
@@ -1357,7 +1357,7 @@ _________\/// _____________\/// _______\/// __\///////// __\/// _____________
             })
         
         
-            it('Should authorize APP_NC in all relevant asset classes', () => {
+            it('Should authorize APP_NC in all relevant nodes', () => {
         
                 console.log("Authorizing APP_NC")
                 return STOR.enableContractForAC('APP_NC', '1000003', '2', { from: account1 })
@@ -1376,7 +1376,7 @@ _________\/// _____________\/// _______\/// __\///////// __\/// _____________
             })
         
         
-            it('Should authorize NP in all relevant asset classes', () => {
+            it('Should authorize NP in all relevant nodes', () => {
         
                 console.log("Authorizing NP")
                 return STOR.enableContractForAC('NP', '1000001', '1', { from: account1 })
@@ -1387,7 +1387,7 @@ _________\/// _____________\/// _______\/// __\///////// __\/// _____________
             })
         
         
-            it('Should authorize MAL_APP in all relevant asset classes', () => {
+            it('Should authorize MAL_APP in all relevant nodes', () => {
         
                 console.log("Authorizing MAL_APP")
                 return STOR.enableContractForAC('MAL_APP', '1000001', '1', { from: account1 })
@@ -1398,7 +1398,7 @@ _________\/// _____________\/// _______\/// __\///////// __\/// _____________
             })
         
         
-            it('Should authorize ECR in all relevant asset classes', () => {
+            it('Should authorize ECR in all relevant nodes', () => {
         
                 console.log("Authorizing ECR")
                 return STOR.enableContractForAC('ECR', '1000001', '3', { from: account1 })
@@ -1409,7 +1409,7 @@ _________\/// _____________\/// _______\/// __\///////// __\/// _____________
             })
         
         
-            it('Should authorize ECR_NC in all relevant asset classes', () => {
+            it('Should authorize ECR_NC in all relevant nodes', () => {
         
                 console.log("Authorizing ECR_NC")
                 return STOR.enableContractForAC('ECR_NC', '1000003', '3', { from: account1 })
@@ -1428,7 +1428,7 @@ _________\/// _____________\/// _______\/// __\///////// __\/// _____________
             })
         
         
-            it('Should authorize ECR2 in all relevant asset classes', () => {
+            it('Should authorize ECR2 in all relevant nodes', () => {
         
                 console.log("Authorizing ECR2")
                 return STOR.enableContractForAC('ECR2', '1000001', '3', { from: account1 })
@@ -1439,7 +1439,7 @@ _________\/// _____________\/// _______\/// __\///////// __\/// _____________
             })
         
         
-            it('Should authorize A_TKN in all relevant asset classes', () => {
+            it('Should authorize A_TKN in all relevant nodes', () => {
         
                 console.log("Authorizing A_TKN")
                 return STOR.enableContractForAC('A_TKN', '1', '1', { from: account1 })

@@ -94,9 +94,9 @@ pragma solidity ^0.6.7;
  *
  *
  * Rules for recycling records:
- *  escrow amount is the same as registration in the asset class where it will be registered (as per the "recycle asset" call),
+ *  escrow amount is the same as registration in the node where it will be registered (as per the "recycle asset" call),
  *  when the fee is paid the escrow is broken, and the asset token is assigned to the sender. The funds (less assetClassRoot fees)
- *  are divided 50/50 between the old owner (setter of the escrow) and the ACtoken holder for the new asset class. If funds are sent 
+ *  are divided 50/50 between the old owner (setter of the escrow) and the ACtoken holder for the new node. If funds are sent 
  *  to a dead escrow or there is an overpayment, the balance can be withdrawn.
  *
  *
@@ -105,7 +105,7 @@ pragma solidity ^0.6.7;
  *
  *
  *  Recycle rules
- *          Not possible in Custodial asset classes
+ *          Not possible in Custodial nodes
  *          Caller must hold token, must be in status 59
  *          Token goes into "indefinite" escrow, RGT set to 0xFFF...
  *              Caller is escrow controller, but escrow contract is "owner", can break escrow (resets to status 51)
@@ -121,7 +121,7 @@ pragma solidity ^0.6.7;
  * FUTURE FEATURES?
  *      "bottle deposit" on asset creation to encourage recycling
  *  New Recycle :
- *          Not possible in Custodial asset classes
+ *          Not possible in Custodial nodes
  *          Caller must hold token, must be in status 59
  *          Caller recieves deposit amount (how the bloody hell do we manage this????)
  *          Token goes into "indefinite" escrow, RGT set to 0xFFF...
@@ -142,13 +142,13 @@ pragma solidity ^0.6.7;
  * All assetclasses in the same root should use the same data structure to generate the idxHash. Other structures 
  *      will result in a nonconforming "hidden" asset only findable in its own web interface, and not AC transportable.
  *
- * When upgrading a contract, all authorized asset classes will be linked to the name, not the newly deplyed contract address
+ * When upgrading a contract, all authorized nodes will be linked to the name, not the newly deplyed contract address
  * PAYABLE CONTRACTS must be given the PAYABLE_ROLE in PRUF_TKN. This includes NODE_MGR
 - ----------------------------------------------------------------
 
 *-----------------------------------------------------------------
  * IMPORTANT NOTE : DO NOT REMOVE FROM CODE:
- *      Verification of rgtHash in curated, custodial asset classes are not secure beyond the honorable intentions
+ *      Verification of rgtHash in curated, custodial nodes are not secure beyond the honorable intentions
  * of authorized recorders. All blockchain info is readable, so a bad actor could trivially obtain a copy of the
  * correct rgtHash on chain. This "stumbling block" measure is in place primarily to keep honest people honest, and
  * to require an actual, malicious effort to bypass security rather than a little copy-paste. Actual decentralized
@@ -245,13 +245,13 @@ pragma solidity ^0.6.7;
 - -----------------------------------------------------------------
 
 *-----------------------------------------------------------------
- * ASSET CLASS Custody Types: AC_data.custodyType (AC_manager)
+ * node Custody Types: AC_data.custodyType (AC_manager)
  * 0   --NONE
  * 1   --Custodial
  * 2   --Non-Custodial
  * 3   --Root (n/a)
  * 4   --Verify-Non-Custodial
- * 5   --Wrapped or decorated ERC721 - Asset class extended data must be set to:
+ * 5   --Wrapped or decorated ERC721 - node extended data must be set to:
  *              '0' for universal, token-contract-independant operation
  *              -or- uint160(ERC721 contract address) for token-contract-specific operation - use to filter for foreign contract address match
  * 11  -- Free Custodial (no contract yet made, must ovveride createRecord in core to allow custody type 11)
@@ -259,7 +259,7 @@ pragma solidity ^0.6.7;
 - -----------------------------------------------------------------
 
 *-----------------------------------------------------------------
- * ASSET CLASS Management Types: AC_data.managementType (AC_manager)
+ * node Management Types: AC_data.managementType (AC_manager)
  *              normal ROOT ACs should be set to type 0 because non type-zero root 
  *              classes will not permit public minting of ACs inside them
  * 0   -- Unrestricted (if root not zero, ACNodes cannot be created in the root w/o root token 
@@ -273,14 +273,14 @@ pragma solidity ^0.6.7;
 - -----------------------------------------------------------------
 
 *-----------------------------------------------------------------
- * ASSET CLASS Storage Providers: AC_data.storageProvider (AC_manager)
+ * node Storage Providers: AC_data.storageProvider (AC_manager)
  * 0   -- Not Set
  * 1   -- IPFS 
  * 2   -- ARweave 
 - -----------------------------------------------------------------
 
 *-----------------------------------------------------------------
- * ASSET CLASS option switches, 1 or 0 : AC_data.switches (AC_manager)
+ * node option switches, 1 or 0 : AC_data.switches (AC_manager)
  *             Switches will be duplicated from root 
  * bit1  -- If set, cannot change URI or CAS data after initial setting
  * bit2  --

@@ -155,8 +155,8 @@ contract("REWARDS_VAULT", (accounts) => {
     console.log("//**************************************END BOOTSTRAP**********************************************/");
     console.log("//**************************************BEGIN REWARDS_VAULT TEST**********************************************/");
     console.log("//**************************************BEGIN REWARDS_VAULT Fail Batch(4)**********************************************/");
-    console.log("//**************************************BEGIN Admin_setTokenContracts Fail Batch**********************************************/");
-    return REWARDS_VAULT.Admin_setTokenContracts(UTIL_TKN.address, STAKE_TKN.address, { from: account2 });
+    console.log("//**************************************BEGIN setTokenContracts Fail Batch**********************************************/");
+    return REWARDS_VAULT.setTokenContracts(UTIL_TKN.address, STAKE_TKN.address, { from: account2 });
   });
 
 
@@ -166,7 +166,7 @@ contract("REWARDS_VAULT", (accounts) => {
 
   //2
   it("Should fail because contract is paused and caller !have pauser_role", async () => {
-    console.log("//**************************************END Admin_setTokenContracts Fail Batch**********************************************/");
+    console.log("//**************************************END setTokenContracts Fail Batch**********************************************/");
     console.log("//**************************************BEGIN payRewards Fail Batch**********************************************/");
     return REWARDS_VAULT.payRewards('1', "10000000000000000000000", { from: account2 });
   });
@@ -178,7 +178,7 @@ contract("REWARDS_VAULT", (accounts) => {
   
   //3
   it("Should fail because caller !stakePayer", async () => {
-    console.log("//**************************************END Admin_setTokenContracts Fail Batch**********************************************/");
+    console.log("//**************************************END setTokenContracts Fail Batch**********************************************/");
     console.log("//**************************************BEGIN payRewards Fail Batch**********************************************/");
     return REWARDS_VAULT.payRewards('1', "10000000000000000000000", { from: account1 });
   });

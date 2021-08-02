@@ -139,35 +139,35 @@ contract('PRESALE', accounts => {
         console.log('//**************************END BOOTSTRAP**************************//')
         console.log('//**************************BEGIN PRESALE_MAL (25)**************************//')
 
-        return PRESALE.ADMIN_setTokenContract(
+        return PRESALE.setTokenContract(
             UTIL_TKN.address,
             { from: B })
     })
 
 
-    it('Should set ADMIN_setTokenContract to UTIL_TKN', async () => {
-        return PRESALE.ADMIN_setTokenContract(
+    it('Should set setTokenContract to UTIL_TKN', async () => {
+        return PRESALE.setTokenContract(
             UTIL_TKN.address,
             { from: A })
     })
 
 
     it('Should set payment address', async () => {
-        return PRESALE.ADMIN_setPaymentAddress(
+        return PRESALE.setPaymentAddress(
             account9,
             { from: A })
     })
 
 
     it('Should set airdropAmount to 10', async () => {
-        return PRESALE.ADMIN_setAirDropAmount(
+        return PRESALE.setAirDropAmount(
             "10000000000000000000",
             { from: A })
     })
 
 
     it('Should set PresaleLimit to 11', async () => {
-        return PRESALE.ADMIN_setPresaleLimit(
+        return PRESALE.setPresaleLimit(
             "11000000000000000000",
             { from: A })
     })
@@ -584,7 +584,7 @@ contract('PRESALE', accounts => {
 
 
     it('Should set PresaleLimit to 1', async () => {
-        return PRESALE.ADMIN_setPresaleLimit(
+        return PRESALE.setPresaleLimit(
             "1000000000000000000",
             { from: A })
     })
@@ -807,7 +807,7 @@ contract('PRESALE', accounts => {
 
 
     it('Should set PresaleLimit to 1', async () => {
-        return PRESALE.ADMIN_setPresaleLimit(
+        return PRESALE.setPresaleLimit(
             "1000000000000000000",
             { from: A })
     })

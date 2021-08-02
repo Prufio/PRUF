@@ -144,7 +144,7 @@ _________\/// _____________\/// _______\/// __\///////// __\/// _____________
         
             discardRoleB32 = await Helper.getStringHash("DISCARD_ROLE");
         
-            stakeRoleB32 = await Helper.getStringHash("STAKE_ADMIN_ROLE");
+            stakeRoleB32 = await Helper.getStringHash("STAKE_ROLE");
         
             stakePayerRoleB32 = await Helper.getStringHash("STAKE_PAYER_ROLE");
           });
@@ -227,7 +227,7 @@ _________\/// _____________\/// _______\/// __\///////// __\/// _____________
           });
         
           it("Should set token contracts in REWARDS_VAULT", async () => {
-            return REWARDS_VAULT.Admin_setTokenContracts(
+            return REWARDS_VAULT.setTokenContracts(
               UTIL_TKN.address,
               STAKE_TKN.address,
               { from: account1 }
@@ -235,7 +235,7 @@ _________\/// _____________\/// _______\/// __\///////// __\/// _____________
           });
         
           it("Should set token contracts in STAKE_VAULT", async () => {
-            return STAKE_VAULT.Admin_setTokenContracts(
+            return STAKE_VAULT.setTokenContracts(
               UTIL_TKN.address,
               STAKE_TKN.address,
               { from: account1 }
@@ -243,7 +243,7 @@ _________\/// _____________\/// _______\/// __\///////// __\/// _____________
           });
         
           it("Should set token contracts in EO_STAKING", async () => {
-            return EO_STAKING.Admin_setTokenContracts(
+            return EO_STAKING.setTokenContracts(
               UTIL_TKN.address,
               STAKE_TKN.address,
               STAKE_VAULT.address,
@@ -273,8 +273,8 @@ _________\/// _____________\/// _______\/// __\///////// __\/// _____________
           //2
           it("Should fail because caller !CONTRACT_ADMIN", async () => {
             console.log("//**************************************END transferERC721Token Fail Batch**********************************************/");
-            console.log("//**************************************BEGIN Admin_setTokenContracts Fail Batch**********************************************/");
-            return STAKE_VAULT.Admin_setTokenContracts(
+            console.log("//**************************************BEGIN setTokenContracts Fail Batch**********************************************/");
+            return STAKE_VAULT.setTokenContracts(
                 UTIL_TKN.address,
                 STAKE_TKN.address,
               { from: account2 }
@@ -282,7 +282,7 @@ _________\/// _____________\/// _______\/// __\///////// __\/// _____________
           });
           //3
           it("Should fail because caller !STAKE_ADMIN", async () => {
-            console.log("//**************************************END Admin_setTokenContracts Fail Batch**********************************************/");
+            console.log("//**************************************END setTokenContracts Fail Batch**********************************************/");
             console.log("//**************************************BEGIN takeStake Fail Batch**********************************************/");
             return STAKE_VAULT.takeStake(
                 '1',
