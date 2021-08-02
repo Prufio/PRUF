@@ -45,7 +45,7 @@ contract NODE_MGR is BASIC {
     mapping(uint32 => Node) private node_data; // AC info database asset class to AC struct (see PRUF_INTERFACES for struct definitions)
     mapping(string => uint32) private node_index; //name to asset class resolution map
     mapping(bytes32 => mapping(uint32 => uint8)) private registeredUsers; // Authorized recorder database by asset class, by address hash
-    mapping(uint8 => uint8) private storageProvidersEnabled; //storageProvider -> status (enabled or disabled)
+    mapping(uint8 => uint8) private validStorageProviders; //storageProvider -> status (enabled or disabled)
     mapping(uint8 => uint8) private managementTypesEnabled; //managementTypes -> status (enabled or disabled)
     mapping(uint8 => uint8) private custodyTypesEnabled; //managementTypes -> status (enabled or disabled)
 
@@ -132,7 +132,7 @@ contract NODE_MGR is BASIC {
         isContractAdmin
     {
         //^^^^^^^checks^^^^^^^^^
-        storageProvidersEnabled[_storageProvider] = _status;
+        validStorageProviders[_storageProvider] = _status;
         //^^^^^^^effects^^^^^^^^^
     }
 
@@ -501,7 +501,7 @@ contract NODE_MGR is BASIC {
             "ACM:UACI: managementType is invalid (0)"
         );
         require( //_storageProvider is a valid type
-            (storageProvidersEnabled[_storageProvider] > 0),
+            (validStorageProviders[_storageProvider] > 0),
             "ACM:UACI: storageProvider is invalid (0)"
         );
         //^^^^^^^checks^^^^^^^^^
@@ -585,7 +585,7 @@ contract NODE_MGR is BASIC {
         returns (uint8)
     {
         //^^^^^^^checks^^^^^^^^^
-        return (storageProvidersEnabled[_storageProvider]);
+        return (validStorageProviders[_storageProvider]);
         //^^^^^^^effects^^^^^^^^^
     }
 
@@ -796,7 +796,7 @@ contract NODE_MGR is BASIC {
             "ACM:CAC: Management type is invalid (0)"
         );
         require( //_ac.storageProvider is a valid type or not specified (0)
-            (storageProvidersEnabled[_AC.storageProvider] > 0) ||
+            (validStorageProviders[_AC.storageProvider] > 0) ||
                 (_AC.storageProvider == 0),
             "ACM:CAC: Storage Provider is invalid (0)"
         );
