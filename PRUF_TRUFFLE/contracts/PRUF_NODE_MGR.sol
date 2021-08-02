@@ -47,7 +47,7 @@ contract NODE_MGR is BASIC {
     mapping(bytes32 => mapping(uint32 => uint8)) private registeredUsers; // Authorized recorder database by asset class, by address hash
     mapping(uint8 => uint8) private validStorageProviders; //storageProvider -> status (enabled or disabled)
     mapping(uint8 => uint8) private validManagementTypes; //managementTypes -> status (enabled or disabled)
-    mapping(uint8 => uint8) private custodyTypesEnabled; //managementTypes -> status (enabled or disabled)
+    mapping(uint8 => uint8) private validCustodyTypes; //managementTypes -> status (enabled or disabled)
 
     constructor() {
         _setupRole(NODE_MINTER_ROLE, _msgSender());
@@ -160,7 +160,7 @@ contract NODE_MGR is BASIC {
         isContractAdmin
     {
         //^^^^^^^checks^^^^^^^^^
-        custodyTypesEnabled[_custodyType] = _status;
+        validCustodyTypes[_custodyType] = _status;
         //^^^^^^^effects^^^^^^^^^
     }
 
@@ -601,7 +601,7 @@ contract NODE_MGR is BASIC {
         returns (uint8)
     {
         //^^^^^^^checks^^^^^^^^^
-        return (custodyTypesEnabled[_custodyType]);
+        return (validCustodyTypes[_custodyType]);
         //^^^^^^^effects^^^^^^^^^
     }
 
@@ -801,7 +801,7 @@ contract NODE_MGR is BASIC {
             "ACM:CAC: Storage Provider is invalid (0)"
         );
         require( //_ac.custodyType is a valid type or specifically unset (255)
-            (custodyTypesEnabled[_AC.custodyType] > 0) ||
+            (validCustodyTypes[_AC.custodyType] > 0) ||
                 (_AC.custodyType == 255),
             "ACM:CAC: Custody type is invalid (0)"
         );
