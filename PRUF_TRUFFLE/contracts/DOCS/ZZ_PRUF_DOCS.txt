@@ -143,7 +143,7 @@ pragma solidity ^0.6.7;
  *      will result in a nonconforming "hidden" asset only findable in its own web interface, and not AC transportable.
  *
  * When upgrading a contract, all authorized asset classes will be linked to the name, not the newly deplyed contract address
- * PAYABLE CONTRACTS must be given the PAYABLE_ROLE in PRUF_TKN. This includes AC_MGR
+ * PAYABLE CONTRACTS must be given the PAYABLE_ROLE in PRUF_TKN. This includes NODE_MGR
 - ----------------------------------------------------------------
 
 *-----------------------------------------------------------------
@@ -227,7 +227,7 @@ pragma solidity ^0.6.7;
  *  RCLR - 3
  *
  *  ECR_MGR - 1
- *  AC_MGR - 1
+ *  NODE_MGR - 1
  *  VFY - 1 ????
  *
 - -----------------------------------------------------------------
