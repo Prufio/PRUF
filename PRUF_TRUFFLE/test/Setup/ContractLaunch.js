@@ -14,7 +14,7 @@ _________\/// _____________\/// _______\/// __\///////// __\/// _____________
         const PRUF_APP = artifacts.require('APP');
         const PRUF_NP = artifacts.require('NP');
         const PRUF_NODE_MGR = artifacts.require('NODE_MGR');
-        const PRUF_AC_TKN = artifacts.require('AC_TKN');
+        const PRUF_NODE_TKN = artifacts.require('NODE_TKN');
         const PRUF_A_TKN = artifacts.require('A_TKN');
         const PRUF_ID_TKN = artifacts.require('ID_TKN');
         const PRUF_ECR_MGR = artifacts.require('ECR_MGR');
@@ -68,11 +68,11 @@ _________\/// _____________\/// _______\/// __\///////// __\/// _____________
             })
         
         
-            it('Should deploy PRUF_AC_TKN', async () => {
-                const PRUF_AC_TKN_TEST = await PRUF_AC_TKN.deployed({ from: account1 });
-                console.log(PRUF_AC_TKN_TEST.address);
-                assert(PRUF_AC_TKN_TEST.address !== '')
-                AC_TKN = PRUF_AC_TKN_TEST;
+            it('Should deploy PRUF_NODE_TKN', async () => {
+                const PRUF_NODE_TKN_TEST = await PRUF_NODE_TKN.deployed({ from: account1 });
+                console.log(PRUF_NODE_TKN_TEST.address);
+                assert(PRUF_NODE_TKN_TEST.address !== '')
+                NODE_TKN = PRUF_NODE_TKN_TEST;
             })
         
         

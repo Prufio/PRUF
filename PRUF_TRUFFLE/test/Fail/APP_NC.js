@@ -14,7 +14,7 @@ const PRUF_STOR = artifacts.require("STOR");
 const PRUF_APP = artifacts.require("APP");
 const PRUF_NP = artifacts.require("NP");
 const PRUF_NODE_MGR = artifacts.require("NODE_MGR");
-const PRUF_AC_TKN = artifacts.require("AC_TKN");
+const PRUF_NODE_TKN = artifacts.require("NODE_TKN");
 const PRUF_A_TKN = artifacts.require("A_TKN");
 const PRUF_ID_TKN = artifacts.require("ID_TKN");
 const PRUF_ECR_MGR = artifacts.require("ECR_MGR");
@@ -35,7 +35,7 @@ let STOR;
 let APP;
 let NP;
 let NODE_MGR;
-let AC_TKN;
+let NODE_TKN;
 let A_TKN;
 let ID_TKN;
 let ECR_MGR;
@@ -323,11 +323,11 @@ contract("APP_NC", (accounts) => {
     NODE_MGR = PRUF_NODE_MGR_TEST;
   });
 
-  it("Should deploy PRUF_AC_TKN", async () => {
-    const PRUF_AC_TKN_TEST = await PRUF_AC_TKN.deployed({ from: account1 });
-    console.log(PRUF_AC_TKN_TEST.address);
-    assert(PRUF_AC_TKN_TEST.address !== "");
-    AC_TKN = PRUF_AC_TKN_TEST;
+  it("Should deploy PRUF_NODE_TKN", async () => {
+    const PRUF_NODE_TKN_TEST = await PRUF_NODE_TKN.deployed({ from: account1 });
+    console.log(PRUF_NODE_TKN_TEST.address);
+    assert(PRUF_NODE_TKN_TEST.address !== "");
+    NODE_TKN = PRUF_NODE_TKN_TEST;
   });
 
   it("Should deploy PRUF_A_TKN", async () => {
@@ -433,8 +433,8 @@ contract("APP_NC", (accounts) => {
     return STOR.addDefaultContracts("0", "NODE_MGR", "1", { from: account1 })
 
       .then(() => {
-        console.log("Adding AC_TKN to default contract list");
-        return STOR.addDefaultContracts("1", "AC_TKN", "1", { from: account1 });
+        console.log("Adding NODE_TKN to default contract list");
+        return STOR.addDefaultContracts("1", "NODE_TKN", "1", { from: account1 });
       })
 
       .then(() => {
@@ -503,8 +503,8 @@ contract("APP_NC", (accounts) => {
       })
 
       .then(() => {
-        console.log("Adding AC_TKN to storage for use in AC 0");
-        return STOR.OO_addContract("AC_TKN", AC_TKN.address, "0", "1", {
+        console.log("Adding NODE_TKN to storage for use in AC 0");
+        return STOR.OO_addContract("NODE_TKN", NODE_TKN.address, "0", "1", {
           from: account1,
         });
       })
@@ -966,17 +966,17 @@ contract("APP_NC", (accounts) => {
       });
   });
 
-  it("Should authorize all minter contracts for minting AC_TKN(s)", () => {
+  it("Should authorize all minter contracts for minting NODE_TKN(s)", () => {
     console.log("Authorizing NODE_MGR");
-    return AC_TKN.grantRole(minterRoleB32, NODE_MGR.address, { from: account1 });
+    return NODE_TKN.grantRole(minterRoleB32, NODE_MGR.address, { from: account1 });
   });
 
-  it("Should authorize all minter contracts for minting AC_TKN(s)", () => {
+  it("Should authorize all minter contracts for minting NODE_TKN(s)", () => {
     console.log("Authorizing NODE_MGR");
     return APP.grantRole(assetTransferRoleB32, NP.address, { from: account1 });
   });
 
-  it("Should authorize all minter contracts for minting AC_TKN(s)", () => {
+  it("Should authorize all minter contracts for minting NODE_TKN(s)", () => {
     console.log("Authorizing NODE_MGR");
     return RCLR.grantRole(discardRoleB32, A_TKN.address, { from: account1 });
   });
@@ -1837,7 +1837,7 @@ contract("APP_NC", (accounts) => {
 
   
   it("Should transfer AC 1000005 to account2", async () => {
-    return AC_TKN.safeTransferFrom(account1, account2, "1000005", { from: account1 });
+    return NODE_TKN.safeTransferFrom(account1, account2, "1000005", { from: account1 });
   });
 
   //12
@@ -1847,7 +1847,7 @@ contract("APP_NC", (accounts) => {
 
   
   it("Should transfer AC 1000005 to account1", async () => {
-    return AC_TKN.safeTransferFrom(account2, account1, "1000005", { from: account2 });
+    return NODE_TKN.safeTransferFrom(account2, account1, "1000005", { from: account2 });
   });
 
   //13

@@ -2,13 +2,13 @@ const PRUF_UTIL_TKN = artifacts.require('UTIL_TKN');
 const PRUF_HELPER = artifacts.require('Helper');
 const PRUF_STOR = artifacts.require('STOR');
 const PRUF_NODE_MGR = artifacts.require('NODE_MGR');
-const PRUF_AC_TKN = artifacts.require('AC_TKN');
+const PRUF_NODE_TKN = artifacts.require('NODE_TKN');
 
 let UTIL_TKN;
 let Helper;
 let STOR;
 let NODE_MGR;
-let AC_TKN;
+let NODE_TKN;
 
 contract('UTIL_TKN', accounts => {
 
@@ -58,11 +58,11 @@ contract('UTIL_TKN', accounts => {
     })
 
 
-    it('Should deploy PRUF_AC_TKN', async () => {
-        const PRUF_AC_TKN_TEST = await PRUF_AC_TKN.deployed({ from: MAIN });
-        console.log(PRUF_AC_TKN_TEST.address);
-        assert(PRUF_AC_TKN_TEST.address !== '')
-        AC_TKN = PRUF_AC_TKN_TEST;
+    it('Should deploy PRUF_NODE_TKN', async () => {
+        const PRUF_NODE_TKN_TEST = await PRUF_NODE_TKN.deployed({ from: MAIN });
+        console.log(PRUF_NODE_TKN_TEST.address);
+        assert(PRUF_NODE_TKN_TEST.address !== '')
+        NODE_TKN = PRUF_NODE_TKN_TEST;
     })
 
 
@@ -105,8 +105,8 @@ contract('UTIL_TKN', accounts => {
             })
 
             .then(() => {
-                console.log("Adding AC_TKN to storage for use in AC 0")
-                return STOR.OO_addContract("AC_TKN", AC_TKN.address, '0', '1', { from: MAIN })
+                console.log("Adding NODE_TKN to storage for use in AC 0")
+                return STOR.OO_addContract("NODE_TKN", NODE_TKN.address, '0', '1', { from: MAIN })
             })
 
             .then(() => {

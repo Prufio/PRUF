@@ -2,7 +2,7 @@ const PRUF_STOR = artifacts.require("STOR");
 const PRUF_APP = artifacts.require("APP");
 const PRUF_NP = artifacts.require("NP");
 const PRUF_NODE_MGR = artifacts.require("NODE_MGR");
-const PRUF_AC_TKN = artifacts.require("AC_TKN");
+const PRUF_NODE_TKN = artifacts.require("NODE_TKN");
 const PRUF_A_TKN = artifacts.require("A_TKN");
 const PRUF_ID_TKN = artifacts.require("ID_TKN");
 const PRUF_ECR_MGR = artifacts.require("ECR_MGR");
@@ -21,7 +21,7 @@ let STOR;
 let APP;
 let NP;
 let NODE_MGR;
-let AC_TKN;
+let NODE_TKN;
 let A_TKN;
 let ID_TKN;
 let ECR_MGR;
@@ -140,11 +140,11 @@ contract("Discount", (accounts) => {
     NODE_MGR = PRUF_NODE_MGR_TEST;
   });
 
-  it("Should deploy PRUF_AC_TKN", async () => {
-    const PRUF_AC_TKN_TEST = await PRUF_AC_TKN.deployed({ from: account1 });
-    console.log(PRUF_AC_TKN_TEST.address);
-    assert(PRUF_AC_TKN_TEST.address !== "");
-    AC_TKN = PRUF_AC_TKN_TEST;
+  it("Should deploy PRUF_NODE_TKN", async () => {
+    const PRUF_NODE_TKN_TEST = await PRUF_NODE_TKN.deployed({ from: account1 });
+    console.log(PRUF_NODE_TKN_TEST.address);
+    assert(PRUF_NODE_TKN_TEST.address !== "");
+    NODE_TKN = PRUF_NODE_TKN_TEST;
   });
 
   it("Should deploy PRUF_A_TKN", async () => {
@@ -411,8 +411,8 @@ contract("Discount", (accounts) => {
       })
 
       .then(() => {
-        console.log("Adding AC_TKN to storage for use in AC 0");
-        return STOR.OO_addContract("AC_TKN", AC_TKN.address, "0", "1", {
+        console.log("Adding NODE_TKN to storage for use in AC 0");
+        return STOR.OO_addContract("NODE_TKN", NODE_TKN.address, "0", "1", {
           from: account1,
         });
       })
@@ -613,8 +613,8 @@ contract("Discount", (accounts) => {
         })
 
         // .then(() => {
-        //     console.log("Resolving in AC_TKN")
-        //     return AC_TKN.Admin_resolveContractAddresses({ from: account1 })
+        //     console.log("Resolving in NODE_TKN")
+        //     return NODE_TKN.Admin_resolveContractAddresses({ from: account1 })
         // })
 
         .then(() => {
@@ -759,9 +759,9 @@ contract("Discount", (accounts) => {
       });
   });
 
-  it("Should authorize all minter contracts for minting AC_TKN(s)", async () => {
+  it("Should authorize all minter contracts for minting NODE_TKN(s)", async () => {
     console.log("Authorizing NODE_MGR");
-    return AC_TKN.grantRole(minterRoleB32, NODE_MGR.address, { from: account1 });
+    return NODE_TKN.grantRole(minterRoleB32, NODE_MGR.address, { from: account1 });
   });
 
   it("Should mint a couple of asset root tokens", async () => {
@@ -1045,30 +1045,30 @@ contract("Discount", (accounts) => {
       });
   });
 
-  it("Should authorize AC_TKN in all relevant asset classes", async () => {
-    console.log("Authorizing AC_TKN");
-    return STOR.enableContractForAC("AC_TKN", "10", "1", { from: account1 })
+  it("Should authorize NODE_TKN in all relevant asset classes", async () => {
+    console.log("Authorizing NODE_TKN");
+    return STOR.enableContractForAC("NODE_TKN", "10", "1", { from: account1 })
 
       .then(() => {
-        return STOR.enableContractForAC("AC_TKN", "11", "1", {
+        return STOR.enableContractForAC("NODE_TKN", "11", "1", {
           from: account1,
         });
       })
 
       .then(() => {
-        return STOR.enableContractForAC("AC_TKN", "12", "2", {
+        return STOR.enableContractForAC("NODE_TKN", "12", "2", {
           from: account1,
         });
       })
 
       .then(() => {
-        return STOR.enableContractForAC("AC_TKN", "13", "2", {
+        return STOR.enableContractForAC("NODE_TKN", "13", "2", {
           from: account1,
         });
       })
 
       .then(() => {
-        return STOR.enableContractForAC("AC_TKN", "14", "2", {
+        return STOR.enableContractForAC("NODE_TKN", "14", "2", {
           from: account1,
         });
       });
@@ -1246,9 +1246,9 @@ contract("Discount", (accounts) => {
       });
   });
 
-  it("Should authorize NODE_MGR as trusted agent in AC_TKN", async () => {
+  it("Should authorize NODE_MGR as trusted agent in NODE_TKN", async () => {
     console.log("Authorizing NODE_MGR");
-    return AC_TKN.grantRole(trustedAgentRoleB32, NODE_MGR.address, {
+    return NODE_TKN.grantRole(trustedAgentRoleB32, NODE_MGR.address, {
       from: account1,
     });
   });
