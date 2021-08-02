@@ -1068,7 +1068,7 @@ interface NODE_MGR_Interface {
      * !! -------- to be used with great caution and only as a result of community governance action -----------
      * Designed to remedy brand infringement issues. This breaks decentralization and must eventually be given
      * over to some kind of governance contract.
-     * Destination node must have IPFS Set to 0xFFF.....
+     * Destination node must have content adressable storage Set to 0xFFF.....
      *
      */
     function transferName(
@@ -1149,7 +1149,7 @@ interface NODE_MGR_Interface {
 
     /*
      * @dev Modifies an node
-     * Sets a new node IPFS Address. Nodees cannot be moved to a new root or custody type.
+     * Sets a new node content adressable storage Address. Nodees cannot be moved to a new root or custody type.
      * Requires that:
      *  caller holds ACtoken
      */

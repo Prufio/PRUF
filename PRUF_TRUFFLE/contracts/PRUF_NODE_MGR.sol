@@ -432,8 +432,8 @@ contract NODE_MGR is BASIC {
         //^^^^^^^effects^^^^^^^^^
     }
 
-    /** CTS:EXAMINE Need 2 IPFS fields
-     * @dev Modifies an node Node IPFS data pointer
+    /** CTS:EXAMINE Need 2 content adressable storage fields
+     * @dev Modifies an node Node content adressable storage data pointer
      * @param _node - node being modified
      * @param _CAS1 - any external data attatched to node 1/2
      * @param _CAS2 - any external data attatched to node 2/2

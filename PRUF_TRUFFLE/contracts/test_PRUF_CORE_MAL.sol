@@ -108,7 +108,7 @@ contract CORE_MAL is BASIC {
     }
 
     /*
-     * @dev Write an Ipfs Record to Storage @ idxHash
+     * @dev Write an content adressable storage Record to Storage @ idxHash
      */
     function writeMutableStorage(bytes32 _idxHash, Record memory _rec)
         internal

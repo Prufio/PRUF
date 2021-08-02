@@ -71,7 +71,7 @@ contract SCULPTOR is AccessControl, BASIC{
         *       
         *   artifact has structure:
         *       key 0 : EOF key number (5 in this case)
-        *       key 1 : NonMutableStorage reference (IPFS file to reference - should ideally be the same hex file, less keys 0,1,and X))
+        *       key 1 : NonMutableStorage reference (content adressable storage file to reference - should ideally be the same hex file, less keys 0,1,and X))
         *       key 2 : start of Data
         *       key 3 : Data
         *       key 4 : end of Data

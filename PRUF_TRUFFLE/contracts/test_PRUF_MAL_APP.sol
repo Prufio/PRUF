@@ -441,7 +441,7 @@ contract MAL_APP is CORE_MAL {
         //     (userType > 0) && (userType < 10),
         //     "NP:MI1: User not authorized to modify records in specified node"
         // );
-        // require(rec.mutableStorage1 != _IpfsHash, "NP:MI1: New data same as old");
+        // require(rec.mutableStorage1 != _content adressable storageHash, "NP:MI1: New data same as old");
 
         // require(
         //     isEscrow(rec.assetStatus) == 0,
