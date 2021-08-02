@@ -27,10 +27,10 @@ struct Record {
     uint32 countDown; // Variable that can only be decreased from countDownStart
     uint32 int32temp; // int32 for persisting transitional data
     uint120 price; //price set for items offered for sale
-    bytes32 Ipfs1a; // Publically viewable asset description
-    bytes32 Ipfs2a; // Publically viewable immutable notes
-    bytes32 Ipfs1b; // Publically viewable asset description
-    bytes32 Ipfs2b; // Publically viewable immutable notes
+    bytes32 mutableStorage1; // Publically viewable asset description
+    bytes32 nonMutableStorage1; // Publically viewable immutable notes
+    bytes32 mutableStorage2; // Publically viewable asset description
+    bytes32 nonMutableStorage2; // Publically viewable immutable notes
     bytes32 rightsHolder; // KEK256 Registered owner
 }
 
@@ -40,10 +40,10 @@ struct Record {
 //     uint32 node; // Type of asset
 //     uint32 countDown; // Variable that can only be decreased from countDownStart
 //     uint32 int32temp; // int32 for persisting transitional data
-//     bytes32 Ipfs1a; // Publically viewable asset description
-//     bytes32 Ipfs2a; // Publically viewable immutable notes
-//     bytes32 Ipfs1b; // Publically viewable asset description
-//     bytes32 Ipfs2b; // Publically viewable immutable notes
+//     bytes32 mutableStorage1; // Publically viewable asset description
+//     bytes32 nonMutableStorage1; // Publically viewable immutable notes
+//     bytes32 mutableStorage2; // Publically viewable asset description
+//     bytes32 nonMutableStorage2; // Publically viewable immutable notes
 //     bytes32 rightsHolder; // KEK256  owner
 // }
 
@@ -1393,12 +1393,12 @@ interface STOR_Interface {
     function clearPrice(bytes32 _idxHash) external;
 
     /*
-     * @dev Modify record Ipfs1a data
+     * @dev Modify record mutableStorage1 data
      */
     function modifyIpfs1(
         bytes32 _idxHash,
-        bytes32 _Ipfs1a,
-        bytes32 _Ipfs1b
+        bytes32 _mutableStorage1,
+        bytes32 _mutableStorage2
     ) external;
 
     /*
@@ -1406,8 +1406,8 @@ interface STOR_Interface {
      */
     function modifyIpfs2(
         bytes32 _idxHash,
-        bytes32 _Ipfs2a,
-        bytes32 _Ipfs2b
+        bytes32 _nonMutableStorage1,
+        bytes32 _nonMutableStorage2
     ) external;
 
     /*

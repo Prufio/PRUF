@@ -214,15 +214,15 @@ contract NP_NC is CORE {
     }
 
     /**
-     * @dev Modify **Record**.Ipfs1a with confirmation of matching rgthash required.
+     * @dev Modify **Record**.mutableStorage1 with confirmation of matching rgthash required.
      * @param _idxHash idx of asset to Modify
-     * @param _Ipfs1a content addressable storage address part 1
-     * @param _Ipfs1b content addressable storage address part 2
+     * @param _mutableStorage1 content addressable storage address part 1
+     * @param _mutableStorage2 content addressable storage address part 2
      */
     function _modIpfs1(
         bytes32 _idxHash,
-        bytes32 _Ipfs1a,
-        bytes32 _Ipfs1b
+        bytes32 _mutableStorage1,
+        bytes32 _mutableStorage2
     ) external nonReentrant whenNotPaused isAuthorized(_idxHash) {
         Record memory rec = getRecord(_idxHash);
 
@@ -232,8 +232,8 @@ contract NP_NC is CORE {
         );
         //^^^^^^^checks^^^^^^^^^
 
-        rec.Ipfs1a = _Ipfs1a;
-        rec.Ipfs1b = _Ipfs1b;
+        rec.mutableStorage1 = _mutableStorage1;
+        rec.mutableStorage2 = _mutableStorage2;
         //^^^^^^^effects^^^^^^^^^
 
         writeRecordIpfs1(_idxHash, rec);
