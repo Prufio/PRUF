@@ -151,7 +151,7 @@ contract APP_NC is CORE {
             "ANC:IA: Cannot change AC except to specified AC"
         );
         require( 
-            AC_MGR.isSameRootAC(_newAssetClass, rec.assetClass) == 170,
+            NODE_MGR.isSameRootAC(_newAssetClass, rec.assetClass) == 170,
             "ANC:IA: Cannot change AC to new root"
         );
         require(
@@ -169,7 +169,7 @@ contract APP_NC is CORE {
             );
         } else if (AC_info.managementType == 3) {
             require(
-                AC_MGR.getUserType(
+                NODE_MGR.getUserType(
                     keccak256(abi.encodePacked(_msgSender())),
                     _newAssetClass
                 ) == 1,

@@ -231,7 +231,7 @@ contract VERIFY is CORE {
 
         require(items[_itemHash] == _idxHash, "VFY:T: Item not held by caller"); //check to see if held by _idxHash
         require( //must move to same asset class root
-            AC_MGR.isSameRootAC(rec.assetClass, newRec.assetClass) == 170,
+            NODE_MGR.isSameRootAC(rec.assetClass, newRec.assetClass) == 170,
             "VFY:T: Wallet is not in the same asset class root"
         );
         require(

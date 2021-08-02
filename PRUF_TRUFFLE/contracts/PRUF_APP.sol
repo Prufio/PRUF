@@ -90,7 +90,7 @@ contract APP is CORE {
             "A:IA: new AC must match AC authorized for import"
         );
         require(
-            AC_MGR.isSameRootAC(_newAssetClass, rec.assetClass) == 170,
+            NODE_MGR.isSameRootAC(_newAssetClass, rec.assetClass) == 170,
             "ANC:IA: Cannot change AC to new root"
         );
         //^^^^^^^checks^^^^^^^^^

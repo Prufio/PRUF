@@ -37,7 +37,7 @@ contract CORE_MAL is BASIC {
     //     (
     //         cost.serviceCost,
     //         cost.paymentAddress
-    //     ) = AC_MGR.retrieveCosts(_assetClass);
+    //     ) = NODE_MGR.retrieveCosts(_assetClass);
 
     //     return (cost);
     //     //^^^^^^^interactions^^^^^^^^^
@@ -143,7 +143,7 @@ contract CORE_MAL is BASIC {
         //^^^^^^^checks^^^^^^^^^
         Invoice memory pricing;
         //^^^^^^^effects^^^^^^^^^
-        pricing = AC_MGR.getServiceCosts(_assetClass, _service);
+        pricing = NODE_MGR.getServiceCosts(_assetClass, _service);
         deductPayment(pricing);
         //^^^^^^^interactions^^^^^^^^^
     }

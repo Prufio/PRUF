@@ -260,7 +260,7 @@ contract Helper is Ownable, BASIC {
         returns (AC memory)
     {
         //^^^^^^^checks^^^^^^^^^
-        return AC_MGR.getExtAC_data(_assetClass);
+        return NODE_MGR.getExtAC_data(_assetClass);
         //^^^^^^^interactions^^^^^^^^^
     }
 
@@ -278,7 +278,7 @@ contract Helper is Ownable, BASIC {
             bytes32
         )
     {
-        AC memory nodeData = AC_MGR.getExtAC_data(_assetClass);
+        AC memory nodeData = NODE_MGR.getExtAC_data(_assetClass);
 
         return (
             nodeData.storageProvider,

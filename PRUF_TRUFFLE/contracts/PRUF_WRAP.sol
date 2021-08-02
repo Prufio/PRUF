@@ -108,7 +108,7 @@ contract WRAP is CORE {
             );
         } else if (AC_info.managementType == 3) {
             require(    //DPS:TEST NEW
-                AC_MGR.getUserType(
+                NODE_MGR.getUserType(
                     keccak256(abi.encodePacked(_msgSender())),
                     _assetClass
                 ) == 1,
@@ -242,7 +242,7 @@ contract WRAP is CORE {
             );
         } else if (AC_info.managementType == 3) {
             require(
-                AC_MGR.getUserType(
+                NODE_MGR.getUserType(
                     keccak256(abi.encodePacked(_msgSender())),
                     _assetClass
                 ) == 1,

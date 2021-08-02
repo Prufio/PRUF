@@ -132,7 +132,7 @@ contract PIP is CORE {
     {
         //^^^^^^^checks^^^^^^^^^
 
-        Invoice memory pricing = AC_MGR.getServiceCosts(_assetClass, 1);
+        Invoice memory pricing = NODE_MGR.getServiceCosts(_assetClass, 1);
 
         pricing.rootPrice = pricing.rootPrice / importDiscount;
         pricing.ACTHprice = pricing.ACTHprice / importDiscount;

@@ -33,7 +33,7 @@ pragma solidity ^0.8.0;
 import "./PRUF_BASIC.sol";
 import "./Imports/utils/ReentrancyGuard.sol";
 
-contract AC_MGR is BASIC {
+contract NODE_MGR is BASIC {
     bytes32 public constant NODE_MINTER_ROLE = keccak256("NODE_MINTER_ROLE");
     bytes32 public constant B320xF_ =
         0xFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFF;

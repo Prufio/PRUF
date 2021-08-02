@@ -89,7 +89,7 @@ contract NP_NC is CORE {
             "NPNC:EXT: Must be in transferrable status (51)"
         );
         require(
-            AC_MGR.isSameRootAC(_exportTo, rec.assetClass) == 170,
+            NODE_MGR.isSameRootAC(_exportTo, rec.assetClass) == 170,
             "NPNC:EXT: Cannot change AC to new root"
         );
         require(

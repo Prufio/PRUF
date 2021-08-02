@@ -1062,7 +1062,7 @@ interface ID_TKN_Interface {
     import "./PRUF_BASIC.sol";
      
  */
-interface AC_MGR_Interface {
+interface NODE_MGR_Interface {
     /*
      * @dev Transfers a name from one asset class to another
      * !! -------- to be used with great caution and only as a result of community governance action -----------
