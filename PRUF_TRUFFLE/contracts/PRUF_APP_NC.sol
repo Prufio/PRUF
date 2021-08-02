@@ -68,7 +68,7 @@ contract APP_NC is CORE {
         //^^^^^^^effects^^^^^^^^^
 
         createRecord(_idxHash, _rgtHash, _node, _countDownStart);
-        writeRecordIpfs1(_idxHash, rec);
+        writeMutableStorage(_idxHash, rec);
         deductServiceCosts(_node, 1);
         //^^^^^^^interactions^^^^^^^^^
     }
@@ -102,7 +102,7 @@ contract APP_NC is CORE {
         //^^^^^^^effects^^^^^^^^^
 
         createRecord(_idxHash, _rgtHash, _node, _countDownStart);
-        writeRecordIpfs2(_idxHash, rec);
+        writeNonMutableStorage(_idxHash, rec);
         deductServiceCosts(_node, 1);
         //^^^^^^^interactions^^^^^^^^^
     }
@@ -193,12 +193,12 @@ contract APP_NC is CORE {
     }
 
     /**
-     * @dev record IPFS2 data 
+     * @dev record NonMutableStorage data 
      * @param _idxHash - hash of asset information created by frontend inputs
      * @param _nonMutableStorage1 - field for permanent external asset data
      * @param _nonMutableStorage2 - field for permanent external asset data
      */
-    function addIpfs2Note(
+    function addNonMutableNote(
         bytes32 _idxHash,
         bytes32 _nonMutableStorage1,
         bytes32 _nonMutableStorage2
@@ -214,7 +214,7 @@ contract APP_NC is CORE {
         rec.nonMutableStorage2 = _nonMutableStorage2;
         //^^^^^^^effects^^^^^^^^^
 
-        writeRecordIpfs2(_idxHash, rec);
+        writeNonMutableStorage(_idxHash, rec);
         deductServiceCosts(rec.node, 3);
         //^^^^^^^interactions^^^^^^^^^
     }

@@ -1395,16 +1395,16 @@ interface STOR_Interface {
     /*
      * @dev Modify record mutableStorage1 data
      */
-    function modifyIpfs1(
+    function modifyMutableStorage(
         bytes32 _idxHash,
         bytes32 _mutableStorage1,
         bytes32 _mutableStorage2
     ) external;
 
     /*
-     * @dev Write record Ipfs2 data
+     * @dev Write record NonMutableStorage data
      */
-    function modifyIpfs2(
+    function modifyNonMutableStorage(
         bytes32 _idxHash,
         bytes32 _nonMutableStorage1,
         bytes32 _nonMutableStorage2

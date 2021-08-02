@@ -14,7 +14,7 @@ __/\\\\\\\\\\\\\ _____/\\\\\\\\\ _______/\\__/\\ ___/\\\\\\\\\\\\\\\
  *  TO DO
  * //CTS:EXAMINE all params/returns defined in comments global
  * //CTS:EXAMINE ACTH->NTH global
- * //CTS:EXAMINE IPFS1/IPFS2->storProvider/storProvider2 global
+ * //CTS:EXAMINE MutableStorage/NonMutableStorage->storProvider/storProvider2 global
  * //CTS:EXAMINE idxHash->assetId global
  * //CTS:EXAMINE NP name change
  * //CTS:EXAMINE Run through interfaces, make sure is up to date.
@@ -669,12 +669,12 @@ contract STOR is AccessControl, ReentrancyGuard, Pausable {
     }
 
     /**
-     * @dev Modify record Ipfs1 data
+     * @dev Modify record MutableStorage data
      * @param  _idxHash - record asset ID
      * @param  _mutableStorage1 - first half of content adressable storage location
      * @param  _mutableStorage2 - second half of content adressable storage location
      */
-    function modifyIpfs1(
+    function modifyMutableStorage(
         bytes32 _idxHash,
         bytes32 _mutableStorage1,
         bytes32 _mutableStorage2
@@ -705,12 +705,12 @@ contract STOR is AccessControl, ReentrancyGuard, Pausable {
     }
 
     /**
-     * @dev Modify record Ipfs1 data
+     * @dev Modify NonMutableStorage data
      * @param _idxHash - record asset ID
      * @param _nonMutableStorage1 - first half of content adressable storage location
      * @param _nonMutableStorage2 - second half of content adressable storage location
      */
-    function modifyIpfs2(
+    function modifyNonMutableStorage(
         bytes32 _idxHash,
         bytes32 _nonMutableStorage1,
         bytes32 _nonMutableStorage2
@@ -723,14 +723,14 @@ contract STOR is AccessControl, ReentrancyGuard, Pausable {
         notEscrow(_idxHash) // asset must not be held in escrow status
     {
         Record memory rec = database[_idxHash];
-        require(isLostOrStolen(rec.assetStatus) == 0, "S:MI2: L/S asset"); //asset cannot be in lost or stolen status
-        require(isTransferred(rec.assetStatus) == 0, "S:MI2: Txfrd. asset"); //asset cannot be in transferred status
+        require(isLostOrStolen(rec.assetStatus) == 0, "S:MNMS: L/S asset"); //asset cannot be in lost or stolen status
+        require(isTransferred(rec.assetStatus) == 0, "S:MNMS: Txfrd. asset"); //asset cannot be in transferred status
 
         require(
             ((rec.nonMutableStorage1 == 0) && (rec.nonMutableStorage2 == 0)) ||
                 (rec.assetStatus == 201),
-            "S:MI2: Cannot overwrite I2"
-        ); //IPFS2 record is immutable after first write unless status 201 is set (Storage provider has died)
+            "S:MNMS: Cannot overwrite NM Storage"
+        ); //NonMutableStorage record is immutable after first write unless status 201 is set (Storage provider has died)
         //^^^^^^^checks^^^^^^^^^
 
         rec.nonMutableStorage1 = _nonMutableStorage1;

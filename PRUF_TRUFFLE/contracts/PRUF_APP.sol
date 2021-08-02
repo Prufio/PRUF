@@ -193,13 +193,13 @@ contract APP is CORE {
     }
 
     /**
-     * @dev Modify **Record** Ipfs2 with confirmation of matching rgthash
+     * @dev Modify **Record** NonMutableStorage with confirmation of matching rgthash
      * @param _idxHash - hash of asset information created by frontend inputs
      * @param _rgtHash - hash of rightsholder information created by frontend inputs
      * @param _nonMutableStorage1 - field for permanent external asset data
      * @param _nonMutableStorage2 - field for permanent external asset data
      */
-    function addIpfs2Note(
+    function addNonMutableNote(
         bytes32 _idxHash,
         bytes32 _rgtHash,
         bytes32 _nonMutableStorage1,
@@ -224,7 +224,7 @@ contract APP is CORE {
         rec.nonMutableStorage2 = _nonMutableStorage2;
         //^^^^^^^effects^^^^^^^^^
 
-        writeRecordIpfs2(_idxHash, rec);
+        writeNonMutableStorage(_idxHash, rec);
         deductServiceCosts(rec.node, 3);
         //^^^^^^^interactions^^^^^^^^^
     }

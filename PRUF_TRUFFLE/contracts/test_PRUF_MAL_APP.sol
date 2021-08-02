@@ -412,7 +412,7 @@ contract MAL_APP is CORE_MAL {
     /*
      * @dev Modify **Record**.mutableStorage1 with confirmation
      */
-    function _modIpfs1(
+    function _modMutableStorage(
         bytes32 _idxHash,
         bytes32 _mutableStorage1,
         bytes32 _mutableStorage2
@@ -461,14 +461,14 @@ contract MAL_APP is CORE_MAL {
         rec.mutableStorage2 = _mutableStorage2;
         //^^^^^^^effects^^^^^^^^^
 
-        writeRecordIpfs1(_idxHash, rec);
+        writeMutableStorage(_idxHash, rec);
         //^^^^^^^interactions^^^^^^^^^
     }
 
     /*
-     * @dev Modify **Record**.Ipfs2 with confirmation
+     * @dev Modify **Record**.NonMutableStorage with confirmation
      */
-    function addIpfs2Note(
+    function addNonMutableNote(
         bytes32 _idxHash,
         bytes32 _nonMutableStorage1,
         bytes32 _nonMutableStorage2
@@ -524,7 +524,7 @@ contract MAL_APP is CORE_MAL {
         rec.nonMutableStorage2 = _nonMutableStorage2;
         //^^^^^^^effects^^^^^^^^^
 
-        writeRecordIpfs2(_idxHash, rec);
+        writeNonMutableStorage(_idxHash, rec);
 
         deductServiceCosts(rec.node, 3);
         //^^^^^^^interactions^^^^^^^^^

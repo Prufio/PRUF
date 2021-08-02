@@ -219,7 +219,7 @@ contract NP_NC is CORE {
      * @param _mutableStorage1 content addressable storage address part 1
      * @param _mutableStorage2 content addressable storage address part 2
      */
-    function _modIpfs1(
+    function _modMutableStorage(
         bytes32 _idxHash,
         bytes32 _mutableStorage1,
         bytes32 _mutableStorage2
@@ -236,7 +236,7 @@ contract NP_NC is CORE {
         rec.mutableStorage2 = _mutableStorage2;
         //^^^^^^^effects^^^^^^^^^
 
-        writeRecordIpfs1(_idxHash, rec);
+        writeMutableStorage(_idxHash, rec);
         deductServiceCosts(rec.node, 8);
         //^^^^^^^interactions^^^^^^^^^
     }

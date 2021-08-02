@@ -153,13 +153,13 @@ contract NP is CORE {
     }
 
     /**
-     * @dev Modify rec.Ipfs1 field with rghHash confirmation
+     * @dev Modify rec.MutableStorage field with rghHash confirmation
      * @param _idxHash idx of asset to Modify
      * @param _rgtHash rgthash to match in front end
      * @param _mutableStorage1 content adressable storage adress part 1
      * @param _mutableStorage2 content adressable storage adress part 2
      */
-    function _modIpfs1(
+    function _modMutableStorage(
         bytes32 _idxHash,
         bytes32 _rgtHash,
         bytes32 _mutableStorage1,
@@ -182,7 +182,7 @@ contract NP is CORE {
         rec.mutableStorage2 = _mutableStorage2;
         //^^^^^^^effects^^^^^^^^^
 
-        writeRecordIpfs1(_idxHash, rec);
+        writeMutableStorage(_idxHash, rec);
         deductServiceCosts(rec.node, 8);
         //^^^^^^^interactions^^^^^^^^^
     }

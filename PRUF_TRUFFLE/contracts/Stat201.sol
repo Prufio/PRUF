@@ -25,7 +25,7 @@ contract STAT201 is CORE {
 
 
     /**
-     * @dev //Sets an item to reserved status 201 when called, if record links to an invalid storage type. Stat201 allows a rewrite of IPFS2
+     * @dev //Sets an item to reserved status 201 when called, if record links to an invalid storage type. Stat201 allows a rewrite of NonMutableStorage
      * @param _idxHash asset ID of the asset being rescued 
      */
     function set201(bytes32 _idxHash)

@@ -302,7 +302,7 @@ contract DECORATE is CORE {
      * @param _mutableStorage1 - field for external asset data
      * @param _mutableStorage2 - field for external asset data
      */
-    function _modIpfs1(
+    function _modMutableStorage(
         uint256 _tokenID,
         address _tokenContract,
         bytes32 _mutableStorage1,
@@ -328,7 +328,7 @@ contract DECORATE is CORE {
         if ((node_info.custodyType != 1) && (node_info.managementType == 5)) {
             require(
                 (NODE_TKN.ownerOf(rec.node) == _msgSender()),
-                "C:WIPFS1: Caller must hold node (management type 5)"
+                "C:WRMS: Caller must hold node (management type 5)"
             );
         }
         require(
@@ -348,19 +348,19 @@ contract DECORATE is CORE {
         rec.mutableStorage2 = _mutableStorage2;
         //^^^^^^^effects^^^^^^^^^
 
-        writeRecordIpfs1(idxHash, rec);
+        writeMutableStorage(idxHash, rec);
         deductServiceCosts(rec.node, 8);
         //^^^^^^^interactions^^^^^^^^^
     }
 
     /**
-     * @dev SET rec.nonMutableStorage1/2 (immutable) content adressable storage pointer
+     * @dev SET rec.nonMutableStorage1/b (immutable) content adressable storage pointer
      * @param _tokenID - tokenID of assets token @_tokenContract
      * @param _tokenContract - token contract of _tokenID
      * @param _nonMutableStorage1 - field for permanent external asset data
      * @param _nonMutableStorage2 - field for permanent external asset data
      */
-    function addIpfs2Note(
+    function addNonMutableNote(
         uint256 _tokenID,
         address _tokenContract,
         bytes32 _nonMutableStorage1,
@@ -395,7 +395,7 @@ contract DECORATE is CORE {
         rec.nonMutableStorage2 = _nonMutableStorage2;
         //^^^^^^^effects^^^^^^^^^
 
-        writeRecordIpfs2(idxHash, rec);
+        writeNonMutableStorage(idxHash, rec);
         deductServiceCosts(rec.node, 3);
         //^^^^^^^interactions^^^^^^^^^
     }
