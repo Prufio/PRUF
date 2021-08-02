@@ -971,7 +971,7 @@ contract("Discount", (accounts) => {
     });
   });
 
-  it("Should authorize APP in all relevant asset classes", async () => {
+  it("Should authorize APP in all relevant nodes", async () => {
     console.log("Authorizing APP");
     return STOR.enableContractForAC("APP", "10", "1", { from: account1 })
 
@@ -992,7 +992,7 @@ contract("Discount", (accounts) => {
       });
   });
 
-  it("Should authorize NP in all relevant asset classes", async () => {
+  it("Should authorize NP in all relevant nodes", async () => {
     console.log("Authorizing NP");
     return STOR.enableContractForAC("NP", "10", "1", { from: account1 })
     .then(() => {
@@ -1000,7 +1000,7 @@ contract("Discount", (accounts) => {
     });
   });
 
-  it("Should authorize MAL_APP in all relevant asset classes", async () => {
+  it("Should authorize MAL_APP in all relevant nodes", async () => {
     console.log("Authorizing MAL_APP");
     return STOR.enableContractForAC("MAL_APP", "10", "1", { from: account1 })
     .then(() => {
@@ -1008,7 +1008,7 @@ contract("Discount", (accounts) => {
     });
   });
 
-  it("Should authorize ECR in all relevant asset classes", async () => {
+  it("Should authorize ECR in all relevant nodes", async () => {
     console.log("Authorizing ECR");
     return STOR.enableContractForAC("ECR", "10", "3", { from: account1 })
     .then(() => {
@@ -1016,7 +1016,7 @@ contract("Discount", (accounts) => {
     });
   });
 
-  it("Should authorize ECR_MGR in all relevant asset classes", async () => {
+  it("Should authorize ECR_MGR in all relevant nodes", async () => {
     console.log("Authorizing ECR_MGR");
     return STOR.enableContractForAC("ECR_MGR", "10", "3", { from: account1 })
 
@@ -1045,7 +1045,7 @@ contract("Discount", (accounts) => {
       });
   });
 
-  it("Should authorize NODE_TKN in all relevant asset classes", async () => {
+  it("Should authorize NODE_TKN in all relevant nodes", async () => {
     console.log("Authorizing NODE_TKN");
     return STOR.enableContractForAC("NODE_TKN", "10", "1", { from: account1 })
 
@@ -1074,7 +1074,7 @@ contract("Discount", (accounts) => {
       });
   });
 
-  it("Should authorize A_TKN in all relevant asset classes", async () => {
+  it("Should authorize A_TKN in all relevant nodes", async () => {
     console.log("Authorizing A_TKN");
     return STOR.enableContractForAC("A_TKN", "10", "1", { from: account1 })
 
@@ -1103,7 +1103,7 @@ contract("Discount", (accounts) => {
       });
   });
 
-  it("Should authorize PIP in all relevant asset classes", async () => {
+  it("Should authorize PIP in all relevant nodes", async () => {
     console.log("Authorizing PIP");
     return STOR.enableContractForAC("PIP", "10", "1", { from: account1 })
 
@@ -1132,7 +1132,7 @@ contract("Discount", (accounts) => {
       });
   });
 
-  it("Should authorize NODE_MGR in all relevant asset classes", async () => {
+  it("Should authorize NODE_MGR in all relevant nodes", async () => {
     console.log("Authorizing NODE_MGR");
     return STOR.enableContractForAC("NODE_MGR", "10", "1", { from: account1 })
 
@@ -1161,7 +1161,7 @@ contract("Discount", (accounts) => {
       });
   });
 
-  it("Should authorize RCLR in all relevant asset classes", async () => {
+  it("Should authorize RCLR in all relevant nodes", async () => {
     console.log("Authorizing RCLR");
     return STOR.enableContractForAC("RCLR", "10", "3", { from: account1 })
 
@@ -1739,8 +1739,8 @@ contract("Discount", (accounts) => {
     );
   });
 
-  it("Should buy asset class 20", async () => {
-    return NODE_MGR.purchaseACnode("AC20", "1", "1", rgt000, { from: account1 });
+  it("Should buy node 20", async () => {
+    return NODE_MGR.purchaseNode("AC20", "1", "1", rgt000, { from: account1 });
   });
 
   it("Should retrieve balanceOf(110000) Pruf tokens @account1", async () => {
@@ -1873,10 +1873,10 @@ contract("Discount", (accounts) => {
     );
   });
 
-  it("Should getAC_Data for AC 11", async () => {
+  it("Should getNode_Data for AC 11", async () => {
     var Balance = [];
 
-    return await NODE_MGR.getAC_data(
+    return await NODE_MGR.getNode_data(
       "11",
       { from: account8 },
       function (_err, _result) {
@@ -1889,13 +1889,13 @@ contract("Discount", (accounts) => {
     );
   });
 
-  it("Should getAC_Data for AC 13", async () => {
+  it("Should getNode_Data for AC 13", async () => {
     console.log(
       "//**************************************END Discount TEST**********************************************/"
     );
     var Balance = [];
 
-    return await NODE_MGR.getAC_data(
+    return await NODE_MGR.getNode_data(
       "13",
       { from: account8 },
       function (_err, _result) {

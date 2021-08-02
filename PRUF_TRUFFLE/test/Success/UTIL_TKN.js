@@ -942,7 +942,7 @@ _________\/// _____________\/// _______\/// __\///////// __\/// _____________
             })
     })
 
-    it('Should authorize APP in all relevant asset classes', async () => {
+    it('Should authorize APP in all relevant nodes', async () => {
         console.log("Authorizing APP")
         return STOR.enableContractForAC('APP', '10', '1', { from: account1 })
 
@@ -964,7 +964,7 @@ _________\/// _____________\/// _______\/// __\///////// __\/// _____________
     })
 
 
-    it('Should authorize NP in all relevant asset classes', async () => {
+    it('Should authorize NP in all relevant nodes', async () => {
 
         console.log("Authorizing NP")
         return STOR.enableContractForAC('NP', '10', '1', { from: account1 })
@@ -975,7 +975,7 @@ _________\/// _____________\/// _______\/// __\///////// __\/// _____________
     })
 
 
-    it('Should authorize MAL_APP in all relevant asset classes', async () => {
+    it('Should authorize MAL_APP in all relevant nodes', async () => {
 
         console.log("Authorizing MAL_APP")
         return STOR.enableContractForAC('MAL_APP', '10', '1', { from: account1 })
@@ -986,7 +986,7 @@ _________\/// _____________\/// _______\/// __\///////// __\/// _____________
     })
 
 
-    it('Should authorize ECR in all relevant asset classes', async () => {
+    it('Should authorize ECR in all relevant nodes', async () => {
 
         console.log("Authorizing ECR")
         return STOR.enableContractForAC('ECR', '10', '3', { from: account1 })
@@ -997,7 +997,7 @@ _________\/// _____________\/// _______\/// __\///////// __\/// _____________
     })
 
 
-    it('Should authorize ECR_MGR in all relevant asset classes', async () => {
+    it('Should authorize ECR_MGR in all relevant nodes', async () => {
 
         console.log("Authorizing ECR_MGR")
         return STOR.enableContractForAC('ECR_MGR', '10', '3', { from: account1 })
@@ -1020,7 +1020,7 @@ _________\/// _____________\/// _______\/// __\///////// __\/// _____________
     })
 
 
-    it('Should authorize NODE_TKN in all relevant asset classes', async () => {
+    it('Should authorize NODE_TKN in all relevant nodes', async () => {
 
         console.log("Authorizing NODE_TKN")
         return STOR.enableContractForAC('NODE_TKN', '10', '1', { from: account1 })
@@ -1043,7 +1043,7 @@ _________\/// _____________\/// _______\/// __\///////// __\/// _____________
     })
 
 
-    it('Should authorize A_TKN in all relevant asset classes', async () => {
+    it('Should authorize A_TKN in all relevant nodes', async () => {
 
         console.log("Authorizing A_TKN")
         return STOR.enableContractForAC('A_TKN', '10', '1', { from: account1 })
@@ -1074,7 +1074,7 @@ _________\/// _____________\/// _______\/// __\///////// __\/// _____________
     })
 
 
-    it('Should authorize PIP in all relevant asset classes', async () => {
+    it('Should authorize PIP in all relevant nodes', async () => {
 
         console.log("Authorizing PIP")
         return STOR.enableContractForAC('PIP', '10', '1', { from: account1 })
@@ -1105,7 +1105,7 @@ _________\/// _____________\/// _______\/// __\///////// __\/// _____________
     })
 
 
-    it('Should authorize NODE_MGR in all relevant asset classes', async () => {
+    it('Should authorize NODE_MGR in all relevant nodes', async () => {
 
         console.log("Authorizing NODE_MGR")
         return STOR.enableContractForAC('NODE_MGR', '10', '1', { from: account1 })
@@ -1128,7 +1128,7 @@ _________\/// _____________\/// _______\/// __\///////// __\/// _____________
     })
 
 
-    it('Should authorize RCLR in all relevant asset classes', async () => {
+    it('Should authorize RCLR in all relevant nodes', async () => {
 
         console.log("Authorizing RCLR")
         return STOR.enableContractForAC('RCLR', '10', '3', { from: account1 })
@@ -1796,7 +1796,7 @@ _________\/// _____________\/// _______\/// __\///////// __\/// _____________
     // it("Should retrieve base AC_discount @AC13 0/100", async () => {
     //     var Discount = [];
 
-    //     return await NODE_MGR.getAC_discount('13', { from: account1 }, function (_err, _result) {
+    //     return await NODE_MGR.getNode_discount('13', { from: account1 }, function (_err, _result) {
     //         if (_err) { }
     //         else {
     //             Discount = Object.values(_result)
@@ -1818,7 +1818,7 @@ _________\/// _____________\/// _______\/// __\///////// __\/// _____________
     // it("Should retrieve AC_discount @AC13 54/46", async () => {
     //     var Discount = [];
 
-    //     return await NODE_MGR.getAC_discount('13', { from: account1 }, function (_err, _result) {
+    //     return await NODE_MGR.getNode_discount('13', { from: account1 }, function (_err, _result) {
     //         if (_err) { }
     //         else {
     //             Discount = Object.values(_result)
@@ -1864,7 +1864,7 @@ _________\/// _____________\/// _______\/// __\///////// __\/// _____________
 
 
     it('Should purchace ACtoken to account2', async () => {
-        return NODE_MGR.purchaseACnode(
+        return NODE_MGR.purchaseNode(
             'account2FTW',
             '1',
             '1',
@@ -1874,7 +1874,7 @@ _________\/// _____________\/// _______\/// __\///////// __\/// _____________
     })
 
 
-    it("Should retrieve 300000 - cost of purchaseACnode", async () => {
+    it("Should retrieve 300000 - cost of purchaseNode", async () => {
         var Balance = [];
 
         return await UTIL_TKN.balanceOf(account2, { from: account2 }, function (_err, _result) {
@@ -1936,7 +1936,7 @@ _________\/// _____________\/// _______\/// __\///////// __\/// _____________
 
 
     it('Should purchace ACtoken to account3', async () => {
-        return NODE_MGR.purchaseACnode(
+        return NODE_MGR.purchaseNode(
             'account3FTW',
             '1',
             '1',
@@ -1972,7 +1972,7 @@ _________\/// _____________\/// _______\/// __\///////// __\/// _____________
     // })
 
 
-    it("Should retrieve 10000 - cost of purchaseACnode", async () => {
+    it("Should retrieve 10000 - cost of purchaseNode", async () => {
         var Balance = [];
 
         return await UTIL_TKN.balanceOf(account3, { from: account3 }, function (_err, _result) {

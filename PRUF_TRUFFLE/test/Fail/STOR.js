@@ -1000,7 +1000,7 @@ contract('STOR', accounts => {
     })
 
 
-    it('Should authorize APP in all relevant asset classes', async () => {
+    it('Should authorize APP in all relevant nodes', async () => {
         console.log("Authorizing APP")
         return STOR.enableContractForAC('APP', '10', '1', { from: account1 })
 
@@ -1010,7 +1010,7 @@ contract('STOR', accounts => {
     })
 
 
-    it('Should authorize APP_NC in all relevant asset classes', async () => {
+    it('Should authorize APP_NC in all relevant nodes', async () => {
 
         console.log("Authorizing APP_NC")
         return STOR.enableContractForAC('APP_NC', '12', '2', { from: account1 })
@@ -1029,7 +1029,7 @@ contract('STOR', accounts => {
     })
 
 
-    it('Should authorize NP in all relevant asset classes', async () => {
+    it('Should authorize NP in all relevant nodes', async () => {
 
         console.log("Authorizing NP")
         return STOR.enableContractForAC('NP', '10', '1', { from: account1 })
@@ -1040,7 +1040,7 @@ contract('STOR', accounts => {
     })
 
 
-    it('Should authorize MAL_APP in all relevant asset classes', async () => {
+    it('Should authorize MAL_APP in all relevant nodes', async () => {
 
         console.log("Authorizing MAL_APP")
         return STOR.enableContractForAC('MAL_APP', '10', '1', { from: account1 })
@@ -1055,7 +1055,7 @@ contract('STOR', accounts => {
     })
 
 
-    it('Should authorize NP_NC in all relevant asset classes', async () => {
+    it('Should authorize NP_NC in all relevant nodes', async () => {
 
         console.log("Authorizing NP_NC")
         return STOR.enableContractForAC('NP_NC', '12', '2', { from: account1 })
@@ -1074,7 +1074,7 @@ contract('STOR', accounts => {
     })
 
 
-    it('Should authorize ECR in all relevant asset classes', async () => {
+    it('Should authorize ECR in all relevant nodes', async () => {
 
         console.log("Authorizing ECR")
         return STOR.enableContractForAC('ECR', '10', '3', { from: account1 })
@@ -1085,7 +1085,7 @@ contract('STOR', accounts => {
     })
 
 
-    it('Should authorize ECR2 in all relevant asset classes', async () => {
+    it('Should authorize ECR2 in all relevant nodes', async () => {
 
         console.log("Authorizing ECR2")
         return STOR.enableContractForAC('ECR2', '10', '3', { from: account1 })
@@ -1096,7 +1096,7 @@ contract('STOR', accounts => {
     })
 
 
-    it('Should authorize ECR_NC in all relevant asset classes', async () => {
+    it('Should authorize ECR_NC in all relevant nodes', async () => {
 
         console.log("Authorizing ECR_NC")
         return STOR.enableContractForAC('ECR_NC', '12', '3', { from: account1 })
@@ -1115,7 +1115,7 @@ contract('STOR', accounts => {
     })
 
 
-    it('Should authorize ECR_MGR in all relevant asset classes', async () => {
+    it('Should authorize ECR_MGR in all relevant nodes', async () => {
 
         console.log("Authorizing ECR_MGR")
         return STOR.enableContractForAC('ECR_MGR', '10', '3', { from: account1 })
@@ -1142,7 +1142,7 @@ contract('STOR', accounts => {
     })
 
 
-    it('Should authorize NODE_TKN in all relevant asset classes', async () => {
+    it('Should authorize NODE_TKN in all relevant nodes', async () => {
 
         console.log("Authorizing NODE_TKN")
         return STOR.enableContractForAC('NODE_TKN', '10', '1', { from: account1 })
@@ -1165,7 +1165,7 @@ contract('STOR', accounts => {
     })
 
 
-    it('Should authorize A_TKN in all relevant asset classes', async () => {
+    it('Should authorize A_TKN in all relevant nodes', async () => {
 
         console.log("Authorizing A_TKN")
         return STOR.enableContractForAC('A_TKN', '10', '1', { from: account1 })
@@ -1204,7 +1204,7 @@ contract('STOR', accounts => {
     })
 
 
-    it('Should authorize PIP in all relevant asset classes', async () => {
+    it('Should authorize PIP in all relevant nodes', async () => {
 
         console.log("Authorizing PIP")
         return STOR.enableContractForAC('PIP', '10', '1', { from: account1 })
@@ -1243,7 +1243,7 @@ contract('STOR', accounts => {
     })
 
 
-    it('Should authorize NODE_MGR in all relevant asset classes', async () => {
+    it('Should authorize NODE_MGR in all relevant nodes', async () => {
 
         console.log("Authorizing NODE_MGR")
         return STOR.enableContractForAC('NODE_MGR', '10', '1', { from: account1 })
@@ -1266,7 +1266,7 @@ contract('STOR', accounts => {
     })
 
 
-    it('Should authorize RCLR in all relevant asset classes', async () => {
+    it('Should authorize RCLR in all relevant nodes', async () => {
 
         console.log("Authorizing RCLR")
         return STOR.enableContractForAC('RCLR', '10', '3', { from: account1 })
@@ -1293,7 +1293,7 @@ contract('STOR', accounts => {
     })
 
 
-    it('Should authorize PURCHASE in all relevant asset classes', async () => {
+    it('Should authorize PURCHASE in all relevant nodes', async () => {
         console.log("Authorizing PURCHASE")
         return STOR.enableContractForAC('PURCHASE', '12', '1', { from: account1 })
     })
@@ -2353,7 +2353,7 @@ contract('STOR', accounts => {
     })
 
 
-    it('Should unauthorize MAL_APP in all relevant asset classes', async () => {
+    it('Should unauthorize MAL_APP in all relevant nodes', async () => {
         return STOR.enableContractForAC('MAL_APP', '10', '0', { from: account1 })
     })
 
@@ -2367,7 +2367,7 @@ contract('STOR', accounts => {
     })
 
 
-    it('Should authorize MAL_APP in all relevant asset classes', async () => {
+    it('Should authorize MAL_APP in all relevant nodes', async () => {
         return STOR.enableContractForAC('MAL_APP', '10', '1', { from: account1 })
     })
 
@@ -2377,7 +2377,7 @@ contract('STOR', accounts => {
     })
 
 
-    it('Should authorize MAL_APP in all relevant asset classes', async () => {
+    it('Should authorize MAL_APP in all relevant nodes', async () => {
         return STOR.enableContractForAC('MAL_APP', '10', '3', { from: account1 })
     })
 
@@ -2410,7 +2410,7 @@ contract('STOR', accounts => {
     })
 
 
-    it('Should authorize MAL_APP in all relevant asset classes', async () => {
+    it('Should authorize MAL_APP in all relevant nodes', async () => {
         return STOR.enableContractForAC('MAL_APP', '10', '1', { from: account1 })
     })
 
@@ -2505,7 +2505,7 @@ contract('STOR', accounts => {
     })
 
 
-    it('Should authorize MAL_APP in all relevant asset classes', async () => {
+    it('Should authorize MAL_APP in all relevant nodes', async () => {
         return STOR.enableContractForAC('MAL_APP', '10', '3', { from: account1 })
     })
 
@@ -2538,7 +2538,7 @@ contract('STOR', accounts => {
     })
 
 
-    it('Should authorize MAL_APP in all relevant asset classes', async () => {
+    it('Should authorize MAL_APP in all relevant nodes', async () => {
         return STOR.enableContractForAC('MAL_APP', '10', '1', { from: account1 })
     })
 
@@ -2633,7 +2633,7 @@ contract('STOR', accounts => {
     })
 
 
-    it('Should unauthorize MAL_APP in all relevant asset classes', async () => {
+    it('Should unauthorize MAL_APP in all relevant nodes', async () => {
         return STOR.enableContractForAC('MAL_APP', '10', '0', { from: account1 })
     })
 
@@ -2648,7 +2648,7 @@ contract('STOR', accounts => {
     })
 
 
-    it('Should authorize MAL_APP in all relevant asset classes', async () => {
+    it('Should authorize MAL_APP in all relevant nodes', async () => {
         return STOR.enableContractForAC('MAL_APP', '10', '1', { from: account1 })
     })
 

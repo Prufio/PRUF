@@ -1130,7 +1130,7 @@ contract("NP", (accounts) => {
 
       .then(() => {
         console.log("Minting AC 1000001 -C");
-        return NODE_MGR.purchaseACnode(
+        return NODE_MGR.purchaseNode(
           "Custodial_AC1",
           "1",
           "1",
@@ -1142,7 +1142,7 @@ contract("NP", (accounts) => {
 
       .then(() => {
         console.log("Minting AC 1000002 -NC");
-        return NODE_MGR.purchaseACnode(
+        return NODE_MGR.purchaseNode(
           "Non_Custodial_AC2",
           "1",
           "2",
@@ -1154,7 +1154,7 @@ contract("NP", (accounts) => {
 
       .then(() => {
         console.log("Minting AC 1000003 -NC");
-        return NODE_MGR.purchaseACnode(
+        return NODE_MGR.purchaseNode(
           "Non_Custodial_AC3",
           "1",
           "2",
@@ -1166,7 +1166,7 @@ contract("NP", (accounts) => {
 
       .then(() => {
         console.log("Minting AC 1000004 -NC");
-        return NODE_MGR.purchaseACnode(
+        return NODE_MGR.purchaseNode(
           "Non_Custodial_AC4",
           "1",
           "2",
@@ -1179,7 +1179,7 @@ contract("NP", (accounts) => {
 
   it("Should Mint 2 non-cust AC tokens in AC_ROOT 2", () => {
     console.log("Minting AC 1000005 -NC");
-    return NODE_MGR.purchaseACnode(
+    return NODE_MGR.purchaseNode(
       "Non-Custodial_AC5",
       "2",
       "2",
@@ -1188,7 +1188,7 @@ contract("NP", (accounts) => {
       { from: account1 }
     ).then(() => {
       console.log("Minting AC 1000006 -NC");
-      return NODE_MGR.purchaseACnode(
+      return NODE_MGR.purchaseNode(
         "Non_Custodial_AC6",
         "2",
         "2",
@@ -1297,7 +1297,7 @@ contract("NP", (accounts) => {
       });
   });
 
-  it("Should authorize APP in all relevant asset classes", () => {
+  it("Should authorize APP in all relevant nodes", () => {
     console.log("Authorizing APP");
     return STOR.enableContractForAC("APP", "1000001", "1", {
       from: account1,
@@ -1308,7 +1308,7 @@ contract("NP", (accounts) => {
     });
   });
 
-  it("Should authorize APP_NC in all relevant asset classes", () => {
+  it("Should authorize APP_NC in all relevant nodes", () => {
     console.log("Authorizing APP_NC");
     return STOR.enableContractForAC("APP_NC", "1000003", "2", {
       from: account1,
@@ -1333,7 +1333,7 @@ contract("NP", (accounts) => {
       });
   });
 
-  it("Should authorize NP in all relevant asset classes", () => {
+  it("Should authorize NP in all relevant nodes", () => {
     console.log("Authorizing NP");
     return STOR.enableContractForAC("NP", "1000001", "1", {
       from: account1,
@@ -1342,7 +1342,7 @@ contract("NP", (accounts) => {
     });
   });
 
-  it("Should authorize MAL_APP in all relevant asset classes", () => {
+  it("Should authorize MAL_APP in all relevant nodes", () => {
     console.log("Authorizing MAL_APP");
     return STOR.enableContractForAC("MAL_APP", "1000001", "1", {
       from: account1,
@@ -1353,7 +1353,7 @@ contract("NP", (accounts) => {
     });
   });
 
-  it("Should authorize ECR in all relevant asset classes", () => {
+  it("Should authorize ECR in all relevant nodes", () => {
     console.log("Authorizing ECR");
     return STOR.enableContractForAC("ECR", "1000001", "3", {
       from: account1,
@@ -1364,7 +1364,7 @@ contract("NP", (accounts) => {
     });
   });
 
-  it("Should authorize ECR_NC in all relevant asset classes", () => {
+  it("Should authorize ECR_NC in all relevant nodes", () => {
     console.log("Authorizing ECR_NC");
     return STOR.enableContractForAC("ECR_NC", "1000003", "3", {
       from: account1,
@@ -1389,7 +1389,7 @@ contract("NP", (accounts) => {
       });
   });
 
-  it("Should authorize ECR2 in all relevant asset classes", () => {
+  it("Should authorize ECR2 in all relevant nodes", () => {
     console.log("Authorizing ECR2");
     return STOR.enableContractForAC("ECR2", "1000001", "3", {
       from: account1,
@@ -1400,7 +1400,7 @@ contract("NP", (accounts) => {
     });
   });
 
-  it("Should authorize A_TKN in all relevant asset classes", () => {
+  it("Should authorize A_TKN in all relevant nodes", () => {
     console.log("Authorizing A_TKN");
     return STOR.enableContractForAC("A_TKN", "1", "1", { from: account1 })
 
