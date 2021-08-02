@@ -83,12 +83,12 @@ contract NODE_MGR is BASIC {
 
     /**
      * @dev Set pricing for Nodes
-     * @param newACprice - cost per node (18 decimals)
+     * @param newNodePrice - cost per node (18 decimals)
      */
-    function adminSetACpricing(uint256 newACprice) external isContractAdmin {
+    function setNodePricing(uint256 newNodePrice) external isContractAdmin {
         //^^^^^^^checks^^^^^^^^^
 
-        node_price = newACprice;
+        node_price = newNodePrice;
         //^^^^^^^effects^^^^^^^^^
 
         emit REPORT("node pricing Changed!"); //report access to internal parameter (KEEP THIS)
@@ -766,7 +766,7 @@ contract NODE_MGR is BASIC {
      *
      * @return percentage of rewards distribution @ _node
      */
-    function getAC_discount(uint32 _node) external view returns (uint32) {
+    function getNodeDiscount(uint32 _node) external view returns (uint32) {
         //^^^^^^^checks^^^^^^^^^
         return (node_data[_node].discount);
         //^^^^^^^interactions^^^^^^^^^
