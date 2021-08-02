@@ -194,7 +194,7 @@ abstract contract BASIC is
         nonReentrant
     {
         //^^^^^^^checks^^^^^^^^^
-        AC_TKN.safeTransferFrom(address(this), _to, _tokenID);
+        NODE_TKN.safeTransferFrom(address(this), _to, _tokenID);
         //^^^^^^^interactions^^^^^^^^^
     }
 

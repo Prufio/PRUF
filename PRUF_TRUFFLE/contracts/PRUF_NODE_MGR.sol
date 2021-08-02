@@ -73,7 +73,7 @@ contract NODE_MGR is BASIC {
      */
     modifier isACtokenHolderOfClass(uint32 _assetClass) {
         require(
-            (AC_TKN.ownerOf(_assetClass) == _msgSender()),
+            (NODE_TKN.ownerOf(_assetClass) == _msgSender()),
             "ACM:MOD-IACTHoC: _msgSender() not authorized in asset class"
         );
         _;
@@ -228,7 +228,7 @@ contract NODE_MGR is BASIC {
             (_ac.custodyType == 3) || (_assetClassRoot == _assetClass),
             "ACM:AMAC: Root !exist"
         );
-        require(AC_TKN.tokenExists(tokenId) == 170, "ACM:AMAC: ACtoken !exist");
+        require(NODE_TKN.tokenExists(tokenId) == 170, "ACM:AMAC: ACtoken !exist");
 
         //^^^^^^^checks^^^^^^^^^
 
@@ -812,7 +812,7 @@ contract NODE_MGR is BASIC {
         );
         if (_RootNodeData.managementType != 0) {
             require( //holds root token if root is restricted
-                (AC_TKN.ownerOf(_AC.assetClassRoot) == _msgSender()),
+                (NODE_TKN.ownerOf(_AC.assetClassRoot) == _msgSender()),
                 "ACM:CAC: Restricted from creating AC's in this root - caller !hold root token"
             );
         }
@@ -834,7 +834,7 @@ contract NODE_MGR is BASIC {
         AC_data[_assetClass].CAS2 = _AC.CAS2;
         //^^^^^^^effects^^^^^^^^^
 
-        AC_TKN.mintACToken(
+        NODE_TKN.mintACToken(
             _recipientAddress,
             tokenId,
             "pruf.io/assetClassToken"

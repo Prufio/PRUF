@@ -98,7 +98,7 @@ contract NP_NC is CORE {
         );
         if ((AC_info.managementType == 1) || (AC_info.managementType == 5)) {
             require( //holds AC token if AC is restricted --------DPS:TEST ---- NEW
-                (AC_TKN.ownerOf(rec.assetClass) == _msgSender()),
+                (NODE_TKN.ownerOf(rec.assetClass) == _msgSender()),
                 "NPNC:EXT: Restricted from exporting assets from this AC - does not hold ACtoken"
             );
         }

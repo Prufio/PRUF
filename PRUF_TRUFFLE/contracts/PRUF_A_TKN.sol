@@ -255,7 +255,7 @@ contract A_TKN is
             );
 
             require(
-                AC_TKN.ownerOf(rec.assetClass) == _msgSender(),
+                NODE_TKN.ownerOf(rec.assetClass) == _msgSender(),
                 "AT:SURI:Caller !ACTH"
             );
         }

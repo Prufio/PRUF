@@ -97,7 +97,7 @@ contract RCLR is ECR_CORE, CORE {
             (AC_info.managementType == 5)
         ) {
             require(
-                (AC_TKN.ownerOf(_assetClass) == _msgSender()),
+                (NODE_TKN.ownerOf(_assetClass) == _msgSender()),
                 "R:R: Cannot create asset in AC mgmt type 1||2||5 - caller does not hold AC token"
             );
         } else if (AC_info.managementType == 3) {

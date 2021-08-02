@@ -103,7 +103,7 @@ contract WRAP is CORE {
             (AC_info.managementType == 5)
         ) {
             require(    //DPS:TEST NEW
-                (AC_TKN.ownerOf(_assetClass) == _msgSender()),
+                (NODE_TKN.ownerOf(_assetClass) == _msgSender()),
                 "ANC:IA: Cannot create asset in AC mgmt type 1||2||5 - caller does not hold AC token"
             );
         } else if (AC_info.managementType == 3) {
@@ -237,7 +237,7 @@ contract WRAP is CORE {
             (AC_info.managementType == 5)
         ) {
             require(
-                (AC_TKN.ownerOf(_assetClass) == _msgSender()),
+                (NODE_TKN.ownerOf(_assetClass) == _msgSender()),
                 "W:CR: Cannot create asset in AC mgmt type 1||2||5 - caller does not hold AC token"
             );
         } else if (AC_info.managementType == 3) {

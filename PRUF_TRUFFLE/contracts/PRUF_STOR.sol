@@ -286,7 +286,7 @@ contract STOR is AccessControl, ReentrancyGuard, Pausable {
      */
     function enableDefaultContractsForAC(uint32 _assetClass) public {
         require(
-            (AC_TKN.ownerOf(_assetClass) == _msgSender()) ||
+            (NODE_TKN.ownerOf(_assetClass) == _msgSender()) ||
                 (_msgSender() == contractNameToAddress["NODE_MGR"]),
             "S:EDCFAC: Caller not ACtokenHolder or NODE_MGR"
         );
@@ -362,7 +362,7 @@ contract STOR is AccessControl, ReentrancyGuard, Pausable {
         uint8 _contractAuthLevel
     ) public {
         require(
-            (AC_TKN.ownerOf(_assetClass) == _msgSender()) ||
+            (NODE_TKN.ownerOf(_assetClass) == _msgSender()) ||
                 (_msgSender() == contractNameToAddress["NODE_MGR"]),
             "S:ECFAC: Caller not ACtokenHolder or NODE_MGR"
         );
