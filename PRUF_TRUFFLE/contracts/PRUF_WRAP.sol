@@ -80,7 +80,7 @@ contract WRAP is CORE {
             keccak256(abi.encodePacked(_foreignTokenID, _foreignTokenContract));
 
         Record memory rec = getRecord(idxHash);
-        AC memory AC_info = getACinfo(_assetClass);
+        Node memory AC_info = getACinfo(_assetClass);
 
         uint256 newTokenId = uint256(idxHash);
 
@@ -158,7 +158,7 @@ contract WRAP is CORE {
     {
         bytes32 idxHash = bytes32(_tokenID);
         Record memory rec = getRecord(idxHash);
-        AC memory AC_info = getACinfo(rec.assetClass);
+        Node memory AC_info = getACinfo(rec.assetClass);
         address foreignTokenContract = wrapped[_tokenID].tokenContract;
         uint256 foreignTokenID = wrapped[_tokenID].tokenID;
 
@@ -217,7 +217,7 @@ contract WRAP is CORE {
         uint32 _countDownStart
     ) internal override {
         uint256 tokenId = uint256(_idxHash);
-        AC memory AC_info = getACinfo(_assetClass);
+        Node memory AC_info = getACinfo(_assetClass);
 
         require(
             A_TKN.tokenExists(tokenId) == 0,

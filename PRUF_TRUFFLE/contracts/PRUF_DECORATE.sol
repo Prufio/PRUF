@@ -66,7 +66,7 @@ contract DECORATE is CORE {
     {   //DPS:TEST
         bytes32 idxHash = keccak256(abi.encodePacked(_tokenID, _tokenContract));
         Record memory rec = getRecord(idxHash);
-        AC memory AC_info = getACinfo(_assetClass);
+        Node memory AC_info = getACinfo(_assetClass);
 
         require(AC_info.custodyType == 5, "D:D:Asset class.custodyType != 5");
         require(
@@ -132,7 +132,7 @@ contract DECORATE is CORE {
     {
         bytes32 idxHash = keccak256(abi.encodePacked(_tokenID, _tokenContract));
         Record memory rec = getRecord(idxHash);
-        AC memory AC_info = getACinfo(rec.assetClass);
+        Node memory AC_info = getACinfo(rec.assetClass);
 
         require(
             AC_info.custodyType == 5,
@@ -191,7 +191,7 @@ contract DECORATE is CORE {
     {
         bytes32 idxHash = keccak256(abi.encodePacked(_tokenID, _tokenContract));
         Record memory rec = getRecord(idxHash);
-        AC memory AC_info = getACinfo(rec.assetClass);
+        Node memory AC_info = getACinfo(rec.assetClass);
 
         require(
             AC_info.custodyType == 5,
@@ -225,7 +225,7 @@ contract DECORATE is CORE {
     {
         bytes32 idxHash = keccak256(abi.encodePacked(_tokenID, _tokenContract));
         Record memory rec = getRecord(idxHash);
-        AC memory AC_info = getACinfo(rec.assetClass);
+        Node memory AC_info = getACinfo(rec.assetClass);
 
         require(
             AC_info.custodyType == 5,
@@ -265,7 +265,7 @@ contract DECORATE is CORE {
     {
         bytes32 idxHash = keccak256(abi.encodePacked(_tokenID, _tokenContract));
         Record memory rec = getRecord(idxHash);
-        AC memory AC_info = getACinfo(rec.assetClass);
+        Node memory AC_info = getACinfo(rec.assetClass);
 
         require(
             AC_info.custodyType == 5,
@@ -315,7 +315,7 @@ contract DECORATE is CORE {
     {
         bytes32 idxHash = keccak256(abi.encodePacked(_tokenID, _tokenContract));
         Record memory rec = getRecord(idxHash);
-        AC memory AC_info = getACinfo(rec.assetClass);
+        Node memory AC_info = getACinfo(rec.assetClass);
 
         require(
             AC_info.custodyType == 5,
@@ -373,7 +373,7 @@ contract DECORATE is CORE {
     {
         bytes32 idxHash = keccak256(abi.encodePacked(_tokenID, _tokenContract));
         Record memory rec = getRecord(idxHash);
-        AC memory AC_info = getACinfo(rec.assetClass);
+        Node memory AC_info = getACinfo(rec.assetClass);
 
         require(
             AC_info.custodyType == 5,
@@ -414,7 +414,7 @@ contract DECORATE is CORE {
     {   
         bytes32 idxHash = keccak256(abi.encodePacked(_tokenID, _tokenContract));
         Record memory rec = getRecord(idxHash);
-        AC memory AC_info = getACinfo(rec.assetClass);
+        Node memory AC_info = getACinfo(rec.assetClass);
 
         require(
             AC_info.custodyType == 5,
@@ -473,8 +473,8 @@ contract DECORATE is CORE {
     {
         bytes32 idxHash = keccak256(abi.encodePacked(_tokenID, _tokenContract));
         Record memory rec = getRecord(idxHash);
-        AC memory AC_info = getACinfo(rec.assetClass);
-        AC memory newAC_info = getACinfo(_newAssetClass);
+        Node memory AC_info = getACinfo(rec.assetClass);
+        Node memory newAC_info = getACinfo(_newAssetClass);
 
         require(
             (AC_info.custodyType == 5) && (newAC_info.custodyType == 5), //only allow import of other wrappers
@@ -550,7 +550,7 @@ contract DECORATE is CORE {
         uint32 _countDownStart
     ) internal {
         uint256 tokenId = uint256(_idxHash);
-        AC memory AC_info = getACinfo(_assetClass);
+        Node memory AC_info = getACinfo(_assetClass);
 
         require(
             A_TKN.tokenExists(tokenId) == 0,

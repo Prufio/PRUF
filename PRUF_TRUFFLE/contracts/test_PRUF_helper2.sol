@@ -257,7 +257,7 @@ contract Helper2 is Ownable, BASIC {
     function helper_getExtAC_data(uint32 _assetClass)
         external
         view
-        returns (AC memory)
+        returns (Node memory)
     {
         //^^^^^^^checks^^^^^^^^^
         return NODE_MGR.getExtAC_data(_assetClass);
@@ -278,7 +278,7 @@ contract Helper2 is Ownable, BASIC {
             bytes32
         )
     {
-        AC memory nodeData = NODE_MGR.getExtAC_data(_assetClass);
+        Node memory nodeData = NODE_MGR.getExtAC_data(_assetClass);
 
         return (
             nodeData.storageProvider,

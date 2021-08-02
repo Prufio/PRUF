@@ -143,7 +143,7 @@ contract APP_NC is CORE {
         isAuthorized(_idxHash)
     {
         Record memory rec = getRecord(_idxHash);
-        AC memory AC_info = getACinfo(_newAssetClass);
+        Node memory AC_info = getACinfo(_newAssetClass);
 
         require(rec.assetStatus == 70, "ANC:IA: Asset !exported");
         require( //DPS:TEST NEW

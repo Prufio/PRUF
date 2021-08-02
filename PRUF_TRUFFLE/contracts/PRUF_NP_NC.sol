@@ -82,7 +82,7 @@ contract NP_NC is CORE {
         isAuthorized(_idxHash)
     {
         Record memory rec = getRecord(_idxHash);
-        AC memory AC_info = getACinfo(rec.assetClass);
+        Node memory AC_info = getACinfo(rec.assetClass);
 
         require(
             (rec.assetStatus == 51) || (rec.assetStatus == 70), //DPS:check

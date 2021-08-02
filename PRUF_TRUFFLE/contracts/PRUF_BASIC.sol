@@ -278,11 +278,11 @@ abstract contract BASIC is
     function getACinfo(uint32 _assetClass)
         internal
         virtual
-        returns (AC memory)
+        returns (Node memory)
     {
         //^^^^^^^checks^^^^^^^^^
 
-        // AC memory AC_info;
+        // Node memory AC_info;
         // //^^^^^^^effects^^^^^^^^^
 
         // (

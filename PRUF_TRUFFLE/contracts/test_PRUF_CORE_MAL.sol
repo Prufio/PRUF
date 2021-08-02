@@ -55,7 +55,7 @@ contract CORE_MAL is BASIC {
         uint32 _countDownStart
     ) internal virtual {
         uint256 tokenId = uint256(_idxHash);
-        AC memory AC_info = getACinfo(_assetClass);
+        Node memory AC_info = getACinfo(_assetClass);
 
         require(
             A_TKN.tokenExists(tokenId) == 0,

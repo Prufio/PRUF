@@ -87,7 +87,7 @@ contract VERIFY is CORE {
         uint8 _verified, //0 for not verify authorized, 1 for admin level auth, 2 for priveledged level auth and 3 = basic verify authorization
         uint32 _assetClass
     ) external {
-        AC memory ACdata = getACinfo(_assetClass);
+        Node memory ACdata = getACinfo(_assetClass);
         Record memory rec = getRecord(_idxHash);
 
         require(

@@ -47,7 +47,7 @@ struct Record {
 //     bytes32 rightsHolder; // KEK256  owner
 // }
 
-struct AC {
+struct Node {
     //Struct for holding and manipulating assetClass data
     string name; // NameHash for assetClass
     uint32 assetClassRoot; // asset type root (bicyles - USA Bicycles)             //immutable
@@ -1247,7 +1247,7 @@ interface NODE_MGR_Interface {
     function getExtAC_data(uint32 _assetClass)
         external
         view
-        returns (AC memory);
+        returns (Node memory);
 
     /*
      * @dev compare the root of two asset classes

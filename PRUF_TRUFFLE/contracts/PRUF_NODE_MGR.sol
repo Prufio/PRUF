@@ -219,7 +219,7 @@ contract NODE_MGR is BASIC {
         bytes32 _CAS1,
         bytes32 _CAS2
     ) external isContractAdmin nonReentrant {
-        AC memory _ac = AC_data[_assetClassRoot];
+        Node memory _ac = AC_data[_assetClassRoot];
         uint256 tokenId = uint256(_assetClass);
 
         require((tokenId != 0), "ACM:AMAC: AC = 0"); //sanity check inputs
@@ -305,7 +305,7 @@ contract NODE_MGR is BASIC {
     ) external isNodeMinter nonReentrant {
         //^^^^^^^checks^^^^^^^^^
 
-        AC memory _AC;
+        Node memory _AC;
         _AC.name = _name;
         _AC.assetClassRoot = _assetClassRoot;
         _AC.custodyType = _custodyType;
@@ -358,7 +358,7 @@ contract NODE_MGR is BASIC {
             rootPaymentAddress,
             AC_Price - (AC_Price / 2)
         ); //burning 50% so we have tokens to incentivise outreach performance
-        AC memory _AC;
+        Node memory _AC;
         _AC.name = _name;
         _AC.assetClassRoot = _assetClassRoot;
         _AC.custodyType = _custodyType;
@@ -641,7 +641,7 @@ contract NODE_MGR is BASIC {
     function getExtAC_data(uint32 _assetClass)
         external
         view
-        returns (AC memory)
+        returns (Node memory)
     {
         //^^^^^^^checks^^^^^^^^^
         return (AC_data[_assetClass]);
@@ -739,7 +739,7 @@ contract NODE_MGR is BASIC {
         view
         returns (Invoice memory)
     {
-        AC memory AC_info = AC_data[_assetClass];
+        Node memory AC_info = AC_data[_assetClass];
         require(AC_info.assetClassRoot != 0, "ACM:GSC: AC !exist");
 
         require(_service != 0, "ACM:GSC: Service type = 0");
@@ -781,11 +781,11 @@ contract NODE_MGR is BASIC {
      * @param _recipientAddress - address to recieve Node
      */
     function _createAssetClass(
-        AC memory _AC,
+        Node memory _AC,
         uint32 _assetClass,
         address _recipientAddress
     ) private whenNotPaused {
-        AC memory _RootNodeData = AC_data[_AC.assetClassRoot];
+        Node memory _RootNodeData = AC_data[_AC.assetClassRoot];
         uint256 tokenId = uint256(_assetClass);
 
         require(tokenId != 0, "ACM:CAC: AC = 0"); //sanity check inputs
