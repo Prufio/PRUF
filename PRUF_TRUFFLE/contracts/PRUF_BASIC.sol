@@ -260,13 +260,13 @@ abstract contract BASIC is
     {
         //^^^^^^^checks^^^^^^^^^
 
-        uint8 userTypeInAssetClass =
+        uint8 userTypeInNode =
             NODE_MGR.getUserType(
                 keccak256(abi.encodePacked(_msgSender())),
                 _node
             );
 
-        return userTypeInAssetClass;
+        return userTypeInNode;
         //^^^^^^^interactions^^^^^^^^^
     }
 
