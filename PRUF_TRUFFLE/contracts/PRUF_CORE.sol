@@ -181,7 +181,7 @@ contract CORE is BASIC {
         virtual
         whenNotPaused
     {
-        uint256 ACTHnetPercent = uint256(NODE_MGR.getAC_discount(_node)) /
+        uint256 ACTHnetPercent = uint256(NODE_MGR.getNode_discount(_node)) /
             uint256(100);
         require( //IMPOSSIBLE TO REACH unless stuff is really broken, still ensures sanity
             (ACTHnetPercent >= 0) && (ACTHnetPercent <= 100),
