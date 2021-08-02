@@ -216,7 +216,7 @@ contract STOR is AccessControl, ReentrancyGuard, Pausable {
     }
 
     /**
-     * @dev Authorize / Deauthorize ADRESSES permitted to make record modifications, per AssetClass
+     * @dev Authorize / Deauthorize ADRESSES permitted to make record modifications, per node
      * populates contract name resolution and data mappings
      * @param   _contractName - String name of contract
      * @param   _contractAddr - address of contract
@@ -349,7 +349,7 @@ contract STOR is AccessControl, ReentrancyGuard, Pausable {
     }
 
     /**
-     * @dev Authorize / Deauthorize contract NAMES permitted to make record modifications, per AssetClass
+     * @dev Authorize / Deauthorize contract NAMES permitted to make record modifications, per node
      * allows ACtokenHolder to Authorize / Deauthorize specific contracts to work within their node
      * @param   _name -  Name of contract being authed
      * @param   _node - affected node
