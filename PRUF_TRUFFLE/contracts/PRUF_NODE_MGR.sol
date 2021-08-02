@@ -41,10 +41,10 @@ contract NODE_MGR is BASIC {
     uint256 private nodeTokenIndex = 1000000; //Starting index for purchased node tokens
     uint256 public node_price = 200000 ether;
     uint32 private constant startingDiscount = 9500; // Purchased nodes start with 95% profit share
-    mapping(uint32 => mapping(uint16 => Costs)) private cost; // Cost per function by node => Costs struct (see PRUF_INTERFACES for struct definitions)
-    mapping(uint32 => Node) private node_data; // node info database node to node struct (see PRUF_INTERFACES for struct definitions)
-    mapping(string => uint32) private node_index; //name to node resolution map
-    mapping(bytes32 => mapping(uint32 => uint8)) private registeredUsers; // Authorized recorder database by node, by address hash
+    mapping(uint32 => mapping(uint16 => Costs)) private cost; // Cost per function by Node => Costs struct (see PRUF_INTERFACES for struct definitions)
+    mapping(uint32 => Node) private node_data; // node info database Node to node struct (see PRUF_INTERFACES for struct definitions)
+    mapping(string => uint32) private node_index; //name to Node resolution map
+    mapping(bytes32 => mapping(uint32 => uint8)) private registeredUsers; // Authorized recorder database by Node, by address hash
     mapping(uint8 => uint8) private validStorageProviders; //storageProvider -> status (enabled or disabled)
     mapping(uint8 => uint8) private validManagementTypes; //managementTypes -> status (enabled or disabled)
     mapping(uint8 => uint8) private validCustodyTypes; //managementTypes -> status (enabled or disabled)
@@ -74,7 +74,7 @@ contract NODE_MGR is BASIC {
     modifier isACtokenHolderOfClass(uint32 _node) {
         require(
             (NODE_TKN.ownerOf(_node) == _msgSender()),
-            "ACM:MOD-IACTHoC: _msgSender() not authorized in node"
+            "ACM:MOD-IACTHoC: _msgSender() not authorized in Node"
         );
         _;
     }
@@ -107,7 +107,7 @@ contract NODE_MGR is BASIC {
         isContractAdmin
     {
         require(
-            (node_data[_node].assetClassRoot != 0),
+            (node_data[_node].nodeRoot != 0),
             "ACM:AIS: node !exist"
         );
         require(
@@ -169,37 +169,37 @@ contract NODE_MGR is BASIC {
      * @dev Transfers a name from one node to another
      *   -Designed to remedy brand infringement issues. This breaks decentralization and must eventually be given
      *   -over to some kind of governance contract.
-     * @param _assetClassSource - source node
-     * @param _assetClassDest - destination node
+     * @param _fromNode - source node
+     * @param _toNode - destination node
      * @param _name - name to be transferred
      */
     function transferName(
-        uint32 _assetClassSource,
-        uint32 _assetClassDest,
+        uint32 _fromNode,
+        uint32 _toNode,
         string calldata _name
     ) external isContractAdmin {
         require(
-            node_index[_name] == _assetClassSource,
+            node_index[_name] == _fromNode,
             "ACM:TN: Name not in source node"
         ); //source AC_Name must match name given
 
         require(
-            (node_data[_assetClassDest].CAS1 == B320xF_), //dest node must have CAS1 set to 0xFFFF.....
+            (node_data[_toNode].CAS1 == B320xF_), //dest node must have CAS1 set to 0xFFFF.....
             "ACM:TN: Destination node not prepared for name transfer"
         );
         //^^^^^^^checks^^^^^^^^^
 
-        node_index[_name] = _assetClassDest;
-        node_data[_assetClassDest].name = _name;
-        node_data[_assetClassSource].name = "";
+        node_index[_name] = _toNode;
+        node_data[_toNode].name = _name;
+        node_data[_fromNode].name = "";
         //^^^^^^^effects^^^^^^^^^
     }
 
     /**
      * !! -------- to be used with great caution -----------
-     * @dev Modifies an node with minimal controls
+     * @dev Modifies an Node with minimal controls
      * @param _node - node to be modified
-     * @param _assetClassRoot - root of node
+     * @param _nodeRoot - root of node
      * @param _custodyType - custodyType of node (see docs)
      * @param _managementType - managementType of node (see docs)
      * @param _storageProvider - storageProvider of node (see docs)
@@ -208,9 +208,9 @@ contract NODE_MGR is BASIC {
      * @param _CAS1 - any external data attatched to node 1/2
      * @param _CAS2 - any external data attatched to node 2/2
      */
-    function adminModAssetClass(
+    function modifyNode(
         uint32 _node,
-        uint32 _assetClassRoot,
+        uint32 _nodeRoot,
         uint8 _custodyType,
         uint8 _managementType,
         uint8 _storageProvider,
@@ -219,20 +219,20 @@ contract NODE_MGR is BASIC {
         bytes32 _CAS1,
         bytes32 _CAS2
     ) external isContractAdmin nonReentrant {
-        Node memory _ac = node_data[_assetClassRoot];
+        Node memory _ac = node_data[_nodeRoot];
         uint256 tokenId = uint256(_node);
 
         require((tokenId != 0), "ACM:AMAC: node = 0"); //sanity check inputs
         require(_discount <= 10000, "ACM:AMAC: Discount > 10000 (100%)");
         require( //has valid root
-            (_ac.custodyType == 3) || (_assetClassRoot == _node),
+            (_ac.custodyType == 3) || (_nodeRoot == _node),
             "ACM:AMAC: Root !exist"
         );
         require(NODE_TKN.tokenExists(tokenId) == 170, "ACM:AMAC: ACtoken !exist");
 
         //^^^^^^^checks^^^^^^^^^
 
-        node_data[_node].assetClassRoot = _assetClassRoot;
+        node_data[_node].nodeRoot = _nodeRoot;
         node_data[_node].discount = _discount;
         node_data[_node].custodyType = _custodyType;
         node_data[_node].managementType = _managementType;
@@ -249,7 +249,7 @@ contract NODE_MGR is BASIC {
      * @param _position - uint position of bit to be modified
      * @param _bit - switch - 1 or 0 (true or false)
      */
-    function adminModAssetClassSwitches(
+    function modifyNodeSwitches(
         uint32 _node,
         uint8 _position,
         uint8 _bit
@@ -279,10 +279,10 @@ contract NODE_MGR is BASIC {
     //--------------------------------------------NODEMINTER only Functions--------------------------
 
     /**
-     * @dev Mints node token and creates an node.
+     * @dev Mints Node token and creates an node.
      * @param _node - node to be created (unique)
      * @param _name - name to be configured to node (unique)
-     * @param _assetClassRoot - root of node
+     * @param _nodeRoot - root of node
      * @param _custodyType - custodyType of new node (see docs)
      * @param _managementType - managementType of new node (see docs)
      * @param _storageProvider - storageProvider of new node (see docs)
@@ -291,10 +291,10 @@ contract NODE_MGR is BASIC {
      * @param _CAS2 - any external data attatched to node 2/2
      * @param _recipientAddress - address to recieve node
      */
-    function createAssetClass(
+    function createNode(
         uint32 _node,
         string calldata _name,
-        uint32 _assetClassRoot,
+        uint32 _nodeRoot,
         uint8 _custodyType,
         uint8 _managementType,
         uint8 _storageProvider,
@@ -305,33 +305,33 @@ contract NODE_MGR is BASIC {
     ) external isNodeMinter nonReentrant {
         //^^^^^^^checks^^^^^^^^^
 
-        Node memory _AC;
-        _AC.name = _name;
-        _AC.assetClassRoot = _assetClassRoot;
-        _AC.custodyType = _custodyType;
-        _AC.managementType = _managementType;
-        _AC.storageProvider = _storageProvider;
-        _AC.discount = _discount;
-        _AC.CAS1 = _CAS1;
-        _AC.CAS2 = _CAS2;
+        Node memory _newNode;
+        _newNode.name = _name;
+        _newNode.nodeRoot = _nodeRoot;
+        _newNode.custodyType = _custodyType;
+        _newNode.managementType = _managementType;
+        _newNode.storageProvider = _storageProvider;
+        _newNode.discount = _discount;
+        _newNode.CAS1 = _CAS1;
+        _newNode.CAS2 = _CAS2;
 
-        _createAssetClass(_AC, _node, _recipientAddress);
+        _createNode(_newNode, _node, _recipientAddress);
         //^^^^^^^effects^^^^^^^^^
     }
 
     //--------------------------------------------External Functions--------------------------
 
     /**
-     * @dev Burns (amount) tokens and mints a new node token to the calling address
+     * @dev Burns (amount) tokens and mints a new Node token to the calling address
      * @param _name - chosen name of node
-     * @param _assetClassRoot - chosen root of node
+     * @param _nodeRoot - chosen root of node
      * @param _custodyType - chosen custodyType of node (see docs)
      * @param _CAS1 - any external data attatched to node 1/2
      * @param _CAS2 - any external data attatched to node 2/2
      */
     function purchaseNode(
         string calldata _name,
-        uint32 _assetClassRoot,
+        uint32 _nodeRoot,
         uint8 _custodyType,
         bytes32 _CAS1,
         bytes32 _CAS2
@@ -348,9 +348,9 @@ contract NODE_MGR is BASIC {
 
         nodeTokenIndex++;
 
-        address rootPaymentAddress = cost[_assetClassRoot][1].paymentAddress; //payment for upgrade goes to root node payment address specified for service (1)
+        address rootPaymentAddress = cost[_nodeRoot][1].paymentAddress; //payment for upgrade goes to root node payment address specified for service (1)
 
-        //mint an node token to _msgSender(), at tokenID nodeTokenIndex, with URI = root asset Class #
+        //mint an Node token to _msgSender(), at tokenID nodeTokenIndex, with URI = root Node #
 
         UTIL_TKN.trustedAgentBurn(_msgSender(), node_price / 2);
         UTIL_TKN.trustedAgentTransfer(
@@ -358,24 +358,24 @@ contract NODE_MGR is BASIC {
             rootPaymentAddress,
             node_price - (node_price / 2)
         ); //burning 50% so we have tokens to incentivise outreach performance
-        Node memory _AC;
-        _AC.name = _name;
-        _AC.assetClassRoot = _assetClassRoot;
-        _AC.custodyType = _custodyType;
-        _AC.managementType = 255; //creates nodes at managementType 255 = not yet usable(disabled),
-        _AC.storageProvider = 0; //creates nodes at storageType 0 = not yet usable(disabled),
-        _AC.discount = startingDiscount;
-        _AC.CAS1 = _CAS1;
-        _AC.CAS2 = _CAS2;
+        Node memory _node;
+        _node.name = _name;
+        _node.nodeRoot = _nodeRoot;
+        _node.custodyType = _custodyType;
+        _node.managementType = 255; //creates nodes at managementType 255 = not yet usable(disabled),
+        _node.storageProvider = 0; //creates nodes at storageType 0 = not yet usable(disabled),
+        _node.discount = startingDiscount;
+        _node.CAS1 = _CAS1;
+        _node.CAS2 = _CAS2;
 
-        _createAssetClass(_AC, uint32(nodeTokenIndex), _msgSender());
+        _createNode(_node, uint32(nodeTokenIndex), _msgSender());
 
         //Set the default 11 authorized contracts
         if (_custodyType == 2) {
             STOR.enableDefaultContractsForAC(uint32(nodeTokenIndex));
         }
 
-        return nodeTokenIndex; //returns node # of minted token
+        return nodeTokenIndex; //returns Node # of minted token
         //^^^^^^^effects/interactions^^^^^^^^^
     }
 
@@ -454,7 +454,7 @@ contract NODE_MGR is BASIC {
     }
 
     /**
-     * @dev Set function costs and payment address per node, in PRUF(18 decimals)
+     * @dev Set function costs and payment address per Node, in PRUF(18 decimals)
      * @param _node - node to set service costs
      * @param _service - service type being modified (see service types in ZZ_PRUF_DOCS)
      * @param _serviceCost - 18 decimal fee in PRUF associated with specified service
@@ -476,7 +476,7 @@ contract NODE_MGR is BASIC {
     //-------------------------------------------Functions dealing with immutable data ---------------------------------------------
 
     /**
-     * @dev Configure the immutable data in an node one time
+     * @dev Configure the immutable data in an Node one time
      * @param _node - node being modified
      * @param _managementType - managementType of node (see docs)
      * @param _storageProvider - storageProvider of node (see docs)
@@ -610,7 +610,7 @@ contract NODE_MGR is BASIC {
      * @param _node - node associated with query
      * DPS:THIS FUNCTION REMAINS FOR EXTERNAL TESTING ACCESS. try using getExtAcData, it should be depricated prior to production.
      */
-    function getNode_data(uint32 _node)
+    function getAC_data(uint32 _node)
         external
         view
         returns (
@@ -623,7 +623,7 @@ contract NODE_MGR is BASIC {
     {
         //^^^^^^^checks^^^^^^^^^
         return (
-            node_data[_node].assetClassRoot,
+            node_data[_node].nodeRoot,
             node_data[_node].custodyType,
             node_data[_node].managementType,
             node_data[_node].discount,
@@ -649,21 +649,21 @@ contract NODE_MGR is BASIC {
     }
 
     /**
-     * @dev verify the root of two asset classes are equal
-     * @param _assetClass1 - first node associated with query
-     * @param _assetClass2 - second node associated with query
+     * @dev verify the root of two Nodees are equal
+     * @param _node1 - first node associated with query
+     * @param _node2 - second node associated with query
      *
      * @return 170 or 0 (true or false)
      */
-    function isSameRootAC(uint32 _assetClass1, uint32 _assetClass2)
+    function isSameRootNode(uint32 _node1, uint32 _node2)
         external
         view
         returns (uint8)
     {
         //^^^^^^^checks^^^^^^^^^
         if (
-            node_data[_assetClass1].assetClassRoot ==
-            node_data[_assetClass2].assetClassRoot
+            node_data[_node1].nodeRoot ==
+            node_data[_node2].nodeRoot
         ) {
             return uint8(170);
         } else {
@@ -678,7 +678,7 @@ contract NODE_MGR is BASIC {
      *
      * @return name of token @ _tokenID
      */
-    function getNode_name(uint32 node)
+    function getAC_name(uint32 node)
         external
         view
         returns (string memory)
@@ -691,11 +691,11 @@ contract NODE_MGR is BASIC {
 
     /**
      * @dev Retrieve node @ AC_name
-     * @param _name - name of node for assetClassNumber query
+     * @param _name - name of node for nodeNumber query
      *
      * @return node number @ _name
      */
-    function resolveAssetClass(string calldata _name)
+    function resolveNode(string calldata _name)
         external
         view
         returns (uint32)
@@ -722,7 +722,7 @@ contract NODE_MGR is BASIC {
     //-------------------------------------------functions for payment calculations----------------------------------------------
 
     /**
-     * @dev Retrieve function costs per node, per service type in PRUF(18 decimals)
+     * @dev Retrieve function costs per Node, per service type in PRUF(18 decimals)
      * @param _node - node associated with query
      * @param _service - service number associated with query (see service types in ZZ_PRUF_DOCS)
      *
@@ -731,7 +731,7 @@ contract NODE_MGR is BASIC {
          rootPrice: @ _node root service cost @ _service
          ACTHaddress: @ _node payment address tied @ _service
          ACTHprice: @ _node service cost @ _service
-         node: _node
+         node: Node index
      }
      */
     function getServiceCosts(uint32 _node, uint16 _service)
@@ -740,14 +740,14 @@ contract NODE_MGR is BASIC {
         returns (Invoice memory)
     {
         Node memory node_info = node_data[_node];
-        require(node_info.assetClassRoot != 0, "ACM:GSC: node !exist");
+        require(node_info.nodeRoot != 0, "ACM:GSC: node !exist");
 
         require(_service != 0, "ACM:GSC: Service type = 0");
         //^^^^^^^checks^^^^^^^^^
-        uint32 rootAssetClass = node_info.assetClassRoot;
+        uint32 rootNode = node_info.nodeRoot;
 
         Costs memory costs = cost[_node][_service];
-        Costs memory rootCosts = cost[rootAssetClass][_service];
+        Costs memory rootCosts = cost[rootNode][_service];
         Invoice memory invoice;
 
         invoice.rootAddress = rootCosts.paymentAddress;
@@ -766,7 +766,7 @@ contract NODE_MGR is BASIC {
      *
      * @return percentage of rewards distribution @ _node
      */
-    function getNode_discount(uint32 _node) external view returns (uint32) {
+    function getAC_discount(uint32 _node) external view returns (uint32) {
         //^^^^^^^checks^^^^^^^^^
         return (node_data[_node].discount);
         //^^^^^^^interactions^^^^^^^^^
@@ -776,68 +776,68 @@ contract NODE_MGR is BASIC {
 
     /**
      * @dev creates an node and its corresponding namespace and data fields
-     * @param _AC - creation Data for new Node
-     * @param _node - Node to be created (unique)
+     * @param _newNodeData - creation Data for new Node
+     * @param _newNode - Node to be created (unique)
      * @param _recipientAddress - address to recieve Node
      */
-    function _createAssetClass(
-        Node memory _AC,
-        uint32 _node,
+    function _createNode(
+        Node memory _newNodeData,
+        uint32 _newNode,
         address _recipientAddress
     ) private whenNotPaused {
-        Node memory _RootNodeData = node_data[_AC.assetClassRoot];
-        uint256 tokenId = uint256(_node);
+        Node memory _RootNodeData = node_data[_newNodeData.nodeRoot];
+        uint256 tokenId = uint256(_newNode);
 
         require(tokenId != 0, "ACM:CAC: node = 0"); //sanity check inputs
-        require(_AC.discount <= 10000, "ACM:CAC: Discount > 10000 (100%)");
+        require(_newNodeData.discount <= 10000, "ACM:CAC: Discount > 10000 (100%)");
         require( //_ac.managementType is a valid type or explicitly unset (255)
-            (validManagementTypes[_AC.managementType] > 0) ||
-                (_AC.managementType == 255),
+            (validManagementTypes[_newNodeData.managementType] > 0) ||
+                (_newNodeData.managementType == 255),
             "ACM:CAC: Management type is invalid (0)"
         );
         require( //_ac.storageProvider is a valid type or not specified (0)
-            (validStorageProviders[_AC.storageProvider] > 0) ||
-                (_AC.storageProvider == 0),
+            (validStorageProviders[_newNodeData.storageProvider] > 0) ||
+                (_newNodeData.storageProvider == 0),
             "ACM:CAC: Storage Provider is invalid (0)"
         );
         require( //_ac.custodyType is a valid type or specifically unset (255)
-            (validCustodyTypes[_AC.custodyType] > 0) ||
-                (_AC.custodyType == 255),
+            (validCustodyTypes[_newNodeData.custodyType] > 0) ||
+                (_newNodeData.custodyType == 255),
             "ACM:CAC: Custody type is invalid (0)"
         );
         require( //has valid root
             (_RootNodeData.custodyType == 3) ||
-                (_AC.assetClassRoot == _node),
+                (_newNodeData.nodeRoot == _newNode),
             "ACM:CAC: Root !exist"
         );
         if (_RootNodeData.managementType != 0) {
             require( //holds root token if root is restricted
-                (NODE_TKN.ownerOf(_AC.assetClassRoot) == _msgSender()),
+                (NODE_TKN.ownerOf(_newNodeData.nodeRoot) == _msgSender()),
                 "ACM:CAC: Restricted from creating node in this root - caller !hold root token"
             );
         }
-        require(node_index[_AC.name] == 0, "ACM:CAC: node name exists");
+        require(node_index[_newNodeData.name] == 0, "ACM:CAC: node name exists");
         require(
-            (node_data[_node].assetClassRoot == 0),
+            (node_data[_newNode].nodeRoot == 0),
             "ACM:CAC: node already exists"
         );
         //^^^^^^^checks^^^^^^^^^
 
-        node_index[_AC.name] = _node;
-        node_data[_node].name = _AC.name;
-        node_data[_node].assetClassRoot = _AC.assetClassRoot;
-        node_data[_node].discount = _AC.discount;
-        node_data[_node].custodyType = _AC.custodyType;
-        node_data[_node].managementType = _AC.managementType;
-        node_data[_node].switches = _RootNodeData.switches;
-        node_data[_node].CAS1 = _AC.CAS1;
-        node_data[_node].CAS2 = _AC.CAS2;
+        node_index[_newNodeData.name] = _newNode;
+        node_data[_newNode].name = _newNodeData.name;
+        node_data[_newNode].nodeRoot = _newNodeData.nodeRoot;
+        node_data[_newNode].discount = _newNodeData.discount;
+        node_data[_newNode].custodyType = _newNodeData.custodyType;
+        node_data[_newNode].managementType = _newNodeData.managementType;
+        node_data[_newNode].switches = _RootNodeData.switches;
+        node_data[_newNode].CAS1 = _newNodeData.CAS1;
+        node_data[_newNode].CAS2 = _newNodeData.CAS2;
         //^^^^^^^effects^^^^^^^^^
 
         NODE_TKN.mintACToken(
             _recipientAddress,
             tokenId,
-            "pruf.io/assetClassToken"
+            "pruf.io/nodeToken"
         );
         //^^^^^^^interactions^^^^^^^^^
     }

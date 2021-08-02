@@ -71,7 +71,7 @@ contract MAL_APP is CORE_MAL {
         //bytes32 userHash = keccak256(abi.encodePacked(_msgSender()));
         //^^^^^^^effects^^^^^^^^^
 
-        // if (node_info.assetClassRoot == oldAC_info.assetClassRoot) {
+        // if (node_info.nodeRoot == oldAC_info.nodeRoot) {
             // createRecord(_idxHash, _rgtHash, _node, rec.countDownStart);
         // } else {
             createRecord(_idxHash, _rgtHash, _node, _countDownStart);
@@ -533,7 +533,7 @@ contract MAL_APP is CORE_MAL {
     /*
      *     @dev Export FROM Custodial:
      */
-    function changeAC(bytes32 _idxHash, uint32 newAssetClass)
+    function changeAC(bytes32 _idxHash, uint32 newNode)
         external
         // nonReentrant
         // whenNotPaused
@@ -570,7 +570,7 @@ contract MAL_APP is CORE_MAL {
 
         // APP.transferAssetToken(_addr, _idxHash);
         // writeRecord(_idxHash, rec);
-        STOR.changeAC(_idxHash, newAssetClass);
+        STOR.changeAC(_idxHash, newNode);
 
         return rec.assetStatus;
         //^^^^^^^interactions^^^^^^^^^

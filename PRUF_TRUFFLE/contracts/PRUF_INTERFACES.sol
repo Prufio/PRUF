@@ -50,7 +50,7 @@ struct Record {
 struct Node {
     //Struct for holding and manipulating node data
     string name; // NameHash for node
-    uint32 assetClassRoot; // asset type root (bicyles - USA Bicycles)             //immutable
+    uint32 nodeRoot; // asset type root (bicyles - USA Bicycles)             //immutable
     uint8 custodyType; // custodial or noncustodial, special asset types       //immutable
     uint8 managementType; // type of management for asset creation, import, export //immutable
     uint8 storageProvider; // Storage Provider
@@ -1072,8 +1072,8 @@ interface NODE_MGR_Interface {
      *
      */
     function transferName(
-        uint32 _assetClass_source,
-        uint32 _assetClass_dest,
+        uint32 _fromNode,
+        uint32 _toNode,
         string calldata _name
     ) external;
 
@@ -1081,9 +1081,9 @@ interface NODE_MGR_Interface {
      * @dev Modifies an node with minimal controls
      *--------DPS TEST ---- NEW args, order
      */
-    function AdminModAssetClass(
+    function AdminModNode(
         uint32 _node,
-        uint32 _assetClassRoot,
+        uint32 _nodeRoot,
         uint8 _custodyType,
         uint8 _managementType,
         uint8 _storageProvider,
@@ -1102,10 +1102,10 @@ interface NODE_MGR_Interface {
      *  that ACtoken does not exist
      *  _discount 10000 = 100 percent price share , cannot exceed
      */
-    function createAssetClass(
+    function createNode(
         uint32 _node,
         string calldata _name,
-        uint32 _assetClassRoot,
+        uint32 _nodeRoot,
         uint8 _custodyType,
         uint8 _managementType,
         uint8 _storageProvider,
@@ -1123,7 +1123,7 @@ interface NODE_MGR_Interface {
      */
     function purchaseNode(
         string calldata _name,
-        uint32 _assetClassRoot,
+        uint32 _nodeRoot,
         uint8 _custodyType,
         bytes32 _CAS1,
         bytes32 _CAS2
@@ -1140,7 +1140,7 @@ interface NODE_MGR_Interface {
 
     /*
      * @dev Modifies an node
-     * Sets a new node name. Asset Classes cannot be moved to a new root or custody type.
+     * Sets a new node name. Nodees cannot be moved to a new root or custody type.
      * Requires that:
      *  caller holds ACtoken
      *  name is unuiqe or same as old name
@@ -1149,7 +1149,7 @@ interface NODE_MGR_Interface {
 
     /*
      * @dev Modifies an node
-     * Sets a new node IPFS Address. Asset Classes cannot be moved to a new root or custody type.
+     * Sets a new node IPFS Address. Nodees cannot be moved to a new root or custody type.
      * Requires that:
      *  caller holds ACtoken
      */
@@ -1250,9 +1250,9 @@ interface NODE_MGR_Interface {
         returns (Node memory);
 
     /*
-     * @dev compare the root of two asset classes
+     * @dev compare the root of two Nodees
      */
-    function isSameRootAC(uint32 _assetClass1, uint32 _assetClass2)
+    function isSameRootNode(uint32 _node1, uint32 _node2)
         external
         view
         returns (uint8);
@@ -1265,7 +1265,7 @@ interface NODE_MGR_Interface {
     /*
      * @dev Retrieve node_index @ AC_name
      */
-    function resolveAssetClass(string calldata _name)
+    function resolveNode(string calldata _name)
         external
         view
         returns (uint32);
@@ -1310,7 +1310,7 @@ interface STOR_Interface {
     function unpause() external;
 
     /*
-     * @dev Authorize / Deauthorize / Authorize ADRESSES permitted to make record modifications, per AssetClass
+     * @dev Authorize / Deauthorize / Authorize ADRESSES permitted to make record modifications, per Node
      * populates contract name resolution and data mappings
      */
     function OO_addContract(
@@ -1326,7 +1326,7 @@ interface STOR_Interface {
     function enableDefaultContractsForAC(uint32 _node) external;
 
     /*
-     * @dev Authorize / Deauthorize / Authorize contract NAMES permitted to make record modifications, per AssetClass
+     * @dev Authorize / Deauthorize / Authorize contract NAMES permitted to make record modifications, per Node
      * allows ACtokenHolder to auithorize or deauthorize specific contracts to work within their node
      */
     function enableContractForAC(
@@ -1361,7 +1361,7 @@ interface STOR_Interface {
     /*
      * @dev Change node of an asset - writes to node in the 'Record' struct of the 'database' at _idxHash
      */
-    function changeAC(bytes32 _idxHash, uint32 _newAssetClass) external;
+    function changeAC(bytes32 _idxHash, uint32 _newNode) external;
 
     /*
      * @dev Set an asset to stolen or lost. Allows narrow modification of status 6/12 assets, normally locked

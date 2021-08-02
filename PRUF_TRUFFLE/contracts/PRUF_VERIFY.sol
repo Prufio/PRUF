@@ -78,7 +78,7 @@ contract VERIFY is CORE {
 
     /*
      * @dev:authorize an asset token _idxHash as a wallet token in verify
-     *      the caller must posess node token for given asset Class (reverts)
+     *      the caller must posess node token for given Node (reverts)
      *      node must be VERIFY custody type (4) (reverts)
      *      node of Asset token to be approved must be of the same node as the held ACtoken (reverts)
      */
@@ -231,7 +231,7 @@ contract VERIFY is CORE {
 
         require(items[_itemHash] == _idxHash, "VFY:T: Item not held by caller"); //check to see if held by _idxHash
         require( //must move to same node root
-            NODE_MGR.isSameRootAC(rec.node, newRec.node) == 170,
+            NODE_MGR.isSameRootNode(rec.node, newRec.node) == 170,
             "VFY:T: Wallet is not in the same node root"
         );
         require(

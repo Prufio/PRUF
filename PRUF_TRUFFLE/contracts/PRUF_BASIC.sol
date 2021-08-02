@@ -123,7 +123,7 @@ abstract contract BASIC is
     /**
      * @dev Resolve Contract Addresses from STOR 
      */
-    function Admin_resolveContractAddresses()
+    function resolveContractAddresses()
         external
         virtual
         nonReentrant
@@ -183,11 +183,11 @@ abstract contract BASIC is
     }
 
     /**
-     * @dev Transfer any specified assetClassToken from contract
+     * @dev Transfer any specified nodeToken from contract
      * @param _to - address to send to
      * @param _tokenID - node token ID
      */
-    function Admin_transferACToken(address _to, uint256 _tokenID)
+    function transferNodeToken(address _to, uint256 _tokenID)
         external
         virtual
         isContractAdmin 
@@ -202,7 +202,7 @@ abstract contract BASIC is
      * @dev Set address of STOR contract to interface with 
      * @param _storageAddress address of PRUF_STOR
      */
-    function Admin_setStorageContract(address _storageAddress)
+    function setStorageContract(address _storageAddress)
         external
         virtual
         isContractAdmin 
@@ -260,13 +260,13 @@ abstract contract BASIC is
     {
         //^^^^^^^checks^^^^^^^^^
 
-        uint8 userTypeInAssetClass =
+        uint8 userTypeInNode =
             NODE_MGR.getUserType(
                 keccak256(abi.encodePacked(_msgSender())),
                 _node
             );
 
-        return userTypeInAssetClass;
+        return userTypeInNode;
         //^^^^^^^interactions^^^^^^^^^
     }
 
@@ -286,7 +286,7 @@ abstract contract BASIC is
         // //^^^^^^^effects^^^^^^^^^
 
         // (
-        //     node_info.assetClassRoot,
+        //     node_info.nodeRoot,
         //     node_info.custodyType,
         //     node_info.managementType,
         //     node_info.discount,

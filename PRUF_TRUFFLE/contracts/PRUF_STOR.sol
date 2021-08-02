@@ -14,7 +14,6 @@ __/\\\\\\\\\\\\\ _____/\\\\\\\\\ _______/\\__/\\ ___/\\\\\\\\\\\\\\\
  *  TO DO
  * //CTS:EXAMINE all params/returns defined in comments global
  * //CTS:EXAMINE ACTH->NTH global
- * //CTS:EXAMINE AssetClassRoot, node root, root->RootNode global
  * //CTS:EXAMINE IPFS1/IPFS2->storProvider/storProvider2 global
  * //CTS:EXAMINE idxHash->assetId global
  * //CTS:EXAMINE NP name change
@@ -216,7 +215,7 @@ contract STOR is AccessControl, ReentrancyGuard, Pausable {
     }
 
     /**
-     * @dev Authorize / Deauthorize ADRESSES permitted to make record modifications, per AssetClass
+     * @dev Authorize / Deauthorize ADRESSES permitted to make record modifications, per node
      * populates contract name resolution and data mappings
      * @param   _contractName - String name of contract
      * @param   _contractAddr - address of contract
@@ -245,7 +244,7 @@ contract STOR is AccessControl, ReentrancyGuard, Pausable {
     }
 
     /**
-     * @dev set the default list of 11 contracts (zero index) to be applied to asset classes
+     * @dev set the default list of 11 contracts (zero index) to be applied to Nodees
      * APP_NC, NP_NC, NODE_MGR, NODE_TKN, A_TKN, ECR_MGR, RCLR, PIP, PURCHASE, DECORATE, WRAP
      * @param   _contractNumber - 0-10
      * @param   _name - name
@@ -264,7 +263,7 @@ contract STOR is AccessControl, ReentrancyGuard, Pausable {
     }
 
     /**
-     * @dev retrieve a record from the default list of 11 contracts to be applied to asset classes
+     * @dev retrieve a record from the default list of 11 contracts to be applied to Nodees
      * @param _contractNumber to look up (0-10)
      * returns the name and auth level
      */
@@ -281,7 +280,7 @@ contract STOR is AccessControl, ReentrancyGuard, Pausable {
 
     /**
      * @dev Set the default 11 authorized contracts
-     * @param _node the Asset Class which will be enabled for the default contracts
+     * @param _node the Node which will be enabled for the default contracts
      */
     function enableDefaultContractsForAC(uint32 _node) public {
         require(
@@ -349,7 +348,7 @@ contract STOR is AccessControl, ReentrancyGuard, Pausable {
     }
 
     /**
-     * @dev Authorize / Deauthorize contract NAMES permitted to make record modifications, per AssetClass
+     * @dev Authorize / Deauthorize contract NAMES permitted to make record modifications, per node
      * allows ACtokenHolder to Authorize / Deauthorize specific contracts to work within their node
      * @param   _name -  Name of contract being authed
      * @param   _node - affected node
@@ -489,28 +488,28 @@ contract STOR is AccessControl, ReentrancyGuard, Pausable {
     /**
      * @dev Change node of an asset - writes to node in the 'Record' struct of the 'database' at _idxHash
      * @param _idxHash - record asset ID
-     * @param _newAssetClass - Aseet Class to change to
+     * @param _newNode - Aseet Class to change to
      */
-    function changeAC(bytes32 _idxHash, uint32 _newAssetClass)
+    function changeAC(bytes32 _idxHash, uint32 _newNode)
         external
         nonReentrant
         whenNotPaused
         exists(_idxHash) //asset must exist in 'database'
         notEscrow(_idxHash) // asset must not be held in escrow status
-        isAuthorized(0) //is an authorized contract, Asset class nonspecific
+        isAuthorized(0) //is an authorized contract, Node nonspecific
     {
         Record memory rec = database[_idxHash];
 
-        require(_newAssetClass != 0, "S:CAC: Cannot set node=0");
+        require(_newNode != 0, "S:CAC: Cannot set node=0");
         require( //require new node is in the same root as old node
-            NODE_MGR.isSameRootAC(_newAssetClass, rec.node) == 170,
+            NODE_MGR.isSameRootNode(_newNode, rec.node) == 170,
             "S:CAC: Cannot mod node to new root"
         );
         require(isLostOrStolen(rec.assetStatus) == 0, "S:CAC: L/S asset"); //asset cannot be in lost or stolen status
         require(isTransferred(rec.assetStatus) == 0, "S:CAC: Txfrd asset"); //asset cannot be in transferred status
         //^^^^^^^checks^^^^^^^^^
 
-        rec.node = _newAssetClass;
+        rec.node = _newNode;
         database[_idxHash] = rec;
         //^^^^^^^effects^^^^^^^^^
 
