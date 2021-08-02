@@ -183,11 +183,11 @@ abstract contract BASIC is
     }
 
     /**
-     * @dev Transfer any specified assetClassToken from contract
+     * @dev Transfer any specified nodeToken from contract
      * @param _to - address to send to
      * @param _tokenID - node token ID
      */
-    function Admin_transferACToken(address _to, uint256 _tokenID)
+    function Admin_transferNodeToken(address _to, uint256 _tokenID)
         external
         virtual
         isContractAdmin 
