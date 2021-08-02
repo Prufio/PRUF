@@ -181,7 +181,7 @@ contract NODE_MGR is BASIC {
         require(
             node_index[_name] == _fromNode,
             "ACM:TN: Name not in source node"
-        ); //source AC_Name must match name given
+        ); //source Node_Name must match name given
 
         require(
             (node_data[_toNode].CAS1 == B320xF_), //dest node must have CAS1 set to 0xFFFF.....
@@ -673,7 +673,7 @@ contract NODE_MGR is BASIC {
     }
 
     /**
-     * @dev Retrieve AC_name @ _tokenId or node
+     * @dev Retrieve Node_name @ _tokenId or node
      * @param node - tokenId associated with query
      *
      * @return name of token @ _tokenID
@@ -690,7 +690,7 @@ contract NODE_MGR is BASIC {
     }
 
     /**
-     * @dev Retrieve node @ AC_name
+     * @dev Retrieve node @ Node_name
      * @param _name - name of node for nodeNumber query
      *
      * @return node number @ _name
@@ -710,7 +710,7 @@ contract NODE_MGR is BASIC {
      *
      * @return {
          nodeTokenIndex: current token number
-         AC_price: current price per node
+         Node_price: current price per node
      }
      */
     function currentACpricingInfo() external view returns (uint256, uint256) {
@@ -761,7 +761,7 @@ contract NODE_MGR is BASIC {
     }
 
     /**
-     * @dev Retrieve AC_discount @ _node
+     * @dev Retrieve Node_discount @ _node
      * @param _node - node associated with query
      *
      * @return percentage of rewards distribution @ _node

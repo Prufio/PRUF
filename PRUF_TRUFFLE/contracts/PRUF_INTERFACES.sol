@@ -1258,12 +1258,12 @@ interface NODE_MGR_Interface {
         returns (uint8);
 
     /*
-     * @dev Retrieve AC_name @ _tokenId
+     * @dev Retrieve Node_name @ _tokenId
      */
     function getNode_name(uint32 _tokenId) external view returns (string memory);
 
     /*
-     * @dev Retrieve node_index @ AC_name
+     * @dev Retrieve node_index @ Node_name
      */
     function resolveNode(string calldata _name)
         external
@@ -1284,7 +1284,7 @@ interface NODE_MGR_Interface {
         returns (Invoice memory);
 
     /*
-     * @dev Retrieve AC_discount @ _node, in percent ACTH share, * 100 (9000 = 90%)
+     * @dev Retrieve Node_discount @ _node, in percent ACTH share, * 100 (9000 = 90%)
      */
     function getNode_discount(uint32 _node) external view returns (uint32);
 }
