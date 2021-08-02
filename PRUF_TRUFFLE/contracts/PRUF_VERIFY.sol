@@ -80,14 +80,14 @@ contract VERIFY is CORE {
      * @dev:authorize an asset token _idxHash as a wallet token in verify
      *      the caller must posess node token for given asset Class (reverts)
      *      node must be VERIFY custody type (4) (reverts)
-     *      node of Asset token to be approved must be of the same assetClass as the held ACtoken (reverts)
+     *      node of Asset token to be approved must be of the same node as the held ACtoken (reverts)
      */
     function authorizeTokenForVerify(
         bytes32 _idxHash,
         uint8 _verified, //0 for not verify authorized, 1 for admin level auth, 2 for priveledged level auth and 3 = basic verify authorization
         uint32 _node
     ) external {
-        Node memory ACdata = getACinfo(_node);
+        Node memory ACdata =getNodeinfo(_node);
         Record memory rec = getRecord(_idxHash);
 
         require(

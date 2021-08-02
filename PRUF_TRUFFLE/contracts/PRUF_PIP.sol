@@ -41,7 +41,7 @@ contract PIP is CORE {
 
     function mintPipAsset(
         bytes32 _idxHash,
-        bytes32 _hashedAuthCode, // token URI needs to be K256(packed( uint32 assetClass, string authCode)) supplied off chain
+        bytes32 _hashedAuthCode, // token URI needs to be K256(packed( uint32 node, string authCode)) supplied off chain
         uint32 _node
     ) external nonReentrant whenNotPaused {
         uint256 tokenId = uint256(_idxHash);

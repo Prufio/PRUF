@@ -45,7 +45,7 @@ contract SCULPTOR is AccessControl, BASIC{
     }
 
     // /*
-    //  * @dev Verify caller holds ACtoken of passed assetClass
+    //  * @dev Verify caller holds ACtoken of passed node
     //  */
     // modifier isACtokenHolderOfClass(uint32 _node) {
     //     require(

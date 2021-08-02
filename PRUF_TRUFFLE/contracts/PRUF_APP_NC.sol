@@ -43,7 +43,7 @@ contract APP_NC is CORE {
      * @dev Create a newRecord with description
      * @param _idxHash - hash of asset information created by frontend inputs
      * @param _rgtHash - hash of rightsholder information created by frontend inputs
-     * @param _node - assetClass the asset will be created in
+     * @param _node - node the asset will be created in
      * @param _countDownStart - decremental counter for an assets lifecycle
      * @param _Ipfs1a - field for external asset data
      * @param _Ipfs1b - field for external asset data
@@ -77,7 +77,7 @@ contract APP_NC is CORE {
      * @dev Create a newRecord with permanent description
      * @param _idxHash - hash of asset information created by frontend inputs
      * @param _rgtHash - hash of rightsholder information created by frontend inputs
-     * @param _node - assetClass the asset will be created in
+     * @param _node - node the asset will be created in
      * @param _countDownStart - decremental counter for an assets lifecycle
      * @param _Ipfs2a - field for permanent external asset data
      * @param _Ipfs2b - field for permanent external asset data
@@ -111,7 +111,7 @@ contract APP_NC is CORE {
      * @dev Create a newRecord
      * @param _idxHash - hash of asset information created by frontend inputs
      * @param _rgtHash - hash of rightsholder information created by frontend inputs
-     * @param _node - assetClass the asset will be created in
+     * @param _node - node the asset will be created in
      * @param _countDownStart - decremental counter for an assets lifecycle
      */
     function newRecord(
@@ -134,7 +134,7 @@ contract APP_NC is CORE {
     /** DPS TEST-NEW FUNCTIONALITY
      * @dev Import a record into a new asset class
      * @param _idxHash - hash of asset information created by frontend inputs
-     * @param _newAssetClass - assetClass the asset will be imported into
+     * @param _newAssetClass - node the asset will be imported into
      */
     function importAsset(bytes32 _idxHash, uint32 _newAssetClass)
         external
@@ -143,7 +143,7 @@ contract APP_NC is CORE {
         isAuthorized(_idxHash)
     {
         Record memory rec = getRecord(_idxHash);
-        Node memory node_info = getACinfo(_newAssetClass);
+        Node memory node_info =getNodeinfo(_newAssetClass);
 
         require(rec.assetStatus == 70, "ANC:IA: Asset !exported");
         require( //DPS:TEST NEW

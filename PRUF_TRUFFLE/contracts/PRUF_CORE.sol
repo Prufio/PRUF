@@ -42,7 +42,7 @@ contract CORE is BASIC {
         uint32 _countDownStart
     ) internal virtual {
         uint256 tokenId = uint256(_idxHash);
-        Node memory node_info = getACinfo(_node);
+        Node memory node_info =getNodeinfo(_node);
 
         require(
             A_TKN.tokenExists(tokenId) == 0,
@@ -135,7 +135,7 @@ contract CORE is BASIC {
         virtual
         whenNotPaused
     {
-        Node memory node_info = getACinfo(_rec.node);
+        Node memory node_info =getNodeinfo(_rec.node);
 
         require(
             (node_info.managementType < 6),

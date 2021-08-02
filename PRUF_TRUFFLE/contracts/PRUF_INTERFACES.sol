@@ -23,7 +23,7 @@ struct Record {
     uint8 modCount; // Number of times asset has been forceModded.
     uint8 currency; //currency for price information (0=not for sale, 1=ETH, 2=PRUF, 3=DAI, 4=WBTC.... )
     uint16 numberOfTransfers; //number of transfers and forcemods
-    uint32 assetClass; // Type of asset
+    uint32 node; // Type of asset
     uint32 countDown; // Variable that can only be decreased from countDownStart
     uint32 int32temp; // int32 for persisting transitional data
     uint120 price; //price set for items offered for sale
@@ -37,7 +37,7 @@ struct Record {
 //     proposed ISO standardized
 //     struct Record {
 //     uint8 assetStatus; // Status - Transferrable, locked, in transfer, stolen, lost, etc.
-//     uint32 assetClass; // Type of asset
+//     uint32 node; // Type of asset
 //     uint32 countDown; // Variable that can only be decreased from countDownStart
 //     uint32 int32temp; // int32 for persisting transitional data
 //     bytes32 Ipfs1a; // Publically viewable asset description
@@ -48,8 +48,8 @@ struct Record {
 // }
 
 struct Node {
-    //Struct for holding and manipulating assetClass data
-    string name; // NameHash for assetClass
+    //Struct for holding and manipulating node data
+    string name; // NameHash for node
     uint32 assetClassRoot; // asset type root (bicyles - USA Bicycles)             //immutable
     uint8 custodyType; // custodial or noncustodial, special asset types       //immutable
     uint8 managementType; // type of management for asset creation, import, export //immutable
@@ -113,7 +113,7 @@ struct Costs {
 
 struct Invoice {
     //invoice struct to facilitate payment messaging in-contract
-    uint32 assetClass;
+    uint32 node;
     address rootAddress;
     address ACTHaddress;
     uint256 rootPrice;
@@ -461,7 +461,7 @@ interface UTIL_TKN_Interface {
  */
 interface NODE_TKN_Interface {
     /*
-     * @dev Mints assetClass token, must be isContractAdmin
+     * @dev Mints node token, must be isContractAdmin
      */
     function mintACToken(
         address _recipientAddress,
@@ -1095,7 +1095,7 @@ interface NODE_MGR_Interface {
     ) external;
 
     /*
-     * @dev Mints asset class token and creates an assetClass. Mints to @address
+     * @dev Mints asset class token and creates an node. Mints to @address
      * Requires that:
      *  name is unuiqe
      *  node is not provisioned with a root (proxy for not yet registered)
@@ -1139,7 +1139,7 @@ interface NODE_MGR_Interface {
     ) external;
 
     /*
-     * @dev Modifies an assetClass
+     * @dev Modifies an node
      * Sets a new node name. Asset Classes cannot be moved to a new root or custody type.
      * Requires that:
      *  caller holds ACtoken
@@ -1148,7 +1148,7 @@ interface NODE_MGR_Interface {
     function updateACname(uint32 _node, string calldata _name) external;
 
     /*
-     * @dev Modifies an assetClass
+     * @dev Modifies an node
      * Sets a new node IPFS Address. Asset Classes cannot be moved to a new root or custody type.
      * Requires that:
      *  caller holds ACtoken
@@ -1170,7 +1170,7 @@ interface NODE_MGR_Interface {
     ) external;
 
     /*
-     * @dev Modifies an assetClass
+     * @dev Modifies an node
      * Sets the immutable data on an node
      * Requires that:
      * caller holds ACtoken
@@ -1187,7 +1187,7 @@ interface NODE_MGR_Interface {
 
     /**
      * @dev get bit from .switches at specified position
-     * @param _node - assetClass associated with query
+     * @param _node - node associated with query
      * @param _position - bit position associated with query
      *
      * @return 1 or 0 (enabled or disabled)
@@ -1231,7 +1231,7 @@ interface NODE_MGR_Interface {
     // /*
     //  * @dev Retrieve node_data @ _node
     //  */
-    // function getAC_data(uint32 _node)
+    // functiongetNode_data(uint32 _node)
     //     external
     //     returns (
     //         uint32,
@@ -1260,7 +1260,7 @@ interface NODE_MGR_Interface {
     /*
      * @dev Retrieve AC_name @ _tokenId
      */
-    function getAC_name(uint32 _tokenId) external view returns (string memory);
+    functiongetNode_name(uint32 _tokenId) external view returns (string memory);
 
     /*
      * @dev Retrieve node_index @ AC_name
@@ -1286,7 +1286,7 @@ interface NODE_MGR_Interface {
     /*
      * @dev Retrieve AC_discount @ _node, in percent ACTH share, * 100 (9000 = 90%)
      */
-    function getAC_discount(uint32 _node) external view returns (uint32);
+    functiongetNode_discount(uint32 _node) external view returns (uint32);
 }
 
 //------------------------------------------------------------------------------------------------
@@ -1359,7 +1359,7 @@ interface STOR_Interface {
     ) external;
 
     /*
-     * @dev Change asset class of an asset - writes to assetClass in the 'Record' struct of the 'database' at _idxHash
+     * @dev Change asset class of an asset - writes to node in the 'Record' struct of the 'database' at _idxHash
      */
     function changeAC(bytes32 _idxHash, uint32 _newAssetClass) external;
 

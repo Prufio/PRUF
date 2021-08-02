@@ -42,7 +42,7 @@ contract APP is CORE {
      * @dev Creates a new record  DPS:CHECK no longer sets rec.countDownStart
      * @param _idxHash - hash of asset information created by frontend inputs
      * @param _rgtHash - hash of rightsholder information created by frontend inputs
-     * @param _node - assetClass the asset will be created in
+     * @param _node - node the asset will be created in
      * @param _countDownStart - decremental counter for an assets lifecycle
      */
     function newRecord(
@@ -66,7 +66,7 @@ contract APP is CORE {
      * @dev import Rercord, must match export node //DPS:TEST
      * posessor is considered to be owner. sets rec.assetStatus to 0.
      * @param _idxHash - hash of asset information created by frontend inputs
-     * @param _newAssetClass - assetClass the asset will be imported into
+     * @param _newAssetClass - node the asset will be imported into
      */
     function importAsset(bytes32 _idxHash, uint32 _newAssetClass)
         external

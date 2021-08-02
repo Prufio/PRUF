@@ -54,7 +54,7 @@ contract WRAP is CORE {
      * @param _foreignTokenID tokenID of token to wrap
      * @param _foreignTokenContract contract address for token to wrap
      * @param _rgtHash - hash of rightsholder information created by frontend inputs
-     * @param _node - assetClass the asset will be created in
+     * @param _node - node the asset will be created in
      * @param _countDownStart - decremental counter for an assets lifecycle
      * Prerequisite: contract authorized for token txfr
      * Takes original 721
@@ -80,7 +80,7 @@ contract WRAP is CORE {
             keccak256(abi.encodePacked(_foreignTokenID, _foreignTokenContract));
 
         Record memory rec = getRecord(idxHash);
-        Node memory node_info = getACinfo(_node);
+        Node memory node_info =getNodeinfo(_node);
 
         uint256 newTokenId = uint256(idxHash);
 
@@ -158,7 +158,7 @@ contract WRAP is CORE {
     {
         bytes32 idxHash = bytes32(_tokenID);
         Record memory rec = getRecord(idxHash);
-        Node memory node_info = getACinfo(rec.node);
+        Node memory node_info =getNodeinfo(rec.node);
         address foreignTokenContract = wrapped[_tokenID].tokenContract;
         uint256 foreignTokenID = wrapped[_tokenID].tokenID;
 
@@ -217,7 +217,7 @@ contract WRAP is CORE {
         uint32 _countDownStart
     ) internal override {
         uint256 tokenId = uint256(_idxHash);
-        Node memory node_info = getACinfo(_node);
+        Node memory node_info =getNodeinfo(_node);
 
         require(
             A_TKN.tokenExists(tokenId) == 0,

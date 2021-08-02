@@ -80,7 +80,7 @@ contract RCLR is ECR_CORE, CORE {
         escrowDataExtLight memory escrowDataLight =
             getEscrowDataLight(_idxHash);
         Record memory rec = getRecord(_idxHash);
-        Node memory node_info = getACinfo(_node);
+        Node memory node_info =getNodeinfo(_node);
         require(_rgtHash != 0, "R:R: New rights holder = zero");
         require(rec.assetStatus == 60, "R:R: Asset not discarded");
         require(

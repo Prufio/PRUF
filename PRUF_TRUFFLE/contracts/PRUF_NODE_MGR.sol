@@ -68,8 +68,8 @@ contract NODE_MGR is BASIC {
     }
 
     /**
-     * @dev Verify caller holds ACtoken of passed assetClass
-     * @param _node - assetClass in which caller is queried for ownership
+     * @dev Verify caller holds ACtoken of passed node
+     * @param _node - node in which caller is queried for ownership
      */
     modifier isACtokenHolderOfClass(uint32 _node) {
         require(
@@ -83,7 +83,7 @@ contract NODE_MGR is BASIC {
 
     /**
      * @dev Set pricing for Nodes
-     * @param newACprice - cost per assetClass (18 decimals)
+     * @param newACprice - cost per node (18 decimals)
      */
     function adminSetACpricing(uint256 newACprice) external isContractAdmin {
         //^^^^^^^checks^^^^^^^^^
@@ -99,7 +99,7 @@ contract NODE_MGR is BASIC {
      * !! to be used with great caution !!
      * This potentially breaks decentralization and must eventually be given over to some kind of governance contract.
      * @dev Increases (but cannot decrease) price share for a given node
-     * @param _node - assetClass in which cost share is being modified
+     * @param _node - node in which cost share is being modified
      * @param _newDiscount - discount(1% == 100, 10000 == max)
      */
     function adminIncreaseShare(uint32 _node, uint32 _newDiscount)
@@ -169,8 +169,8 @@ contract NODE_MGR is BASIC {
      * @dev Transfers a name from one asset class to another
      *   -Designed to remedy brand infringement issues. This breaks decentralization and must eventually be given
      *   -over to some kind of governance contract.
-     * @param _assetClassSource - source assetClass
-     * @param _assetClassDest - destination assetClass
+     * @param _assetClassSource - source node
+     * @param _assetClassDest - destination node
      * @param _name - name to be transferred
      */
     function transferName(
@@ -198,15 +198,15 @@ contract NODE_MGR is BASIC {
     /**
      * !! -------- to be used with great caution -----------
      * @dev Modifies an asset class with minimal controls
-     * @param _node - assetClass to be modified
-     * @param _assetClassRoot - root of assetClass
-     * @param _custodyType - custodyType of assetClass (see docs)
-     * @param _managementType - managementType of assetClass (see docs)
-     * @param _storageProvider - storageProvider of assetClass (see docs)
-     * @param _discount - discount of assetClass (100 == 1%, 10000 == max)
-     * @param _refAddress - referance address associated with an assetClass
-     * @param _CAS1 - any external data attatched to assetClass 1/2
-     * @param _CAS2 - any external data attatched to assetClass 2/2
+     * @param _node - node to be modified
+     * @param _assetClassRoot - root of node
+     * @param _custodyType - custodyType of node (see docs)
+     * @param _managementType - managementType of node (see docs)
+     * @param _storageProvider - storageProvider of node (see docs)
+     * @param _discount - discount of node (100 == 1%, 10000 == max)
+     * @param _refAddress - referance address associated with an node
+     * @param _CAS1 - any external data attatched to node 1/2
+     * @param _CAS2 - any external data attatched to node 2/2
      */
     function adminModAssetClass(
         uint32 _node,
@@ -245,7 +245,7 @@ contract NODE_MGR is BASIC {
 
     /**
      * @dev Modifies node.switches bitwise (see NODE option switches in ZZ_PRUF_DOCS)
-     * @param _node - assetClass to be modified
+     * @param _node - node to be modified
      * @param _position - uint position of bit to be modified
      * @param _bit - switch - 1 or 0 (true or false)
      */
@@ -279,17 +279,17 @@ contract NODE_MGR is BASIC {
     //--------------------------------------------NODEMINTER only Functions--------------------------
 
     /**
-     * @dev Mints asset class token and creates an assetClass.
-     * @param _node - assetClass to be created (unique)
-     * @param _name - name to be configured to assetClass (unique)
-     * @param _assetClassRoot - root of assetClass
-     * @param _custodyType - custodyType of new assetClass (see docs)
-     * @param _managementType - managementType of new assetClass (see docs)
-     * @param _storageProvider - storageProvider of new assetClass (see docs)
-     * @param _discount - discount of assetClass (100 == 1%, 10000 == max)
-     * @param _CAS1 - any external data attatched to assetClass 1/2
-     * @param _CAS2 - any external data attatched to assetClass 2/2
-     * @param _recipientAddress - address to recieve assetClass
+     * @dev Mints asset class token and creates an node.
+     * @param _node - node to be created (unique)
+     * @param _name - name to be configured to node (unique)
+     * @param _assetClassRoot - root of node
+     * @param _custodyType - custodyType of new node (see docs)
+     * @param _managementType - managementType of new node (see docs)
+     * @param _storageProvider - storageProvider of new node (see docs)
+     * @param _discount - discount of node (100 == 1%, 10000 == max)
+     * @param _CAS1 - any external data attatched to node 1/2
+     * @param _CAS2 - any external data attatched to node 2/2
+     * @param _recipientAddress - address to recieve node
      */
     function createAssetClass(
         uint32 _node,
@@ -323,11 +323,11 @@ contract NODE_MGR is BASIC {
 
     /**
      * @dev Burns (amount) tokens and mints a new asset class token to the calling address
-     * @param _name - chosen name of assetClass
-     * @param _assetClassRoot - chosen root of assetClass
-     * @param _custodyType - chosen custodyType of assetClass (see docs)
-     * @param _CAS1 - any external data attatched to assetClass 1/2
-     * @param _CAS2 - any external data attatched to assetClass 2/2
+     * @param _name - chosen name of node
+     * @param _assetClassRoot - chosen root of node
+     * @param _custodyType - chosen custodyType of node (see docs)
+     * @param _CAS1 - any external data attatched to node 1/2
+     * @param _CAS2 - any external data attatched to node 2/2
      */
     function purchaseNode(
         string calldata _name,
@@ -382,7 +382,7 @@ contract NODE_MGR is BASIC {
     /**
      * @dev Authorize / Deauthorize users for an address be permitted to make record modifications
      * @dev only useful for custody types that designate user adresses (type1...)
-     * @param _node - assetClass that user is being authorized in
+     * @param _node - node that user is being authorized in
      * @param _addrHash - hash of address belonging to user being authorized
      * @param _userType - authority level for user (see docs)
      */
@@ -409,8 +409,8 @@ contract NODE_MGR is BASIC {
 
     /**
      * @dev Modifies an node Node name for its exclusive namespace
-     * @param _node - assetClass being modified
-     * @param _name - updated name associated with assetClass (unique)
+     * @param _node - node being modified
+     * @param _name - updated name associated with node (unique)
      */
     function updateACname(uint32 _node, string calldata _name)
         external
@@ -434,9 +434,9 @@ contract NODE_MGR is BASIC {
 
     /** CTS:EXAMINE Need 2 IPFS fields
      * @dev Modifies an node Node IPFS data pointer
-     * @param _node - assetClass being modified
-     * @param _CAS1 - any external data attatched to assetClass 1/2
-     * @param _CAS2 - any external data attatched to assetClass 2/2
+     * @param _node - node being modified
+     * @param _CAS1 - any external data attatched to node 1/2
+     * @param _CAS2 - any external data attatched to node 2/2
      */
     function updateNodeCAS(
         uint32 _node,
@@ -455,7 +455,7 @@ contract NODE_MGR is BASIC {
 
     /**
      * @dev Set function costs and payment address per asset class, in PRUF(18 decimals)
-     * @param _node - assetClass to set service costs
+     * @param _node - node to set service costs
      * @param _service - service type being modified (see service types in ZZ_PRUF_DOCS)
      * @param _serviceCost - 18 decimal fee in PRUF associated with specified service
      * @param _paymentAddress - address to have _serviceCost paid to
@@ -477,10 +477,10 @@ contract NODE_MGR is BASIC {
 
     /**
      * @dev Configure the immutable data in an asset class one time
-     * @param _node - assetClass being modified
-     * @param _managementType - managementType of assetClass (see docs)
-     * @param _storageProvider - storageProvider of assetClass (see docs)
-     * @param _refAddress - address permanently tied to assetClass
+     * @param _node - node being modified
+     * @param _managementType - managementType of node (see docs)
+     * @param _storageProvider - storageProvider of node (see docs)
+     * @param _refAddress - address permanently tied to node
      */
     function updateACImmutable(
         uint32 _node,
@@ -516,7 +516,7 @@ contract NODE_MGR is BASIC {
 
     /**
      * @dev get bit from .switches at specified position
-     * @param _node - assetClass associated with query
+     * @param _node - node associated with query
      * @param _position - bit position associated with query
      *
      * @return 1 or 0 (enabled or disabled)
@@ -543,7 +543,7 @@ contract NODE_MGR is BASIC {
     /**
      * @dev get an node Node User type for a specified address
      * @param _userHash - hash of selected user
-     * @param _node - assetClass of query
+     * @param _node - node of query
      *
      * @return type of user @ _node (see docs)
      */
@@ -607,10 +607,10 @@ contract NODE_MGR is BASIC {
 
     /**
      * @dev Retrieve node_data @ _node
-     * @param _node - assetClass associated with query
+     * @param _node - node associated with query
      * DPS:THIS FUNCTION REMAINS FOR EXTERNAL TESTING ACCESS. try using getExtAcData, it should be depricated prior to production.
      */
-    function getAC_data(uint32 _node)
+    functiongetNode_data(uint32 _node)
         external
         view
         returns (
@@ -634,7 +634,7 @@ contract NODE_MGR is BASIC {
 
     /**
      * @dev Retrieve extended node_data @ _node
-     * @param _node - assetClass associated with query
+     * @param _node - node associated with query
      *
      * @return node_data (see docs)
      */
@@ -650,8 +650,8 @@ contract NODE_MGR is BASIC {
 
     /**
      * @dev verify the root of two asset classes are equal
-     * @param _assetClass1 - first assetClass associated with query
-     * @param _assetClass2 - second assetClass associated with query
+     * @param _assetClass1 - first node associated with query
+     * @param _assetClass2 - second node associated with query
      *
      * @return 170 or 0 (true or false)
      */
@@ -674,11 +674,11 @@ contract NODE_MGR is BASIC {
 
     /**
      * @dev Retrieve AC_name @ _tokenId or node
-     * @param assetClass - tokenId associated with query
+     * @param node - tokenId associated with query
      *
      * @return name of token @ _tokenID
      */
-    function getAC_name(uint32 assetClass)
+    functiongetNode_name(uint32 node)
         external
         view
         returns (string memory)
@@ -690,10 +690,10 @@ contract NODE_MGR is BASIC {
     }
 
     /**
-     * @dev Retrieve assetClass @ AC_name
-     * @param _name - name of assetClass for assetClassNumber query
+     * @dev Retrieve node @ AC_name
+     * @param _name - name of node for assetClassNumber query
      *
-     * @return assetClass number @ _name
+     * @return node number @ _name
      */
     function resolveAssetClass(string calldata _name)
         external
@@ -710,7 +710,7 @@ contract NODE_MGR is BASIC {
      *
      * @return {
          nodeTokenIndex: current token number
-         AC_price: current price per assetClass
+         AC_price: current price per node
      }
      */
     function currentACpricingInfo() external view returns (uint256, uint256) {
@@ -723,7 +723,7 @@ contract NODE_MGR is BASIC {
 
     /**
      * @dev Retrieve function costs per asset class, per service type in PRUF(18 decimals)
-     * @param _node - assetClass associated with query
+     * @param _node - node associated with query
      * @param _service - service number associated with query (see service types in ZZ_PRUF_DOCS)
      *
      * @return invoice{
@@ -731,7 +731,7 @@ contract NODE_MGR is BASIC {
          rootPrice: @ _node root service cost @ _service
          ACTHaddress: @ _node payment address tied @ _service
          ACTHprice: @ _node service cost @ _service
-         assetClass: _node
+         node: _node
      }
      */
     function getServiceCosts(uint32 _node, uint16 _service)
@@ -762,11 +762,11 @@ contract NODE_MGR is BASIC {
 
     /**
      * @dev Retrieve AC_discount @ _node
-     * @param _node - assetClass associated with query
+     * @param _node - node associated with query
      *
      * @return percentage of rewards distribution @ _node
      */
-    function getAC_discount(uint32 _node) external view returns (uint32) {
+    functiongetNode_discount(uint32 _node) external view returns (uint32) {
         //^^^^^^^checks^^^^^^^^^
         return (node_data[_node].discount);
         //^^^^^^^interactions^^^^^^^^^

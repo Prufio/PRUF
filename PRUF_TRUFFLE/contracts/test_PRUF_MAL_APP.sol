@@ -49,8 +49,8 @@ contract MAL_APP is CORE_MAL {
     {
         // Record memory rec = getRecord(_idxHash);
         // uint8 userType = getCallingUserType(_node);
-        // Node memory node_info = getACinfo(_node);
-        // Node memory oldAC_info = getACinfo(rec.node);
+        // Node memory node_info =getNodeinfo(_node);
+        // Node memory oldAC_info =getNodeinfo(rec.node);
         // ContractDataHash memory contractInfo = getContractInfo(
         //     address(this),
         //     _node
@@ -546,7 +546,7 @@ contract MAL_APP is CORE_MAL {
         //     address(this),
         //     rec.node
         // );
-        // Node memory node_info = getACinfo(rec.node);
+        // Node memory node_info =getNodeinfo(rec.node);
 
         // require(
         //     contractInfo.contractType > 0,

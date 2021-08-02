@@ -49,7 +49,7 @@ contract DECORATE is CORE {
      * @param _tokenID - tokenID of token being decorated from @_tokenContract
      * @param _tokenContract - token contract for @_tokenID
      * @param _rgtHash - hash of new rightsholder information created by frontend inputs
-     * @param _node - assetClass the @_tokenID will be decorated in
+     * @param _node - node the @_tokenID will be decorated in
      * @param _countDownStart - decremental counter for an assets lifecycle
      */
     function decorate721(
@@ -66,7 +66,7 @@ contract DECORATE is CORE {
     {   //DPS:TEST
         bytes32 idxHash = keccak256(abi.encodePacked(_tokenID, _tokenContract));
         Record memory rec = getRecord(idxHash);
-        Node memory node_info = getACinfo(_node);
+        Node memory node_info =getNodeinfo(_node);
 
         require(node_info.custodyType == 5, "D:D:Asset class.custodyType != 5");
         require(
@@ -132,7 +132,7 @@ contract DECORATE is CORE {
     {
         bytes32 idxHash = keccak256(abi.encodePacked(_tokenID, _tokenContract));
         Record memory rec = getRecord(idxHash);
-        Node memory node_info = getACinfo(rec.node);
+        Node memory node_info =getNodeinfo(rec.node);
 
         require(
             node_info.custodyType == 5,
@@ -191,7 +191,7 @@ contract DECORATE is CORE {
     {
         bytes32 idxHash = keccak256(abi.encodePacked(_tokenID, _tokenContract));
         Record memory rec = getRecord(idxHash);
-        Node memory node_info = getACinfo(rec.node);
+        Node memory node_info =getNodeinfo(rec.node);
 
         require(
             node_info.custodyType == 5,
@@ -225,7 +225,7 @@ contract DECORATE is CORE {
     {
         bytes32 idxHash = keccak256(abi.encodePacked(_tokenID, _tokenContract));
         Record memory rec = getRecord(idxHash);
-        Node memory node_info = getACinfo(rec.node);
+        Node memory node_info =getNodeinfo(rec.node);
 
         require(
             node_info.custodyType == 5,
@@ -265,7 +265,7 @@ contract DECORATE is CORE {
     {
         bytes32 idxHash = keccak256(abi.encodePacked(_tokenID, _tokenContract));
         Record memory rec = getRecord(idxHash);
-        Node memory node_info = getACinfo(rec.node);
+        Node memory node_info =getNodeinfo(rec.node);
 
         require(
             node_info.custodyType == 5,
@@ -315,7 +315,7 @@ contract DECORATE is CORE {
     {
         bytes32 idxHash = keccak256(abi.encodePacked(_tokenID, _tokenContract));
         Record memory rec = getRecord(idxHash);
-        Node memory node_info = getACinfo(rec.node);
+        Node memory node_info =getNodeinfo(rec.node);
 
         require(
             node_info.custodyType == 5,
@@ -373,7 +373,7 @@ contract DECORATE is CORE {
     {
         bytes32 idxHash = keccak256(abi.encodePacked(_tokenID, _tokenContract));
         Record memory rec = getRecord(idxHash);
-        Node memory node_info = getACinfo(rec.node);
+        Node memory node_info =getNodeinfo(rec.node);
 
         require(
             node_info.custodyType == 5,
@@ -404,7 +404,7 @@ contract DECORATE is CORE {
      * @dev Export - sets asset to status 70 (importable)
      * @param _tokenID - tokenID of assets token @_tokenContract
      * @param _tokenContract - token contract of _tokenID
-     * @param _exportTo - destination assetClass of decorated token
+     * @param _exportTo - destination node of decorated token
      * DPS:TEST added destination node parameter
      */
     function _exportAssetTo(uint256 _tokenID, address _tokenContract, uint32 _exportTo)
@@ -414,7 +414,7 @@ contract DECORATE is CORE {
     {   
         bytes32 idxHash = keccak256(abi.encodePacked(_tokenID, _tokenContract));
         Record memory rec = getRecord(idxHash);
-        Node memory node_info = getACinfo(rec.node);
+        Node memory node_info =getNodeinfo(rec.node);
 
         require(
             node_info.custodyType == 5,
@@ -458,7 +458,7 @@ contract DECORATE is CORE {
      * @dev import a decoration into a new asset class. posessor is considered to be owner. sets rec.assetStatus to 51.
      * @param _tokenID - tokenID of assets token @_tokenContract
      * @param _tokenContract - token contract of _tokenID
-     * @param _newAssetClass - new assetClass of decorated token
+     * @param _newAssetClass - new node of decorated token
      * DPS:TEST
      */
     function _import(
@@ -473,8 +473,8 @@ contract DECORATE is CORE {
     {
         bytes32 idxHash = keccak256(abi.encodePacked(_tokenID, _tokenContract));
         Record memory rec = getRecord(idxHash);
-        Node memory node_info = getACinfo(rec.node);
-        Node memory newAC_info = getACinfo(_newAssetClass);
+        Node memory node_info =getNodeinfo(rec.node);
+        Node memory newAC_info =getNodeinfo(_newAssetClass);
 
         require(
             (node_info.custodyType == 5) && (newAC_info.custodyType == 5), //only allow import of other wrappers
@@ -540,7 +540,7 @@ contract DECORATE is CORE {
      * @dev create a Record in Storage @ idxHash (SETTER)
      * @param _idxHash - hash of asset information created by frontend inputs
      * @param _rgtHash - hash of rightsholder information created by frontend inputs
-     * @param _node - assetClass the asset will be created in
+     * @param _node - node the asset will be created in
      * @param _countDownStart - decremental counter for an assets lifecycle
      */
     function createRecordOnly(
@@ -550,7 +550,7 @@ contract DECORATE is CORE {
         uint32 _countDownStart
     ) internal {
         uint256 tokenId = uint256(_idxHash);
-        Node memory node_info = getACinfo(_node);
+        Node memory node_info =getNodeinfo(_node);
 
         require(
             A_TKN.tokenExists(tokenId) == 0,
