@@ -13,7 +13,7 @@ _________\/// _____________\/// _______\/// __\///////// __\/// _____________
 const PRUF_STOR = artifacts.require("STOR");
 const PRUF_APP = artifacts.require("APP");
 const PRUF_NP = artifacts.require("NP");
-const PRUF_AC_MGR = artifacts.require("AC_MGR");
+const PRUF_NODE_MGR = artifacts.require("NODE_MGR");
 const PRUF_AC_TKN = artifacts.require("AC_TKN");
 const PRUF_A_TKN = artifacts.require("A_TKN");
 const PRUF_ID_TKN = artifacts.require("ID_TKN");
@@ -34,7 +34,7 @@ const PRUF_WRAP = artifacts.require("WRAP");
 let STOR;
 let APP;
 let NP;
-let AC_MGR;
+let NODE_MGR;
 let AC_TKN;
 let A_TKN;
 let ID_TKN;
@@ -112,7 +112,7 @@ let trustedAgentRoleB32;
 let assetTransferRoleB32;
 let discardRoleB32;
 
-contract("AC_MGR", (accounts) => {
+contract("NODE_MGR", (accounts) => {
   console.log(
     "//**************************BEGIN BOOTSTRAP**************************//"
   );
@@ -316,11 +316,11 @@ contract("AC_MGR", (accounts) => {
     NP = PRUF_NP_TEST;
   });
 
-  it("Should deploy PRUF_AC_MGR", async () => {
-    const PRUF_AC_MGR_TEST = await PRUF_AC_MGR.deployed({ from: account1 });
-    console.log(PRUF_AC_MGR_TEST.address);
-    assert(PRUF_AC_MGR_TEST.address !== "");
-    AC_MGR = PRUF_AC_MGR_TEST;
+  it("Should deploy PRUF_NODE_MGR", async () => {
+    const PRUF_NODE_MGR_TEST = await PRUF_NODE_MGR.deployed({ from: account1 });
+    console.log(PRUF_NODE_MGR_TEST.address);
+    assert(PRUF_NODE_MGR_TEST.address !== "");
+    NODE_MGR = PRUF_NODE_MGR_TEST;
   });
 
   it("Should deploy PRUF_AC_TKN", async () => {
@@ -429,8 +429,8 @@ contract("AC_MGR", (accounts) => {
   });
 
   it("Should add default contracts to storage", () => {
-    console.log("Adding AC_MGR to default contract list");
-    return STOR.addDefaultContracts("0", "AC_MGR", "1", { from: account1 })
+    console.log("Adding NODE_MGR to default contract list");
+    return STOR.addDefaultContracts("0", "NODE_MGR", "1", { from: account1 })
 
       .then(() => {
         console.log("Adding AC_TKN to default contract list");
@@ -496,8 +496,8 @@ contract("AC_MGR", (accounts) => {
       })
 
       .then(() => {
-        console.log("Adding AC_MGR to storage for use in AC 0");
-        return STOR.OO_addContract("AC_MGR", AC_MGR.address, "0", "1", {
+        console.log("Adding NODE_MGR to storage for use in AC 0");
+        return STOR.OO_addContract("NODE_MGR", NODE_MGR.address, "0", "1", {
           from: account1,
         });
       })
@@ -625,8 +625,8 @@ contract("AC_MGR", (accounts) => {
       })
 
       .then(() => {
-        console.log("Adding in AC_MGR");
-        return AC_MGR.Admin_setStorageContract(STOR.address, {
+        console.log("Adding in NODE_MGR");
+        return NODE_MGR.Admin_setStorageContract(STOR.address, {
           from: account1,
         });
       })
@@ -712,8 +712,8 @@ contract("AC_MGR", (accounts) => {
       })
 
       .then(() => {
-        console.log("Resolving in AC_MGR");
-        return AC_MGR.Admin_resolveContractAddresses({ from: account1 });
+        console.log("Resolving in NODE_MGR");
+        return NODE_MGR.Admin_resolveContractAddresses({ from: account1 });
       })
 
       .then(() => {
@@ -774,91 +774,91 @@ contract("AC_MGR", (accounts) => {
 
   it("Should set all permitted storage providers", () => {
     console.log("Authorizing UNCONFIGURED");
-    return AC_MGR.adminSetStorageProviders("0", "1", { from: account1 })
+    return NODE_MGR.adminSetStorageProviders("0", "1", { from: account1 })
 
       .then(() => {
         console.log("Authorizing IPFS");
-        return AC_MGR.adminSetStorageProviders("1", "1", { from: account1 });
+        return NODE_MGR.adminSetStorageProviders("1", "1", { from: account1 });
       })
 
       .then(() => {
         console.log("Authorizing ARWEAVE");
-        return AC_MGR.adminSetStorageProviders("2", "1", { from: account1 });
+        return NODE_MGR.adminSetStorageProviders("2", "1", { from: account1 });
       });
   });
 
   it("Should set all permitted management types", () => {
     console.log("Authorizing Unrestricted");
-    return AC_MGR.adminSetManagementTypes("0", "1", { from: account1 })
+    return NODE_MGR.adminSetManagementTypes("0", "1", { from: account1 })
 
       .then(() => {
         console.log("Authorizing Restricted");
-        return AC_MGR.adminSetManagementTypes("1", "1", { from: account1 });
+        return NODE_MGR.adminSetManagementTypes("1", "1", { from: account1 });
       })
 
       .then(() => {
         console.log("Authorizing Less Restricted");
-        return AC_MGR.adminSetManagementTypes("2", "1", { from: account1 });
+        return NODE_MGR.adminSetManagementTypes("2", "1", { from: account1 });
       })
 
       .then(() => {
         console.log("Authorizing Authorized");
-        return AC_MGR.adminSetManagementTypes("3", "1", { from: account1 });
+        return NODE_MGR.adminSetManagementTypes("3", "1", { from: account1 });
       })
 
       .then(() => {
         console.log("Authorizing Trusted");
-        return AC_MGR.adminSetManagementTypes("4", "1", { from: account1 });
+        return NODE_MGR.adminSetManagementTypes("4", "1", { from: account1 });
       })
 
       .then(() => {
         console.log("Authorizing Remotely Managed");
-        return AC_MGR.adminSetManagementTypes("5", "1", { from: account1 });
+        return NODE_MGR.adminSetManagementTypes("5", "1", { from: account1 });
       })
 
       .then(() => {
         console.log("Authorizing Unconfigured");
-        return AC_MGR.adminSetManagementTypes("255", "1", { from: account1 });
+        return NODE_MGR.adminSetManagementTypes("255", "1", { from: account1 });
       });
   });
 
   it("Should set all permitted custody types", () => {
     console.log("Authorizing NONE");
-    return AC_MGR.adminSetCustodyTypes("0", "1", { from: account1 })
+    return NODE_MGR.adminSetCustodyTypes("0", "1", { from: account1 })
 
       .then(() => {
         console.log("Authorizing Custodial");
-        return AC_MGR.adminSetCustodyTypes("1", "1", { from: account1 });
+        return NODE_MGR.adminSetCustodyTypes("1", "1", { from: account1 });
       })
 
       .then(() => {
         console.log("Authorizing Non-Custodial");
-        return AC_MGR.adminSetCustodyTypes("2", "1", { from: account1 });
+        return NODE_MGR.adminSetCustodyTypes("2", "1", { from: account1 });
       })
 
       .then(() => {
         console.log("Authorizing RAdmint");
-        return AC_MGR.adminSetCustodyTypes("3", "1", { from: account1 });
+        return NODE_MGR.adminSetCustodyTypes("3", "1", { from: account1 });
       })
 
       .then(() => {
         console.log("Authorizing Verify-Non-Custodial");
-        return AC_MGR.adminSetCustodyTypes("4", "1", { from: account1 });
+        return NODE_MGR.adminSetCustodyTypes("4", "1", { from: account1 });
       })
 
       .then(() => {
         console.log("Authorizing Wrapped or decorated ERC721");
-        return AC_MGR.adminSetCustodyTypes("5", "1", { from: account1 });
+        return NODE_MGR.adminSetCustodyTypes("5", "1", { from: account1 });
       })
 
       .then(() => {
         console.log("Authorizing Free Custodial");
-        return AC_MGR.adminSetCustodyTypes("11", "1", { from: account1 });
+        return NODE_MGR.adminSetCustodyTypes("11", "1", { from: account1 });
       })
 
       .then(() => {
         console.log("Authorizing Free Non-Custodial");
-        return AC_MGR.adminSetCustodyTypes("12", "1", { from: account1 });
+        return NODE_MGR.adminSetCustodyTypes("12", "1", { from: account1 });
       });
   });
 
@@ -892,8 +892,8 @@ contract("AC_MGR", (accounts) => {
   });
 
   it("Should authorize all payable contracts for transactions", () => {
-    console.log("Authorizing AC_MGR");
-    return UTIL_TKN.grantRole(payableRoleB32, AC_MGR.address, {
+    console.log("Authorizing NODE_MGR");
+    return UTIL_TKN.grantRole(payableRoleB32, NODE_MGR.address, {
       from: account1,
     })
 
@@ -919,15 +919,15 @@ contract("AC_MGR", (accounts) => {
       })
 
       .then(() => {
-        console.log("Authorizing AC_MGR");
-        return UTIL_TKN.grantRole(trustedAgentRoleB32, AC_MGR.address, {
+        console.log("Authorizing NODE_MGR");
+        return UTIL_TKN.grantRole(trustedAgentRoleB32, NODE_MGR.address, {
           from: account1,
         });
       })
 
       .then(() => {
-        console.log("Authorizing AC_MGR");
-        return UTIL_TKN.grantRole(trustedAgentRoleB32, AC_MGR.address, {
+        console.log("Authorizing NODE_MGR");
+        return UTIL_TKN.grantRole(trustedAgentRoleB32, NODE_MGR.address, {
           from: account1,
         });
       })
@@ -962,23 +962,23 @@ contract("AC_MGR", (accounts) => {
   });
 
   it("Should authorize all minter contracts for minting AC_TKN(s)", () => {
-    console.log("Authorizing AC_MGR");
-    return AC_TKN.grantRole(minterRoleB32, AC_MGR.address, { from: account1 });
+    console.log("Authorizing NODE_MGR");
+    return AC_TKN.grantRole(minterRoleB32, NODE_MGR.address, { from: account1 });
   });
 
   it("Should authorize all minter contracts for minting AC_TKN(s)", () => {
-    console.log("Authorizing AC_MGR");
+    console.log("Authorizing NODE_MGR");
     return APP.grantRole(assetTransferRoleB32, NP.address, { from: account1 });
   });
 
   it("Should authorize all minter contracts for minting AC_TKN(s)", () => {
-    console.log("Authorizing AC_MGR");
+    console.log("Authorizing NODE_MGR");
     return RCLR.grantRole(discardRoleB32, A_TKN.address, { from: account1 });
   });
 
   it("Should mint a couple of asset root tokens", () => {
     console.log("Minting root token 1 -C");
-    return AC_MGR.createAssetClass(
+    return NODE_MGR.createAssetClass(
       "1",
       "CUSTODIAL_ROOT",
       "1",
@@ -991,7 +991,7 @@ contract("AC_MGR", (accounts) => {
       { from: account1 }
     ).then(() => {
       console.log("Minting root token 2 -NC");
-      return AC_MGR.createAssetClass(
+      return NODE_MGR.createAssetClass(
         "2",
         "NON-CUSTODIAL_ROOT",
         "2",
@@ -1009,97 +1009,97 @@ contract("AC_MGR", (accounts) => {
   it("Should set costs in minted roots", () => {
     console.log("Setting costs in AC 1");
 
-    return AC_MGR.ACTH_setCosts("1", "1", "10000000000000000", account1, {
+    return NODE_MGR.ACTH_setCosts("1", "1", "10000000000000000", account1, {
       from: account1,
     })
 
       .then(() => {
-        return AC_MGR.ACTH_setCosts("1", "2", "10000000000000000", account1, {
+        return NODE_MGR.ACTH_setCosts("1", "2", "10000000000000000", account1, {
           from: account1,
         });
       })
 
       .then(() => {
-        return AC_MGR.ACTH_setCosts("1", "3", "10000000000000000", account1, {
+        return NODE_MGR.ACTH_setCosts("1", "3", "10000000000000000", account1, {
           from: account1,
         });
       })
 
       .then(() => {
-        return AC_MGR.ACTH_setCosts("1", "4", "10000000000000000", account1, {
+        return NODE_MGR.ACTH_setCosts("1", "4", "10000000000000000", account1, {
           from: account1,
         });
       })
 
       .then(() => {
-        return AC_MGR.ACTH_setCosts("1", "5", "10000000000000000", account1, {
+        return NODE_MGR.ACTH_setCosts("1", "5", "10000000000000000", account1, {
           from: account1,
         });
       })
 
       .then(() => {
-        return AC_MGR.ACTH_setCosts("1", "6", "10000000000000000", account1, {
+        return NODE_MGR.ACTH_setCosts("1", "6", "10000000000000000", account1, {
           from: account1,
         });
       })
 
       .then(() => {
-        return AC_MGR.ACTH_setCosts("1", "7", "10000000000000000", account1, {
+        return NODE_MGR.ACTH_setCosts("1", "7", "10000000000000000", account1, {
           from: account1,
         });
       })
 
       .then(() => {
-        return AC_MGR.ACTH_setCosts("1", "8", "10000000000000000", account1, {
+        return NODE_MGR.ACTH_setCosts("1", "8", "10000000000000000", account1, {
           from: account1,
         });
       })
 
       .then(() => {
         console.log("Setting base costs in AC 2");
-        return AC_MGR.ACTH_setCosts("2", "1", "10000000000000000", account1, {
+        return NODE_MGR.ACTH_setCosts("2", "1", "10000000000000000", account1, {
           from: account1,
         });
       })
 
       .then(() => {
-        return AC_MGR.ACTH_setCosts("2", "2", "10000000000000000", account1, {
+        return NODE_MGR.ACTH_setCosts("2", "2", "10000000000000000", account1, {
           from: account1,
         });
       })
 
       .then(() => {
-        return AC_MGR.ACTH_setCosts("2", "3", "10000000000000000", account1, {
+        return NODE_MGR.ACTH_setCosts("2", "3", "10000000000000000", account1, {
           from: account1,
         });
       })
 
       .then(() => {
-        return AC_MGR.ACTH_setCosts("2", "4", "10000000000000000", account1, {
+        return NODE_MGR.ACTH_setCosts("2", "4", "10000000000000000", account1, {
           from: account1,
         });
       })
 
       .then(() => {
-        return AC_MGR.ACTH_setCosts("2", "5", "10000000000000000", account1, {
+        return NODE_MGR.ACTH_setCosts("2", "5", "10000000000000000", account1, {
           from: account1,
         });
       })
 
       .then(() => {
-        return AC_MGR.ACTH_setCosts("2", "6", "10000000000000000", account1, {
+        return NODE_MGR.ACTH_setCosts("2", "6", "10000000000000000", account1, {
           from: account1,
         });
       })
 
       .then(() => {
-        return AC_MGR.ACTH_setCosts("2", "7", "10000000000000000", account1, {
+        return NODE_MGR.ACTH_setCosts("2", "7", "10000000000000000", account1, {
           from: account1,
         });
       })
 
       .then(() => {
-        return AC_MGR.ACTH_setCosts("2", "8", "10000000000000000", account1, {
+        return NODE_MGR.ACTH_setCosts("2", "8", "10000000000000000", account1, {
           from: account1,
         });
       });
@@ -1130,28 +1130,28 @@ contract("AC_MGR", (accounts) => {
 
       .then(() => {
         console.log("Minting AC 1000001 -C");
-        return AC_MGR.purchaseACnode("Custodial_AC1", "1", "1", rgt000, {
+        return NODE_MGR.purchaseACnode("Custodial_AC1", "1", "1", rgt000, {
           from: account1,
         });
       })
 
       .then(() => {
         console.log("Minting AC 1000002 -NC");
-        return AC_MGR.purchaseACnode("Non_Custodial_AC2", "1", "2", rgt000, {
+        return NODE_MGR.purchaseACnode("Non_Custodial_AC2", "1", "2", rgt000, {
           from: account1,
         });
       })
 
       .then(() => {
         console.log("Minting AC 1000003 -NC");
-        return AC_MGR.purchaseACnode("Non_Custodial_AC3", "1", "2", rgt000, {
+        return NODE_MGR.purchaseACnode("Non_Custodial_AC3", "1", "2", rgt000, {
           from: account1,
         });
       })
 
       .then(() => {
         console.log("Minting AC 1000004 -NC");
-        return AC_MGR.purchaseACnode("Non_Custodial_AC4", "1", "2", rgt000, {
+        return NODE_MGR.purchaseACnode("Non_Custodial_AC4", "1", "2", rgt000, {
           from: account10,
         });
       });
@@ -1159,11 +1159,11 @@ contract("AC_MGR", (accounts) => {
 
   it("Should Mint 2 non-cust AC tokens in AC_ROOT 2", () => {
     console.log("Minting AC 1000005 -NC");
-    return AC_MGR.purchaseACnode("Non-Custodial_AC5", "2", "2", rgt000, {
+    return NODE_MGR.purchaseACnode("Non-Custodial_AC5", "2", "2", rgt000, {
       from: account1,
     }).then(() => {
       console.log("Minting AC 1000006 -NC");
-      return AC_MGR.purchaseACnode("Non_Custodial_AC6", "2", "2", rgt000, {
+      return NODE_MGR.purchaseACnode("Non_Custodial_AC6", "2", "2", rgt000, {
         from: account10,
       });
     });
@@ -1171,7 +1171,7 @@ contract("AC_MGR", (accounts) => {
 
   it("Should finalize all ACs", () => {
     console.log("Updating AC Immutables");
-    return AC_MGR.updateACImmutable(
+    return NODE_MGR.updateACImmutable(
       "1000001",
       "3",
       "1",
@@ -1180,7 +1180,7 @@ contract("AC_MGR", (accounts) => {
     )
 
       .then(() => {
-        return AC_MGR.updateACImmutable(
+        return NODE_MGR.updateACImmutable(
           "1000002",
           "3",
           "1",
@@ -1190,7 +1190,7 @@ contract("AC_MGR", (accounts) => {
       })
 
       .then(() => {
-        return AC_MGR.updateACImmutable(
+        return NODE_MGR.updateACImmutable(
           "1000003",
           "3",
           "1",
@@ -1200,7 +1200,7 @@ contract("AC_MGR", (accounts) => {
       })
 
       .then(() => {
-        return AC_MGR.updateACImmutable(
+        return NODE_MGR.updateACImmutable(
           "1000004",
           "3",
           "1",
@@ -1210,7 +1210,7 @@ contract("AC_MGR", (accounts) => {
       })
 
       .then(() => {
-        return AC_MGR.updateACImmutable(
+        return NODE_MGR.updateACImmutable(
           "1000005",
           "3",
           "1",
@@ -1220,7 +1220,7 @@ contract("AC_MGR", (accounts) => {
       })
 
       .then(() => {
-        return AC_MGR.updateACImmutable(
+        return NODE_MGR.updateACImmutable(
           "1000006",
           "3",
           "1",
@@ -1232,36 +1232,36 @@ contract("AC_MGR", (accounts) => {
 
   it("Should finalize all ACs", () => {
     console.log("Authorizing AC Switch 1");
-    return AC_MGR.adminModAssetClassSwitches("1000001", "1", "1", {
+    return NODE_MGR.adminModAssetClassSwitches("1000001", "1", "1", {
       from: account1,
     })
 
       .then(() => {
-        return AC_MGR.adminModAssetClassSwitches("1000002", "3", "1", {
+        return NODE_MGR.adminModAssetClassSwitches("1000002", "3", "1", {
           from: account1,
         });
       })
 
       .then(() => {
-        return AC_MGR.adminModAssetClassSwitches("1000003", "3", "1", {
+        return NODE_MGR.adminModAssetClassSwitches("1000003", "3", "1", {
           from: account1,
         });
       })
 
       .then(() => {
-        return AC_MGR.adminModAssetClassSwitches("1000004", "3", "1", {
+        return NODE_MGR.adminModAssetClassSwitches("1000004", "3", "1", {
           from: account1,
         });
       })
 
       .then(() => {
-        return AC_MGR.adminModAssetClassSwitches("1000005", "3", "1", {
+        return NODE_MGR.adminModAssetClassSwitches("1000005", "3", "1", {
           from: account1,
         });
       })
 
       .then(() => {
-        return AC_MGR.adminModAssetClassSwitches("1000006", "3", "1", {
+        return NODE_MGR.adminModAssetClassSwitches("1000006", "3", "1", {
           from: account1,
         });
       });
@@ -1396,40 +1396,40 @@ contract("AC_MGR", (accounts) => {
       "//**************************************END BOOTSTRAP**********************************************/"
     );
     console.log("Account2 => 1000001");
-    return AC_MGR.addUser("1000001", account4Hash, "1", { from: account1 })
+    return NODE_MGR.addUser("1000001", account4Hash, "1", { from: account1 })
 
       .then(() => {
         console.log("Account2 => 1000001");
-        return AC_MGR.addUser("1000001", account2Hash, "1", { from: account1 });
+        return NODE_MGR.addUser("1000001", account2Hash, "1", { from: account1 });
       })
 
       .then(() => {
         console.log("Account2 => 1000003");
-        return AC_MGR.addUser("1000003", account2Hash, "1", { from: account1 });
+        return NODE_MGR.addUser("1000003", account2Hash, "1", { from: account1 });
       })
 
       .then(() => {
         console.log("Account4 => 1000003");
-        return AC_MGR.addUser("1000003", account4Hash, "1", { from: account1 });
+        return NODE_MGR.addUser("1000003", account4Hash, "1", { from: account1 });
       })
 
       .then(() => {
         console.log("Account4 => 1000004");
-        return AC_MGR.addUser("1000004", account4Hash, "1", {
+        return NODE_MGR.addUser("1000004", account4Hash, "1", {
           from: account10,
         });
       })
 
       .then(() => {
         console.log("Account4 => 1000006");
-        return AC_MGR.addUser("1000006", account4Hash, "1", {
+        return NODE_MGR.addUser("1000006", account4Hash, "1", {
           from: account10,
         });
       })
 
       .then(() => {
         console.log("Account10 => 1000001");
-        return AC_MGR.addUser("1000001", account10Hash, "1", {
+        return NODE_MGR.addUser("1000001", account10Hash, "1", {
           from: account1,
         });
       });
@@ -1445,7 +1445,7 @@ contract("AC_MGR", (accounts) => {
 
   it("Should set SharesAddress", async () => {
     console.log(
-      "//**************************************BEGIN AC_MGR TEST**********************************************/"
+      "//**************************************BEGIN NODE_MGR TEST**********************************************/"
     );
     return UTIL_TKN.AdminSetSharesAddress(account1, { from: account1 });
   });
@@ -1469,13 +1469,13 @@ contract("AC_MGR", (accounts) => {
   });
 
   it("Should update IPFS of AC 1000001 to rgt1", async () => {
-    return AC_MGR.updateACipfs("1000001", rgt1, { from: account1 });
+    return NODE_MGR.updateACipfs("1000001", rgt1, { from: account1 });
   });
 
   it("Should getExtAC_data for 1000001", async () => {
     var Record = [];
 
-    return await AC_MGR.getExtAC_data(
+    return await NODE_MGR.getExtAC_data(
       "1000001",
       { from: account2 },
       function (_err, _result) {
@@ -1489,19 +1489,19 @@ contract("AC_MGR", (accounts) => {
   });
 
   it("Should set assetClass 13 switch to 1:1", async () => {
-    return AC_MGR.adminModAssetClassSwitches("1000004", "1", "1", {
+    return NODE_MGR.adminModAssetClassSwitches("1000004", "1", "1", {
       from: account1,
     });
   });
 
   it("Should set AC pricing to 10", async () => {
-    return AC_MGR.adminSetACpricing("10000000000000000000", { from: account1 });
+    return NODE_MGR.adminSetACpricing("10000000000000000000", { from: account1 });
   });
 
   it("Should retrieve currentACpricingInfo", async () => {
     var Record = [];
 
-    return await AC_MGR.currentACpricingInfo(
+    return await NODE_MGR.currentACpricingInfo(
       { from: account1 },
       function (_err, _result) {
         if (_err) {
@@ -1514,13 +1514,13 @@ contract("AC_MGR", (accounts) => {
   });
 
   it("Should increase share of AC 1000001", async () => {
-    return AC_MGR.adminIncreaseShare("1000001", "9900", { from: account1 });
+    return NODE_MGR.adminIncreaseShare("1000001", "9900", { from: account1 });
   });
 
   it("Should retrieve AC_discount (1000001) discount(9900)", async () => {
     var Record = [];
 
-    return await AC_MGR.getAC_discount(
+    return await NODE_MGR.getAC_discount(
       "1000001",
       { from: account1 },
       function (_err, _result) {
@@ -1536,7 +1536,7 @@ contract("AC_MGR", (accounts) => {
   it("Should retrieve storage provider status 6 (0)", async () => {
     var Record = [];
 
-    return await AC_MGR.getStorageProviderStatus(
+    return await NODE_MGR.getStorageProviderStatus(
       "6",
       { from: account1 },
       function (_err, _result) {
@@ -1550,13 +1550,13 @@ contract("AC_MGR", (accounts) => {
   });
 
   it("Should enable storageProvider 6", async () => {
-    return AC_MGR.adminSetStorageProviders("6", "1", { from: account1 });
+    return NODE_MGR.adminSetStorageProviders("6", "1", { from: account1 });
   });
 
   it("Should retrieve storage provider status 6 (1)", async () => {
     var Record = [];
 
-    return await AC_MGR.getStorageProviderStatus(
+    return await NODE_MGR.getStorageProviderStatus(
       "6",
       { from: account1 },
       function (_err, _result) {
@@ -1572,7 +1572,7 @@ contract("AC_MGR", (accounts) => {
   it("Should retrieve management type status 6 (0)", async () => {
     var Record = [];
 
-    return await AC_MGR.getManagementTypeStatus(
+    return await NODE_MGR.getManagementTypeStatus(
       "6",
       { from: account1 },
       function (_err, _result) {
@@ -1586,13 +1586,13 @@ contract("AC_MGR", (accounts) => {
   });
 
   it("Should enable management type 6", async () => {
-    return AC_MGR.adminSetManagementTypes("6", "1", { from: account1 });
+    return NODE_MGR.adminSetManagementTypes("6", "1", { from: account1 });
   });
 
   it("Should retrieve management type status 6 (1)", async () => {
     var Record = [];
 
-    return await AC_MGR.getManagementTypeStatus(
+    return await NODE_MGR.getManagementTypeStatus(
       "6",
       { from: account1 },
       function (_err, _result) {
@@ -1608,7 +1608,7 @@ contract("AC_MGR", (accounts) => {
   it("Should retrieve custody type status 6 (0)", async () => {
     var Record = [];
 
-    return await AC_MGR.getCustodyTypeStatus(
+    return await NODE_MGR.getCustodyTypeStatus(
       "6",
       { from: account1 },
       function (_err, _result) {
@@ -1622,13 +1622,13 @@ contract("AC_MGR", (accounts) => {
   });
 
   it("Should enable management type 6", async () => {
-    return AC_MGR.adminSetCustodyTypes("6", "1", { from: account1 });
+    return NODE_MGR.adminSetCustodyTypes("6", "1", { from: account1 });
   });
 
   it("Should retrieve management type status 6 (1)", async () => {
     var Record = [];
 
-    return await AC_MGR.getCustodyTypeStatus(
+    return await NODE_MGR.getCustodyTypeStatus(
       "6",
       { from: account1 },
       function (_err, _result) {
@@ -1642,7 +1642,7 @@ contract("AC_MGR", (accounts) => {
   });
 
   it("Should set ipfs of AC 1000002 to 0xF", async () => {
-    return AC_MGR.updateACipfs(
+    return NODE_MGR.updateACipfs(
       "1000002",
       "0xFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFF",
       { from: account1 }
@@ -1650,7 +1650,7 @@ contract("AC_MGR", (accounts) => {
   });
 
   it("Should transfer name from 1000001 to 1000002", async () => {
-    return AC_MGR.transferName("1000001", "1000002", "Custodial_AC1", {
+    return NODE_MGR.transferName("1000001", "1000002", "Custodial_AC1", {
       from: account1,
     });
   });
@@ -1658,7 +1658,7 @@ contract("AC_MGR", (accounts) => {
   it("Should return AC 1000002", async () => {
     var Record = [];
 
-    return await AC_MGR.resolveAssetClass(
+    return await NODE_MGR.resolveAssetClass(
       "Custodial_AC1",
       { from: account1 },
       function (_err, _result) {
@@ -1672,7 +1672,7 @@ contract("AC_MGR", (accounts) => {
   });
 
   it("Should mod AC 1 discount", async () => {
-    return AC_MGR.AdminModAssetClass(
+    return NODE_MGR.AdminModAssetClass(
       "1000001",
       "1",
       "1",
@@ -1688,7 +1688,7 @@ contract("AC_MGR", (accounts) => {
   it("Should retrieve AC_discount (1000001) dicount(5100)", async () => {
     var Record = [];
 
-    return await AC_MGR.getAC_discount(
+    return await NODE_MGR.getAC_discount(
       "1000001",
       { from: account1 },
       function (_err, _result) {
@@ -1704,7 +1704,7 @@ contract("AC_MGR", (accounts) => {
   it("Should retrieve switch (5) (0) @AC 1000003", async () => {
     var Record = [];
 
-    return await AC_MGR.getSwitchAt(
+    return await NODE_MGR.getSwitchAt(
       "1000003",
       "5",
       { from: account1 },
@@ -1719,7 +1719,7 @@ contract("AC_MGR", (accounts) => {
   });
 
   it("Should modify switch 5 to 1", async () => {
-    return AC_MGR.adminModAssetClassSwitches("1000003", "5", "1", {
+    return NODE_MGR.adminModAssetClassSwitches("1000003", "5", "1", {
       from: account1,
     });
   });
@@ -1727,7 +1727,7 @@ contract("AC_MGR", (accounts) => {
   it("Should retrieve switch (5) (1) @AC 1000003", async () => {
     var Record = [];
 
-    return await AC_MGR.getSwitchAt(
+    return await NODE_MGR.getSwitchAt(
       "1000003",
       "5",
       { from: account1 },
@@ -1742,7 +1742,7 @@ contract("AC_MGR", (accounts) => {
   });
 
   it("Should create AC20", async () => {
-    return AC_MGR.createAssetClass(
+    return NODE_MGR.createAssetClass(
       "20",
       "20",
       "1",
@@ -1759,7 +1759,7 @@ contract("AC_MGR", (accounts) => {
   it("Should retrieve ExtAC_data (20)", async () => {
     var Record = [];
 
-    return await AC_MGR.getExtAC_data(
+    return await NODE_MGR.getExtAC_data(
       "20",
       { from: account1 },
       function (_err, _result) {
@@ -1773,13 +1773,13 @@ contract("AC_MGR", (accounts) => {
   });
 
   it("Should update name of AC 20 to ACTEST", async () => {
-    return AC_MGR.updateACname("20", "ACTEST", { from: account1 });
+    return NODE_MGR.updateACname("20", "ACTEST", { from: account1 });
   });
 
   it("Should return AC 20", async () => {
     var Record = [];
 
-    return await AC_MGR.resolveAssetClass(
+    return await NODE_MGR.resolveAssetClass(
       "ACTEST",
       { from: account1 },
       function (_err, _result) {
@@ -1795,7 +1795,7 @@ contract("AC_MGR", (accounts) => {
   it("Should return 1", async () => {
     var Record = [];
 
-    return await AC_MGR.getUserType(
+    return await NODE_MGR.getUserType(
       account4Hash,
       "1000001",
       { from: account1 },
@@ -1812,7 +1812,7 @@ contract("AC_MGR", (accounts) => {
   it("Should return 170", async () => {
     var Record = [];
 
-    return await AC_MGR.isSameRootAC(
+    return await NODE_MGR.isSameRootAC(
       "1000002",
       "1000001",
       { from: account1 },
@@ -1829,7 +1829,7 @@ contract("AC_MGR", (accounts) => {
   it("Should return ACTEST", async () => {
     var Record = [];
 
-    return await AC_MGR.getAC_name(
+    return await NODE_MGR.getAC_name(
       "20",
       { from: account1 },
       function (_err, _result) {
@@ -1845,7 +1845,7 @@ contract("AC_MGR", (accounts) => {
   it("Should return serviceCost 1 @ AC 1000001", async () => {
     var Record = [];
 
-    return await AC_MGR.getServiceCosts(
+    return await NODE_MGR.getServiceCosts(
       "1000001",
       "1",
       { from: account1 },
@@ -1861,7 +1861,7 @@ contract("AC_MGR", (accounts) => {
 
   it("Should set SharesAddress", async () => {
     console.log(
-      "//**************************************END AC_MGR TEST**********************************************/"
+      "//**************************************END NODE_MGR TEST**********************************************/"
     );
     console.log(
       "//**************************************BEGIN THE WORKS CUSTODIAL**********************************************/"

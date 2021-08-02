@@ -13,7 +13,7 @@ _________\/// _____________\/// _______\/// __\///////// __\/// _____________
         const PRUF_STOR = artifacts.require('STOR');
         const PRUF_APP = artifacts.require('APP');
         const PRUF_NP = artifacts.require('NP');
-        const PRUF_AC_MGR = artifacts.require('AC_MGR');
+        const PRUF_NODE_MGR = artifacts.require('NODE_MGR');
         const PRUF_AC_TKN = artifacts.require('AC_TKN');
         const PRUF_A_TKN = artifacts.require('A_TKN');
         const PRUF_ID_TKN = artifacts.require('ID_TKN');
@@ -60,11 +60,11 @@ _________\/// _____________\/// _______\/// __\///////// __\/// _____________
             })
         
         
-            it('Should deploy PRUF_AC_MGR', async () => {
-                const PRUF_AC_MGR_TEST = await PRUF_AC_MGR.deployed({ from: account1 });
-                console.log(PRUF_AC_MGR_TEST.address);
-                assert(PRUF_AC_MGR_TEST.address !== '');
-                AC_MGR = PRUF_AC_MGR_TEST;
+            it('Should deploy PRUF_NODE_MGR', async () => {
+                const PRUF_NODE_MGR_TEST = await PRUF_NODE_MGR.deployed({ from: account1 });
+                console.log(PRUF_NODE_MGR_TEST.address);
+                assert(PRUF_NODE_MGR_TEST.address !== '');
+                NODE_MGR = PRUF_NODE_MGR_TEST;
             })
         
         

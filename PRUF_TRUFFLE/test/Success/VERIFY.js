@@ -13,7 +13,7 @@ _________\/// _____________\/// _______\/// __\///////// __\/// _____________
         const PRUF_STOR = artifacts.require('STOR');
         const PRUF_APP = artifacts.require('APP');
         const PRUF_NP = artifacts.require('NP');
-        const PRUF_AC_MGR = artifacts.require('AC_MGR');
+        const PRUF_NODE_MGR = artifacts.require('NODE_MGR');
         const PRUF_AC_TKN = artifacts.require('AC_TKN');
         const PRUF_A_TKN = artifacts.require('A_TKN');
         const PRUF_ID_TKN = artifacts.require('ID_TKN');
@@ -33,7 +33,7 @@ _________\/// _____________\/// _______\/// __\///////// __\/// _____________
         let STOR;
         let APP;
         let NP;
-        let AC_MGR;
+        let NODE_MGR;
         let AC_TKN;
         let A_TKN;
         let ID_TKN;
@@ -150,11 +150,11 @@ _________\/// _____________\/// _______\/// __\///////// __\/// _____________
             })
         
         
-            it('Should deploy PRUF_AC_MGR', async () => {
-                const PRUF_AC_MGR_TEST = await PRUF_AC_MGR.deployed({ from: account1 });
-                console.log(PRUF_AC_MGR_TEST.address);
-                assert(PRUF_AC_MGR_TEST.address !== '');
-                AC_MGR = PRUF_AC_MGR_TEST;
+            it('Should deploy PRUF_NODE_MGR', async () => {
+                const PRUF_NODE_MGR_TEST = await PRUF_NODE_MGR.deployed({ from: account1 });
+                console.log(PRUF_NODE_MGR_TEST.address);
+                assert(PRUF_NODE_MGR_TEST.address !== '');
+                NODE_MGR = PRUF_NODE_MGR_TEST;
             })
         
         
@@ -596,8 +596,8 @@ _________\/// _____________\/// _______\/// __\///////// __\/// _____________
                     })
         
                     .then(() => {
-                        console.log("Adding AC_MGR to storage for use in AC 0")
-                        return STOR.OO_addContract("AC_MGR", AC_MGR.address, '0', '1', { from: account1 })
+                        console.log("Adding NODE_MGR to storage for use in AC 0")
+                        return STOR.OO_addContract("NODE_MGR", NODE_MGR.address, '0', '1', { from: account1 })
                     })
         
                     .then(() => {
@@ -688,8 +688,8 @@ _________\/// _____________\/// _______\/// __\///////// __\/// _____________
                     })
         
                     .then(() => {
-                        console.log("Adding in AC_MGR")
-                        return AC_MGR.OO_setStorageContract(STOR.address, { from: account1 })
+                        console.log("Adding in NODE_MGR")
+                        return NODE_MGR.OO_setStorageContract(STOR.address, { from: account1 })
                     })
         
                     // .then(() => {
@@ -770,8 +770,8 @@ _________\/// _____________\/// _______\/// __\///////// __\/// _____________
                     })
         
                     .then(() => {
-                        console.log("Resolving in AC_MGR")
-                        return AC_MGR.OO_resolveContractAddresses({ from: account1 })
+                        console.log("Resolving in NODE_MGR")
+                        return NODE_MGR.OO_resolveContractAddresses({ from: account1 })
                     })
         
                     // .then(() => {
@@ -853,8 +853,8 @@ _________\/// _____________\/// _______\/// __\///////// __\/// _____________
         
             it('Should authorize all payable contracts for transactions', async () => {
         
-                console.log("Authorizing AC_MGR")
-                return UTIL_TKN.grantRole(payableRoleB32, AC_MGR.address, { from: account1 })
+                console.log("Authorizing NODE_MGR")
+                return UTIL_TKN.grantRole(payableRoleB32, NODE_MGR.address, { from: account1 })
         
                     .then(() => {
                         console.log("Authorizing APP_NC")
@@ -883,27 +883,27 @@ _________\/// _____________\/// _______\/// __\///////// __\/// _____________
             })
         
         
-            it('Should authorize AC_MGR as trusted agent in AC_TKN', async () => {
+            it('Should authorize NODE_MGR as trusted agent in AC_TKN', async () => {
             
-                console.log("Authorizing AC_MGR")
-                return UTIL_TKN.grantRole(trustedAgentRoleB32, AC_MGR.address, { from: account1 })
+                console.log("Authorizing NODE_MGR")
+                return UTIL_TKN.grantRole(trustedAgentRoleB32, NODE_MGR.address, { from: account1 })
             })
         
         
             it('Should authorize all minter contracts for minting AC_TKN(s)', async () => {
-                console.log("Authorizing AC_MGR")
-                return AC_TKN.grantRole(minterRoleB32, AC_MGR.address, { from: account1 })
+                console.log("Authorizing NODE_MGR")
+                return AC_TKN.grantRole(minterRoleB32, NODE_MGR.address, { from: account1 })
             })
         
         
             it('Should authorize all minter contracts for minting AC_TKN(s)', async () => {
-                console.log("Authorizing AC_MGR")
+                console.log("Authorizing NODE_MGR")
                 return APP.grantRole(assetTransferRoleB32, NP.address, { from: account1 })
             })
         
         
             it('Should authorize all minter contracts for minting AC_TKN(s)', async () => {
-                console.log("Authorizing AC_MGR")
+                console.log("Authorizing NODE_MGR")
                 return RCLR.grantRole(discardRoleB32, A_TKN.address, { from: account1 })
             })
         
@@ -911,11 +911,11 @@ _________\/// _____________\/// _______\/// __\///////// __\/// _____________
             it('Should mint 2 asset root tokens', async () => {
 
                 console.log("Minting root token 1")
-                return AC_MGR.createAssetClass('1', 'ROOT1', '1', '3', "0", "0", rgt000, account1, { from: account1 })
+                return NODE_MGR.createAssetClass('1', 'ROOT1', '1', '3', "0", "0", rgt000, account1, { from: account1 })
             
                 .then(() => {
                     console.log("Minting root token 2")
-                    return AC_MGR.createAssetClass('2', 'ROOT2', '2', '3', "0", "0", rgt000, account1, { from: account1 })
+                    return NODE_MGR.createAssetClass('2', 'ROOT2', '2', '3', "0", "0", rgt000, account1, { from: account1 })
                 })
             })
             
@@ -923,11 +923,11 @@ _________\/// _____________\/// _______\/// __\///////// __\/// _____________
             it("Should Mint 2 non cust AC", async () => {
                 
                 console.log("Minting AC 10 -NC")
-                return AC_MGR.createAssetClass('10', 'NonCustodial_AC10', '1', '2', "0", "0", rgt000, account1, { from: account1 })
+                return NODE_MGR.createAssetClass('10', 'NonCustodial_AC10', '1', '2', "0", "0", rgt000, account1, { from: account1 })
             
                     .then(() => {
                         console.log("Minting AC 11 -NC to Account1")
-                        return AC_MGR.createAssetClass('11', 'NonCustodial_AC11', '1', '2', "0", "0", rgt000, account1, { from: account1 })
+                        return NODE_MGR.createAssetClass('11', 'NonCustodial_AC11', '1', '2', "0", "0", rgt000, account1, { from: account1 })
                     })
             })
             
@@ -935,21 +935,21 @@ _________\/// _____________\/// _______\/// __\///////// __\/// _____________
             it("Should Mint 4 verify AC tokens", async () => {
                 
                 console.log("Minting AC 12 Verify")
-                return AC_MGR.createAssetClass('12', 'Verify1', '1', '4', "0", "0", rgt000, account1, { from: account1 })
+                return NODE_MGR.createAssetClass('12', 'Verify1', '1', '4', "0", "0", rgt000, account1, { from: account1 })
             
                     .then(() => {
                         console.log("Minting AC 13 Verify")
-                        return AC_MGR.createAssetClass('13', 'Verify2', '1', '4', "0", "0", rgt000, account1, { from: account1 })
+                        return NODE_MGR.createAssetClass('13', 'Verify2', '1', '4', "0", "0", rgt000, account1, { from: account1 })
                     })
             
                     .then(() => {
                         console.log("Minting AC 14 Verify to Account1")
-                        return AC_MGR.createAssetClass('14', 'Verify3', '1', '4', "0", "0", rgt000, account1, { from: account1 })
+                        return NODE_MGR.createAssetClass('14', 'Verify3', '1', '4', "0", "0", rgt000, account1, { from: account1 })
                     })
             
                     .then(() => {
                         console.log("Minting AC 15 Verify to Account1")
-                        return AC_MGR.createAssetClass('15', 'Verify4', '2', '4', "0", "0", rgt000, account1, { from: account1 })
+                        return NODE_MGR.createAssetClass('15', 'Verify4', '2', '4', "0", "0", rgt000, account1, { from: account1 })
                     })
             
             })
@@ -1206,25 +1206,25 @@ _________\/// _____________\/// _______\/// __\///////// __\/// _____________
             })
         
         
-            it('Should authorize AC_MGR in all relevant asset classes', async () => {
+            it('Should authorize NODE_MGR in all relevant asset classes', async () => {
         
-                console.log("Authorizing AC_MGR")
-                return STOR.enableContractForAC('AC_MGR', '10', '1', { from: account1 })
+                console.log("Authorizing NODE_MGR")
+                return STOR.enableContractForAC('NODE_MGR', '10', '1', { from: account1 })
         
                     .then(() => {
-                        return STOR.enableContractForAC('AC_MGR', '11', '1', { from: account1 })
+                        return STOR.enableContractForAC('NODE_MGR', '11', '1', { from: account1 })
                     })
         
                     .then(() => {
-                        return STOR.enableContractForAC('AC_MGR', '12', '2', { from: account1 })
+                        return STOR.enableContractForAC('NODE_MGR', '12', '2', { from: account1 })
                     })
         
                     .then(() => {
-                        return STOR.enableContractForAC('AC_MGR', '13', '2', { from: account1 })
+                        return STOR.enableContractForAC('NODE_MGR', '13', '2', { from: account1 })
                     })
         
                     .then(() => {
-                        return STOR.enableContractForAC('AC_MGR', '14', '2', { from: account1 })
+                        return STOR.enableContractForAC('NODE_MGR', '14', '2', { from: account1 })
                     })
             })
         
@@ -1260,7 +1260,7 @@ _________\/// _____________\/// _______\/// __\///////// __\/// _____________
         
                 console.log("Setting costs in AC 1")
         
-                return AC_MGR.ACTH_setCosts(
+                return NODE_MGR.ACTH_setCosts(
                     "1",
                     "1",
                     "10000000000000000",
@@ -1269,7 +1269,7 @@ _________\/// _____________\/// _______\/// __\///////// __\/// _____________
         
         
                     .then(() => {
-                        return AC_MGR.ACTH_setCosts(
+                        return NODE_MGR.ACTH_setCosts(
                             "1",
                             "2",
                             "10000000000000000",
@@ -1278,7 +1278,7 @@ _________\/// _____________\/// _______\/// __\///////// __\/// _____________
                     })
         
                     .then(() => {
-                        return AC_MGR.ACTH_setCosts(
+                        return NODE_MGR.ACTH_setCosts(
                             "1",
                             "3",
                             "10000000000000000",
@@ -1287,7 +1287,7 @@ _________\/// _____________\/// _______\/// __\///////// __\/// _____________
                     })
         
                     .then(() => {
-                        return AC_MGR.ACTH_setCosts(
+                        return NODE_MGR.ACTH_setCosts(
                             "1",
                             "4",
                             "10000000000000000",
@@ -1296,7 +1296,7 @@ _________\/// _____________\/// _______\/// __\///////// __\/// _____________
                     })
         
                     .then(() => {
-                        return AC_MGR.ACTH_setCosts(
+                        return NODE_MGR.ACTH_setCosts(
                             "1",
                             "5",
                             "10000000000000000",
@@ -1305,7 +1305,7 @@ _________\/// _____________\/// _______\/// __\///////// __\/// _____________
                     })
         
                     .then(() => {
-                        return AC_MGR.ACTH_setCosts(
+                        return NODE_MGR.ACTH_setCosts(
                             "1",
                             "6",
                             "10000000000000000",
@@ -1314,7 +1314,7 @@ _________\/// _____________\/// _______\/// __\///////// __\/// _____________
                     })
         
                     .then(() => {
-                        return AC_MGR.ACTH_setCosts(
+                        return NODE_MGR.ACTH_setCosts(
                             "1",
                             "7",
                             "10000000000000000",
@@ -1323,7 +1323,7 @@ _________\/// _____________\/// _______\/// __\///////// __\/// _____________
                     })
         
                     .then(() => {
-                        return AC_MGR.ACTH_setCosts(
+                        return NODE_MGR.ACTH_setCosts(
                             "1",
                             "8",
                             "10000000000000000",
@@ -1333,7 +1333,7 @@ _________\/// _____________\/// _______\/// __\///////// __\/// _____________
         
                     .then(() => {
                         console.log("Setting base costs in AC 2")
-                        return AC_MGR.ACTH_setCosts(
+                        return NODE_MGR.ACTH_setCosts(
                             "2",
                             "1",
                             "10000000000000000",
@@ -1342,7 +1342,7 @@ _________\/// _____________\/// _______\/// __\///////// __\/// _____________
                     })
         
                     .then(() => {
-                        return AC_MGR.ACTH_setCosts(
+                        return NODE_MGR.ACTH_setCosts(
                             "2",
                             "2",
                             "10000000000000000",
@@ -1351,7 +1351,7 @@ _________\/// _____________\/// _______\/// __\///////// __\/// _____________
                     })
         
                     .then(() => {
-                        return AC_MGR.ACTH_setCosts(
+                        return NODE_MGR.ACTH_setCosts(
                             "2",
                             "3",
                             "10000000000000000",
@@ -1360,7 +1360,7 @@ _________\/// _____________\/// _______\/// __\///////// __\/// _____________
                     })
         
                     .then(() => {
-                        return AC_MGR.ACTH_setCosts(
+                        return NODE_MGR.ACTH_setCosts(
                             "2",
                             "4",
                             "10000000000000000",
@@ -1369,7 +1369,7 @@ _________\/// _____________\/// _______\/// __\///////// __\/// _____________
                     })
         
                     .then(() => {
-                        return AC_MGR.ACTH_setCosts(
+                        return NODE_MGR.ACTH_setCosts(
                             "2",
                             "5",
                             "10000000000000000",
@@ -1378,7 +1378,7 @@ _________\/// _____________\/// _______\/// __\///////// __\/// _____________
                     })
         
                     .then(() => {
-                        return AC_MGR.ACTH_setCosts(
+                        return NODE_MGR.ACTH_setCosts(
                             "2",
                             "6",
                             "10000000000000000",
@@ -1387,7 +1387,7 @@ _________\/// _____________\/// _______\/// __\///////// __\/// _____________
                     })
         
                     .then(() => {
-                        return AC_MGR.ACTH_setCosts(
+                        return NODE_MGR.ACTH_setCosts(
                             "2",
                             "7",
                             "10000000000000000",
@@ -1396,7 +1396,7 @@ _________\/// _____________\/// _______\/// __\///////// __\/// _____________
                     })
         
                     .then(() => {
-                        return AC_MGR.ACTH_setCosts(
+                        return NODE_MGR.ACTH_setCosts(
                             "2",
                             "8",
                             "10000000000000000",
@@ -1406,7 +1406,7 @@ _________\/// _____________\/// _______\/// __\///////// __\/// _____________
         
                     .then(() => {
                         console.log("Setting base costs in AC 10")
-                        return AC_MGR.ACTH_setCosts(
+                        return NODE_MGR.ACTH_setCosts(
                             "10",
                             "1",
                             "10000000000000000",
@@ -1415,7 +1415,7 @@ _________\/// _____________\/// _______\/// __\///////// __\/// _____________
                     })
         
                     .then(() => {
-                        return AC_MGR.ACTH_setCosts(
+                        return NODE_MGR.ACTH_setCosts(
                             "10",
                             "2",
                             "10000000000000000",
@@ -1424,7 +1424,7 @@ _________\/// _____________\/// _______\/// __\///////// __\/// _____________
                     })
         
                     .then(() => {
-                        return AC_MGR.ACTH_setCosts(
+                        return NODE_MGR.ACTH_setCosts(
                             "10",
                             "3",
                             "10000000000000000",
@@ -1433,7 +1433,7 @@ _________\/// _____________\/// _______\/// __\///////// __\/// _____________
                     })
         
                     .then(() => {
-                        return AC_MGR.ACTH_setCosts(
+                        return NODE_MGR.ACTH_setCosts(
                             "10",
                             "4",
                             "10000000000000000",
@@ -1442,7 +1442,7 @@ _________\/// _____________\/// _______\/// __\///////// __\/// _____________
                     })
         
                     .then(() => {
-                        return AC_MGR.ACTH_setCosts(
+                        return NODE_MGR.ACTH_setCosts(
                             "10",
                             "5",
                             "10000000000000000",
@@ -1451,7 +1451,7 @@ _________\/// _____________\/// _______\/// __\///////// __\/// _____________
                     })
         
                     .then(() => {
-                        return AC_MGR.ACTH_setCosts(
+                        return NODE_MGR.ACTH_setCosts(
                             "10",
                             "6",
                             "10000000000000000",
@@ -1460,7 +1460,7 @@ _________\/// _____________\/// _______\/// __\///////// __\/// _____________
                     })
         
                     .then(() => {
-                        return AC_MGR.ACTH_setCosts(
+                        return NODE_MGR.ACTH_setCosts(
                             "10",
                             "7",
                             "10000000000000000",
@@ -1469,7 +1469,7 @@ _________\/// _____________\/// _______\/// __\///////// __\/// _____________
                     })
         
                     .then(() => {
-                        return AC_MGR.ACTH_setCosts(
+                        return NODE_MGR.ACTH_setCosts(
                             "10",
                             "8",
                             "10000000000000000",
@@ -1479,7 +1479,7 @@ _________\/// _____________\/// _______\/// __\///////// __\/// _____________
         
                     .then(() => {
                         console.log("Setting base costs in AC 11")
-                        return AC_MGR.ACTH_setCosts(
+                        return NODE_MGR.ACTH_setCosts(
                             "11",
                             "1",
                             "10000000000000000",
@@ -1488,7 +1488,7 @@ _________\/// _____________\/// _______\/// __\///////// __\/// _____________
                     })
         
                     .then(() => {
-                        return AC_MGR.ACTH_setCosts(
+                        return NODE_MGR.ACTH_setCosts(
                             "11",
                             "2",
                             "10000000000000000",
@@ -1497,7 +1497,7 @@ _________\/// _____________\/// _______\/// __\///////// __\/// _____________
                     })
         
                     .then(() => {
-                        return AC_MGR.ACTH_setCosts(
+                        return NODE_MGR.ACTH_setCosts(
                             "11",
                             "3",
                             "10000000000000000",
@@ -1506,7 +1506,7 @@ _________\/// _____________\/// _______\/// __\///////// __\/// _____________
                     })
         
                     .then(() => {
-                        return AC_MGR.ACTH_setCosts(
+                        return NODE_MGR.ACTH_setCosts(
                             "11",
                             "4",
                             "10000000000000000",
@@ -1515,7 +1515,7 @@ _________\/// _____________\/// _______\/// __\///////// __\/// _____________
                     })
         
                     .then(() => {
-                        return AC_MGR.ACTH_setCosts(
+                        return NODE_MGR.ACTH_setCosts(
                             "11",
                             "5",
                             "10000000000000000",
@@ -1524,7 +1524,7 @@ _________\/// _____________\/// _______\/// __\///////// __\/// _____________
                     })
         
                     .then(() => {
-                        return AC_MGR.ACTH_setCosts(
+                        return NODE_MGR.ACTH_setCosts(
                             "11",
                             "6",
                             "10000000000000000",
@@ -1533,7 +1533,7 @@ _________\/// _____________\/// _______\/// __\///////// __\/// _____________
                     })
         
                     .then(() => {
-                        return AC_MGR.ACTH_setCosts(
+                        return NODE_MGR.ACTH_setCosts(
                             "11",
                             "7",
                             "10000000000000000",
@@ -1542,7 +1542,7 @@ _________\/// _____________\/// _______\/// __\///////// __\/// _____________
                     })
         
                     .then(() => {
-                        return AC_MGR.ACTH_setCosts(
+                        return NODE_MGR.ACTH_setCosts(
                             "11",
                             "8",
                             "10000000000000000",
@@ -1552,7 +1552,7 @@ _________\/// _____________\/// _______\/// __\///////// __\/// _____________
         
                     .then(() => {
                         console.log("Setting base costs in AC 12")
-                        return AC_MGR.ACTH_setCosts(
+                        return NODE_MGR.ACTH_setCosts(
                             "12",
                             "1",
                             "10000000000000000",
@@ -1561,7 +1561,7 @@ _________\/// _____________\/// _______\/// __\///////// __\/// _____________
                     })
         
                     .then(() => {
-                        return AC_MGR.ACTH_setCosts(
+                        return NODE_MGR.ACTH_setCosts(
                             "12",
                             "2",
                             "10000000000000000",
@@ -1570,7 +1570,7 @@ _________\/// _____________\/// _______\/// __\///////// __\/// _____________
                     })
         
                     .then(() => {
-                        return AC_MGR.ACTH_setCosts(
+                        return NODE_MGR.ACTH_setCosts(
                             "12",
                             "3",
                             "10000000000000000",
@@ -1579,7 +1579,7 @@ _________\/// _____________\/// _______\/// __\///////// __\/// _____________
                     })
         
                     .then(() => {
-                        return AC_MGR.ACTH_setCosts(
+                        return NODE_MGR.ACTH_setCosts(
                             "12",
                             "4",
                             "10000000000000000",
@@ -1588,7 +1588,7 @@ _________\/// _____________\/// _______\/// __\///////// __\/// _____________
                     })
         
                     .then(() => {
-                        return AC_MGR.ACTH_setCosts(
+                        return NODE_MGR.ACTH_setCosts(
                             "12",
                             "5",
                             "10000000000000000",
@@ -1597,7 +1597,7 @@ _________\/// _____________\/// _______\/// __\///////// __\/// _____________
                     })
         
                     .then(() => {
-                        return AC_MGR.ACTH_setCosts(
+                        return NODE_MGR.ACTH_setCosts(
                             "12",
                             "6",
                             "10000000000000000",
@@ -1606,7 +1606,7 @@ _________\/// _____________\/// _______\/// __\///////// __\/// _____________
                     })
         
                     .then(() => {
-                        return AC_MGR.ACTH_setCosts(
+                        return NODE_MGR.ACTH_setCosts(
                             "12",
                             "7",
                             "10000000000000000",
@@ -1615,7 +1615,7 @@ _________\/// _____________\/// _______\/// __\///////// __\/// _____________
                     })
         
                     .then(() => {
-                        return AC_MGR.ACTH_setCosts(
+                        return NODE_MGR.ACTH_setCosts(
                             "12",
                             "8",
                             "10000000000000000",
@@ -1625,7 +1625,7 @@ _________\/// _____________\/// _______\/// __\///////// __\/// _____________
         
                     .then(() => {
                         console.log("Setting base costs in AC 13")
-                        return AC_MGR.ACTH_setCosts(
+                        return NODE_MGR.ACTH_setCosts(
                             "13",
                             "1",
                             "10000000000000000",
@@ -1634,7 +1634,7 @@ _________\/// _____________\/// _______\/// __\///////// __\/// _____________
                     })
         
                     .then(() => {
-                        return AC_MGR.ACTH_setCosts(
+                        return NODE_MGR.ACTH_setCosts(
                             "13",
                             "2",
                             "10000000000000000",
@@ -1643,7 +1643,7 @@ _________\/// _____________\/// _______\/// __\///////// __\/// _____________
                     })
         
                     .then(() => {
-                        return AC_MGR.ACTH_setCosts(
+                        return NODE_MGR.ACTH_setCosts(
                             "13",
                             "3",
                             "10000000000000000",
@@ -1652,7 +1652,7 @@ _________\/// _____________\/// _______\/// __\///////// __\/// _____________
                     })
         
                     .then(() => {
-                        return AC_MGR.ACTH_setCosts(
+                        return NODE_MGR.ACTH_setCosts(
                             "13",
                             "4",
                             "10000000000000000",
@@ -1661,7 +1661,7 @@ _________\/// _____________\/// _______\/// __\///////// __\/// _____________
                     })
         
                     .then(() => {
-                        return AC_MGR.ACTH_setCosts(
+                        return NODE_MGR.ACTH_setCosts(
                             "13",
                             "5",
                             "10000000000000000",
@@ -1670,7 +1670,7 @@ _________\/// _____________\/// _______\/// __\///////// __\/// _____________
                     })
         
                     .then(() => {
-                        return AC_MGR.ACTH_setCosts(
+                        return NODE_MGR.ACTH_setCosts(
                             "13",
                             "6",
                             "10000000000000000",
@@ -1679,7 +1679,7 @@ _________\/// _____________\/// _______\/// __\///////// __\/// _____________
                     })
         
                     .then(() => {
-                        return AC_MGR.ACTH_setCosts(
+                        return NODE_MGR.ACTH_setCosts(
                             "13",
                             "7",
                             "10000000000000000",
@@ -1688,7 +1688,7 @@ _________\/// _____________\/// _______\/// __\///////// __\/// _____________
                     })
         
                     .then(() => {
-                        return AC_MGR.ACTH_setCosts(
+                        return NODE_MGR.ACTH_setCosts(
                             "13",
                             "8",
                             "10000000000000000",
@@ -1698,7 +1698,7 @@ _________\/// _____________\/// _______\/// __\///////// __\/// _____________
         
                     .then(() => {
                         console.log("Setting base costs in AC 14")
-                        return AC_MGR.ACTH_setCosts(
+                        return NODE_MGR.ACTH_setCosts(
                             "14",
                             "1",
                             "10000000000000000",
@@ -1707,7 +1707,7 @@ _________\/// _____________\/// _______\/// __\///////// __\/// _____________
                     })
         
                     .then(() => {
-                        return AC_MGR.ACTH_setCosts(
+                        return NODE_MGR.ACTH_setCosts(
                             "14",
                             "2",
                             "10000000000000000",
@@ -1716,7 +1716,7 @@ _________\/// _____________\/// _______\/// __\///////// __\/// _____________
                     })
         
                     .then(() => {
-                        return AC_MGR.ACTH_setCosts(
+                        return NODE_MGR.ACTH_setCosts(
                             "14",
                             "3",
                             "10000000000000000",
@@ -1725,7 +1725,7 @@ _________\/// _____________\/// _______\/// __\///////// __\/// _____________
                     })
         
                     .then(() => {
-                        return AC_MGR.ACTH_setCosts(
+                        return NODE_MGR.ACTH_setCosts(
                             "14",
                             "4",
                             "10000000000000000",
@@ -1734,7 +1734,7 @@ _________\/// _____________\/// _______\/// __\///////// __\/// _____________
                     })
         
                     .then(() => {
-                        return AC_MGR.ACTH_setCosts(
+                        return NODE_MGR.ACTH_setCosts(
                             "14",
                             "5",
                             "10000000000000000",
@@ -1743,7 +1743,7 @@ _________\/// _____________\/// _______\/// __\///////// __\/// _____________
                     })
         
                     .then(() => {
-                        return AC_MGR.ACTH_setCosts(
+                        return NODE_MGR.ACTH_setCosts(
                             "14",
                             "6",
                             "10000000000000000",
@@ -1752,7 +1752,7 @@ _________\/// _____________\/// _______\/// __\///////// __\/// _____________
                     })
         
                     .then(() => {
-                        return AC_MGR.ACTH_setCosts(
+                        return NODE_MGR.ACTH_setCosts(
                             "14",
                             "7",
                             "10000000000000000",
@@ -1761,7 +1761,7 @@ _________\/// _____________\/// _______\/// __\///////// __\/// _____________
                     })
         
                     .then(() => {
-                        return AC_MGR.ACTH_setCosts(
+                        return NODE_MGR.ACTH_setCosts(
                             "14",
                             "8",
                             "10000000000000000",
@@ -1771,7 +1771,7 @@ _________\/// _____________\/// _______\/// __\///////// __\/// _____________
         
                     .then(() => {
                         console.log("Setting base costs in AC 15")
-                        return AC_MGR.ACTH_setCosts(
+                        return NODE_MGR.ACTH_setCosts(
                             "15",
                             "1",
                             "10000000000000000",
@@ -1780,7 +1780,7 @@ _________\/// _____________\/// _______\/// __\///////// __\/// _____________
                     })
         
                     .then(() => {
-                        return AC_MGR.ACTH_setCosts(
+                        return NODE_MGR.ACTH_setCosts(
                             "15",
                             "2",
                             "10000000000000000",
@@ -1789,7 +1789,7 @@ _________\/// _____________\/// _______\/// __\///////// __\/// _____________
                     })
         
                     .then(() => {
-                        return AC_MGR.ACTH_setCosts(
+                        return NODE_MGR.ACTH_setCosts(
                             "15",
                             "3",
                             "10000000000000000",
@@ -1798,7 +1798,7 @@ _________\/// _____________\/// _______\/// __\///////// __\/// _____________
                     })
         
                     .then(() => {
-                        return AC_MGR.ACTH_setCosts(
+                        return NODE_MGR.ACTH_setCosts(
                             "15",
                             "4",
                             "10000000000000000",
@@ -1807,7 +1807,7 @@ _________\/// _____________\/// _______\/// __\///////// __\/// _____________
                     })
         
                     .then(() => {
-                        return AC_MGR.ACTH_setCosts(
+                        return NODE_MGR.ACTH_setCosts(
                             "15",
                             "5",
                             "10000000000000000",
@@ -1816,7 +1816,7 @@ _________\/// _____________\/// _______\/// __\///////// __\/// _____________
                     })
         
                     .then(() => {
-                        return AC_MGR.ACTH_setCosts(
+                        return NODE_MGR.ACTH_setCosts(
                             "15",
                             "6",
                             "10000000000000000",
@@ -1825,7 +1825,7 @@ _________\/// _____________\/// _______\/// __\///////// __\/// _____________
                     })
         
                     .then(() => {
-                        return AC_MGR.ACTH_setCosts(
+                        return NODE_MGR.ACTH_setCosts(
                             "15",
                             "7",
                             "10000000000000000",
@@ -1834,7 +1834,7 @@ _________\/// _____________\/// _______\/// __\///////// __\/// _____________
                     })
         
                     .then(() => {
-                        return AC_MGR.ACTH_setCosts(
+                        return NODE_MGR.ACTH_setCosts(
                             "15",
                             "8",
                             "10000000000000000",
@@ -1848,91 +1848,91 @@ _________\/// _____________\/// _______\/// __\///////// __\/// _____________
         
                 console.log("//**************************************END BOOTSTRAP**********************************************/")
                 console.log("Account1 => AC10")
-                return AC_MGR.addUser('10', account1Hash, '1', { from: account1 })
+                return NODE_MGR.addUser('10', account1Hash, '1', { from: account1 })
         
                     .then(() => {
                         console.log("Account1 => AC10")
-                        return AC_MGR.addUser('10', account1Hash, '1', { from: account1 })
+                        return NODE_MGR.addUser('10', account1Hash, '1', { from: account1 })
                     })
         
                     .then(() => {
                         console.log("Account1 => AC11")
-                        return AC_MGR.addUser('11', account1Hash, '1', { from: account1 })
+                        return NODE_MGR.addUser('11', account1Hash, '1', { from: account1 })
                     })
         
                     .then(() => {
                         console.log("Account3 => AC11")
-                        return AC_MGR.addUser('11', account3Hash, '1', { from: account1 })
+                        return NODE_MGR.addUser('11', account3Hash, '1', { from: account1 })
                     })
         
                     .then(() => {
                         console.log("Account4 => AC10")
-                        return AC_MGR.addUser('10', account4Hash, '1', { from: account1 })
+                        return NODE_MGR.addUser('10', account4Hash, '1', { from: account1 })
                     })
         
                     .then(() => {
                         console.log("Account4 => AC12")
-                        return AC_MGR.addUser('12', account4Hash, '1', { from: account1 })
+                        return NODE_MGR.addUser('12', account4Hash, '1', { from: account1 })
                     })
         
                     .then(() => {
                         console.log("Account1 => AC12")
-                        return AC_MGR.addUser('12', account1Hash, '1', { from: account1 })
+                        return NODE_MGR.addUser('12', account1Hash, '1', { from: account1 })
                     })
         
                     // .then(() => {
                     //     console.log("Account4 => AC16")
-                    //     return AC_MGR.addUser(account4Hash, '1', '16', { from: account10 })
+                    //     return NODE_MGR.addUser(account4Hash, '1', '16', { from: account10 })
                     // })
         
                     .then(() => {
                         console.log("Account5 => AC13")
-                        return AC_MGR.addUser('13', account5Hash, '1', { from: account1 })
+                        return NODE_MGR.addUser('13', account5Hash, '1', { from: account1 })
                     })
         
                     .then(() => {
                         console.log("Account1 => AC14")
-                        return AC_MGR.addUser('14', account1Hash, '1', { from: account1 })
+                        return NODE_MGR.addUser('14', account1Hash, '1', { from: account1 })
                     })
         
                     .then(() => {
                         console.log("Account6 => AC14")
-                        return AC_MGR.addUser('14', account6Hash, '1', { from: account1 })
+                        return NODE_MGR.addUser('14', account6Hash, '1', { from: account1 })
                     })
         
                     .then(() => {
                         console.log("Account7 => AC14 (ROBOT)")
-                        return AC_MGR.addUser('14', account7Hash, '9', { from: account1 })
+                        return NODE_MGR.addUser('14', account7Hash, '9', { from: account1 })
                     })
         
                     .then(() => {
                         console.log("Account8 => AC10 (ROBOT)")
-                        return AC_MGR.addUser('10', account8Hash, '9', { from: account1 })
+                        return NODE_MGR.addUser('10', account8Hash, '9', { from: account1 })
                     })
         
                     .then(() => {
                         console.log("Account9 => AC11 (ROBOT)")
-                        return AC_MGR.addUser('11', account9Hash, '9', { from: account1 })
+                        return NODE_MGR.addUser('11', account9Hash, '9', { from: account1 })
                     })
         
                     .then(() => {
                         console.log("Account10 => AC15 (PIPMINTER)")
-                        return AC_MGR.addUser('15', account10Hash, '10', { from: account1 })
+                        return NODE_MGR.addUser('15', account10Hash, '10', { from: account1 })
                     })
         
                     .then(() => {
                         console.log("Account1 => AC15")
-                        return AC_MGR.addUser('15', account1Hash, '1', { from: account1 })
+                        return NODE_MGR.addUser('15', account1Hash, '1', { from: account1 })
                     })
         
                     // .then(() => {
                     //     console.log("Account10 => AC16 (PIPMINTER)")
-                    //     return AC_MGR.addUser(account10Hash, '10', '16', { from: account10 })
+                    //     return NODE_MGR.addUser(account10Hash, '10', '16', { from: account10 })
                     // })
         
                     .then(() => {
                         console.log("Account10 => AC10 (PIPMINTER)")
-                        return AC_MGR.addUser('10', account10Hash, '1', { from: account1 })
+                        return NODE_MGR.addUser('10', account10Hash, '1', { from: account1 })
                     })
             })
 

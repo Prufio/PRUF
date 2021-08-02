@@ -23,7 +23,7 @@ __/\\\\\\\\\\\\\ _____/\\\\\\\\\ _______/\\__/\\ ___/\\\\\\\\\\\\\\\
 *
 * 3 - NP|0|
 *
-* 4 - AC_MGR|0|
+* 4 - NODE_MGR|0|
 *
 * 5 - AC_TKN|0|
 *
@@ -55,7 +55,7 @@ __/\\\\\\\\\\\\\ _____/\\\\\\\\\ _______/\\__/\\ ___/\\\\\\\\\\\\\\\
 * 
 * ----------------- ADD DEFAULT CONTRACTS TO STORAGE (STOR.addDefaultContracts)-----------------|0|
 *
-* 1 - AC_MGR ("0", AC_MGR, '1')|0|
+* 1 - NODE_MGR ("0", NODE_MGR, '1')|0|
 *
 * 2 - AC_TKN ("1", AC_TKN, '1')|0|
 *
@@ -82,7 +82,7 @@ __/\\\\\\\\\\\\\ _____/\\\\\\\\\ _______/\\__/\\ ___/\\\\\\\\\\\\\\\
 *
 * 2 - NP ("NP", NP.address, '0', '1')|0|
 *
-* 3 - AC_MGR ("AC_MGR", AC_MGR.address, '0', '1')|0|
+* 3 - NODE_MGR ("NODE_MGR", NODE_MGR.address, '0', '1')|0|
 *
 * 4 - AC_TKN ("AC_TKN", AC_TKN.address, '0', '1')|0|
 *
@@ -117,7 +117,7 @@ __/\\\\\\\\\\\\\ _____/\\\\\\\\\ _______/\\__/\\ ___/\\\\\\\\\\\\\\\
 *
 * 2 - NP (STOR.address)|0|
 *
-* 3 - AC_MGR (STOR.address)|0|
+* 3 - NODE_MGR (STOR.address)|0|
 *
 * 4 - A_TKN (STOR.address)|0|
 *
@@ -146,7 +146,7 @@ __/\\\\\\\\\\\\\ _____/\\\\\\\\\ _______/\\__/\\ ___/\\\\\\\\\\\\\\\
 *
 * 2 - NP|0|
 *
-* 3 - AC_MGR|0|
+* 3 - NODE_MGR|0|
 *
 * 4 - A_TKN|0|
 *
@@ -170,14 +170,14 @@ __/\\\\\\\\\\\\\ _____/\\\\\\\\\ _______/\\__/\\ ___/\\\\\\\\\\\\\\\
 *
 * 14 - WRAP|0|
 * 
-* ----------------- SET PERMITTED STORAGE PROVIDERS (AC_MGR.adminSetStorageProviders)-----------------|0|
+* ----------------- SET PERMITTED STORAGE PROVIDERS (NODE_MGR.adminSetStorageProviders)-----------------|0|
 * 1 - Unconfigured ('0', '1')   |0|
 *
 * 1 - IPFS ('1', '1')   |0|
 *
 * 2 - ARWEAVE ('2', '1')   |0|
 * 
-* ----------------- SET PERMITTED MANAGEMENT TYPES (AC_MGR.adminSetMangementTypes)-----------------|0|
+* ----------------- SET PERMITTED MANAGEMENT TYPES (NODE_MGR.adminSetMangementTypes)-----------------|0|
 * 1 - Unrestricted ('0', '1')   |0|
 *
 * 2 - Restricted ('1', '1')   |0|
@@ -192,7 +192,7 @@ __/\\\\\\\\\\\\\ _____/\\\\\\\\\ _______/\\__/\\ ___/\\\\\\\\\\\\\\\
 *
 * 7 - Unconfigured ('255', '1')   |0|
 * 
-* ----------------- SET PERMITTED CUSTODY TYPES (AC_MGR.adminSetCustodyTypes)-----------------|0|
+* ----------------- SET PERMITTED CUSTODY TYPES (NODE_MGR.adminSetCustodyTypes)-----------------|0|
 * 1 - NONE ('0', '1')   |0|
 *
 * 2 - Custodial ('1', '1')   |0|
@@ -210,9 +210,9 @@ __/\\\\\\\\\\\\\ _____/\\\\\\\\\ _______/\\__/\\ ___/\\\\\\\\\\\\\\\
 * 8 - Free Non-Custodial ('12', '1')   |0|
 * 
 * ----------------- DIVY UP ROLES (CONTRACT.grantRole) (B32'S) -----------------|0|
-* 1 - AC_TKN (MINTER_ROLEB32, AC_MGR.address),   |0|
+* 1 - AC_TKN (MINTER_ROLEB32, NODE_MGR.address),   |0|
 *
-* 2 - UTIL_TKN (PAYABLE_ROLEB32, AC_MGR.address),   |0|
+* 2 - UTIL_TKN (PAYABLE_ROLEB32, NODE_MGR.address),   |0|
 *              (PAYABLE_ROLEB32, APP_NC.address),   |0|
 *              (PAYABLE_ROLEB32, APP.address),   |0|
 *              (PAYABLE_ROLEB32, RCLR.address),   |0|
@@ -222,7 +222,7 @@ __/\\\\\\\\\\\\\ _____/\\\\\\\\\ _______/\\__/\\ ___/\\\\\\\\\\\\\\\
 *              (PAYABLE_ROLEB32, PURCHASE.address),   |0|
 *              (PAYABLE_ROLEB32, DECORATE.address),   |0|
 *              (PAYABLE_ROLEB32, WRAP.address),   |0|
-*              (TRUSTED_AGENT_ROLEB32, AC_MGR.address)   |0|
+*              (TRUSTED_AGENT_ROLEB32, NODE_MGR.address)   |0|
 *              (TRUSTED_AGENT_ROLEB32, PURCHASE.address),   |0|
 *
 * 3 - A_TKN (MINTER_ROLEB32, NP.address),   |0|
@@ -238,7 +238,7 @@ __/\\\\\\\\\\\\\ _____/\\\\\\\\\ _______/\\__/\\ ___/\\\\\\\\\\\\\\\
 *
 * 5 - RCLR (DISCARD_ROLEB32, A_TKN.address)   |0| 
 * 
-* ----------------- MINT ROOT TOKENS (AC_MGR.createAssetClass)-----------------|0|
+* ----------------- MINT ROOT TOKENS (NODE_MGR.createAssetClass)-----------------|0|
 * 1 - ROOT1 ('1', 'name', '1', '3', '0', "9500" 0x000...(b32), USER1.address,)   |0|
 *
 * 2 - ROOT2 ('2', 'name', '2', '3', '0', "9500" 0x000...(b32), USER1.address,)   |0|
@@ -253,7 +253,7 @@ __/\\\\\\\\\\\\\ _____/\\\\\\\\\ _______/\\__/\\ ___/\\\\\\\\\\\\\\\
 *
 * 7 - ROOT5 ('7', 'name', '7', '3', '0', "9500" 0x000...(b32), USER1.address,)   |0|
 *
-* ----------------- ROOT TOKEN PRICING (AC_MGR.ACTH_setCosts)-----------------|0|
+* ----------------- ROOT TOKEN PRICING (NODE_MGR.ACTH_setCosts)-----------------|0|
 * 1 - ROOT1 ('1', '1', PRUF+(0*18), PAYMENT_ADDR)   |0|
 *           ('1', '2', PRUF+(0*18), PAYMENT_ADDR)   |0|
 *           ('1', '3', PRUF+(0*18), PAYMENT_ADDR)   |0|
