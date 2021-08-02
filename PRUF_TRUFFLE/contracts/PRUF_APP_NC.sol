@@ -151,7 +151,7 @@ contract APP_NC is CORE {
             "ANC:IA: Cannot change node except to specified node"
         );
         require( 
-            NODE_MGR.isSameRootAC(_newAssetClass, rec.assetClass) == 170,
+            NODE_MGR.isSameRootAC(_newAssetClass, rec.node) == 170,
             "ANC:IA: Cannot change node to new root"
         );
         require(
@@ -215,7 +215,7 @@ contract APP_NC is CORE {
         //^^^^^^^effects^^^^^^^^^
 
         writeRecordIpfs2(_idxHash, rec);
-        deductServiceCosts(rec.assetClass, 3);
+        deductServiceCosts(rec.node, 3);
         //^^^^^^^interactions^^^^^^^^^
     }
 }

@@ -52,11 +52,11 @@ contract ECR is ECR_CORE {
         uint8 _escrowStatus
     ) external nonReentrant isAuthorized(_idxHash) {
         Record memory rec = getRecord(_idxHash);
-        uint8 userType = getCallingUserType(rec.assetClass);
+        uint8 userType = getCallingUserType(rec.node);
         uint256 escrowTime = block.timestamp + _escrowTime;
         uint8 newEscrowStatus;
         ContractDataHash memory contractInfo =
-            getContractInfo(address(this), rec.assetClass);
+            getContractInfo(address(this), rec.node);
 
         require(contractInfo.contractType > 0, "E:SE: Contract not auth in node");
         require((userType > 0) && (userType < 10), "E:SE: User not auth in node");
@@ -94,11 +94,11 @@ contract ECR is ECR_CORE {
         uint8 _escrowStatus
     ) external nonReentrant isAuthorized(_idxHash) {
         Record memory rec = getRecord(_idxHash);
-        uint8 userType = getCallingUserType(rec.assetClass);
+        uint8 userType = getCallingUserType(rec.node);
         uint256 escrowTime = block.timestamp + _escrowTime;
         uint8 newEscrowStatus;
         ContractDataHash memory contractInfo =
-            getContractInfo(address(this), rec.assetClass);
+            getContractInfo(address(this), rec.node);
 
         require(contractInfo.contractType > 0, "E:SEED: Contract not auth in node");
         require((userType > 0) && (userType < 10), "E:SEED: User not auth in node");
@@ -153,8 +153,8 @@ contract ECR is ECR_CORE {
         Record memory rec = getRecord(_idxHash);
         escrowData memory escrow = getEscrowData(_idxHash);
         ContractDataHash memory contractInfo =
-            getContractInfo(address(this), rec.assetClass);
-        uint8 userType = getCallingUserType(rec.assetClass);
+            getContractInfo(address(this), rec.node);
+        uint8 userType = getCallingUserType(rec.node);
         bytes32 ownerHash = ECR_MGR.retrieveEscrowOwner(_idxHash);
 
         require(contractInfo.contractType > 0, "E:EE: Contract not auth in node");

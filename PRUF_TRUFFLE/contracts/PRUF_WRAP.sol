@@ -133,7 +133,7 @@ contract WRAP is CORE {
             _foreignTokenID
         ); // move token to this contract 
 
-        if (rec.assetClass == 0) {
+        if (rec.node == 0) {
             //record does not exist
             createRecord(idxHash, _rgtHash, _node, _countDownStart);
         } else {
@@ -158,7 +158,7 @@ contract WRAP is CORE {
     {
         bytes32 idxHash = bytes32(_tokenID);
         Record memory rec = getRecord(idxHash);
-        Node memory node_info = getACinfo(rec.assetClass);
+        Node memory node_info = getACinfo(rec.node);
         address foreignTokenContract = wrapped[_tokenID].tokenContract;
         uint256 foreignTokenID = wrapped[_tokenID].tokenID;
 

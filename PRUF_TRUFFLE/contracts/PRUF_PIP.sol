@@ -54,7 +54,7 @@ contract PIP is CORE {
         );
         require(userType == 10, "P:MPA: User not authorized to mint PIP assets");
         require(
-            rec.assetClass == 0, //verified as VALID
+            rec.node == 0, //verified as VALID
             "P:MPA: Asset already registered in system"
         );
         // //^^^^^^^checks^^^^^^^^^

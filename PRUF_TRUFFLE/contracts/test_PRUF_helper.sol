@@ -304,7 +304,7 @@ contract Helper is Ownable, BASIC {
         invoice.rootPrice = _rootPrice;
         invoice.ACTHaddress = _ACTHaddress;
         invoice.ACTHprice = _ACTHprice;
-        invoice.assetClass = _node;
+        invoice.node = _node;
 
         //UTIL_TKN.payForService(_msgSender(), _pricing); //-- NON LEGACY TOKEN CONTRACT
 

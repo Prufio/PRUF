@@ -135,7 +135,7 @@ contract CORE is BASIC {
         virtual
         whenNotPaused
     {
-        Node memory node_info = getACinfo(_rec.assetClass);
+        Node memory node_info = getACinfo(_rec.node);
 
         require(
             (node_info.managementType < 6),
@@ -143,7 +143,7 @@ contract CORE is BASIC {
         );
         if ((node_info.custodyType != 1) && (node_info.managementType == 5)) {
             require(
-                (NODE_TKN.ownerOf(_rec.assetClass) == _msgSender()),
+                (NODE_TKN.ownerOf(_rec.node) == _msgSender()),
                 "C:WIPFS1: Caller must hold node (management type 5)"
             );
         }

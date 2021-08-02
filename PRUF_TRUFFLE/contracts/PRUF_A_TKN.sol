@@ -245,7 +245,7 @@ contract A_TKN is
         bytes32 _idxHash = bytes32(tokenId);
         Record memory rec = getRecord(_idxHash);
 
-        if (NODE_MGR.getSwitchAt(rec.assetClass, 1) == 1) {
+        if (NODE_MGR.getSwitchAt(rec.node, 1) == 1) {
             //if switch at bit 1 (0) is set
             string memory tokenURI = tokenURI(tokenId);
 
@@ -255,7 +255,7 @@ contract A_TKN is
             );
 
             require(
-                NODE_TKN.ownerOf(rec.assetClass) == _msgSender(),
+                NODE_TKN.ownerOf(rec.node) == _msgSender(),
                 "AT:SURI:Caller !ACTH"
             );
         }

@@ -132,7 +132,7 @@ contract STOR is AccessControl, ReentrancyGuard, Pausable {
      * @param _idxHash idx hash to check for existance in storage data
      */
     modifier exists(bytes32 _idxHash) {
-        require(database[_idxHash].assetClass != 0, "S:MOD-E: Rec !exist");
+        require(database[_idxHash].node != 0, "S:MOD-E: Rec !exist");
         _;
     }
 
@@ -396,7 +396,7 @@ contract STOR is AccessControl, ReentrancyGuard, Pausable {
             database[_idxHash].assetStatus != 60,
             "S:NR: Asset discarded use APP_NC rcycl"
         );
-        require(database[_idxHash].assetClass == 0, "S:NR: Rec already exists");
+        require(database[_idxHash].node == 0, "S:NR: Rec already exists");
         require(_rgtHash != 0, "S:NR: RGT = 0");
         require(_node != 0, "S:NR: node = 0");
         //^^^^^^^checks^^^^^^^^^
@@ -411,7 +411,7 @@ contract STOR is AccessControl, ReentrancyGuard, Pausable {
             rec.assetStatus = 51;
         }
 
-        rec.assetClass = _node;
+        rec.node = _node;
         rec.countDown = _countDownStart;
         rec.rightsHolder = _rgtHash;
 
@@ -444,7 +444,7 @@ contract STOR is AccessControl, ReentrancyGuard, Pausable {
         nonReentrant
         whenNotPaused
         exists(_idxHash) //asset must exist in 'database'
-        isAuthorized(database[_idxHash].assetClass) //calling contract must be authorized in relevant assetClass
+        isAuthorized(database[_idxHash].node) //calling contract must be authorized in relevant assetClass
         notEscrow(_idxHash) // asset must not be held in escrow status
     {
         Record memory rec = database[_idxHash];
@@ -504,14 +504,14 @@ contract STOR is AccessControl, ReentrancyGuard, Pausable {
 
         require(_newAssetClass != 0, "S:CAC: Cannot set node=0");
         require( //require new assetClass is in the same root as old assetClass
-            NODE_MGR.isSameRootAC(_newAssetClass, rec.assetClass) == 170,
+            NODE_MGR.isSameRootAC(_newAssetClass, rec.node) == 170,
             "S:CAC: Cannot mod node to new root"
         );
         require(isLostOrStolen(rec.assetStatus) == 0, "S:CAC: L/S asset"); //asset cannot be in lost or stolen status
         require(isTransferred(rec.assetStatus) == 0, "S:CAC: Txfrd asset"); //asset cannot be in transferred status
         //^^^^^^^checks^^^^^^^^^
 
-        rec.assetClass = _newAssetClass;
+        rec.node = _newAssetClass;
         database[_idxHash] = rec;
         //^^^^^^^effects^^^^^^^^^
 
@@ -529,7 +529,7 @@ contract STOR is AccessControl, ReentrancyGuard, Pausable {
         nonReentrant
         whenNotPaused
         exists(_idxHash)
-        isAuthorized(database[_idxHash].assetClass)
+        isAuthorized(database[_idxHash].node)
     {
         Record memory rec = database[_idxHash];
 
@@ -629,7 +629,7 @@ contract STOR is AccessControl, ReentrancyGuard, Pausable {
         nonReentrant
         whenNotPaused
         exists(_idxHash) //asset must exist in 'database'
-        isAuthorized(database[_idxHash].assetClass) //calling contract must be authorized in relevant assetClass
+        isAuthorized(database[_idxHash].node) //calling contract must be authorized in relevant assetClass
     {
         Record memory rec = database[_idxHash];
         require(isTransferred(rec.assetStatus) == 0, "S:SP: Txfrd asset");
@@ -654,7 +654,7 @@ contract STOR is AccessControl, ReentrancyGuard, Pausable {
         nonReentrant
         whenNotPaused
         exists(_idxHash) //asset must exist in 'database'
-        isAuthorized(database[_idxHash].assetClass) //calling contract must be authorized in relevant assetClass
+        isAuthorized(database[_idxHash].node) //calling contract must be authorized in relevant assetClass
     {
         Record memory rec = database[_idxHash];
         require(isTransferred(rec.assetStatus) == 0, "S:CP: Txfrd asset");
@@ -685,7 +685,7 @@ contract STOR is AccessControl, ReentrancyGuard, Pausable {
         nonReentrant
         whenNotPaused
         exists(_idxHash) //asset must exist in 'database'
-        isAuthorized(database[_idxHash].assetClass) //calling contract must be authorized in relevant assetClass
+        isAuthorized(database[_idxHash].node) //calling contract must be authorized in relevant assetClass
         notEscrow(_idxHash) // asset must not be held in escrow status
     {
         Record memory rec = database[_idxHash];
@@ -721,7 +721,7 @@ contract STOR is AccessControl, ReentrancyGuard, Pausable {
         nonReentrant
         whenNotPaused
         exists(_idxHash) //asset must exist in 'database'
-        isAuthorized(database[_idxHash].assetClass) //calling contract must be authorized in relevant assetClass
+        isAuthorized(database[_idxHash].node) //calling contract must be authorized in relevant assetClass
         notEscrow(_idxHash) // asset must not be held in escrow status
     {
         Record memory rec = database[_idxHash];
@@ -766,7 +766,7 @@ contract STOR is AccessControl, ReentrancyGuard, Pausable {
      * @param _idxHash - record asset ID
      * returns rec.assetStatus,
                 rec.modCount,
-                rec.assetClass,
+                rec.node,
                 rec.countDown,
                 rec.countDownStart,
                 rec.Ipfs1a,
@@ -795,7 +795,7 @@ contract STOR is AccessControl, ReentrancyGuard, Pausable {
         return (
             rec.assetStatus,
             rec.modCount,
-            rec.assetClass,
+            rec.node,
             rec.countDown,
             rec.int32temp,
             rec.Ipfs1a,

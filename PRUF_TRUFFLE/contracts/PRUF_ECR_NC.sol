@@ -61,7 +61,7 @@ contract ECR_NC is ECR_CORE {
         uint8 newEscrowStatus;
         ContractDataHash memory contractInfo = getContractInfo(
             address(this),
-            rec.assetClass
+            rec.node
         );
 
         require(
@@ -111,7 +111,7 @@ contract ECR_NC is ECR_CORE {
         escrowData memory escrow = getEscrowData(_idxHash);
         ContractDataHash memory contractInfo = getContractInfo(
             address(this),
-            rec.assetClass
+            rec.node
         );
 
         require(

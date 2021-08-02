@@ -90,7 +90,7 @@ contract APP is CORE {
             "A:IA: new node must match node authorized for import"
         );
         require(
-            NODE_MGR.isSameRootAC(_newAssetClass, rec.assetClass) == 170,
+            NODE_MGR.isSameRootAC(_newAssetClass, rec.node) == 170,
             "ANC:IA: Cannot change node to new root"
         );
         //^^^^^^^checks^^^^^^^^^
@@ -117,7 +117,7 @@ contract APP is CORE {
         isAuthorized(_idxHash)
     {
         Record memory rec = getRecord(_idxHash);
-        uint8 userType = getCallingUserType(rec.assetClass);
+        uint8 userType = getCallingUserType(rec.node);
 
         require(userType == 1, "A:FMR: User !auth in node");
         require(
@@ -137,7 +137,7 @@ contract APP is CORE {
         //^^^^^^^effects^^^^^^^^^
 
         writeRecord(_idxHash, rec);
-        deductServiceCosts(rec.assetClass, 6);
+        deductServiceCosts(rec.node, 6);
         //^^^^^^^interactions^^^^^^^^^
     }
 
@@ -159,7 +159,7 @@ contract APP is CORE {
         isAuthorized(_idxHash)
     {
         Record memory rec = getRecord(_idxHash);
-        uint8 userType = getCallingUserType(rec.assetClass);
+        uint8 userType = getCallingUserType(rec.node);
 
         require((userType > 0) && (userType < 10), "A:TA: User not auth in node");
         require(
@@ -188,7 +188,7 @@ contract APP is CORE {
         //^^^^^^^effects^^^^^^^^^
 
         writeRecord(_idxHash, rec);
-        deductServiceCosts(rec.assetClass, 2);
+        deductServiceCosts(rec.node, 2);
         //^^^^^^^interactions^^^^^^^^^
     }
 
@@ -206,7 +206,7 @@ contract APP is CORE {
         bytes32 _Ipfs2b
     ) external nonReentrant whenNotPaused isAuthorized(_idxHash) {
         Record memory rec = getRecord(_idxHash);
-        uint8 userType = getCallingUserType(rec.assetClass);
+        uint8 userType = getCallingUserType(rec.node);
 
         require((userType > 0) && (userType < 10), "A:I2: User not auth in node");
 
@@ -225,7 +225,7 @@ contract APP is CORE {
         //^^^^^^^effects^^^^^^^^^
 
         writeRecordIpfs2(_idxHash, rec);
-        deductServiceCosts(rec.assetClass, 3);
+        deductServiceCosts(rec.node, 3);
         //^^^^^^^interactions^^^^^^^^^
     }
 }

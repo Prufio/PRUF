@@ -754,7 +754,7 @@ contract NODE_MGR is BASIC {
         invoice.rootPrice = rootCosts.serviceCost;
         invoice.ACTHaddress = costs.paymentAddress;
         invoice.ACTHprice = costs.serviceCost;
-        invoice.assetClass = _node;
+        invoice.node = _node;
 
         return invoice;
         //^^^^^^^effects^^^^^^^^^

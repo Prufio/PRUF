@@ -61,7 +61,7 @@ contract ECR_MGR is BASIC {
     ) external nonReentrant whenNotPaused {
         Record memory rec = getRecord(_idxHash);
         ContractDataHash memory contractInfo =
-            getContractInfo(_msgSender(), rec.assetClass);
+            getContractInfo(_msgSender(), rec.node);
         bytes32 controllingContractNameHash = contractInfo.nameHash;
 
         require(
@@ -91,7 +91,7 @@ contract ECR_MGR is BASIC {
     function endEscrow(bytes32 _idxHash) external nonReentrant whenNotPaused {
         Record memory rec = getRecord(_idxHash);
         ContractDataHash memory contractInfo =
-            getContractInfo(_msgSender(), rec.assetClass);
+            getContractInfo(_msgSender(), rec.node);
 
         require(
             isEscrow(rec.assetStatus) == 170,
@@ -125,7 +125,7 @@ contract ECR_MGR is BASIC {
     ) external nonReentrant whenNotPaused {
         Record memory rec = getRecord(_idxHash);
         ContractDataHash memory contractInfo =
-            getContractInfo(_msgSender(), rec.assetClass);
+            getContractInfo(_msgSender(), rec.node);
 
         require(
             isEscrow(rec.assetStatus) == 170,
@@ -153,7 +153,7 @@ contract ECR_MGR is BASIC {
     ) external nonReentrant whenNotPaused {
         Record memory rec = getRecord(_idxHash);
         ContractDataHash memory contractInfo =
-            getContractInfo(_msgSender(), rec.assetClass);
+            getContractInfo(_msgSender(), rec.node);
 
         require(
             isEscrow(rec.assetStatus) == 170,

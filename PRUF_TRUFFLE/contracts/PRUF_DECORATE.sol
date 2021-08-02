@@ -75,7 +75,7 @@ contract DECORATE is CORE {
             "D:D:Asset class reference address must be '0' or ERC721 contract address"
         );
         require(
-            rec.assetClass == 0,
+            rec.node == 0,
             "D:D:Wrapper, decoration, or record already exists"
         );
         require( //DPS:TEST NEW
@@ -132,7 +132,7 @@ contract DECORATE is CORE {
     {
         bytes32 idxHash = keccak256(abi.encodePacked(_tokenID, _tokenContract));
         Record memory rec = getRecord(idxHash);
-        Node memory node_info = getACinfo(rec.assetClass);
+        Node memory node_info = getACinfo(rec.node);
 
         require(
             node_info.custodyType == 5,
@@ -191,7 +191,7 @@ contract DECORATE is CORE {
     {
         bytes32 idxHash = keccak256(abi.encodePacked(_tokenID, _tokenContract));
         Record memory rec = getRecord(idxHash);
-        Node memory node_info = getACinfo(rec.assetClass);
+        Node memory node_info = getACinfo(rec.node);
 
         require(
             node_info.custodyType == 5,
@@ -225,7 +225,7 @@ contract DECORATE is CORE {
     {
         bytes32 idxHash = keccak256(abi.encodePacked(_tokenID, _tokenContract));
         Record memory rec = getRecord(idxHash);
-        Node memory node_info = getACinfo(rec.assetClass);
+        Node memory node_info = getACinfo(rec.node);
 
         require(
             node_info.custodyType == 5,
@@ -265,7 +265,7 @@ contract DECORATE is CORE {
     {
         bytes32 idxHash = keccak256(abi.encodePacked(_tokenID, _tokenContract));
         Record memory rec = getRecord(idxHash);
-        Node memory node_info = getACinfo(rec.assetClass);
+        Node memory node_info = getACinfo(rec.node);
 
         require(
             node_info.custodyType == 5,
@@ -291,7 +291,7 @@ contract DECORATE is CORE {
         //^^^^^^^effects^^^^^^^^^
 
         writeRecord(idxHash, rec);
-        deductServiceCosts(rec.assetClass, 7);
+        deductServiceCosts(rec.node, 7);
         //^^^^^^^interactions^^^^^^^^^
     }
 
@@ -315,7 +315,7 @@ contract DECORATE is CORE {
     {
         bytes32 idxHash = keccak256(abi.encodePacked(_tokenID, _tokenContract));
         Record memory rec = getRecord(idxHash);
-        Node memory node_info = getACinfo(rec.assetClass);
+        Node memory node_info = getACinfo(rec.node);
 
         require(
             node_info.custodyType == 5,
@@ -327,7 +327,7 @@ contract DECORATE is CORE {
         );
         if ((node_info.custodyType != 1) && (node_info.managementType == 5)) {
             require(
-                (NODE_TKN.ownerOf(rec.assetClass) == _msgSender()),
+                (NODE_TKN.ownerOf(rec.node) == _msgSender()),
                 "C:WIPFS1: Caller must hold node (management type 5)"
             );
         }
@@ -349,7 +349,7 @@ contract DECORATE is CORE {
         //^^^^^^^effects^^^^^^^^^
 
         writeRecordIpfs1(idxHash, rec);
-        deductServiceCosts(rec.assetClass, 8);
+        deductServiceCosts(rec.node, 8);
         //^^^^^^^interactions^^^^^^^^^
     }
 
@@ -373,7 +373,7 @@ contract DECORATE is CORE {
     {
         bytes32 idxHash = keccak256(abi.encodePacked(_tokenID, _tokenContract));
         Record memory rec = getRecord(idxHash);
-        Node memory node_info = getACinfo(rec.assetClass);
+        Node memory node_info = getACinfo(rec.node);
 
         require(
             node_info.custodyType == 5,
@@ -396,7 +396,7 @@ contract DECORATE is CORE {
         //^^^^^^^effects^^^^^^^^^
 
         writeRecordIpfs2(idxHash, rec);
-        deductServiceCosts(rec.assetClass, 3);
+        deductServiceCosts(rec.node, 3);
         //^^^^^^^interactions^^^^^^^^^
     }
 
@@ -414,7 +414,7 @@ contract DECORATE is CORE {
     {   
         bytes32 idxHash = keccak256(abi.encodePacked(_tokenID, _tokenContract));
         Record memory rec = getRecord(idxHash);
-        Node memory node_info = getACinfo(rec.assetClass);
+        Node memory node_info = getACinfo(rec.node);
 
         require(
             node_info.custodyType == 5,
@@ -426,7 +426,7 @@ contract DECORATE is CORE {
         );
         if ((node_info.managementType == 1) || (node_info.managementType == 5)) {
             require(
-                (NODE_TKN.ownerOf(rec.assetClass) == _msgSender()),
+                (NODE_TKN.ownerOf(rec.node) == _msgSender()),
                 "D:E: Restricted from exporting assets from this node - does not hold ACtoken"
             );
         }
@@ -441,7 +441,7 @@ contract DECORATE is CORE {
             "D:E: Must be in transferrable status (51/70)"
         );
         require(
-            NODE_MGR.isSameRootAC(_exportTo, rec.assetClass) == 170,
+            NODE_MGR.isSameRootAC(_exportTo, rec.node) == 170,
             "D:E: Cannot change node to new root"
         );
         //^^^^^^^checks^^^^^^^^^
@@ -473,7 +473,7 @@ contract DECORATE is CORE {
     {
         bytes32 idxHash = keccak256(abi.encodePacked(_tokenID, _tokenContract));
         Record memory rec = getRecord(idxHash);
-        Node memory node_info = getACinfo(rec.assetClass);
+        Node memory node_info = getACinfo(rec.node);
         Node memory newAC_info = getACinfo(_newAssetClass);
 
         require(
@@ -489,7 +489,7 @@ contract DECORATE is CORE {
         );
         require(rec.assetStatus == 70, "D:I: Asset not exported");
         require(
-            NODE_MGR.isSameRootAC(_newAssetClass, rec.assetClass) == 170,
+            NODE_MGR.isSameRootAC(_newAssetClass, rec.node) == 170,
             "D:I:Cannot change node to new root"
         );
         require( //DPS:TEST NEW

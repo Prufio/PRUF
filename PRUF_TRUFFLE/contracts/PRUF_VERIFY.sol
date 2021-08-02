@@ -96,7 +96,7 @@ contract VERIFY is CORE {
         );
         require(ACdata.custodyType == 4, "VFY:ATFV: node not VERIFY enabled");
         require(
-            rec.assetClass == _node,
+            rec.node == _node,
             "VFY:ATFV: node of Asset Token does not match supplied node "
         );
         //^^^^^^^checks^^^^^^^^^
@@ -231,7 +231,7 @@ contract VERIFY is CORE {
 
         require(items[_itemHash] == _idxHash, "VFY:T: Item not held by caller"); //check to see if held by _idxHash
         require( //must move to same asset class root
-            NODE_MGR.isSameRootAC(rec.assetClass, newRec.assetClass) == 170,
+            NODE_MGR.isSameRootAC(rec.node, newRec.node) == 170,
             "VFY:T: Wallet is not in the same asset class root"
         );
         require(

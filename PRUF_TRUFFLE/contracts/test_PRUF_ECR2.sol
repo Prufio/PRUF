@@ -47,19 +47,19 @@ contract ECR2 is ECR_CORE {
         uint8 _escrowStatus
     ) external nonReentrant whenNotPaused isAuthorized(_idxHash) {
         Record memory rec = getRecord(_idxHash);
-        uint8 userType = getCallingUserType(rec.assetClass);
+        uint8 userType = getCallingUserType(rec.node);
         uint256 escrowTime = block.timestamp + _escrowTime;
         uint8 newEscrowStatus;
         ContractDataHash memory contractInfo = getContractInfo(
             address(this),
-            rec.assetClass
+            rec.node
         );
 
         require(
             contractInfo.contractType > 0,
             "E:SE: This contract not authorized for specified node"
         );
-        require((rec.assetClass != 0), "E:SE: Record does not exist");
+        require((rec.node != 0), "E:SE: Record does not exist");
         require(
             (userType > 0) && (userType < 10),
             "E:SE: User not authorized to modify records in specified asset class"
@@ -128,9 +128,9 @@ contract ECR2 is ECR_CORE {
         escrowData memory escrow = getEscrowData(_idxHash);
         ContractDataHash memory contractInfo = getContractInfo(
             address(this),
-            rec.assetClass
+            rec.node
         );
-        uint8 userType = getCallingUserType(rec.assetClass);
+        uint8 userType = getCallingUserType(rec.node);
         bytes32 ownerHash = ECR_MGR.retrieveEscrowOwner(_idxHash);
 
         require(
@@ -138,7 +138,7 @@ contract ECR2 is ECR_CORE {
             "E:EE: This contract not authorized for specified node"
         );
 
-        require((rec.assetClass != 0), "E:EE: Record does not exist");
+        require((rec.node != 0), "E:EE: Record does not exist");
         require(
             (userType > 0) && (userType < 10),
             "E:EE: User not authorized to modify records in specified asset class"

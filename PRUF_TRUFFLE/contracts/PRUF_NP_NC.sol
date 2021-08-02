@@ -66,7 +66,7 @@ contract NP_NC is CORE {
         //^^^^^^^effects^^^^^^^^^
 
         writeRecord(_idxHash, rec);
-        deductServiceCosts(rec.assetClass, 6);
+        deductServiceCosts(rec.node, 6);
         //^^^^^^^interactions^^^^^^^^^
     }
 
@@ -82,14 +82,14 @@ contract NP_NC is CORE {
         isAuthorized(_idxHash)
     {
         Record memory rec = getRecord(_idxHash);
-        Node memory node_info = getACinfo(rec.assetClass);
+        Node memory node_info = getACinfo(rec.node);
 
         require(
             (rec.assetStatus == 51) || (rec.assetStatus == 70), //DPS:check
             "NPNC:EXT: Must be in transferrable status (51)"
         );
         require(
-            NODE_MGR.isSameRootAC(_exportTo, rec.assetClass) == 170,
+            NODE_MGR.isSameRootAC(_exportTo, rec.node) == 170,
             "NPNC:EXT: Cannot change node to new root"
         );
         require(
@@ -98,7 +98,7 @@ contract NP_NC is CORE {
         );
         if ((node_info.managementType == 1) || (node_info.managementType == 5)) {
             require( //holds node token if node is restricted --------DPS:TEST ---- NEW
-                (NODE_TKN.ownerOf(rec.assetClass) == _msgSender()),
+                (NODE_TKN.ownerOf(rec.node) == _msgSender()),
                 "NPNC:EXT: Restricted from exporting assets from this node - does not hold ACtoken"
             );
         }
@@ -147,7 +147,7 @@ contract NP_NC is CORE {
 
         rec.assetStatus = _newAssetStatus;
         //^^^^^^^effects^^^^^^^^^
-        deductServiceCosts(rec.assetClass, 5);
+        deductServiceCosts(rec.node, 5);
         writeRecord(_idxHash, rec);
         //^^^^^^^interactions^^^^^^^^^
     }
@@ -209,7 +209,7 @@ contract NP_NC is CORE {
         //^^^^^^^effects^^^^^^^^^
 
         writeRecord(_idxHash, rec);
-        deductServiceCosts(rec.assetClass, 7);
+        deductServiceCosts(rec.node, 7);
         //^^^^^^^interactions^^^^^^^^^
     }
 
@@ -237,7 +237,7 @@ contract NP_NC is CORE {
         //^^^^^^^effects^^^^^^^^^
 
         writeRecordIpfs1(_idxHash, rec);
-        deductServiceCosts(rec.assetClass, 8);
+        deductServiceCosts(rec.node, 8);
         //^^^^^^^interactions^^^^^^^^^
     }
 }

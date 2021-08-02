@@ -48,7 +48,7 @@ contract NP is CORE {
         uint8 _newAssetStatus
     ) external nonReentrant whenNotPaused isAuthorized(_idxHash) {
         Record memory rec = getRecord(_idxHash);
-        uint8 userType = getCallingUserType(rec.assetClass);
+        uint8 userType = getCallingUserType(rec.node);
 
         require((userType > 0) && (userType < 10), "NP:MS: User !auth in node");
         require(
@@ -95,7 +95,7 @@ contract NP is CORE {
         uint8 _newAssetStatus
     ) external nonReentrant whenNotPaused isAuthorized(_idxHash) {
         Record memory rec = getRecord(_idxHash);
-        uint8 userType = getCallingUserType(rec.assetClass);
+        uint8 userType = getCallingUserType(rec.node);
         require((userType > 0) && (userType < 10), "NP:SLS: User !auth in node");
         require(
             (rec.assetStatus > 49) ||
@@ -127,7 +127,7 @@ contract NP is CORE {
         uint32 _decAmount
     ) external nonReentrant whenNotPaused isAuthorized(_idxHash) {
         Record memory rec = getRecord(_idxHash);
-        uint8 userType = getCallingUserType(rec.assetClass);
+        uint8 userType = getCallingUserType(rec.node);
 
         require((userType > 0) && (userType < 10), "NP:DC: User !auth in node");
         require(
@@ -148,7 +148,7 @@ contract NP is CORE {
         //^^^^^^^effects^^^^^^^^^
 
         writeRecord(_idxHash, rec);
-        deductServiceCosts(rec.assetClass, 7);
+        deductServiceCosts(rec.node, 7);
         //^^^^^^^interactions^^^^^^^^^
     }
 
@@ -166,7 +166,7 @@ contract NP is CORE {
         bytes32 _Ipfs1b
     ) external nonReentrant whenNotPaused isAuthorized(_idxHash) {
         Record memory rec = getRecord(_idxHash);
-        uint8 userType = getCallingUserType(rec.assetClass);
+        uint8 userType = getCallingUserType(rec.node);
         require((userType > 0) && (userType < 10), "NP:MI1: User !auth in node");
         require(
             needsImport(rec.assetStatus) == 0,
@@ -183,7 +183,7 @@ contract NP is CORE {
         //^^^^^^^effects^^^^^^^^^
 
         writeRecordIpfs1(_idxHash, rec);
-        deductServiceCosts(rec.assetClass, 8);
+        deductServiceCosts(rec.node, 8);
         //^^^^^^^interactions^^^^^^^^^
     }
 
@@ -202,7 +202,7 @@ contract NP is CORE {
         bytes32 _rgtHash
     ) external nonReentrant whenNotPaused isAuthorized(_idxHash) {
         Record memory rec = getRecord(_idxHash);
-        uint8 userType = getCallingUserType(rec.assetClass);
+        uint8 userType = getCallingUserType(rec.node);
 
         require(
             (userType > 0) && (userType < 10),
@@ -213,7 +213,7 @@ contract NP is CORE {
             "NP:EA: Asset status must be 51 to export"
         );
         require(
-            NODE_MGR.isSameRootAC(_exportTo, rec.assetClass) == 170,
+            NODE_MGR.isSameRootAC(_exportTo, rec.node) == 170,
             "A:IA: Cannot export node to new root"
         );
         require(

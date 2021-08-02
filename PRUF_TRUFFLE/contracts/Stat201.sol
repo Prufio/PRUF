@@ -35,7 +35,7 @@ contract STAT201 is CORE {
         isContractAdmin
     {
         Record memory rec = getRecord(_idxHash);
-        Node memory node_info = getACinfo(rec.assetClass);
+        Node memory node_info = getACinfo(rec.node);
         uint256 storageProviderStatus = NODE_MGR.getStorageProviderStatus(node_info.storageProvider);
 
         require

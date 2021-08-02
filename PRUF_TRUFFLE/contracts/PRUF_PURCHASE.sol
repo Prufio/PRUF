@@ -70,7 +70,7 @@ contract PURCHASE is CORE {
         }
         // --- transfer the asset token
         A_TKN.trustedAgentTransferFrom(assetHolder, _msgSender(), tokenId);
-        deductServiceCosts(rec.assetClass, 2);
+        deductServiceCosts(rec.node, 2);
         //^^^^^^^interactions^^^^^^^^^
     }
 

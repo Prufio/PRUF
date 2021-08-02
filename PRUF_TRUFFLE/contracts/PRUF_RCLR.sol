@@ -84,7 +84,7 @@ contract RCLR is ECR_CORE, CORE {
         require(_rgtHash != 0, "R:R: New rights holder = zero");
         require(rec.assetStatus == 60, "R:R: Asset not discarded");
         require(
-            NODE_MGR.isSameRootAC(_node, rec.assetClass) == 170,
+            NODE_MGR.isSameRootAC(_node, rec.node) == 170,
             "R:R: !Change node to new root"
         );
         require(
