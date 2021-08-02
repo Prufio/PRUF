@@ -38,7 +38,7 @@ contract NODE_MGR is BASIC {
     bytes32 public constant B320xF_ =
         0xFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFF;
 
-    uint256 private nodeTokenIndex = 1000000; //Starting index for purchased ACnode tokens
+    uint256 private nodeTokenIndex = 1000000; //Starting index for purchased node tokens
     uint256 public node_price = 200000 ether;
     uint32 private constant startingDiscount = 9500; // Purchased nodes start with 95% profit share
     mapping(uint32 => mapping(uint16 => Costs)) private cost; // Cost per function by asset class => Costs struct (see PRUF_INTERFACES for struct definitions)
@@ -91,7 +91,7 @@ contract NODE_MGR is BASIC {
         node_price = newACprice;
         //^^^^^^^effects^^^^^^^^^
 
-        emit REPORT("ACnode pricing Changed!"); //report access to internal parameter (KEEP THIS)
+        emit REPORT("node pricing Changed!"); //report access to internal parameter (KEEP THIS)
         //^^^^^^^interactions^^^^^^^^^
     }
 
@@ -244,7 +244,7 @@ contract NODE_MGR is BASIC {
     }
 
     /**
-     * @dev Modifies node.switches bitwise (see ASSET CLASS option switches in ZZ_PRUF_DOCS)
+     * @dev Modifies node.switches bitwise (see NODE option switches in ZZ_PRUF_DOCS)
      * @param _assetClass - assetClass to be modified
      * @param _position - uint position of bit to be modified
      * @param _bit - switch - 1 or 0 (true or false)
@@ -329,7 +329,7 @@ contract NODE_MGR is BASIC {
      * @param _CAS1 - any external data attatched to assetClass 1/2
      * @param _CAS2 - any external data attatched to assetClass 2/2
      */
-    function purchaseACnode(
+    function purchaseNode(
         string calldata _name,
         uint32 _assetClassRoot,
         uint8 _custodyType,
@@ -362,8 +362,8 @@ contract NODE_MGR is BASIC {
         _AC.name = _name;
         _AC.assetClassRoot = _assetClassRoot;
         _AC.custodyType = _custodyType;
-        _AC.managementType = 255; //creates ACNODES at managementType 255 = not yet usable(disabled),
-        _AC.storageProvider = 0; //creates ACNODES at storageType 0 = not yet usable(disabled),
+        _AC.managementType = 255; //creates nodes at managementType 255 = not yet usable(disabled),
+        _AC.storageProvider = 0; //creates nodes at storageType 0 = not yet usable(disabled),
         _AC.discount = startingDiscount;
         _AC.CAS1 = _CAS1;
         _AC.CAS2 = _CAS2;
@@ -673,7 +673,7 @@ contract NODE_MGR is BASIC {
     }
 
     /**
-     * @dev Retrieve AC_name @ _tokenId or ACnode
+     * @dev Retrieve AC_name @ _tokenId or node
      * @param assetClass - tokenId associated with query
      *
      * @return name of token @ _tokenID
@@ -775,7 +775,7 @@ contract NODE_MGR is BASIC {
     //-------------------------------------------INTERNAL / PRIVATE functions ----------------------------------------------
 
     /**
-     * @dev creates an ACnode and its corresponding namespace and data fields
+     * @dev creates an node and its corresponding namespace and data fields
      * @param _AC - creation Data for new Node
      * @param _assetClass - Node to be created (unique)
      * @param _recipientAddress - address to recieve Node

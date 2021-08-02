@@ -16,7 +16,7 @@ _________\/// _____________\/// _______\/// __\///////// __\/// _____________
 
 
 // Must set up a custodyType 5 asset class for decorated assets and auth this contract type 1. Root must be private to class.
-// Extended Data for ACnodes must be set to 0 <works with any ERC721>
+// Extended Data for nodes must be set to 0 <works with any ERC721>
 // or set to ERC721 contract address <works only with tokens from specified contract address>
 
 // SPDX-License-Identifier: UNLICENSED
@@ -328,7 +328,7 @@ contract DECORATE is CORE {
         if ((node_info.custodyType != 1) && (node_info.managementType == 5)) {
             require(
                 (NODE_TKN.ownerOf(rec.assetClass) == _msgSender()),
-                "C:WIPFS1: Caller must hold ACnode (management type 5)"
+                "C:WIPFS1: Caller must hold node (management type 5)"
             );
         }
         require(
@@ -405,7 +405,7 @@ contract DECORATE is CORE {
      * @param _tokenID - tokenID of assets token @_tokenContract
      * @param _tokenContract - token contract of _tokenID
      * @param _exportTo - destination assetClass of decorated token
-     * DPS:TEST added destination ACNODE parameter
+     * DPS:TEST added destination node parameter
      */
     function _exportAssetTo(uint256 _tokenID, address _tokenContract, uint32 _exportTo)
         external

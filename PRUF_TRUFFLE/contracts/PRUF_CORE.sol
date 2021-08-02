@@ -144,7 +144,7 @@ contract CORE is BASIC {
         if ((node_info.custodyType != 1) && (node_info.managementType == 5)) {
             require(
                 (NODE_TKN.ownerOf(_rec.assetClass) == _msgSender()),
-                "C:WIPFS1: Caller must hold ACnode (management type 5)"
+                "C:WIPFS1: Caller must hold node (management type 5)"
             );
         }
         //^^^^^^^Checks^^^^^^^^^

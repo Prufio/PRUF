@@ -1121,7 +1121,7 @@ interface NODE_MGR_Interface {
      * Requirements:
      * - the caller must have a balance of at least `amount`.
      */
-    function purchaseACnode(
+    function purchaseNode(
         string calldata _name,
         uint32 _assetClassRoot,
         uint8 _custodyType,
@@ -1171,10 +1171,10 @@ interface NODE_MGR_Interface {
 
     /*
      * @dev Modifies an assetClass
-     * Sets the immutable data on an ACNode
+     * Sets the immutable data on an node
      * Requires that:
      * caller holds ACtoken
-     * ACnode is managementType 255 (unconfigured)
+     * node is managementType 255 (unconfigured)
      */
     function updateACImmutable(
         uint32 _assetClass,
