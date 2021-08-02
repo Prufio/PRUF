@@ -254,20 +254,20 @@ contract Helper is Ownable, BASIC {
     /*
      * @dev Retrieve node_data @ _node
      */
-    function helper_getExtAC_data(uint32 _node)
+    function helper_getExtendedNodeData(uint32 _node)
         external
         view
         returns (Node memory)
     {
         //^^^^^^^checks^^^^^^^^^
-        return NODE_MGR.getExtAC_data(_node);
+        return NODE_MGR.getExtendedNodeData(_node);
         //^^^^^^^interactions^^^^^^^^^
     }
 
 /*
      * @dev Retrieve node_data @ _node
      */
-    function helper_getExtAC_data_nostruct(uint32 _node)
+    function helper_getExtendedNodeData_nostruct(uint32 _node)
         external
         view
         returns (
@@ -278,7 +278,7 @@ contract Helper is Ownable, BASIC {
             bytes32
         )
     {
-        Node memory nodeData = NODE_MGR.getExtAC_data(_node);
+        Node memory nodeData = NODE_MGR.getExtendedNodeData(_node);
 
         return (
             nodeData.storageProvider,

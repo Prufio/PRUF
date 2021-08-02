@@ -638,7 +638,7 @@ contract NODE_MGR is BASIC {
      *
      * @return node_data (see docs)
      */
-    function getExtAC_data(uint32 _node)
+    function getExtendedNodeData(uint32 _node)
         external
         view
         returns (Node memory)

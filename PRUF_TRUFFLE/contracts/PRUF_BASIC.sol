@@ -294,7 +294,7 @@ abstract contract BASIC is
         // ) = NODE_MGR.getAC_data(_node);
 
         // return node_info;
-        return NODE_MGR.getExtAC_data(_node);
+        return NODE_MGR.getExtendedNodeData(_node);
         //^^^^^^^interactions^^^^^^^^^
     }
 

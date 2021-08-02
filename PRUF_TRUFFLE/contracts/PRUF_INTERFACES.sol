@@ -1244,7 +1244,7 @@ interface NODE_MGR_Interface {
     /* CAN'T RETURN A STRUCT WITH A STRING WITHOUT WIERDNESS-0.8.1
      * @dev Retrieve node_data @ _node
      */
-    function getExtAC_data(uint32 _node)
+    function getExtendedNodeData(uint32 _node)
         external
         view
         returns (Node memory);
