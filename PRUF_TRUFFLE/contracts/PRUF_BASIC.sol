@@ -275,7 +275,7 @@ abstract contract BASIC is
      * @param _node - to retrireve info about
      * @return entire node struct (see interfaces for struct definitions)
      */
-    functiongetNodeinfo(uint32 _node)
+    function getNodeinfo(uint32 _node)
         internal
         virtual
         returns (Node memory)

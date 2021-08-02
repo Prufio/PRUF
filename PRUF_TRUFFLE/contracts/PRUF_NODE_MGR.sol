@@ -610,7 +610,7 @@ contract NODE_MGR is BASIC {
      * @param _node - node associated with query
      * DPS:THIS FUNCTION REMAINS FOR EXTERNAL TESTING ACCESS. try using getExtAcData, it should be depricated prior to production.
      */
-    functiongetNode_data(uint32 _node)
+    function getNode_data(uint32 _node)
         external
         view
         returns (
@@ -678,14 +678,14 @@ contract NODE_MGR is BASIC {
      *
      * @return name of token @ _tokenID
      */
-    functiongetNode_name(uint32 node)
+    function getNode_name(uint32 node)
         external
         view
         returns (string memory)
     {
         //^^^^^^^checks^^^^^^^^^
 
-        return (node_data[assetClass].name);
+        return (node_data[node].name);
         //^^^^^^^effects^^^^^^^^^
     }
 
@@ -766,7 +766,7 @@ contract NODE_MGR is BASIC {
      *
      * @return percentage of rewards distribution @ _node
      */
-    functiongetNode_discount(uint32 _node) external view returns (uint32) {
+    function getNode_discount(uint32 _node) external view returns (uint32) {
         //^^^^^^^checks^^^^^^^^^
         return (node_data[_node].discount);
         //^^^^^^^interactions^^^^^^^^^
