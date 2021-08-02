@@ -66,16 +66,16 @@ contract APP is CORE {
      * @dev import Rercord, must match export node //DPS:TEST
      * posessor is considered to be owner. sets rec.assetStatus to 0.
      * @param _idxHash - hash of asset information created by frontend inputs
-     * @param _newAssetClass - node the asset will be imported into
+     * @param _newNode - node the asset will be imported into
      */
-    function importAsset(bytes32 _idxHash, uint32 _newAssetClass)
+    function importAsset(bytes32 _idxHash, uint32 _newNode)
         external
         nonReentrant
         whenNotPaused
         isAuthorized(_idxHash) ///contract holds token (user sent to contract)
     {
         Record memory rec = getRecord(_idxHash);
-        uint8 userType = getCallingUserType(_newAssetClass);
+        uint8 userType = getCallingUserType(_newNode);
 
         require(userType < 3, "A:IA: User !authorized to import assets");
         require((userType > 0) && (userType < 10), "A:IA: User !auth in node");
@@ -86,11 +86,11 @@ contract APP is CORE {
             "A:IA: Only Transferred or exported assets can be imported"
         );
         require(
-            _newAssetClass == rec.int32temp,
+            _newNode == rec.int32temp,
             "A:IA: new node must match node authorized for import"
         );
         require(
-            NODE_MGR.isSameRootAC(_newAssetClass, rec.node) == 170,
+            NODE_MGR.isSameRootAC(_newNode, rec.node) == 170,
             "ANC:IA: Cannot change node to new root"
         );
         //^^^^^^^checks^^^^^^^^^
@@ -99,9 +99,9 @@ contract APP is CORE {
         rec.assetStatus = 0;
         //^^^^^^^effects^^^^^^^^^
 
-        STOR.changeAC(_idxHash, _newAssetClass);
+        STOR.changeAC(_idxHash, _newNode);
         writeRecord(_idxHash, rec);
-        deductServiceCosts(_newAssetClass, 1);
+        deductServiceCosts(_newNode, 1);
         //^^^^^^^interactions^^^^^^^^^
     }
 

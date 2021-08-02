@@ -1361,7 +1361,7 @@ interface STOR_Interface {
     /*
      * @dev Change node of an asset - writes to node in the 'Record' struct of the 'database' at _idxHash
      */
-    function changeAC(bytes32 _idxHash, uint32 _newAssetClass) external;
+    function changeAC(bytes32 _idxHash, uint32 _newNode) external;
 
     /*
      * @dev Set an asset to stolen or lost. Allows narrow modification of status 6/12 assets, normally locked

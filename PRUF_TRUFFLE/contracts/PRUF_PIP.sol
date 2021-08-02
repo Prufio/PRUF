@@ -75,7 +75,7 @@ contract PIP is CORE {
     function claimPipAsset(
         bytes32 _idxHash,
         //String calldata _authCode,
-        uint32 _newAssetClass,
+        uint32 _newNode,
         bytes32 _rgtHash,
         uint32 _countDownStart
     ) external nonReentrant whenNotPaused {
@@ -87,11 +87,11 @@ contract PIP is CORE {
         );
         //^^^^^^^checks^^^^^^^^^
 
-        //A_TKN.validatePipToken(tokenId, _newAssetClass, _authCode); //check supplied data matches tokenURI
-        STOR.newRecord(_idxHash, _rgtHash, _newAssetClass, _countDownStart); // Make a new record at the tokenId b32
+        //A_TKN.validatePipToken(tokenId, _newNode, _authCode); //check supplied data matches tokenURI
+        STOR.newRecord(_idxHash, _rgtHash, _newNode, _countDownStart); // Make a new record at the tokenId b32
         A_TKN.setURI(tokenId, "pruf.io"); // set URI
         A_TKN.safeTransferFrom(address(this), _msgSender(), tokenId); // sends token from this holding contract to caller wallet
-        deductImportRecordCosts(_newAssetClass);
+        deductImportRecordCosts(_newNode);
 
         //^^^^^^^interactions^^^^^^^^
     }

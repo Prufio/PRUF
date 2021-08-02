@@ -458,13 +458,13 @@ contract DECORATE is CORE {
      * @dev import a decoration into a new node. posessor is considered to be owner. sets rec.assetStatus to 51.
      * @param _tokenID - tokenID of assets token @_tokenContract
      * @param _tokenContract - token contract of _tokenID
-     * @param _newAssetClass - new node of decorated token
+     * @param _newNode - new node of decorated token
      * DPS:TEST
      */
     function _import(
         uint256 _tokenID,
         address _tokenContract,
-        uint32 _newAssetClass
+        uint32 _newNode
     )
         external
         nonReentrant
@@ -474,7 +474,7 @@ contract DECORATE is CORE {
         bytes32 idxHash = keccak256(abi.encodePacked(_tokenID, _tokenContract));
         Record memory rec = getRecord(idxHash);
         Node memory node_info =getNodeinfo(rec.node);
-        Node memory newAC_info =getNodeinfo(_newAssetClass);
+        Node memory newAC_info =getNodeinfo(_newNode);
 
         require(
             (node_info.custodyType == 5) && (newAC_info.custodyType == 5), //only allow import of other wrappers
@@ -489,11 +489,11 @@ contract DECORATE is CORE {
         );
         require(rec.assetStatus == 70, "D:I: Asset not exported");
         require(
-            NODE_MGR.isSameRootAC(_newAssetClass, rec.node) == 170,
+            NODE_MGR.isSameRootAC(_newNode, rec.node) == 170,
             "D:I:Cannot change node to new root"
         );
         require( //DPS:TEST NEW
-            _newAssetClass == rec.int32temp,
+            _newNode == rec.int32temp,
             "ANC:IA: Cannot change node except to specified node"
         );
         require( //DPS:TEST NEW
@@ -506,14 +506,14 @@ contract DECORATE is CORE {
             (newAC_info.managementType == 5)
         ) {
             require( //DPS:TEST NEW
-                (NODE_TKN.ownerOf(_newAssetClass) == _msgSender()),
+                (NODE_TKN.ownerOf(_newNode) == _msgSender()),
                 "D:I: Cannot create asset in node mgmt type 1||2||5 - caller does not hold node token"
             );
         } else if (newAC_info.managementType == 3) {
             require( //DPS:TEST NEW
                 NODE_MGR.getUserType(
                     keccak256(abi.encodePacked(_msgSender())),
-                    _newAssetClass
+                    _newNode
                 ) == 1,
                 "D:I: Cannot create asset - caller address !authorized"
             );
@@ -528,9 +528,9 @@ contract DECORATE is CORE {
         rec.assetStatus = 51;
         //^^^^^^^effects^^^^^^^^^
 
-        STOR.changeAC(idxHash, _newAssetClass);
+        STOR.changeAC(idxHash, _newNode);
         writeRecord(idxHash, rec);
-        deductServiceCosts(_newAssetClass, 1);
+        deductServiceCosts(_newNode, 1);
         //^^^^^^^interactions^^^^^^^^^
     }
 

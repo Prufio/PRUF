@@ -134,24 +134,24 @@ contract APP_NC is CORE {
     /** DPS TEST-NEW FUNCTIONALITY
      * @dev Import a record into a new node
      * @param _idxHash - hash of asset information created by frontend inputs
-     * @param _newAssetClass - node the asset will be imported into
+     * @param _newNode - node the asset will be imported into
      */
-    function importAsset(bytes32 _idxHash, uint32 _newAssetClass)
+    function importAsset(bytes32 _idxHash, uint32 _newNode)
         external
         nonReentrant
         whenNotPaused
         isAuthorized(_idxHash)
     {
         Record memory rec = getRecord(_idxHash);
-        Node memory node_info =getNodeinfo(_newAssetClass);
+        Node memory node_info =getNodeinfo(_newNode);
 
         require(rec.assetStatus == 70, "ANC:IA: Asset !exported");
         require( //DPS:TEST NEW
-            _newAssetClass == rec.int32temp,
+            _newNode == rec.int32temp,
             "ANC:IA: Cannot change node except to specified node"
         );
         require( 
-            NODE_MGR.isSameRootAC(_newAssetClass, rec.node) == 170,
+            NODE_MGR.isSameRootAC(_newNode, rec.node) == 170,
             "ANC:IA: Cannot change node to new root"
         );
         require(
@@ -164,14 +164,14 @@ contract APP_NC is CORE {
             (node_info.managementType == 5)
         ) {
             require(
-                (NODE_TKN.ownerOf(_newAssetClass) == _msgSender()),
+                (NODE_TKN.ownerOf(_newNode) == _msgSender()),
                 "ANC:IA: Cannot create asset in node mgmt type 1||2||5 - caller does not hold node token"
             );
         } else if (node_info.managementType == 3) {
             require(
                 NODE_MGR.getUserType(
                     keccak256(abi.encodePacked(_msgSender())),
-                    _newAssetClass
+                    _newNode
                 ) == 1,
                 "ANC:IA: Cannot create asset - caller address !authorized"
             );
@@ -186,9 +186,9 @@ contract APP_NC is CORE {
         rec.assetStatus = 51; //transferrable status
         //^^^^^^^effects^^^^^^^^^
 
-        STOR.changeAC(_idxHash, _newAssetClass);
+        STOR.changeAC(_idxHash, _newNode);
         writeRecord(_idxHash, rec);
-        deductServiceCosts(_newAssetClass, 1);
+        deductServiceCosts(_newNode, 1);
         //^^^^^^^interactions^^^^^^^^^^^^
     }
 
