@@ -1081,7 +1081,7 @@ interface NODE_MGR_Interface {
      * @dev Modifies an node with minimal controls
      *--------DPS TEST ---- NEW args, order
      */
-    function AdminModAssetClass(
+    function AdminModNode(
         uint32 _node,
         uint32 _assetClassRoot,
         uint8 _custodyType,
@@ -1102,7 +1102,7 @@ interface NODE_MGR_Interface {
      *  that ACtoken does not exist
      *  _discount 10000 = 100 percent price share , cannot exceed
      */
-    function createAssetClass(
+    function createNode(
         uint32 _node,
         string calldata _name,
         uint32 _assetClassRoot,
