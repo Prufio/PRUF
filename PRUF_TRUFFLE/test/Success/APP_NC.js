@@ -1232,36 +1232,36 @@ contract("APP_NC", (accounts) => {
 
   it("Should finalize all ACs", () => {
     console.log("Authorizing AC Switch 1");
-    return NODE_MGR.modAssetClassSwitches("1000001", "1", "1", {
+    return NODE_MGR.modifyNodeSwitches("1000001", "1", "1", {
       from: account1,
     })
 
       .then(() => {
-        return NODE_MGR.modAssetClassSwitches("1000002", "3", "1", {
+        return NODE_MGR.modifyNodeSwitches("1000002", "3", "1", {
           from: account1,
         });
       })
 
       .then(() => {
-        return NODE_MGR.modAssetClassSwitches("1000003", "3", "1", {
+        return NODE_MGR.modifyNodeSwitches("1000003", "3", "1", {
           from: account1,
         });
       })
 
       .then(() => {
-        return NODE_MGR.modAssetClassSwitches("1000004", "3", "1", {
+        return NODE_MGR.modifyNodeSwitches("1000004", "3", "1", {
           from: account1,
         });
       })
 
       .then(() => {
-        return NODE_MGR.modAssetClassSwitches("1000005", "3", "1", {
+        return NODE_MGR.modifyNodeSwitches("1000005", "3", "1", {
           from: account1,
         });
       })
 
       .then(() => {
-        return NODE_MGR.modAssetClassSwitches("1000006", "3", "1", {
+        return NODE_MGR.modifyNodeSwitches("1000006", "3", "1", {
           from: account1,
         });
       });

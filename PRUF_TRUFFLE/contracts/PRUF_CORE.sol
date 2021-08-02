@@ -181,17 +181,17 @@ contract CORE is BASIC {
         virtual
         whenNotPaused
     {
-        uint256 ACTHnetPercent = uint256(NODE_MGR.getNode_discount(_node)) /
+        uint256 nodeNetPercent = uint256(NODE_MGR.getNodeDiscount(_node)) /
             uint256(100);
         require( //IMPOSSIBLE TO REACH unless stuff is really broken, still ensures sanity
-            (ACTHnetPercent >= 0) && (ACTHnetPercent <= 100),
+            (nodeNetPercent >= 0) && (nodeNetPercent <= 100),
             "C:DSC:invalid discount value for price calculation"
         );
         //^^^^^^^checks^^^^^^^^^
         Invoice memory pricing = NODE_MGR.getServiceCosts(_node, _service);
 
         uint256 percent = pricing.ACTHprice / uint256(100); //calculate 1% of listed ACTH price
-        uint256 _ACTHprice = ACTHnetPercent * percent; //calculate the share proprotrion% * 1%
+        uint256 _ACTHprice = nodeNetPercent * percent; //calculate the share proprotrion% * 1%
         uint256 prufShare = pricing.ACTHprice - _ACTHprice;
 
         pricing.ACTHprice = _ACTHprice;

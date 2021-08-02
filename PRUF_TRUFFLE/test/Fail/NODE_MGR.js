@@ -1234,36 +1234,36 @@ contract("NODE_MGR", (accounts) => {
 
   it("Should finalize all ACs", () => {
     console.log("Authorizing AC Switch 1");
-    return NODE_MGR.modAssetClassSwitches("1000001", "1", "1", {
+    return NODE_MGR.modifyNodeSwitches("1000001", "1", "1", {
       from: account1,
     })
 
       .then(() => {
-        return NODE_MGR.modAssetClassSwitches("1000002", "3", "1", {
+        return NODE_MGR.modifyNodeSwitches("1000002", "3", "1", {
           from: account1,
         });
       })
 
       .then(() => {
-        return NODE_MGR.modAssetClassSwitches("1000003", "3", "1", {
+        return NODE_MGR.modifyNodeSwitches("1000003", "3", "1", {
           from: account1,
         });
       })
 
       .then(() => {
-        return NODE_MGR.modAssetClassSwitches("1000004", "3", "1", {
+        return NODE_MGR.modifyNodeSwitches("1000004", "3", "1", {
           from: account1,
         });
       })
 
       .then(() => {
-        return NODE_MGR.modAssetClassSwitches("1000005", "3", "1", {
+        return NODE_MGR.modifyNodeSwitches("1000005", "3", "1", {
           from: account1,
         });
       })
 
       .then(() => {
-        return NODE_MGR.modAssetClassSwitches("1000006", "3", "1", {
+        return NODE_MGR.modifyNodeSwitches("1000006", "3", "1", {
           from: account1,
         });
       });
@@ -1491,7 +1491,7 @@ contract("NODE_MGR", (accounts) => {
   });
 
   it("Should set assetClass 13 switch to 1:1", async () => {
-    return NODE_MGR.modAssetClassSwitches("1000004", "1", "1", {
+    return NODE_MGR.modifyNodeSwitches("1000004", "1", "1", {
       from: account1,
     });
   });
@@ -1683,23 +1683,23 @@ contract("NODE_MGR", (accounts) => {
       "//**************************************END AdminModAssetClass FAIL BATCH**********************************************/"
     );
     console.log(
-      "//**************************************BEGIN modAssetClassSwitches FAIL BATCH**********************************************/"
+      "//**************************************BEGIN modifyNodeSwitches FAIL BATCH**********************************************/"
     );
-    return NODE_MGR.modAssetClassSwitches("1000003", "1", "1", {
+    return NODE_MGR.modifyNodeSwitches("1000003", "1", "1", {
       from: account2,
     });
   });
 
   //18
   it("Should fail bit pos !>0||<9", async () => {
-    return NODE_MGR.modAssetClassSwitches("1000003", "10", "1", {
+    return NODE_MGR.modifyNodeSwitches("1000003", "10", "1", {
       from: account1,
     });
   });
 
   //19
   it("Should fail bit !1||0", async () => {
-    return NODE_MGR.modAssetClassSwitches("1000003", "1", "4", {
+    return NODE_MGR.modifyNodeSwitches("1000003", "1", "4", {
       from: account1,
     });
   });
@@ -1707,7 +1707,7 @@ contract("NODE_MGR", (accounts) => {
   //20
   it("Should fail because caller is not node minter", async () => {
     console.log(
-      "//**************************************END modAssetClassSwitches FAIL BATCH**********************************************/"
+      "//**************************************END modifyNodeSwitches FAIL BATCH**********************************************/"
     );
     console.log(
       "//**************************************BEGIN createNode FAIL BATCH**********************************************/"

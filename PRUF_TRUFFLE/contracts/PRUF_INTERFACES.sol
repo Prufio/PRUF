@@ -1260,7 +1260,7 @@ interface NODE_MGR_Interface {
     /*
      * @dev Retrieve Node_name @ _tokenId
      */
-    function getNode_name(uint32 _tokenId) external view returns (string memory);
+    function getNodeName(uint32 _tokenId) external view returns (string memory);
 
     /*
      * @dev Retrieve node_index @ Node_name
@@ -1286,7 +1286,7 @@ interface NODE_MGR_Interface {
     /*
      * @dev Retrieve Node_discount @ _node, in percent ACTH share, * 100 (9000 = 90%)
      */
-    function getNode_discount(uint32 _node) external view returns (uint32);
+    function getNodeDiscount(uint32 _node) external view returns (uint32);
 }
 
 //------------------------------------------------------------------------------------------------

@@ -1264,36 +1264,36 @@ contract("TheWorks", (accounts) => {
 
   it("Should finalize all ACs", () => {
     console.log("Authorizing AC Switch 1");
-    return NODE_MGR.modAssetClassSwitches("1000001", "1", "1", {
+    return NODE_MGR.modifyNodeSwitches("1000001", "1", "1", {
       from: account1,
     })
 
       .then(() => {
-        return NODE_MGR.modAssetClassSwitches("1000002", "3", "1", {
+        return NODE_MGR.modifyNodeSwitches("1000002", "3", "1", {
           from: account1,
         });
       })
 
       .then(() => {
-        return NODE_MGR.modAssetClassSwitches("1000003", "3", "1", {
+        return NODE_MGR.modifyNodeSwitches("1000003", "3", "1", {
           from: account1,
         });
       })
 
       .then(() => {
-        return NODE_MGR.modAssetClassSwitches("1000004", "3", "1", {
+        return NODE_MGR.modifyNodeSwitches("1000004", "3", "1", {
           from: account1,
         });
       })
 
       .then(() => {
-        return NODE_MGR.modAssetClassSwitches("1000005", "3", "1", {
+        return NODE_MGR.modifyNodeSwitches("1000005", "3", "1", {
           from: account1,
         });
       })
 
       .then(() => {
-        return NODE_MGR.modAssetClassSwitches("1000006", "3", "1", {
+        return NODE_MGR.modifyNodeSwitches("1000006", "3", "1", {
           from: account1,
         });
       });
@@ -1491,9 +1491,16 @@ contract("TheWorks", (accounts) => {
     });
   });
 
+  // it("Should write asset12 in AC 1000001", async () => {
+  //   return APP.newRecord(asset12, rgt12, "1000001", "100", { from: account2 });
+  // });
+
   it("Should write asset12 in AC 1000001", async () => {
-    return APP.newRecord(asset12, rgt12, "1000001", "100", { from: account2 });
+    return APP.newRecord("1000001", { from: account2 });
   });
+  // * @param _idxHash - hash of asset information created by frontend inputs
+  // * @param _rgtHash - hash of rightsholder information created by frontend inputs
+  // * @param _countDownStart - decremental counter for an assets lifecycle
 
   it("Should retrieve show clean asset 12", async () => {
     var Record = [];
