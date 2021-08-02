@@ -754,7 +754,7 @@ contract STOR is AccessControl, ReentrancyGuard, Pausable {
     function retrieveRecord(bytes32 _idxHash)
         external
         view
-        isAuthorized(0) //is an authorized contract, Asset class nonspecific
+        isAuthorized(0)
         returns (Record memory)
     {
         return database[_idxHash];
