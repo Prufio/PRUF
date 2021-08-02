@@ -45,7 +45,7 @@ abstract contract BASIC is
     STOR_Interface internal STOR;
 
     address internal NODE_MGR_Address;
-    NODE_MGR_Interface internal AC_MGR;
+    NODE_MGR_Interface internal NODE_MGR;
 
     address internal UTIL_TKN_Address;
     UTIL_TKN_Interface internal UTIL_TKN;
@@ -133,8 +133,8 @@ abstract contract BASIC is
         AC_TKN_Address = STOR.resolveContractAddress("AC_TKN");
         AC_TKN = AC_TKN_Interface(AC_TKN_Address);
 
-        NODE_MGR_Address = STOR.resolveContractAddress("AC_MGR");
-        AC_MGR = NODE_MGR_Interface(NODE_MGR_Address);
+        NODE_MGR_Address = STOR.resolveContractAddress("NODE_MGR");
+        NODE_MGR = NODE_MGR_Interface(NODE_MGR_Address);
 
         UTIL_TKN_Address = STOR.resolveContractAddress("UTIL_TKN");
         UTIL_TKN = UTIL_TKN_Interface(UTIL_TKN_Address);
@@ -251,7 +251,7 @@ abstract contract BASIC is
     /**
      * @dev Get a User type Record from AC_manager for _msgSender(), by assetClass
      * @param _assetClass - to check user type in
-     * @return user authorization type of caller, from AC_MGR user mapping
+     * @return user authorization type of caller, from NODE_MGR user mapping
      */
     function getCallingUserType(uint32 _assetClass)
         internal

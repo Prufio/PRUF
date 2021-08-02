@@ -1057,7 +1057,7 @@ interface ID_TKN_Interface {
 
 //------------------------------------------------------------------------------------------------
 /*
- * @dev Interface for AC_MGR
+ * @dev Interface for NODE_MGR
  * INHERIANCE:
     import "./PRUF_BASIC.sol";
      
