@@ -41,10 +41,10 @@ contract NODE_MGR is BASIC {
     uint256 private nodeTokenIndex = 1000000; //Starting index for purchased node tokens
     uint256 public node_price = 200000 ether;
     uint32 private constant startingDiscount = 9500; // Purchased nodes start with 95% profit share
-    mapping(uint32 => mapping(uint16 => Costs)) private cost; // Cost per function by asset class => Costs struct (see PRUF_INTERFACES for struct definitions)
-    mapping(uint32 => Node) private node_data; // node info database asset class to node struct (see PRUF_INTERFACES for struct definitions)
-    mapping(string => uint32) private node_index; //name to asset class resolution map
-    mapping(bytes32 => mapping(uint32 => uint8)) private registeredUsers; // Authorized recorder database by asset class, by address hash
+    mapping(uint32 => mapping(uint16 => Costs)) private cost; // Cost per function by Node => Costs struct (see PRUF_INTERFACES for struct definitions)
+    mapping(uint32 => Node) private node_data; // node info database Node to node struct (see PRUF_INTERFACES for struct definitions)
+    mapping(string => uint32) private node_index; //name to Node resolution map
+    mapping(bytes32 => mapping(uint32 => uint8)) private registeredUsers; // Authorized recorder database by Node, by address hash
     mapping(uint8 => uint8) private validStorageProviders; //storageProvider -> status (enabled or disabled)
     mapping(uint8 => uint8) private validManagementTypes; //managementTypes -> status (enabled or disabled)
     mapping(uint8 => uint8) private validCustodyTypes; //managementTypes -> status (enabled or disabled)
@@ -74,7 +74,7 @@ contract NODE_MGR is BASIC {
     modifier isACtokenHolderOfClass(uint32 _node) {
         require(
             (NODE_TKN.ownerOf(_node) == _msgSender()),
-            "ACM:MOD-IACTHoC: _msgSender() not authorized in asset class"
+            "ACM:MOD-IACTHoC: _msgSender() not authorized in Node"
         );
         _;
     }
@@ -197,7 +197,7 @@ contract NODE_MGR is BASIC {
 
     /**
      * !! -------- to be used with great caution -----------
-     * @dev Modifies an asset class with minimal controls
+     * @dev Modifies an Node with minimal controls
      * @param _node - node to be modified
      * @param _nodeRoot - root of node
      * @param _custodyType - custodyType of node (see docs)
@@ -208,7 +208,7 @@ contract NODE_MGR is BASIC {
      * @param _CAS1 - any external data attatched to node 1/2
      * @param _CAS2 - any external data attatched to node 2/2
      */
-    function adminModAssetClass(
+    function modifyNode(
         uint32 _node,
         uint32 _nodeRoot,
         uint8 _custodyType,
@@ -249,7 +249,7 @@ contract NODE_MGR is BASIC {
      * @param _position - uint position of bit to be modified
      * @param _bit - switch - 1 or 0 (true or false)
      */
-    function adminModAssetClassSwitches(
+    function modifyNodeSwitches(
         uint32 _node,
         uint8 _position,
         uint8 _bit
@@ -279,7 +279,7 @@ contract NODE_MGR is BASIC {
     //--------------------------------------------NODEMINTER only Functions--------------------------
 
     /**
-     * @dev Mints asset class token and creates an node.
+     * @dev Mints Node token and creates an node.
      * @param _node - node to be created (unique)
      * @param _name - name to be configured to node (unique)
      * @param _nodeRoot - root of node
@@ -291,7 +291,7 @@ contract NODE_MGR is BASIC {
      * @param _CAS2 - any external data attatched to node 2/2
      * @param _recipientAddress - address to recieve node
      */
-    function createAssetClass(
+    function createNode(
         uint32 _node,
         string calldata _name,
         uint32 _nodeRoot,
@@ -322,7 +322,7 @@ contract NODE_MGR is BASIC {
     //--------------------------------------------External Functions--------------------------
 
     /**
-     * @dev Burns (amount) tokens and mints a new asset class token to the calling address
+     * @dev Burns (amount) tokens and mints a new Node token to the calling address
      * @param _name - chosen name of node
      * @param _nodeRoot - chosen root of node
      * @param _custodyType - chosen custodyType of node (see docs)
@@ -350,7 +350,7 @@ contract NODE_MGR is BASIC {
 
         address rootPaymentAddress = cost[_nodeRoot][1].paymentAddress; //payment for upgrade goes to root node payment address specified for service (1)
 
-        //mint an asset class token to _msgSender(), at tokenID nodeTokenIndex, with URI = root asset Class #
+        //mint an Node token to _msgSender(), at tokenID nodeTokenIndex, with URI = root Node #
 
         UTIL_TKN.trustedAgentBurn(_msgSender(), node_price / 2);
         UTIL_TKN.trustedAgentTransfer(
@@ -375,7 +375,7 @@ contract NODE_MGR is BASIC {
             STOR.enableDefaultContractsForAC(uint32(nodeTokenIndex));
         }
 
-        return nodeTokenIndex; //returns asset class # of minted token
+        return nodeTokenIndex; //returns Node # of minted token
         //^^^^^^^effects/interactions^^^^^^^^^
     }
 
@@ -454,7 +454,7 @@ contract NODE_MGR is BASIC {
     }
 
     /**
-     * @dev Set function costs and payment address per asset class, in PRUF(18 decimals)
+     * @dev Set function costs and payment address per Node, in PRUF(18 decimals)
      * @param _node - node to set service costs
      * @param _service - service type being modified (see service types in ZZ_PRUF_DOCS)
      * @param _serviceCost - 18 decimal fee in PRUF associated with specified service
@@ -476,7 +476,7 @@ contract NODE_MGR is BASIC {
     //-------------------------------------------Functions dealing with immutable data ---------------------------------------------
 
     /**
-     * @dev Configure the immutable data in an asset class one time
+     * @dev Configure the immutable data in an Node one time
      * @param _node - node being modified
      * @param _managementType - managementType of node (see docs)
      * @param _storageProvider - storageProvider of node (see docs)
@@ -649,7 +649,7 @@ contract NODE_MGR is BASIC {
     }
 
     /**
-     * @dev verify the root of two asset classes are equal
+     * @dev verify the root of two Nodees are equal
      * @param _node1 - first node associated with query
      * @param _node2 - second node associated with query
      *
@@ -695,7 +695,7 @@ contract NODE_MGR is BASIC {
      *
      * @return node number @ _name
      */
-    function resolveAssetClass(string calldata _name)
+    function resolveNode(string calldata _name)
         external
         view
         returns (uint32)
@@ -722,7 +722,7 @@ contract NODE_MGR is BASIC {
     //-------------------------------------------functions for payment calculations----------------------------------------------
 
     /**
-     * @dev Retrieve function costs per asset class, per service type in PRUF(18 decimals)
+     * @dev Retrieve function costs per Node, per service type in PRUF(18 decimals)
      * @param _node - node associated with query
      * @param _service - service number associated with query (see service types in ZZ_PRUF_DOCS)
      *
@@ -744,10 +744,10 @@ contract NODE_MGR is BASIC {
 
         require(_service != 0, "ACM:GSC: Service type = 0");
         //^^^^^^^checks^^^^^^^^^
-        uint32 rootAssetClass = node_info.nodeRoot;
+        uint32 rootNode = node_info.nodeRoot;
 
         Costs memory costs = cost[_node][_service];
-        Costs memory rootCosts = cost[rootAssetClass][_service];
+        Costs memory rootCosts = cost[rootNode][_service];
         Invoice memory invoice;
 
         invoice.rootAddress = rootCosts.paymentAddress;

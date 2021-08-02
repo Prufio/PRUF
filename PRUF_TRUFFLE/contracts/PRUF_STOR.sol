@@ -14,7 +14,6 @@ __/\\\\\\\\\\\\\ _____/\\\\\\\\\ _______/\\__/\\ ___/\\\\\\\\\\\\\\\
  *  TO DO
  * //CTS:EXAMINE all params/returns defined in comments global
  * //CTS:EXAMINE ACTH->NTH global
- * //CTS:EXAMINE AssetClassRoot, node root, root->RootNode global
  * //CTS:EXAMINE IPFS1/IPFS2->storProvider/storProvider2 global
  * //CTS:EXAMINE idxHash->assetId global
  * //CTS:EXAMINE NP name change
@@ -245,7 +244,7 @@ contract STOR is AccessControl, ReentrancyGuard, Pausable {
     }
 
     /**
-     * @dev set the default list of 11 contracts (zero index) to be applied to asset classes
+     * @dev set the default list of 11 contracts (zero index) to be applied to Nodees
      * APP_NC, NP_NC, NODE_MGR, NODE_TKN, A_TKN, ECR_MGR, RCLR, PIP, PURCHASE, DECORATE, WRAP
      * @param   _contractNumber - 0-10
      * @param   _name - name
@@ -264,7 +263,7 @@ contract STOR is AccessControl, ReentrancyGuard, Pausable {
     }
 
     /**
-     * @dev retrieve a record from the default list of 11 contracts to be applied to asset classes
+     * @dev retrieve a record from the default list of 11 contracts to be applied to Nodees
      * @param _contractNumber to look up (0-10)
      * returns the name and auth level
      */
@@ -281,7 +280,7 @@ contract STOR is AccessControl, ReentrancyGuard, Pausable {
 
     /**
      * @dev Set the default 11 authorized contracts
-     * @param _node the Asset Class which will be enabled for the default contracts
+     * @param _node the Node which will be enabled for the default contracts
      */
     function enableDefaultContractsForAC(uint32 _node) public {
         require(
@@ -497,7 +496,7 @@ contract STOR is AccessControl, ReentrancyGuard, Pausable {
         whenNotPaused
         exists(_idxHash) //asset must exist in 'database'
         notEscrow(_idxHash) // asset must not be held in escrow status
-        isAuthorized(0) //is an authorized contract, Asset class nonspecific
+        isAuthorized(0) //is an authorized contract, Node nonspecific
     {
         Record memory rec = database[_idxHash];
 

@@ -1140,7 +1140,7 @@ interface NODE_MGR_Interface {
 
     /*
      * @dev Modifies an node
-     * Sets a new node name. Asset Classes cannot be moved to a new root or custody type.
+     * Sets a new node name. Nodees cannot be moved to a new root or custody type.
      * Requires that:
      *  caller holds ACtoken
      *  name is unuiqe or same as old name
@@ -1149,7 +1149,7 @@ interface NODE_MGR_Interface {
 
     /*
      * @dev Modifies an node
-     * Sets a new node IPFS Address. Asset Classes cannot be moved to a new root or custody type.
+     * Sets a new node IPFS Address. Nodees cannot be moved to a new root or custody type.
      * Requires that:
      *  caller holds ACtoken
      */
@@ -1250,7 +1250,7 @@ interface NODE_MGR_Interface {
         returns (Node memory);
 
     /*
-     * @dev compare the root of two asset classes
+     * @dev compare the root of two Nodees
      */
     function isSameRootNode(uint32 _node1, uint32 _node2)
         external

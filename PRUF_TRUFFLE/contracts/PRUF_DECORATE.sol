@@ -68,11 +68,11 @@ contract DECORATE is CORE {
         Record memory rec = getRecord(idxHash);
         Node memory node_info =getNodeinfo(_node);
 
-        require(node_info.custodyType == 5, "D:D:Asset class.custodyType != 5");
+        require(node_info.custodyType == 5, "D:D:Node.custodyType != 5");
         require(
             (node_info.referenceAddress == _tokenContract) ||
                 (node_info.referenceAddress == address(0)),
-            "D:D:Asset class reference address must be '0' or ERC721 contract address"
+            "D:D:Node reference address must be '0' or ERC721 contract address"
         );
         require(
             rec.node == 0,
@@ -136,12 +136,12 @@ contract DECORATE is CORE {
 
         require(
             node_info.custodyType == 5,
-            "D:MS:Asset class.custodyType != 5 & record must exist"
+            "D:MS:Node.custodyType != 5 & record must exist"
         );
         require(
             (node_info.referenceAddress == _tokenContract) ||
                 (node_info.referenceAddress == address(0)),
-            "D:MS:Asset class extended data must be '0' or ERC721 contract address"
+            "D:MS:Node extended data must be '0' or ERC721 contract address"
         );
         require(
             (_newAssetStatus > 49) && (rec.assetStatus > 49), //Preferred
@@ -195,12 +195,12 @@ contract DECORATE is CORE {
 
         require(
             node_info.custodyType == 5,
-            "D:SP:Asset class.custodyType != 5 & record must exist"
+            "D:SP:Node.custodyType != 5 & record must exist"
         );
         require( //DPS test unreachable reason does not make sense UNREACHABLE-Preferred, asset would already need to exist, which requires that this is already the case. Or import, where this also applies
             (node_info.referenceAddress == _tokenContract) ||
                 (node_info.referenceAddress == address(0)),
-            "D:SP:Asset class extended data must be '0' or ERC721 contract address"
+            "D:SP:Node extended data must be '0' or ERC721 contract address"
         );
         require( //DPS:TEST unreachable reason does not make sense UNREACHABLE-Preferred requires root to be type5
             needsImport(rec.assetStatus) == 0,
@@ -229,12 +229,12 @@ contract DECORATE is CORE {
 
         require(
             node_info.custodyType == 5,
-            "D:CP:Asset class.custodyType != 5 & record must exist"
+            "D:CP:Node.custodyType != 5 & record must exist"
         );
         require( //DPS:TEST Retest reason for unreachable does not make sense UNREACHABLE, asset would already need to exist, which requires that this is already the case. Or import, where this also applies
             (node_info.referenceAddress == _tokenContract) ||
                 (node_info.referenceAddress == address(0)),
-            "D:CP:Asset class extended data must be '0' or ERC721 contract address"
+            "D:CP:Node extended data must be '0' or ERC721 contract address"
         );
 
         require(
@@ -269,12 +269,12 @@ contract DECORATE is CORE {
 
         require(
             node_info.custodyType == 5,
-            "D:DC:Asset class.custodyType != 5 & record must exist"
+            "D:DC:Node.custodyType != 5 & record must exist"
         );
         require(
             (node_info.referenceAddress == _tokenContract) ||
                 (node_info.referenceAddress == address(0)),
-            "D:DC:Asset class extended data must be '0' or ERC721 contract address"
+            "D:DC:Node extended data must be '0' or ERC721 contract address"
         );
 
         require( //DPS:TEST Retest reason for unreachable does not make sense
@@ -319,7 +319,7 @@ contract DECORATE is CORE {
 
         require(
             node_info.custodyType == 5,
-            "D:MI1:Asset class.custodyType != 5 & record must exist"
+            "D:MI1:Node.custodyType != 5 & record must exist"
         );
         require(
             (node_info.managementType < 6),
@@ -334,7 +334,7 @@ contract DECORATE is CORE {
         require(
             (node_info.referenceAddress == _tokenContract) ||
                 (node_info.referenceAddress == address(0)),
-            "D:MI1:Asset class extended data must be '0' or ERC721 contract address"
+            "D:MI1:Node extended data must be '0' or ERC721 contract address"
         );
 
         require( //DPS:TEST unreachable reason does not make sense:UNREACHABLE. WOULD REQUIRE ROOT CLASSES TO BE CUSTODY TYPE 5
@@ -377,12 +377,12 @@ contract DECORATE is CORE {
 
         require(
             node_info.custodyType == 5,
-            "D:AI2:Asset class.custodyType != 5 & record must exist"
+            "D:AI2:Node.custodyType != 5 & record must exist"
         );
         require(
             (node_info.referenceAddress == _tokenContract) ||
                 (node_info.referenceAddress == address(0)),
-            "D:AI2:Asset class extended data must be '0' or ERC721 contract address"
+            "D:AI2:Node extended data must be '0' or ERC721 contract address"
         );
 
         require(
@@ -418,7 +418,7 @@ contract DECORATE is CORE {
 
         require(
             node_info.custodyType == 5,
-            "D:E:Asset class.custodyType != 5 & record must exist"
+            "D:E:Node.custodyType != 5 & record must exist"
         );
         require(
             (node_info.managementType < 6),
@@ -433,7 +433,7 @@ contract DECORATE is CORE {
         require(
             (node_info.referenceAddress == _tokenContract) ||
                 (node_info.referenceAddress == address(0)),
-            "D:E:Asset class extended data must be '0' or ERC721 contract address"
+            "D:E:Node extended data must be '0' or ERC721 contract address"
         );
 
         require(
@@ -478,14 +478,14 @@ contract DECORATE is CORE {
 
         require(
             (node_info.custodyType == 5) && (newAC_info.custodyType == 5), //only allow import of other wrappers
-            "D:I:Asset class.custodyType != 5 & record must exist"
+            "D:I:Node.custodyType != 5 & record must exist"
         );
         require(
             ((node_info.referenceAddress == _tokenContract) ||
                 (node_info.referenceAddress == address(0))) &&
                 ((newAC_info.referenceAddress == _tokenContract) ||
                     (newAC_info.referenceAddress == address(0))),
-            "D:I:Asset class extended data must be '0' or ERC721 contract address" //if node has a contract erc721address specified, it must match
+            "D:I:Node extended data must be '0' or ERC721 contract address" //if node has a contract erc721address specified, it must match
         );
         require(rec.assetStatus == 70, "D:I: Asset not exported");
         require(
@@ -558,7 +558,7 @@ contract DECORATE is CORE {
         );
         require(
             node_info.custodyType == 5,
-            "D:CRO:Asset class.custodyType must be 5 (wrapped/decorated erc721)"
+            "D:CRO:Node.custodyType must be 5 (wrapped/decorated erc721)"
         );
         require(
             (node_info.managementType < 5),

@@ -58,7 +58,7 @@ contract NODE_TKN is
 
     Counters.Counter private _tokenIdTracker;
 
-    constructor() ERC721("PRUF Asset Class Node Token", "PRFN") {
+    constructor() ERC721("PRUF Node Token", "PRFN") {
         _setupRole(DEFAULT_ADMIN_ROLE, _msgSender());
         _setupRole(CONTRACT_ADMIN_ROLE, _msgSender());
         _setupRole(MINTER_ROLE, _msgSender());
@@ -117,7 +117,7 @@ contract NODE_TKN is
     }
 
     /**
-     * @dev remint Asset Class Token - must be minter
+     * @dev remint Node Token - must be minter
      * burns old token
      * Sends new token to specified address
      * @param _recipientAddress - new address for token

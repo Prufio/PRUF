@@ -60,7 +60,7 @@ contract WRAP is CORE {
      * Takes original 721
      * Makes a pruf record (exists?) if so does not change
      * Mints a pruf token to caller (exists?) if so ???????
-     * Asset class.custodyType must be 5 (wrapped/decorated erc721) / enabled for contract address
+     * Node.custodyType must be 5 (wrapped/decorated erc721) / enabled for contract address
      * referenceAddress must be '0' or ERC721 contract address
      *
      */
@@ -162,11 +162,11 @@ contract WRAP is CORE {
         address foreignTokenContract = wrapped[_tokenID].tokenContract;
         uint256 foreignTokenID = wrapped[_tokenID].tokenID;
 
-        require(node_info.custodyType == 5, "W:UW: Asset class.custodyType != 5");
+        require(node_info.custodyType == 5, "W:UW: Node.custodyType != 5");
         require(
             (node_info.referenceAddress == foreignTokenContract) ||
                 (node_info.referenceAddress == address(0)),
-            "W:UW: Asset class extended data must be '0' or ERC721 contract address"
+            "W:UW: Node extended data must be '0' or ERC721 contract address"
         );
         require(
             rec.assetStatus == 51,
