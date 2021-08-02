@@ -195,7 +195,7 @@ contract NP is CORE {
      * @param _addr adress to send asset to
      * @param _rgtHash rgthash to match in front end
      */
-    function _exportAssetTo( //DPS:TEST
+    function _exportAssetTo(
         bytes32 _idxHash,
         uint32 _exportTo,
         address _addr,
@@ -209,7 +209,7 @@ contract NP is CORE {
             "NP:EA: user not auth in AC"
         );
         require( // require transferrable (51) status
-            (rec.assetStatus == 51) || (rec.assetStatus == 70), //DPS:check
+            (rec.assetStatus == 51) || (rec.assetStatus == 70),
             "NP:EA: Asset status must be 51 to export"
         );
         require(
