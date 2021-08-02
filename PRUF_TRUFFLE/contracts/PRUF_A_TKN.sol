@@ -143,7 +143,7 @@ contract A_TKN is
      * PRuF "banked" in an allowance for use in the system.
      * @param _key - set to 170 to PERMENANTLY REMOVE TRUSTED AGENT CAPABILITY
      */
-    function adminKillTrustedAgent(uint256 _key) external isContractAdmin {
+    function killTrustedAgent(uint256 _key) external isContractAdmin {
         if (_key == 170) {
             trustedAgentEnabled = 0; // !!! THIS IS A PERMANENT ACTION AND CANNOT BE UNDONE
         }

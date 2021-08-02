@@ -256,7 +256,7 @@ contract VERIFY is CORE {
      * @dev:Mark an item conterfeit . Admin function, user marks conterfeit regardless of who holds it
      *      the caller must posess Asset token authorized at userlevel 3
      */
-    function adminMarkCounterfeit(
+    function markCounterfeit(
         bytes32 _idxHash,
         bytes32 _itemHash
     ) external isAuthorized(_idxHash) returns (uint256) {
