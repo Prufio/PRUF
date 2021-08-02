@@ -16,7 +16,7 @@ _________\/// _____________\/// _______\/// __\///////// __\/// _____________
  *---------------------------------------------------------------*/
 
 // SPDX-License-Identifier: UNLICENSED
-pragma solidity ^0.8.0;
+pragma solidity ^0.8.6;
 
 struct Record {
     uint8 assetStatus; // Status - Transferrable, locked, in transfer, stolen, lost, etc.
