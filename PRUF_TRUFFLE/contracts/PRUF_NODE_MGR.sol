@@ -41,10 +41,10 @@ contract NODE_MGR is BASIC {
     uint256 private nodeTokenIndex = 1000000; //Starting index for purchased node tokens
     uint256 public node_price = 200000 ether;
     uint32 private constant startingDiscount = 9500; // Purchased nodes start with 95% profit share
-    mapping(uint32 => mapping(uint16 => Costs)) private cost; // Cost per function by asset class => Costs struct (see PRUF_INTERFACES for struct definitions)
-    mapping(uint32 => Node) private node_data; // node info database asset class to node struct (see PRUF_INTERFACES for struct definitions)
-    mapping(string => uint32) private node_index; //name to asset class resolution map
-    mapping(bytes32 => mapping(uint32 => uint8)) private registeredUsers; // Authorized recorder database by asset class, by address hash
+    mapping(uint32 => mapping(uint16 => Costs)) private cost; // Cost per function by node => Costs struct (see PRUF_INTERFACES for struct definitions)
+    mapping(uint32 => Node) private node_data; // node info database node to node struct (see PRUF_INTERFACES for struct definitions)
+    mapping(string => uint32) private node_index; //name to node resolution map
+    mapping(bytes32 => mapping(uint32 => uint8)) private registeredUsers; // Authorized recorder database by node, by address hash
     mapping(uint8 => uint8) private validStorageProviders; //storageProvider -> status (enabled or disabled)
     mapping(uint8 => uint8) private validManagementTypes; //managementTypes -> status (enabled or disabled)
     mapping(uint8 => uint8) private validCustodyTypes; //managementTypes -> status (enabled or disabled)
@@ -74,7 +74,7 @@ contract NODE_MGR is BASIC {
     modifier isACtokenHolderOfClass(uint32 _node) {
         require(
             (NODE_TKN.ownerOf(_node) == _msgSender()),
-            "ACM:MOD-IACTHoC: _msgSender() not authorized in asset class"
+            "ACM:MOD-IACTHoC: _msgSender() not authorized in node"
         );
         _;
     }
@@ -166,7 +166,7 @@ contract NODE_MGR is BASIC {
 
     /**
      * !! -------- to be used with great caution and only as a result of community governance action -----------
-     * @dev Transfers a name from one asset class to another
+     * @dev Transfers a name from one node to another
      *   -Designed to remedy brand infringement issues. This breaks decentralization and must eventually be given
      *   -over to some kind of governance contract.
      * @param _assetClassSource - source node
@@ -197,7 +197,7 @@ contract NODE_MGR is BASIC {
 
     /**
      * !! -------- to be used with great caution -----------
-     * @dev Modifies an asset class with minimal controls
+     * @dev Modifies an node with minimal controls
      * @param _node - node to be modified
      * @param _assetClassRoot - root of node
      * @param _custodyType - custodyType of node (see docs)
@@ -279,7 +279,7 @@ contract NODE_MGR is BASIC {
     //--------------------------------------------NODEMINTER only Functions--------------------------
 
     /**
-     * @dev Mints asset class token and creates an node.
+     * @dev Mints node token and creates an node.
      * @param _node - node to be created (unique)
      * @param _name - name to be configured to node (unique)
      * @param _assetClassRoot - root of node
@@ -322,7 +322,7 @@ contract NODE_MGR is BASIC {
     //--------------------------------------------External Functions--------------------------
 
     /**
-     * @dev Burns (amount) tokens and mints a new asset class token to the calling address
+     * @dev Burns (amount) tokens and mints a new node token to the calling address
      * @param _name - chosen name of node
      * @param _assetClassRoot - chosen root of node
      * @param _custodyType - chosen custodyType of node (see docs)
@@ -350,7 +350,7 @@ contract NODE_MGR is BASIC {
 
         address rootPaymentAddress = cost[_assetClassRoot][1].paymentAddress; //payment for upgrade goes to root node payment address specified for service (1)
 
-        //mint an asset class token to _msgSender(), at tokenID nodeTokenIndex, with URI = root asset Class #
+        //mint an node token to _msgSender(), at tokenID nodeTokenIndex, with URI = root asset Class #
 
         UTIL_TKN.trustedAgentBurn(_msgSender(), node_price / 2);
         UTIL_TKN.trustedAgentTransfer(
@@ -375,7 +375,7 @@ contract NODE_MGR is BASIC {
             STOR.enableDefaultContractsForAC(uint32(nodeTokenIndex));
         }
 
-        return nodeTokenIndex; //returns asset class # of minted token
+        return nodeTokenIndex; //returns node # of minted token
         //^^^^^^^effects/interactions^^^^^^^^^
     }
 
@@ -454,7 +454,7 @@ contract NODE_MGR is BASIC {
     }
 
     /**
-     * @dev Set function costs and payment address per asset class, in PRUF(18 decimals)
+     * @dev Set function costs and payment address per node, in PRUF(18 decimals)
      * @param _node - node to set service costs
      * @param _service - service type being modified (see service types in ZZ_PRUF_DOCS)
      * @param _serviceCost - 18 decimal fee in PRUF associated with specified service
@@ -476,7 +476,7 @@ contract NODE_MGR is BASIC {
     //-------------------------------------------Functions dealing with immutable data ---------------------------------------------
 
     /**
-     * @dev Configure the immutable data in an asset class one time
+     * @dev Configure the immutable data in an node one time
      * @param _node - node being modified
      * @param _managementType - managementType of node (see docs)
      * @param _storageProvider - storageProvider of node (see docs)
@@ -722,7 +722,7 @@ contract NODE_MGR is BASIC {
     //-------------------------------------------functions for payment calculations----------------------------------------------
 
     /**
-     * @dev Retrieve function costs per asset class, per service type in PRUF(18 decimals)
+     * @dev Retrieve function costs per node, per service type in PRUF(18 decimals)
      * @param _node - node associated with query
      * @param _service - service number associated with query (see service types in ZZ_PRUF_DOCS)
      *

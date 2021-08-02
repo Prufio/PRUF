@@ -62,7 +62,7 @@ contract MAL_APP is CORE_MAL {
         // );
         // require(
         //     (userType > 0) && (userType < 10),
-        //     "A:NR: User not authorized to create records in specified asset class"
+        //     "A:NR: User not authorized to create records in specified node"
         // );
         // require(userType < 5, "A:NR: User not authorized to create records");
         // require(_rgtHash != 0, "A:NR: rights holder cannot be zero");
@@ -108,7 +108,7 @@ contract MAL_APP is CORE_MAL {
         // );
         // require(
         //     (userType > 0) && (userType < 10),
-        //     "NP:MS: User not authorized to modify records in specified asset class"
+        //     "NP:MS: User not authorized to modify records in specified node"
         // );
 
         // require(
@@ -188,7 +188,7 @@ contract MAL_APP is CORE_MAL {
         // );
         // require(
         //     (userType > 0) && (userType < 10),
-        //     "NP:SLS: User not authorized to modify records in specified asset class"
+        //     "NP:SLS: User not authorized to modify records in specified node"
         // );
         // require(
         //     isLostOrStolen(_newAssetStatus) == 170,
@@ -254,7 +254,7 @@ contract MAL_APP is CORE_MAL {
         // );
         // require(
         //     (userType > 0) && (userType < 10),
-        //     "NP:DC: User not authorized to modify records in specified asset class"
+        //     "NP:DC: User not authorized to modify records in specified node"
         // );
         // require(
         //     isEscrow(rec.assetStatus) == 0,
@@ -320,7 +320,7 @@ contract MAL_APP is CORE_MAL {
     //     // );
     //     // require(
     //     //     (userType > 0) && (userType < 10),
-    //     //     "NP:DC: User not authorized to modify records in specified asset class"
+    //     //     "NP:DC: User not authorized to modify records in specified node"
     //     // );
     //     // require(
     //     //     isEscrow(rec.assetStatus) == 0,
@@ -379,7 +379,7 @@ contract MAL_APP is CORE_MAL {
     //     // );
     //     // require(
     //     //     (userType > 0) && (userType < 10),
-    //     //     "NP:DC: User not authorized to modify records in specified asset class"
+    //     //     "NP:DC: User not authorized to modify records in specified node"
     //     // );
     //     // require(
     //     //     isEscrow(rec.assetStatus) == 0,
@@ -439,7 +439,7 @@ contract MAL_APP is CORE_MAL {
         // );
         // require(
         //     (userType > 0) && (userType < 10),
-        //     "NP:MI1: User not authorized to modify records in specified asset class"
+        //     "NP:MI1: User not authorized to modify records in specified node"
         // );
         // require(rec.Ipfs1a != _IpfsHash, "NP:MI1: New data same as old");
 
@@ -496,7 +496,7 @@ contract MAL_APP is CORE_MAL {
         // );
         // require(
         //     (userType > 0) && (userType < 10),
-        //     "A:I2: User not authorized to modify records in specified asset class"
+        //     "A:I2: User not authorized to modify records in specified node"
         // );
         // require(
         //     isLostOrStolen(rec.assetStatus) == 0,
@@ -554,7 +554,7 @@ contract MAL_APP is CORE_MAL {
         // );
         // require(
         //     (userType > 0) && (userType < 10),
-        //     "A:EA: User not authorized to modify records in specified asset class"
+        //     "A:EA: User not authorized to modify records in specified node"
         // );
         // require( // require transferrable (51) status
         //     rec.assetStatus == 51,
@@ -600,7 +600,7 @@ contract MAL_APP is CORE_MAL {
         // require((rec.node != 0), "E:SE: Record does not exist");
         // require(
         //     (userType > 0) && (userType < 10),
-        //     "E:SE: User not authorized to modify records in specified asset class"
+        //     "E:SE: User not authorized to modify records in specified node"
         // );
         // require(
         //     (escrowTime >= block.timestamp),
@@ -668,7 +668,7 @@ contract MAL_APP is CORE_MAL {
         // require((rec.node != 0), "E:SE: Record does not exist");
         // require(
         //     (userType > 0) && (userType < 10),
-        //     "E:SE: User not authorized to modify records in specified asset class"
+        //     "E:SE: User not authorized to modify records in specified node"
         // );
         // require(
         //     (escrowTime >= block.timestamp),
@@ -736,7 +736,7 @@ contract MAL_APP is CORE_MAL {
         // require((rec.node != 0), "E:EE: Record does not exist");
         // require(
         //     (userType > 0) && (userType < 10),
-        //     "E:EE: User not authorized to modify records in specified asset class"
+        //     "E:EE: User not authorized to modify records in specified node"
         // );
         // require(
         //     (rec.assetStatus == 6) ||
@@ -782,7 +782,7 @@ contract MAL_APP is CORE_MAL {
         // require((rec.node != 0), "E:EE: Record does not exist");
         // require(
         //     (userType > 0) && (userType < 10),
-        //     "E:EE: User not authorized to modify records in specified asset class"
+        //     "E:EE: User not authorized to modify records in specified node"
         // );
         // require(
         //     (rec.assetStatus == 6) ||

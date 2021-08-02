@@ -70,7 +70,7 @@ contract PIP is CORE {
     }
 
     /*
-     * @dev Import a record into a new asset class
+     * @dev Import a record into a new node
      */
     function claimPipAsset(
         bytes32 _idxHash,

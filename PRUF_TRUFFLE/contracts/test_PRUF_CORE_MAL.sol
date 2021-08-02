@@ -64,14 +64,14 @@ contract CORE_MAL is BASIC {
 
         require(
             node_info.custodyType != 3,
-            "C:CR:Cannot create asset in a root asset class"
+            "C:CR:Cannot create asset in a root node"
         );
 
         require(
             (node_info.custodyType == 1) ||
                 (node_info.custodyType == 2) ||
                 (node_info.custodyType == 4),
-            "C:CR:Cannot create asset - contract not authorized for asset class custody type"
+            "C:CR:Cannot create asset - contract not authorized for node custody type"
         );
 
         if (node_info.custodyType == 1) {

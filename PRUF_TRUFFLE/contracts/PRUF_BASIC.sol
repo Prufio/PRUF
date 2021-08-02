@@ -18,7 +18,7 @@ _________\/// _____________\/// _______\/// __\///////// __\/// _____________
 *-----------------------------------------------------------------
 *-----------------------------------------------------------------
 *PRUF basic provides core data structures and functionality to PRUF contracts.
-*Features include contract name resolution, and getters for records, users, and asset class information.
+*Features include contract name resolution, and getters for records, users, and node information.
 *---------------------------------------------------------------*/
 
 // SPDX-License-Identifier: UNLICENSED
@@ -185,7 +185,7 @@ abstract contract BASIC is
     /**
      * @dev Transfer any specified assetClassToken from contract
      * @param _to - address to send to
-     * @param _tokenID - asset class token ID
+     * @param _tokenID - node token ID
      */
     function Admin_transferACToken(address _to, uint256 _tokenID)
         external
@@ -271,7 +271,7 @@ abstract contract BASIC is
     }
 
     /**
-     * @dev Get asset class information from AC_manager and return an node Struct
+     * @dev Get node information from AC_manager and return an node Struct
      * @param _node - to retrireve info about
      * @return entire node struct (see interfaces for struct definitions)
      */
@@ -301,8 +301,8 @@ abstract contract BASIC is
     /**
      * @dev Get contract information from STOR and return a ContractDataHash Struct
      * @param _addr address of contract to check
-     * @param _node asset class to check 
-     * @return ContractDataHash struct, containing the authorization level and hashed name of a given contract X in asset class Y
+     * @param _node node to check 
+     * @return ContractDataHash struct, containing the authorization level and hashed name of a given contract X in node Y
      */
     function getContractInfo(address _addr, uint32 _node)
         internal

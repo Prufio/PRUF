@@ -225,7 +225,7 @@ contract WRAP is CORE {
         );
         require(
             (node_info.custodyType == 5),
-            "W:CR: Cannot create asset - contract not authorized for asset class custody type"
+            "W:CR: Cannot create asset - contract not authorized for node custody type"
         );
         require(
             (node_info.managementType < 6),

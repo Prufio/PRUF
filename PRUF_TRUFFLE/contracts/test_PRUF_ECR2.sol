@@ -26,7 +26,7 @@ contract ECR2 is ECR_CORE {
      * @dev Verify user credentials
      * Originating Address:
      *      Exists in registeredUsers as a usertype 1 to 9
-     *      Is authorized for asset class
+     *      Is authorized for node
      */
     modifier isAuthorized(bytes32 _idxHash) override {
         uint256 tokenId = uint256(_idxHash);
@@ -62,7 +62,7 @@ contract ECR2 is ECR_CORE {
         require((rec.node != 0), "E:SE: Record does not exist");
         require(
             (userType > 0) && (userType < 10),
-            "E:SE: User not authorized to modify records in specified asset class"
+            "E:SE: User not authorized to modify records in specified node"
         );
         require(
             (escrowTime >= block.timestamp),
@@ -141,7 +141,7 @@ contract ECR2 is ECR_CORE {
         require((rec.node != 0), "E:EE: Record does not exist");
         require(
             (userType > 0) && (userType < 10),
-            "E:EE: User not authorized to modify records in specified asset class"
+            "E:EE: User not authorized to modify records in specified node"
         );
         require(
             (rec.assetStatus == 6) ||

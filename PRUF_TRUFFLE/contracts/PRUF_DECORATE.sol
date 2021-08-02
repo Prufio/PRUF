@@ -15,7 +15,7 @@ _________\/// _____________\/// _______\/// __\///////// __\/// _____________
  *----------------------------------------------------------------*/
 
 
-// Must set up a custodyType 5 asset class for decorated assets and auth this contract type 1. Root must be private to class.
+// Must set up a custodyType 5 node for decorated assets and auth this contract type 1. Root must be private to class.
 // Extended Data for nodes must be set to 0 <works with any ERC721>
 // or set to ERC721 contract address <works only with tokens from specified contract address>
 
@@ -455,7 +455,7 @@ contract DECORATE is CORE {
     }
 
     /**
-     * @dev import a decoration into a new asset class. posessor is considered to be owner. sets rec.assetStatus to 51.
+     * @dev import a decoration into a new node. posessor is considered to be owner. sets rec.assetStatus to 51.
      * @param _tokenID - tokenID of assets token @_tokenContract
      * @param _tokenContract - token contract of _tokenID
      * @param _newAssetClass - new node of decorated token

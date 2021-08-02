@@ -14,7 +14,7 @@ __/\\\\\\\\\\\\\ _____/\\\\\\\\\ _______/\\__/\\ ___/\\\\\\\\\\\\\\\
  *  TO DO
  * //CTS:EXAMINE all params/returns defined in comments global
  * //CTS:EXAMINE ACTH->NTH global
- * //CTS:EXAMINE AssetClassRoot, asset class root, root->RootNode global
+ * //CTS:EXAMINE AssetClassRoot, node root, root->RootNode global
  * //CTS:EXAMINE IPFS1/IPFS2->storProvider/storProvider2 global
  * //CTS:EXAMINE idxHash->assetId global
  * //CTS:EXAMINE NP name change
@@ -100,8 +100,8 @@ contract STOR is AccessControl, ReentrancyGuard, Pausable {
 
     /**
      * @dev Verify user credentials
-     * Requires: Originating Address is authorized for asset class
-     * @param _node asset class to check address auth
+     * Requires: Originating Address is authorized for node
+     * @param _node node to check address auth
      */
     modifier isAuthorized(uint32 _node) {
         uint8 auth = contractInfo[contractAddressToName[msg.sender]][
@@ -220,7 +220,7 @@ contract STOR is AccessControl, ReentrancyGuard, Pausable {
      * populates contract name resolution and data mappings
      * @param   _contractName - String name of contract
      * @param   _contractAddr - address of contract
-     * @param   _node - asset class to authorize in
+     * @param   _node - node to authorize in
      * @param   _contractAuthLevel - auth level to assign
      */
     function OO_addContract(
@@ -350,10 +350,10 @@ contract STOR is AccessControl, ReentrancyGuard, Pausable {
 
     /**
      * @dev Authorize / Deauthorize contract NAMES permitted to make record modifications, per AssetClass
-     * allows ACtokenHolder to Authorize / Deauthorize specific contracts to work within their asset class
+     * allows ACtokenHolder to Authorize / Deauthorize specific contracts to work within their node
      * @param   _name -  Name of contract being authed
-     * @param   _node - affected asset class
-     * @param   _contractAuthLevel - auth level to set for thae contract, in that asset class
+     * @param   _node - affected node
+     * @param   _contractAuthLevel - auth level to set for thae contract, in that node
      */
     function enableContractForAC(
         string memory _name,
@@ -381,7 +381,7 @@ contract STOR is AccessControl, ReentrancyGuard, Pausable {
      * @dev Make a new record, writing to the 'database' mapping with basic initial asset data
      * @param   _idxHash - asset ID
      * @param   _rgtHash - rightsholder id hash
-     * @param   _node - asset class in which to create the asset
+     * @param   _node - node in which to create the asset
      * @param   _countDownStart - initial value for decrement-only value
      * calling contract must be authorized in relevant node
      */
@@ -487,7 +487,7 @@ contract STOR is AccessControl, ReentrancyGuard, Pausable {
     }
 
     /**
-     * @dev Change asset class of an asset - writes to node in the 'Record' struct of the 'database' at _idxHash
+     * @dev Change node of an asset - writes to node in the 'Record' struct of the 'database' at _idxHash
      * @param _idxHash - record asset ID
      * @param _newAssetClass - Aseet Class to change to
      */
@@ -878,7 +878,7 @@ contract STOR is AccessControl, ReentrancyGuard, Pausable {
     /**
      * @dev //returns the contract type of a contract with address _addr.
      * @param _addr - contract address
-     * @param _node - asset class to look up contract type-in-class
+     * @param _node - node to look up contract type-in-class
      * returns address contract address
      */
     function ContractInfoHash(address _addr, uint32 _node)

@@ -32,7 +32,7 @@ contract CORE is BASIC {
      * @dev create a Record in Storage @ idxHash (SETTER)
      * @param _idxHash - Asset Index
      * @param _rgtHash - Owner ID Hash
-     * @param _node - asset class to create asset in
+     * @param _node - node to create asset in
      * @param _countDownStart - initial value for decrement only register
      */
     function createRecord(
@@ -50,7 +50,7 @@ contract CORE is BASIC {
         );
         require(
             node_info.custodyType != 3,
-            "C:CR:Cannot create asset in a root asset class"
+            "C:CR:Cannot create asset in a root node"
         );
         require(
             (node_info.managementType < 6),
@@ -85,7 +85,7 @@ contract CORE is BASIC {
             (node_info.custodyType == 1) ||
                 (node_info.custodyType == 2) ||
                 (node_info.custodyType == 4),
-            "C:CR:Cannot create asset - contract not authorized for asset class custody type"
+            "C:CR:Cannot create asset - contract not authorized for node custody type"
         );
         //^^^^^^^Checks^^^^^^^^
 
@@ -173,7 +173,7 @@ contract CORE is BASIC {
 
     /**
      * @dev Send payment to appropriate adresseses for payable function
-     * @param _node - selected asset class for payment
+     * @param _node - selected node for payment
      * @param _service - selected service for payment
      */
     function deductServiceCosts(uint32 _node, uint16 _service)
@@ -204,7 +204,7 @@ contract CORE is BASIC {
 
     /**
      * @dev Send payment to appropriate adresses for recycle operation
-     * @param _node - selected asset class for payment
+     * @param _node - selected node for payment
      * @param _prevOwner - adddress to pay recycle bonus to
      */
     function deductRecycleCosts(uint32 _node, address _prevOwner)

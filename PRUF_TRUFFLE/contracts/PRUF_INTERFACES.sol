@@ -1064,7 +1064,7 @@ interface ID_TKN_Interface {
  */
 interface NODE_MGR_Interface {
     /*
-     * @dev Transfers a name from one asset class to another
+     * @dev Transfers a name from one node to another
      * !! -------- to be used with great caution and only as a result of community governance action -----------
      * Designed to remedy brand infringement issues. This breaks decentralization and must eventually be given
      * over to some kind of governance contract.
@@ -1078,7 +1078,7 @@ interface NODE_MGR_Interface {
     ) external;
 
     /*
-     * @dev Modifies an asset class with minimal controls
+     * @dev Modifies an node with minimal controls
      *--------DPS TEST ---- NEW args, order
      */
     function AdminModAssetClass(
@@ -1095,7 +1095,7 @@ interface NODE_MGR_Interface {
     ) external;
 
     /*
-     * @dev Mints asset class token and creates an node. Mints to @address
+     * @dev Mints node token and creates an node. Mints to @address
      * Requires that:
      *  name is unuiqe
      *  node is not provisioned with a root (proxy for not yet registered)
@@ -1116,7 +1116,7 @@ interface NODE_MGR_Interface {
     ) external;
 
     /**
-     * @dev Burns (amount) tokens and mints a new asset class token to the caller address
+     * @dev Burns (amount) tokens and mints a new node token to the caller address
      *
      * Requirements:
      * - the caller must have a balance of at least `amount`.
@@ -1160,7 +1160,7 @@ interface NODE_MGR_Interface {
     ) external;
 
     /*
-     * @dev Set function costs and payment address per asset class, in Wei
+     * @dev Set function costs and payment address per node, in Wei
      */
     function ACTH_setCosts(
         uint32 _node,
@@ -1276,7 +1276,7 @@ interface NODE_MGR_Interface {
     function currentACpricingInfo() external view returns (uint256, uint256);
 
     /*
-     * @dev Retrieve function costs per asset class, per service type, in Wei
+     * @dev Retrieve function costs per node, per service type, in Wei
      */
     function getServiceCosts(uint32 _node, uint16 _service)
         external
@@ -1327,7 +1327,7 @@ interface STOR_Interface {
 
     /*
      * @dev Authorize / Deauthorize / Authorize contract NAMES permitted to make record modifications, per AssetClass
-     * allows ACtokenHolder to auithorize or deauthorize specific contracts to work within their asset class
+     * allows ACtokenHolder to auithorize or deauthorize specific contracts to work within their node
      */
     function enableContractForAC(
         string calldata _name,
@@ -1359,7 +1359,7 @@ interface STOR_Interface {
     ) external;
 
     /*
-     * @dev Change asset class of an asset - writes to node in the 'Record' struct of the 'database' at _idxHash
+     * @dev Change node of an asset - writes to node in the 'Record' struct of the 'database' at _idxHash
      */
     function changeAC(bytes32 _idxHash, uint32 _newAssetClass) external;
 

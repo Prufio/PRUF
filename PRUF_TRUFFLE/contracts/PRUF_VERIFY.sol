@@ -16,7 +16,7 @@ _________\/// _____________\/// _______\/// __\///////// __\/// _____________
 /*-----------------------------------------------------------------
  * only tokenHolder can put items "in pouch" 
  * only trusted entities can take items "out"
- * only pouchholder can mark item status, auth as user type 1+ in asset class
+ * only pouchholder can mark item status, auth as user type 1+ in node
  * joe public can check only?
  * statuses:
  *
@@ -218,7 +218,7 @@ contract VERIFY is CORE {
      *      the caller must posess Asset token, must pass isAuth (reverts)
      *      item must be registered as "in" the callers wallet (reverts)
      *      item must not be lost/stolen (reverts)
-     *      destination wallet must be in same asset class as sending wallet (reverts)
+     *      destination wallet must be in same node as sending wallet (reverts)
      */
     function transfer(
         //IS THIS A TERRIBLE IDEA? EXAMINE
@@ -230,9 +230,9 @@ contract VERIFY is CORE {
         Record memory newRec = getRecord(_newIdxHash);
 
         require(items[_itemHash] == _idxHash, "VFY:T: Item not held by caller"); //check to see if held by _idxHash
-        require( //must move to same asset class root
+        require( //must move to same node root
             NODE_MGR.isSameRootAC(rec.node, newRec.node) == 170,
-            "VFY:T: Wallet is not in the same asset class root"
+            "VFY:T: Wallet is not in the same node root"
         );
         require(
             itemData[_itemHash].status != 2,
@@ -262,7 +262,7 @@ contract VERIFY is CORE {
     ) external isAuthorized(_idxHash) returns (uint256) {
         require(
             idxAuthInVerify[_idxHash] == 3, //token is auth amdmin
-            "VFY:AMC: Caller not authorized as a admin user (type3) in asset class"
+            "VFY:AMC: Caller not authorized as a admin user (type3) in node"
         );
         //^^^^^^^checks^^^^^^^^^
 
@@ -337,7 +337,7 @@ contract VERIFY is CORE {
  try to put item A in wallet 2 (should fail) -- item already held, collision ++
  take item A out of wallet 1 (should succeed)
  put item A in wallet 2 (should succeed) 
- transfer item A to wallet 3 (should fail)  -- non matching asset class
+ transfer item A to wallet 3 (should fail)  -- non matching node
  transfer item A to wallet 1 (should succeed)
  take item A out of wallet 1 (should succeed)
  safePutIn item A to wallet 2 with collision threshold at 1 (should succeed)
@@ -346,7 +346,7 @@ contract VERIFY is CORE {
  take item A out of wallet 2 (should succeed)
  safePutIn item A to wallet 2 with collision threshold at 1 (should Fail) -- excess collisions
  safePutIn item A to wallet 3 with collision threshold at 2 (should succeed)
- transfer item A to wallet 1 (should fail) -- non matching asset class
+ transfer item A to wallet 1 (should fail) -- non matching node
  transfer item A to wallet 4 (should succeed)
 
 
