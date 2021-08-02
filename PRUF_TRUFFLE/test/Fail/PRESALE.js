@@ -75,45 +75,45 @@ contract('PRESALE', accounts => {
     it('Should fail because caller is not admin', async () => {
         console.log('//**************************END BOOTSTRAP**************************//')
         console.log('//**************************BEGIN PRESALE FAIL BATCH (21)**************************//')
-        console.log('//**************************BEGIN ADMIN_setTokenContract FAIL BATCH**************************//')
-        return PRESALE.ADMIN_setTokenContract(
+        console.log('//**************************BEGIN setTokenContract FAIL BATCH**************************//')
+        return PRESALE.setTokenContract(
             UTIL_TKN.address,
             { from: account2 })
     })
 
     //2
-    it('Should fail because ADMIN_setTokenContract cannot = 0', async () => {
-        return PRESALE.ADMIN_setTokenContract(
+    it('Should fail because setTokenContract cannot = 0', async () => {
+        return PRESALE.setTokenContract(
             account000,
             { from: account1 })
     })
 
 
-    it('Should set ADMIN_setTokenContract to UTIL_TKN', async () => {
-        return PRESALE.ADMIN_setTokenContract(
+    it('Should set setTokenContract to UTIL_TKN', async () => {
+        return PRESALE.setTokenContract(
             UTIL_TKN.address,
             { from: account1 })
     })
 
     //3
     it('Should fail because caller is not admin', async () => {
-        console.log('//**************************END ADMIN_setTokenContract FAIL BATCH**************************//')
-        console.log('//**************************BEGIN ADMIN_setPaymentAddress FAIL BATCH**************************//')
-        return PRESALE.ADMIN_setPaymentAddress(
+        console.log('//**************************END setTokenContract FAIL BATCH**************************//')
+        console.log('//**************************BEGIN setPaymentAddress FAIL BATCH**************************//')
+        return PRESALE.setPaymentAddress(
             account2,
             { from: account2 })
     })
 
     //4
     it('Should fail because payment address cannot = 0', async () => {
-        return PRESALE.ADMIN_setPaymentAddress(
+        return PRESALE.setPaymentAddress(
             account000,
             { from: account1 })
     })
 
     //5
     it('Should fail because caller is not whitelist authorized', async () => {
-        console.log('//**************************END ADMIN_setPaymentAddress FAIL BATCH**************************//')
+        console.log('//**************************END setPaymentAddress FAIL BATCH**************************//')
         console.log('//**************************BEGIN whitelist FAIL BATCH**************************//')
         return PRESALE.whitelist(
             account2,
@@ -160,45 +160,45 @@ contract('PRESALE', accounts => {
 
     //6
     it('Should fail because caller is not admin', async () => {
-        console.log('//**************************BEGIN ADMIN_setAirDropAmount FAIL BATCH**************************//')
-        return PRESALE.ADMIN_setAirDropAmount(
+        console.log('//**************************BEGIN setAirDropAmount FAIL BATCH**************************//')
+        return PRESALE.setAirDropAmount(
             "100000",
             { from: account2 })
     })
 
     //7
     it('Should fail because airdropAmount cannot = 0', async () => {
-        return PRESALE.ADMIN_setAirDropAmount(
+        return PRESALE.setAirDropAmount(
             "0",
             { from: account1 })
     })
 
 
     it('Should set airdropAmount to 20000', async () => {
-        return PRESALE.ADMIN_setAirDropAmount(
+        return PRESALE.setAirDropAmount(
             "20000000000000000000000",
             { from: account1 })
     })
 
     //8
     it('Should fail because caller is not admin', async () => {
-        console.log('//**************************BEGIN ADMIN_setAirDropAmount FAIL BATCH**************************//')
-        console.log('//**************************BEGIN ADMIN_setPresaleLimit FAIL BATCH**************************//')
-        return PRESALE.ADMIN_setPresaleLimit(
+        console.log('//**************************BEGIN setAirDropAmount FAIL BATCH**************************//')
+        console.log('//**************************BEGIN setPresaleLimit FAIL BATCH**************************//')
+        return PRESALE.setPresaleLimit(
             "1600000000",
             { from: account2 })
     })
 
 
     it('Should set PresaleLimit to 1600000000', async () => {
-        return PRESALE.ADMIN_setPresaleLimit(
+        return PRESALE.setPresaleLimit(
             "1600000000000000000000000000",
             { from: account1 })
     })
 
     //9
     it('Should fail because caller is not airdrop authorized', async () => {
-        console.log('//**************************END ADMIN_setPresaleLimit FAIL BATCH**************************//')
+        console.log('//**************************END setPresaleLimit FAIL BATCH**************************//')
         console.log('//**************************BEGIN AIRDROP_Mint14 FAIL BATCH**************************//')
         return PRESALE.AIRDROP_Mint14(
             account2,
@@ -491,8 +491,8 @@ contract('PRESALE', accounts => {
     })
 
 
-    it('Should set ADMIN_setPaymentAddress to account9', async () => {
-        return PRESALE.ADMIN_setPaymentAddress(
+    it('Should set setPaymentAddress to account9', async () => {
+        return PRESALE.setPaymentAddress(
             account9,
             { from: account1 })
     })

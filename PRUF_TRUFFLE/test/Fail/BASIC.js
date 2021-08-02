@@ -608,165 +608,165 @@ contract("BASIC", (accounts) => {
 
   it("Should add Storage to each contract", () => {
     console.log("Adding in APP");
-    return APP.Admin_setStorageContract(STOR.address, { from: account1 })
+    return APP.setStorageContract(STOR.address, { from: account1 })
 
       .then(() => {
         console.log("Adding in NP");
-        return NP.Admin_setStorageContract(STOR.address, { from: account1 });
+        return NP.setStorageContract(STOR.address, { from: account1 });
       })
 
       .then(() => {
         console.log("Adding in MAL_APP");
-        return MAL_APP.Admin_setStorageContract(STOR.address, {
+        return MAL_APP.setStorageContract(STOR.address, {
           from: account1,
         });
       })
 
       .then(() => {
         console.log("Adding in NODE_MGR");
-        return NODE_MGR.Admin_setStorageContract(STOR.address, {
+        return NODE_MGR.setStorageContract(STOR.address, {
           from: account1,
         });
       })
 
       .then(() => {
         console.log("Adding in A_TKN");
-        return A_TKN.Admin_setStorageContract(STOR.address, { from: account1 });
+        return A_TKN.setStorageContract(STOR.address, { from: account1 });
       })
 
       .then(() => {
         console.log("Adding in ECR_MGR");
-        return ECR_MGR.Admin_setStorageContract(STOR.address, {
+        return ECR_MGR.setStorageContract(STOR.address, {
           from: account1,
         });
       })
 
       .then(() => {
         console.log("Adding in ECR");
-        return ECR.Admin_setStorageContract(STOR.address, { from: account1 });
+        return ECR.setStorageContract(STOR.address, { from: account1 });
       })
 
       .then(() => {
         console.log("Adding in ECR2");
-        return ECR2.Admin_setStorageContract(STOR.address, { from: account1 });
+        return ECR2.setStorageContract(STOR.address, { from: account1 });
       })
 
       .then(() => {
         console.log("Adding in APP_NC");
-        return APP_NC.Admin_setStorageContract(STOR.address, {
+        return APP_NC.setStorageContract(STOR.address, {
           from: account1,
         });
       })
 
       .then(() => {
         console.log("Adding in NP_NC");
-        return NP_NC.Admin_setStorageContract(STOR.address, { from: account1 });
+        return NP_NC.setStorageContract(STOR.address, { from: account1 });
       })
 
       .then(() => {
         console.log("Adding in ECR_NC");
-        return ECR_NC.Admin_setStorageContract(STOR.address, {
+        return ECR_NC.setStorageContract(STOR.address, {
           from: account1,
         });
       })
 
       .then(() => {
         console.log("Adding in RCLR");
-        return RCLR.Admin_setStorageContract(STOR.address, { from: account1 });
+        return RCLR.setStorageContract(STOR.address, { from: account1 });
       })
 
       .then(() => {
         console.log("Adding in PURCHASE");
-        return PURCHASE.Admin_setStorageContract(STOR.address, {
+        return PURCHASE.setStorageContract(STOR.address, {
           from: account1,
         });
       })
 
       .then(() => {
         console.log("Adding in DECORATE");
-        return DECORATE.Admin_setStorageContract(STOR.address, {
+        return DECORATE.setStorageContract(STOR.address, {
           from: account1,
         });
       })
 
       .then(() => {
         console.log("Adding in WRAP");
-        return WRAP.Admin_setStorageContract(STOR.address, { from: account1 });
+        return WRAP.setStorageContract(STOR.address, { from: account1 });
       });
   });
 
   it("Should resolve contract addresses", () => {
     console.log("Resolving in APP");
-    return APP.Admin_resolveContractAddresses({ from: account1 })
+    return APP.resolveContractAddresses({ from: account1 })
 
       .then(() => {
         console.log("Resolving in NP");
-        return NP.Admin_resolveContractAddresses({ from: account1 });
+        return NP.resolveContractAddresses({ from: account1 });
       })
 
       .then(() => {
         console.log("Resolving in MAL_APP");
-        return MAL_APP.Admin_resolveContractAddresses({ from: account1 });
+        return MAL_APP.resolveContractAddresses({ from: account1 });
       })
 
       .then(() => {
         console.log("Resolving in NODE_MGR");
-        return NODE_MGR.Admin_resolveContractAddresses({ from: account1 });
+        return NODE_MGR.resolveContractAddresses({ from: account1 });
       })
 
       .then(() => {
         console.log("Resolving in A_TKN");
-        return A_TKN.Admin_resolveContractAddresses({ from: account1 });
+        return A_TKN.resolveContractAddresses({ from: account1 });
       })
 
       .then(() => {
         console.log("Resolving in ECR_MGR");
-        return ECR_MGR.Admin_resolveContractAddresses({ from: account1 });
+        return ECR_MGR.resolveContractAddresses({ from: account1 });
       })
 
       .then(() => {
         console.log("Resolving in ECR");
-        return ECR.Admin_resolveContractAddresses({ from: account1 });
+        return ECR.resolveContractAddresses({ from: account1 });
       })
 
       .then(() => {
         console.log("Resolving in ECR2");
-        return ECR2.Admin_resolveContractAddresses({ from: account1 });
+        return ECR2.resolveContractAddresses({ from: account1 });
       })
 
       .then(() => {
         console.log("Resolving in APP_NC");
-        return APP_NC.Admin_resolveContractAddresses({ from: account1 });
+        return APP_NC.resolveContractAddresses({ from: account1 });
       })
 
       .then(() => {
         console.log("Resolving in NP_NC");
-        return NP_NC.Admin_resolveContractAddresses({ from: account1 });
+        return NP_NC.resolveContractAddresses({ from: account1 });
       })
 
       .then(() => {
         console.log("Resolving in ECR_NC");
-        return ECR_NC.Admin_resolveContractAddresses({ from: account1 });
+        return ECR_NC.resolveContractAddresses({ from: account1 });
       })
 
       .then(() => {
         console.log("Resolving in RCLR");
-        return RCLR.Admin_resolveContractAddresses({ from: account1 });
+        return RCLR.resolveContractAddresses({ from: account1 });
       })
 
       .then(() => {
         console.log("Resolving in PURCHASE");
-        return PURCHASE.Admin_resolveContractAddresses({ from: account1 });
+        return PURCHASE.resolveContractAddresses({ from: account1 });
       })
 
       .then(() => {
         console.log("Resolving in DECORATE");
-        return DECORATE.Admin_resolveContractAddresses({ from: account1 });
+        return DECORATE.resolveContractAddresses({ from: account1 });
       })
 
       .then(() => {
         console.log("Resolving in WRAP");
-        return WRAP.Admin_resolveContractAddresses({ from: account1 });
+        return WRAP.resolveContractAddresses({ from: account1 });
       });
   });
 
@@ -1470,15 +1470,15 @@ contract("BASIC", (accounts) => {
       "//**************************************BEGIN BASIC FAIL BATCH (7)**********************************************/"
     );
     console.log(
-      "//**************************************BEGIN Admin_resolveContractAddresses FAIL BATCH**********************************************/"
+      "//**************************************BEGIN resolveContractAddresses FAIL BATCH**********************************************/"
     );
-    return APP.Admin_resolveContractAddresses({ from: account2 });
+    return APP.resolveContractAddresses({ from: account2 });
   });
 
   //2
   it("Should fail becasue caller does not have ASSET_TXFR_ROLE", async () => {
     console.log(
-      "//**************************************END Admin_resolveContractAddresses FAIL BATCH**********************************************/"
+      "//**************************************END resolveContractAddresses FAIL BATCH**********************************************/"
     );
     console.log(
       "//**************************************BEGIN transferAssetToken FAIL BATCH**********************************************/"
@@ -1492,31 +1492,31 @@ contract("BASIC", (accounts) => {
       "//**************************************END transferAssetToken SETUP**********************************************/"
     );
     console.log(
-      "//**************************************BEGIN Admin_transferACToken FAIL BATCH**********************************************/"
+      "//**************************************BEGIN transferNodeToken FAIL BATCH**********************************************/"
     );
-    return APP.Admin_transferACToken(account1, asset1, { from: account2 });
+    return APP.transferNodeToken(account1, asset1, { from: account2 });
   });
 
   //4
   it("Should fail because caller is not admin", async () => {
     console.log(
-      "//**************************************END Admin_transferACToken FAIL BATCH**********************************************/"
+      "//**************************************END transferNodeToken FAIL BATCH**********************************************/"
     );
     console.log(
-      "//**************************************BEGIN Admin_setStorageContract FAIL BATCH**********************************************/"
+      "//**************************************BEGIN setStorageContract FAIL BATCH**********************************************/"
     );
-    return APP.Admin_setStorageContract(STOR.address, { from: account2 });
+    return APP.setStorageContract(STOR.address, { from: account2 });
   });
 
   //5
   it("Should fail because storageAddress != 0", async () => {
-    return APP.Admin_setStorageContract(account000, { from: account1 });
+    return APP.setStorageContract(account000, { from: account1 });
   });
 
   //6
   it("Should fail because caller is not pauser", async () => {
     console.log(
-      "//**************************************END Admin_setStorageContract FAIL BATCH**********************************************/"
+      "//**************************************END setStorageContract FAIL BATCH**********************************************/"
     );
     console.log(
       "//**************************************BEGIN pause FAIL BATCH**********************************************/"

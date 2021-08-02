@@ -124,15 +124,15 @@ contract('SPLIT', accounts => {
     })
 
 
-    it('Should ADMIN_setTokenContract to A_TKN', async () => {
-        return SPLIT.ADMIN_setTokenContract(
+    it('Should setTokenContract to A_TKN', async () => {
+        return SPLIT.setTokenContract(
             UTIL_TKN.address,
             { from: account1 })
     })
 
 
     it('Should take snapshot and pause', async () => {
-        return SPLIT.ADMIN_takeSnapshot(
+        return SPLIT.takeSnapshot(
             { from: account1 })
     })
 

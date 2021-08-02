@@ -505,82 +505,82 @@ contract("Discount", (accounts) => {
   it("Should add Storage in each contract", async () => {
     console.log("Adding in APP");
     return (
-      APP.Admin_setStorageContract(STOR.address, { from: account1 })
+      APP.setStorageContract(STOR.address, { from: account1 })
 
         .then(() => {
           console.log("Adding in NP");
-          return NP.Admin_setStorageContract(STOR.address, { from: account1 });
+          return NP.setStorageContract(STOR.address, { from: account1 });
         })
 
         .then(() => {
           console.log("Adding in MAL_APP");
-          return MAL_APP.Admin_setStorageContract(STOR.address, {
+          return MAL_APP.setStorageContract(STOR.address, {
             from: account1,
           });
         })
 
         .then(() => {
           console.log("Adding in NODE_MGR");
-          return NODE_MGR.Admin_setStorageContract(STOR.address, {
+          return NODE_MGR.setStorageContract(STOR.address, {
             from: account1,
           });
         })
 
         .then(() => {
           console.log("Adding in A_TKN");
-          return A_TKN.Admin_setStorageContract(STOR.address, {
+          return A_TKN.setStorageContract(STOR.address, {
             from: account1,
           });
         })
 
         .then(() => {
           console.log("Adding in ECR_MGR");
-          return ECR_MGR.Admin_setStorageContract(STOR.address, {
+          return ECR_MGR.setStorageContract(STOR.address, {
             from: account1,
           });
         })
 
         .then(() => {
           console.log("Adding in ECR");
-          return ECR.Admin_setStorageContract(STOR.address, { from: account1 });
+          return ECR.setStorageContract(STOR.address, { from: account1 });
         })
 
         .then(() => {
           console.log("Adding in ECR2");
-          return ECR2.Admin_setStorageContract(STOR.address, {
+          return ECR2.setStorageContract(STOR.address, {
             from: account1,
           });
         })
 
         .then(() => {
           console.log("Adding in APP_NC");
-          return APP_NC.Admin_setStorageContract(STOR.address, {
+          return APP_NC.setStorageContract(STOR.address, {
             from: account1,
           });
         })
 
         .then(() => {
           console.log("Adding in NP_NC");
-          return NP_NC.Admin_setStorageContract(STOR.address, {
+          return NP_NC.setStorageContract(STOR.address, {
             from: account1,
           });
         })
 
         .then(() => {
           console.log("Adding in ECR_NC");
-          return ECR_NC.Admin_setStorageContract(STOR.address, {
+          return ECR_NC.setStorageContract(STOR.address, {
             from: account1,
           });
         })
 
         .then(() => {
           console.log("Adding in PIP");
-          return PIP.Admin_setStorageContract(STOR.address, { from: account1 });
+          return PIP.setStorageContract(STOR.address, { from: account1 });
         })
 
         .then(() => {
           console.log("Adding in RCLR");
-          return RCLR.Admin_setStorageContract(STOR.address, {
+          return RCLR.setStorageContract(STOR.address, {
             from: account1,
           });
         })
@@ -595,71 +595,71 @@ contract("Discount", (accounts) => {
   it("Should resolve contract addresses", async () => {
     console.log("Resolving in APP");
     return (
-      APP.Admin_resolveContractAddresses({ from: account1 })
+      APP.resolveContractAddresses({ from: account1 })
 
         .then(() => {
           console.log("Resolving in NP");
-          return NP.Admin_resolveContractAddresses({ from: account1 });
+          return NP.resolveContractAddresses({ from: account1 });
         })
 
         .then(() => {
           console.log("Resolving in MAL_APP");
-          return MAL_APP.Admin_resolveContractAddresses({ from: account1 });
+          return MAL_APP.resolveContractAddresses({ from: account1 });
         })
 
         .then(() => {
           console.log("Resolving in NODE_MGR");
-          return NODE_MGR.Admin_resolveContractAddresses({ from: account1 });
+          return NODE_MGR.resolveContractAddresses({ from: account1 });
         })
 
         // .then(() => {
         //     console.log("Resolving in NODE_TKN")
-        //     return NODE_TKN.Admin_resolveContractAddresses({ from: account1 })
+        //     return NODE_TKN.resolveContractAddresses({ from: account1 })
         // })
 
         .then(() => {
           console.log("Resolving in A_TKN");
-          return A_TKN.Admin_resolveContractAddresses({ from: account1 });
+          return A_TKN.resolveContractAddresses({ from: account1 });
         })
 
         .then(() => {
           console.log("Resolving in ECR_MGR");
-          return ECR_MGR.Admin_resolveContractAddresses({ from: account1 });
+          return ECR_MGR.resolveContractAddresses({ from: account1 });
         })
 
         .then(() => {
           console.log("Resolving in ECR");
-          return ECR.Admin_resolveContractAddresses({ from: account1 });
+          return ECR.resolveContractAddresses({ from: account1 });
         })
 
         .then(() => {
           console.log("Resolving in ECR2");
-          return ECR2.Admin_resolveContractAddresses({ from: account1 });
+          return ECR2.resolveContractAddresses({ from: account1 });
         })
 
         .then(() => {
           console.log("Resolving in APP_NC");
-          return APP_NC.Admin_resolveContractAddresses({ from: account1 });
+          return APP_NC.resolveContractAddresses({ from: account1 });
         })
 
         .then(() => {
           console.log("Resolving in NP_NC");
-          return NP_NC.Admin_resolveContractAddresses({ from: account1 });
+          return NP_NC.resolveContractAddresses({ from: account1 });
         })
 
         .then(() => {
           console.log("Resolving in ECR_NC");
-          return ECR_NC.Admin_resolveContractAddresses({ from: account1 });
+          return ECR_NC.resolveContractAddresses({ from: account1 });
         })
 
         .then(() => {
           console.log("Resolving in PIP");
-          return PIP.Admin_resolveContractAddresses({ from: account1 });
+          return PIP.resolveContractAddresses({ from: account1 });
         })
 
         .then(() => {
           console.log("Resolving in RCLR");
-          return RCLR.Admin_resolveContractAddresses({ from: account1 });
+          return RCLR.resolveContractAddresses({ from: account1 });
         })
     );
 

@@ -145,7 +145,7 @@ contract("EO_STAKING", (accounts) => {
 
     discardRoleB32 = await Helper.getStringHash("DISCARD_ROLE");
 
-    stakeRoleB32 = await Helper.getStringHash("STAKE_ADMIN_ROLE");
+    stakeRoleB32 = await Helper.getStringHash("STAKE_ROLE");
 
     stakePayerRoleB32 = await Helper.getStringHash("STAKE_PAYER_ROLE");
 
@@ -242,7 +242,7 @@ contract("EO_STAKING", (accounts) => {
   });
 
   it("Should set token contracts in REWARDS_VAULT", async () => {
-    return REWARDS_VAULT.Admin_setTokenContracts(
+    return REWARDS_VAULT.setTokenContracts(
       UTIL_TKN.address,
       STAKE_TKN.address,
       { from: account1 }
@@ -250,7 +250,7 @@ contract("EO_STAKING", (accounts) => {
   });
 
   it("Should set token contracts in STAKE_VAULT", async () => {
-    return STAKE_VAULT.Admin_setTokenContracts(
+    return STAKE_VAULT.setTokenContracts(
       UTIL_TKN.address,
       STAKE_TKN.address,
       { from: account1 }
@@ -258,7 +258,7 @@ contract("EO_STAKING", (accounts) => {
   });
 
   it("Should set token contracts in EO_STAKING", async () => {
-    return EO_STAKING.Admin_setTokenContracts(
+    return EO_STAKING.setTokenContracts(
       UTIL_TKN.address,
       STAKE_TKN.address,
       STAKE_VAULT.address,
