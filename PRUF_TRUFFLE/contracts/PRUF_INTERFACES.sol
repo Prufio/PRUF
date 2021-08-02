@@ -1263,7 +1263,7 @@ interface NODE_MGR_Interface {
     function getAC_name(uint32 _tokenId) external view returns (string memory);
 
     /*
-     * @dev Retrieve AC_number @ AC_name
+     * @dev Retrieve node_index @ AC_name
      */
     function resolveAssetClass(string calldata _name)
         external

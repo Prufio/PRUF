@@ -38,12 +38,12 @@ contract NODE_MGR is BASIC {
     bytes32 public constant B320xF_ =
         0xFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFF;
 
-    uint256 private ACtokenIndex = 1000000; //Starting index for purchased ACnode tokens
-    uint256 public AC_Price = 200000 ether;
+    uint256 private nodeTokenIndex = 1000000; //Starting index for purchased ACnode tokens
+    uint256 public node_price = 200000 ether;
     uint32 private constant startingDiscount = 9500; // Purchased nodes start with 95% profit share
     mapping(uint32 => mapping(uint16 => Costs)) private cost; // Cost per function by asset class => Costs struct (see PRUF_INTERFACES for struct definitions)
     mapping(uint32 => Node) private node_data; // AC info database asset class to AC struct (see PRUF_INTERFACES for struct definitions)
-    mapping(string => uint32) private AC_number; //name to asset class resolution map
+    mapping(string => uint32) private node_index; //name to asset class resolution map
     mapping(bytes32 => mapping(uint32 => uint8)) private registeredUsers; // Authorized recorder database by asset class, by address hash
     mapping(uint8 => uint8) private storageProvidersEnabled; //storageProvider -> status (enabled or disabled)
     mapping(uint8 => uint8) private managementTypesEnabled; //managementTypes -> status (enabled or disabled)
@@ -51,7 +51,7 @@ contract NODE_MGR is BASIC {
 
     constructor() {
         _setupRole(NODE_MINTER_ROLE, _msgSender());
-        AC_number[""] = 4294967295; //points the blank string name to AC 4294967295 to make "" owned
+        node_index[""] = 4294967295; //points the blank string name to AC 4294967295 to make "" owned
     }
 
     /**
@@ -88,7 +88,7 @@ contract NODE_MGR is BASIC {
     function adminSetACpricing(uint256 newACprice) external isContractAdmin {
         //^^^^^^^checks^^^^^^^^^
 
-        AC_Price = newACprice;
+        node_price = newACprice;
         //^^^^^^^effects^^^^^^^^^
 
         emit REPORT("ACnode pricing Changed!"); //report access to internal parameter (KEEP THIS)
@@ -179,7 +179,7 @@ contract NODE_MGR is BASIC {
         string calldata _name
     ) external isContractAdmin {
         require(
-            AC_number[_name] == _assetClassSource,
+            node_index[_name] == _assetClassSource,
             "ACM:TN: Name not in source AC"
         ); //source AC_Name must match name given
 
@@ -189,7 +189,7 @@ contract NODE_MGR is BASIC {
         );
         //^^^^^^^checks^^^^^^^^^
 
-        AC_number[_name] = _assetClassDest;
+        node_index[_name] = _assetClassDest;
         node_data[_assetClassDest].name = _name;
         node_data[_assetClassSource].name = "";
         //^^^^^^^effects^^^^^^^^^
@@ -337,7 +337,7 @@ contract NODE_MGR is BASIC {
         bytes32 _CAS2
     ) external nonReentrant returns (uint256) {
         require(
-            ACtokenIndex < 4294000000,
+            nodeTokenIndex < 4294000000,
             "ACM:PACN: Only 4294000000 AC tokens allowed"
         );
         require(
@@ -346,17 +346,17 @@ contract NODE_MGR is BASIC {
         );
         //^^^^^^^checks^^^^^^^^^
 
-        ACtokenIndex++;
+        nodeTokenIndex++;
 
         address rootPaymentAddress = cost[_assetClassRoot][1].paymentAddress; //payment for upgrade goes to root AC payment address specified for service (1)
 
-        //mint an asset class token to _msgSender(), at tokenID ACtokenIndex, with URI = root asset Class #
+        //mint an asset class token to _msgSender(), at tokenID nodeTokenIndex, with URI = root asset Class #
 
-        UTIL_TKN.trustedAgentBurn(_msgSender(), AC_Price / 2);
+        UTIL_TKN.trustedAgentBurn(_msgSender(), node_price / 2);
         UTIL_TKN.trustedAgentTransfer(
             _msgSender(),
             rootPaymentAddress,
-            AC_Price - (AC_Price / 2)
+            node_price - (node_price / 2)
         ); //burning 50% so we have tokens to incentivise outreach performance
         Node memory _AC;
         _AC.name = _name;
@@ -368,14 +368,14 @@ contract NODE_MGR is BASIC {
         _AC.CAS1 = _CAS1;
         _AC.CAS2 = _CAS2;
 
-        _createAssetClass(_AC, uint32(ACtokenIndex), _msgSender());
+        _createAssetClass(_AC, uint32(nodeTokenIndex), _msgSender());
 
         //Set the default 11 authorized contracts
         if (_custodyType == 2) {
-            STOR.enableDefaultContractsForAC(uint32(ACtokenIndex));
+            STOR.enableDefaultContractsForAC(uint32(nodeTokenIndex));
         }
 
-        return ACtokenIndex; //returns asset class # of minted token
+        return nodeTokenIndex; //returns asset class # of minted token
         //^^^^^^^effects/interactions^^^^^^^^^
     }
 
@@ -418,16 +418,16 @@ contract NODE_MGR is BASIC {
         isACtokenHolderOfClass(_assetClass)
     {
         require( //should pass if name is same as old name or name is unassigned. Should fail if name is assigned to other AC
-            (AC_number[_name] == 0) || //name is unassigned
+            (node_index[_name] == 0) || //name is unassigned
                 (keccak256(abi.encodePacked(_name)) == //name is same as old name
                     (keccak256(abi.encodePacked(node_data[_assetClass].name)))),
             "ACM:UACN: Name already in use or is same as the previous"
         );
         //^^^^^^^checks^^^^^^^^^
 
-        delete AC_number[node_data[_assetClass].name];
+        delete node_index[node_data[_assetClass].name];
 
-        AC_number[_name] = _assetClass;
+        node_index[_name] = _assetClass;
         node_data[_assetClass].name = _name;
         //^^^^^^^effects^^^^^^^^^
     }
@@ -701,7 +701,7 @@ contract NODE_MGR is BASIC {
         returns (uint32)
     {
         //^^^^^^^checks^^^^^^^^^
-        return (AC_number[_name]);
+        return (node_index[_name]);
         //^^^^^^^effects^^^^^^^^^
     }
 
@@ -709,13 +709,13 @@ contract NODE_MGR is BASIC {
      * @dev return current AC token index and price
      *
      * @return {
-         ACtokenIndex: current token number
+         nodeTokenIndex: current token number
          AC_price: current price per assetClass
      }
      */
     function currentACpricingInfo() external view returns (uint256, uint256) {
         //^^^^^^^checks^^^^^^^^^
-        return (ACtokenIndex, AC_Price);
+        return (nodeTokenIndex, node_price);
         //^^^^^^^effects^^^^^^^^^
     }
 
@@ -816,14 +816,14 @@ contract NODE_MGR is BASIC {
                 "ACM:CAC: Restricted from creating AC's in this root - caller !hold root token"
             );
         }
-        require(AC_number[_AC.name] == 0, "ACM:CAC: AC name exists");
+        require(node_index[_AC.name] == 0, "ACM:CAC: AC name exists");
         require(
             (node_data[_assetClass].assetClassRoot == 0),
             "ACM:CAC: AC already exists"
         );
         //^^^^^^^checks^^^^^^^^^
 
-        AC_number[_AC.name] = _assetClass;
+        node_index[_AC.name] = _assetClass;
         node_data[_assetClass].name = _AC.name;
         node_data[_assetClass].assetClassRoot = _AC.assetClassRoot;
         node_data[_assetClass].discount = _AC.discount;

@@ -29,7 +29,7 @@ contract Helper is Ownable, BASIC {
     address erc721ContractAddress;
     erc721_tokenInterface erc721_tokenContract; //erc721_token prototype initialization
 
-    uint256 private ACtokenIndex = 10000;
+    uint256 private nodeTokenIndex = 10000;
     uint256 private currentACtokenPrice = 5000;
 
     function setErc721_tokenAddress(address contractAddress) public onlyOwner {
