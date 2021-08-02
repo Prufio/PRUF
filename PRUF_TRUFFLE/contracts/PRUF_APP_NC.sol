@@ -43,7 +43,7 @@ contract APP_NC is CORE {
      * @dev Create a newRecord with description
      * @param _idxHash - hash of asset information created by frontend inputs
      * @param _rgtHash - hash of rightsholder information created by frontend inputs
-     * @param _assetClass - assetClass the asset will be created in
+     * @param _node - assetClass the asset will be created in
      * @param _countDownStart - decremental counter for an assets lifecycle
      * @param _Ipfs1a - field for external asset data
      * @param _Ipfs1b - field for external asset data
@@ -51,7 +51,7 @@ contract APP_NC is CORE {
     function newRecordWithDescription(
         bytes32 _idxHash,
         bytes32 _rgtHash,
-        uint32 _assetClass,
+        uint32 _node,
         uint32 _countDownStart,
         bytes32 _Ipfs1a,
         bytes32 _Ipfs1b
@@ -67,9 +67,9 @@ contract APP_NC is CORE {
         rec.Ipfs1b = _Ipfs1b;
         //^^^^^^^effects^^^^^^^^^
 
-        createRecord(_idxHash, _rgtHash, _assetClass, _countDownStart);
+        createRecord(_idxHash, _rgtHash, _node, _countDownStart);
         writeRecordIpfs1(_idxHash, rec);
-        deductServiceCosts(_assetClass, 1);
+        deductServiceCosts(_node, 1);
         //^^^^^^^interactions^^^^^^^^^
     }
 
@@ -77,7 +77,7 @@ contract APP_NC is CORE {
      * @dev Create a newRecord with permanent description
      * @param _idxHash - hash of asset information created by frontend inputs
      * @param _rgtHash - hash of rightsholder information created by frontend inputs
-     * @param _assetClass - assetClass the asset will be created in
+     * @param _node - assetClass the asset will be created in
      * @param _countDownStart - decremental counter for an assets lifecycle
      * @param _Ipfs2a - field for permanent external asset data
      * @param _Ipfs2b - field for permanent external asset data
@@ -85,7 +85,7 @@ contract APP_NC is CORE {
     function newRecordWithNote(
         bytes32 _idxHash,
         bytes32 _rgtHash,
-        uint32 _assetClass,
+        uint32 _node,
         uint32 _countDownStart,
         bytes32 _Ipfs2a,
         bytes32 _Ipfs2b
@@ -101,9 +101,9 @@ contract APP_NC is CORE {
         rec.Ipfs2b = _Ipfs2b;
         //^^^^^^^effects^^^^^^^^^
 
-        createRecord(_idxHash, _rgtHash, _assetClass, _countDownStart);
+        createRecord(_idxHash, _rgtHash, _node, _countDownStart);
         writeRecordIpfs2(_idxHash, rec);
-        deductServiceCosts(_assetClass, 1);
+        deductServiceCosts(_node, 1);
         //^^^^^^^interactions^^^^^^^^^
     }
 
@@ -111,13 +111,13 @@ contract APP_NC is CORE {
      * @dev Create a newRecord
      * @param _idxHash - hash of asset information created by frontend inputs
      * @param _rgtHash - hash of rightsholder information created by frontend inputs
-     * @param _assetClass - assetClass the asset will be created in
+     * @param _node - assetClass the asset will be created in
      * @param _countDownStart - decremental counter for an assets lifecycle
      */
     function newRecord(
         bytes32 _idxHash,
         bytes32 _rgtHash,
-        uint32 _assetClass,
+        uint32 _node,
         uint32 _countDownStart
     ) external nonReentrant whenNotPaused {
         require(
@@ -126,8 +126,8 @@ contract APP_NC is CORE {
         );
         //^^^^^^^Checks^^^^^^^^^
 
-        createRecord(_idxHash, _rgtHash, _assetClass, _countDownStart);
-        deductServiceCosts(_assetClass, 1);
+        createRecord(_idxHash, _rgtHash, _node, _countDownStart);
+        deductServiceCosts(_node, 1);
         //^^^^^^^interactions^^^^^^^^^
     }
 

@@ -250,10 +250,10 @@ abstract contract BASIC is
 
     /**
      * @dev Get a User type Record from AC_manager for _msgSender(), by assetClass
-     * @param _assetClass - to check user type in
+     * @param _node - to check user type in
      * @return user authorization type of caller, from NODE_MGR user mapping
      */
-    function getCallingUserType(uint32 _assetClass)
+    function getCallingUserType(uint32 _node)
         internal
         virtual
         returns (uint8)
@@ -263,7 +263,7 @@ abstract contract BASIC is
         uint8 userTypeInAssetClass =
             NODE_MGR.getUserType(
                 keccak256(abi.encodePacked(_msgSender())),
-                _assetClass
+                _node
             );
 
         return userTypeInAssetClass;
@@ -272,10 +272,10 @@ abstract contract BASIC is
 
     /**
      * @dev Get asset class information from AC_manager and return an node Struct
-     * @param _assetClass - to retrireve info about
+     * @param _node - to retrireve info about
      * @return entire node struct (see interfaces for struct definitions)
      */
-    function getACinfo(uint32 _assetClass)
+    function getACinfo(uint32 _node)
         internal
         virtual
         returns (Node memory)
@@ -291,20 +291,20 @@ abstract contract BASIC is
         //     node_info.managementType,
         //     node_info.discount,
         //     node_info.referenceAddress
-        // ) = NODE_MGR.getAC_data(_assetClass);
+        // ) = NODE_MGR.getAC_data(_node);
 
         // return node_info;
-        return NODE_MGR.getExtAC_data(_assetClass);
+        return NODE_MGR.getExtAC_data(_node);
         //^^^^^^^interactions^^^^^^^^^
     }
 
     /**
      * @dev Get contract information from STOR and return a ContractDataHash Struct
      * @param _addr address of contract to check
-     * @param _assetClass asset class to check 
+     * @param _node asset class to check 
      * @return ContractDataHash struct, containing the authorization level and hashed name of a given contract X in asset class Y
      */
-    function getContractInfo(address _addr, uint32 _assetClass)
+    function getContractInfo(address _addr, uint32 _node)
         internal
         view
         returns (ContractDataHash memory)
@@ -313,7 +313,7 @@ abstract contract BASIC is
 
         ContractDataHash memory contractInfo;
         (contractInfo.contractType, contractInfo.nameHash) = STOR
-            .ContractInfoHash(_addr, _assetClass);
+            .ContractInfoHash(_addr, _node);
         return contractInfo;
         //^^^^^^^interactions^^^^^^^^^
     }

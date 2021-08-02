@@ -47,9 +47,9 @@ contract SCULPTOR is AccessControl, BASIC{
     // /*
     //  * @dev Verify caller holds ACtoken of passed assetClass
     //  */
-    // modifier isACtokenHolderOfClass(uint32 _assetClass) {
+    // modifier isACtokenHolderOfClass(uint32 _node) {
     //     require(
-    //         (NODE_TKN.ownerOf(_assetClass) == _msgSender()),
+    //         (NODE_TKN.ownerOf(_node) == _msgSender()),
     //         "ACM:MOD-IACTHoC:_msgSender() not authorized in asset class"
     //     );
     //     _;

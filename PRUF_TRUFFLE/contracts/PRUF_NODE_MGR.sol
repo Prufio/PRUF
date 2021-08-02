@@ -69,11 +69,11 @@ contract NODE_MGR is BASIC {
 
     /**
      * @dev Verify caller holds ACtoken of passed assetClass
-     * @param _assetClass - assetClass in which caller is queried for ownership
+     * @param _node - assetClass in which caller is queried for ownership
      */
-    modifier isACtokenHolderOfClass(uint32 _assetClass) {
+    modifier isACtokenHolderOfClass(uint32 _node) {
         require(
-            (NODE_TKN.ownerOf(_assetClass) == _msgSender()),
+            (NODE_TKN.ownerOf(_node) == _msgSender()),
             "ACM:MOD-IACTHoC: _msgSender() not authorized in asset class"
         );
         _;
@@ -99,25 +99,25 @@ contract NODE_MGR is BASIC {
      * !! to be used with great caution !!
      * This potentially breaks decentralization and must eventually be given over to some kind of governance contract.
      * @dev Increases (but cannot decrease) price share for a given node
-     * @param _assetClass - assetClass in which cost share is being modified
+     * @param _node - assetClass in which cost share is being modified
      * @param _newDiscount - discount(1% == 100, 10000 == max)
      */
-    function adminIncreaseShare(uint32 _assetClass, uint32 _newDiscount)
+    function adminIncreaseShare(uint32 _node, uint32 _newDiscount)
         external
         isContractAdmin
     {
         require(
-            (node_data[_assetClass].assetClassRoot != 0),
+            (node_data[_node].assetClassRoot != 0),
             "ACM:AIS: node !exist"
         );
         require(
-            _newDiscount >= node_data[_assetClass].discount,
+            _newDiscount >= node_data[_node].discount,
             "ACM:AIS: New share < old share"
         );
         require(_newDiscount <= 10000, "ACM:AIS: Discount > 100% (10000)");
         //^^^^^^^checks^^^^^^^^^
 
-        node_data[_assetClass].discount = _newDiscount;
+        node_data[_node].discount = _newDiscount;
         //^^^^^^^effects^^^^^^^^^
     }
 
@@ -198,7 +198,7 @@ contract NODE_MGR is BASIC {
     /**
      * !! -------- to be used with great caution -----------
      * @dev Modifies an asset class with minimal controls
-     * @param _assetClass - assetClass to be modified
+     * @param _node - assetClass to be modified
      * @param _assetClassRoot - root of assetClass
      * @param _custodyType - custodyType of assetClass (see docs)
      * @param _managementType - managementType of assetClass (see docs)
@@ -209,7 +209,7 @@ contract NODE_MGR is BASIC {
      * @param _CAS2 - any external data attatched to assetClass 2/2
      */
     function adminModAssetClass(
-        uint32 _assetClass,
+        uint32 _node,
         uint32 _assetClassRoot,
         uint8 _custodyType,
         uint8 _managementType,
@@ -220,37 +220,37 @@ contract NODE_MGR is BASIC {
         bytes32 _CAS2
     ) external isContractAdmin nonReentrant {
         Node memory _ac = node_data[_assetClassRoot];
-        uint256 tokenId = uint256(_assetClass);
+        uint256 tokenId = uint256(_node);
 
         require((tokenId != 0), "ACM:AMAC: node = 0"); //sanity check inputs
         require(_discount <= 10000, "ACM:AMAC: Discount > 10000 (100%)");
         require( //has valid root
-            (_ac.custodyType == 3) || (_assetClassRoot == _assetClass),
+            (_ac.custodyType == 3) || (_assetClassRoot == _node),
             "ACM:AMAC: Root !exist"
         );
         require(NODE_TKN.tokenExists(tokenId) == 170, "ACM:AMAC: ACtoken !exist");
 
         //^^^^^^^checks^^^^^^^^^
 
-        node_data[_assetClass].assetClassRoot = _assetClassRoot;
-        node_data[_assetClass].discount = _discount;
-        node_data[_assetClass].custodyType = _custodyType;
-        node_data[_assetClass].managementType = _managementType;
-        node_data[_assetClass].storageProvider = _storageProvider;
-        node_data[_assetClass].referenceAddress = _refAddress;
-        node_data[_assetClass].CAS1 = _CAS1;
-        node_data[_assetClass].CAS2 = _CAS2;
+        node_data[_node].assetClassRoot = _assetClassRoot;
+        node_data[_node].discount = _discount;
+        node_data[_node].custodyType = _custodyType;
+        node_data[_node].managementType = _managementType;
+        node_data[_node].storageProvider = _storageProvider;
+        node_data[_node].referenceAddress = _refAddress;
+        node_data[_node].CAS1 = _CAS1;
+        node_data[_node].CAS2 = _CAS2;
         //^^^^^^^effects^^^^^^^^^
     }
 
     /**
      * @dev Modifies node.switches bitwise (see NODE option switches in ZZ_PRUF_DOCS)
-     * @param _assetClass - assetClass to be modified
+     * @param _node - assetClass to be modified
      * @param _position - uint position of bit to be modified
      * @param _bit - switch - 1 or 0 (true or false)
      */
     function adminModAssetClassSwitches(
-        uint32 _assetClass,
+        uint32 _node,
         uint8 _position,
         uint8 _bit
     ) external isContractAdmin nonReentrant {
@@ -262,7 +262,7 @@ contract NODE_MGR is BASIC {
 
         //^^^^^^^checks^^^^^^^^^
 
-        uint256 switches = node_data[_assetClass].switches;
+        uint256 switches = node_data[_node].switches;
 
         if (_bit == 1) {
             switches = switches | (1 << (_position - 1));
@@ -272,7 +272,7 @@ contract NODE_MGR is BASIC {
             switches = switches & ~(1 << (_position - 1)); //make zero mask
         }
 
-        node_data[_assetClass].switches = uint8(switches);
+        node_data[_node].switches = uint8(switches);
         //^^^^^^^effects^^^^^^^^^
     }
 
@@ -280,7 +280,7 @@ contract NODE_MGR is BASIC {
 
     /**
      * @dev Mints asset class token and creates an assetClass.
-     * @param _assetClass - assetClass to be created (unique)
+     * @param _node - assetClass to be created (unique)
      * @param _name - name to be configured to assetClass (unique)
      * @param _assetClassRoot - root of assetClass
      * @param _custodyType - custodyType of new assetClass (see docs)
@@ -292,7 +292,7 @@ contract NODE_MGR is BASIC {
      * @param _recipientAddress - address to recieve assetClass
      */
     function createAssetClass(
-        uint32 _assetClass,
+        uint32 _node,
         string calldata _name,
         uint32 _assetClassRoot,
         uint8 _custodyType,
@@ -315,7 +315,7 @@ contract NODE_MGR is BASIC {
         _AC.CAS1 = _CAS1;
         _AC.CAS2 = _CAS2;
 
-        _createAssetClass(_AC, _assetClass, _recipientAddress);
+        _createAssetClass(_AC, _node, _recipientAddress);
         //^^^^^^^effects^^^^^^^^^
     }
 
@@ -382,18 +382,18 @@ contract NODE_MGR is BASIC {
     /**
      * @dev Authorize / Deauthorize users for an address be permitted to make record modifications
      * @dev only useful for custody types that designate user adresses (type1...)
-     * @param _assetClass - assetClass that user is being authorized in
+     * @param _node - assetClass that user is being authorized in
      * @param _addrHash - hash of address belonging to user being authorized
      * @param _userType - authority level for user (see docs)
      */
     function addUser(
-        uint32 _assetClass,
+        uint32 _node,
         bytes32 _addrHash,
         uint8 _userType
-    ) external whenNotPaused isACtokenHolderOfClass(_assetClass) {
+    ) external whenNotPaused isACtokenHolderOfClass(_node) {
         //^^^^^^^checks^^^^^^^^^
 
-        registeredUsers[_addrHash][_assetClass] = _userType;
+        registeredUsers[_addrHash][_node] = _userType;
 
         if ((_userType != 0) && (registeredUsers[_addrHash][0] < 255)) {
             registeredUsers[_addrHash][0]++;
@@ -409,67 +409,67 @@ contract NODE_MGR is BASIC {
 
     /**
      * @dev Modifies an node Node name for its exclusive namespace
-     * @param _assetClass - assetClass being modified
+     * @param _node - assetClass being modified
      * @param _name - updated name associated with assetClass (unique)
      */
-    function updateACname(uint32 _assetClass, string calldata _name)
+    function updateACname(uint32 _node, string calldata _name)
         external
         whenNotPaused
-        isACtokenHolderOfClass(_assetClass)
+        isACtokenHolderOfClass(_node)
     {
         require( //should pass if name is same as old name or name is unassigned. Should fail if name is assigned to other node
             (node_index[_name] == 0) || //name is unassigned
                 (keccak256(abi.encodePacked(_name)) == //name is same as old name
-                    (keccak256(abi.encodePacked(node_data[_assetClass].name)))),
+                    (keccak256(abi.encodePacked(node_data[_node].name)))),
             "ACM:UACN: Name already in use or is same as the previous"
         );
         //^^^^^^^checks^^^^^^^^^
 
-        delete node_index[node_data[_assetClass].name];
+        delete node_index[node_data[_node].name];
 
-        node_index[_name] = _assetClass;
-        node_data[_assetClass].name = _name;
+        node_index[_name] = _node;
+        node_data[_node].name = _name;
         //^^^^^^^effects^^^^^^^^^
     }
 
     /** CTS:EXAMINE Need 2 IPFS fields
      * @dev Modifies an node Node IPFS data pointer
-     * @param _assetClass - assetClass being modified
+     * @param _node - assetClass being modified
      * @param _CAS1 - any external data attatched to assetClass 1/2
      * @param _CAS2 - any external data attatched to assetClass 2/2
      */
     function updateNodeCAS(
-        uint32 _assetClass,
+        uint32 _node,
         bytes32 _CAS1,
         bytes32 _CAS2
-    ) external whenNotPaused isACtokenHolderOfClass(_assetClass) {
+    ) external whenNotPaused isACtokenHolderOfClass(_node) {
         require(
-            getSwitchAt(_assetClass, 1) == 0,
+            getSwitchAt(_node, 1) == 0,
             "ACM:UNC: CAS for node is locked and cannot be written"
         );
         //^^^^^^^checks^^^^^^^^^
-        node_data[_assetClass].CAS1 = _CAS1;
-        node_data[_assetClass].CAS2 = _CAS2;
+        node_data[_node].CAS1 = _CAS1;
+        node_data[_node].CAS2 = _CAS2;
         //^^^^^^^effects^^^^^^^^^
     }
 
     /**
      * @dev Set function costs and payment address per asset class, in PRUF(18 decimals)
-     * @param _assetClass - assetClass to set service costs
+     * @param _node - assetClass to set service costs
      * @param _service - service type being modified (see service types in ZZ_PRUF_DOCS)
      * @param _serviceCost - 18 decimal fee in PRUF associated with specified service
      * @param _paymentAddress - address to have _serviceCost paid to
      */
     function ACTH_setCosts(
-        uint32 _assetClass,
+        uint32 _node,
         uint16 _service,
         uint256 _serviceCost,
         address _paymentAddress
-    ) external whenNotPaused isACtokenHolderOfClass(_assetClass) {
+    ) external whenNotPaused isACtokenHolderOfClass(_node) {
         //^^^^^^^checks^^^^^^^^^
 
-        cost[_assetClass][_service].serviceCost = _serviceCost;
-        cost[_assetClass][_service].paymentAddress = _paymentAddress;
+        cost[_node][_service].serviceCost = _serviceCost;
+        cost[_node][_service].paymentAddress = _paymentAddress;
         //^^^^^^^effects^^^^^^^^^
     }
 
@@ -477,19 +477,19 @@ contract NODE_MGR is BASIC {
 
     /**
      * @dev Configure the immutable data in an asset class one time
-     * @param _assetClass - assetClass being modified
+     * @param _node - assetClass being modified
      * @param _managementType - managementType of assetClass (see docs)
      * @param _storageProvider - storageProvider of assetClass (see docs)
      * @param _refAddress - address permanently tied to assetClass
      */
     function updateACImmutable(
-        uint32 _assetClass,
+        uint32 _node,
         uint8 _managementType,
         uint8 _storageProvider,
         address _refAddress
-    ) external whenNotPaused isACtokenHolderOfClass(_assetClass) {
+    ) external whenNotPaused isACtokenHolderOfClass(_node) {
         require(
-            node_data[_assetClass].managementType == 255,
+            node_data[_node].managementType == 255,
             "ACM:UACI: Immutable node data already set"
         );
         require(
@@ -506,9 +506,9 @@ contract NODE_MGR is BASIC {
         );
         //^^^^^^^checks^^^^^^^^^
 
-        node_data[_assetClass].managementType = _managementType;
-        node_data[_assetClass].storageProvider = _storageProvider;
-        node_data[_assetClass].referenceAddress = _refAddress;
+        node_data[_node].managementType = _managementType;
+        node_data[_node].storageProvider = _storageProvider;
+        node_data[_node].referenceAddress = _refAddress;
         //^^^^^^^effects^^^^^^^^^
     }
 
@@ -516,12 +516,12 @@ contract NODE_MGR is BASIC {
 
     /**
      * @dev get bit from .switches at specified position
-     * @param _assetClass - assetClass associated with query
+     * @param _node - assetClass associated with query
      * @param _position - bit position associated with query
      *
      * @return 1 or 0 (enabled or disabled)
      */
-    function getSwitchAt(uint32 _assetClass, uint8 _position)
+    function getSwitchAt(uint32 _node, uint8 _position)
         public
         view
         returns (uint256)
@@ -532,7 +532,7 @@ contract NODE_MGR is BASIC {
         );
         //^^^^^^^checks^^^^^^^^^
 
-        if ((node_data[_assetClass].switches & (1 << (_position - 1))) > 0) {
+        if ((node_data[_node].switches & (1 << (_position - 1))) > 0) {
             return 1;
         } else {
             return 0;
@@ -543,17 +543,17 @@ contract NODE_MGR is BASIC {
     /**
      * @dev get an node Node User type for a specified address
      * @param _userHash - hash of selected user
-     * @param _assetClass - assetClass of query
+     * @param _node - assetClass of query
      *
-     * @return type of user @ _assetClass (see docs)
+     * @return type of user @ _node (see docs)
      */
-    function getUserType(bytes32 _userHash, uint32 _assetClass)
+    function getUserType(bytes32 _userHash, uint32 _node)
         external
         view
         returns (uint8)
     {
         //^^^^^^^checks^^^^^^^^^
-        return (registeredUsers[_userHash][_assetClass]);
+        return (registeredUsers[_userHash][_node]);
         //^^^^^^^effects^^^^^^^^^
     }
 
@@ -606,11 +606,11 @@ contract NODE_MGR is BASIC {
     }
 
     /**
-     * @dev Retrieve node_data @ _assetClass
-     * @param _assetClass - assetClass associated with query
+     * @dev Retrieve node_data @ _node
+     * @param _node - assetClass associated with query
      * DPS:THIS FUNCTION REMAINS FOR EXTERNAL TESTING ACCESS. try using getExtAcData, it should be depricated prior to production.
      */
-    function getAC_data(uint32 _assetClass)
+    function getAC_data(uint32 _node)
         external
         view
         returns (
@@ -623,28 +623,28 @@ contract NODE_MGR is BASIC {
     {
         //^^^^^^^checks^^^^^^^^^
         return (
-            node_data[_assetClass].assetClassRoot,
-            node_data[_assetClass].custodyType,
-            node_data[_assetClass].managementType,
-            node_data[_assetClass].discount,
-            node_data[_assetClass].referenceAddress
+            node_data[_node].assetClassRoot,
+            node_data[_node].custodyType,
+            node_data[_node].managementType,
+            node_data[_node].discount,
+            node_data[_node].referenceAddress
         );
         //^^^^^^^interactions^^^^^^^^^
     }
 
     /**
-     * @dev Retrieve extended node_data @ _assetClass
-     * @param _assetClass - assetClass associated with query
+     * @dev Retrieve extended node_data @ _node
+     * @param _node - assetClass associated with query
      *
      * @return node_data (see docs)
      */
-    function getExtAC_data(uint32 _assetClass)
+    function getExtAC_data(uint32 _node)
         external
         view
         returns (Node memory)
     {
         //^^^^^^^checks^^^^^^^^^
-        return (node_data[_assetClass]);
+        return (node_data[_node]);
         //^^^^^^^effects^^^^^^^^^
     }
 
@@ -723,30 +723,30 @@ contract NODE_MGR is BASIC {
 
     /**
      * @dev Retrieve function costs per asset class, per service type in PRUF(18 decimals)
-     * @param _assetClass - assetClass associated with query
+     * @param _node - assetClass associated with query
      * @param _service - service number associated with query (see service types in ZZ_PRUF_DOCS)
      *
      * @return invoice{
-         rootAddress: @ _assetClass root payment address @ _service
-         rootPrice: @ _assetClass root service cost @ _service
-         ACTHaddress: @ _assetClass payment address tied @ _service
-         ACTHprice: @ _assetClass service cost @ _service
-         assetClass: _assetClass
+         rootAddress: @ _node root payment address @ _service
+         rootPrice: @ _node root service cost @ _service
+         ACTHaddress: @ _node payment address tied @ _service
+         ACTHprice: @ _node service cost @ _service
+         assetClass: _node
      }
      */
-    function getServiceCosts(uint32 _assetClass, uint16 _service)
+    function getServiceCosts(uint32 _node, uint16 _service)
         external
         view
         returns (Invoice memory)
     {
-        Node memory node_info = node_data[_assetClass];
+        Node memory node_info = node_data[_node];
         require(node_info.assetClassRoot != 0, "ACM:GSC: node !exist");
 
         require(_service != 0, "ACM:GSC: Service type = 0");
         //^^^^^^^checks^^^^^^^^^
         uint32 rootAssetClass = node_info.assetClassRoot;
 
-        Costs memory costs = cost[_assetClass][_service];
+        Costs memory costs = cost[_node][_service];
         Costs memory rootCosts = cost[rootAssetClass][_service];
         Invoice memory invoice;
 
@@ -754,21 +754,21 @@ contract NODE_MGR is BASIC {
         invoice.rootPrice = rootCosts.serviceCost;
         invoice.ACTHaddress = costs.paymentAddress;
         invoice.ACTHprice = costs.serviceCost;
-        invoice.assetClass = _assetClass;
+        invoice.assetClass = _node;
 
         return invoice;
         //^^^^^^^effects^^^^^^^^^
     }
 
     /**
-     * @dev Retrieve AC_discount @ _assetClass
-     * @param _assetClass - assetClass associated with query
+     * @dev Retrieve AC_discount @ _node
+     * @param _node - assetClass associated with query
      *
-     * @return percentage of rewards distribution @ _assetClass
+     * @return percentage of rewards distribution @ _node
      */
-    function getAC_discount(uint32 _assetClass) external view returns (uint32) {
+    function getAC_discount(uint32 _node) external view returns (uint32) {
         //^^^^^^^checks^^^^^^^^^
-        return (node_data[_assetClass].discount);
+        return (node_data[_node].discount);
         //^^^^^^^interactions^^^^^^^^^
     }
 
@@ -777,16 +777,16 @@ contract NODE_MGR is BASIC {
     /**
      * @dev creates an node and its corresponding namespace and data fields
      * @param _AC - creation Data for new Node
-     * @param _assetClass - Node to be created (unique)
+     * @param _node - Node to be created (unique)
      * @param _recipientAddress - address to recieve Node
      */
     function _createAssetClass(
         Node memory _AC,
-        uint32 _assetClass,
+        uint32 _node,
         address _recipientAddress
     ) private whenNotPaused {
         Node memory _RootNodeData = node_data[_AC.assetClassRoot];
-        uint256 tokenId = uint256(_assetClass);
+        uint256 tokenId = uint256(_node);
 
         require(tokenId != 0, "ACM:CAC: node = 0"); //sanity check inputs
         require(_AC.discount <= 10000, "ACM:CAC: Discount > 10000 (100%)");
@@ -807,7 +807,7 @@ contract NODE_MGR is BASIC {
         );
         require( //has valid root
             (_RootNodeData.custodyType == 3) ||
-                (_AC.assetClassRoot == _assetClass),
+                (_AC.assetClassRoot == _node),
             "ACM:CAC: Root !exist"
         );
         if (_RootNodeData.managementType != 0) {
@@ -818,20 +818,20 @@ contract NODE_MGR is BASIC {
         }
         require(node_index[_AC.name] == 0, "ACM:CAC: node name exists");
         require(
-            (node_data[_assetClass].assetClassRoot == 0),
+            (node_data[_node].assetClassRoot == 0),
             "ACM:CAC: node already exists"
         );
         //^^^^^^^checks^^^^^^^^^
 
-        node_index[_AC.name] = _assetClass;
-        node_data[_assetClass].name = _AC.name;
-        node_data[_assetClass].assetClassRoot = _AC.assetClassRoot;
-        node_data[_assetClass].discount = _AC.discount;
-        node_data[_assetClass].custodyType = _AC.custodyType;
-        node_data[_assetClass].managementType = _AC.managementType;
-        node_data[_assetClass].switches = _RootNodeData.switches;
-        node_data[_assetClass].CAS1 = _AC.CAS1;
-        node_data[_assetClass].CAS2 = _AC.CAS2;
+        node_index[_AC.name] = _node;
+        node_data[_node].name = _AC.name;
+        node_data[_node].assetClassRoot = _AC.assetClassRoot;
+        node_data[_node].discount = _AC.discount;
+        node_data[_node].custodyType = _AC.custodyType;
+        node_data[_node].managementType = _AC.managementType;
+        node_data[_node].switches = _RootNodeData.switches;
+        node_data[_node].CAS1 = _AC.CAS1;
+        node_data[_node].CAS2 = _AC.CAS2;
         //^^^^^^^effects^^^^^^^^^
 
         NODE_TKN.mintACToken(

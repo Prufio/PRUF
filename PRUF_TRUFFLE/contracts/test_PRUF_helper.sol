@@ -197,26 +197,26 @@ contract Helper is Ownable, BASIC {
         return rawRgtHash;
     }
 
-    function getURIfromAuthcode(uint32 _assetClass, string calldata _authCode)
+    function getURIfromAuthcode(uint32 _node, string calldata _authCode)
         external
         pure
         returns (string memory)
     {
         bytes32 _hashedAuthCode = keccak256(abi.encodePacked(_authCode));
         bytes32 b32URI =
-            keccak256(abi.encodePacked(_hashedAuthCode, _assetClass));
+            keccak256(abi.encodePacked(_hashedAuthCode, _node));
         string memory authString = uint256toString(uint256(b32URI));
 
         return authString;
     }
 
     function getURIb32fromAuthcode(
-        uint32 _assetClass,
+        uint32 _node,
         string calldata _authCode
     ) external pure returns (bytes32) {
         bytes32 _hashedAuthCode = keccak256(abi.encodePacked(_authCode));
         bytes32 b32URI =
-            keccak256(abi.encodePacked(_hashedAuthCode, _assetClass));
+            keccak256(abi.encodePacked(_hashedAuthCode, _node));
 
         return b32URI;
     }
@@ -252,22 +252,22 @@ contract Helper is Ownable, BASIC {
     }
 
     /*
-     * @dev Retrieve node_data @ _assetClass
+     * @dev Retrieve node_data @ _node
      */
-    function helper_getExtAC_data(uint32 _assetClass)
+    function helper_getExtAC_data(uint32 _node)
         external
         view
         returns (Node memory)
     {
         //^^^^^^^checks^^^^^^^^^
-        return NODE_MGR.getExtAC_data(_assetClass);
+        return NODE_MGR.getExtAC_data(_node);
         //^^^^^^^interactions^^^^^^^^^
     }
 
 /*
-     * @dev Retrieve node_data @ _assetClass
+     * @dev Retrieve node_data @ _node
      */
-    function helper_getExtAC_data_nostruct(uint32 _assetClass)
+    function helper_getExtAC_data_nostruct(uint32 _node)
         external
         view
         returns (
@@ -278,7 +278,7 @@ contract Helper is Ownable, BASIC {
             bytes32
         )
     {
-        Node memory nodeData = NODE_MGR.getExtAC_data(_assetClass);
+        Node memory nodeData = NODE_MGR.getExtAC_data(_node);
 
         return (
             nodeData.storageProvider,
@@ -291,7 +291,7 @@ contract Helper is Ownable, BASIC {
     }
 
     function helper_payForService(
-        uint32 _assetClass,
+        uint32 _node,
         //address _senderAddress,
         address _rootAddress,
         uint256 _rootPrice,
@@ -304,7 +304,7 @@ contract Helper is Ownable, BASIC {
         invoice.rootPrice = _rootPrice;
         invoice.ACTHaddress = _ACTHaddress;
         invoice.ACTHprice = _ACTHprice;
-        invoice.assetClass = _assetClass;
+        invoice.assetClass = _node;
 
         //UTIL_TKN.payForService(_msgSender(), _pricing); //-- NON LEGACY TOKEN CONTRACT
 

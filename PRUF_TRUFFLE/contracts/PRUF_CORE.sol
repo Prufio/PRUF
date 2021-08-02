@@ -32,17 +32,17 @@ contract CORE is BASIC {
      * @dev create a Record in Storage @ idxHash (SETTER)
      * @param _idxHash - Asset Index
      * @param _rgtHash - Owner ID Hash
-     * @param _assetClass - asset class to create asset in
+     * @param _node - asset class to create asset in
      * @param _countDownStart - initial value for decrement only register
      */
     function createRecord(
         bytes32 _idxHash,
         bytes32 _rgtHash,
-        uint32 _assetClass,
+        uint32 _node,
         uint32 _countDownStart
     ) internal virtual {
         uint256 tokenId = uint256(_idxHash);
-        Node memory node_info = getACinfo(_assetClass);
+        Node memory node_info = getACinfo(_node);
 
         require(
             A_TKN.tokenExists(tokenId) == 0,
@@ -63,14 +63,14 @@ contract CORE is BASIC {
                 (node_info.managementType == 5)
             ) {
                 require(
-                    (NODE_TKN.ownerOf(_assetClass) == _msgSender()),
+                    (NODE_TKN.ownerOf(_node) == _msgSender()),
                     "C:CR:Cannot create asset in node mgmt type 1||2||5 - caller does not hold node token"
                 );
             } else if (node_info.managementType == 3) {
                 require(
                     NODE_MGR.getUserType(
                         keccak256(abi.encodePacked(_msgSender())),
-                        _assetClass
+                        _node
                     ) == 1,
                     "C:CR:Cannot create asset - caller not authorized"
                 );
@@ -97,7 +97,7 @@ contract CORE is BASIC {
             A_TKN.mintAssetToken(_msgSender(), tokenId, "");
         }
 
-        STOR.newRecord(_idxHash, _rgtHash, _assetClass, _countDownStart);
+        STOR.newRecord(_idxHash, _rgtHash, _node, _countDownStart);
         //^^^^^^^interactions^^^^^^^^^
     }
 
@@ -173,22 +173,22 @@ contract CORE is BASIC {
 
     /**
      * @dev Send payment to appropriate adresseses for payable function
-     * @param _assetClass - selected asset class for payment
+     * @param _node - selected asset class for payment
      * @param _service - selected service for payment
      */
-    function deductServiceCosts(uint32 _assetClass, uint16 _service)
+    function deductServiceCosts(uint32 _node, uint16 _service)
         internal
         virtual
         whenNotPaused
     {
-        uint256 ACTHnetPercent = uint256(NODE_MGR.getAC_discount(_assetClass)) /
+        uint256 ACTHnetPercent = uint256(NODE_MGR.getAC_discount(_node)) /
             uint256(100);
         require( //IMPOSSIBLE TO REACH unless stuff is really broken, still ensures sanity
             (ACTHnetPercent >= 0) && (ACTHnetPercent <= 100),
             "C:DSC:invalid discount value for price calculation"
         );
         //^^^^^^^checks^^^^^^^^^
-        Invoice memory pricing = NODE_MGR.getServiceCosts(_assetClass, _service);
+        Invoice memory pricing = NODE_MGR.getServiceCosts(_node, _service);
 
         uint256 percent = pricing.ACTHprice / uint256(100); //calculate 1% of listed ACTH price
         uint256 _ACTHprice = ACTHnetPercent * percent; //calculate the share proprotrion% * 1%
@@ -204,10 +204,10 @@ contract CORE is BASIC {
 
     /**
      * @dev Send payment to appropriate adresses for recycle operation
-     * @param _assetClass - selected asset class for payment
+     * @param _node - selected asset class for payment
      * @param _prevOwner - adddress to pay recycle bonus to
      */
-    function deductRecycleCosts(uint32 _assetClass, address _prevOwner)
+    function deductRecycleCosts(uint32 _node, address _prevOwner)
         internal
         virtual
         whenNotPaused
@@ -217,7 +217,7 @@ contract CORE is BASIC {
         Invoice memory pricing;
         uint256 half;
 
-        pricing = NODE_MGR.getServiceCosts(_assetClass, 1);
+        pricing = NODE_MGR.getServiceCosts(_node, 1);
         pricing.rootAddress = _prevOwner;
 
         half = pricing.ACTHprice / 2;

@@ -42,18 +42,18 @@ contract MAL_APP is CORE_MAL {
         function newRecord(
         bytes32 _idxHash,
         bytes32 _rgtHash,
-        uint32 _assetClass,
+        uint32 _node,
         uint32 _countDownStart
     ) external 
     // nonReentrant whenNotPaused 
     {
         // Record memory rec = getRecord(_idxHash);
-        // uint8 userType = getCallingUserType(_assetClass);
-        // Node memory node_info = getACinfo(_assetClass);
+        // uint8 userType = getCallingUserType(_node);
+        // Node memory node_info = getACinfo(_node);
         // Node memory oldAC_info = getACinfo(rec.assetClass);
         // ContractDataHash memory contractInfo = getContractInfo(
         //     address(this),
-        //     _assetClass
+        //     _node
         // );
 
         // require(
@@ -72,11 +72,11 @@ contract MAL_APP is CORE_MAL {
         //^^^^^^^effects^^^^^^^^^
 
         // if (node_info.assetClassRoot == oldAC_info.assetClassRoot) {
-            // createRecord(_idxHash, _rgtHash, _assetClass, rec.countDownStart);
+            // createRecord(_idxHash, _rgtHash, _node, rec.countDownStart);
         // } else {
-            createRecord(_idxHash, _rgtHash, _assetClass, _countDownStart);
+            createRecord(_idxHash, _rgtHash, _node, _countDownStart);
         // }
-        deductServiceCosts(_assetClass, 1);
+        deductServiceCosts(_node, 1);
 
         //^^^^^^^interactions^^^^^^^^^
     }

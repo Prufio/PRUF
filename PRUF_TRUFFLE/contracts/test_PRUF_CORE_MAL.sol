@@ -29,7 +29,7 @@ contract CORE_MAL is BASIC {
     // /*
     //  * @dev retrieves costs from Storage and returns Costs struct
     //  */
-    // function getCost(uint32 _assetClass, ) internal returns (Costs memory) {
+    // function getCost(uint32 _node, ) internal returns (Costs memory) {
     //     //^^^^^^^checks^^^^^^^^^
 
     //     Costs memory cost;
@@ -37,7 +37,7 @@ contract CORE_MAL is BASIC {
     //     (
     //         cost.serviceCost,
     //         cost.paymentAddress
-    //     ) = NODE_MGR.retrieveCosts(_assetClass);
+    //     ) = NODE_MGR.retrieveCosts(_node);
 
     //     return (cost);
     //     //^^^^^^^interactions^^^^^^^^^
@@ -51,11 +51,11 @@ contract CORE_MAL is BASIC {
     function createRecord(
         bytes32 _idxHash,
         bytes32 _rgtHash,
-        uint32 _assetClass,
+        uint32 _node,
         uint32 _countDownStart
     ) internal virtual {
         uint256 tokenId = uint256(_idxHash);
-        Node memory node_info = getACinfo(_assetClass);
+        Node memory node_info = getACinfo(_node);
 
         require(
             A_TKN.tokenExists(tokenId) == 0,
@@ -82,7 +82,7 @@ contract CORE_MAL is BASIC {
             A_TKN.mintAssetToken(_msgSender(), tokenId, "pruf.io");
         }
 
-        STOR.newRecord(_idxHash, _rgtHash, _assetClass, _countDownStart);
+        STOR.newRecord(_idxHash, _rgtHash, _node, _countDownStart);
     }
 
     /*
@@ -136,14 +136,14 @@ contract CORE_MAL is BASIC {
     /*
      * @dev Send payment to appropriate pullPayment adresses for payable function
      */
-    function deductServiceCosts(uint32 _assetClass, uint16 _service)
+    function deductServiceCosts(uint32 _node, uint16 _service)
         internal
         whenNotPaused
     {
         //^^^^^^^checks^^^^^^^^^
         Invoice memory pricing;
         //^^^^^^^effects^^^^^^^^^
-        pricing = NODE_MGR.getServiceCosts(_assetClass, _service);
+        pricing = NODE_MGR.getServiceCosts(_node, _service);
         deductPayment(pricing);
         //^^^^^^^interactions^^^^^^^^^
     }

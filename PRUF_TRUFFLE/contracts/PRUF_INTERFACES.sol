@@ -757,7 +757,7 @@ interface A_TKN_Interface {
     //  */
     // function validatePipToken(
     //     uint256 tokenId,
-    //     uint32 _assetClass,
+    //     uint32 _node,
     //     string calldata _authCode
     // ) external view;
 
@@ -1082,7 +1082,7 @@ interface NODE_MGR_Interface {
      *--------DPS TEST ---- NEW args, order
      */
     function AdminModAssetClass(
-        uint32 _assetClass,
+        uint32 _node,
         uint32 _assetClassRoot,
         uint8 _custodyType,
         uint8 _managementType,
@@ -1103,7 +1103,7 @@ interface NODE_MGR_Interface {
      *  _discount 10000 = 100 percent price share , cannot exceed
      */
     function createAssetClass(
-        uint32 _assetClass,
+        uint32 _node,
         string calldata _name,
         uint32 _assetClassRoot,
         uint8 _custodyType,
@@ -1133,7 +1133,7 @@ interface NODE_MGR_Interface {
      * @dev Authorize / Deauthorize / Authorize users for an address be permitted to make record modifications
      */
     function addUser(
-        uint32 _assetClass,
+        uint32 _node,
         bytes32 _addrHash,
         uint8 _userType
     ) external;
@@ -1145,7 +1145,7 @@ interface NODE_MGR_Interface {
      *  caller holds ACtoken
      *  name is unuiqe or same as old name
      */
-    function updateACname(uint32 _assetClass, string calldata _name) external;
+    function updateACname(uint32 _node, string calldata _name) external;
 
     /*
      * @dev Modifies an assetClass
@@ -1154,7 +1154,7 @@ interface NODE_MGR_Interface {
      *  caller holds ACtoken
      */
     function updateNodeCAS(
-        uint32 _assetClass,
+        uint32 _node,
         bytes32 _CAS1,
         bytes32 _CAS2
     ) external;
@@ -1163,7 +1163,7 @@ interface NODE_MGR_Interface {
      * @dev Set function costs and payment address per asset class, in Wei
      */
     function ACTH_setCosts(
-        uint32 _assetClass,
+        uint32 _node,
         uint16 _service,
         uint256 _serviceCost,
         address _paymentAddress
@@ -1177,7 +1177,7 @@ interface NODE_MGR_Interface {
      * node is managementType 255 (unconfigured)
      */
     function updateACImmutable(
-        uint32 _assetClass,
+        uint32 _node,
         uint8 _managementType,
         uint8 _storageProvider,
         address _refAddress
@@ -1187,19 +1187,19 @@ interface NODE_MGR_Interface {
 
     /**
      * @dev get bit from .switches at specified position
-     * @param _assetClass - assetClass associated with query
+     * @param _node - assetClass associated with query
      * @param _position - bit position associated with query
      *
      * @return 1 or 0 (enabled or disabled)
      */
-    function getSwitchAt(uint32 _assetClass, uint8 _position)
+    function getSwitchAt(uint32 _node, uint8 _position)
         external
         returns (uint256);
 
     /*
      * @dev get a User Record
      */
-    function getUserType(bytes32 _userHash, uint32 _assetClass)
+    function getUserType(bytes32 _userHash, uint32 _node)
         external
         view
         returns (uint8);
@@ -1229,9 +1229,9 @@ interface NODE_MGR_Interface {
         returns (uint8);
 
     // /*
-    //  * @dev Retrieve node_data @ _assetClass
+    //  * @dev Retrieve node_data @ _node
     //  */
-    // function getAC_data(uint32 _assetClass)
+    // function getAC_data(uint32 _node)
     //     external
     //     returns (
     //         uint32,
@@ -1242,9 +1242,9 @@ interface NODE_MGR_Interface {
     //     );
 
     /* CAN'T RETURN A STRUCT WITH A STRING WITHOUT WIERDNESS-0.8.1
-     * @dev Retrieve node_data @ _assetClass
+     * @dev Retrieve node_data @ _node
      */
-    function getExtAC_data(uint32 _assetClass)
+    function getExtAC_data(uint32 _node)
         external
         view
         returns (Node memory);
@@ -1278,15 +1278,15 @@ interface NODE_MGR_Interface {
     /*
      * @dev Retrieve function costs per asset class, per service type, in Wei
      */
-    function getServiceCosts(uint32 _assetClass, uint16 _service)
+    function getServiceCosts(uint32 _node, uint16 _service)
         external
         view
         returns (Invoice memory);
 
     /*
-     * @dev Retrieve AC_discount @ _assetClass, in percent ACTH share, * 100 (9000 = 90%)
+     * @dev Retrieve AC_discount @ _node, in percent ACTH share, * 100 (9000 = 90%)
      */
-    function getAC_discount(uint32 _assetClass) external view returns (uint32);
+    function getAC_discount(uint32 _node) external view returns (uint32);
 }
 
 //------------------------------------------------------------------------------------------------
@@ -1316,14 +1316,14 @@ interface STOR_Interface {
     function OO_addContract(
         string calldata _name,
         address _addr,
-        uint32 _assetClass,
+        uint32 _node,
         uint8 _contractAuthLevel
     ) external;
 
     /*
      * @dev ASet the default 11 authorized contracts
      */
-    function enableDefaultContractsForAC(uint32 _assetClass) external;
+    function enableDefaultContractsForAC(uint32 _node) external;
 
     /*
      * @dev Authorize / Deauthorize / Authorize contract NAMES permitted to make record modifications, per AssetClass
@@ -1331,7 +1331,7 @@ interface STOR_Interface {
      */
     function enableContractForAC(
         string calldata _name,
-        uint32 _assetClass,
+        uint32 _node,
         uint8 _contractAuthLevel
     ) external;
 
@@ -1341,7 +1341,7 @@ interface STOR_Interface {
     function newRecord(
         bytes32 _idxHash,
         bytes32 _rgtHash,
-        uint32 _assetClass,
+        uint32 _node,
         uint32 _countDownStart
     ) external;
 
@@ -1483,7 +1483,7 @@ interface STOR_Interface {
     /*
      * @dev //returns the contract type of a contract with address _addr.
      */
-    function ContractInfoHash(address _addr, uint32 _assetClass)
+    function ContractInfoHash(address _addr, uint32 _node)
         external
         view
         returns (uint8, bytes32);

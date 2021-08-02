@@ -74,17 +74,17 @@ contract RCLR is ECR_CORE, CORE {
     function recycle(
         bytes32 _idxHash,
         bytes32 _rgtHash,
-        uint32 _assetClass
+        uint32 _node
     ) external nonReentrant whenNotPaused {
         uint256 tokenId = uint256(_idxHash);
         escrowDataExtLight memory escrowDataLight =
             getEscrowDataLight(_idxHash);
         Record memory rec = getRecord(_idxHash);
-        Node memory node_info = getACinfo(_assetClass);
+        Node memory node_info = getACinfo(_node);
         require(_rgtHash != 0, "R:R: New rights holder = zero");
         require(rec.assetStatus == 60, "R:R: Asset not discarded");
         require(
-            NODE_MGR.isSameRootAC(_assetClass, rec.assetClass) == 170,
+            NODE_MGR.isSameRootAC(_node, rec.assetClass) == 170,
             "R:R: !Change node to new root"
         );
         require(
@@ -97,14 +97,14 @@ contract RCLR is ECR_CORE, CORE {
             (node_info.managementType == 5)
         ) {
             require(
-                (NODE_TKN.ownerOf(_assetClass) == _msgSender()),
+                (NODE_TKN.ownerOf(_node) == _msgSender()),
                 "R:R: Cannot create asset in node mgmt type 1||2||5 - caller does not hold node token"
             );
         } else if (node_info.managementType == 3) {
             require(
                 NODE_MGR.getUserType(
                     keccak256(abi.encodePacked(_msgSender())),
-                    _assetClass
+                    _node
                 ) == 1,
                 "R:R: Cannot create asset - caller address !authorized"
             );
@@ -122,8 +122,8 @@ contract RCLR is ECR_CORE, CORE {
 
         A_TKN.mintAssetToken(_msgSender(), tokenId, "pruf.io"); //FIX TO MAKE REAL ASSET URL DPS / CTS
         ECR_MGR.endEscrow(_idxHash);
-        STOR.changeAC(_idxHash, _assetClass);
-        deductRecycleCosts(_assetClass, escrowDataLight.addr_1);
+        STOR.changeAC(_idxHash, _node);
+        deductRecycleCosts(_node, escrowDataLight.addr_1);
         rec.assetStatus = 58;
         writeRecord(_idxHash, rec);
         //^^^^^^^interactions^^^^^^^^^^^^

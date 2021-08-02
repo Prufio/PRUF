@@ -42,14 +42,14 @@ contract PIP is CORE {
     function mintPipAsset(
         bytes32 _idxHash,
         bytes32 _hashedAuthCode, // token URI needs to be K256(packed( uint32 assetClass, string authCode)) supplied off chain
-        uint32 _assetClass
+        uint32 _node
     ) external nonReentrant whenNotPaused {
         uint256 tokenId = uint256(_idxHash);
         Record memory rec = getRecord(_idxHash);
-        uint8 userType = getCallingUserType(_assetClass);
+        uint8 userType = getCallingUserType(_node);
 
         require(
-            (NODE_TKN.ownerOf(_assetClass) == _msgSender()), //_msgSender() is node token holder
+            (NODE_TKN.ownerOf(_node) == _msgSender()), //_msgSender() is node token holder
             "P:MPA: Caller does not hold node token"
         );
         require(userType == 10, "P:MPA: User not authorized to mint PIP assets");
@@ -61,7 +61,7 @@ contract PIP is CORE {
 
         string memory tokenURI;
         bytes32 b32URI =
-            keccak256(abi.encodePacked(_hashedAuthCode, _assetClass));
+            keccak256(abi.encodePacked(_hashedAuthCode, _node));
         tokenURI = uint256toString(uint256(b32URI));
         //^^^^^^^effects^^^^^^^^^^^^
 
@@ -126,13 +126,13 @@ contract PIP is CORE {
         return string(buffer);
     }
 
-    function deductImportRecordCosts(uint32 _assetClass)
+    function deductImportRecordCosts(uint32 _node)
         internal
         whenNotPaused
     {
         //^^^^^^^checks^^^^^^^^^
 
-        Invoice memory pricing = NODE_MGR.getServiceCosts(_assetClass, 1);
+        Invoice memory pricing = NODE_MGR.getServiceCosts(_node, 1);
 
         pricing.rootPrice = pricing.rootPrice / importDiscount;
         pricing.ACTHprice = pricing.ACTHprice / importDiscount;

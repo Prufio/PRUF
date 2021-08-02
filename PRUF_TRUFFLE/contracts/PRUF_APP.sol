@@ -42,23 +42,23 @@ contract APP is CORE {
      * @dev Creates a new record  DPS:CHECK no longer sets rec.countDownStart
      * @param _idxHash - hash of asset information created by frontend inputs
      * @param _rgtHash - hash of rightsholder information created by frontend inputs
-     * @param _assetClass - assetClass the asset will be created in
+     * @param _node - assetClass the asset will be created in
      * @param _countDownStart - decremental counter for an assets lifecycle
      */
     function newRecord(
         bytes32 _idxHash,
         bytes32 _rgtHash,
-        uint32 _assetClass,
+        uint32 _node,
         uint32 _countDownStart
     ) external nonReentrant whenNotPaused {
-        uint8 userType = getCallingUserType(_assetClass);
+        uint8 userType = getCallingUserType(_node);
 
         require((userType > 0) && (userType < 10), "A:NR: User !auth in node");
         require(userType < 5, "A:NR: User !authorized to create records");
         //^^^^^^^checks^^^^^^^^^
 
-        createRecord(_idxHash, _rgtHash, _assetClass, _countDownStart);
-        deductServiceCosts(_assetClass, 1);
+        createRecord(_idxHash, _rgtHash, _node, _countDownStart);
+        deductServiceCosts(_node, 1);
         //^^^^^^^interactions^^^^^^^^^
     }
 

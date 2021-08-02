@@ -54,7 +54,7 @@ contract WRAP is CORE {
      * @param _foreignTokenID tokenID of token to wrap
      * @param _foreignTokenContract contract address for token to wrap
      * @param _rgtHash - hash of rightsholder information created by frontend inputs
-     * @param _assetClass - assetClass the asset will be created in
+     * @param _node - assetClass the asset will be created in
      * @param _countDownStart - decremental counter for an assets lifecycle
      * Prerequisite: contract authorized for token txfr
      * Takes original 721
@@ -68,7 +68,7 @@ contract WRAP is CORE {
         uint256 _foreignTokenID,
         address _foreignTokenContract,
         bytes32 _rgtHash,
-        uint32 _assetClass,
+        uint32 _node,
         uint32 _countDownStart
     ) ///DPS:TEST
         external
@@ -80,7 +80,7 @@ contract WRAP is CORE {
             keccak256(abi.encodePacked(_foreignTokenID, _foreignTokenContract));
 
         Record memory rec = getRecord(idxHash);
-        Node memory node_info = getACinfo(_assetClass);
+        Node memory node_info = getACinfo(_node);
 
         uint256 newTokenId = uint256(idxHash);
 
@@ -103,14 +103,14 @@ contract WRAP is CORE {
             (node_info.managementType == 5)
         ) {
             require(    //DPS:TEST NEW
-                (NODE_TKN.ownerOf(_assetClass) == _msgSender()),
+                (NODE_TKN.ownerOf(_node) == _msgSender()),
                 "ANC:IA: Cannot create asset in node mgmt type 1||2||5 - caller does not hold node token"
             );
         } else if (node_info.managementType == 3) {
             require(    //DPS:TEST NEW
                 NODE_MGR.getUserType(
                     keccak256(abi.encodePacked(_msgSender())),
-                    _assetClass
+                    _node
                 ) == 1,
                 "ANC:IA: Cannot create asset - caller address !authorized"
             );
@@ -135,12 +135,12 @@ contract WRAP is CORE {
 
         if (rec.assetClass == 0) {
             //record does not exist
-            createRecord(idxHash, _rgtHash, _assetClass, _countDownStart);
+            createRecord(idxHash, _rgtHash, _node, _countDownStart);
         } else {
             //just mint the token, record already exists
             A_TKN.mintAssetToken(_msgSender(), newTokenId, "pruf.io");
         }
-        deductServiceCosts(_assetClass, 1);
+        deductServiceCosts(_node, 1);
         //^^^^^^^interactions^^^^^^^^^
     }
 
@@ -205,7 +205,7 @@ contract WRAP is CORE {
      * @dev create a Record in Storage @ idxHash (SETTER)
      * @param _idxHash Asset ID
      * @param _rgtHash Hash or user data
-     * @param _assetClass Node ID
+     * @param _node Node ID
      * @param _countDownStart Initial counter value
      * Asset token already exists
      * depending on custody type/management type, caller ID token or address myst be authorized
@@ -213,11 +213,11 @@ contract WRAP is CORE {
     function createRecord(
         bytes32 _idxHash,
         bytes32 _rgtHash,
-        uint32 _assetClass,
+        uint32 _node,
         uint32 _countDownStart
     ) internal override {
         uint256 tokenId = uint256(_idxHash);
-        Node memory node_info = getACinfo(_assetClass);
+        Node memory node_info = getACinfo(_node);
 
         require(
             A_TKN.tokenExists(tokenId) == 0,
@@ -237,14 +237,14 @@ contract WRAP is CORE {
             (node_info.managementType == 5)
         ) {
             require(
-                (NODE_TKN.ownerOf(_assetClass) == _msgSender()),
+                (NODE_TKN.ownerOf(_node) == _msgSender()),
                 "W:CR: Cannot create asset in node mgmt type 1||2||5 - caller does not hold node token"
             );
         } else if (node_info.managementType == 3) {
             require(
                 NODE_MGR.getUserType(
                     keccak256(abi.encodePacked(_msgSender())),
-                    _assetClass
+                    _node
                 ) == 1,
                 "W:CR:Cannot create asset - caller address not authorized"
             );
@@ -257,7 +257,7 @@ contract WRAP is CORE {
         //^^^^^^^checks^^^^^^^^^
 
         A_TKN.mintAssetToken(_msgSender(), tokenId, "pruf.io"); //CTS:EXAMINE better URI
-        STOR.newRecord(_idxHash, _rgtHash, _assetClass, _countDownStart);
+        STOR.newRecord(_idxHash, _rgtHash, _node, _countDownStart);
         //^^^^^^^interactions^^^^^^^^^
     }
 }
