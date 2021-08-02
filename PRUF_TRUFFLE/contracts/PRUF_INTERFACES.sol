@@ -1229,7 +1229,7 @@ interface NODE_MGR_Interface {
         returns (uint8);
 
     // /*
-    //  * @dev Retrieve AC_data @ _assetClass
+    //  * @dev Retrieve node_data @ _assetClass
     //  */
     // function getAC_data(uint32 _assetClass)
     //     external
@@ -1242,7 +1242,7 @@ interface NODE_MGR_Interface {
     //     );
 
     /* CAN'T RETURN A STRUCT WITH A STRING WITHOUT WIERDNESS-0.8.1
-     * @dev Retrieve AC_data @ _assetClass
+     * @dev Retrieve node_data @ _assetClass
      */
     function getExtAC_data(uint32 _assetClass)
         external

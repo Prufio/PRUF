@@ -252,7 +252,7 @@ contract Helper is Ownable, BASIC {
     }
 
     /*
-     * @dev Retrieve AC_data @ _assetClass
+     * @dev Retrieve node_data @ _assetClass
      */
     function helper_getExtAC_data(uint32 _assetClass)
         external
@@ -265,7 +265,7 @@ contract Helper is Ownable, BASIC {
     }
 
 /*
-     * @dev Retrieve AC_data @ _assetClass
+     * @dev Retrieve node_data @ _assetClass
      */
     function helper_getExtAC_data_nostruct(uint32 _assetClass)
         external

@@ -42,7 +42,7 @@ contract NODE_MGR is BASIC {
     uint256 public AC_Price = 200000 ether;
     uint32 private constant startingDiscount = 9500; // Purchased nodes start with 95% profit share
     mapping(uint32 => mapping(uint16 => Costs)) private cost; // Cost per function by asset class => Costs struct (see PRUF_INTERFACES for struct definitions)
-    mapping(uint32 => AC) private AC_data; // AC info database asset class to AC struct (see PRUF_INTERFACES for struct definitions)
+    mapping(uint32 => AC) private node_data; // AC info database asset class to AC struct (see PRUF_INTERFACES for struct definitions)
     mapping(string => uint32) private AC_number; //name to asset class resolution map
     mapping(bytes32 => mapping(uint32 => uint8)) private registeredUsers; // Authorized recorder database by asset class, by address hash
     mapping(uint8 => uint8) private storageProvidersEnabled; //storageProvider -> status (enabled or disabled)
@@ -107,17 +107,17 @@ contract NODE_MGR is BASIC {
         isContractAdmin
     {
         require(
-            (AC_data[_assetClass].assetClassRoot != 0),
+            (node_data[_assetClass].assetClassRoot != 0),
             "ACM:AIS: AC !exist"
         );
         require(
-            _newDiscount >= AC_data[_assetClass].discount,
+            _newDiscount >= node_data[_assetClass].discount,
             "ACM:AIS: New share < old share"
         );
         require(_newDiscount <= 10000, "ACM:AIS: Discount > 100% (10000)");
         //^^^^^^^checks^^^^^^^^^
 
-        AC_data[_assetClass].discount = _newDiscount;
+        node_data[_assetClass].discount = _newDiscount;
         //^^^^^^^effects^^^^^^^^^
     }
 
@@ -184,14 +184,14 @@ contract NODE_MGR is BASIC {
         ); //source AC_Name must match name given
 
         require(
-            (AC_data[_assetClassDest].CAS1 == B320xF_), //dest AC must have CAS1 set to 0xFFFF.....
+            (node_data[_assetClassDest].CAS1 == B320xF_), //dest AC must have CAS1 set to 0xFFFF.....
             "ACM:TN: Destination AC not prepared for name transfer"
         );
         //^^^^^^^checks^^^^^^^^^
 
         AC_number[_name] = _assetClassDest;
-        AC_data[_assetClassDest].name = _name;
-        AC_data[_assetClassSource].name = "";
+        node_data[_assetClassDest].name = _name;
+        node_data[_assetClassSource].name = "";
         //^^^^^^^effects^^^^^^^^^
     }
 
@@ -219,7 +219,7 @@ contract NODE_MGR is BASIC {
         bytes32 _CAS1,
         bytes32 _CAS2
     ) external isContractAdmin nonReentrant {
-        Node memory _ac = AC_data[_assetClassRoot];
+        Node memory _ac = node_data[_assetClassRoot];
         uint256 tokenId = uint256(_assetClass);
 
         require((tokenId != 0), "ACM:AMAC: AC = 0"); //sanity check inputs
@@ -232,14 +232,14 @@ contract NODE_MGR is BASIC {
 
         //^^^^^^^checks^^^^^^^^^
 
-        AC_data[_assetClass].assetClassRoot = _assetClassRoot;
-        AC_data[_assetClass].discount = _discount;
-        AC_data[_assetClass].custodyType = _custodyType;
-        AC_data[_assetClass].managementType = _managementType;
-        AC_data[_assetClass].storageProvider = _storageProvider;
-        AC_data[_assetClass].referenceAddress = _refAddress;
-        AC_data[_assetClass].CAS1 = _CAS1;
-        AC_data[_assetClass].CAS2 = _CAS2;
+        node_data[_assetClass].assetClassRoot = _assetClassRoot;
+        node_data[_assetClass].discount = _discount;
+        node_data[_assetClass].custodyType = _custodyType;
+        node_data[_assetClass].managementType = _managementType;
+        node_data[_assetClass].storageProvider = _storageProvider;
+        node_data[_assetClass].referenceAddress = _refAddress;
+        node_data[_assetClass].CAS1 = _CAS1;
+        node_data[_assetClass].CAS2 = _CAS2;
         //^^^^^^^effects^^^^^^^^^
     }
 
@@ -262,7 +262,7 @@ contract NODE_MGR is BASIC {
 
         //^^^^^^^checks^^^^^^^^^
 
-        uint256 switches = AC_data[_assetClass].switches;
+        uint256 switches = node_data[_assetClass].switches;
 
         if (_bit == 1) {
             switches = switches | (1 << (_position - 1));
@@ -272,7 +272,7 @@ contract NODE_MGR is BASIC {
             switches = switches & ~(1 << (_position - 1)); //make zero mask
         }
 
-        AC_data[_assetClass].switches = uint8(switches);
+        node_data[_assetClass].switches = uint8(switches);
         //^^^^^^^effects^^^^^^^^^
     }
 
@@ -420,15 +420,15 @@ contract NODE_MGR is BASIC {
         require( //should pass if name is same as old name or name is unassigned. Should fail if name is assigned to other AC
             (AC_number[_name] == 0) || //name is unassigned
                 (keccak256(abi.encodePacked(_name)) == //name is same as old name
-                    (keccak256(abi.encodePacked(AC_data[_assetClass].name)))),
+                    (keccak256(abi.encodePacked(node_data[_assetClass].name)))),
             "ACM:UACN: Name already in use or is same as the previous"
         );
         //^^^^^^^checks^^^^^^^^^
 
-        delete AC_number[AC_data[_assetClass].name];
+        delete AC_number[node_data[_assetClass].name];
 
         AC_number[_name] = _assetClass;
-        AC_data[_assetClass].name = _name;
+        node_data[_assetClass].name = _name;
         //^^^^^^^effects^^^^^^^^^
     }
 
@@ -448,8 +448,8 @@ contract NODE_MGR is BASIC {
             "ACM:UNC: CAS for node is locked and cannot be written"
         );
         //^^^^^^^checks^^^^^^^^^
-        AC_data[_assetClass].CAS1 = _CAS1;
-        AC_data[_assetClass].CAS2 = _CAS2;
+        node_data[_assetClass].CAS1 = _CAS1;
+        node_data[_assetClass].CAS2 = _CAS2;
         //^^^^^^^effects^^^^^^^^^
     }
 
@@ -489,7 +489,7 @@ contract NODE_MGR is BASIC {
         address _refAddress
     ) external whenNotPaused isACtokenHolderOfClass(_assetClass) {
         require(
-            AC_data[_assetClass].managementType == 255,
+            node_data[_assetClass].managementType == 255,
             "ACM:UACI: Immutable AC data already set"
         );
         require(
@@ -506,9 +506,9 @@ contract NODE_MGR is BASIC {
         );
         //^^^^^^^checks^^^^^^^^^
 
-        AC_data[_assetClass].managementType = _managementType;
-        AC_data[_assetClass].storageProvider = _storageProvider;
-        AC_data[_assetClass].referenceAddress = _refAddress;
+        node_data[_assetClass].managementType = _managementType;
+        node_data[_assetClass].storageProvider = _storageProvider;
+        node_data[_assetClass].referenceAddress = _refAddress;
         //^^^^^^^effects^^^^^^^^^
     }
 
@@ -532,7 +532,7 @@ contract NODE_MGR is BASIC {
         );
         //^^^^^^^checks^^^^^^^^^
 
-        if ((AC_data[_assetClass].switches & (1 << (_position - 1))) > 0) {
+        if ((node_data[_assetClass].switches & (1 << (_position - 1))) > 0) {
             return 1;
         } else {
             return 0;
@@ -606,7 +606,7 @@ contract NODE_MGR is BASIC {
     }
 
     /**
-     * @dev Retrieve AC_data @ _assetClass
+     * @dev Retrieve node_data @ _assetClass
      * @param _assetClass - assetClass associated with query
      * DPS:THIS FUNCTION REMAINS FOR EXTERNAL TESTING ACCESS. try using getExtAcData, it should be depricated prior to production.
      */
@@ -623,20 +623,20 @@ contract NODE_MGR is BASIC {
     {
         //^^^^^^^checks^^^^^^^^^
         return (
-            AC_data[_assetClass].assetClassRoot,
-            AC_data[_assetClass].custodyType,
-            AC_data[_assetClass].managementType,
-            AC_data[_assetClass].discount,
-            AC_data[_assetClass].referenceAddress
+            node_data[_assetClass].assetClassRoot,
+            node_data[_assetClass].custodyType,
+            node_data[_assetClass].managementType,
+            node_data[_assetClass].discount,
+            node_data[_assetClass].referenceAddress
         );
         //^^^^^^^interactions^^^^^^^^^
     }
 
     /**
-     * @dev Retrieve extended AC_data @ _assetClass
+     * @dev Retrieve extended node_data @ _assetClass
      * @param _assetClass - assetClass associated with query
      *
-     * @return AC_data (see docs)
+     * @return node_data (see docs)
      */
     function getExtAC_data(uint32 _assetClass)
         external
@@ -644,7 +644,7 @@ contract NODE_MGR is BASIC {
         returns (Node memory)
     {
         //^^^^^^^checks^^^^^^^^^
-        return (AC_data[_assetClass]);
+        return (node_data[_assetClass]);
         //^^^^^^^effects^^^^^^^^^
     }
 
@@ -662,8 +662,8 @@ contract NODE_MGR is BASIC {
     {
         //^^^^^^^checks^^^^^^^^^
         if (
-            AC_data[_assetClass1].assetClassRoot ==
-            AC_data[_assetClass2].assetClassRoot
+            node_data[_assetClass1].assetClassRoot ==
+            node_data[_assetClass2].assetClassRoot
         ) {
             return uint8(170);
         } else {
@@ -685,7 +685,7 @@ contract NODE_MGR is BASIC {
     {
         //^^^^^^^checks^^^^^^^^^
 
-        return (AC_data[assetClass].name);
+        return (node_data[assetClass].name);
         //^^^^^^^effects^^^^^^^^^
     }
 
@@ -739,7 +739,7 @@ contract NODE_MGR is BASIC {
         view
         returns (Invoice memory)
     {
-        Node memory AC_info = AC_data[_assetClass];
+        Node memory AC_info = node_data[_assetClass];
         require(AC_info.assetClassRoot != 0, "ACM:GSC: AC !exist");
 
         require(_service != 0, "ACM:GSC: Service type = 0");
@@ -768,7 +768,7 @@ contract NODE_MGR is BASIC {
      */
     function getAC_discount(uint32 _assetClass) external view returns (uint32) {
         //^^^^^^^checks^^^^^^^^^
-        return (AC_data[_assetClass].discount);
+        return (node_data[_assetClass].discount);
         //^^^^^^^interactions^^^^^^^^^
     }
 
@@ -785,7 +785,7 @@ contract NODE_MGR is BASIC {
         uint32 _assetClass,
         address _recipientAddress
     ) private whenNotPaused {
-        Node memory _RootNodeData = AC_data[_AC.assetClassRoot];
+        Node memory _RootNodeData = node_data[_AC.assetClassRoot];
         uint256 tokenId = uint256(_assetClass);
 
         require(tokenId != 0, "ACM:CAC: AC = 0"); //sanity check inputs
@@ -818,20 +818,20 @@ contract NODE_MGR is BASIC {
         }
         require(AC_number[_AC.name] == 0, "ACM:CAC: AC name exists");
         require(
-            (AC_data[_assetClass].assetClassRoot == 0),
+            (node_data[_assetClass].assetClassRoot == 0),
             "ACM:CAC: AC already exists"
         );
         //^^^^^^^checks^^^^^^^^^
 
         AC_number[_AC.name] = _assetClass;
-        AC_data[_assetClass].name = _AC.name;
-        AC_data[_assetClass].assetClassRoot = _AC.assetClassRoot;
-        AC_data[_assetClass].discount = _AC.discount;
-        AC_data[_assetClass].custodyType = _AC.custodyType;
-        AC_data[_assetClass].managementType = _AC.managementType;
-        AC_data[_assetClass].switches = _RootNodeData.switches;
-        AC_data[_assetClass].CAS1 = _AC.CAS1;
-        AC_data[_assetClass].CAS2 = _AC.CAS2;
+        node_data[_assetClass].name = _AC.name;
+        node_data[_assetClass].assetClassRoot = _AC.assetClassRoot;
+        node_data[_assetClass].discount = _AC.discount;
+        node_data[_assetClass].custodyType = _AC.custodyType;
+        node_data[_assetClass].managementType = _AC.managementType;
+        node_data[_assetClass].switches = _RootNodeData.switches;
+        node_data[_assetClass].CAS1 = _AC.CAS1;
+        node_data[_assetClass].CAS2 = _AC.CAS2;
         //^^^^^^^effects^^^^^^^^^
 
         NODE_TKN.mintACToken(
