@@ -17,7 +17,7 @@ _________\/// _____________\/// _______\/// __\///////// __\/// _____________
  *---------------------------------------------------------------*/
 
 // SPDX-License-Identifier: UNLICENSED
-pragma solidity ^0.8.0;
+pragma solidity ^0.8.6;
 
 import "./PRUF_CORE.sol";
 
@@ -36,7 +36,7 @@ contract STAT201 is CORE {
     {
         Record memory rec = getRecord(_idxHash);
         AC memory AC_info = getACinfo(rec.assetClass);
-        uint256 storageProviderStatus = AC_MGR.getStorageProviderStatus(AC_info.storageProvider);
+        uint256 storageProviderStatus = NODE_MGR.getStorageProviderStatus(AC_info.storageProvider);
 
         require
             (storageProviderStatus == 0,

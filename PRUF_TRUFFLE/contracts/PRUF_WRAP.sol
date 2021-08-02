@@ -19,7 +19,7 @@ _________\/// _____________\/// _______\/// __\///////// __\/// _____________
  *----------------------------------------------------------------*/
 
 // SPDX-License-Identifier: UNLICENSED
-pragma solidity ^0.8.0;
+pragma solidity ^0.8.6;
 
 import "./PRUF_CORE.sol";
 import "./Imports/token/ERC721/IERC721.sol";
@@ -108,7 +108,7 @@ contract WRAP is CORE {
             );
         } else if (AC_info.managementType == 3) {
             require(    //DPS:TEST NEW
-                AC_MGR.getUserType(
+                NODE_MGR.getUserType(
                     keccak256(abi.encodePacked(_msgSender())),
                     _assetClass
                 ) == 1,
@@ -242,7 +242,7 @@ contract WRAP is CORE {
             );
         } else if (AC_info.managementType == 3) {
             require(
-                AC_MGR.getUserType(
+                NODE_MGR.getUserType(
                     keccak256(abi.encodePacked(_msgSender())),
                     _assetClass
                 ) == 1,

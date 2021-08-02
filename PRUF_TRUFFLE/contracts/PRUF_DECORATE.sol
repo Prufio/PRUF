@@ -20,7 +20,7 @@ _________\/// _____________\/// _______\/// __\///////// __\/// _____________
 // or set to ERC721 contract address <works only with tokens from specified contract address>
 
 // SPDX-License-Identifier: UNLICENSED
-pragma solidity ^0.8.0;
+pragma solidity ^0.8.6;
 
 import "./PRUF_CORE.sol";
 import "./Imports/token/ERC721/IERC721.sol";
@@ -93,7 +93,7 @@ contract DECORATE is CORE {
             );
         } else if (AC_info.managementType == 3) {
             require(    //DPS:TEST NEW
-                AC_MGR.getUserType(
+                NODE_MGR.getUserType(
                     keccak256(abi.encodePacked(_msgSender())),
                     _assetClass
                 ) == 1,
@@ -441,7 +441,7 @@ contract DECORATE is CORE {
             "D:E: Must be in transferrable status (51/70)"
         );
         require(
-            AC_MGR.isSameRootAC(_exportTo, rec.assetClass) == 170,
+            NODE_MGR.isSameRootAC(_exportTo, rec.assetClass) == 170,
             "D:E: Cannot change AC to new root"
         );
         //^^^^^^^checks^^^^^^^^^
@@ -489,7 +489,7 @@ contract DECORATE is CORE {
         );
         require(rec.assetStatus == 70, "D:I: Asset not exported");
         require(
-            AC_MGR.isSameRootAC(_newAssetClass, rec.assetClass) == 170,
+            NODE_MGR.isSameRootAC(_newAssetClass, rec.assetClass) == 170,
             "D:I:Cannot change AC to new root"
         );
         require( //DPS:TEST NEW
@@ -511,7 +511,7 @@ contract DECORATE is CORE {
             );
         } else if (newAC_info.managementType == 3) {
             require( //DPS:TEST NEW
-                AC_MGR.getUserType(
+                NODE_MGR.getUserType(
                     keccak256(abi.encodePacked(_msgSender())),
                     _newAssetClass
                 ) == 1,
@@ -575,7 +575,7 @@ contract DECORATE is CORE {
             );
         } else if (AC_info.managementType == 3) {
             require(
-                AC_MGR.getUserType(
+                NODE_MGR.getUserType(
                     keccak256(abi.encodePacked(_msgSender())),
                     _assetClass
                 ) == 1,

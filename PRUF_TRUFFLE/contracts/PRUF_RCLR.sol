@@ -18,7 +18,7 @@ _________\/// _____________\/// _______\/// __\///////// __\/// _____________
  //CTS:EXAMINE quick explainer for the contract
 
 // SPDX-License-Identifier: UNLICENSED
-pragma solidity ^0.8.0;
+pragma solidity ^0.8.6;
 
 import "./PRUF_ECR_CORE.sol";
 import "./PRUF_CORE.sol";
@@ -84,7 +84,7 @@ contract RCLR is ECR_CORE, CORE {
         require(_rgtHash != 0, "R:R: New rights holder = zero");
         require(rec.assetStatus == 60, "R:R: Asset not discarded");
         require(
-            AC_MGR.isSameRootAC(_assetClass, rec.assetClass) == 170,
+            NODE_MGR.isSameRootAC(_assetClass, rec.assetClass) == 170,
             "R:R: !Change AC to new root"
         );
         require(
@@ -102,7 +102,7 @@ contract RCLR is ECR_CORE, CORE {
             );
         } else if (AC_info.managementType == 3) {
             require(
-                AC_MGR.getUserType(
+                NODE_MGR.getUserType(
                     keccak256(abi.encodePacked(_msgSender())),
                     _assetClass
                 ) == 1,

@@ -20,7 +20,7 @@ __/\\\\\\\\\\\\\ _____/\\\\\\\\\ _______/\\__/\\ ___/\\\\\\\\\\\\\\\
  *---------------------------------------------------------------*/
 
 // SPDX-License-Identifier: UNLICENSED
-pragma solidity ^0.8.0;
+pragma solidity ^0.8.6;
 
 import "./Imports/utils/ReentrancyGuard.sol";
 import "./PRUF_BASIC.sol";
@@ -68,7 +68,7 @@ contract CORE is BASIC {
                 );
             } else if (AC_info.managementType == 3) {
                 require(
-                    AC_MGR.getUserType(
+                    NODE_MGR.getUserType(
                         keccak256(abi.encodePacked(_msgSender())),
                         _assetClass
                     ) == 1,
@@ -181,14 +181,14 @@ contract CORE is BASIC {
         virtual
         whenNotPaused
     {
-        uint256 ACTHnetPercent = uint256(AC_MGR.getAC_discount(_assetClass)) /
+        uint256 ACTHnetPercent = uint256(NODE_MGR.getAC_discount(_assetClass)) /
             uint256(100);
         require( //IMPOSSIBLE TO REACH unless stuff is really broken, still ensures sanity
             (ACTHnetPercent >= 0) && (ACTHnetPercent <= 100),
             "C:DSC:invalid discount value for price calculation"
         );
         //^^^^^^^checks^^^^^^^^^
-        Invoice memory pricing = AC_MGR.getServiceCosts(_assetClass, _service);
+        Invoice memory pricing = NODE_MGR.getServiceCosts(_assetClass, _service);
 
         uint256 percent = pricing.ACTHprice / uint256(100); //calculate 1% of listed ACTH price
         uint256 _ACTHprice = ACTHnetPercent * percent; //calculate the share proprotrion% * 1%
@@ -217,7 +217,7 @@ contract CORE is BASIC {
         Invoice memory pricing;
         uint256 half;
 
-        pricing = AC_MGR.getServiceCosts(_assetClass, 1);
+        pricing = NODE_MGR.getServiceCosts(_assetClass, 1);
         pricing.rootAddress = _prevOwner;
 
         half = pricing.ACTHprice / 2;

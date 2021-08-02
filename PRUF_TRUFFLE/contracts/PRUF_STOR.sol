@@ -38,7 +38,7 @@ __/\\\\\\\\\\\\\ _____/\\\\\\\\\ _______/\\__/\\ ___/\\\\\\\\\\\\\\\
  *-----------------------------------------------------------------*/
 
 // SPDX-License-Identifier: UNLICENSED
-pragma solidity ^0.8.0;
+pragma solidity ^0.8.6;
 
 import "./PRUF_INTERFACES.sol";
 import "./Imports/access/AccessControl.sol";
@@ -62,8 +62,8 @@ contract STOR is AccessControl, ReentrancyGuard, Pausable {
     //address private AC_TKN_Address;
     AC_TKN_Interface private AC_TKN; //erc721_token prototype initialization
 
-    //address internal AC_MGR_Address;
-    AC_MGR_Interface internal AC_MGR; // Set up external contract interface for AC_MGR
+    //address internal NODE_MGR_Address;
+    NODE_MGR_Interface internal NODE_MGR; // Set up external contract interface for NODE_MGR
 
     constructor() {
         _setupRole(DEFAULT_ADMIN_ROLE, _msgSender());
@@ -238,7 +238,7 @@ contract STOR is AccessControl, ReentrancyGuard, Pausable {
         contractAddressToName[_contractAddr] = _contractName;
 
         AC_TKN = AC_TKN_Interface(contractNameToAddress["AC_TKN"]); // cheaper than keking to check
-        AC_MGR = AC_MGR_Interface(contractNameToAddress["AC_MGR"]); // cheaper than keking to check
+        NODE_MGR = NODE_MGR_Interface(contractNameToAddress["NODE_MGR"]); // cheaper than keking to check
         //^^^^^^^effects^^^^^^^^^
 
         emit REPORT("ACDA", bytes32(uint256(_contractAuthLevel))); //report access to the internal user database
@@ -247,7 +247,7 @@ contract STOR is AccessControl, ReentrancyGuard, Pausable {
 
     /**
      * @dev set the default list of 11 contracts (zero index) to be applied to asset classes
-     * APP_NC, NP_NC, AC_MGR, AC_TKN, A_TKN, ECR_MGR, RCLR, PIP, PURCHASE, DECORATE, WRAP
+     * APP_NC, NP_NC, NODE_MGR, AC_TKN, A_TKN, ECR_MGR, RCLR, PIP, PURCHASE, DECORATE, WRAP
      * @param   _contractNumber - 0-10
      * @param   _name - name
      * @param   _contractAuthLevel - authLevel
@@ -287,8 +287,8 @@ contract STOR is AccessControl, ReentrancyGuard, Pausable {
     function enableDefaultContractsForAC(uint32 _assetClass) public {
         require(
             (AC_TKN.ownerOf(_assetClass) == _msgSender()) ||
-                (_msgSender() == contractNameToAddress["AC_MGR"]),
-            "S:EDCFAC: Caller not ACtokenHolder or AC_MGR"
+                (_msgSender() == contractNameToAddress["NODE_MGR"]),
+            "S:EDCFAC: Caller not ACtokenHolder or NODE_MGR"
         );
         //^^^^^^^checks^^^^^^^^^
         enableContractForAC(
@@ -363,8 +363,8 @@ contract STOR is AccessControl, ReentrancyGuard, Pausable {
     ) public {
         require(
             (AC_TKN.ownerOf(_assetClass) == _msgSender()) ||
-                (_msgSender() == contractNameToAddress["AC_MGR"]),
-            "S:ECFAC: Caller not ACtokenHolder or AC_MGR"
+                (_msgSender() == contractNameToAddress["NODE_MGR"]),
+            "S:ECFAC: Caller not ACtokenHolder or NODE_MGR"
         );
 
         //^^^^^^^checks^^^^^^^^^
@@ -504,7 +504,7 @@ contract STOR is AccessControl, ReentrancyGuard, Pausable {
 
         require(_newAssetClass != 0, "S:CAC: Cannot set AC=0");
         require( //require new assetClass is in the same root as old assetClass
-            AC_MGR.isSameRootAC(_newAssetClass, rec.assetClass) == 170,
+            NODE_MGR.isSameRootAC(_newAssetClass, rec.assetClass) == 170,
             "S:CAC: Cannot mod AC to new root"
         );
         require(isLostOrStolen(rec.assetStatus) == 0, "S:CAC: L/S asset"); //asset cannot be in lost or stolen status

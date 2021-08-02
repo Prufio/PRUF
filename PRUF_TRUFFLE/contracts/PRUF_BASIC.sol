@@ -22,7 +22,7 @@ _________\/// _____________\/// _______\/// __\///////// __\/// _____________
 *---------------------------------------------------------------*/
 
 // SPDX-License-Identifier: UNLICENSED
-pragma solidity ^0.8.0;
+pragma solidity ^0.8.6;
 
 import "./PRUF_INTERFACES.sol";
 import "./Imports/access/AccessControl.sol";
@@ -44,8 +44,8 @@ abstract contract BASIC is
     address internal STOR_Address;
     STOR_Interface internal STOR;
 
-    address internal AC_MGR_Address;
-    AC_MGR_Interface internal AC_MGR;
+    address internal NODE_MGR_Address;
+    NODE_MGR_Interface internal NODE_MGR;
 
     address internal UTIL_TKN_Address;
     UTIL_TKN_Interface internal UTIL_TKN;
@@ -133,8 +133,8 @@ abstract contract BASIC is
         AC_TKN_Address = STOR.resolveContractAddress("AC_TKN");
         AC_TKN = AC_TKN_Interface(AC_TKN_Address);
 
-        AC_MGR_Address = STOR.resolveContractAddress("AC_MGR");
-        AC_MGR = AC_MGR_Interface(AC_MGR_Address);
+        NODE_MGR_Address = STOR.resolveContractAddress("NODE_MGR");
+        NODE_MGR = NODE_MGR_Interface(NODE_MGR_Address);
 
         UTIL_TKN_Address = STOR.resolveContractAddress("UTIL_TKN");
         UTIL_TKN = UTIL_TKN_Interface(UTIL_TKN_Address);
@@ -251,7 +251,7 @@ abstract contract BASIC is
     /**
      * @dev Get a User type Record from AC_manager for _msgSender(), by assetClass
      * @param _assetClass - to check user type in
-     * @return user authorization type of caller, from AC_MGR user mapping
+     * @return user authorization type of caller, from NODE_MGR user mapping
      */
     function getCallingUserType(uint32 _assetClass)
         internal
@@ -261,7 +261,7 @@ abstract contract BASIC is
         //^^^^^^^checks^^^^^^^^^
 
         uint8 userTypeInAssetClass =
-            AC_MGR.getUserType(
+            NODE_MGR.getUserType(
                 keccak256(abi.encodePacked(_msgSender())),
                 _assetClass
             );
@@ -291,10 +291,10 @@ abstract contract BASIC is
         //     AC_info.managementType,
         //     AC_info.discount,
         //     AC_info.referenceAddress
-        // ) = AC_MGR.getAC_data(_assetClass);
+        // ) = NODE_MGR.getAC_data(_assetClass);
 
         // return AC_info;
-        return AC_MGR.getExtAC_data(_assetClass);
+        return NODE_MGR.getExtAC_data(_assetClass);
         //^^^^^^^interactions^^^^^^^^^
     }
 

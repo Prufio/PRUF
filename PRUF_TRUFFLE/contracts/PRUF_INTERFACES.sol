@@ -16,7 +16,7 @@ _________\/// _____________\/// _______\/// __\///////// __\/// _____________
  *---------------------------------------------------------------*/
 
 // SPDX-License-Identifier: UNLICENSED
-pragma solidity ^0.8.0;
+pragma solidity ^0.8.6;
 
 struct Record {
     uint8 assetStatus; // Status - Transferrable, locked, in transfer, stolen, lost, etc.
@@ -1057,12 +1057,12 @@ interface ID_TKN_Interface {
 
 //------------------------------------------------------------------------------------------------
 /*
- * @dev Interface for AC_MGR
+ * @dev Interface for NODE_MGR
  * INHERIANCE:
     import "./PRUF_BASIC.sol";
      
  */
-interface AC_MGR_Interface {
+interface NODE_MGR_Interface {
     /*
      * @dev Transfers a name from one asset class to another
      * !! -------- to be used with great caution and only as a result of community governance action -----------

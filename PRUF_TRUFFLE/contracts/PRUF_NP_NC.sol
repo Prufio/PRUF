@@ -16,7 +16,7 @@ _________\/// _____________\/// _______\/// __\///////// __\/// _____________
  *---------------------------------------------------------------*/
 
 // SPDX-License-Identifier: UNLICENSED
-pragma solidity ^0.8.0;
+pragma solidity ^0.8.6;
 
 import "./PRUF_CORE.sol";
 
@@ -89,7 +89,7 @@ contract NP_NC is CORE {
             "NPNC:EXT: Must be in transferrable status (51)"
         );
         require(
-            AC_MGR.isSameRootAC(_exportTo, rec.assetClass) == 170,
+            NODE_MGR.isSameRootAC(_exportTo, rec.assetClass) == 170,
             "NPNC:EXT: Cannot change AC to new root"
         );
         require(

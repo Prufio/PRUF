@@ -18,7 +18,7 @@ __/\\\\\\\\\\\\\ _____/\\\\\\\\\ _______/\\./\\ ___/\\\\\\\\\\\\\\\
 
 // SPDX-License-Identifier: UNLICENSED
 
-pragma solidity ^0.8.0;
+pragma solidity ^0.8.6;
 
 import "./PRUF_INTERFACES.sol";
 import "./Imports/access/AccessControl.sol";
@@ -34,7 +34,7 @@ import "./Imports/token/ERC20/ERC20Snapshot.sol";
  *  - a PAUSER_ROLE that allows to stop all token transfers
  *  - a SNAPSHOT_ROLE that allows to take snapshots
  *  - a PAYABLE_ROLE role that allows authorized addresses to invoke the token splitting payment function (all paybale contracts)
- *  - a TRUSTED_AGENT_ROLE role that allows authorized addresses to transfer and burn tokens (AC_MGR)
+ *  - a TRUSTED_AGENT_ROLE role that allows authorized addresses to transfer and burn tokens (NODE_MGR)
 
 
 

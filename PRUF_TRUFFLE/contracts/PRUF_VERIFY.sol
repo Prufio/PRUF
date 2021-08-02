@@ -36,7 +36,7 @@ _________\/// _____________\/// _______\/// __\///////// __\/// _____________
  *---------------------------------------------------------------*/
 
 // SPDX-License-Identifier: UNLICENSED
-pragma solidity ^0.8.0;
+pragma solidity ^0.8.6;
 
 import "./PRUF_CORE.sol";
 //import "./PRUF_INTERFACES.sol";
@@ -231,7 +231,7 @@ contract VERIFY is CORE {
 
         require(items[_itemHash] == _idxHash, "VFY:T: Item not held by caller"); //check to see if held by _idxHash
         require( //must move to same asset class root
-            AC_MGR.isSameRootAC(rec.assetClass, newRec.assetClass) == 170,
+            NODE_MGR.isSameRootAC(rec.assetClass, newRec.assetClass) == 170,
             "VFY:T: Wallet is not in the same asset class root"
         );
         require(

@@ -18,7 +18,7 @@ __/\\\\\\\\\\\\\ _____/\\\\\\\\\ _______/\\__/\\ ___/\\\\\\\\\\\\\\\
  *---------------------------------------------------------------*/
 
 // SPDX-License-Identifier: UNLICENSED
-pragma solidity ^0.8.0;
+pragma solidity ^0.8.6;
 
 import "./Imports/access/AccessControl.sol";
 import "./Imports/utils/Context.sol";
@@ -67,11 +67,11 @@ contract A_TKN is
 
     address internal STOR_Address;
     address internal RCLR_Address;
-    address internal AC_MGR_Address;
+    address internal NODE_MGR_Address;
     address internal AC_TKN_Address;
     STOR_Interface internal STOR;
     RCLR_Interface internal RCLR;
-    AC_MGR_Interface internal AC_MGR;
+    NODE_MGR_Interface internal NODE_MGR;
     AC_TKN_Interface internal AC_TKN;
 
     bytes32 public constant B320xF_ =
@@ -173,8 +173,8 @@ contract A_TKN is
         RCLR_Address = STOR.resolveContractAddress("RCLR");
         RCLR = RCLR_Interface(RCLR_Address);
 
-        AC_MGR_Address = STOR.resolveContractAddress("AC_MGR");
-        AC_MGR = AC_MGR_Interface(AC_MGR_Address);
+        NODE_MGR_Address = STOR.resolveContractAddress("NODE_MGR");
+        NODE_MGR = NODE_MGR_Interface(NODE_MGR_Address);
 
         AC_TKN_Address = STOR.resolveContractAddress("AC_TKN");
         AC_TKN = AC_TKN_Interface(AC_TKN_Address);
@@ -245,7 +245,7 @@ contract A_TKN is
         bytes32 _idxHash = bytes32(tokenId);
         Record memory rec = getRecord(_idxHash);
 
-        if (AC_MGR.getSwitchAt(rec.assetClass, 1) == 1) {
+        if (NODE_MGR.getSwitchAt(rec.assetClass, 1) == 1) {
             //if switch at bit 1 (0) is set
             string memory tokenURI = tokenURI(tokenId);
 

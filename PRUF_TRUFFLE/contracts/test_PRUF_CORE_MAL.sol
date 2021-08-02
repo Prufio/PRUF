@@ -16,7 +16,7 @@ _________\/// _____________\/// _______\/// __\///////// __\/// _____________
  *---------------------------------------------------------------*/
 
 // SPDX-License-Identifier: UNLICENSED
-pragma solidity ^0.8.0;
+pragma solidity ^0.8.6;
 
 //import "./PRUF_INTERFACES.sol";
 //import "./Imports/payment/PullPayment.sol";
@@ -37,7 +37,7 @@ contract CORE_MAL is BASIC {
     //     (
     //         cost.serviceCost,
     //         cost.paymentAddress
-    //     ) = AC_MGR.retrieveCosts(_assetClass);
+    //     ) = NODE_MGR.retrieveCosts(_assetClass);
 
     //     return (cost);
     //     //^^^^^^^interactions^^^^^^^^^
@@ -143,7 +143,7 @@ contract CORE_MAL is BASIC {
         //^^^^^^^checks^^^^^^^^^
         Invoice memory pricing;
         //^^^^^^^effects^^^^^^^^^
-        pricing = AC_MGR.getServiceCosts(_assetClass, _service);
+        pricing = NODE_MGR.getServiceCosts(_assetClass, _service);
         deductPayment(pricing);
         //^^^^^^^interactions^^^^^^^^^
     }

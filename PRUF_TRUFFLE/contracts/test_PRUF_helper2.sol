@@ -16,7 +16,7 @@ _________\/// _____________\/// _______\/// __\///////// __\/// _____________
  *---------------------------------------------------------------*/
 
 // SPDX-License-Identifier: UNLICENSED
-pragma solidity ^0.8.0;
+pragma solidity ^0.8.6;
 
 import "./Imports/access/Ownable.sol";
 import "./PRUF_BASIC.sol";
@@ -260,7 +260,7 @@ contract Helper2 is Ownable, BASIC {
         returns (AC memory)
     {
         //^^^^^^^checks^^^^^^^^^
-        return AC_MGR.getExtAC_data(_assetClass);
+        return NODE_MGR.getExtAC_data(_assetClass);
         //^^^^^^^interactions^^^^^^^^^
     }
 
@@ -278,7 +278,7 @@ contract Helper2 is Ownable, BASIC {
             bytes32
         )
     {
-        AC memory nodeData = AC_MGR.getExtAC_data(_assetClass);
+        AC memory nodeData = NODE_MGR.getExtAC_data(_assetClass);
 
         return (
             nodeData.storageProvider,
