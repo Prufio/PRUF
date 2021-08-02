@@ -34,11 +34,7 @@ import "./Imports/token/ERC20/ERC20Snapshot.sol";
  *  - a PAUSER_ROLE that allows to stop all token transfers
  *  - a SNAPSHOT_ROLE that allows to take snapshots
  *  - a PAYABLE_ROLE role that allows authorized addresses to invoke the token splitting payment function (all paybale contracts)
- *  - a TRUSTED_AGENT_ROLE role that allows authorized addresses to transfer and burn tokens (NODE_MGR)
-
-
-
-
+ *  - a TRUSTED_AGENT_ROLE role that allows authorized addresses to transfer and burn tokens (AC_MGR)
  *
  * This contract uses {AccessControl} to lock permissioned functions using the
  * different roles - head to its documentation for details.
