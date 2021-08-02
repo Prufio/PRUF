@@ -82,7 +82,7 @@ contract SPLITTEST is ReentrancyGuard, Pausable, AccessControl {
      * @dev Set address of PRUF_TKN contract to interface with
      * TESTING: ALL REQUIRES, ACCESS ROLE
      */
-    function ADMIN_setTokenContract(address _address) external isContractAdmin {
+    function setTokenContract(address _address) external isContractAdmin {
         require(
             _address != address(0) && UTIL_TKN_Address == address(0),
             "SPLIT:ASTC: Token contract address = zero or address already set"
@@ -98,7 +98,7 @@ contract SPLITTEST is ReentrancyGuard, Pausable, AccessControl {
     //  * @dev Set snapshot ID
     //  * TESTING: ALL REQUIRES, ACCESS ROLE
     //  */
-    // function ADMIN_setSnapshotID(uint256 _snapshot) external isContractAdmin {
+    // function setSnapshotID(uint256 _snapshot) external isContractAdmin {
     // // ^^^^^^^checks^^^^^^^^^
 
     // snapshotID = _snapshot;
@@ -109,7 +109,7 @@ contract SPLITTEST is ReentrancyGuard, Pausable, AccessControl {
     //  * @dev pause the contract, renounce pauser role, take a snapshot,
     //  * TESTING: ALL REQUIRES, ACCESS ROLE
     //  */
-    // function ADMIN_takeSnapshot() external isContractAdmin {
+    // function takeSnapshot() external isContractAdmin {
     //     //^^^^^^^checks^^^^^^^^^
     //     // UTIL_TKN.pause();
     //     // renounceRole(PAUSER_ROLE, address(this));

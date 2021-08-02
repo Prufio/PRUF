@@ -153,7 +153,7 @@ contract A_TKN is
      * @dev Set storage contract to interface with
      * @param _storageAddress - Storage contract address to set
      */
-    function Admin_setStorageContract(address _storageAddress)
+    function setStorageContract(address _storageAddress)
         external
         isContractAdmin
     {
@@ -167,7 +167,7 @@ contract A_TKN is
     /**
      * @dev Address Setters  - resolves addresses from storage and sets local interfaces
      */
-    function Admin_resolveContractAddresses() external isContractAdmin {
+    function resolveContractAddresses() external isContractAdmin {
         //^^^^^^^checks^^^^^^^^^
 
         RCLR_Address = STOR.resolveContractAddress("RCLR");

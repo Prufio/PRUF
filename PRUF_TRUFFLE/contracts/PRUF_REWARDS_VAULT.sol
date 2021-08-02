@@ -80,7 +80,7 @@ contract REWARDS_VAULT is ReentrancyGuard, AccessControl, Pausable {
      * @param _utilAddress address of UTIL_TKN
      * @param _stakeAddress address of STAKE_TKN
      */
-    function Admin_setTokenContracts(
+    function setTokenContracts(
         address _utilAddress,
         address _stakeAddress
     ) external virtual isContractAdmin {

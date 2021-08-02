@@ -113,7 +113,7 @@ contract STAKE_VAULT is ReentrancyGuard, AccessControl, Pausable {
      * @param _utilAddress address of UTIL_TKN contract
      * @param _stakeAddress address of STAKE_TKN contract
      */
-    function Admin_setTokenContracts(
+    function setTokenContracts(
         address _utilAddress,
         address _stakeAddress
     ) external virtual isContractAdmin {

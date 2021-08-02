@@ -734,7 +734,7 @@ interface A_TKN_Interface {
     /*
      * @dev Address Setters
      */
-    function Admin_resolveContractAddresses() external;
+    function resolveContractAddresses() external;
 
     /*
      * @dev Mint new asset token

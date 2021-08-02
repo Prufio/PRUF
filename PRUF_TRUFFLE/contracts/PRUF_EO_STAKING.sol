@@ -154,7 +154,7 @@ contract EO_STAKING is ReentrancyGuard, AccessControl, Pausable {
      * @param _stakeVaultAddress address of STAKE_VAULT
      * @param _rewardsVaultAddress address of REWARDS_VAULT
      */
-    function Admin_setTokenContracts(
+    function setTokenContracts(
         address _utilAddress,
         address _stakeAddress,
         address _stakeVaultAddress,
