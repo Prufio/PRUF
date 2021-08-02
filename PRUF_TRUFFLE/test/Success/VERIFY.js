@@ -911,11 +911,11 @@ _________\/// _____________\/// _______\/// __\///////// __\/// _____________
             it('Should mint 2 asset root tokens', async () => {
 
                 console.log("Minting root token 1")
-                return NODE_MGR.createAssetClass('1', 'ROOT1', '1', '3', "0", "0", rgt000, account1, { from: account1 })
+                return NODE_MGR.createNode('1', 'ROOT1', '1', '3', "0", "0", rgt000, account1, { from: account1 })
             
                 .then(() => {
                     console.log("Minting root token 2")
-                    return NODE_MGR.createAssetClass('2', 'ROOT2', '2', '3', "0", "0", rgt000, account1, { from: account1 })
+                    return NODE_MGR.createNode('2', 'ROOT2', '2', '3', "0", "0", rgt000, account1, { from: account1 })
                 })
             })
             
@@ -923,11 +923,11 @@ _________\/// _____________\/// _______\/// __\///////// __\/// _____________
             it("Should Mint 2 non cust AC", async () => {
                 
                 console.log("Minting AC 10 -NC")
-                return NODE_MGR.createAssetClass('10', 'NonCustodial_AC10', '1', '2', "0", "0", rgt000, account1, { from: account1 })
+                return NODE_MGR.createNode('10', 'NonCustodial_AC10', '1', '2', "0", "0", rgt000, account1, { from: account1 })
             
                     .then(() => {
                         console.log("Minting AC 11 -NC to Account1")
-                        return NODE_MGR.createAssetClass('11', 'NonCustodial_AC11', '1', '2', "0", "0", rgt000, account1, { from: account1 })
+                        return NODE_MGR.createNode('11', 'NonCustodial_AC11', '1', '2', "0", "0", rgt000, account1, { from: account1 })
                     })
             })
             
@@ -935,21 +935,21 @@ _________\/// _____________\/// _______\/// __\///////// __\/// _____________
             it("Should Mint 4 verify AC tokens", async () => {
                 
                 console.log("Minting AC 12 Verify")
-                return NODE_MGR.createAssetClass('12', 'Verify1', '1', '4', "0", "0", rgt000, account1, { from: account1 })
+                return NODE_MGR.createNode('12', 'Verify1', '1', '4', "0", "0", rgt000, account1, { from: account1 })
             
                     .then(() => {
                         console.log("Minting AC 13 Verify")
-                        return NODE_MGR.createAssetClass('13', 'Verify2', '1', '4', "0", "0", rgt000, account1, { from: account1 })
+                        return NODE_MGR.createNode('13', 'Verify2', '1', '4', "0", "0", rgt000, account1, { from: account1 })
                     })
             
                     .then(() => {
                         console.log("Minting AC 14 Verify to Account1")
-                        return NODE_MGR.createAssetClass('14', 'Verify3', '1', '4', "0", "0", rgt000, account1, { from: account1 })
+                        return NODE_MGR.createNode('14', 'Verify3', '1', '4', "0", "0", rgt000, account1, { from: account1 })
                     })
             
                     .then(() => {
                         console.log("Minting AC 15 Verify to Account1")
-                        return NODE_MGR.createAssetClass('15', 'Verify4', '2', '4', "0", "0", rgt000, account1, { from: account1 })
+                        return NODE_MGR.createNode('15', 'Verify4', '2', '4', "0", "0", rgt000, account1, { from: account1 })
                     })
             
             })
@@ -2104,7 +2104,7 @@ _________\/// _____________\/// _______\/// __\///////// __\/// _____________
 
 
     it('Should mark asset1 counterfeit', async () => {
-        return VERIFY.adminMarkCounterfeit(
+        return VERIFY.markCounterfeit(
             asset1,
             string1Hash,
             { from: account1 }

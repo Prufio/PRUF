@@ -774,91 +774,91 @@ contract("NODE_MGR", (accounts) => {
 
   it("Should set all permitted storage providers", () => {
     console.log("Authorizing UNCONFIGURED");
-    return NODE_MGR.adminSetStorageProviders("0", "1", { from: account1 })
+    return NODE_MGR.setStorageProviders("0", "1", { from: account1 })
 
       .then(() => {
         console.log("Authorizing IPFS");
-        return NODE_MGR.adminSetStorageProviders("1", "1", { from: account1 });
+        return NODE_MGR.setStorageProviders("1", "1", { from: account1 });
       })
 
       .then(() => {
         console.log("Authorizing ARWEAVE");
-        return NODE_MGR.adminSetStorageProviders("2", "1", { from: account1 });
+        return NODE_MGR.setStorageProviders("2", "1", { from: account1 });
       });
   });
 
   it("Should set all permitted management types", () => {
     console.log("Authorizing Unrestricted");
-    return NODE_MGR.adminSetManagementTypes("0", "1", { from: account1 })
+    return NODE_MGR.setManagementTypes("0", "1", { from: account1 })
 
       .then(() => {
         console.log("Authorizing Restricted");
-        return NODE_MGR.adminSetManagementTypes("1", "1", { from: account1 });
+        return NODE_MGR.setManagementTypes("1", "1", { from: account1 });
       })
 
       .then(() => {
         console.log("Authorizing Less Restricted");
-        return NODE_MGR.adminSetManagementTypes("2", "1", { from: account1 });
+        return NODE_MGR.setManagementTypes("2", "1", { from: account1 });
       })
 
       .then(() => {
         console.log("Authorizing Authorized");
-        return NODE_MGR.adminSetManagementTypes("3", "1", { from: account1 });
+        return NODE_MGR.setManagementTypes("3", "1", { from: account1 });
       })
 
       .then(() => {
         console.log("Authorizing Trusted");
-        return NODE_MGR.adminSetManagementTypes("4", "1", { from: account1 });
+        return NODE_MGR.setManagementTypes("4", "1", { from: account1 });
       })
 
       .then(() => {
         console.log("Authorizing Remotely Managed");
-        return NODE_MGR.adminSetManagementTypes("5", "1", { from: account1 });
+        return NODE_MGR.setManagementTypes("5", "1", { from: account1 });
       })
 
       .then(() => {
         console.log("Authorizing Unconfigured");
-        return NODE_MGR.adminSetManagementTypes("255", "1", { from: account1 });
+        return NODE_MGR.setManagementTypes("255", "1", { from: account1 });
       });
   });
 
   it("Should set all permitted custody types", () => {
     console.log("Authorizing NONE");
-    return NODE_MGR.adminSetCustodyTypes("0", "1", { from: account1 })
+    return NODE_MGR.setCustodyTypes("0", "1", { from: account1 })
 
       .then(() => {
         console.log("Authorizing Custodial");
-        return NODE_MGR.adminSetCustodyTypes("1", "1", { from: account1 });
+        return NODE_MGR.setCustodyTypes("1", "1", { from: account1 });
       })
 
       .then(() => {
         console.log("Authorizing Non-Custodial");
-        return NODE_MGR.adminSetCustodyTypes("2", "1", { from: account1 });
+        return NODE_MGR.setCustodyTypes("2", "1", { from: account1 });
       })
 
       .then(() => {
         console.log("Authorizing RAdmint");
-        return NODE_MGR.adminSetCustodyTypes("3", "1", { from: account1 });
+        return NODE_MGR.setCustodyTypes("3", "1", { from: account1 });
       })
 
       .then(() => {
         console.log("Authorizing Verify-Non-Custodial");
-        return NODE_MGR.adminSetCustodyTypes("4", "1", { from: account1 });
+        return NODE_MGR.setCustodyTypes("4", "1", { from: account1 });
       })
 
       .then(() => {
         console.log("Authorizing Wrapped or decorated ERC721");
-        return NODE_MGR.adminSetCustodyTypes("5", "1", { from: account1 });
+        return NODE_MGR.setCustodyTypes("5", "1", { from: account1 });
       })
 
       .then(() => {
         console.log("Authorizing Free Custodial");
-        return NODE_MGR.adminSetCustodyTypes("11", "1", { from: account1 });
+        return NODE_MGR.setCustodyTypes("11", "1", { from: account1 });
       })
 
       .then(() => {
         console.log("Authorizing Free Non-Custodial");
-        return NODE_MGR.adminSetCustodyTypes("12", "1", { from: account1 });
+        return NODE_MGR.setCustodyTypes("12", "1", { from: account1 });
       });
   });
 
@@ -978,7 +978,7 @@ contract("NODE_MGR", (accounts) => {
 
   it("Should mint a couple of asset root tokens", () => {
     console.log("Minting root token 1 -C");
-    return NODE_MGR.createAssetClass(
+    return NODE_MGR.createNode(
       "1",
       "CUSTODIAL_ROOT",
       "1",
@@ -992,7 +992,7 @@ contract("NODE_MGR", (accounts) => {
     )
     .then(() => {
       console.log("Minting root token 2 -NC");
-      return NODE_MGR.createAssetClass(
+      return NODE_MGR.createNode(
         "2",
         "NON-CUSTODIAL_ROOT",
         "2",
@@ -1234,36 +1234,36 @@ contract("NODE_MGR", (accounts) => {
 
   it("Should finalize all ACs", () => {
     console.log("Authorizing AC Switch 1");
-    return NODE_MGR.adminModAssetClassSwitches("1000001", "1", "1", {
+    return NODE_MGR.modAssetClassSwitches("1000001", "1", "1", {
       from: account1,
     })
 
       .then(() => {
-        return NODE_MGR.adminModAssetClassSwitches("1000002", "3", "1", {
+        return NODE_MGR.modAssetClassSwitches("1000002", "3", "1", {
           from: account1,
         });
       })
 
       .then(() => {
-        return NODE_MGR.adminModAssetClassSwitches("1000003", "3", "1", {
+        return NODE_MGR.modAssetClassSwitches("1000003", "3", "1", {
           from: account1,
         });
       })
 
       .then(() => {
-        return NODE_MGR.adminModAssetClassSwitches("1000004", "3", "1", {
+        return NODE_MGR.modAssetClassSwitches("1000004", "3", "1", {
           from: account1,
         });
       })
 
       .then(() => {
-        return NODE_MGR.adminModAssetClassSwitches("1000005", "3", "1", {
+        return NODE_MGR.modAssetClassSwitches("1000005", "3", "1", {
           from: account1,
         });
       })
 
       .then(() => {
-        return NODE_MGR.adminModAssetClassSwitches("1000006", "3", "1", {
+        return NODE_MGR.modAssetClassSwitches("1000006", "3", "1", {
           from: account1,
         });
       });
@@ -1491,7 +1491,7 @@ contract("NODE_MGR", (accounts) => {
   });
 
   it("Should set assetClass 13 switch to 1:1", async () => {
-    return NODE_MGR.adminModAssetClassSwitches("1000004", "1", "1", {
+    return NODE_MGR.modAssetClassSwitches("1000004", "1", "1", {
       from: account1,
     });
   });
@@ -1505,78 +1505,78 @@ contract("NODE_MGR", (accounts) => {
       "//**************************************BEGIN NODE_MGR FAIL BATCH (33)**********************************************/"
     );
     console.log(
-      "//**************************************BEGIN adminSetACpricing FAIL BATCH**********************************************/"
+      "//**************************************BEGIN setACpricing FAIL BATCH**********************************************/"
     );
-    return NODE_MGR.adminSetACpricing("10", { from: account2 });
+    return NODE_MGR.setACpricing("10", { from: account2 });
   });
 
   //2
   it("Should fail because caller is not admin", async () => {
     console.log(
-      "//**************************************END adminSetACpricing FAIL BATCH**********************************************/"
+      "//**************************************END setACpricing FAIL BATCH**********************************************/"
     );
     console.log(
-      "//**************************************BEGIN adminSetStorageProviders FAIL BATCH**********************************************/"
+      "//**************************************BEGIN setStorageProviders FAIL BATCH**********************************************/"
     );
-    return NODE_MGR.adminSetStorageProviders("6", "1", { from: account2 });
+    return NODE_MGR.setStorageProviders("6", "1", { from: account2 });
   });
 
   //3
   it("Should fail because caller is not admin", async () => {
     console.log(
-      "//**************************************END adminSetStorageProviders FAIL BATCH**********************************************/"
+      "//**************************************END setStorageProviders FAIL BATCH**********************************************/"
     );
     console.log(
-      "//**************************************BEGIN adminSetManagementTypes FAIL BATCH**********************************************/"
+      "//**************************************BEGIN setManagementTypes FAIL BATCH**********************************************/"
     );
-    return NODE_MGR.adminSetManagementTypes("6", "1", { from: account2 });
+    return NODE_MGR.setManagementTypes("6", "1", { from: account2 });
   });
 
   //4
   it("Should fail because caller is not admin", async () => {
     console.log(
-      "//**************************************END adminSetManagementTypes FAIL BATCH**********************************************/"
+      "//**************************************END setManagementTypes FAIL BATCH**********************************************/"
     );
     console.log(
-      "//**************************************BEGIN adminSetCustodyTypes FAIL BATCH**********************************************/"
+      "//**************************************BEGIN setCustodyTypes FAIL BATCH**********************************************/"
     );
-    return NODE_MGR.adminSetCustodyTypes("6", "1", { from: account2 });
+    return NODE_MGR.setCustodyTypes("6", "1", { from: account2 });
   });
 
   //5
   it("Should fail because caller is not admin", async () => {
     console.log(
-      "//**************************************END adminSetStorageProviders FAIL BATCH**********************************************/"
+      "//**************************************END setStorageProviders FAIL BATCH**********************************************/"
     );
     console.log(
-      "//**************************************BEGIN adminIncreaseShare FAIL BATCH**********************************************/"
+      "//**************************************BEGIN increaseShare FAIL BATCH**********************************************/"
     );
-    return NODE_MGR.adminIncreaseShare("1000001", "5100", { from: account2 });
+    return NODE_MGR.increaseShare("1000001", "5100", { from: account2 });
   });
 
   //6
   it("Should fail because AC !exist", async () => {
-    return NODE_MGR.adminIncreaseShare("50", "5100", { from: account1 });
+    return NODE_MGR.increaseShare("50", "5100", { from: account1 });
   });
 
   it("Should increase share of AC 10", async () => {
-    return NODE_MGR.adminIncreaseShare("1000001", "9900", { from: account1 });
+    return NODE_MGR.increaseShare("1000001", "9900", { from: account1 });
   });
 
   //7
   it("Should fail because cannot decrease share", async () => {
-    return NODE_MGR.adminIncreaseShare("1000001", "5000", { from: account1 });
+    return NODE_MGR.increaseShare("1000001", "5000", { from: account1 });
   });
 
   //8
   it("Should fail because increase share of AC 10 > 10000", async () => {
-    return NODE_MGR.adminIncreaseShare("1000001", "10001", { from: account1 });
+    return NODE_MGR.increaseShare("1000001", "10001", { from: account1 });
   });
 
   //9
   it("Should fail because caller !admin", async () => {
     console.log(
-      "//**************************************END adminIncreaseShare FAIL BATCH**********************************************/"
+      "//**************************************END increaseShare FAIL BATCH**********************************************/"
     );
     console.log(
       "//**************************************BEGIN transferName FAIL BATCH**********************************************/"
@@ -1683,23 +1683,23 @@ contract("NODE_MGR", (accounts) => {
       "//**************************************END AdminModAssetClass FAIL BATCH**********************************************/"
     );
     console.log(
-      "//**************************************BEGIN adminModAssetClassSwitches FAIL BATCH**********************************************/"
+      "//**************************************BEGIN modAssetClassSwitches FAIL BATCH**********************************************/"
     );
-    return NODE_MGR.adminModAssetClassSwitches("1000003", "1", "1", {
+    return NODE_MGR.modAssetClassSwitches("1000003", "1", "1", {
       from: account2,
     });
   });
 
   //18
   it("Should fail bit pos !>0||<9", async () => {
-    return NODE_MGR.adminModAssetClassSwitches("1000003", "10", "1", {
+    return NODE_MGR.modAssetClassSwitches("1000003", "10", "1", {
       from: account1,
     });
   });
 
   //19
   it("Should fail bit !1||0", async () => {
-    return NODE_MGR.adminModAssetClassSwitches("1000003", "1", "4", {
+    return NODE_MGR.modAssetClassSwitches("1000003", "1", "4", {
       from: account1,
     });
   });
@@ -1707,12 +1707,12 @@ contract("NODE_MGR", (accounts) => {
   //20
   it("Should fail because caller is not node minter", async () => {
     console.log(
-      "//**************************************END adminModAssetClassSwitches FAIL BATCH**********************************************/"
+      "//**************************************END modAssetClassSwitches FAIL BATCH**********************************************/"
     );
     console.log(
-      "//**************************************BEGIN createAssetClass FAIL BATCH**********************************************/"
+      "//**************************************BEGIN createNode FAIL BATCH**********************************************/"
     );
-    return NODE_MGR.createAssetClass(
+    return NODE_MGR.createNode(
       "20",
       "20",
       "1",
@@ -1728,7 +1728,7 @@ contract("NODE_MGR", (accounts) => {
 
   it("Should pause NODE_MGR", async () => {
     console.log(
-      "//**************************************END createAssetClass FAIL BATCH**********************************************/"
+      "//**************************************END createNode FAIL BATCH**********************************************/"
     );
     console.log(
       "//**************************************BEGIN purchaseNode FAIL BATCH**********************************************/"
@@ -1871,7 +1871,7 @@ contract("NODE_MGR", (accounts) => {
   });
 
   it("Should mint AC 50", async () => {
-    return NODE_MGR.createAssetClass(
+    return NODE_MGR.createNode(
       "50",
       "TEST",
       "1",
@@ -1952,9 +1952,9 @@ contract("NODE_MGR", (accounts) => {
       "//**************************************END getServiceCosts FAIL BATCH**********************************************/"
     );
     console.log(
-      "//**************************************BEGIN _createAssetClass(Private) FAIL BATCH**********************************************/"
+      "//**************************************BEGIN _createNode(Private) FAIL BATCH**********************************************/"
     );
-    return NODE_MGR.createAssetClass(
+    return NODE_MGR.createNode(
       "0",
       "20",
       "1",
@@ -1970,7 +1970,7 @@ contract("NODE_MGR", (accounts) => {
 
   //41
   it("Should fail because discount > 10000", async () => {
-    return NODE_MGR.createAssetClass(
+    return NODE_MGR.createNode(
       "20",
       "20",
       "1",
@@ -1986,7 +1986,7 @@ contract("NODE_MGR", (accounts) => {
 
   //42
   it("Should fail because custodyType is invalid", async () => {
-    return NODE_MGR.createAssetClass(
+    return NODE_MGR.createNode(
       "20",
       "20",
       "1",
@@ -2002,7 +2002,7 @@ contract("NODE_MGR", (accounts) => {
 
   //43
   it("Should fail because managementType is invalid", async () => {
-    return NODE_MGR.createAssetClass(
+    return NODE_MGR.createNode(
       "20",
       "20",
       "1",
@@ -2018,7 +2018,7 @@ contract("NODE_MGR", (accounts) => {
 
   //44
   it("Should fail because storageProvider is invalid", async () => {
-    return NODE_MGR.createAssetClass(
+    return NODE_MGR.createNode(
       "20",
       "20",
       "1",
@@ -2034,7 +2034,7 @@ contract("NODE_MGR", (accounts) => {
 
   //45
   it("Should fail because root !exist", async () => {
-    return NODE_MGR.createAssetClass(
+    return NODE_MGR.createNode(
       "20",
       "10",
       "10",
@@ -2049,7 +2049,7 @@ contract("NODE_MGR", (accounts) => {
   });
 
   it("Should mint ROOT 3", async () => {
-    return NODE_MGR.createAssetClass(
+    return NODE_MGR.createNode(
       "3",
       "TEST2",
       "3",
@@ -2085,7 +2085,7 @@ contract("NODE_MGR", (accounts) => {
 
   //46
   it("Should fail because root is disabled && !ACTH", async () => {
-    return NODE_MGR.createAssetClass(
+    return NODE_MGR.createNode(
       "20",
       "20",
       "3",
@@ -2101,7 +2101,7 @@ contract("NODE_MGR", (accounts) => {
 
   //47
   it("Should fail because name already exists", async () => {
-    return NODE_MGR.createAssetClass(
+    return NODE_MGR.createNode(
       "20",
       "Custodial_AC1",
       "2",
@@ -2117,7 +2117,7 @@ contract("NODE_MGR", (accounts) => {
 
   //48
   it("Should fail because AC already exists", async () => {
-    return NODE_MGR.createAssetClass(
+    return NODE_MGR.createNode(
       "1",
       "1",
       "1",

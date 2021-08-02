@@ -671,91 +671,91 @@ contract("Discount", (accounts) => {
 
   it("Should set all permitted storage providers", () => {
     console.log("Authorizing UNCONFIGURED");
-    return NODE_MGR.adminSetStorageProviders("0", "1", { from: account1 })
+    return NODE_MGR.setStorageProviders("0", "1", { from: account1 })
 
       .then(() => {
         console.log("Authorizing IPFS");
-        return NODE_MGR.adminSetStorageProviders("1", "1", { from: account1 });
+        return NODE_MGR.setStorageProviders("1", "1", { from: account1 });
       })
 
       .then(() => {
         console.log("Authorizing ARWEAVE");
-        return NODE_MGR.adminSetStorageProviders("2", "1", { from: account1 });
+        return NODE_MGR.setStorageProviders("2", "1", { from: account1 });
       });
   });
 
   it("Should set all permitted management types", () => {
     console.log("Authorizing Unrestricted");
-    return NODE_MGR.adminSetManagementTypes("0", "1", { from: account1 })
+    return NODE_MGR.setManagementTypes("0", "1", { from: account1 })
 
       .then(() => {
         console.log("Authorizing Restricted");
-        return NODE_MGR.adminSetManagementTypes("1", "1", { from: account1 });
+        return NODE_MGR.setManagementTypes("1", "1", { from: account1 });
       })
 
       .then(() => {
         console.log("Authorizing Less Restricted");
-        return NODE_MGR.adminSetManagementTypes("2", "1", { from: account1 });
+        return NODE_MGR.setManagementTypes("2", "1", { from: account1 });
       })
 
       .then(() => {
         console.log("Authorizing Authorized");
-        return NODE_MGR.adminSetManagementTypes("3", "1", { from: account1 });
+        return NODE_MGR.setManagementTypes("3", "1", { from: account1 });
       })
 
       .then(() => {
         console.log("Authorizing Trusted");
-        return NODE_MGR.adminSetManagementTypes("4", "1", { from: account1 });
+        return NODE_MGR.setManagementTypes("4", "1", { from: account1 });
       })
 
       .then(() => {
         console.log("Authorizing Remotely Managed");
-        return NODE_MGR.adminSetManagementTypes("5", "1", { from: account1 });
+        return NODE_MGR.setManagementTypes("5", "1", { from: account1 });
       })
 
       .then(() => {
         console.log("Authorizing Unconfigured");
-        return NODE_MGR.adminSetManagementTypes("255", "1", { from: account1 });
+        return NODE_MGR.setManagementTypes("255", "1", { from: account1 });
       });
   });
 
   it("Should set all permitted custody types", () => {
     console.log("Authorizing NONE");
-    return NODE_MGR.adminSetCustodyTypes("0", "1", { from: account1 })
+    return NODE_MGR.setCustodyTypes("0", "1", { from: account1 })
 
       .then(() => {
         console.log("Authorizing Custodial");
-        return NODE_MGR.adminSetCustodyTypes("1", "1", { from: account1 });
+        return NODE_MGR.setCustodyTypes("1", "1", { from: account1 });
       })
 
       .then(() => {
         console.log("Authorizing Non-Custodial");
-        return NODE_MGR.adminSetCustodyTypes("2", "1", { from: account1 });
+        return NODE_MGR.setCustodyTypes("2", "1", { from: account1 });
       })
 
       .then(() => {
         console.log("Authorizing RAdmint");
-        return NODE_MGR.adminSetCustodyTypes("3", "1", { from: account1 });
+        return NODE_MGR.setCustodyTypes("3", "1", { from: account1 });
       })
 
       .then(() => {
         console.log("Authorizing Verify-Non-Custodial");
-        return NODE_MGR.adminSetCustodyTypes("4", "1", { from: account1 });
+        return NODE_MGR.setCustodyTypes("4", "1", { from: account1 });
       })
 
       .then(() => {
         console.log("Authorizing Wrapped or decorated ERC721");
-        return NODE_MGR.adminSetCustodyTypes("5", "1", { from: account1 });
+        return NODE_MGR.setCustodyTypes("5", "1", { from: account1 });
       })
 
       .then(() => {
         console.log("Authorizing Free Custodial");
-        return NODE_MGR.adminSetCustodyTypes("11", "1", { from: account1 });
+        return NODE_MGR.setCustodyTypes("11", "1", { from: account1 });
       })
 
       .then(() => {
         console.log("Authorizing Free Non-Custodial");
-        return NODE_MGR.adminSetCustodyTypes("12", "1", { from: account1 });
+        return NODE_MGR.setCustodyTypes("12", "1", { from: account1 });
       });
   });
 
@@ -766,7 +766,7 @@ contract("Discount", (accounts) => {
 
   it("Should mint a couple of asset root tokens", async () => {
     console.log("Minting root token 1 -C");
-    return NODE_MGR.createAssetClass(
+    return NODE_MGR.createNode(
       "1",
       "CUSTODIAL_ROOT1",
       "1",
@@ -781,7 +781,7 @@ contract("Discount", (accounts) => {
 
       .then(() => {
         console.log("Minting root token 2 -NC");
-        return NODE_MGR.createAssetClass(
+        return NODE_MGR.createNode(
           "2",
           "CUSTODIAL_ROOT2",
           "2",
@@ -797,7 +797,7 @@ contract("Discount", (accounts) => {
 
       .then(() => {
         console.log("Minting root token 3 -RESTRICTED");
-        return NODE_MGR.createAssetClass(
+        return NODE_MGR.createNode(
           "3",
           "CUSTODIAL_ROOT3",
           "3",
@@ -814,7 +814,7 @@ contract("Discount", (accounts) => {
 
   it("Should Mint 2 cust and 2 non-cust AC tokens in AC_ROOT 1", async () => {
     console.log("Minting AC 10 -C");
-    return NODE_MGR.createAssetClass(
+    return NODE_MGR.createNode(
       "10",
       "CUSTODIAL_AC10",
       "1",
@@ -829,7 +829,7 @@ contract("Discount", (accounts) => {
 
       .then(() => {
         console.log("Minting AC 11 -C");
-        return NODE_MGR.createAssetClass(
+        return NODE_MGR.createNode(
           "11",
           "CUSTODIAL_AC11",
           "1",
@@ -845,7 +845,7 @@ contract("Discount", (accounts) => {
 
       .then(() => {
         console.log("Minting AC 12 -NC");
-        return NODE_MGR.createAssetClass(
+        return NODE_MGR.createNode(
           "12",
           "CUSTODIAL_AC12",
           "1",
@@ -861,7 +861,7 @@ contract("Discount", (accounts) => {
 
       .then(() => {
         console.log("Minting AC 13 -NC");
-        return NODE_MGR.createAssetClass(
+        return NODE_MGR.createNode(
           "13",
           "CUSTODIAL_AC13",
           "1",
@@ -877,7 +877,7 @@ contract("Discount", (accounts) => {
 
       .then(() => {
         console.log("Minting AC 16 -NC");
-        return NODE_MGR.createAssetClass(
+        return NODE_MGR.createNode(
           "16",
           "CUSTODIAL_AC16",
           "2",
@@ -893,7 +893,7 @@ contract("Discount", (accounts) => {
 
       .then(() => {
         console.log("Minting AC 17 -NC");
-        return NODE_MGR.createAssetClass(
+        return NODE_MGR.createNode(
           "17",
           "CUSTODIAL_AC17",
           "2",
@@ -909,7 +909,7 @@ contract("Discount", (accounts) => {
 
       .then(() => {
         console.log("Minting AC 18 -NC");
-        return NODE_MGR.createAssetClass(
+        return NODE_MGR.createNode(
           "18",
           "CUSTODIAL_AC18",
           "2",
@@ -925,7 +925,7 @@ contract("Discount", (accounts) => {
 
       .then(() => {
         console.log("Minting AC 19 -NC");
-        return NODE_MGR.createAssetClass(
+        return NODE_MGR.createNode(
           "19",
           "CUSTODIAL_AC19",
           "2",
@@ -942,7 +942,7 @@ contract("Discount", (accounts) => {
 
   it("Should Mint 2 non-cust AC tokens in AC_ROOT 2", async () => {
     console.log("Minting AC 14 -NC");
-    return NODE_MGR.createAssetClass(
+    return NODE_MGR.createNode(
       "14",
       "CUSTODIAL_AC14",
       "2",
@@ -956,7 +956,7 @@ contract("Discount", (accounts) => {
     )
     .then(() => {
       console.log("Minting AC 15 -NC");
-      return NODE_MGR.createAssetClass(
+      return NODE_MGR.createNode(
         "15",
         "CUSTODIAL_AC15",
         "2",
@@ -1683,7 +1683,7 @@ contract("Discount", (accounts) => {
   });
 
   it("Should increaseShare to 66/36 split @AC13", async () => {
-    return NODE_MGR.adminIncreaseShare("13", "6600", { from: account1 });
+    return NODE_MGR.increaseShare("13", "6600", { from: account1 });
   });
 
   it("Should retrieve balanceOf(295000) Pruf tokens @account1", async () => {
@@ -1703,7 +1703,7 @@ contract("Discount", (accounts) => {
   });
 
   it("Should increaseShare to 90/10 split @AC11", async () => {
-    return NODE_MGR.adminIncreaseShare("11", "9000", { from: account1 });
+    return NODE_MGR.increaseShare("11", "9000", { from: account1 });
   });
 
   it("Should retrieve balanceOf(256000) Pruf tokens @account1", async () => {

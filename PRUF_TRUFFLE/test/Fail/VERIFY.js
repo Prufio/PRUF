@@ -911,11 +911,11 @@ _________\/// _____________\/// _______\/// __\///////// __\/// _____________
             it('Should mint 2 asset root tokens', async () => {
 
                 console.log("Minting root token 1")
-                return NODE_MGR.createAssetClass('1', 'ROOT1', '1', '3', "0", "0", rgt000, account1, { from: account1 })
+                return NODE_MGR.createNode('1', 'ROOT1', '1', '3', "0", "0", rgt000, account1, { from: account1 })
             
                 .then(() => {
                     console.log("Minting root token 2")
-                    return NODE_MGR.createAssetClass('2', 'ROOT2', '2', '3', "0", "0", rgt000, account1, { from: account1 })
+                    return NODE_MGR.createNode('2', 'ROOT2', '2', '3', "0", "0", rgt000, account1, { from: account1 })
                 })
             })
             
@@ -923,11 +923,11 @@ _________\/// _____________\/// _______\/// __\///////// __\/// _____________
             it("Should Mint 2 non cust AC", async () => {
                 
                 console.log("Minting AC 10 -NC")
-                return NODE_MGR.createAssetClass('10', 'NonCustodial_AC10', '1', '2', "0", "0", rgt000, account1, { from: account1 })
+                return NODE_MGR.createNode('10', 'NonCustodial_AC10', '1', '2', "0", "0", rgt000, account1, { from: account1 })
             
                     .then(() => {
                         console.log("Minting AC 11 -NC to Account2")
-                        return NODE_MGR.createAssetClass('11', 'NonCustodial_AC11', '1', '2', "0", "0", rgt000, account2, { from: account1 })
+                        return NODE_MGR.createNode('11', 'NonCustodial_AC11', '1', '2', "0", "0", rgt000, account2, { from: account1 })
                     })
             })
             
@@ -935,21 +935,21 @@ _________\/// _____________\/// _______\/// __\///////// __\/// _____________
             it("Should Mint 4 verify AC tokens", async () => {
                 
                 console.log("Minting AC 12 Verify")
-                return NODE_MGR.createAssetClass('12', 'Verify1', '1', '4', "0", "0", rgt000, account1, { from: account1 })
+                return NODE_MGR.createNode('12', 'Verify1', '1', '4', "0", "0", rgt000, account1, { from: account1 })
             
                     .then(() => {
                         console.log("Minting AC 13 Verify")
-                        return NODE_MGR.createAssetClass('13', 'Verify2', '1', '4', "0", "0", rgt000, account1, { from: account1 })
+                        return NODE_MGR.createNode('13', 'Verify2', '1', '4', "0", "0", rgt000, account1, { from: account1 })
                     })
             
                     .then(() => {
                         console.log("Minting AC 14 Verify to Account2")
-                        return NODE_MGR.createAssetClass('14', 'Verify3', '1', '4', "0", "0", rgt000, account2, { from: account1 })
+                        return NODE_MGR.createNode('14', 'Verify3', '1', '4', "0", "0", rgt000, account2, { from: account1 })
                     })
             
                     .then(() => {
                         console.log("Minting AC 15 Verify to Account2")
-                        return NODE_MGR.createAssetClass('15', 'Verify4', '2', '4', "0", "0", rgt000, account2, { from: account1 })
+                        return NODE_MGR.createNode('15', 'Verify4', '2', '4', "0", "0", rgt000, account2, { from: account1 })
                     })
             
             })
@@ -2331,7 +2331,7 @@ _________\/// _____________\/// _______\/// __\///////// __\/// _____________
 
 
     it('Should mark string1 status 2(Counterfeit)', async () => {
-        return VERIFY.adminMarkCounterfeit(
+        return VERIFY.markCounterfeit(
             asset2,
             string4Hash,
             { from: account2 }
@@ -2373,8 +2373,8 @@ _________\/// _____________\/// _______\/// __\///////// __\/// _____________
     it('Should fail because caller does not hold verify wallet', async () => {
 
         console.log("//**************************************END transfer FAIL BATCH**********************************************/")
-        console.log("//**************************************BEGIN adminMarkCounterfeit FAIL BATCH**********************************************/")
-        return VERIFY.adminMarkCounterfeit(
+        console.log("//**************************************BEGIN markCounterfeit FAIL BATCH**********************************************/")
+        return VERIFY.markCounterfeit(
             asset2,
             string2Hash,
             { from: account1 }
@@ -2383,7 +2383,7 @@ _________\/// _____________\/// _______\/// __\///////// __\/// _____________
 
     //21
     it('Should fail because asset3 is not verified wallet', async () => {
-        return VERIFY.adminMarkCounterfeit(
+        return VERIFY.markCounterfeit(
             asset3,
             string3Hash,
             { from: account1 }
@@ -2413,7 +2413,7 @@ _________\/// _____________\/// _______\/// __\///////// __\/// _____________
 
     //22
     it('Should fail because caller is not authLevel3 in verify wallet', async () => {
-        return VERIFY.adminMarkCounterfeit(
+        return VERIFY.markCounterfeit(
             asset7,
             string2Hash,
             { from: account2 }
@@ -2423,7 +2423,7 @@ _________\/// _____________\/// _______\/// __\///////// __\/// _____________
     //23
     it('Should fail because caller does not hold verify wallet', async () => {
 
-        console.log("//**************************************END adminMarkCounterfeit FAIL BATCH**********************************************/")
+        console.log("//**************************************END markCounterfeit FAIL BATCH**********************************************/")
         console.log("//**************************************BEGIN markItem FAIL BATCH**********************************************/")
         return VERIFY.markItem(
             asset2,

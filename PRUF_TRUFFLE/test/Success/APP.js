@@ -772,91 +772,91 @@ contract("APP", (accounts) => {
 
   it("Should set all permitted storage providers", () => {
     console.log("Authorizing UNCONFIGURED");
-    return NODE_MGR.adminSetStorageProviders("0", "1", { from: account1 })
+    return NODE_MGR.setStorageProviders("0", "1", { from: account1 })
 
       .then(() => {
         console.log("Authorizing IPFS");
-        return NODE_MGR.adminSetStorageProviders("1", "1", { from: account1 });
+        return NODE_MGR.setStorageProviders("1", "1", { from: account1 });
       })
 
       .then(() => {
         console.log("Authorizing ARWEAVE");
-        return NODE_MGR.adminSetStorageProviders("2", "1", { from: account1 });
+        return NODE_MGR.setStorageProviders("2", "1", { from: account1 });
       });
   });
 
   it("Should set all permitted management types", () => {
     console.log("Authorizing Unrestricted");
-    return NODE_MGR.adminSetManagementTypes("0", "1", { from: account1 })
+    return NODE_MGR.setManagementTypes("0", "1", { from: account1 })
 
       .then(() => {
         console.log("Authorizing Restricted");
-        return NODE_MGR.adminSetManagementTypes("1", "1", { from: account1 });
+        return NODE_MGR.setManagementTypes("1", "1", { from: account1 });
       })
 
       .then(() => {
         console.log("Authorizing Less Restricted");
-        return NODE_MGR.adminSetManagementTypes("2", "1", { from: account1 });
+        return NODE_MGR.setManagementTypes("2", "1", { from: account1 });
       })
 
       .then(() => {
         console.log("Authorizing Authorized");
-        return NODE_MGR.adminSetManagementTypes("3", "1", { from: account1 });
+        return NODE_MGR.setManagementTypes("3", "1", { from: account1 });
       })
 
       .then(() => {
         console.log("Authorizing Trusted");
-        return NODE_MGR.adminSetManagementTypes("4", "1", { from: account1 });
+        return NODE_MGR.setManagementTypes("4", "1", { from: account1 });
       })
 
       .then(() => {
         console.log("Authorizing Remotely Managed");
-        return NODE_MGR.adminSetManagementTypes("5", "1", { from: account1 });
+        return NODE_MGR.setManagementTypes("5", "1", { from: account1 });
       })
 
       .then(() => {
         console.log("Authorizing Unconfigured");
-        return NODE_MGR.adminSetManagementTypes("255", "1", { from: account1 });
+        return NODE_MGR.setManagementTypes("255", "1", { from: account1 });
       });
   });
 
   it("Should set all permitted custody types", () => {
     console.log("Authorizing NONE");
-    return NODE_MGR.adminSetCustodyTypes("0", "1", { from: account1 })
+    return NODE_MGR.setCustodyTypes("0", "1", { from: account1 })
 
       .then(() => {
         console.log("Authorizing Custodial");
-        return NODE_MGR.adminSetCustodyTypes("1", "1", { from: account1 });
+        return NODE_MGR.setCustodyTypes("1", "1", { from: account1 });
       })
 
       .then(() => {
         console.log("Authorizing Non-Custodial");
-        return NODE_MGR.adminSetCustodyTypes("2", "1", { from: account1 });
+        return NODE_MGR.setCustodyTypes("2", "1", { from: account1 });
       })
 
       .then(() => {
         console.log("Authorizing RAdmint");
-        return NODE_MGR.adminSetCustodyTypes("3", "1", { from: account1 });
+        return NODE_MGR.setCustodyTypes("3", "1", { from: account1 });
       })
 
       .then(() => {
         console.log("Authorizing Verify-Non-Custodial");
-        return NODE_MGR.adminSetCustodyTypes("4", "1", { from: account1 });
+        return NODE_MGR.setCustodyTypes("4", "1", { from: account1 });
       })
 
       .then(() => {
         console.log("Authorizing Wrapped or decorated ERC721");
-        return NODE_MGR.adminSetCustodyTypes("5", "1", { from: account1 });
+        return NODE_MGR.setCustodyTypes("5", "1", { from: account1 });
       })
 
       .then(() => {
         console.log("Authorizing Free Custodial");
-        return NODE_MGR.adminSetCustodyTypes("11", "1", { from: account1 });
+        return NODE_MGR.setCustodyTypes("11", "1", { from: account1 });
       })
 
       .then(() => {
         console.log("Authorizing Free Non-Custodial");
-        return NODE_MGR.adminSetCustodyTypes("12", "1", { from: account1 });
+        return NODE_MGR.setCustodyTypes("12", "1", { from: account1 });
       });
   });
 
@@ -976,7 +976,7 @@ contract("APP", (accounts) => {
 
   it("Should mint a couple of asset root tokens", () => {
     console.log("Minting root token 1 -C");
-    return NODE_MGR.createAssetClass(
+    return NODE_MGR.createNode(
       "1",
       "CUSTODIAL_ROOT",
       "1",
@@ -989,7 +989,7 @@ contract("APP", (accounts) => {
       { from: account1 }
     ).then(() => {
       console.log("Minting root token 2 -NC");
-      return NODE_MGR.createAssetClass(
+      return NODE_MGR.createNode(
         "2",
         "NON-CUSTODIAL_ROOT",
         "2",
@@ -1230,36 +1230,36 @@ contract("APP", (accounts) => {
 
   it("Should finalize all ACs", () => {
     console.log("Authorizing AC Switch 1");
-    return NODE_MGR.adminModAssetClassSwitches("1000001", "1", "1", {
+    return NODE_MGR.modAssetClassSwitches("1000001", "1", "1", {
       from: account1,
     })
 
       .then(() => {
-        return NODE_MGR.adminModAssetClassSwitches("1000002", "3", "1", {
+        return NODE_MGR.modAssetClassSwitches("1000002", "3", "1", {
           from: account1,
         });
       })
 
       .then(() => {
-        return NODE_MGR.adminModAssetClassSwitches("1000003", "3", "1", {
+        return NODE_MGR.modAssetClassSwitches("1000003", "3", "1", {
           from: account1,
         });
       })
 
       .then(() => {
-        return NODE_MGR.adminModAssetClassSwitches("1000004", "3", "1", {
+        return NODE_MGR.modAssetClassSwitches("1000004", "3", "1", {
           from: account1,
         });
       })
 
       .then(() => {
-        return NODE_MGR.adminModAssetClassSwitches("1000005", "3", "1", {
+        return NODE_MGR.modAssetClassSwitches("1000005", "3", "1", {
           from: account1,
         });
       })
 
       .then(() => {
-        return NODE_MGR.adminModAssetClassSwitches("1000006", "3", "1", {
+        return NODE_MGR.modAssetClassSwitches("1000006", "3", "1", {
           from: account1,
         });
       });

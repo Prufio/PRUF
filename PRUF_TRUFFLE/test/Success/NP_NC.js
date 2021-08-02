@@ -899,16 +899,16 @@ contract('NP_NC', accounts => {
     it('Should mint a couple of asset root tokens', async () => {
                 
         console.log("Minting root token 1 -C")
-        return NODE_MGR.createAssetClass("1", 'CUSTODIAL_ROOT1', '1', '3', '0', "0", rgt000, account1, { from: account1 })
+        return NODE_MGR.createNode("1", 'CUSTODIAL_ROOT1', '1', '3', '0', "0", rgt000, account1, { from: account1 })
 
             .then(() => {
                 console.log("Minting root token 2 -NC")
-                return NODE_MGR.createAssetClass("2", 'CUSTODIAL_ROOT2', '2', '3', '0', "0", rgt000, account1, { from: account1 })
+                return NODE_MGR.createNode("2", 'CUSTODIAL_ROOT2', '2', '3', '0', "0", rgt000, account1, { from: account1 })
             })
 
             .then(() => {
                 console.log("Minting root token 3 -RESTRICTED")
-                return NODE_MGR.createAssetClass("3", 'CUSTODIAL_ROOT3', '3', '3', '1', "0", rgt000, account2, { from: account1 })
+                return NODE_MGR.createNode("3", 'CUSTODIAL_ROOT3', '3', '3', '1', "0", rgt000, account2, { from: account1 })
             })
     })
 
@@ -916,41 +916,41 @@ contract('NP_NC', accounts => {
     it("Should Mint 2 cust and 2 non-cust AC tokens in AC_ROOT 1", async () => {
 
         console.log("Minting AC 10 -C")
-        return NODE_MGR.createAssetClass("10", 'CUSTODIAL_AC10', '1', '1', '0', "0", rgt000, account1, { from: account1 })
+        return NODE_MGR.createNode("10", 'CUSTODIAL_AC10', '1', '1', '0', "0", rgt000, account1, { from: account1 })
 
             .then(() => {
                 console.log("Minting AC 11 -C")
-                return NODE_MGR.createAssetClass("11", 'CUSTODIAL_AC11', '1', '1', '0', "0", rgt000, account1, { from: account1 })
+                return NODE_MGR.createNode("11", 'CUSTODIAL_AC11', '1', '1', '0', "0", rgt000, account1, { from: account1 })
             })
 
             .then(() => {
                 console.log("Minting AC 12 -NC")
-                return NODE_MGR.createAssetClass("12", 'CUSTODIAL_AC12', '1', '2', '0', "0", rgt000, account1, { from: account1 })
+                return NODE_MGR.createNode("12", 'CUSTODIAL_AC12', '1', '2', '0', "0", rgt000, account1, { from: account1 })
             })
 
             .then(() => {
                 console.log("Minting AC 13 -NC")
-                return NODE_MGR.createAssetClass("13", 'CUSTODIAL_AC13', '1', '2', '0', "0", rgt000, account1, { from: account1 })
+                return NODE_MGR.createNode("13", 'CUSTODIAL_AC13', '1', '2', '0', "0", rgt000, account1, { from: account1 })
             })
 
             .then(() => {
                 console.log("Minting AC 16 -NC")
-                return NODE_MGR.createAssetClass("16", 'CUSTODIAL_AC16', '2', '2', '1', "0", rgt000, account10, { from: account1 })
+                return NODE_MGR.createNode("16", 'CUSTODIAL_AC16', '2', '2', '1', "0", rgt000, account10, { from: account1 })
             })
 
             .then(() => {
                 console.log("Minting AC 17 -NC")
-                return NODE_MGR.createAssetClass("17", 'CUSTODIAL_AC17', '2', '2', '3', "0", rgt000, account1, { from: account1 })
+                return NODE_MGR.createNode("17", 'CUSTODIAL_AC17', '2', '2', '3', "0", rgt000, account1, { from: account1 })
             })
 
             .then(() => {
                 console.log("Minting AC 18 -NC")
-                return NODE_MGR.createAssetClass("18", 'CUSTODIAL_AC18', '2', '2', '4', "0", rgt000, account1, { from: account1 })
+                return NODE_MGR.createNode("18", 'CUSTODIAL_AC18', '2', '2', '4', "0", rgt000, account1, { from: account1 })
             })
 
             .then(() => {
                 console.log("Minting AC 19 -NC")
-                return NODE_MGR.createAssetClass("19", 'CUSTODIAL_AC19', '2', '2', '5', "0", rgt000, account1, { from: account1 })
+                return NODE_MGR.createNode("19", 'CUSTODIAL_AC19', '2', '2', '5', "0", rgt000, account1, { from: account1 })
             })
     })
 
@@ -958,11 +958,11 @@ contract('NP_NC', accounts => {
     it("Should Mint 2 non-cust AC tokens in AC_ROOT 2", async () => {
 
         console.log("Minting AC 14 -NC")
-        return NODE_MGR.createAssetClass("14", 'CUSTODIAL_AC14', '2', '2', '0', "0", rgt000, account1, { from: account1 })
+        return NODE_MGR.createNode("14", 'CUSTODIAL_AC14', '2', '2', '0', "0", rgt000, account1, { from: account1 })
 
             .then(() => {
                 console.log("Minting AC 15 -NC")
-                return NODE_MGR.createAssetClass("15", 'CUSTODIAL_AC15', '2', '2', '0', "0", rgt000, account10, { from: account1 })
+                return NODE_MGR.createNode("15", 'CUSTODIAL_AC15', '2', '2', '0', "0", rgt000, account10, { from: account1 })
             })
     })
 

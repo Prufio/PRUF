@@ -1428,7 +1428,7 @@ contract('PRESALE', accounts => {
 
     //21
     it('Should fail because not default admin', async () => {
-        return UTIL_TKN.adminKillTrustedAgent(
+        return UTIL_TKN.killTrustedAgent(
             "170",
             { from: B }
         )
@@ -1436,7 +1436,7 @@ contract('PRESALE', accounts => {
 
 
     it('Should kill all trusted agent functionality', async () => {
-        return UTIL_TKN.adminKillTrustedAgent(
+        return UTIL_TKN.killTrustedAgent(
             "170",
             { from: A }
         )

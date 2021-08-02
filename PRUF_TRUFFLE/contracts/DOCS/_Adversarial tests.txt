@@ -179,9 +179,9 @@ B: payForService(
    ) -- SUCCEEDS
 --- A:4.1 B:9 C:7.4 -- 20.5
 
-B: adminKillTrustedAgent FAIL must have DEFAULT_ADMIN_ROLE
+B: killTrustedAgent FAIL must have DEFAULT_ADMIN_ROLE
 
-A: adminKillTrustedAgent -- SUCCEEDS
+A: killTrustedAgent -- SUCCEEDS
 
 B: trustedAgentTransfer(
        address _from C,
