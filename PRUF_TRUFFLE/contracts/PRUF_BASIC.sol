@@ -123,7 +123,7 @@ abstract contract BASIC is
     /**
      * @dev Resolve Contract Addresses from STOR 
      */
-    function Admin_resolveContractAddresses()
+    function resolveContractAddresses()
         external
         virtual
         nonReentrant
@@ -187,7 +187,7 @@ abstract contract BASIC is
      * @param _to - address to send to
      * @param _tokenID - node token ID
      */
-    function Admin_transferNodeToken(address _to, uint256 _tokenID)
+    function transferNodeToken(address _to, uint256 _tokenID)
         external
         virtual
         isContractAdmin 
@@ -202,7 +202,7 @@ abstract contract BASIC is
      * @dev Set address of STOR contract to interface with 
      * @param _storageAddress address of PRUF_STOR
      */
-    function Admin_setStorageContract(address _storageAddress)
+    function setStorageContract(address _storageAddress)
         external
         virtual
         isContractAdmin 
