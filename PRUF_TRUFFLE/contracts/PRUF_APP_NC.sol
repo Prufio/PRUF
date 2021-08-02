@@ -164,7 +164,7 @@ contract APP_NC is CORE {
             (AC_info.managementType == 5)
         ) {
             require(
-                (AC_TKN.ownerOf(_newAssetClass) == _msgSender()),
+                (NODE_TKN.ownerOf(_newAssetClass) == _msgSender()),
                 "ANC:IA: Cannot create asset in AC mgmt type 1||2||5 - caller does not hold AC token"
             );
         } else if (AC_info.managementType == 3) {

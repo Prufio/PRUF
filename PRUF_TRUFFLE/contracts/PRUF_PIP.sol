@@ -49,7 +49,7 @@ contract PIP is CORE {
         uint8 userType = getCallingUserType(_assetClass);
 
         require(
-            (AC_TKN.ownerOf(_assetClass) == _msgSender()), //_msgSender() is AC token holder
+            (NODE_TKN.ownerOf(_assetClass) == _msgSender()), //_msgSender() is AC token holder
             "P:MPA: Caller does not hold AC token"
         );
         require(userType == 10, "P:MPA: User not authorized to mint PIP assets");

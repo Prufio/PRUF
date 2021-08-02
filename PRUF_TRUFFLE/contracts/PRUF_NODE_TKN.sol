@@ -42,7 +42,7 @@ import "./Imports/utils/ReentrancyGuard.sol";
  * roles to other accounts.
  */
 
-contract AC_TKN is
+contract NODE_TKN is
     ReentrancyGuard,
     Context,
     AccessControl,

@@ -49,7 +49,7 @@ contract SCULPTOR is AccessControl, BASIC{
     //  */
     // modifier isACtokenHolderOfClass(uint32 _assetClass) {
     //     require(
-    //         (AC_TKN.ownerOf(_assetClass) == _msgSender()),
+    //         (NODE_TKN.ownerOf(_assetClass) == _msgSender()),
     //         "ACM:MOD-IACTHoC:_msgSender() not authorized in asset class"
     //     );
     //     _;
@@ -62,7 +62,7 @@ contract SCULPTOR is AccessControl, BASIC{
     function createArtiifact(bytes32 _idxHash) external isAuthorized(_idxHash) {
         Record memory rec = getRecord( _idxHash);
         require(
-            (AC_TKN.ownerOf(rec.assetClass) == _msgSender()),
+            (NODE_TKN.ownerOf(rec.assetClass) == _msgSender()),
             "ACM:MOD-IACTHoC:_msgSender() not authorized in asset class"
         );
 

@@ -63,7 +63,7 @@ contract CORE is BASIC {
                 (AC_info.managementType == 5)
             ) {
                 require(
-                    (AC_TKN.ownerOf(_assetClass) == _msgSender()),
+                    (NODE_TKN.ownerOf(_assetClass) == _msgSender()),
                     "C:CR:Cannot create asset in AC mgmt type 1||2||5 - caller does not hold AC token"
                 );
             } else if (AC_info.managementType == 3) {
@@ -143,7 +143,7 @@ contract CORE is BASIC {
         );
         if ((AC_info.custodyType != 1) && (AC_info.managementType == 5)) {
             require(
-                (AC_TKN.ownerOf(_rec.assetClass) == _msgSender()),
+                (NODE_TKN.ownerOf(_rec.assetClass) == _msgSender()),
                 "C:WIPFS1: Caller must hold ACnode (management type 5)"
             );
         }

@@ -68,11 +68,11 @@ contract A_TKN is
     address internal STOR_Address;
     address internal RCLR_Address;
     address internal NODE_MGR_Address;
-    address internal AC_TKN_Address;
+    address internal NODE_TKN_Address;
     STOR_Interface internal STOR;
     RCLR_Interface internal RCLR;
     NODE_MGR_Interface internal NODE_MGR;
-    AC_TKN_Interface internal AC_TKN;
+    NODE_TKN_Interface internal NODE_TKN;
 
     bytes32 public constant B320xF_ =
         0xFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFF;
@@ -176,8 +176,8 @@ contract A_TKN is
         NODE_MGR_Address = STOR.resolveContractAddress("NODE_MGR");
         NODE_MGR = NODE_MGR_Interface(NODE_MGR_Address);
 
-        AC_TKN_Address = STOR.resolveContractAddress("AC_TKN");
-        AC_TKN = AC_TKN_Interface(AC_TKN_Address);
+        NODE_TKN_Address = STOR.resolveContractAddress("NODE_TKN");
+        NODE_TKN = NODE_TKN_Interface(NODE_TKN_Address);
         //^^^^^^^effects^^^^^^^^^
     }
 
@@ -255,7 +255,7 @@ contract A_TKN is
             );
 
             require(
-                AC_TKN.ownerOf(rec.assetClass) == _msgSender(),
+                NODE_TKN.ownerOf(rec.assetClass) == _msgSender(),
                 "AT:SURI:Caller !ACTH"
             );
         }

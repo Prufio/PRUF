@@ -88,7 +88,7 @@ contract DECORATE is CORE {
             (AC_info.managementType == 5)
         ) {
             require(    //DPS:TEST NEW
-                (AC_TKN.ownerOf(_assetClass) == _msgSender()),
+                (NODE_TKN.ownerOf(_assetClass) == _msgSender()),
                 "ANC:IA: Cannot create asset in AC mgmt type 1||2||5 - caller does not hold AC token"
             );
         } else if (AC_info.managementType == 3) {
@@ -327,7 +327,7 @@ contract DECORATE is CORE {
         );
         if ((AC_info.custodyType != 1) && (AC_info.managementType == 5)) {
             require(
-                (AC_TKN.ownerOf(rec.assetClass) == _msgSender()),
+                (NODE_TKN.ownerOf(rec.assetClass) == _msgSender()),
                 "C:WIPFS1: Caller must hold ACnode (management type 5)"
             );
         }
@@ -426,7 +426,7 @@ contract DECORATE is CORE {
         );
         if ((AC_info.managementType == 1) || (AC_info.managementType == 5)) {
             require(
-                (AC_TKN.ownerOf(rec.assetClass) == _msgSender()),
+                (NODE_TKN.ownerOf(rec.assetClass) == _msgSender()),
                 "D:E: Restricted from exporting assets from this AC - does not hold ACtoken"
             );
         }
@@ -506,7 +506,7 @@ contract DECORATE is CORE {
             (newAC_info.managementType == 5)
         ) {
             require( //DPS:TEST NEW
-                (AC_TKN.ownerOf(_newAssetClass) == _msgSender()),
+                (NODE_TKN.ownerOf(_newAssetClass) == _msgSender()),
                 "D:I: Cannot create asset in AC mgmt type 1||2||5 - caller does not hold AC token"
             );
         } else if (newAC_info.managementType == 3) {
@@ -570,7 +570,7 @@ contract DECORATE is CORE {
             (AC_info.managementType == 5)
         ) {
             require(
-                (AC_TKN.ownerOf(_assetClass) == _msgSender()),
+                (NODE_TKN.ownerOf(_assetClass) == _msgSender()),
                 "D:CRO:Cannot create asset in AC mgmt type 1||2||5 - caller does not hold AC token"
             );
         } else if (AC_info.managementType == 3) {
