@@ -286,7 +286,7 @@ abstract contract BASIC is
         // //^^^^^^^effects^^^^^^^^^
 
         // (
-        //     node_info.assetClassRoot,
+        //     node_info.nodeRoot,
         //     node_info.custodyType,
         //     node_info.managementType,
         //     node_info.discount,

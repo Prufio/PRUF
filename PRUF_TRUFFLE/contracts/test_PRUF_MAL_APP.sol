@@ -71,7 +71,7 @@ contract MAL_APP is CORE_MAL {
         //bytes32 userHash = keccak256(abi.encodePacked(_msgSender()));
         //^^^^^^^effects^^^^^^^^^
 
-        // if (node_info.assetClassRoot == oldAC_info.assetClassRoot) {
+        // if (node_info.nodeRoot == oldAC_info.nodeRoot) {
             // createRecord(_idxHash, _rgtHash, _node, rec.countDownStart);
         // } else {
             createRecord(_idxHash, _rgtHash, _node, _countDownStart);
