@@ -2451,8 +2451,8 @@ contract('DECORATE', accounts => {
         })
     })
 
-    it('Should _modIpfs1 to rgt1', async () => {
-        return DECORATE._modIpfs1(
+    it('Should _modMutable to rgt1', async () => {
+        return DECORATE._modMutable(
             "0",
             Foreign721.address,
             rgt1,
@@ -2461,7 +2461,7 @@ contract('DECORATE', accounts => {
         )
     })
 
-    it("Should retrieve recordCode1 ipfs1=rgt1", async () => {
+    it("Should retrieve recordCode1 mutable=rgt1", async () => {
         var Record = [];
 
         return await STOR.retrieveShortRecord(recordCode1, { from: account1 }, function (_err, _result) {
@@ -2473,8 +2473,8 @@ contract('DECORATE', accounts => {
         })
     })
 
-    it('Should addIpfs2Note to rgt1', async () => {
-        return DECORATE.addIpfs2Note(
+    it('Should addNonMutableNote to rgt1', async () => {
+        return DECORATE.addNonMutableNote(
             "0",
             Foreign721.address,
             rgt1,
@@ -2483,7 +2483,7 @@ contract('DECORATE', accounts => {
         )
     })
 
-    it("Should retrieve recordCode1 ipfs1=rgt1", async () => {
+    it("Should retrieve recordCode1 mutable=rgt1", async () => {
         var Record = [];
 
         return await STOR.retrieveShortRecord(recordCode1, { from: account1 }, function (_err, _result) {
@@ -2590,8 +2590,8 @@ contract('DECORATE', accounts => {
     })
 
 
-    it('Should modify Ipfs1 note @asset12 to IDX(1)', async () => {
-        return NP._modIpfs1(
+    it('Should modify Mutable note @asset12 to IDX(1)', async () => {
+        return NP._modMutable(
             asset12,
             rgt12,
             asset12,
@@ -2642,8 +2642,8 @@ contract('DECORATE', accounts => {
     // })
 
 
-    it('Should set Ipfs2 note to IDX(1)', async () => {
-        return APP_NC.addIpfs2Note(
+    it('Should set NonMutable note to IDX(1)', async () => {
+        return APP_NC.addNonMutableNote(
             asset12,
             asset12,
             rgt000,
@@ -2698,8 +2698,8 @@ contract('DECORATE', accounts => {
     })
 
 
-    it('Should modify Ipfs1 note @asset12 to RGT(1)', async () => {
-        return NP_NC._modIpfs1(
+    it('Should modify Mutable note @asset12 to RGT(1)', async () => {
+        return NP_NC._modMutable(
             asset12,
             rgt12,
             rgt000,

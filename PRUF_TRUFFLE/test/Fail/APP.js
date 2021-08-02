@@ -775,7 +775,7 @@ contract("APP", (accounts) => {
     return NODE_MGR.setStorageProviders("0", "1", { from: account1 })
 
       .then(() => {
-        console.log("Authorizing IPFS");
+        console.log("Authorizing Mutable");
         return NODE_MGR.setStorageProviders("1", "1", { from: account1 });
       })
 
@@ -1719,7 +1719,7 @@ contract("APP", (accounts) => {
     console.log(
       "//**************************BEGIN addIpfsNote FAIL BATCH**************************//"
     );
-    return APP.addIpfs2Note(asset3, rgt3, rgt2, rgt000, { from: account4 });
+    return APP.addNonMutableNote(asset3, rgt3, rgt2, rgt000, { from: account4 });
   });
 
   it("Should unpause APP", async () => {
@@ -1728,17 +1728,17 @@ contract("APP", (accounts) => {
 
   //21
   it("Should fail because contract does not hold token", async () => {
-    return APP.addIpfs2Note(asset3, rgt3, rgt2, rgt000, { from: account4 });
+    return APP.addNonMutableNote(asset3, rgt3, rgt2, rgt000, { from: account4 });
   });
 
   //22
   it("Should fail becasue user not auth for AC", async () => {
-    return APP.addIpfs2Note(asset1, rgt1, rgt5, rgt000, { from: account6 });
+    return APP.addNonMutableNote(asset1, rgt1, rgt5, rgt000, { from: account6 });
   });
 
   //23
   it("Should fail becasue rgt does not match record data", async () => {
-    return APP.addIpfs2Note(asset6, rgt5, rgt5, rgt000, { from: account2 });
+    return APP.addNonMutableNote(asset6, rgt5, rgt5, rgt000, { from: account2 });
   });
 
   it("Should set shares address", async () => {
@@ -1869,11 +1869,11 @@ contract("APP", (accounts) => {
     );
   });
 
-  it("Should modify Ipfs1 note @asset12 to (asset12)", async () => {
-    return NP._modIpfs1(asset12, rgt12, asset12, rgt000, { from: account2 });
+  it("Should modify Mutable note @asset12 to (asset12)", async () => {
+    return NP._modMutable(asset12, rgt12, asset12, rgt000, { from: account2 });
   });
 
-  it("Should retrieve asset12 with newIpfs1(asset12)", async () => {
+  it("Should retrieve asset12 with newMutable(asset12)", async () => {
     var Record = [];
 
     return await STOR.retrieveShortRecord(
@@ -1909,13 +1909,13 @@ contract("APP", (accounts) => {
     );
   });
 
-  it("Should set Ipfs2 note to (asset12)", async () => {
-    return APP.addIpfs2Note(asset12, rgt12, asset12, rgt000, {
+  it("Should set NonMutable note to (asset12)", async () => {
+    return APP.addNonMutableNote(asset12, rgt12, asset12, rgt000, {
       from: account2,
     });
   });
 
-  it("Should retrieve asset12 with newIpfs2(asset12)", async () => {
+  it("Should retrieve asset12 with newNonMutable(asset12)", async () => {
     var Record = [];
 
     return await STOR.retrieveShortRecord(
@@ -2073,11 +2073,11 @@ contract("APP", (accounts) => {
     );
   });
 
-  it("Should modify Ipfs1 @asset12 to RGT(12)", async () => {
-    return NP_NC._modIpfs1(asset12, rgt12, rgt000, { from: account2 });
+  it("Should modify Mutable @asset12 to RGT(12)", async () => {
+    return NP_NC._modMutable(asset12, rgt12, rgt000, { from: account2 });
   });
 
-  it("Should retrieve asset12 @newIpfs1(rgt12)", async () => {
+  it("Should retrieve asset12 @newMutable(rgt12)", async () => {
     var Record = [];
 
     return await STOR.retrieveShortRecord(
@@ -2362,11 +2362,11 @@ contract("APP", (accounts) => {
     );
   });
 
-  it("Should modify Ipfs1 note @asset13 to (asset13)", async () => {
-    return NP_NC._modIpfs1(asset13, asset13, rgt000, { from: account4 });
+  it("Should modify Mutable note @asset13 to (asset13)", async () => {
+    return NP_NC._modMutable(asset13, asset13, rgt000, { from: account4 });
   });
 
-  it("Should retrieve asset13 with newIpfs1(asset13)", async () => {
+  it("Should retrieve asset13 with newMutable(asset13)", async () => {
     var Record = [];
 
     return await STOR.retrieveShortRecord(
@@ -2382,11 +2382,11 @@ contract("APP", (accounts) => {
     );
   });
 
-  it("Should set Ipfs2 note to (asset13)", async () => {
-    return APP_NC.addIpfs2Note(asset13, asset13, rgt000, { from: account4 });
+  it("Should set NonMutable note to (asset13)", async () => {
+    return APP_NC.addNonMutableNote(asset13, asset13, rgt000, { from: account4 });
   });
 
-  it("Should retrieve asset13 with newIpfs2(asset13)", async () => {
+  it("Should retrieve asset13 with newNonMutable(asset13)", async () => {
     var Record = [];
 
     return await STOR.retrieveShortRecord(
@@ -2667,11 +2667,11 @@ contract("APP", (accounts) => {
     );
   });
 
-  it("Should modify Ipfs1 @asset13 to RGT(12)", async () => {
-    return NP._modIpfs1(asset13, rgt13, rgt13, rgt000, { from: account4 });
+  it("Should modify Mutable @asset13 to RGT(12)", async () => {
+    return NP._modMutable(asset13, rgt13, rgt13, rgt000, { from: account4 });
   });
 
-  it("Should retrieve asset13 @newIpfs1(rgt13)", async () => {
+  it("Should retrieve asset13 @newMutable(rgt13)", async () => {
     var Record = [];
 
     return await STOR.retrieveShortRecord(

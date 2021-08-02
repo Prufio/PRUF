@@ -275,7 +275,7 @@ pragma solidity ^0.6.7;
 *-----------------------------------------------------------------
  * node Storage Providers: AC_data.storageProvider (AC_manager)
  * 0   -- Not Set
- * 1   -- IPFS 
+ * 1   -- Mutable 
  * 2   -- ARweave 
 - -----------------------------------------------------------------
 
@@ -448,7 +448,7 @@ Private Provenance
 // uint32 discount;
 // address referenceAddress;
 // uint8 switches;
-// bytes32 IPFS;
+// bytes32 Mutable;
  }
  /*-----------------------------------------------------------------
 

@@ -173,7 +173,7 @@ __/\\\\\\\\\\\\\ _____/\\\\\\\\\ _______/\\__/\\ ___/\\\\\\\\\\\\\\\
 * ----------------- SET PERMITTED STORAGE PROVIDERS (NODE_MGR.setStorageProviders)-----------------|0|
 * 1 - Unconfigured ('0', '1')   |0|
 *
-* 1 - IPFS ('1', '1')   |0|
+* 1 - Mutable ('1', '1')   |0|
 *
 * 2 - ARWEAVE ('2', '1')   |0|
 * 

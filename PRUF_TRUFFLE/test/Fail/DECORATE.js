@@ -777,7 +777,7 @@ contract("DECORATE", (accounts) => {
     return NODE_MGR.setStorageProviders("0", "1", { from: account1 })
 
       .then(() => {
-        console.log("Authorizing IPFS");
+        console.log("Authorizing Mutable");
         return NODE_MGR.setStorageProviders("1", "1", { from: account1 });
       })
 
@@ -1875,8 +1875,8 @@ contract("DECORATE", (accounts) => {
     it('Should fail because caller is not token holder', async () => {
 
         console.log("//**************************************END _decCounter FAIL BATCH**********************************************/")
-        console.log("//**************************************BEGIN _modIpfs1 BATCH**********************************************/")
-        return DECORATE._modIpfs1(
+        console.log("//**************************************BEGIN _modMutable BATCH**********************************************/")
+        return DECORATE._modMutable(
             "0",
             Foreign721.address,
             rgt1,
@@ -1886,7 +1886,7 @@ contract("DECORATE", (accounts) => {
     })
     //18
     it('Should fail because record AC cust type !== 5', async () => {
-        return DECORATE._modIpfs1(
+        return DECORATE._modMutable(
             "0",
             Foreign721.address,
             rgt1,
@@ -1897,7 +1897,7 @@ contract("DECORATE", (accounts) => {
 
     // //24
     // it('Should fail because assetStatus = exported', async () => {
-    //     return DECORATE._modIpfs1(
+    //     return DECORATE._modMutable(
     //         "3",
     //         Foreign721.address,
     //         rgt1,
@@ -1908,9 +1908,9 @@ contract("DECORATE", (accounts) => {
     //19
     it('Should fail because caller is not token holder', async () => {
 
-        console.log("//**************************************END _modIpfs1 FAIL BATCH**********************************************/")
-        console.log("//**************************************BEGIN addIpfs2Note BATCH**********************************************/")
-        return DECORATE.addIpfs2Note(
+        console.log("//**************************************END _modMutable FAIL BATCH**********************************************/")
+        console.log("//**************************************BEGIN addNonMutableNote BATCH**********************************************/")
+        return DECORATE.addNonMutableNote(
             "0",
             Foreign721.address,
             rgt1,
@@ -1920,7 +1920,7 @@ contract("DECORATE", (accounts) => {
     })
     //20
     it('Should fail because record AC cust type !== 5', async () => {
-        return DECORATE.addIpfs2Note(
+        return DECORATE.addNonMutableNote(
             "0",
             Foreign721.address,
             rgt1,
@@ -1931,7 +1931,7 @@ contract("DECORATE", (accounts) => {
 
     // //27
     // it('Should fail because assetStatus = exported', async () => {
-    //     return DECORATE.addIpfs2Note(
+    //     return DECORATE.addNonMutableNote(
     //         "3",
     //         Foreign721.address,
     //         rgt1,
@@ -1942,7 +1942,7 @@ contract("DECORATE", (accounts) => {
     //21
     it('Should fail because caller is not token holder', async () => {
 
-        console.log("//**************************************END addIpfs2Note FAIL BATCH**********************************************/")
+        console.log("//**************************************END addNonMutableNote FAIL BATCH**********************************************/")
         console.log("//**************************************BEGIN _export BATCH**********************************************/")
         return DECORATE._export(
             "0",
@@ -2219,11 +2219,11 @@ contract("DECORATE", (accounts) => {
           );
         });
       
-        it("Should modify Ipfs1 note @asset12 to (asset12)", async () => {
-          return NP._modIpfs1(asset12, rgt12, asset12, rgt000, { from: account2 });
+        it("Should modify Mutable note @asset12 to (asset12)", async () => {
+          return NP._modMutable(asset12, rgt12, asset12, rgt000, { from: account2 });
         });
       
-        it("Should retrieve asset12 with newIpfs1(asset12)", async () => {
+        it("Should retrieve asset12 with newMutable(asset12)", async () => {
           var Record = [];
       
           return await STOR.retrieveShortRecord(
@@ -2259,13 +2259,13 @@ contract("DECORATE", (accounts) => {
           );
         });
       
-        it("Should set Ipfs2 note to (asset12)", async () => {
-          return APP.addIpfs2Note(asset12, rgt12, asset12, rgt000, {
+        it("Should set NonMutable note to (asset12)", async () => {
+          return APP.addNonMutableNote(asset12, rgt12, asset12, rgt000, {
             from: account2,
           });
         });
       
-        it("Should retrieve asset12 with newIpfs2(asset12)", async () => {
+        it("Should retrieve asset12 with newNonMutable(asset12)", async () => {
           var Record = [];
       
           return await STOR.retrieveShortRecord(
@@ -2423,11 +2423,11 @@ contract("DECORATE", (accounts) => {
           );
         });
       
-        it("Should modify Ipfs1 @asset12 to RGT(12)", async () => {
-          return NP_NC._modIpfs1(asset12, rgt12, rgt000, { from: account2 });
+        it("Should modify Mutable @asset12 to RGT(12)", async () => {
+          return NP_NC._modMutable(asset12, rgt12, rgt000, { from: account2 });
         });
       
-        it("Should retrieve asset12 @newIpfs1(rgt12)", async () => {
+        it("Should retrieve asset12 @newMutable(rgt12)", async () => {
           var Record = [];
       
           return await STOR.retrieveShortRecord(
@@ -2712,11 +2712,11 @@ contract("DECORATE", (accounts) => {
           );
         });
       
-        it("Should modify Ipfs1 note @asset13 to (asset13)", async () => {
-          return NP_NC._modIpfs1(asset13, asset13, rgt000, { from: account4 });
+        it("Should modify Mutable note @asset13 to (asset13)", async () => {
+          return NP_NC._modMutable(asset13, asset13, rgt000, { from: account4 });
         });
       
-        it("Should retrieve asset13 with newIpfs1(asset13)", async () => {
+        it("Should retrieve asset13 with newMutable(asset13)", async () => {
           var Record = [];
       
           return await STOR.retrieveShortRecord(
@@ -2732,11 +2732,11 @@ contract("DECORATE", (accounts) => {
           );
         });
       
-        it("Should set Ipfs2 note to (asset13)", async () => {
-          return APP_NC.addIpfs2Note(asset13, asset13, rgt000, { from: account4 });
+        it("Should set NonMutable note to (asset13)", async () => {
+          return APP_NC.addNonMutableNote(asset13, asset13, rgt000, { from: account4 });
         });
       
-        it("Should retrieve asset13 with newIpfs2(asset13)", async () => {
+        it("Should retrieve asset13 with newNonMutable(asset13)", async () => {
           var Record = [];
       
           return await STOR.retrieveShortRecord(
@@ -3017,11 +3017,11 @@ contract("DECORATE", (accounts) => {
           );
         });
       
-        it("Should modify Ipfs1 @asset13 to RGT(12)", async () => {
-          return NP._modIpfs1(asset13, rgt13, rgt13, rgt000, { from: account4 });
+        it("Should modify Mutable @asset13 to RGT(12)", async () => {
+          return NP._modMutable(asset13, rgt13, rgt13, rgt000, { from: account4 });
         });
       
-        it("Should retrieve asset13 @newIpfs1(rgt13)", async () => {
+        it("Should retrieve asset13 @newMutable(rgt13)", async () => {
           var Record = [];
       
           return await STOR.retrieveShortRecord(

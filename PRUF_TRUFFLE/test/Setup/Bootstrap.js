@@ -896,7 +896,7 @@ _________\/// _____________\/// _______\/// __\///////// __\/// _____________
                 return NODE_MGR.setStorageProviders('0', '1', { from: account1 })
         
                     .then(() => {
-                        console.log("Authorizing IPFS")
+                        console.log("Authorizing Mutable")
                         return NODE_MGR.setStorageProviders('1', '1', { from: account1 })
                     })
         

@@ -2066,8 +2066,8 @@ _________\/// _____________\/// _______\/// __\///////// __\/// _____________
     })
 
     
-    it('Should mod ipfs1 to rgt1 and rgt2', async () => {
-        return NP._modIpfs1(
+    it('Should mod mutable to rgt1 and rgt2', async () => {
+        return NP._modMutable(
         asset1,
         rgt1,
         rgt1,
@@ -2181,8 +2181,8 @@ _________\/// _____________\/// _______\/// __\///////// __\/// _____________
     })
 
 
-    it('Should modify Ipfs1 note @asset12 to IDX(1)', async () => {
-        return NP._modIpfs1(
+    it('Should modify Mutable note @asset12 to IDX(1)', async () => {
+        return NP._modMutable(
         asset12, 
         rgt12,
         asset12,
@@ -2233,8 +2233,8 @@ _________\/// _____________\/// _______\/// __\///////// __\/// _____________
     // })
 
 
-    it('Should set Ipfs2 note to IDX(1)', async () => {
-        return APP_NC.addIpfs2Note(
+    it('Should set NonMutable note to IDX(1)', async () => {
+        return APP_NC.addNonMutableNote(
         asset12,
         asset12,
         rgt000,
@@ -2289,8 +2289,8 @@ _________\/// _____________\/// _______\/// __\///////// __\/// _____________
     })
 
 
-    it('Should modify Ipfs1 note @asset12 to RGT(1)', async () => {
-        return NP_NC._modIpfs1(
+    it('Should modify Mutable note @asset12 to RGT(1)', async () => {
+        return NP_NC._modMutable(
         asset12, 
         rgt12,
         rgt000,

@@ -2854,7 +2854,7 @@ contract('STOR', accounts => {
     it('Should authorize MAL_APP as a normal contract', async () => {
 
         console.log("//**************************************END clearPrice FAIL BATCH**********************************************/")
-        console.log("//**************************************BEGIN modifyIpfs1 FAIL BATCH**********************************************/")
+        console.log("//**************************************BEGIN modifyMutable FAIL BATCH**********************************************/")
         return STOR.OO_addContract("MAL_APP", MAL_APP.address, '0', '1', { from: account1 })
 
             .then(() => {
@@ -2865,7 +2865,7 @@ contract('STOR', accounts => {
 
     //45
     it('Should fail because record does not exist', async () => {
-        return MAL_APP._modIpfs1(
+        return MAL_APP._modMutable(
             asset10,
             rgt1,
             rgt000,
@@ -2875,7 +2875,7 @@ contract('STOR', accounts => {
 
     //46
     it('Should fail because calling contract not auth in AC', async () => {
-        return MAL_APP._modIpfs1(
+        return MAL_APP._modMutable(
             asset8,
             // rgt8,
             asset8,
@@ -2891,7 +2891,7 @@ contract('STOR', accounts => {
 
     //47
     it('Should fail because record in escrow stat', async () => {
-        return MAL_APP._modIpfs1(
+        return MAL_APP._modMutable(
             asset7,
             asset7,
             rgt000,
@@ -2900,8 +2900,8 @@ contract('STOR', accounts => {
     })
 
 
-    it('Should set asset8 ipfs1 to asset8', async () => {
-        return MAL_APP._modIpfs1(
+    it('Should set asset8 mutable to asset8', async () => {
+        return MAL_APP._modMutable(
             asset8,
             // rgt8,
             asset8,
@@ -2912,7 +2912,7 @@ contract('STOR', accounts => {
 
     //48
     it('Should fail because ips1 cannot match previous data', async () => {
-        return MAL_APP._modIpfs1(
+        return MAL_APP._modMutable(
             asset8,
             // rgt8,
             asset8,
@@ -2924,9 +2924,9 @@ contract('STOR', accounts => {
     //49
     it('Should fail because record does not exist', async () => {
 
-        console.log("//**************************************END modifyIpfs1 FAIL BATCH**********************************************/")
-        console.log("//**************************************BEGIN modifyIpfs2 FAIL BATCH**********************************************/")
-        return MAL_APP.addIpfs2Note(
+        console.log("//**************************************END modifyMutable FAIL BATCH**********************************************/")
+        console.log("//**************************************BEGIN modifyNonMutable FAIL BATCH**********************************************/")
+        return MAL_APP.addNonMutableNote(
             asset10,
             // rgt6,
             rgt6,
@@ -2943,7 +2943,7 @@ contract('STOR', accounts => {
 
     //50
     it('Should fail becasue contract not auth in AC', async () => {
-        return MAL_APP.addIpfs2Note(
+        return MAL_APP.addNonMutableNote(
             asset2,
             // rgt2,
             rgt2,
@@ -2960,7 +2960,7 @@ contract('STOR', accounts => {
 
     //51
     it('Should fail becasue asset in escrow stat', async () => {
-        return MAL_APP.addIpfs2Note(
+        return MAL_APP.addNonMutableNote(
             asset7,
             // rgt7,
             rgt7,
@@ -2972,7 +2972,7 @@ contract('STOR', accounts => {
 
     //52
     it('Should fail becasue asset in L/S stat', async () => {
-        return MAL_APP.addIpfs2Note(
+        return MAL_APP.addNonMutableNote(
             asset4,
             // rgt7,
             rgt4,
@@ -2984,7 +2984,7 @@ contract('STOR', accounts => {
 
     //53
     it('Should fail becasue asset in transfered stat', async () => {
-        return MAL_APP.addIpfs2Note(
+        return MAL_APP.addNonMutableNote(
             asset3,
             // rgt7,
             rgt3,
@@ -2995,7 +2995,7 @@ contract('STOR', accounts => {
 
 
     it('Should set asset8 ipfs2 to asset8', async () => {
-        return MAL_APP.addIpfs2Note(
+        return MAL_APP.addNonMutableNote(
             asset8,
             // rgt8,
             asset8,
@@ -3005,8 +3005,8 @@ contract('STOR', accounts => {
     })
 
     //54
-    it('Should fail becasue attempting to modify IPFS2', async () => {
-        return MAL_APP.addIpfs2Note(
+    it('Should fail becasue attempting to modify NonMutable', async () => {
+        return MAL_APP.addNonMutableNote(
             asset8,
             // rgt8,
             rgt8,
@@ -3018,7 +3018,7 @@ contract('STOR', accounts => {
 
     it('Should unauthorize MAL_APP in system', async () => {
 
-        console.log("//**************************************END modifyIpfs2 FAIL BATCH**********************************************/")
+        console.log("//**************************************END modifyNonMutable FAIL BATCH**********************************************/")
         console.log("//**************************************BEGIN retrieveRecord FAIL BATCH**********************************************/")
         return STOR.OO_addContract("MAL_APP", MAL_APP.address, '0', '0', { from: account1 })
     })
@@ -3093,8 +3093,8 @@ contract('STOR', accounts => {
     })
 
 
-    it('Should modify Ipfs1 note @asset12 to IDX(1)', async () => {
-        return NP._modIpfs1(
+    it('Should modify Mutable note @asset12 to IDX(1)', async () => {
+        return NP._modMutable(
             asset12,
             rgt12,
             asset12,
@@ -3145,8 +3145,8 @@ contract('STOR', accounts => {
     // })
 
 
-    it('Should set Ipfs2 note to IDX(1)', async () => {
-        return APP_NC.addIpfs2Note(
+    it('Should set NonMutable note to IDX(1)', async () => {
+        return APP_NC.addNonMutableNote(
             asset12,
             asset12,
             rgt000,
@@ -3201,8 +3201,8 @@ contract('STOR', accounts => {
     })
 
 
-    it('Should modify Ipfs1 note @asset12 to RGT(1)', async () => {
-        return NP_NC._modIpfs1(
+    it('Should modify Mutable note @asset12 to RGT(1)', async () => {
+        return NP_NC._modMutable(
             asset12,
             rgt12,
             rgt000,

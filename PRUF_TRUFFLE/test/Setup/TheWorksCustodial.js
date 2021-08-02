@@ -2117,8 +2117,8 @@ _________\/// _____________\/// _______\/// __\///////// __\/// _____________
     })
 
 
-    it('Should modify Ipfs1 note @asset12 to (asset12)', async () => {
-        return NP._modIpfs1(
+    it('Should modify Mutable note @asset12 to (asset12)', async () => {
+        return NP._modMutable(
         asset12, 
         rgt12,
         asset12,
@@ -2128,7 +2128,7 @@ _________\/// _____________\/// _______\/// __\///////// __\/// _____________
     })
 
 
-    it("Should retrieve asset12 with newIpfs1(asset12)", async () =>{ 
+    it("Should retrieve asset12 with newMutable(asset12)", async () =>{ 
         var Record = [];
         
         return await STOR.retrieveShortRecord(asset12, {from: account2}, function (_err, _result) {
@@ -2160,8 +2160,8 @@ _________\/// _____________\/// _______\/// __\///////// __\/// _____________
     })
 
 
-    it('Should set Ipfs2 note to (asset12)', async () => {
-        return APP.addIpfs2Note(
+    it('Should set NonMutable note to (asset12)', async () => {
+        return APP.addNonMutableNote(
         asset12,
         rgt12,
         asset12,
@@ -2171,7 +2171,7 @@ _________\/// _____________\/// _______\/// __\///////// __\/// _____________
     })
 
 
-    it("Should retrieve asset12 with newIpfs2(asset12)", async () =>{ 
+    it("Should retrieve asset12 with newNonMutable(asset12)", async () =>{ 
         var Record = [];
         
         return await STOR.retrieveShortRecord(asset12, {from: account2}, function (_err, _result) {
@@ -2347,8 +2347,8 @@ _________\/// _____________\/// _______\/// __\///////// __\/// _____________
     })
 
 
-    it('Should modify Ipfs1 @asset12 to RGT(12)', async () => {
-        return NP_NC._modIpfs1(
+    it('Should modify Mutable @asset12 to RGT(12)', async () => {
+        return NP_NC._modMutable(
         asset12, 
         rgt12,
         rgt000,
@@ -2357,7 +2357,7 @@ _________\/// _____________\/// _______\/// __\///////// __\/// _____________
     })
 
 
-    it("Should retrieve asset12 @newIpfs1(rgt12)", async () =>{ 
+    it("Should retrieve asset12 @newMutable(rgt12)", async () =>{ 
         var Record = [];
         
         return await STOR.retrieveShortRecord(asset12, {from: account2}, function (_err, _result) {

@@ -775,7 +775,7 @@ _________\/// _____________\/// _______\/// __\///////// __\/// _____________
             return NODE_MGR.setStorageProviders("0", "1", { from: account1 })
         
               .then(() => {
-                console.log("Authorizing IPFS");
+                console.log("Authorizing Mutable");
                 return NODE_MGR.setStorageProviders("1", "1", { from: account1 });
               })
         
@@ -2064,11 +2064,11 @@ it('Should authorize all minter contracts for minting A_TKN(s)', async () => {
         );
       });
     
-      it("Should modify Ipfs1 note @asset12 to (asset12)", async () => {
-        return NP._modIpfs1(asset12, rgt12, asset12, rgt000, { from: account2 });
+      it("Should modify Mutable note @asset12 to (asset12)", async () => {
+        return NP._modMutable(asset12, rgt12, asset12, rgt000, { from: account2 });
       });
     
-      it("Should retrieve asset12 with newIpfs1(asset12)", async () => {
+      it("Should retrieve asset12 with newMutable(asset12)", async () => {
         var Record = [];
     
         return await STOR.retrieveShortRecord(
@@ -2104,13 +2104,13 @@ it('Should authorize all minter contracts for minting A_TKN(s)', async () => {
         );
       });
     
-      it("Should set Ipfs2 note to (asset12)", async () => {
-        return APP.addIpfs2Note(asset12, rgt12, asset12, rgt000, {
+      it("Should set NonMutable note to (asset12)", async () => {
+        return APP.addNonMutableNote(asset12, rgt12, asset12, rgt000, {
           from: account2,
         });
       });
     
-      it("Should retrieve asset12 with newIpfs2(asset12)", async () => {
+      it("Should retrieve asset12 with newNonMutable(asset12)", async () => {
         var Record = [];
     
         return await STOR.retrieveShortRecord(
@@ -2268,11 +2268,11 @@ it('Should authorize all minter contracts for minting A_TKN(s)', async () => {
         );
       });
     
-      it("Should modify Ipfs1 @asset12 to RGT(12)", async () => {
-        return NP_NC._modIpfs1(asset12, rgt12, rgt000, { from: account2 });
+      it("Should modify Mutable @asset12 to RGT(12)", async () => {
+        return NP_NC._modMutable(asset12, rgt12, rgt000, { from: account2 });
       });
     
-      it("Should retrieve asset12 @newIpfs1(rgt12)", async () => {
+      it("Should retrieve asset12 @newMutable(rgt12)", async () => {
         var Record = [];
     
         return await STOR.retrieveShortRecord(
@@ -2557,11 +2557,11 @@ it('Should authorize all minter contracts for minting A_TKN(s)', async () => {
         );
       });
     
-      it("Should modify Ipfs1 note @asset13 to (asset13)", async () => {
-        return NP_NC._modIpfs1(asset13, asset13, rgt000, { from: account4 });
+      it("Should modify Mutable note @asset13 to (asset13)", async () => {
+        return NP_NC._modMutable(asset13, asset13, rgt000, { from: account4 });
       });
     
-      it("Should retrieve asset13 with newIpfs1(asset13)", async () => {
+      it("Should retrieve asset13 with newMutable(asset13)", async () => {
         var Record = [];
     
         return await STOR.retrieveShortRecord(
@@ -2577,11 +2577,11 @@ it('Should authorize all minter contracts for minting A_TKN(s)', async () => {
         );
       });
     
-      it("Should set Ipfs2 note to (asset13)", async () => {
-        return APP_NC.addIpfs2Note(asset13, asset13, rgt000, { from: account4 });
+      it("Should set NonMutable note to (asset13)", async () => {
+        return APP_NC.addNonMutableNote(asset13, asset13, rgt000, { from: account4 });
       });
     
-      it("Should retrieve asset13 with newIpfs2(asset13)", async () => {
+      it("Should retrieve asset13 with newNonMutable(asset13)", async () => {
         var Record = [];
     
         return await STOR.retrieveShortRecord(
@@ -2862,11 +2862,11 @@ it('Should authorize all minter contracts for minting A_TKN(s)', async () => {
         );
       });
     
-      it("Should modify Ipfs1 @asset13 to RGT(12)", async () => {
-        return NP._modIpfs1(asset13, rgt13, rgt13, rgt000, { from: account4 });
+      it("Should modify Mutable @asset13 to RGT(12)", async () => {
+        return NP._modMutable(asset13, rgt13, rgt13, rgt000, { from: account4 });
       });
     
-      it("Should retrieve asset13 @newIpfs1(rgt13)", async () => {
+      it("Should retrieve asset13 @newMutable(rgt13)", async () => {
         var Record = [];
     
         return await STOR.retrieveShortRecord(
