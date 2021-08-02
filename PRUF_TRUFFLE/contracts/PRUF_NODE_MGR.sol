@@ -46,7 +46,7 @@ contract NODE_MGR is BASIC {
     mapping(string => uint32) private node_index; //name to asset class resolution map
     mapping(bytes32 => mapping(uint32 => uint8)) private registeredUsers; // Authorized recorder database by asset class, by address hash
     mapping(uint8 => uint8) private validStorageProviders; //storageProvider -> status (enabled or disabled)
-    mapping(uint8 => uint8) private managementTypesEnabled; //managementTypes -> status (enabled or disabled)
+    mapping(uint8 => uint8) private validManagementTypes; //managementTypes -> status (enabled or disabled)
     mapping(uint8 => uint8) private custodyTypesEnabled; //managementTypes -> status (enabled or disabled)
 
     constructor() {
@@ -146,7 +146,7 @@ contract NODE_MGR is BASIC {
         isContractAdmin
     {
         //^^^^^^^checks^^^^^^^^^
-        managementTypesEnabled[_managementType] = _status;
+        validManagementTypes[_managementType] = _status;
         //^^^^^^^effects^^^^^^^^^
     }
 
@@ -497,7 +497,7 @@ contract NODE_MGR is BASIC {
             "ACM:UACI: managementType = 255(Unconfigured)"
         );
         require( //_managementType is a valid type
-            (managementTypesEnabled[_managementType] > 0),
+            (validManagementTypes[_managementType] > 0),
             "ACM:UACI: managementType is invalid (0)"
         );
         require( //_storageProvider is a valid type
@@ -569,7 +569,7 @@ contract NODE_MGR is BASIC {
         returns (uint8)
     {
         //^^^^^^^checks^^^^^^^^^
-        return (managementTypesEnabled[_managementType]);
+        return (validManagementTypes[_managementType]);
         //^^^^^^^effects^^^^^^^^^
     }
 
@@ -791,7 +791,7 @@ contract NODE_MGR is BASIC {
         require(tokenId != 0, "ACM:CAC: AC = 0"); //sanity check inputs
         require(_AC.discount <= 10000, "ACM:CAC: Discount > 10000 (100%)");
         require( //_ac.managementType is a valid type or explicitly unset (255)
-            (managementTypesEnabled[_AC.managementType] > 0) ||
+            (validManagementTypes[_AC.managementType] > 0) ||
                 (_AC.managementType == 255),
             "ACM:CAC: Management type is invalid (0)"
         );
