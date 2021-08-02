@@ -42,7 +42,7 @@ contract NODE_MGR is BASIC {
     uint256 public AC_Price = 200000 ether;
     uint32 private constant startingDiscount = 9500; // Purchased nodes start with 95% profit share
     mapping(uint32 => mapping(uint16 => Costs)) private cost; // Cost per function by asset class => Costs struct (see PRUF_INTERFACES for struct definitions)
-    mapping(uint32 => AC) private node_data; // AC info database asset class to AC struct (see PRUF_INTERFACES for struct definitions)
+    mapping(uint32 => Node) private node_data; // AC info database asset class to AC struct (see PRUF_INTERFACES for struct definitions)
     mapping(string => uint32) private AC_number; //name to asset class resolution map
     mapping(bytes32 => mapping(uint32 => uint8)) private registeredUsers; // Authorized recorder database by asset class, by address hash
     mapping(uint8 => uint8) private storageProvidersEnabled; //storageProvider -> status (enabled or disabled)
