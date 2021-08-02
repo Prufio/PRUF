@@ -739,12 +739,12 @@ contract NODE_MGR is BASIC {
         view
         returns (Invoice memory)
     {
-        Node memory AC_info = node_data[_assetClass];
-        require(AC_info.assetClassRoot != 0, "ACM:GSC: AC !exist");
+        Node memory node_info = node_data[_assetClass];
+        require(node_info.assetClassRoot != 0, "ACM:GSC: AC !exist");
 
         require(_service != 0, "ACM:GSC: Service type = 0");
         //^^^^^^^checks^^^^^^^^^
-        uint32 rootAssetClass = AC_info.assetClassRoot;
+        uint32 rootAssetClass = node_info.assetClassRoot;
 
         Costs memory costs = cost[_assetClass][_service];
         Costs memory rootCosts = cost[rootAssetClass][_service];

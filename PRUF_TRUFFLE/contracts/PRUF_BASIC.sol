@@ -282,18 +282,18 @@ abstract contract BASIC is
     {
         //^^^^^^^checks^^^^^^^^^
 
-        // Node memory AC_info;
+        // Node memory node_info;
         // //^^^^^^^effects^^^^^^^^^
 
         // (
-        //     AC_info.assetClassRoot,
-        //     AC_info.custodyType,
-        //     AC_info.managementType,
-        //     AC_info.discount,
-        //     AC_info.referenceAddress
+        //     node_info.assetClassRoot,
+        //     node_info.custodyType,
+        //     node_info.managementType,
+        //     node_info.discount,
+        //     node_info.referenceAddress
         // ) = NODE_MGR.getAC_data(_assetClass);
 
-        // return AC_info;
+        // return node_info;
         return NODE_MGR.getExtAC_data(_assetClass);
         //^^^^^^^interactions^^^^^^^^^
     }

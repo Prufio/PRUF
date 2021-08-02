@@ -80,7 +80,7 @@ contract RCLR is ECR_CORE, CORE {
         escrowDataExtLight memory escrowDataLight =
             getEscrowDataLight(_idxHash);
         Record memory rec = getRecord(_idxHash);
-        Node memory AC_info = getACinfo(_assetClass);
+        Node memory node_info = getACinfo(_assetClass);
         require(_rgtHash != 0, "R:R: New rights holder = zero");
         require(rec.assetStatus == 60, "R:R: Asset not discarded");
         require(
@@ -88,19 +88,19 @@ contract RCLR is ECR_CORE, CORE {
             "R:R: !Change AC to new root"
         );
         require(
-            (AC_info.managementType < 6),
+            (node_info.managementType < 6),
             "R:R: Contract does not support management types > 5 or AC is locked"
         );
         if (
-            (AC_info.managementType == 1) ||
-            (AC_info.managementType == 2) ||
-            (AC_info.managementType == 5)
+            (node_info.managementType == 1) ||
+            (node_info.managementType == 2) ||
+            (node_info.managementType == 5)
         ) {
             require(
                 (NODE_TKN.ownerOf(_assetClass) == _msgSender()),
                 "R:R: Cannot create asset in AC mgmt type 1||2||5 - caller does not hold AC token"
             );
-        } else if (AC_info.managementType == 3) {
+        } else if (node_info.managementType == 3) {
             require(
                 NODE_MGR.getUserType(
                     keccak256(abi.encodePacked(_msgSender())),
@@ -108,7 +108,7 @@ contract RCLR is ECR_CORE, CORE {
                 ) == 1,
                 "R:R: Cannot create asset - caller address !authorized"
             );
-        } else if (AC_info.managementType == 4) {
+        } else if (node_info.managementType == 4) {
             require(
                 ID_TKN.trustedLevelByAddress(_msgSender()) > 10,
                 "R:R: Caller !trusted ID holder"

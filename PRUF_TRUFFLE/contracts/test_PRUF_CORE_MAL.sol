@@ -55,7 +55,7 @@ contract CORE_MAL is BASIC {
         uint32 _countDownStart
     ) internal virtual {
         uint256 tokenId = uint256(_idxHash);
-        Node memory AC_info = getACinfo(_assetClass);
+        Node memory node_info = getACinfo(_assetClass);
 
         require(
             A_TKN.tokenExists(tokenId) == 0,
@@ -63,22 +63,22 @@ contract CORE_MAL is BASIC {
         );
 
         require(
-            AC_info.custodyType != 3,
+            node_info.custodyType != 3,
             "C:CR:Cannot create asset in a root asset class"
         );
 
         require(
-            (AC_info.custodyType == 1) ||
-                (AC_info.custodyType == 2) ||
-                (AC_info.custodyType == 4),
+            (node_info.custodyType == 1) ||
+                (node_info.custodyType == 2) ||
+                (node_info.custodyType == 4),
             "C:CR:Cannot create asset - contract not authorized for asset class custody type"
         );
 
-        if (AC_info.custodyType == 1) {
+        if (node_info.custodyType == 1) {
             A_TKN.mintAssetToken(address(this), tokenId, "pruf.io");
         }
 
-        if ((AC_info.custodyType == 2) || (AC_info.custodyType == 4)) {
+        if ((node_info.custodyType == 2) || (node_info.custodyType == 4)) {
             A_TKN.mintAssetToken(_msgSender(), tokenId, "pruf.io");
         }
 

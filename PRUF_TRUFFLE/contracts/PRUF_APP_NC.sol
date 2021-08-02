@@ -143,7 +143,7 @@ contract APP_NC is CORE {
         isAuthorized(_idxHash)
     {
         Record memory rec = getRecord(_idxHash);
-        Node memory AC_info = getACinfo(_newAssetClass);
+        Node memory node_info = getACinfo(_newAssetClass);
 
         require(rec.assetStatus == 70, "ANC:IA: Asset !exported");
         require( //DPS:TEST NEW
@@ -155,19 +155,19 @@ contract APP_NC is CORE {
             "ANC:IA: Cannot change AC to new root"
         );
         require(
-            (AC_info.managementType < 6),
+            (node_info.managementType < 6),
             "ANC:IA: Contract does not support management types > 5 or AC is locked"
         );
         if (
-            (AC_info.managementType == 1) ||
-            (AC_info.managementType == 2) ||
-            (AC_info.managementType == 5)
+            (node_info.managementType == 1) ||
+            (node_info.managementType == 2) ||
+            (node_info.managementType == 5)
         ) {
             require(
                 (NODE_TKN.ownerOf(_newAssetClass) == _msgSender()),
                 "ANC:IA: Cannot create asset in AC mgmt type 1||2||5 - caller does not hold AC token"
             );
-        } else if (AC_info.managementType == 3) {
+        } else if (node_info.managementType == 3) {
             require(
                 NODE_MGR.getUserType(
                     keccak256(abi.encodePacked(_msgSender())),
@@ -175,7 +175,7 @@ contract APP_NC is CORE {
                 ) == 1,
                 "ANC:IA: Cannot create asset - caller address !authorized"
             );
-        } else if (AC_info.managementType == 4) {
+        } else if (node_info.managementType == 4) {
             require(
                 ID_TKN.trustedLevelByAddress(_msgSender()) > 10,
                 "ANC:IA: Caller !trusted ID holder"

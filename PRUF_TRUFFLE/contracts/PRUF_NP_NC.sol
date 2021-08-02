@@ -82,7 +82,7 @@ contract NP_NC is CORE {
         isAuthorized(_idxHash)
     {
         Record memory rec = getRecord(_idxHash);
-        Node memory AC_info = getACinfo(rec.assetClass);
+        Node memory node_info = getACinfo(rec.assetClass);
 
         require(
             (rec.assetStatus == 51) || (rec.assetStatus == 70), //DPS:check
@@ -93,10 +93,10 @@ contract NP_NC is CORE {
             "NPNC:EXT: Cannot change AC to new root"
         );
         require(
-            (AC_info.managementType < 6),
+            (node_info.managementType < 6),
             "NPNC:EXT: Contract does not support management types > 5 or AC is locked"
         );
-        if ((AC_info.managementType == 1) || (AC_info.managementType == 5)) {
+        if ((node_info.managementType == 1) || (node_info.managementType == 5)) {
             require( //holds AC token if AC is restricted --------DPS:TEST ---- NEW
                 (NODE_TKN.ownerOf(rec.assetClass) == _msgSender()),
                 "NPNC:EXT: Restricted from exporting assets from this AC - does not hold ACtoken"

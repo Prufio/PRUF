@@ -49,7 +49,7 @@ contract MAL_APP is CORE_MAL {
     {
         // Record memory rec = getRecord(_idxHash);
         // uint8 userType = getCallingUserType(_assetClass);
-        // Node memory AC_info = getACinfo(_assetClass);
+        // Node memory node_info = getACinfo(_assetClass);
         // Node memory oldAC_info = getACinfo(rec.assetClass);
         // ContractDataHash memory contractInfo = getContractInfo(
         //     address(this),
@@ -71,7 +71,7 @@ contract MAL_APP is CORE_MAL {
         //bytes32 userHash = keccak256(abi.encodePacked(_msgSender()));
         //^^^^^^^effects^^^^^^^^^
 
-        // if (AC_info.assetClassRoot == oldAC_info.assetClassRoot) {
+        // if (node_info.assetClassRoot == oldAC_info.assetClassRoot) {
             // createRecord(_idxHash, _rgtHash, _assetClass, rec.countDownStart);
         // } else {
             createRecord(_idxHash, _rgtHash, _assetClass, _countDownStart);
@@ -546,7 +546,7 @@ contract MAL_APP is CORE_MAL {
         //     address(this),
         //     rec.assetClass
         // );
-        // Node memory AC_info = getACinfo(rec.assetClass);
+        // Node memory node_info = getACinfo(rec.assetClass);
 
         // require(
         //     contractInfo.contractType > 0,
