@@ -412,7 +412,7 @@ contract MAL_APP is CORE_MAL {
     /*
      * @dev Modify **Record**.mutableStorage1 with confirmation
      */
-    function modMutableStorage(
+    function modifyMutableStorage(
         bytes32 _idxHash,
         bytes32 _mutableStorage1,
         bytes32 _mutableStorage2

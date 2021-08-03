@@ -159,7 +159,7 @@ contract NP is CORE {
      * @param _mutableStorage1 content adressable storage adress part 1
      * @param _mutableStorage2 content adressable storage adress part 2
      */
-    function modMutableStorage(
+    function modifyMutableStorage(
         bytes32 _idxHash,
         bytes32 _rgtHash,
         bytes32 _mutableStorage1,

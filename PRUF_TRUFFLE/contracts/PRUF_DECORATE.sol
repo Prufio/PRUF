@@ -302,7 +302,7 @@ contract DECORATE is CORE {
      * @param _mutableStorage1 - field for external asset data
      * @param _mutableStorage2 - field for external asset data
      */
-    function modMutableStorage(
+    function modifyMutableStorage(
         uint256 _tokenID,
         address _tokenContract,
         bytes32 _mutableStorage1,

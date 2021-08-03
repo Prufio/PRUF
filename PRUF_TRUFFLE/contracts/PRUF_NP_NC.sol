@@ -219,7 +219,7 @@ contract NP_NC is CORE {
      * @param _mutableStorage1 content addressable storage address part 1
      * @param _mutableStorage2 content addressable storage address part 2
      */
-    function modMutableStorage(
+    function modifyMutableStorage(
         bytes32 _idxHash,
         bytes32 _mutableStorage1,
         bytes32 _mutableStorage2
