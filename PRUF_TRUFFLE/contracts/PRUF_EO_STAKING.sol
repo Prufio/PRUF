@@ -69,15 +69,6 @@ contract EO_STAKING is ReentrancyGuard, AccessControl, Pausable {
         uint256 interval;
         uint256 bonus;
     }
-    /* //CTS:EXAMINE remove?
-    struct Stake {
-    uint256 stakedAmount; //tokens in stake
-    uint256 mintTime; //blocktime of creation
-    uint256 startTime; //blocktime of creation or most recent payout
-    uint256 interval; //staking interval in seconds
-    uint256 bonus; //bonus tokens earned per interval
-    }
-*/
 
     uint256 constant seconds_in_a_day = 86400;
 
@@ -195,6 +186,12 @@ contract EO_STAKING is ReentrancyGuard, AccessControl, Pausable {
             _interval >= 2,
             "PES:SSL: minumum allowable time for stake is 2 days"
         );
+        require( 
+            _min > 99999999999999999999, //100 pruf
+            "PES:NS: Stake tier minimum amount < 100 not allowed"
+        );
+
+
         //^^^^^^^checks^^^^^^^^^
         stakeTier[_stakeTier].minimum = _min;
         stakeTier[_stakeTier].maximum = _max;
@@ -239,7 +236,6 @@ contract EO_STAKING is ReentrancyGuard, AccessControl, Pausable {
         whenNotPaused
         nonReentrant
     {
-        uint256 availableRewards = UTIL_TKN.balanceOf(REWARDS_VAULT_Address); //CTS:EXAMINE move to effects?
         Stake memory thisStake = stake[_tokenId];
 
         require(
@@ -247,6 +243,8 @@ contract EO_STAKING is ReentrancyGuard, AccessControl, Pausable {
             "PES:CB: must wait 24h from creation/last claim"
         );
         //^^^^^^^checks^^^^^^^^^
+
+        uint256 availableRewards = UTIL_TKN.balanceOf(REWARDS_VAULT_Address);
 
         uint256 reward = eligibleRewards(_tokenId); //gets reward for current reward period
 
@@ -271,7 +269,6 @@ contract EO_STAKING is ReentrancyGuard, AccessControl, Pausable {
         whenNotPaused
         nonReentrant
     {
-        uint256 availableRewards = UTIL_TKN.balanceOf(REWARDS_VAULT_Address); //CTS:EXAMINE move to effects?
         Stake memory thisStake = stake[_tokenId];
 
         require(
@@ -285,7 +282,7 @@ contract EO_STAKING is ReentrancyGuard, AccessControl, Pausable {
             "PES:BS: must wait 24h from creation/last claim"
         );
         //^^^^^^^checks^^^^^^^^^
-
+        uint256 availableRewards = UTIL_TKN.balanceOf(REWARDS_VAULT_Address);
         uint256 reward = eligibleRewards(_tokenId);
         thisStake.startTime = block.timestamp;
 
@@ -413,11 +410,11 @@ contract EO_STAKING is ReentrancyGuard, AccessControl, Pausable {
         uint256 _bonus
     ) private whenNotPaused nonReentrant {
         require(
-            _interval >= 172800, // 2 days in seconds CTS:EXAMINE unreachable? throws in setStakeLevels
+            _interval >= 172800, // 2 days in seconds unreachable? throws in setStakeLevels
             "PES:NS: Interval <= 1"
         );
 
-        require( //CTS:EXAMINE shouldn't this be put in setStakeLevels and not here?
+        require( //throws in setStakeLevels
             _amount > 99999999999999999999, //100 pruf
             "PES:NS: Staked amount < 100"
         );

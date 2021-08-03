@@ -204,7 +204,7 @@ contract ID_TKN is
     }
 
     /**
-     * @dev Set new ID mapp user URI String -- string should eventually be a B32 hash of ID info in a standardized format - verifyable against provided ID //CTS:EXAMINE new comment
+     * @dev Set new ID map user URI String -- string should eventually be a B32 hash of ID info in a standardized format - verifyable against provided ID
      * @param _tokenId - token ID to set URI
      * @param _userName - String for Name
      */

@@ -12,7 +12,6 @@ __/\\\\\\\\\\\\\ _____/\\\\\\\\\ _______/\\__/\\ ___/\\\\\\\\\\\\\\\
 
 /**-----------------------------------------------------------------
  *  TO DO
- *  //CTS:!!EXAMINE GLOBAL!! we need to be using pascal case for all acronyms ex. htmlButton or bigHtmlButton, except for things with two acronyms ex. prufIO rather than prufIo !!important
  *-----------------------------------------------------------------
  * IMPORTANT!!! NO EXTERNAL OR PUBLIC FUNCTIONS ALLOWED IN THIS CONTRACT!!!!!!!!
  *-----------------------------------------------------------------
@@ -42,7 +41,7 @@ contract CORE is BASIC {
         uint32 _countDownStart
     ) internal virtual {
         uint256 tokenId = uint256(_idxHash);
-        Node memory node_info =getNodeinfo(_node);
+        Node memory node_info = getNodeinfo(_node);
 
         require(
             A_TKN.tokenExists(tokenId) == 0,
@@ -135,7 +134,7 @@ contract CORE is BASIC {
         virtual
         whenNotPaused
     {
-        Node memory node_info =getNodeinfo(_rec.node);
+        Node memory node_info = getNodeinfo(_rec.node);
 
         require(
             (node_info.managementType < 6),
@@ -149,7 +148,11 @@ contract CORE is BASIC {
         }
         //^^^^^^^Checks^^^^^^^^^
 
-        STOR.modifyMutableStorage(_idxHash, _rec.mutableStorage1, _rec.mutableStorage2); // Send MutableStorage data to storage
+        STOR.modifyMutableStorage(
+            _idxHash,
+            _rec.mutableStorage1,
+            _rec.mutableStorage2
+        ); // Send MutableStorage data to storage
         //^^^^^^^interactions^^^^^^^^^
     }
 
@@ -165,7 +168,11 @@ contract CORE is BASIC {
     {
         //^^^^^^^checks^^^^^^^^^
 
-        STOR.modifyNonMutableStorage(_idxHash, _rec.nonMutableStorage1, _rec.nonMutableStorage2); // Send NonMutableStorage data to storage
+        STOR.modifyNonMutableStorage(
+            _idxHash,
+            _rec.nonMutableStorage1,
+            _rec.nonMutableStorage2
+        ); // Send NonMutableStorage data to storage
         //^^^^^^^interactions^^^^^^^^^
     }
 
