@@ -407,7 +407,7 @@ contract DECORATE is CORE {
      * @param _exportTo - destination node of decorated token
      * DPS:TEST added destination node parameter
      */
-    function _exportAssetTo(uint256 _tokenID, address _tokenContract, uint32 _exportTo)
+    function exportAssetTo(uint256 _tokenID, address _tokenContract, uint32 _exportTo)
         external
         whenNotPaused
         isTokenHolder(_tokenID, _tokenContract)

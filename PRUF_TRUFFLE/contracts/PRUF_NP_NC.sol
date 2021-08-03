@@ -76,7 +76,7 @@ contract NP_NC is CORE {
      * @param _exportTo node target for export
      */
     //DPS:TEST
-    function _exportAssetTo(bytes32 _idxHash, uint32 _exportTo)
+    function exportAssetTo(bytes32 _idxHash, uint32 _exportTo)
         external
         whenNotPaused
         isAuthorized(_idxHash)

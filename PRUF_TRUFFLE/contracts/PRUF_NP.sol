@@ -195,7 +195,7 @@ contract NP is CORE {
      * @param _addr adress to send asset to
      * @param _rgtHash rgthash to match in front end
      */
-    function _exportAssetTo(
+    function exportAssetTo(
         bytes32 _idxHash,
         uint32 _exportTo,
         address _addr,
