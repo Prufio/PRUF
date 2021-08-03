@@ -2347,7 +2347,7 @@ contract('DECORATE', accounts => {
     })
 
     it('Should mod status to 52', async () => {
-        return DECORATE._modStatus(
+        return DECORATE.modifyStatus(
             "0",
             Foreign721.address,
             "52",
@@ -2368,7 +2368,7 @@ contract('DECORATE', accounts => {
     })
 
     it('Should mod status to 51', async () => {
-        return DECORATE._modStatus(
+        return DECORATE.modifyStatus(
             "0",
             Foreign721.address,
             "51",
@@ -2431,7 +2431,7 @@ contract('DECORATE', accounts => {
     })
 
     it('Should dec 500', async () => {
-        return DECORATE._decCounter(
+        return DECORATE.decrementCounter(
             "0",
             Foreign721.address,
             "500",
@@ -2451,8 +2451,8 @@ contract('DECORATE', accounts => {
         })
     })
 
-    it('Should _modMutableStorage to rgt1', async () => {
-        return DECORATE._modMutableStorage(
+    it('Should modifyMutableStorage to rgt1', async () => {
+        return DECORATE.modifyMutableStorage(
             "0",
             Foreign721.address,
             rgt1,
@@ -2552,7 +2552,7 @@ contract('DECORATE', accounts => {
 
 
     it('Should change status of new asset12 to status(1)', async () => {
-        return NP._modStatus(
+        return NP.modifyStatus(
             asset12,
             rgt12,
             '1',
@@ -2572,7 +2572,7 @@ contract('DECORATE', accounts => {
 
 
     it('Should force modify asset12 RGT(2) to RGT(1)', async () => {
-        return APP.forceModRecord(
+        return APP.forceModifyRecord(
             asset12,
             rgt12,
             { from: account2 }
@@ -2581,7 +2581,7 @@ contract('DECORATE', accounts => {
 
 
     it('Should change decrement amount @asset12 from (100) to (85)', async () => {
-        return NP._decCounter(
+        return NP.decrementCounter(
             asset12,
             rgt12,
             '15',
@@ -2591,7 +2591,7 @@ contract('DECORATE', accounts => {
 
 
     it('Should modify Mutable note @asset12 to IDX(1)', async () => {
-        return NP._modMutableStorage(
+        return NP.modifyMutableStorage(
             asset12,
             rgt12,
             asset12,
@@ -2602,7 +2602,7 @@ contract('DECORATE', accounts => {
 
 
     it('Should change status of new asset12 to status(51)', async () => {
-        return NP._modStatus(
+        return NP.modifyStatus(
             asset12,
             rgt12,
             '51',
@@ -2653,7 +2653,7 @@ contract('DECORATE', accounts => {
 
 
     it('Should change status of asset12 to status(51)', async () => {
-        return NP_NC._modStatus(
+        return NP_NC.modifyStatus(
             asset12,
             '51',
             { from: account2 }
@@ -2681,7 +2681,7 @@ contract('DECORATE', accounts => {
 
 
     it('Should change decrement amount @asset12 from (85) to (70)', async () => {
-        return NP_NC._decCounter(
+        return NP_NC.decrementCounter(
             asset12,
             '15',
             { from: account2 }
@@ -2699,7 +2699,7 @@ contract('DECORATE', accounts => {
 
 
     it('Should modify Mutable note @asset12 to RGT(1)', async () => {
-        return NP_NC._modMutableStorage(
+        return NP_NC.modifyMutableStorage(
             asset12,
             rgt12,
             rgt000,
@@ -2708,7 +2708,7 @@ contract('DECORATE', accounts => {
     })
 
     it('Should change status of asset12 to status(51)', async () => {
-        return NP_NC._modStatus(
+        return NP_NC.modifyStatus(
             asset12,
             '51',
             { from: account2 }
@@ -2744,7 +2744,7 @@ contract('DECORATE', accounts => {
 
 
     it('Should change status of asset12 to status(1)', async () => {
-        return NP._modStatus(
+        return NP.modifyStatus(
             asset12,
             rgt12,
             '1',
@@ -2773,7 +2773,7 @@ contract('DECORATE', accounts => {
 
 
     it('Should change status of asset12 to status(1)', async () => {
-        return NP._modStatus(
+        return NP.modifyStatus(
             asset12,
             rgt12,
             '1',
@@ -2794,7 +2794,7 @@ contract('DECORATE', accounts => {
 
 
     it('Should set asset12 to stolen(3) status', async () => {
-        return NP._setLostOrStolen(
+        return NP.setLostOrStolen(
             asset12,
             rgt12,
             '3',
@@ -2804,7 +2804,7 @@ contract('DECORATE', accounts => {
 
 
     it('Should change status of asset12 to status(1)', async () => {
-        return NP._modStatus(
+        return NP.modifyStatus(
             asset12,
             rgt12,
             '1',

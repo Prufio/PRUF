@@ -1552,7 +1552,7 @@ contract("DECORATE", (accounts) => {
     })
 
     it('Should modStat of asset3 to 52', async () => {
-        return DECORATE._modStatus(
+        return DECORATE.modifyStatus(
             "3",
             Foreign721.address,
             "52",
@@ -1688,8 +1688,8 @@ contract("DECORATE", (accounts) => {
     it('Should fail because DECORATE is paused', async () => {
 
       console.log("//**************************************END decorate721 FAIL BATCH**********************************************/")
-      console.log("//**************************************BEGIN _modStatus BATCH**********************************************/")
-      return DECORATE._modStatus(
+      console.log("//**************************************BEGIN modifyStatus BATCH**********************************************/")
+      return DECORATE.modifyStatus(
           "0",
           Foreign721.address,
           "52",
@@ -1705,7 +1705,7 @@ contract("DECORATE", (accounts) => {
 
     //7
     it('Should fail because caller is not token holder', async () => {
-        return DECORATE._modStatus(
+        return DECORATE.modifyStatus(
             "0",
             Foreign721.address,
             "52",
@@ -1715,7 +1715,7 @@ contract("DECORATE", (accounts) => {
 
     //8
     it('Should fail because record AC cust type !== 5', async () => {
-        return DECORATE._modStatus(
+        return DECORATE.modifyStatus(
             "0",
             Foreign721.address,
             "52",
@@ -1725,7 +1725,7 @@ contract("DECORATE", (accounts) => {
 
     //9
     it('Should fail because newAssetStatus = 57 (stat rsvrd)', async () => {
-        return DECORATE._modStatus(
+        return DECORATE.modifyStatus(
             "1",
             Foreign721.address,
             "57",
@@ -1735,7 +1735,7 @@ contract("DECORATE", (accounts) => {
 
     //10
     it('Should fail because newAssetStatus = 58 (stat rsvrd)', async () => {
-        return DECORATE._modStatus(
+        return DECORATE.modifyStatus(
             "1",
             Foreign721.address,
             "58",
@@ -1745,7 +1745,7 @@ contract("DECORATE", (accounts) => {
 
     //11
     it('Should fail because newAssetStatus => 100 (stat rsvrd)', async () => {
-        return DECORATE._modStatus(
+        return DECORATE.modifyStatus(
             "1",
             Foreign721.address,
             "100",
@@ -1755,7 +1755,7 @@ contract("DECORATE", (accounts) => {
 
     //12
     it('Should fail because newAssetStatus = exported', async () => {
-        return DECORATE._modStatus(
+        return DECORATE.modifyStatus(
             "1",
             Foreign721.address,
             "70",
@@ -1772,7 +1772,7 @@ contract("DECORATE", (accounts) => {
     //13
     it('Should fail because DECORATE is paused', async () => {
 
-      console.log("//**************************************END _modStatus FAIL BATCH**********************************************/")
+      console.log("//**************************************END modifyStatus FAIL BATCH**********************************************/")
       console.log("//**************************************BEGIN _setPrice BATCH**********************************************/")
       return DECORATE._setPrice(
           "0",
@@ -1843,8 +1843,8 @@ contract("DECORATE", (accounts) => {
     it('Should fail because caller is not token holder', async () => {
 
         console.log("//**************************************END _setPrice FAIL BATCH**********************************************/")
-        console.log("//**************************************BEGIN _decCounter BATCH**********************************************/")
-        return DECORATE._decCounter(
+        console.log("//**************************************BEGIN decrementCounter BATCH**********************************************/")
+        return DECORATE.decrementCounter(
             "0",
             Foreign721.address,
             "100",
@@ -1853,7 +1853,7 @@ contract("DECORATE", (accounts) => {
     })
     //16
     it('Should fail because record AC cust type !== 5', async () => {
-        return DECORATE._decCounter(
+        return DECORATE.decrementCounter(
             "0",
             Foreign721.address,
             "100",
@@ -1863,7 +1863,7 @@ contract("DECORATE", (accounts) => {
 
     // //21
     // it('Should fail because assetStatus = exported', async () => {
-    //     return DECORATE._decCounter(
+    //     return DECORATE.decrementCounter(
     //         "3",
     //         Foreign721.address,
     //         "100",
@@ -1874,9 +1874,9 @@ contract("DECORATE", (accounts) => {
     //17
     it('Should fail because caller is not token holder', async () => {
 
-        console.log("//**************************************END _decCounter FAIL BATCH**********************************************/")
-        console.log("//**************************************BEGIN _modMutableStorage BATCH**********************************************/")
-        return DECORATE._modMutableStorage(
+        console.log("//**************************************END decrementCounter FAIL BATCH**********************************************/")
+        console.log("//**************************************BEGIN modifyMutableStorage BATCH**********************************************/")
+        return DECORATE.modifyMutableStorage(
             "0",
             Foreign721.address,
             rgt1,
@@ -1886,7 +1886,7 @@ contract("DECORATE", (accounts) => {
     })
     //18
     it('Should fail because record AC cust type !== 5', async () => {
-        return DECORATE._modMutableStorage(
+        return DECORATE.modifyMutableStorage(
             "0",
             Foreign721.address,
             rgt1,
@@ -1897,7 +1897,7 @@ contract("DECORATE", (accounts) => {
 
     // //24
     // it('Should fail because assetStatus = exported', async () => {
-    //     return DECORATE._modMutableStorage(
+    //     return DECORATE.modifyMutableStorage(
     //         "3",
     //         Foreign721.address,
     //         rgt1,
@@ -1908,7 +1908,7 @@ contract("DECORATE", (accounts) => {
     //19
     it('Should fail because caller is not token holder', async () => {
 
-        console.log("//**************************************END _modMutableStorage FAIL BATCH**********************************************/")
+        console.log("//**************************************END modifyMutableStorage FAIL BATCH**********************************************/")
         console.log("//**************************************BEGIN addNonMutableNote BATCH**********************************************/")
         return DECORATE.addNonMutableNote(
             "0",
@@ -2140,7 +2140,7 @@ contract("DECORATE", (accounts) => {
         });
       
         it("Should change status of new asset12 to status(1)", async () => {
-          return NP._modStatus(asset12, rgt12, "1", { from: account2 });
+          return NP.modifyStatus(asset12, rgt12, "1", { from: account2 });
         });
       
         it("Should retrieve asset12 @stat(1)", async () => {
@@ -2180,7 +2180,7 @@ contract("DECORATE", (accounts) => {
         });
       
         it("Should force modify asset12 RGT(2) to RGT(12)", async () => {
-          return APP.forceModRecord(asset12, rgt12, { from: account2 });
+          return APP.forceModifyRecord(asset12, rgt12, { from: account2 });
         });
       
         it("Should retrieve asset12 @newStat(0) && @newRgt(rgt12) && +1 FMR count && +1 N.O.T", async () => {
@@ -2200,7 +2200,7 @@ contract("DECORATE", (accounts) => {
         });
       
         it("Should decrement asset12 amount from (100) to (85)", async () => {
-          return NP._decCounter(asset12, rgt12, "15", { from: account2 });
+          return NP.decrementCounter(asset12, rgt12, "15", { from: account2 });
         });
       
         it("Should retrieve asset12 @newDecCount(85)", async () => {
@@ -2220,7 +2220,7 @@ contract("DECORATE", (accounts) => {
         });
       
         it("Should modify Mutable note @asset12 to (asset12)", async () => {
-          return NP._modMutableStorage(asset12, rgt12, asset12, rgt000, { from: account2 });
+          return NP.modifyMutableStorage(asset12, rgt12, asset12, rgt000, { from: account2 });
         });
       
         it("Should retrieve asset12 with newMutable(asset12)", async () => {
@@ -2240,7 +2240,7 @@ contract("DECORATE", (accounts) => {
         });
       
         it("Should change status of new asset12 to status(51)", async () => {
-          return NP._modStatus(asset12, rgt12, "51", { from: account2 });
+          return NP.modifyStatus(asset12, rgt12, "51", { from: account2 });
         });
       
         it("Should retrieve asset12 @newStatus(51)", async () => {
@@ -2322,7 +2322,7 @@ contract("DECORATE", (accounts) => {
         });
       
         it("Should change status of asset12 to status(51)", async () => {
-          return NP_NC._modStatus(asset12, "51", { from: account2 });
+          return NP_NC.modifyStatus(asset12, "51", { from: account2 });
         });
       
         it("Should retrieve asset12 @newStatus(51)", async () => {
@@ -2384,7 +2384,7 @@ contract("DECORATE", (accounts) => {
         });
       
         it("Should change decrement amount @asset12 from (85) to (70)", async () => {
-          return NP_NC._decCounter(asset12, "15", { from: account2 });
+          return NP_NC.decrementCounter(asset12, "15", { from: account2 });
         });
       
         it("Should retrieve asset12 @newDecAmount(70)", async () => {
@@ -2424,7 +2424,7 @@ contract("DECORATE", (accounts) => {
         });
       
         it("Should modify Mutable @asset12 to RGT(12)", async () => {
-          return NP_NC._modMutableStorage(asset12, rgt12, rgt000, { from: account2 });
+          return NP_NC.modifyMutableStorage(asset12, rgt12, rgt000, { from: account2 });
         });
       
         it("Should retrieve asset12 @newMutable(rgt12)", async () => {
@@ -2444,7 +2444,7 @@ contract("DECORATE", (accounts) => {
         });
       
         it("Should set asset12 to stolen(53) status", async () => {
-          return NP_NC._setLostOrStolen(asset12, "53", { from: account2 });
+          return NP_NC.setLostOrStolen(asset12, "53", { from: account2 });
         });
       
         it("Should retrieve asset12 @newStatus(53)", async () => {
@@ -2464,7 +2464,7 @@ contract("DECORATE", (accounts) => {
         });
       
         it("Should change status of asset12 to status(51)", async () => {
-          return NP_NC._modStatus(asset12, "51", { from: account2 });
+          return NP_NC.modifyStatus(asset12, "51", { from: account2 });
         });
       
         it("Should retrieve asset12 @newStatus(51)", async () => {
@@ -2546,7 +2546,7 @@ contract("DECORATE", (accounts) => {
         });
       
         it("Should change status of asset12 to status(1)", async () => {
-          return NP._modStatus(asset12, rgt12, "1", { from: account2 });
+          return NP.modifyStatus(asset12, rgt12, "1", { from: account2 });
         });
       
         it("Should retrieve asset12 @newStatus(1)", async () => {
@@ -2608,7 +2608,7 @@ contract("DECORATE", (accounts) => {
         });
       
         it("Should change status of asset12 to status(1)", async () => {
-          return NP._modStatus(asset12, rgt12, "1", { from: account2 });
+          return NP.modifyStatus(asset12, rgt12, "1", { from: account2 });
         });
       
         it("Should retrieve asset12 @newStatus(1)", async () => {
@@ -2628,7 +2628,7 @@ contract("DECORATE", (accounts) => {
         });
       
         it("Should set asset12 to stolen(3) status", async () => {
-          return NP._setLostOrStolen(asset12, rgt12, "3", { from: account2 });
+          return NP.setLostOrStolen(asset12, rgt12, "3", { from: account2 });
         });
       
         it("Should retrieve asset12 @newStatus(3)", async () => {
@@ -2648,7 +2648,7 @@ contract("DECORATE", (accounts) => {
         });
       
         it("Should change status of asset12 to status(51)", async () => {
-          return NP._modStatus(asset12, rgt12, "51", { from: account2 });
+          return NP.modifyStatus(asset12, rgt12, "51", { from: account2 });
         });
       
         it("Should retrieve asset12 @newStaus(51)", async () => {
@@ -2693,7 +2693,7 @@ contract("DECORATE", (accounts) => {
         });
       
         it("Should decrement asset13 amount from (100) to (85)", async () => {
-          return NP_NC._decCounter(asset13, "15", { from: account4 });
+          return NP_NC.decrementCounter(asset13, "15", { from: account4 });
         });
       
         it("Should retrieve asset13 @newDecCount(85)", async () => {
@@ -2713,7 +2713,7 @@ contract("DECORATE", (accounts) => {
         });
       
         it("Should modify Mutable note @asset13 to (asset13)", async () => {
-          return NP_NC._modMutableStorage(asset13, asset13, rgt000, { from: account4 });
+          return NP_NC.modifyMutableStorage(asset13, asset13, rgt000, { from: account4 });
         });
       
         it("Should retrieve asset13 with newMutable(asset13)", async () => {
@@ -2773,7 +2773,7 @@ contract("DECORATE", (accounts) => {
         });
       
         it("Should set asset13 to stolen(53) status", async () => {
-          return NP_NC._setLostOrStolen(asset13, "53", { from: account4 });
+          return NP_NC.setLostOrStolen(asset13, "53", { from: account4 });
         });
       
         it("Should retrieve asset13 @newStatus(53)", async () => {
@@ -2793,7 +2793,7 @@ contract("DECORATE", (accounts) => {
         });
       
         it("Should change status of new asset12 to status(51)", async () => {
-          return NP_NC._modStatus(asset13, "51", { from: account4 });
+          return NP_NC.modifyStatus(asset13, "51", { from: account4 });
         });
       
         it("Should retrieve asset13 @stat(51)", async () => {
@@ -2855,7 +2855,7 @@ contract("DECORATE", (accounts) => {
         });
       
         it("Should change status of new asset12 to status(51)", async () => {
-          return NP_NC._modStatus(asset13, "51", { from: account4 });
+          return NP_NC.modifyStatus(asset13, "51", { from: account4 });
         });
       
         it("Should retrieve asset13 @stat(51)", async () => {
@@ -2938,7 +2938,7 @@ contract("DECORATE", (accounts) => {
         });
       
         it("Should change status of asset13 to status(1)", async () => {
-          return NP._modStatus(asset13, rgt13, "1", { from: account4 });
+          return NP.modifyStatus(asset13, rgt13, "1", { from: account4 });
         });
       
         it("Should retrieve asset13 @newStatus(1)", async () => {
@@ -2998,7 +2998,7 @@ contract("DECORATE", (accounts) => {
         });
       
         it("Should change decrement amount @asset13 from (85) to (70)", async () => {
-          return NP._decCounter(asset13, rgt13, "15", { from: account4 });
+          return NP.decrementCounter(asset13, rgt13, "15", { from: account4 });
         });
       
         it("Should retrieve asset13 @newDecAmount(70)", async () => {
@@ -3018,7 +3018,7 @@ contract("DECORATE", (accounts) => {
         });
       
         it("Should modify Mutable @asset13 to RGT(12)", async () => {
-          return NP._modMutableStorage(asset13, rgt13, rgt13, rgt000, { from: account4 });
+          return NP.modifyMutableStorage(asset13, rgt13, rgt13, rgt000, { from: account4 });
         });
       
         it("Should retrieve asset13 @newMutable(rgt13)", async () => {
@@ -3038,7 +3038,7 @@ contract("DECORATE", (accounts) => {
         });
       
         it("Should set asset13 to stolen(3) status", async () => {
-          return NP._setLostOrStolen(asset13, rgt13, "3", { from: account4 });
+          return NP.setLostOrStolen(asset13, rgt13, "3", { from: account4 });
         });
       
         it("Should retrieve asset13 @newStatus(3)", async () => {
@@ -3058,7 +3058,7 @@ contract("DECORATE", (accounts) => {
         });
       
         it("Should change status of asset13 to status(1)", async () => {
-          return NP._modStatus(asset13, rgt13, "1", { from: account4 });
+          return NP.modifyStatus(asset13, rgt13, "1", { from: account4 });
         });
       
         it("Should retrieve asset13 @newStatus(1)", async () => {
@@ -3098,7 +3098,7 @@ contract("DECORATE", (accounts) => {
         });
       
         it("Should force modify asset13 RGT(2) to RGT(13)", async () => {
-          return APP.forceModRecord(asset13, rgt13, { from: account4 });
+          return APP.forceModifyRecord(asset13, rgt13, { from: account4 });
         });
       
         it("Should retrieve asset12 @newStat(0) && @newRgt(rgt12) && +1 FMR count && +1 N.O.T", async () => {
@@ -3118,7 +3118,7 @@ contract("DECORATE", (accounts) => {
         });
       
         it("Should change asset13 status to (51)", async () => {
-          return NP._modStatus(asset13, rgt13, "51", { from: account4 });
+          return NP.modifyStatus(asset13, rgt13, "51", { from: account4 });
         });
       
         it("Should retrieve asset12 @newStat(51)", async () => {
@@ -3179,7 +3179,7 @@ contract("DECORATE", (accounts) => {
         });
       
         it("Should change status of asset13 to status(51)", async () => {
-          return NP_NC._modStatus(asset13, "51", { from: account4 });
+          return NP_NC.modifyStatus(asset13, "51", { from: account4 });
         });
       
         it("Should retrieve asset13 @newStatus(51)", async () => {
@@ -3199,7 +3199,7 @@ contract("DECORATE", (accounts) => {
         });
       
         it("Should change status of asset13 to status(59)", async () => {
-          return NP_NC._modStatus(asset13, "59", { from: account4 });
+          return NP_NC.modifyStatus(asset13, "59", { from: account4 });
         });
       
         it("Should retrieve asset13 @newStaus(59)", async () => {
@@ -3259,7 +3259,7 @@ contract("DECORATE", (accounts) => {
         });
       
         it("Should change status of asset12 to status(51)", async () => {
-          return NP_NC._modStatus(asset13, "51", { from: account4 });
+          return NP_NC.modifyStatus(asset13, "51", { from: account4 });
         });
       
         it("Should retrieve asset12 @newStaus(51)", async () => {
