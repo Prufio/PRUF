@@ -2468,7 +2468,7 @@ _________\/// _____________\/// _______\/// __\///////// __\/// _____________
 
 
     it('Should force modify asset13 RGT(2) to RGT(13)', async () => {
-        return APP.forceModRecord(
+        return APP.forceModifyRecord(
         asset13, 
         rgt13,
         {from: account4}

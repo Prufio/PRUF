@@ -2025,7 +2025,7 @@ it('Should authorize all minter contracts for minting A_TKN(s)', async () => {
       });
     
       it("Should force modify asset12 RGT(2) to RGT(12)", async () => {
-        return APP.forceModRecord(asset12, rgt12, { from: account2 });
+        return APP.forceModifyRecord(asset12, rgt12, { from: account2 });
       });
     
       it("Should retrieve asset12 @newStat(0) && @newRgt(rgt12) && +1 FMR count && +1 N.O.T", async () => {
@@ -2943,7 +2943,7 @@ it('Should authorize all minter contracts for minting A_TKN(s)', async () => {
       });
     
       it("Should force modify asset13 RGT(2) to RGT(13)", async () => {
-        return APP.forceModRecord(asset13, rgt13, { from: account4 });
+        return APP.forceModifyRecord(asset13, rgt13, { from: account4 });
       });
     
       it("Should retrieve asset12 @newStat(0) && @newRgt(rgt12) && +1 FMR count && +1 N.O.T", async () => {

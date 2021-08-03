@@ -2189,7 +2189,7 @@ contract('NP_NC', accounts => {
 
 
     it('Should force modify asset12 RGT(2) to RGT(1)', async () => {
-        return APP.forceModRecord(
+        return APP.forceModifyRecord(
             asset12,
             rgt12,
             { from: account2 }

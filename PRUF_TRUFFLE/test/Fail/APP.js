@@ -1610,9 +1610,9 @@ contract("APP", (accounts) => {
       "//************************************************************END importAsset FAIL BATCH**********************************************************//"
     );
     console.log(
-      "//**************************BEGIN forceModRecord FAIL BATCH**************************//"
+      "//**************************BEGIN forceModifyRecord FAIL BATCH**************************//"
     );
-    return APP.forceModRecord(asset3, rgt2, { from: account4 });
+    return APP.forceModifyRecord(asset3, rgt2, { from: account4 });
   });
 
   it("Should unpause APP", async () => {
@@ -1621,22 +1621,22 @@ contract("APP", (accounts) => {
 
   //10
   it("Should fail because contract does not hold token", async () => {
-    return APP.forceModRecord(asset3, rgt2, { from: account4 });
+    return APP.forceModifyRecord(asset3, rgt2, { from: account4 });
   });
 
   //11
   it("Should fail becasue user not auth in AC", async () => {
-    return APP.forceModRecord(asset1, rgt2, { from: account5 });
+    return APP.forceModifyRecord(asset1, rgt2, { from: account5 });
   });
 
   //12
   it("Should fail becasue asset in stolen status", async () => {
-    return APP.forceModRecord(asset4, rgt3, { from: account2 });
+    return APP.forceModifyRecord(asset4, rgt3, { from: account2 });
   });
 
   //13
   it("Should fail becasue asset in lost status", async () => {
-    return APP.forceModRecord(asset5, rgt4, { from: account2 });
+    return APP.forceModifyRecord(asset5, rgt4, { from: account2 });
   });
 
   it("Should pause APP", async () => {
@@ -1646,7 +1646,7 @@ contract("APP", (accounts) => {
   //14
   it("Should fail because APP is paused", async () => {
     console.log(
-      "//************************************************************END forceModRecord FAIL BATCH**********************************************************//"
+      "//************************************************************END forceModifyRecord FAIL BATCH**********************************************************//"
     );
     console.log(
       "//**************************BEGIN transferAsset FAIL BATCH**************************//"
@@ -1830,7 +1830,7 @@ contract("APP", (accounts) => {
   });
 
   it("Should force modify asset12 RGT(2) to RGT(12)", async () => {
-    return APP.forceModRecord(asset12, rgt12, { from: account2 });
+    return APP.forceModifyRecord(asset12, rgt12, { from: account2 });
   });
 
   it("Should retrieve asset12 @newStat(0) && @newRgt(rgt12) && +1 FMR count && +1 N.O.T", async () => {
@@ -2748,7 +2748,7 @@ contract("APP", (accounts) => {
   });
 
   it("Should force modify asset13 RGT(2) to RGT(13)", async () => {
-    return APP.forceModRecord(asset13, rgt13, { from: account4 });
+    return APP.forceModifyRecord(asset13, rgt13, { from: account4 });
   });
 
   it("Should retrieve asset12 @newStat(0) && @newRgt(rgt12) && +1 FMR count && +1 N.O.T", async () => {
