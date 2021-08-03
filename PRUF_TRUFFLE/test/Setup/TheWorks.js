@@ -1654,7 +1654,7 @@ contract("TheWorks", (accounts) => {
   });
 
   it("Should export asset12 to account2", async () => {
-    return NP._exportAssetTo(asset12, "1000003", account2, rgt12, {
+    return NP.exportAssetTo(asset12, "1000003", account2, rgt12, {
       from: account2,
     });
   });
@@ -1778,7 +1778,7 @@ contract("TheWorks", (accounts) => {
   });
 
   it("Should force modify asset12 RGT12 to RGT(2)", async () => {
-    return NP_NC._changeRgt(asset12, rgt2, { from: account2 });
+    return NP_NC.changeRgt(asset12, rgt2, { from: account2 });
   });
 
   it("Should retrieve asset12 @newRgt(2)", async () => {
@@ -1858,7 +1858,7 @@ contract("TheWorks", (accounts) => {
   });
 
   it("Should export asset12(status70)", async () => {
-    return NP_NC._exportAssetTo(asset12, "1000001", { from: account2 });
+    return NP_NC.exportAssetTo(asset12, "1000001", { from: account2 });
   });
 
   it("Should retrieve asset12 @newAC (root(1)) && @newStatus(exported(70))", async () => {
@@ -2127,7 +2127,7 @@ contract("TheWorks", (accounts) => {
   });
 
   it("Should force modify asset13 rgt13 to RGT(2)", async () => {
-    return NP_NC._changeRgt(asset13, rgt2, { from: account4 });
+    return NP_NC.changeRgt(asset13, rgt2, { from: account4 });
   });
 
   it("Should retrieve asset13 @newRgt(2)", async () => {
@@ -2249,7 +2249,7 @@ contract("TheWorks", (accounts) => {
   });
 
   it("Should export asset13 to account4", async () => {
-    return NP_NC._exportAssetTo(asset13, "1000001", { from: account4 });
+    return NP_NC.exportAssetTo(asset13, "1000001", { from: account4 });
   });
 
   it("Should retrieve asset13 @newStatus(70(exported))", async () => {
@@ -2511,7 +2511,7 @@ contract("TheWorks", (accounts) => {
   });
 
   it("Should export asset13(status70)", async () => {
-    return NP._exportAssetTo(asset13, "1000003", account4, rgt13, { from: account4 });
+    return NP.exportAssetTo(asset13, "1000003", account4, rgt13, { from: account4 });
   });
   ///
 

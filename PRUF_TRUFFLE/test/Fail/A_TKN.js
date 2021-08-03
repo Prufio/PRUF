@@ -1475,7 +1475,7 @@ contract("A_TKN", (accounts) => {
   });
 
   it("Should export asset2", async () => {
-    return NP_NC._exportAssetTo(asset2, "1000003", { from: account4 });
+    return NP_NC.exportAssetTo(asset2, "1000003", { from: account4 });
   });
 
   it("Should set assetClass 13 switch to 1:1", async () => {
@@ -1639,7 +1639,7 @@ contract("A_TKN", (accounts) => {
   });
 
   it("Should export asset2", async () => {
-    return NP_NC._exportAssetTo(asset2, '1000003', { from: account4 });
+    return NP_NC.exportAssetTo(asset2, '1000003', { from: account4 });
   });
 
   //14
@@ -2019,7 +2019,7 @@ contract("A_TKN", (accounts) => {
   });
 
   it("Should export asset12 to account2", async () => {
-    return NP._exportAssetTo(asset12, '1000003', account2, { from: account2 });
+    return NP.exportAssetTo(asset12, '1000003', account2, { from: account2 });
   });
 
   it("Should retrieve asset12 @newStatus(70(exported)) && +1 N.O.T", async () => {
@@ -2141,7 +2141,7 @@ contract("A_TKN", (accounts) => {
   });
 
   it("Should force modify asset12 RGT12 to RGT(2)", async () => {
-    return NP_NC._changeRgt(asset12, rgt2, { from: account2 });
+    return NP_NC.changeRgt(asset12, rgt2, { from: account2 });
   });
 
   it("Should retrieve asset12 @newRgt(2)", async () => {
@@ -2221,7 +2221,7 @@ contract("A_TKN", (accounts) => {
   });
 
   it("Should export asset12(status70)", async () => {
-    return NP_NC._exportAssetTo(asset12, "1000001", { from: account2 });
+    return NP_NC.exportAssetTo(asset12, "1000001", { from: account2 });
   });
 
   it("Should retrieve asset12 @newAC (root(1)) && @newStatus(exported(70))", async () => {
@@ -2490,7 +2490,7 @@ contract("A_TKN", (accounts) => {
   });
 
   it("Should force modify asset13 rgt13 to RGT(2)", async () => {
-    return NP_NC._changeRgt(asset13, rgt2, { from: account4 });
+    return NP_NC.changeRgt(asset13, rgt2, { from: account4 });
   });
 
   it("Should retrieve asset13 @newRgt(2)", async () => {
