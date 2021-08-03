@@ -1875,8 +1875,8 @@ contract("DECORATE", (accounts) => {
     it('Should fail because caller is not token holder', async () => {
 
         console.log("//**************************************END _decCounter FAIL BATCH**********************************************/")
-        console.log("//**************************************BEGIN _modMutable BATCH**********************************************/")
-        return DECORATE._modMutable(
+        console.log("//**************************************BEGIN _modMutableStorage BATCH**********************************************/")
+        return DECORATE._modMutableStorage(
             "0",
             Foreign721.address,
             rgt1,
@@ -1886,7 +1886,7 @@ contract("DECORATE", (accounts) => {
     })
     //18
     it('Should fail because record AC cust type !== 5', async () => {
-        return DECORATE._modMutable(
+        return DECORATE._modMutableStorage(
             "0",
             Foreign721.address,
             rgt1,
@@ -1897,7 +1897,7 @@ contract("DECORATE", (accounts) => {
 
     // //24
     // it('Should fail because assetStatus = exported', async () => {
-    //     return DECORATE._modMutable(
+    //     return DECORATE._modMutableStorage(
     //         "3",
     //         Foreign721.address,
     //         rgt1,
@@ -1908,7 +1908,7 @@ contract("DECORATE", (accounts) => {
     //19
     it('Should fail because caller is not token holder', async () => {
 
-        console.log("//**************************************END _modMutable FAIL BATCH**********************************************/")
+        console.log("//**************************************END _modMutableStorage FAIL BATCH**********************************************/")
         console.log("//**************************************BEGIN addNonMutableNote BATCH**********************************************/")
         return DECORATE.addNonMutableNote(
             "0",
@@ -2220,7 +2220,7 @@ contract("DECORATE", (accounts) => {
         });
       
         it("Should modify Mutable note @asset12 to (asset12)", async () => {
-          return NP._modMutable(asset12, rgt12, asset12, rgt000, { from: account2 });
+          return NP._modMutableStorage(asset12, rgt12, asset12, rgt000, { from: account2 });
         });
       
         it("Should retrieve asset12 with newMutable(asset12)", async () => {
@@ -2424,7 +2424,7 @@ contract("DECORATE", (accounts) => {
         });
       
         it("Should modify Mutable @asset12 to RGT(12)", async () => {
-          return NP_NC._modMutable(asset12, rgt12, rgt000, { from: account2 });
+          return NP_NC._modMutableStorage(asset12, rgt12, rgt000, { from: account2 });
         });
       
         it("Should retrieve asset12 @newMutable(rgt12)", async () => {
@@ -2713,7 +2713,7 @@ contract("DECORATE", (accounts) => {
         });
       
         it("Should modify Mutable note @asset13 to (asset13)", async () => {
-          return NP_NC._modMutable(asset13, asset13, rgt000, { from: account4 });
+          return NP_NC._modMutableStorage(asset13, asset13, rgt000, { from: account4 });
         });
       
         it("Should retrieve asset13 with newMutable(asset13)", async () => {
@@ -3018,7 +3018,7 @@ contract("DECORATE", (accounts) => {
         });
       
         it("Should modify Mutable @asset13 to RGT(12)", async () => {
-          return NP._modMutable(asset13, rgt13, rgt13, rgt000, { from: account4 });
+          return NP._modMutableStorage(asset13, rgt13, rgt13, rgt000, { from: account4 });
         });
       
         it("Should retrieve asset13 @newMutable(rgt13)", async () => {

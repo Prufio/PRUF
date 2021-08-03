@@ -2865,7 +2865,7 @@ contract('STOR', accounts => {
 
     //45
     it('Should fail because record does not exist', async () => {
-        return MAL_APP._modMutable(
+        return MAL_APP._modMutableStorage(
             asset10,
             rgt1,
             rgt000,
@@ -2875,7 +2875,7 @@ contract('STOR', accounts => {
 
     //46
     it('Should fail because calling contract not auth in AC', async () => {
-        return MAL_APP._modMutable(
+        return MAL_APP._modMutableStorage(
             asset8,
             // rgt8,
             asset8,
@@ -2891,7 +2891,7 @@ contract('STOR', accounts => {
 
     //47
     it('Should fail because record in escrow stat', async () => {
-        return MAL_APP._modMutable(
+        return MAL_APP._modMutableStorage(
             asset7,
             asset7,
             rgt000,
@@ -2901,7 +2901,7 @@ contract('STOR', accounts => {
 
 
     it('Should set asset8 mutable to asset8', async () => {
-        return MAL_APP._modMutable(
+        return MAL_APP._modMutableStorage(
             asset8,
             // rgt8,
             asset8,
@@ -2912,7 +2912,7 @@ contract('STOR', accounts => {
 
     //48
     it('Should fail because ips1 cannot match previous data', async () => {
-        return MAL_APP._modMutable(
+        return MAL_APP._modMutableStorage(
             asset8,
             // rgt8,
             asset8,
@@ -3094,7 +3094,7 @@ contract('STOR', accounts => {
 
 
     it('Should modify Mutable note @asset12 to IDX(1)', async () => {
-        return NP._modMutable(
+        return NP._modMutableStorage(
             asset12,
             rgt12,
             asset12,
@@ -3202,7 +3202,7 @@ contract('STOR', accounts => {
 
 
     it('Should modify Mutable note @asset12 to RGT(1)', async () => {
-        return NP_NC._modMutable(
+        return NP_NC._modMutableStorage(
             asset12,
             rgt12,
             rgt000,

@@ -2348,8 +2348,8 @@ contract('NP_NC', accounts => {
     it('Should fail because caller does not hold token', async () => {
 
         console.log("//**************************************END _decCounter FAIL BATCH**********************************************/")
-        console.log("//**************************************BEGIN _modMutable FAIL BATCH**********************************************/")
-        return NP_NC._modMutable(
+        console.log("//**************************************BEGIN _modMutableStorage FAIL BATCH**********************************************/")
+        return NP_NC._modMutableStorage(
             asset1,
             rgt1,
             rgt000,
@@ -2414,7 +2414,7 @@ contract('NP_NC', accounts => {
 
 
     it('Should modify Mutable note @asset12 to IDX(1)', async () => {
-        return NP._modMutable(
+        return NP._modMutableStorage(
             asset12,
             rgt12,
             asset12,
@@ -2522,7 +2522,7 @@ contract('NP_NC', accounts => {
 
 
     it('Should modify Mutable note @asset12 to RGT(1)', async () => {
-        return NP_NC._modMutable(
+        return NP_NC._modMutableStorage(
             asset12,
             rgt12,
             rgt000,

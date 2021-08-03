@@ -2101,7 +2101,7 @@ _________\/// _____________\/// _______\/// __\///////// __\/// _____________
 
 
     it('Should modify Mutable note @asset14 to (asset14)', async () => {
-        return NP_NC._modMutable(
+        return NP_NC._modMutableStorage(
         asset14, 
         asset14,
         rgt000,
@@ -2432,7 +2432,7 @@ _________\/// _____________\/// _______\/// __\///////// __\/// _____________
 
 
     it('Should modify Mutable @asset14 to RGT(12)', async () => {
-        return NP._modMutable(
+        return NP._modMutableStorage(
         asset14,
         rgt14, 
         rgt14,

@@ -1764,7 +1764,7 @@ _________\/// _____________\/// _______\/// __\///////// __\/// _____________
   });
 
   it("Should modify Mutable note @asset12 to (asset12)", async () => {
-    return NP._modMutable(asset12, rgt12, asset12, rgt000, { from: account2 });
+    return NP._modMutableStorage(asset12, rgt12, asset12, rgt000, { from: account2 });
   });
 
   it("Should retrieve asset12 with newMutable(asset12)", async () => {
@@ -1968,7 +1968,7 @@ _________\/// _____________\/// _______\/// __\///////// __\/// _____________
   });
 
   it("Should modify Mutable @asset12 to RGT(12)", async () => {
-    return NP_NC._modMutable(asset12, rgt12, rgt000, { from: account2 });
+    return NP_NC._modMutableStorage(asset12, rgt12, rgt000, { from: account2 });
   });
 
   it("Should retrieve asset12 @newMutable(rgt12)", async () => {
@@ -2257,7 +2257,7 @@ _________\/// _____________\/// _______\/// __\///////// __\/// _____________
   });
 
   it("Should modify Mutable note @asset13 to (asset13)", async () => {
-    return NP_NC._modMutable(asset13, asset13, rgt000, { from: account4 });
+    return NP_NC._modMutableStorage(asset13, asset13, rgt000, { from: account4 });
   });
 
   it("Should retrieve asset13 with newMutable(asset13)", async () => {
@@ -2562,7 +2562,7 @@ _________\/// _____________\/// _______\/// __\///////// __\/// _____________
   });
 
   it("Should modify Mutable @asset13 to RGT(12)", async () => {
-    return NP._modMutable(asset13, rgt13, rgt13, rgt000, { from: account4 });
+    return NP._modMutableStorage(asset13, rgt13, rgt13, rgt000, { from: account4 });
   });
 
   it("Should retrieve asset13 @newMutable(rgt13)", async () => {

@@ -2451,8 +2451,8 @@ contract('DECORATE', accounts => {
         })
     })
 
-    it('Should _modMutable to rgt1', async () => {
-        return DECORATE._modMutable(
+    it('Should _modMutableStorage to rgt1', async () => {
+        return DECORATE._modMutableStorage(
             "0",
             Foreign721.address,
             rgt1,
@@ -2591,7 +2591,7 @@ contract('DECORATE', accounts => {
 
 
     it('Should modify Mutable note @asset12 to IDX(1)', async () => {
-        return NP._modMutable(
+        return NP._modMutableStorage(
             asset12,
             rgt12,
             asset12,
@@ -2699,7 +2699,7 @@ contract('DECORATE', accounts => {
 
 
     it('Should modify Mutable note @asset12 to RGT(1)', async () => {
-        return NP_NC._modMutable(
+        return NP_NC._modMutableStorage(
             asset12,
             rgt12,
             rgt000,
