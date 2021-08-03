@@ -1173,7 +1173,7 @@ contract("NODE_MGR", (accounts) => {
 
   it("Should finalize all ACs", () => {
     console.log("Updating AC Immutables");
-    return NODE_MGR.updateACImmutable(
+    return NODE_MGR.setNonMutableData(
       "1000001",
       "3",
       "1",
@@ -1182,7 +1182,7 @@ contract("NODE_MGR", (accounts) => {
     )
 
       .then(() => {
-        return NODE_MGR.updateACImmutable(
+        return NODE_MGR.setNonMutableData(
           "1000002",
           "3",
           "1",
@@ -1192,7 +1192,7 @@ contract("NODE_MGR", (accounts) => {
       })
 
       .then(() => {
-        return NODE_MGR.updateACImmutable(
+        return NODE_MGR.setNonMutableData(
           "1000003",
           "3",
           "1",
@@ -1202,7 +1202,7 @@ contract("NODE_MGR", (accounts) => {
       })
 
       .then(() => {
-        return NODE_MGR.updateACImmutable(
+        return NODE_MGR.setNonMutableData(
           "1000004",
           "3",
           "1",
@@ -1212,7 +1212,7 @@ contract("NODE_MGR", (accounts) => {
       })
 
       .then(() => {
-        return NODE_MGR.updateACImmutable(
+        return NODE_MGR.setNonMutableData(
           "1000005",
           "3",
           "1",
@@ -1222,7 +1222,7 @@ contract("NODE_MGR", (accounts) => {
       })
 
       .then(() => {
-        return NODE_MGR.updateACImmutable(
+        return NODE_MGR.setNonMutableData(
           "1000006",
           "3",
           "1",
@@ -1847,14 +1847,14 @@ contract("NODE_MGR", (accounts) => {
       "//**************************************END setOperationCosts FAIL BATCH**********************************************/"
     );
     console.log(
-      "//**************************************BEGIN updateACImmutable FAIL BATCH**********************************************/"
+      "//**************************************BEGIN setNonMutableData FAIL BATCH**********************************************/"
     );
     return NODE_MGR.pause({ from: account1 });
   });
 
   //31
   it("Should fail because NODE_MGR is paused", async () => {
-    return NODE_MGR.updateACImmutable("1000001", "1", "0", account2, {
+    return NODE_MGR.setNonMutableData("1000001", "1", "0", account2, {
       from: account2,
     });
   });
@@ -1865,7 +1865,7 @@ contract("NODE_MGR", (accounts) => {
 
   //32
   it("Should fail because caller is not ACTH", async () => {
-    return NODE_MGR.updateACImmutable("1000001", "1", "0", account2, {
+    return NODE_MGR.setNonMutableData("1000001", "1", "0", account2, {
       from: account2,
     });
   });
@@ -1887,34 +1887,34 @@ contract("NODE_MGR", (accounts) => {
 
   //33
   it("Should fail because immutable data = 255", async () => {
-    return NODE_MGR.updateACImmutable("50", "255", "0", account1, {
+    return NODE_MGR.setNonMutableData("50", "255", "0", account1, {
       from: account1,
     });
   });
 
   //34
   it("Should fail because managementType is invalid", async () => {
-    return NODE_MGR.updateACImmutable("50", "10", "0", account1, {
+    return NODE_MGR.setNonMutableData("50", "10", "0", account1, {
       from: account1,
     });
   });
 
   //35
   it("Should fail because storageProvider is invalid", async () => {
-    return NODE_MGR.updateACImmutable("50", "1", "10", account1, {
+    return NODE_MGR.setNonMutableData("50", "1", "10", account1, {
       from: account1,
     });
   });
 
   it("Should change Immutable data", async () => {
-    return NODE_MGR.updateACImmutable("50", "1", "1", account1, {
+    return NODE_MGR.setNonMutableData("50", "1", "1", account1, {
       from: account1,
     });
   });
 
   //36
   it("Should fail because immutable data has already been set", async () => {
-    return NODE_MGR.updateACImmutable("50", "1", "0", account1, {
+    return NODE_MGR.setNonMutableData("50", "1", "0", account1, {
       from: account1,
     });
   });
@@ -1922,7 +1922,7 @@ contract("NODE_MGR", (accounts) => {
   //37
   it("Should fail because bit pos !<0||>9", async () => {
     console.log(
-      "//**************************************END updateACImmutable FAIL BATCH**********************************************/"
+      "//**************************************END setNonMutableData FAIL BATCH**********************************************/"
     );
     console.log(
       "//**************************************BEGIN getSwitchAt FAIL BATCH**********************************************/"

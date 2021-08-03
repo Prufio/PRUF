@@ -1297,26 +1297,26 @@ _________\/// _____________\/// _______\/// __\///////// __\/// _____________
         
             it('Should finalize all ACs', () => {
                 console.log("Updating AC Immutables")
-                return NODE_MGR.updateACImmutable('1000001', '3', '1', '0x0000000000000000000000000000000000000000', { from: account1 })
+                return NODE_MGR.setNonMutableData('1000001', '3', '1', '0x0000000000000000000000000000000000000000', { from: account1 })
         
                     .then(() => {
-                        return NODE_MGR.updateACImmutable('1000002', '3', '1', '0x0000000000000000000000000000000000000000', { from: account1 })
+                        return NODE_MGR.setNonMutableData('1000002', '3', '1', '0x0000000000000000000000000000000000000000', { from: account1 })
                     })
         
                     .then(() => {
-                        return NODE_MGR.updateACImmutable('1000003', '3', '1', '0x0000000000000000000000000000000000000000', { from: account1 })
+                        return NODE_MGR.setNonMutableData('1000003', '3', '1', '0x0000000000000000000000000000000000000000', { from: account1 })
                     })
         
                     .then(() => {
-                        return NODE_MGR.updateACImmutable('1000004', '3', '1', '0x0000000000000000000000000000000000000000', { from: account10 })
+                        return NODE_MGR.setNonMutableData('1000004', '3', '1', '0x0000000000000000000000000000000000000000', { from: account10 })
                     })
         
                     .then(() => {
-                        return NODE_MGR.updateACImmutable('1000005', '3', '1', '0x0000000000000000000000000000000000000000', { from: account1 })
+                        return NODE_MGR.setNonMutableData('1000005', '3', '1', '0x0000000000000000000000000000000000000000', { from: account1 })
                     })
         
                     .then(() => {
-                        return NODE_MGR.updateACImmutable('1000006', '3', '1', '0x0000000000000000000000000000000000000000', { from: account10 })
+                        return NODE_MGR.setNonMutableData('1000006', '3', '1', '0x0000000000000000000000000000000000000000', { from: account10 })
                     })
             })
         

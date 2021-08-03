@@ -1221,7 +1221,7 @@ contract("CORE", (accounts) => {
 
   it("Should finalize all ACs", () => {
     console.log("Updating AC Immutables");
-    return NODE_MGR.updateACImmutable(
+    return NODE_MGR.setNonMutableData(
       "1000001",
       "3",
       "1",
@@ -1230,7 +1230,7 @@ contract("CORE", (accounts) => {
     )
 
       .then(() => {
-        return NODE_MGR.updateACImmutable(
+        return NODE_MGR.setNonMutableData(
           "1000002",
           "3",
           "1",
@@ -1240,7 +1240,7 @@ contract("CORE", (accounts) => {
       })
 
       .then(() => {
-        return NODE_MGR.updateACImmutable(
+        return NODE_MGR.setNonMutableData(
           "1000003",
           "3",
           "1",
@@ -1250,7 +1250,7 @@ contract("CORE", (accounts) => {
       })
 
       .then(() => {
-        return NODE_MGR.updateACImmutable(
+        return NODE_MGR.setNonMutableData(
           "1000004",
           "6",
           "1",
@@ -1260,7 +1260,7 @@ contract("CORE", (accounts) => {
       })
 
       .then(() => {
-        return NODE_MGR.updateACImmutable(
+        return NODE_MGR.setNonMutableData(
           "1000005",
           "1",
           "1",
@@ -1270,7 +1270,7 @@ contract("CORE", (accounts) => {
       })
 
       .then(() => {
-        return NODE_MGR.updateACImmutable(
+        return NODE_MGR.setNonMutableData(
           "1000006",
           "2",
           "1",
@@ -1280,7 +1280,7 @@ contract("CORE", (accounts) => {
       })
 
       .then(() => {
-        return NODE_MGR.updateACImmutable(
+        return NODE_MGR.setNonMutableData(
           "1000007",
           "3",
           "1",
@@ -1290,7 +1290,7 @@ contract("CORE", (accounts) => {
       })
 
       .then(() => {
-        return NODE_MGR.updateACImmutable(
+        return NODE_MGR.setNonMutableData(
           "1000008",
           "4",
           "1",
@@ -1300,7 +1300,7 @@ contract("CORE", (accounts) => {
       })
 
       .then(() => {
-        return NODE_MGR.updateACImmutable(
+        return NODE_MGR.setNonMutableData(
           "1000009",
           "4",
           "1",

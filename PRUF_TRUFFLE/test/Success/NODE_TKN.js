@@ -1173,7 +1173,7 @@ _________\/// _____________\/// _______\/// __\///////// __\/// _____________
         
           it("Should finalize all ACs", () => {
             console.log("Updating AC Immutables");
-            return NODE_MGR.updateACImmutable(
+            return NODE_MGR.setNonMutableData(
               "1000001",
               "3",
               "1",
@@ -1182,7 +1182,7 @@ _________\/// _____________\/// _______\/// __\///////// __\/// _____________
             )
         
               .then(() => {
-                return NODE_MGR.updateACImmutable(
+                return NODE_MGR.setNonMutableData(
                   "1000002",
                   "3",
                   "1",
@@ -1192,7 +1192,7 @@ _________\/// _____________\/// _______\/// __\///////// __\/// _____________
               })
         
               .then(() => {
-                return NODE_MGR.updateACImmutable(
+                return NODE_MGR.setNonMutableData(
                   "1000003",
                   "3",
                   "1",
@@ -1202,7 +1202,7 @@ _________\/// _____________\/// _______\/// __\///////// __\/// _____________
               })
         
               .then(() => {
-                return NODE_MGR.updateACImmutable(
+                return NODE_MGR.setNonMutableData(
                   "1000004",
                   "3",
                   "1",
@@ -1212,7 +1212,7 @@ _________\/// _____________\/// _______\/// __\///////// __\/// _____________
               })
         
               .then(() => {
-                return NODE_MGR.updateACImmutable(
+                return NODE_MGR.setNonMutableData(
                   "1000005",
                   "3",
                   "1",
@@ -1222,7 +1222,7 @@ _________\/// _____________\/// _______\/// __\///////// __\/// _____________
               })
         
               .then(() => {
-                return NODE_MGR.updateACImmutable(
+                return NODE_MGR.setNonMutableData(
                   "1000006",
                   "3",
                   "1",
