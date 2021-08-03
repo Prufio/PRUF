@@ -3193,7 +3193,7 @@ contract('STOR', accounts => {
 
 
     it('Should force modify asset12 RGT(1) to RGT(2)', async () => {
-        return NP_NC._changeRgt(
+        return NP_NC.changeRgt(
             asset12,
             rgt2,
             { from: account2 }

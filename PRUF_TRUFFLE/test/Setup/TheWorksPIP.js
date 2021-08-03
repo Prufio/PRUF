@@ -2143,7 +2143,7 @@ _________\/// _____________\/// _______\/// __\///////// __\/// _____________
 
 
     it('Should force modify asset14 to RGT(14)', async () => {
-        return NP_NC._changeRgt(
+        return NP_NC.changeRgt(
         asset14, 
         rgt14,
         {from: account4}

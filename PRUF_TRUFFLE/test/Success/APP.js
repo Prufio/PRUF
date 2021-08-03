@@ -2001,7 +2001,7 @@ contract("APP", (accounts) => {
       });
     
       it("Should force modify asset12 RGT12 to RGT(2)", async () => {
-        return NP_NC._changeRgt(asset12, rgt2, { from: account2 });
+        return NP_NC.changeRgt(asset12, rgt2, { from: account2 });
       });
     
       it("Should retrieve asset12 @newRgt(2)", async () => {
@@ -2350,7 +2350,7 @@ contract("APP", (accounts) => {
       });
     
       it("Should force modify asset13 rgt13 to RGT(2)", async () => {
-        return NP_NC._changeRgt(asset13, rgt2, { from: account4 });
+        return NP_NC.changeRgt(asset13, rgt2, { from: account4 });
       });
     
       it("Should retrieve asset13 @newRgt(2)", async () => {

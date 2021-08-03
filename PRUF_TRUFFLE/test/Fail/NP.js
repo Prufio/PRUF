@@ -1538,7 +1538,7 @@ contract("NP", (accounts) => {
   });
 
   it("Should export asset3 to put in unregistered status", async () => {
-    return NP._exportAssetTo(asset3, "1000003", account2, rgt3, { from: account2 });
+    return NP.exportAssetTo(asset3, "1000003", account2, rgt3, { from: account2 });
   });
 
   it("Should transfer asset3 to APP", async () => {
@@ -1772,7 +1772,7 @@ contract("NP", (accounts) => {
     console.log(
       "//**************************************BEGIN exportAsset FAIL BATCH**********************************************/"
     );
-    return NP._exportAssetTo(asset5, "1000003", account5, rgt5, { from: account5 });
+    return NP.exportAssetTo(asset5, "1000003", account5, rgt5, { from: account5 });
   });
 
   it("Should unpause NP", async () => {
@@ -1781,7 +1781,7 @@ contract("NP", (accounts) => {
 
   //28
   it("Should fail because APP does not hold token", async () => {
-    return NP._exportAssetTo(asset5, "1000003", account5, rgt5, { from: account5 });
+    return NP.exportAssetTo(asset5, "1000003", account5, rgt5, { from: account5 });
   });
 
   it("Should set asset1 to newAssetStatus(51)", async () => {
@@ -1790,7 +1790,7 @@ contract("NP", (accounts) => {
 
   //29
   it("Should Fail because account5 != auth for AC1000001 assets", async () => {
-    return NP._exportAssetTo(asset1, "1000003", account4, rgt1, { from: account5 });
+    return NP.exportAssetTo(asset1, "1000003", account4, rgt1, { from: account5 });
   });
 
   it("Should set asset1 to newAssetStatus(1)", async () => {
@@ -1799,7 +1799,7 @@ contract("NP", (accounts) => {
 
   //30
   it("Should Fail because asset must be in stat 51", async () => {
-    return NP._exportAssetTo(asset1, "1000003", account4, rgt1, { from: account2 });
+    return NP.exportAssetTo(asset1, "1000003", account4, rgt1, { from: account2 });
   });
 
   it("Should set asset1 to newAssetStatus(51)", async () => {
@@ -1808,7 +1808,7 @@ contract("NP", (accounts) => {
 
   //31
   it("Should Fail because rgt !match", async () => {
-    return NP._exportAssetTo(asset1, "1000003", account4, rgt5, { from: account2 });
+    return NP.exportAssetTo(asset1, "1000003", account4, rgt5, { from: account2 });
   });
 
   it("Should set SharesAddress", async () => {
@@ -2002,7 +2002,7 @@ contract("NP", (accounts) => {
   });
 
   it("Should export asset12 to account2", async () => {
-    return NP._exportAssetTo(asset12, "1000003", account2, rgt12, {
+    return NP.exportAssetTo(asset12, "1000003", account2, rgt12, {
       from: account2,
     });
   });
@@ -2126,7 +2126,7 @@ contract("NP", (accounts) => {
   });
 
   it("Should force modify asset12 RGT12 to RGT(2)", async () => {
-    return NP_NC._changeRgt(asset12, rgt2, { from: account2 });
+    return NP_NC.changeRgt(asset12, rgt2, { from: account2 });
   });
 
   it("Should retrieve asset12 @newRgt(2)", async () => {
@@ -2206,7 +2206,7 @@ contract("NP", (accounts) => {
   });
 
   it("Should export asset12(status70)", async () => {
-    return NP_NC._exportAssetTo(asset12, "1000001", { from: account2 });
+    return NP_NC.exportAssetTo(asset12, "1000001", { from: account2 });
   });
 
   it("Should retrieve asset12 @newAC (root(1)) && @newStatus(exported(70))", async () => {
@@ -2475,7 +2475,7 @@ contract("NP", (accounts) => {
   });
 
   it("Should force modify asset13 rgt13 to RGT(2)", async () => {
-    return NP_NC._changeRgt(asset13, rgt2, { from: account4 });
+    return NP_NC.changeRgt(asset13, rgt2, { from: account4 });
   });
 
   it("Should retrieve asset13 @newRgt(2)", async () => {
@@ -2597,7 +2597,7 @@ contract("NP", (accounts) => {
   });
 
   it("Should export asset13 to account4", async () => {
-    return NP_NC._exportAssetTo(asset13, "1000001", { from: account4 });
+    return NP_NC.exportAssetTo(asset13, "1000001", { from: account4 });
   });
 
   it("Should retrieve asset13 @newStatus(70(exported))", async () => {
@@ -2859,7 +2859,7 @@ contract("NP", (accounts) => {
   });
 
   it("Should export asset13(status70)", async () => {
-    return NP._exportAssetTo(asset13, "1000003", account4, rgt13, {
+    return NP.exportAssetTo(asset13, "1000003", account4, rgt13, {
       from: account4,
     });
   });

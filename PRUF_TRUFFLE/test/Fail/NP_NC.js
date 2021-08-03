@@ -2184,7 +2184,7 @@ contract('NP_NC', accounts => {
         console.log("//**************************************END NP_NC SETUP**********************************************/")
         console.log("//**************************************BEGIN NP_NC FAIL BATCH (17)**********************************************/")
         console.log("//**************************************BEGIN _changeRGT FAIL BATCH**********************************************/")
-        return NP_NC._changeRgt(
+        return NP_NC.changeRgt(
             asset1,
             rgt2,
             { from: account5 }
@@ -2193,7 +2193,7 @@ contract('NP_NC', accounts => {
 
     //2
     it('Should fail because record is in stolen status', async () => {
-        return NP_NC._changeRgt(
+        return NP_NC.changeRgt(
             asset6,
             rgt5,
             { from: account4 }
@@ -2202,7 +2202,7 @@ contract('NP_NC', accounts => {
 
     //3
     it('Should fail because record is in lost status', async () => {
-        return NP_NC._changeRgt(
+        return NP_NC.changeRgt(
             asset7,
             rgt6,
             { from: account4 }
@@ -2212,7 +2212,7 @@ contract('NP_NC', accounts => {
     //4
     it('Should fail because caller does not hold token', async () => {
 
-        console.log("//**************************************END _changeRgt FAIL BATCH**********************************************/")
+        console.log("//**************************************END changeRgt FAIL BATCH**********************************************/")
         console.log("//**************************************BEGIN _exportNC FAIL BATCH**********************************************/")
         return NP_NC._exportNC(
             asset1,
@@ -2513,7 +2513,7 @@ contract('NP_NC', accounts => {
 
 
     it('Should force modify asset12 RGT(1) to RGT(2)', async () => {
-        return NP_NC._changeRgt(
+        return NP_NC.changeRgt(
             asset12,
             rgt2,
             { from: account2 }
