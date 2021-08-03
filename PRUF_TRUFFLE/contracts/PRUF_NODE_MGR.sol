@@ -68,10 +68,10 @@ contract NODE_MGR is BASIC {
     }
 
     /**
-     * @dev Verify caller holds ACtoken of passed node
+     * @dev Verify caller holds Nodetoken of passed node
      * @param _node - node in which caller is queried for ownership
      */
-    modifier isNodeHoldertokenHolderOfClass(uint32 _node) {
+    modifier isNodeHolder(uint32 _node) {
         require(
             (NODE_TKN.ownerOf(_node) == _msgSender()),
             "ACM:MOD-IACTHoC: _msgSender() not authorized in Node"
@@ -390,7 +390,7 @@ contract NODE_MGR is BASIC {
         uint32 _node,
         bytes32 _addrHash,
         uint8 _userType
-    ) external whenNotPaused isNodeHoldertokenHolderOfClass(_node) {
+    ) external whenNotPaused isNodeHolder(_node) {
         //^^^^^^^checks^^^^^^^^^
 
         registeredUsers[_addrHash][_node] = _userType;
@@ -412,10 +412,10 @@ contract NODE_MGR is BASIC {
      * @param _node - node being modified
      * @param _name - updated name associated with node (unique)
      */
-    function updateACname(uint32 _node, string calldata _name)
+    function updateNodeName(uint32 _node, string calldata _name)
         external
         whenNotPaused
-        isNodeHoldertokenHolderOfClass(_node)
+        isNodeHolder(_node)
     {
         require( //should pass if name is same as old name or name is unassigned. Should fail if name is assigned to other node
             (node_index[_name] == 0) || //name is unassigned
@@ -442,7 +442,7 @@ contract NODE_MGR is BASIC {
         uint32 _node,
         bytes32 _CAS1,
         bytes32 _CAS2
-    ) external whenNotPaused isNodeHoldertokenHolderOfClass(_node) {
+    ) external whenNotPaused isNodeHolder(_node) {
         require(
             getSwitchAt(_node, 1) == 0,
             "ACM:UNC: CAS for node is locked and cannot be written"
@@ -465,7 +465,7 @@ contract NODE_MGR is BASIC {
         uint16 _service,
         uint256 _serviceCost,
         address _paymentAddress
-    ) external whenNotPaused isNodeHoldertokenHolderOfClass(_node) {
+    ) external whenNotPaused isNodeHolder(_node) {
         //^^^^^^^checks^^^^^^^^^
 
         cost[_node][_service].serviceCost = _serviceCost;
@@ -487,7 +487,7 @@ contract NODE_MGR is BASIC {
         uint8 _managementType,
         uint8 _storageProvider,
         address _refAddress
-    ) external whenNotPaused isNodeHoldertokenHolderOfClass(_node) {
+    ) external whenNotPaused isNodeHolder(_node) {
         require(
             node_data[_node].managementType == 255,
             "ACM:UACI: Immutable node data already set"
