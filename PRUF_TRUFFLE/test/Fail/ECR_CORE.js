@@ -1141,7 +1141,7 @@ contract('ECR_CORE', accounts => {
 
         console.log("Setting costs in AC 1")
 
-        return NODE_MGR.ACTH_setCosts(
+        return NODE_MGR.setOperationCosts(
             "1",
             "1",
             "10000000000000000",
@@ -1150,7 +1150,7 @@ contract('ECR_CORE', accounts => {
 
 
             .then(() => {
-                return NODE_MGR.ACTH_setCosts(
+                return NODE_MGR.setOperationCosts(
                     "1",
                     "2",
                     "10000000000000000",
@@ -1159,7 +1159,7 @@ contract('ECR_CORE', accounts => {
             })
 
             .then(() => {
-                return NODE_MGR.ACTH_setCosts(
+                return NODE_MGR.setOperationCosts(
                     "1",
                     "3",
                     "10000000000000000",
@@ -1168,7 +1168,7 @@ contract('ECR_CORE', accounts => {
             })
 
             .then(() => {
-                return NODE_MGR.ACTH_setCosts(
+                return NODE_MGR.setOperationCosts(
                     "1",
                     "4",
                     "10000000000000000",
@@ -1177,7 +1177,7 @@ contract('ECR_CORE', accounts => {
             })
 
             .then(() => {
-                return NODE_MGR.ACTH_setCosts(
+                return NODE_MGR.setOperationCosts(
                     "1",
                     "5",
                     "10000000000000000",
@@ -1186,7 +1186,7 @@ contract('ECR_CORE', accounts => {
             })
 
             .then(() => {
-                return NODE_MGR.ACTH_setCosts(
+                return NODE_MGR.setOperationCosts(
                     "1",
                     "6",
                     "10000000000000000",
@@ -1196,7 +1196,7 @@ contract('ECR_CORE', accounts => {
 
             .then(() => {
                 console.log("Setting base costs in AC 2")
-                return NODE_MGR.ACTH_setCosts(
+                return NODE_MGR.setOperationCosts(
                     "2",
                     "1",
                     "10000000000000000",
@@ -1205,7 +1205,7 @@ contract('ECR_CORE', accounts => {
             })
 
             .then(() => {
-                return NODE_MGR.ACTH_setCosts(
+                return NODE_MGR.setOperationCosts(
                     "2",
                     "2",
                     "10000000000000000",
@@ -1214,7 +1214,7 @@ contract('ECR_CORE', accounts => {
             })
 
             .then(() => {
-                return NODE_MGR.ACTH_setCosts(
+                return NODE_MGR.setOperationCosts(
                     "2",
                     "3",
                     "10000000000000000",
@@ -1223,7 +1223,7 @@ contract('ECR_CORE', accounts => {
             })
 
             .then(() => {
-                return NODE_MGR.ACTH_setCosts(
+                return NODE_MGR.setOperationCosts(
                     "2",
                     "4",
                     "10000000000000000",
@@ -1232,7 +1232,7 @@ contract('ECR_CORE', accounts => {
             })
 
             .then(() => {
-                return NODE_MGR.ACTH_setCosts(
+                return NODE_MGR.setOperationCosts(
                     "2",
                     "5",
                     "10000000000000000",
@@ -1241,7 +1241,7 @@ contract('ECR_CORE', accounts => {
             })
 
             .then(() => {
-                return NODE_MGR.ACTH_setCosts(
+                return NODE_MGR.setOperationCosts(
                     "2",
                     "6",
                     "10000000000000000",
@@ -1250,7 +1250,7 @@ contract('ECR_CORE', accounts => {
             })
             .then(() => {
                 console.log("Setting base costs in AC 10")
-                return NODE_MGR.ACTH_setCosts(
+                return NODE_MGR.setOperationCosts(
                     "10",
                     "1",
                     "10000000000000000",
@@ -1259,7 +1259,7 @@ contract('ECR_CORE', accounts => {
             })
 
             .then(() => {
-                return NODE_MGR.ACTH_setCosts(
+                return NODE_MGR.setOperationCosts(
                     "10",
                     "2",
                     "10000000000000000",
@@ -1268,7 +1268,7 @@ contract('ECR_CORE', accounts => {
             })
 
             .then(() => {
-                return NODE_MGR.ACTH_setCosts(
+                return NODE_MGR.setOperationCosts(
                     "10",
                     "3",
                     "10000000000000000",
@@ -1277,7 +1277,7 @@ contract('ECR_CORE', accounts => {
             })
 
             .then(() => {
-                return NODE_MGR.ACTH_setCosts(
+                return NODE_MGR.setOperationCosts(
                     "10",
                     "4",
                     "10000000000000000",
@@ -1286,7 +1286,7 @@ contract('ECR_CORE', accounts => {
             })
 
             .then(() => {
-                return NODE_MGR.ACTH_setCosts(
+                return NODE_MGR.setOperationCosts(
                     "10",
                     "5",
                     "10000000000000000",
@@ -1295,7 +1295,7 @@ contract('ECR_CORE', accounts => {
             })
 
             .then(() => {
-                return NODE_MGR.ACTH_setCosts(
+                return NODE_MGR.setOperationCosts(
                     "10",
                     "6",
                     "10000000000000000",
@@ -1305,7 +1305,7 @@ contract('ECR_CORE', accounts => {
 
             .then(() => {
                 console.log("Setting base costs in AC 11")
-                return NODE_MGR.ACTH_setCosts(
+                return NODE_MGR.setOperationCosts(
                     "11",
                     "1",
                     "10000000000000000",
@@ -1314,7 +1314,7 @@ contract('ECR_CORE', accounts => {
             })
 
             .then(() => {
-                return NODE_MGR.ACTH_setCosts(
+                return NODE_MGR.setOperationCosts(
                     "11",
                     "2",
                     "10000000000000000",
@@ -1323,7 +1323,7 @@ contract('ECR_CORE', accounts => {
             })
 
             .then(() => {
-                return NODE_MGR.ACTH_setCosts(
+                return NODE_MGR.setOperationCosts(
                     "11",
                     "3",
                     "10000000000000000",
@@ -1332,7 +1332,7 @@ contract('ECR_CORE', accounts => {
             })
 
             .then(() => {
-                return NODE_MGR.ACTH_setCosts(
+                return NODE_MGR.setOperationCosts(
                     "11",
                     "4",
                     "10000000000000000",
@@ -1341,7 +1341,7 @@ contract('ECR_CORE', accounts => {
             })
 
             .then(() => {
-                return NODE_MGR.ACTH_setCosts(
+                return NODE_MGR.setOperationCosts(
                     "11",
                     "5",
                     "10000000000000000",
@@ -1350,7 +1350,7 @@ contract('ECR_CORE', accounts => {
             })
 
             .then(() => {
-                return NODE_MGR.ACTH_setCosts(
+                return NODE_MGR.setOperationCosts(
                     "11",
                     "6",
                     "10000000000000000",
@@ -1360,7 +1360,7 @@ contract('ECR_CORE', accounts => {
 
             .then(() => {
                 console.log("Setting base costs in AC 12")
-                return NODE_MGR.ACTH_setCosts(
+                return NODE_MGR.setOperationCosts(
                     "12",
                     "1",
                     "10000000000000000",
@@ -1369,7 +1369,7 @@ contract('ECR_CORE', accounts => {
             })
 
             .then(() => {
-                return NODE_MGR.ACTH_setCosts(
+                return NODE_MGR.setOperationCosts(
                     "12",
                     "2",
                     "10000000000000000",
@@ -1378,7 +1378,7 @@ contract('ECR_CORE', accounts => {
             })
 
             .then(() => {
-                return NODE_MGR.ACTH_setCosts(
+                return NODE_MGR.setOperationCosts(
                     "12",
                     "3",
                     "10000000000000000",
@@ -1387,7 +1387,7 @@ contract('ECR_CORE', accounts => {
             })
 
             .then(() => {
-                return NODE_MGR.ACTH_setCosts(
+                return NODE_MGR.setOperationCosts(
                     "12",
                     "4",
                     "10000000000000000",
@@ -1396,7 +1396,7 @@ contract('ECR_CORE', accounts => {
             })
 
             .then(() => {
-                return NODE_MGR.ACTH_setCosts(
+                return NODE_MGR.setOperationCosts(
                     "12",
                     "5",
                     "10000000000000000",
@@ -1405,7 +1405,7 @@ contract('ECR_CORE', accounts => {
             })
 
             .then(() => {
-                return NODE_MGR.ACTH_setCosts(
+                return NODE_MGR.setOperationCosts(
                     "12",
                     "6",
                     "10000000000000000",
@@ -1415,7 +1415,7 @@ contract('ECR_CORE', accounts => {
 
             .then(() => {
                 console.log("Setting base costs in AC 13")
-                return NODE_MGR.ACTH_setCosts(
+                return NODE_MGR.setOperationCosts(
                     "13",
                     "1",
                     "10000000000000000",
@@ -1424,7 +1424,7 @@ contract('ECR_CORE', accounts => {
             })
 
             .then(() => {
-                return NODE_MGR.ACTH_setCosts(
+                return NODE_MGR.setOperationCosts(
                     "13",
                     "2",
                     "10000000000000000",
@@ -1433,7 +1433,7 @@ contract('ECR_CORE', accounts => {
             })
 
             .then(() => {
-                return NODE_MGR.ACTH_setCosts(
+                return NODE_MGR.setOperationCosts(
                     "13",
                     "3",
                     "10000000000000000",
@@ -1442,7 +1442,7 @@ contract('ECR_CORE', accounts => {
             })
 
             .then(() => {
-                return NODE_MGR.ACTH_setCosts(
+                return NODE_MGR.setOperationCosts(
                     "13",
                     "4",
                     "10000000000000000",
@@ -1451,7 +1451,7 @@ contract('ECR_CORE', accounts => {
             })
 
             .then(() => {
-                return NODE_MGR.ACTH_setCosts(
+                return NODE_MGR.setOperationCosts(
                     "13",
                     "5",
                     "10000000000000000",
@@ -1460,7 +1460,7 @@ contract('ECR_CORE', accounts => {
             })
 
             .then(() => {
-                return NODE_MGR.ACTH_setCosts(
+                return NODE_MGR.setOperationCosts(
                     "13",
                     "6",
                     "10000000000000000",
@@ -1470,7 +1470,7 @@ contract('ECR_CORE', accounts => {
 
             .then(() => {
                 console.log("Setting base costs in AC 14")
-                return NODE_MGR.ACTH_setCosts(
+                return NODE_MGR.setOperationCosts(
                     "14",
                     "1",
                     "10000000000000000",
@@ -1479,7 +1479,7 @@ contract('ECR_CORE', accounts => {
             })
 
             .then(() => {
-                return NODE_MGR.ACTH_setCosts(
+                return NODE_MGR.setOperationCosts(
                     "14",
                     "2",
                     "10000000000000000",
@@ -1488,7 +1488,7 @@ contract('ECR_CORE', accounts => {
             })
 
             .then(() => {
-                return NODE_MGR.ACTH_setCosts(
+                return NODE_MGR.setOperationCosts(
                     "14",
                     "3",
                     "10000000000000000",
@@ -1497,7 +1497,7 @@ contract('ECR_CORE', accounts => {
             })
 
             .then(() => {
-                return NODE_MGR.ACTH_setCosts(
+                return NODE_MGR.setOperationCosts(
                     "14",
                     "4",
                     "10000000000000000",
@@ -1506,7 +1506,7 @@ contract('ECR_CORE', accounts => {
             })
 
             .then(() => {
-                return NODE_MGR.ACTH_setCosts(
+                return NODE_MGR.setOperationCosts(
                     "14",
                     "5",
                     "10000000000000000",
@@ -1515,7 +1515,7 @@ contract('ECR_CORE', accounts => {
             })
 
             .then(() => {
-                return NODE_MGR.ACTH_setCosts(
+                return NODE_MGR.setOperationCosts(
                     "14",
                     "6",
                     "10000000000000000",
@@ -1525,7 +1525,7 @@ contract('ECR_CORE', accounts => {
 
             .then(() => {
                 console.log("Setting base costs in AC 15")
-                return NODE_MGR.ACTH_setCosts(
+                return NODE_MGR.setOperationCosts(
                     "15",
                     "1",
                     "10000000000000000",
@@ -1534,7 +1534,7 @@ contract('ECR_CORE', accounts => {
             })
 
             .then(() => {
-                return NODE_MGR.ACTH_setCosts(
+                return NODE_MGR.setOperationCosts(
                     "15",
                     "2",
                     "10000000000000000",
@@ -1543,7 +1543,7 @@ contract('ECR_CORE', accounts => {
             })
 
             .then(() => {
-                return NODE_MGR.ACTH_setCosts(
+                return NODE_MGR.setOperationCosts(
                     "15",
                     "3",
                     "10000000000000000",
@@ -1552,7 +1552,7 @@ contract('ECR_CORE', accounts => {
             })
 
             .then(() => {
-                return NODE_MGR.ACTH_setCosts(
+                return NODE_MGR.setOperationCosts(
                     "15",
                     "4",
                     "10000000000000000",
@@ -1561,7 +1561,7 @@ contract('ECR_CORE', accounts => {
             })
 
             .then(() => {
-                return NODE_MGR.ACTH_setCosts(
+                return NODE_MGR.setOperationCosts(
                     "15",
                     "5",
                     "10000000000000000",
@@ -1570,7 +1570,7 @@ contract('ECR_CORE', accounts => {
             })
 
             .then(() => {
-                return NODE_MGR.ACTH_setCosts(
+                return NODE_MGR.setOperationCosts(
                     "15",
                     "6",
                     "10000000000000000",

@@ -1014,97 +1014,97 @@ contract("APP_NC", (accounts) => {
   it("Should set costs in minted roots", () => {
     console.log("Setting costs in AC 1");
 
-    return NODE_MGR.ACTH_setCosts("1", "1", "10000000000000000", account1, {
+    return NODE_MGR.setOperationCosts("1", "1", "10000000000000000", account1, {
       from: account1,
     })
 
       .then(() => {
-        return NODE_MGR.ACTH_setCosts("1", "2", "10000000000000000", account1, {
+        return NODE_MGR.setOperationCosts("1", "2", "10000000000000000", account1, {
           from: account1,
         });
       })
 
       .then(() => {
-        return NODE_MGR.ACTH_setCosts("1", "3", "10000000000000000", account1, {
+        return NODE_MGR.setOperationCosts("1", "3", "10000000000000000", account1, {
           from: account1,
         });
       })
 
       .then(() => {
-        return NODE_MGR.ACTH_setCosts("1", "4", "10000000000000000", account1, {
+        return NODE_MGR.setOperationCosts("1", "4", "10000000000000000", account1, {
           from: account1,
         });
       })
 
       .then(() => {
-        return NODE_MGR.ACTH_setCosts("1", "5", "10000000000000000", account1, {
+        return NODE_MGR.setOperationCosts("1", "5", "10000000000000000", account1, {
           from: account1,
         });
       })
 
       .then(() => {
-        return NODE_MGR.ACTH_setCosts("1", "6", "10000000000000000", account1, {
+        return NODE_MGR.setOperationCosts("1", "6", "10000000000000000", account1, {
           from: account1,
         });
       })
 
       .then(() => {
-        return NODE_MGR.ACTH_setCosts("1", "7", "10000000000000000", account1, {
+        return NODE_MGR.setOperationCosts("1", "7", "10000000000000000", account1, {
           from: account1,
         });
       })
 
       .then(() => {
-        return NODE_MGR.ACTH_setCosts("1", "8", "10000000000000000", account1, {
+        return NODE_MGR.setOperationCosts("1", "8", "10000000000000000", account1, {
           from: account1,
         });
       })
 
       .then(() => {
         console.log("Setting base costs in AC 2");
-        return NODE_MGR.ACTH_setCosts("2", "1", "10000000000000000", account1, {
+        return NODE_MGR.setOperationCosts("2", "1", "10000000000000000", account1, {
           from: account1,
         });
       })
 
       .then(() => {
-        return NODE_MGR.ACTH_setCosts("2", "2", "10000000000000000", account1, {
+        return NODE_MGR.setOperationCosts("2", "2", "10000000000000000", account1, {
           from: account1,
         });
       })
 
       .then(() => {
-        return NODE_MGR.ACTH_setCosts("2", "3", "10000000000000000", account1, {
+        return NODE_MGR.setOperationCosts("2", "3", "10000000000000000", account1, {
           from: account1,
         });
       })
 
       .then(() => {
-        return NODE_MGR.ACTH_setCosts("2", "4", "10000000000000000", account1, {
+        return NODE_MGR.setOperationCosts("2", "4", "10000000000000000", account1, {
           from: account1,
         });
       })
 
       .then(() => {
-        return NODE_MGR.ACTH_setCosts("2", "5", "10000000000000000", account1, {
+        return NODE_MGR.setOperationCosts("2", "5", "10000000000000000", account1, {
           from: account1,
         });
       })
 
       .then(() => {
-        return NODE_MGR.ACTH_setCosts("2", "6", "10000000000000000", account1, {
+        return NODE_MGR.setOperationCosts("2", "6", "10000000000000000", account1, {
           from: account1,
         });
       })
 
       .then(() => {
-        return NODE_MGR.ACTH_setCosts("2", "7", "10000000000000000", account1, {
+        return NODE_MGR.setOperationCosts("2", "7", "10000000000000000", account1, {
           from: account1,
         });
       })
 
       .then(() => {
-        return NODE_MGR.ACTH_setCosts("2", "8", "10000000000000000", account1, {
+        return NODE_MGR.setOperationCosts("2", "8", "10000000000000000", account1, {
           from: account1,
         });
       });
@@ -2017,7 +2017,7 @@ contract("APP_NC", (accounts) => {
   });
 
   it("Should modify Mutable note @asset12 to (asset12)", async () => {
-    return NP._modMutable(asset12, rgt12, asset12, rgt000, { from: account2 });
+    return NP._modMutableStorage(asset12, rgt12, asset12, rgt000, { from: account2 });
   });
 
   it("Should retrieve asset12 with newMutable(asset12)", async () => {
@@ -2221,7 +2221,7 @@ contract("APP_NC", (accounts) => {
   });
 
   it("Should modify Mutable @asset12 to RGT(12)", async () => {
-    return NP_NC._modMutable(asset12, rgt12, rgt000, { from: account2 });
+    return NP_NC._modMutableStorage(asset12, rgt12, rgt000, { from: account2 });
   });
 
   it("Should retrieve asset12 @newMutable(rgt12)", async () => {
@@ -2510,7 +2510,7 @@ contract("APP_NC", (accounts) => {
   });
 
   it("Should modify Mutable note @asset13 to (asset13)", async () => {
-    return NP_NC._modMutable(asset13, asset13, rgt000, { from: account4 });
+    return NP_NC._modMutableStorage(asset13, asset13, rgt000, { from: account4 });
   });
 
   it("Should retrieve asset13 with newMutable(asset13)", async () => {
@@ -2815,7 +2815,7 @@ contract("APP_NC", (accounts) => {
   });
 
   it("Should modify Mutable @asset13 to RGT(12)", async () => {
-    return NP._modMutable(asset13, rgt13, rgt13, rgt000, { from: account4 });
+    return NP._modMutableStorage(asset13, rgt13, rgt13, rgt000, { from: account4 });
   });
 
   it("Should retrieve asset13 @newMutable(rgt13)", async () => {

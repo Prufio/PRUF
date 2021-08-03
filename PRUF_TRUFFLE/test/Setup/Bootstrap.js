@@ -1095,7 +1095,7 @@ _________\/// _____________\/// _______\/// __\///////// __\/// _____________
         
                 console.log("Setting costs in AC 1")
         
-                return NODE_MGR.ACTH_setCosts(
+                return NODE_MGR.setOperationCosts(
                     "1",
                     "1",
                     "10000000000000000",
@@ -1104,7 +1104,7 @@ _________\/// _____________\/// _______\/// __\///////// __\/// _____________
         
         
                     .then(() => {
-                        return NODE_MGR.ACTH_setCosts(
+                        return NODE_MGR.setOperationCosts(
                             "1",
                             "2",
                             "10000000000000000",
@@ -1113,7 +1113,7 @@ _________\/// _____________\/// _______\/// __\///////// __\/// _____________
                     })
         
                     .then(() => {
-                        return NODE_MGR.ACTH_setCosts(
+                        return NODE_MGR.setOperationCosts(
                             "1",
                             "3",
                             "10000000000000000",
@@ -1122,7 +1122,7 @@ _________\/// _____________\/// _______\/// __\///////// __\/// _____________
                     })
         
                     .then(() => {
-                        return NODE_MGR.ACTH_setCosts(
+                        return NODE_MGR.setOperationCosts(
                             "1",
                             "4",
                             "10000000000000000",
@@ -1131,7 +1131,7 @@ _________\/// _____________\/// _______\/// __\///////// __\/// _____________
                     })
         
                     .then(() => {
-                        return NODE_MGR.ACTH_setCosts(
+                        return NODE_MGR.setOperationCosts(
                             "1",
                             "5",
                             "10000000000000000",
@@ -1140,7 +1140,7 @@ _________\/// _____________\/// _______\/// __\///////// __\/// _____________
                     })
         
                     .then(() => {
-                        return NODE_MGR.ACTH_setCosts(
+                        return NODE_MGR.setOperationCosts(
                             "1",
                             "6",
                             "10000000000000000",
@@ -1149,7 +1149,7 @@ _________\/// _____________\/// _______\/// __\///////// __\/// _____________
                     })
         
                     .then(() => {
-                        return NODE_MGR.ACTH_setCosts(
+                        return NODE_MGR.setOperationCosts(
                             "1",
                             "7",
                             "10000000000000000",
@@ -1158,7 +1158,7 @@ _________\/// _____________\/// _______\/// __\///////// __\/// _____________
                     })
         
                     .then(() => {
-                        return NODE_MGR.ACTH_setCosts(
+                        return NODE_MGR.setOperationCosts(
                             "1",
                             "8",
                             "10000000000000000",
@@ -1168,7 +1168,7 @@ _________\/// _____________\/// _______\/// __\///////// __\/// _____________
         
                     .then(() => {
                         console.log("Setting base costs in AC 2")
-                        return NODE_MGR.ACTH_setCosts(
+                        return NODE_MGR.setOperationCosts(
                             "2",
                             "1",
                             "10000000000000000",
@@ -1177,7 +1177,7 @@ _________\/// _____________\/// _______\/// __\///////// __\/// _____________
                     })
         
                     .then(() => {
-                        return NODE_MGR.ACTH_setCosts(
+                        return NODE_MGR.setOperationCosts(
                             "2",
                             "2",
                             "10000000000000000",
@@ -1186,7 +1186,7 @@ _________\/// _____________\/// _______\/// __\///////// __\/// _____________
                     })
         
                     .then(() => {
-                        return NODE_MGR.ACTH_setCosts(
+                        return NODE_MGR.setOperationCosts(
                             "2",
                             "3",
                             "10000000000000000",
@@ -1195,7 +1195,7 @@ _________\/// _____________\/// _______\/// __\///////// __\/// _____________
                     })
         
                     .then(() => {
-                        return NODE_MGR.ACTH_setCosts(
+                        return NODE_MGR.setOperationCosts(
                             "2",
                             "4",
                             "10000000000000000",
@@ -1204,7 +1204,7 @@ _________\/// _____________\/// _______\/// __\///////// __\/// _____________
                     })
         
                     .then(() => {
-                        return NODE_MGR.ACTH_setCosts(
+                        return NODE_MGR.setOperationCosts(
                             "2",
                             "5",
                             "10000000000000000",
@@ -1213,7 +1213,7 @@ _________\/// _____________\/// _______\/// __\///////// __\/// _____________
                     })
         
                     .then(() => {
-                        return NODE_MGR.ACTH_setCosts(
+                        return NODE_MGR.setOperationCosts(
                             "2",
                             "6",
                             "10000000000000000",
@@ -1222,7 +1222,7 @@ _________\/// _____________\/// _______\/// __\///////// __\/// _____________
                     })
         
                     .then(() => {
-                        return NODE_MGR.ACTH_setCosts(
+                        return NODE_MGR.setOperationCosts(
                             "2",
                             "7",
                             "10000000000000000",
@@ -1231,7 +1231,7 @@ _________\/// _____________\/// _______\/// __\///////// __\/// _____________
                     })
         
                     .then(() => {
-                        return NODE_MGR.ACTH_setCosts(
+                        return NODE_MGR.setOperationCosts(
                             "2",
                             "8",
                             "10000000000000000",
