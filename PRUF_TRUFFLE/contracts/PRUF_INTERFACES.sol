@@ -1322,17 +1322,6 @@ interface STOR_Interface {
     function unpause() external;
 
     /*
-     * @dev Authorize / Deauthorize / Authorize ADRESSES permitted to make record modifications, per Node
-     * populates contract name resolution and data mappings
-     */
-    function OO_addContract(
-        string calldata _name,
-        address _addr,
-        uint32 _node,
-        uint8 _contractAuthLevel
-    ) external;
-
-    /*
      * @dev ASet the default 11 authorized contracts
      */
     function enableDefaultContractsForAC(uint32 _node) external;
