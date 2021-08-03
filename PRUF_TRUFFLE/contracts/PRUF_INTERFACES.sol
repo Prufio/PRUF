@@ -583,7 +583,7 @@ interface NODE_TKN_Interface {
 
 //------------------------------------------------------------------------------------------------
 /*
- * @dev Interface for NODE_TKN
+ * @dev Interface for STAKE_TKN
  * INHERIANCE:
     import "./Imports/token/ERC721/ERC721.sol";
     import "./Imports/access/Ownable.sol";
@@ -1081,7 +1081,7 @@ interface NODE_MGR_Interface {
      * @dev Modifies an node with minimal controls
      *--------DPS TEST ---- NEW args, order
      */
-    function AdminModNode(
+    function modifyNode(
         uint32 _node,
         uint32 _nodeRoot,
         uint8 _custodyType,
@@ -1092,6 +1092,18 @@ interface NODE_MGR_Interface {
         uint8 _switches,
         bytes32 _CAS1,
         bytes32 _CAS2
+    ) external;
+
+    /**
+     * @dev Modifies node.switches bitwise (see NODE option switches in ZZ_PRUF_DOCS)
+     * @param _node - node to be modified
+     * @param _position - uint position of bit to be modified
+     * @param _bit - switch - 1 or 0 (true or false)
+     */
+    function modifyNodeSwitches(
+        uint32 _node,
+        uint8 _position,
+        uint8 _bit
     ) external;
 
     /*
@@ -1145,7 +1157,7 @@ interface NODE_MGR_Interface {
      *  caller holds ACtoken
      *  name is unuiqe or same as old name
      */
-    function updateACname(uint32 _node, string calldata _name) external;
+    function updateNodeName(uint32 _node, string calldata _name) external;
 
     /*
      * @dev Modifies an node
@@ -1162,7 +1174,7 @@ interface NODE_MGR_Interface {
     /*
      * @dev Set function costs and payment address per node, in Wei
      */
-    function ACTH_setCosts(
+    function setOperationCosts(
         uint32 _node,
         uint16 _service,
         uint256 _serviceCost,
@@ -1273,7 +1285,7 @@ interface NODE_MGR_Interface {
     /*
      * @dev return current node token index pointer
      */
-    function currentACpricingInfo() external view returns (uint256, uint256);
+    function currentNodePricingInfo() external view returns (uint256, uint256);
 
     /*
      * @dev Retrieve function costs per node, per service type, in Wei

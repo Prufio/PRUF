@@ -460,7 +460,7 @@ contract NODE_MGR is BASIC {
      * @param _serviceCost - 18 decimal fee in PRUF associated with specified service
      * @param _paymentAddress - address to have _serviceCost paid to
      */
-    function ACTH_setCosts(
+    function setOperationCosts(
         uint32 _node,
         uint16 _service,
         uint256 _serviceCost,
@@ -713,7 +713,7 @@ contract NODE_MGR is BASIC {
          Node_price: current price per node
      }
      */
-    function currentACpricingInfo() external view returns (uint256, uint256) {
+    function currentNodePricingInfo() external view returns (uint256, uint256) {
         //^^^^^^^checks^^^^^^^^^
         return (nodeTokenIndex, node_price);
         //^^^^^^^effects^^^^^^^^^
