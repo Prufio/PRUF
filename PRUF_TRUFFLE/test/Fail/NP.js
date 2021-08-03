@@ -1534,7 +1534,7 @@ contract("NP", (accounts) => {
   });
 
   it("Should put asset3 in to exportable status", async () => {
-    return NP._modStatus(asset3, rgt3, "51", { from: account2 });
+    return NP.modifyStatus(asset3, rgt3, "51", { from: account2 });
   });
 
   it("Should export asset3 to put in unregistered status", async () => {
@@ -1548,7 +1548,7 @@ contract("NP", (accounts) => {
   });
 
   it("Should put asset4 in to transferable status", async () => {
-    return NP._modStatus(asset4, rgt4, "1", { from: account2 });
+    return NP.modifyStatus(asset4, rgt4, "1", { from: account2 });
   });
 
   it("Should transfer asset4 to put in unregistered status", async () => {
@@ -1568,9 +1568,9 @@ contract("NP", (accounts) => {
       "//**************************************BEGIN NP FAIL BATCH (30)**********************************************/"
     );
     console.log(
-      "//**************************************BEGIN _modStatus FAIL BATCH**********************************************/"
+      "//**************************************BEGIN modifyStatus FAIL BATCH**********************************************/"
     );
-    return NP._modStatus(asset5, rgt5, "1", { from: account5 });
+    return NP.modifyStatus(asset5, rgt5, "1", { from: account5 });
   });
 
   it("Should unpause NP", async () => {
@@ -1579,42 +1579,42 @@ contract("NP", (accounts) => {
 
   //2
   it("Should Fail because APP does not hold token", async () => {
-    return NP._modStatus(asset5, rgt5, "1", { from: account5 });
+    return NP.modifyStatus(asset5, rgt5, "1", { from: account5 });
   });
 
   //3
   it("Should Fail because account5 != auth for AC10 assets", async () => {
-    return NP._modStatus(asset1, rgt1, "1", { from: account5 });
+    return NP.modifyStatus(asset1, rgt1, "1", { from: account5 });
   });
 
   //4
   it("Should Fail because being placed in exported status", async () => {
-    return NP._modStatus(asset1, rgt1, "70", { from: account2 });
+    return NP.modifyStatus(asset1, rgt1, "70", { from: account2 });
   });
 
   //5
   it("Should Fail because being placed in status > 100", async () => {
-    return NP._modStatus(asset1, rgt1, "101", { from: account2 });
+    return NP.modifyStatus(asset1, rgt1, "101", { from: account2 });
   });
 
   //6
   it("Should Fail because being placed in reserved status 7", async () => {
-    return NP._modStatus(asset1, rgt1, "7", { from: account2 });
+    return NP.modifyStatus(asset1, rgt1, "7", { from: account2 });
   });
 
   //7
   it("Should Fail because being placed in reserved status 57", async () => {
-    return NP._modStatus(asset1, rgt1, "57", { from: account2 });
+    return NP.modifyStatus(asset1, rgt1, "57", { from: account2 });
   });
 
   //8
   it("Should Fail because being placed in reserved status 58", async () => {
-    return NP._modStatus(asset1, rgt1, "58", { from: account2 });
+    return NP.modifyStatus(asset1, rgt1, "58", { from: account2 });
   });
 
   //9
   it("Should fail because asset4 is unregistered(transfered)", async () => {
-    return NP._modStatus(asset4, rgtFFF, "1", { from: account2 });
+    return NP.modifyStatus(asset4, rgtFFF, "1", { from: account2 });
   });
 
   it("Should authorize account7 in AC 10", async () => {
@@ -1623,7 +1623,7 @@ contract("NP", (accounts) => {
 
   //10
   it("Should fail because account7 is usertype 9 trying to modStatus < 49", async () => {
-    return NP._modStatus(asset1, rgt1, "1", { from: account7 });
+    return NP.modifyStatus(asset1, rgt1, "1", { from: account7 });
   });
 
   it("Should unauthorize account7 in AC 10", async () => {
@@ -1632,7 +1632,7 @@ contract("NP", (accounts) => {
 
   //11
   it("Should fail because wrong rgt", async () => {
-    return NP._modStatus(asset1, rgt2, "1", { from: account2 });
+    return NP.modifyStatus(asset1, rgt2, "1", { from: account2 });
   });
 
   it("Should pause NP", async () => {
@@ -1642,12 +1642,12 @@ contract("NP", (accounts) => {
   //12
   it("Should fail because NP is paused", async () => {
     console.log(
-      "//**************************************END _modStatus FAIL BATCH**********************************************/"
+      "//**************************************END modifyStatus FAIL BATCH**********************************************/"
     );
     console.log(
-      "//**************************************BEGIN _setLostOrStolen FAIL BATCH**********************************************/"
+      "//**************************************BEGIN setLostOrStolen FAIL BATCH**********************************************/"
     );
-    return NP._setLostOrStolen(asset5, rgt5, "3", { from: account5 });
+    return NP.setLostOrStolen(asset5, rgt5, "3", { from: account5 });
   });
 
   it("Should unpause NP", async () => {
@@ -1656,12 +1656,12 @@ contract("NP", (accounts) => {
 
   //13
   it("Should fail because APP does not hold token", async () => {
-    return NP._setLostOrStolen(asset5, rgt5, "3", { from: account5 });
+    return NP.setLostOrStolen(asset5, rgt5, "3", { from: account5 });
   });
 
   //14
   it("Should Fail because account5 != auth for AC1000001 assets", async () => {
-    return NP._setLostOrStolen(asset1, rgt1, "3", { from: account5 });
+    return NP.setLostOrStolen(asset1, rgt1, "3", { from: account5 });
   });
 
   it("Should authorize account7 in AC1000001", async () => {
@@ -1670,7 +1670,7 @@ contract("NP", (accounts) => {
 
   //15
   it("Should fail because account7 is usertype 9 trying to modStatus < 49", async () => {
-    return NP._setLostOrStolen(asset1, rgt1, "3", { from: account7 });
+    return NP.setLostOrStolen(asset1, rgt1, "3", { from: account7 });
   });
 
   it("Should unauthorize account7 in AC1000001", async () => {
@@ -1679,7 +1679,7 @@ contract("NP", (accounts) => {
 
   //16
   it("Should fail because wrong rgt", async () => {
-    return NP._setLostOrStolen(asset1, rgt2, "3", { from: account2 });
+    return NP.setLostOrStolen(asset1, rgt2, "3", { from: account2 });
   });
 
   it("Should pause NP", async () => {
@@ -1689,12 +1689,12 @@ contract("NP", (accounts) => {
   //17
   it("Should fail because NP is paused", async () => {
     console.log(
-      "//**************************************END _setLostOrStolen FAIL BATCH**********************************************/"
+      "//**************************************END setLostOrStolen FAIL BATCH**********************************************/"
     );
     console.log(
-      "//**************************************BEGIN _decCounter FAIL BATCH**********************************************/"
+      "//**************************************BEGIN decrementCounter FAIL BATCH**********************************************/"
     );
-    return NP._decCounter(asset5, rgt5, "15", { from: account5 });
+    return NP.decrementCounter(asset5, rgt5, "15", { from: account5 });
   });
 
   it("Should unpause NP", async () => {
@@ -1703,22 +1703,22 @@ contract("NP", (accounts) => {
 
   //18
   it("Should fail because APP does not hold token", async () => {
-    return NP._decCounter(asset5, rgt5, "15", { from: account5 });
+    return NP.decrementCounter(asset5, rgt5, "15", { from: account5 });
   });
 
   //19
   it("Should Fail because account4 != auth for AC10 assets", async () => {
-    return NP._decCounter(asset1, rgt1, "15", { from: account5 });
+    return NP.decrementCounter(asset1, rgt1, "15", { from: account5 });
   });
 
   //20
   it("Should fail because asset4 is unregistered(transfered)", async () => {
-    return NP._decCounter(asset4, rgtFFF, "15", { from: account2 });
+    return NP.decrementCounter(asset4, rgtFFF, "15", { from: account2 });
   });
 
   //21
   it("Should fail because wrong rgt", async () => {
-    return NP._decCounter(asset1, rgt2, "15", { from: account2 });
+    return NP.decrementCounter(asset1, rgt2, "15", { from: account2 });
   });
 
   it("Should pause NP", async () => {
@@ -1728,12 +1728,12 @@ contract("NP", (accounts) => {
   //22
   it("Should fail because NP is paused", async () => {
     console.log(
-      "//**************************************END _decCounter FAIL BATCH**********************************************/"
+      "//**************************************END decrementCounter FAIL BATCH**********************************************/"
     );
     console.log(
-      "//**************************************BEGIN _modMutableStorage FAIL BATCH**********************************************/"
+      "//**************************************BEGIN modifyMutableStorage FAIL BATCH**********************************************/"
     );
-    return NP._modMutableStorage(asset5, rgt5, rgt5, rgt000, { from: account5 });
+    return NP.modifyMutableStorage(asset5, rgt5, rgt5, rgt000, { from: account5 });
   });
 
   it("Should unpause NP", async () => {
@@ -1742,22 +1742,22 @@ contract("NP", (accounts) => {
 
   //23
   it("Should fail because APP does not hold token", async () => {
-    return NP._modMutableStorage(asset5, rgt5, rgt5, rgt000, { from: account5 });
+    return NP.modifyMutableStorage(asset5, rgt5, rgt5, rgt000, { from: account5 });
   });
 
   //24
   it("Should Fail because account5 != auth for AC10 assets", async () => {
-    return NP._modMutableStorage(asset1, rgt1, rgt1, rgt000, { from: account5 });
+    return NP.modifyMutableStorage(asset1, rgt1, rgt1, rgt000, { from: account5 });
   });
 
   //25
   it("Should fail because asset4 is unregistered(transfered)", async () => {
-    return NP._modMutableStorage(asset4, rgtFFF, rgt4, rgt000, { from: account2 });
+    return NP.modifyMutableStorage(asset4, rgtFFF, rgt4, rgt000, { from: account2 });
   });
 
   //26
   it("Should fail because wrong rgt", async () => {
-    return NP._modMutableStorage(asset1, rgt2, rgt2, rgt000, { from: account2 });
+    return NP.modifyMutableStorage(asset1, rgt2, rgt2, rgt000, { from: account2 });
   });
 
   it("Should pause NP", async () => {
@@ -1767,7 +1767,7 @@ contract("NP", (accounts) => {
   //27
   it("Should fail because NP is paused", async () => {
     console.log(
-      "//**************************************END _modMutableStorage FAIL BATCH**********************************************/"
+      "//**************************************END modifyMutableStorage FAIL BATCH**********************************************/"
     );
     console.log(
       "//**************************************BEGIN exportAsset FAIL BATCH**********************************************/"
@@ -1785,7 +1785,7 @@ contract("NP", (accounts) => {
   });
 
   it("Should set asset1 to newAssetStatus(51)", async () => {
-    return NP._modStatus(asset1, rgt1, "51", { from: account2 });
+    return NP.modifyStatus(asset1, rgt1, "51", { from: account2 });
   });
 
   //29
@@ -1794,7 +1794,7 @@ contract("NP", (accounts) => {
   });
 
   it("Should set asset1 to newAssetStatus(1)", async () => {
-    return NP._modStatus(asset1, rgt1, "1", { from: account2 });
+    return NP.modifyStatus(asset1, rgt1, "1", { from: account2 });
   });
 
   //30
@@ -1803,7 +1803,7 @@ contract("NP", (accounts) => {
   });
 
   it("Should set asset1 to newAssetStatus(51)", async () => {
-    return NP._modStatus(asset1, rgt1, "51", { from: account2 });
+    return NP.modifyStatus(asset1, rgt1, "51", { from: account2 });
   });
 
   //31
@@ -1813,7 +1813,7 @@ contract("NP", (accounts) => {
 
   it("Should set SharesAddress", async () => {
     console.log(
-      "//**************************************END _modMutableStorage FAIL BATCH**********************************************/"
+      "//**************************************END modifyMutableStorage FAIL BATCH**********************************************/"
     );
     console.log(
       "//**************************************END NP FAIL BATCH**********************************************/"
@@ -1860,7 +1860,7 @@ contract("NP", (accounts) => {
   });
 
   it("Should change status of new asset12 to status(1)", async () => {
-    return NP._modStatus(asset12, rgt12, "1", { from: account2 });
+    return NP.modifyStatus(asset12, rgt12, "1", { from: account2 });
   });
 
   it("Should retrieve asset12 @stat(1)", async () => {
@@ -1920,7 +1920,7 @@ contract("NP", (accounts) => {
   });
 
   it("Should decrement asset12 amount from (100) to (85)", async () => {
-    return NP._decCounter(asset12, rgt12, "15", { from: account2 });
+    return NP.decrementCounter(asset12, rgt12, "15", { from: account2 });
   });
 
   it("Should retrieve asset12 @newDecCount(85)", async () => {
@@ -1940,7 +1940,7 @@ contract("NP", (accounts) => {
   });
 
   it("Should modify Mutable note @asset12 to (asset12)", async () => {
-    return NP._modMutableStorage(asset12, rgt12, asset12, rgt000, { from: account2 });
+    return NP.modifyMutableStorage(asset12, rgt12, asset12, rgt000, { from: account2 });
   });
 
   it("Should retrieve asset12 with newMutable(asset12)", async () => {
@@ -1960,7 +1960,7 @@ contract("NP", (accounts) => {
   });
 
   it("Should change status of new asset12 to status(51)", async () => {
-    return NP._modStatus(asset12, rgt12, "51", { from: account2 });
+    return NP.modifyStatus(asset12, rgt12, "51", { from: account2 });
   });
 
   it("Should retrieve asset12 @newStatus(51)", async () => {
@@ -2044,7 +2044,7 @@ contract("NP", (accounts) => {
   });
 
   it("Should change status of asset12 to status(51)", async () => {
-    return NP_NC._modStatus(asset12, "51", { from: account2 });
+    return NP_NC.modifyStatus(asset12, "51", { from: account2 });
   });
 
   it("Should retrieve asset12 @newStatus(51)", async () => {
@@ -2106,7 +2106,7 @@ contract("NP", (accounts) => {
   });
 
   it("Should change decrement amount @asset12 from (85) to (70)", async () => {
-    return NP_NC._decCounter(asset12, "15", { from: account2 });
+    return NP_NC.decrementCounter(asset12, "15", { from: account2 });
   });
 
   it("Should retrieve asset12 @newDecAmount(70)", async () => {
@@ -2146,7 +2146,7 @@ contract("NP", (accounts) => {
   });
 
   it("Should modify Mutable @asset12 to RGT(12)", async () => {
-    return NP_NC._modMutableStorage(asset12, rgt12, rgt000, { from: account2 });
+    return NP_NC.modifyMutableStorage(asset12, rgt12, rgt000, { from: account2 });
   });
 
   it("Should retrieve asset12 @newMutable(rgt12)", async () => {
@@ -2166,7 +2166,7 @@ contract("NP", (accounts) => {
   });
 
   it("Should set asset12 to stolen(53) status", async () => {
-    return NP_NC._setLostOrStolen(asset12, "53", { from: account2 });
+    return NP_NC.setLostOrStolen(asset12, "53", { from: account2 });
   });
 
   it("Should retrieve asset12 @newStatus(53)", async () => {
@@ -2186,7 +2186,7 @@ contract("NP", (accounts) => {
   });
 
   it("Should change status of asset12 to status(51)", async () => {
-    return NP_NC._modStatus(asset12, "51", { from: account2 });
+    return NP_NC.modifyStatus(asset12, "51", { from: account2 });
   });
 
   it("Should retrieve asset12 @newStatus(51)", async () => {
@@ -2268,7 +2268,7 @@ contract("NP", (accounts) => {
   });
 
   it("Should change status of asset12 to status(1)", async () => {
-    return NP._modStatus(asset12, rgtFFF, "1", { from: account2 });
+    return NP.modifyStatus(asset12, rgtFFF, "1", { from: account2 });
   });
 
   it("Should retrieve asset12 @newStatus(1)", async () => {
@@ -2330,7 +2330,7 @@ contract("NP", (accounts) => {
   });
 
   it("Should change status of asset12 to status(1)", async () => {
-    return NP._modStatus(asset12, rgtFFF, "1", { from: account2 });
+    return NP.modifyStatus(asset12, rgtFFF, "1", { from: account2 });
   });
 
   it("Should retrieve asset12 @newStatus(1)", async () => {
@@ -2350,7 +2350,7 @@ contract("NP", (accounts) => {
   });
 
   it("Should set asset12 to stolen(3) status", async () => {
-    return NP._setLostOrStolen(asset12, rgtFFF, "3", { from: account2 });
+    return NP.setLostOrStolen(asset12, rgtFFF, "3", { from: account2 });
   });
 
   it("Should retrieve asset12 @newStatus(3)", async () => {
@@ -2370,7 +2370,7 @@ contract("NP", (accounts) => {
   });
 
   it("Should change status of asset12 to status(51)", async () => {
-    return NP._modStatus(asset12, rgtFFF, "51", { from: account2 });
+    return NP.modifyStatus(asset12, rgtFFF, "51", { from: account2 });
   });
 
   it("Should retrieve asset12 @newStaus(51)", async () => {
@@ -2415,7 +2415,7 @@ contract("NP", (accounts) => {
   });
 
   it("Should decrement asset13 amount from (100) to (85)", async () => {
-    return NP_NC._decCounter(asset13, "15", { from: account4 });
+    return NP_NC.decrementCounter(asset13, "15", { from: account4 });
   });
 
   it("Should retrieve asset13 @newDecCount(85)", async () => {
@@ -2435,7 +2435,7 @@ contract("NP", (accounts) => {
   });
 
   it("Should modify Mutable note @asset13 to (asset13)", async () => {
-    return NP_NC._modMutableStorage(asset13, asset13, rgt000, { from: account4 });
+    return NP_NC.modifyMutableStorage(asset13, asset13, rgt000, { from: account4 });
   });
 
   it("Should retrieve asset13 with newMutable(asset13)", async () => {
@@ -2495,7 +2495,7 @@ contract("NP", (accounts) => {
   });
 
   it("Should set asset13 to stolen(53) status", async () => {
-    return NP_NC._setLostOrStolen(asset13, "53", { from: account4 });
+    return NP_NC.setLostOrStolen(asset13, "53", { from: account4 });
   });
 
   it("Should retrieve asset13 @newStatus(53)", async () => {
@@ -2515,7 +2515,7 @@ contract("NP", (accounts) => {
   });
 
   it("Should change status of new asset12 to status(51)", async () => {
-    return NP_NC._modStatus(asset13, "51", { from: account4 });
+    return NP_NC.modifyStatus(asset13, "51", { from: account4 });
   });
 
   it("Should retrieve asset13 @stat(51)", async () => {
@@ -2577,7 +2577,7 @@ contract("NP", (accounts) => {
   });
 
   it("Should change status of new asset12 to status(51)", async () => {
-    return NP_NC._modStatus(asset13, "51", { from: account4 });
+    return NP_NC.modifyStatus(asset13, "51", { from: account4 });
   });
 
   it("Should retrieve asset13 @stat(51)", async () => {
@@ -2659,7 +2659,7 @@ contract("NP", (accounts) => {
   });
 
   it("Should change status of asset13 to status(1)", async () => {
-    return NP._modStatus(asset13, rgtFFF, "1", { from: account4 });
+    return NP.modifyStatus(asset13, rgtFFF, "1", { from: account4 });
   });
 
   it("Should retrieve asset13 @newStatus(1)", async () => {
@@ -2719,7 +2719,7 @@ contract("NP", (accounts) => {
   });
 
   it("Should change decrement amount @asset13 from (85) to (70)", async () => {
-    return NP._decCounter(asset13, rgtFFF, "15", { from: account4 });
+    return NP.decrementCounter(asset13, rgtFFF, "15", { from: account4 });
   });
 
   it("Should retrieve asset13 @newDecAmount(70)", async () => {
@@ -2739,7 +2739,7 @@ contract("NP", (accounts) => {
   });
 
   it("Should modify Mutable @asset13 to RGT(12)", async () => {
-    return NP._modMutableStorage(asset13, rgtFFF, rgt13, rgt000, { from: account4 });
+    return NP.modifyMutableStorage(asset13, rgtFFF, rgt13, rgt000, { from: account4 });
   });
 
   it("Should retrieve asset13 @newMutable(rgt13)", async () => {
@@ -2759,7 +2759,7 @@ contract("NP", (accounts) => {
   });
 
   it("Should set asset13 to stolen(3) status", async () => {
-    return NP._setLostOrStolen(asset13, rgtFFF, "3", { from: account4 });
+    return NP.setLostOrStolen(asset13, rgtFFF, "3", { from: account4 });
   });
 
   it("Should retrieve asset13 @newStatus(3)", async () => {
@@ -2779,7 +2779,7 @@ contract("NP", (accounts) => {
   });
 
   it("Should change status of asset13 to status(1)", async () => {
-    return NP._modStatus(asset13, rgtFFF, "1", { from: account4 });
+    return NP.modifyStatus(asset13, rgtFFF, "1", { from: account4 });
   });
 
   it("Should retrieve asset13 @newStatus(1)", async () => {
@@ -2839,7 +2839,7 @@ contract("NP", (accounts) => {
   });
 
   it("Should change asset13 status to (51)", async () => {
-    return NP._modStatus(asset13, rgt13, "51", { from: account4 });
+    return NP.modifyStatus(asset13, rgt13, "51", { from: account4 });
   });
 
   it("Should retrieve asset12 @newStat(51)", async () => {
@@ -2902,7 +2902,7 @@ contract("NP", (accounts) => {
   });
 
   it("Should change status of asset13 to status(51)", async () => {
-    return NP_NC._modStatus(asset13, "51", { from: account4 });
+    return NP_NC.modifyStatus(asset13, "51", { from: account4 });
   });
 
   it("Should retrieve asset13 @newStatus(51)", async () => {
@@ -2922,7 +2922,7 @@ contract("NP", (accounts) => {
   });
 
   it("Should change status of asset13 to status(59)", async () => {
-    return NP_NC._modStatus(asset13, "59", { from: account4 });
+    return NP_NC.modifyStatus(asset13, "59", { from: account4 });
   });
 
   it("Should retrieve asset13 @newStaus(59)", async () => {
@@ -2982,7 +2982,7 @@ contract("NP", (accounts) => {
   });
 
   it("Should change status of asset12 to status(51)", async () => {
-    return NP_NC._modStatus(asset13, "51", { from: account4 });
+    return NP_NC.modifyStatus(asset13, "51", { from: account4 });
   });
 
   it("Should retrieve asset12 @newStaus(51)", async () => {

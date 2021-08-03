@@ -2047,7 +2047,7 @@ contract('NP_NC', accounts => {
 
 
     it('Should put asset2 in to discardable status', async () => {
-        return NP_NC._modStatus(
+        return NP_NC.modifyStatus(
             asset2,
             '59',
             { from: account5 }
@@ -2064,7 +2064,7 @@ contract('NP_NC', accounts => {
 
 
     it('Should put asset3 in to exportable status', async () => {
-        return NP_NC._modStatus(
+        return NP_NC.modifyStatus(
             asset3,
             '51',
             { from: account4 }
@@ -2081,7 +2081,7 @@ contract('NP_NC', accounts => {
 
 
     it('Should put asset4 in to transferable status', async () => {
-        return NP_NC._modStatus(
+        return NP_NC.modifyStatus(
             asset4,
             '51',
             { from: account4 }
@@ -2122,7 +2122,7 @@ contract('NP_NC', accounts => {
 
 
     it('Should put asset6 in to stolen status', async () => {
-        return NP_NC._setLostOrStolen(
+        return NP_NC.setLostOrStolen(
             asset6,
             '53',
             { from: account4 }
@@ -2131,7 +2131,7 @@ contract('NP_NC', accounts => {
 
 
     it('Should put asset7 in to lost status', async () => {
-        return NP_NC._setLostOrStolen(
+        return NP_NC.setLostOrStolen(
             asset7,
             '54',
             { from: account4 }
@@ -2151,7 +2151,7 @@ contract('NP_NC', accounts => {
 
 
     it('Should put asset4 in to transferable status', async () => {
-        return NP_NC._modStatus(
+        return NP_NC.modifyStatus(
             asset8,
             '51',
             { from: account10 }
@@ -2170,7 +2170,7 @@ contract('NP_NC', accounts => {
 
 
     it('Should put asset4 in to transferable status', async () => {
-        return NP_NC._modStatus(
+        return NP_NC.modifyStatus(
             asset8,
             '51',
             { from: account4 }
@@ -2222,7 +2222,7 @@ contract('NP_NC', accounts => {
 
 
     it('Should set asset1 stat to 52', async () => {
-        return NP_NC._modStatus(
+        return NP_NC.modifyStatus(
             asset1,
             '52',
             { from: account4 }
@@ -2249,8 +2249,8 @@ contract('NP_NC', accounts => {
     it('Should Fail because caller does not hold token', async () => {
 
         console.log("//**************************************END _exportNC FAIL BATCH**********************************************/")
-        console.log("//**************************************BEGIN _modStatus FAIL BATCH**********************************************/")
-        return NP_NC._modStatus(
+        console.log("//**************************************BEGIN modifyStatus FAIL BATCH**********************************************/")
+        return NP_NC.modifyStatus(
             asset1,
             '51',
             { from: account5 }
@@ -2259,7 +2259,7 @@ contract('NP_NC', accounts => {
 
     //8
     it('Should Fail because being placed in status > 100', async () => {
-        return NP_NC._modStatus(
+        return NP_NC.modifyStatus(
             asset1,
             '101',
             { from: account4 }
@@ -2268,7 +2268,7 @@ contract('NP_NC', accounts => {
 
     //9
     it('Should Fail because being placed in status 7', async () => {
-        return NP_NC._modStatus(
+        return NP_NC.modifyStatus(
             asset1,
             '7',
             { from: account4 }
@@ -2277,7 +2277,7 @@ contract('NP_NC', accounts => {
 
     //10
     it('Should Fail because being placed in reserved status 57', async () => {
-        return NP_NC._modStatus(
+        return NP_NC.modifyStatus(
             asset1,
             '57',
             { from: account4 }
@@ -2286,7 +2286,7 @@ contract('NP_NC', accounts => {
 
     //11
     it('Should Fail because being placed in reserved status 58', async () => {
-        return NP_NC._modStatus(
+        return NP_NC.modifyStatus(
             asset1,
             '58',
             { from: account4 }
@@ -2295,7 +2295,7 @@ contract('NP_NC', accounts => {
 
     //12
     it('Should Fail because being placed in exported status', async () => {
-        return NP_NC._modStatus(
+        return NP_NC.modifyStatus(
             asset1,
             '70',
             { from: account4 }
@@ -2304,7 +2304,7 @@ contract('NP_NC', accounts => {
 
     //13
     it('Should Fail because being placed in status <50', async () => {
-        return NP_NC._modStatus(
+        return NP_NC.modifyStatus(
             asset1,
             '1',
             { from: account4 }
@@ -2314,9 +2314,9 @@ contract('NP_NC', accounts => {
     //14
     it('Should fail because caller does not hold token', async () => {
 
-        console.log("//**************************************END _modStatus FAIL BATCH**********************************************/")
-        console.log("//**************************************BEGIN _setLostOrStolen FAIL BATCH**********************************************/")
-        return NP_NC._setLostOrStolen(
+        console.log("//**************************************END modifyStatus FAIL BATCH**********************************************/")
+        console.log("//**************************************BEGIN setLostOrStolen FAIL BATCH**********************************************/")
+        return NP_NC.setLostOrStolen(
             asset1,
             '53',
             { from: account5 }
@@ -2325,7 +2325,7 @@ contract('NP_NC', accounts => {
 
     //15
     it('Should fail because assetStatus is < 50', async () => {
-        return NP_NC._setLostOrStolen(
+        return NP_NC.setLostOrStolen(
             asset1,
             '3',
             { from: account4 }
@@ -2335,9 +2335,9 @@ contract('NP_NC', accounts => {
     //16
     it('Should fail becasue caller does not hold token', async () => {
 
-        console.log("//**************************************END _setLostOrStolen FAIL BATCH**********************************************/")
-        console.log("//**************************************BEGIN _decCounter FAIL BATCH**********************************************/")
-        return NP_NC._decCounter(
+        console.log("//**************************************END setLostOrStolen FAIL BATCH**********************************************/")
+        console.log("//**************************************BEGIN decrementCounter FAIL BATCH**********************************************/")
+        return NP_NC.decrementCounter(
             asset1,
             '15',
             { from: account5 }
@@ -2347,9 +2347,9 @@ contract('NP_NC', accounts => {
     //17
     it('Should fail because caller does not hold token', async () => {
 
-        console.log("//**************************************END _decCounter FAIL BATCH**********************************************/")
-        console.log("//**************************************BEGIN _modMutableStorage FAIL BATCH**********************************************/")
-        return NP_NC._modMutableStorage(
+        console.log("//**************************************END decrementCounter FAIL BATCH**********************************************/")
+        console.log("//**************************************BEGIN modifyMutableStorage FAIL BATCH**********************************************/")
+        return NP_NC.modifyMutableStorage(
             asset1,
             rgt1,
             rgt000,
@@ -2375,7 +2375,7 @@ contract('NP_NC', accounts => {
 
 
     it('Should change status of new asset12 to status(1)', async () => {
-        return NP._modStatus(
+        return NP.modifyStatus(
             asset12,
             rgt12,
             '1',
@@ -2404,7 +2404,7 @@ contract('NP_NC', accounts => {
 
 
     it('Should change decrement amount @asset12 from (100) to (85)', async () => {
-        return NP._decCounter(
+        return NP.decrementCounter(
             asset12,
             rgt12,
             '15',
@@ -2414,7 +2414,7 @@ contract('NP_NC', accounts => {
 
 
     it('Should modify Mutable note @asset12 to IDX(1)', async () => {
-        return NP._modMutableStorage(
+        return NP.modifyMutableStorage(
             asset12,
             rgt12,
             asset12,
@@ -2425,7 +2425,7 @@ contract('NP_NC', accounts => {
 
 
     it('Should change status of new asset12 to status(51)', async () => {
-        return NP._modStatus(
+        return NP.modifyStatus(
             asset12,
             rgt12,
             '51',
@@ -2476,7 +2476,7 @@ contract('NP_NC', accounts => {
 
 
     it('Should change status of asset12 to status(51)', async () => {
-        return NP_NC._modStatus(
+        return NP_NC.modifyStatus(
             asset12,
             '51',
             { from: account2 }
@@ -2504,7 +2504,7 @@ contract('NP_NC', accounts => {
 
 
     it('Should change decrement amount @asset12 from (85) to (70)', async () => {
-        return NP_NC._decCounter(
+        return NP_NC.decrementCounter(
             asset12,
             '15',
             { from: account2 }
@@ -2522,7 +2522,7 @@ contract('NP_NC', accounts => {
 
 
     it('Should modify Mutable note @asset12 to RGT(1)', async () => {
-        return NP_NC._modMutableStorage(
+        return NP_NC.modifyMutableStorage(
             asset12,
             rgt12,
             rgt000,
@@ -2531,7 +2531,7 @@ contract('NP_NC', accounts => {
     })
 
     it('Should change status of asset12 to status(51)', async () => {
-        return NP_NC._modStatus(
+        return NP_NC.modifyStatus(
             asset12,
             '51',
             { from: account2 }
@@ -2567,7 +2567,7 @@ contract('NP_NC', accounts => {
 
 
     it('Should change status of asset12 to status(1)', async () => {
-        return NP._modStatus(
+        return NP.modifyStatus(
             asset12,
             rgt12,
             '1',
@@ -2596,7 +2596,7 @@ contract('NP_NC', accounts => {
 
 
     it('Should change status of asset12 to status(1)', async () => {
-        return NP._modStatus(
+        return NP.modifyStatus(
             asset12,
             rgt12,
             '1',
@@ -2617,7 +2617,7 @@ contract('NP_NC', accounts => {
 
 
     it('Should set asset12 to stolen(3) status', async () => {
-        return NP._setLostOrStolen(
+        return NP.setLostOrStolen(
             asset12,
             rgt12,
             '3',
@@ -2627,7 +2627,7 @@ contract('NP_NC', accounts => {
 
 
     it('Should change status of asset12 to status(1)', async () => {
-        return NP._modStatus(
+        return NP.modifyStatus(
             asset12,
             rgt12,
             '1',

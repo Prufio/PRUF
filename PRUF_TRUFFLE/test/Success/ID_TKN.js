@@ -2057,7 +2057,7 @@ _________\/// _____________\/// _______\/// __\///////// __\/// _____________
 
 
     it('Should change status of new asset12 to status(1)', async () => {
-        return NP._modStatus(
+        return NP.modifyStatus(
         asset12, 
         rgt12,
         '1',
@@ -2086,7 +2086,7 @@ _________\/// _____________\/// _______\/// __\///////// __\/// _____________
 
 
     it('Should change decrement amount @asset12 from (100) to (85)', async () => {
-        return NP._decCounter(
+        return NP.decrementCounter(
         asset12, 
         rgt12,
         '15',
@@ -2096,7 +2096,7 @@ _________\/// _____________\/// _______\/// __\///////// __\/// _____________
 
 
     it('Should modify Mutable note @asset12 to IDX(1)', async () => {
-        return NP._modMutableStorage(
+        return NP.modifyMutableStorage(
         asset12, 
         rgt12,
         asset12,
@@ -2107,7 +2107,7 @@ _________\/// _____________\/// _______\/// __\///////// __\/// _____________
 
 
     it('Should change status of new asset12 to status(51)', async () => {
-        return NP._modStatus(
+        return NP.modifyStatus(
         asset12, 
         rgt12,
         '51',
@@ -2158,7 +2158,7 @@ _________\/// _____________\/// _______\/// __\///////// __\/// _____________
 
 
     it('Should change status of asset12 to status(51)', async () => {
-        return NP_NC._modStatus(
+        return NP_NC.modifyStatus(
         asset12, 
         '51',
         {from: account2}
@@ -2186,7 +2186,7 @@ _________\/// _____________\/// _______\/// __\///////// __\/// _____________
 
 
     it('Should change decrement amount @asset12 from (85) to (70)', async () => {
-        return NP_NC._decCounter(
+        return NP_NC.decrementCounter(
         asset12, 
         '15',
         {from: account2}
@@ -2204,7 +2204,7 @@ _________\/// _____________\/// _______\/// __\///////// __\/// _____________
 
 
     it('Should modify Mutable note @asset12 to RGT(1)', async () => {
-        return NP_NC._modMutableStorage(
+        return NP_NC.modifyMutableStorage(
         asset12, 
         rgt12,
         rgt000,
@@ -2213,7 +2213,7 @@ _________\/// _____________\/// _______\/// __\///////// __\/// _____________
     })
 
     it('Should change status of asset12 to status(51)', async () => {
-        return NP_NC._modStatus(
+        return NP_NC.modifyStatus(
         asset12, 
         '51',
         {from: account2}
@@ -2249,7 +2249,7 @@ _________\/// _____________\/// _______\/// __\///////// __\/// _____________
 
 
     it('Should change status of asset12 to status(1)', async () => {
-        return NP._modStatus(
+        return NP.modifyStatus(
         asset12, 
         rgt12,
         '1',
@@ -2278,7 +2278,7 @@ _________\/// _____________\/// _______\/// __\///////// __\/// _____________
 
 
     it('Should change status of asset12 to status(1)', async () => {
-        return NP._modStatus(
+        return NP.modifyStatus(
         asset12, 
         rgt12,
         '1',
@@ -2299,7 +2299,7 @@ _________\/// _____________\/// _______\/// __\///////// __\/// _____________
 
 
     it('Should set asset12 to stolen(3) status', async () => {
-        return NP._setLostOrStolen(
+        return NP.setLostOrStolen(
         asset12,
         rgt12,
         '3',
@@ -2309,7 +2309,7 @@ _________\/// _____________\/// _______\/// __\///////// __\/// _____________
 
 
     it('Should change status of asset12 to status(1)', async () => {
-        return NP._modStatus(
+        return NP.modifyStatus(
         asset12, 
         rgt12,
         '1',
