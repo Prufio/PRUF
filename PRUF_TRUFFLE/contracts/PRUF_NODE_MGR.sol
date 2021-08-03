@@ -482,7 +482,7 @@ contract NODE_MGR is BASIC {
      * @param _storageProvider - storageProvider of node (see docs)
      * @param _refAddress - address permanently tied to node
      */
-    function updateACImmutable(
+    function updateImmutableData(
         uint32 _node,
         uint8 _managementType,
         uint8 _storageProvider,
