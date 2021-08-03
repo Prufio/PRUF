@@ -47,7 +47,7 @@ contract SCULPTOR is AccessControl, BASIC{
     // /*
     //  * @dev Verify caller holds ACtoken of passed node
     //  */
-    // modifier isNodeHoldertokenHolderOfClass(uint32 _node) {
+    // modifier isNodeHolder(uint32 _node) {
     //     require(
     //         (NODE_TKN.ownerOf(_node) == _msgSender()),
     //         "ACM:MOD-IACTHoC:_msgSender() not authorized in node"
