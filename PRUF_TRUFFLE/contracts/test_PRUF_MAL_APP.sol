@@ -84,7 +84,7 @@ contract MAL_APP is CORE_MAL {
     /*
      * @dev Modify **Record**.assetStatus with confirmation required
      */
-    function modStatus(
+    function modifyStatus(
         bytes32 _idxHash,
         // bytes32 _rgtHash,
         uint8 _newAssetStatus
@@ -113,15 +113,15 @@ contract MAL_APP is CORE_MAL {
 
         // require(
         //     isLostOrStolen(_newAssetStatus) == 0,
-        //     "NP:MS: Cannot place asset in lost or stolen status using modStatus"
+        //     "NP:MS: Cannot place asset in lost or stolen status using modifyStatus"
         // );
         // require(
         //     isEscrow(_newAssetStatus) == 0,
-        //     "NP:MS: Cannot place asset in Escrow using modStatus"
+        //     "NP:MS: Cannot place asset in Escrow using modifyStatus"
         // );
         // require(
         //     needsImport(_newAssetStatus) == 0,
-        //     "NP:MS: Cannot place asset in unregistered, exported, or discarded status using modStatus"
+        //     "NP:MS: Cannot place asset in unregistered, exported, or discarded status using modifyStatus"
         // );
         // require(
         //     (_newAssetStatus < 100) &&
@@ -225,7 +225,7 @@ contract MAL_APP is CORE_MAL {
     /*
      * @dev Decrement **Record**.countdown with confirmation required
      */
-    function decCounter(
+    function decrementCounter(
         bytes32 _idxHash,
         // bytes32 _rgtHash,
         uint32 _decAmount
@@ -291,7 +291,7 @@ contract MAL_APP is CORE_MAL {
     // /*
     //  * @dev Decrement **Record**.countdown with confirmation required
     //  */
-    // function decCounterFMR(
+    // function decrementCounterFMR(
     //     bytes32 _idxHash,
     //     bytes32 _rgtHash,
     //     uint8 _decAmount
@@ -350,7 +350,7 @@ contract MAL_APP is CORE_MAL {
     //     //^^^^^^^interactions^^^^^^^^^
     // }
                                                                                                //NEEDS TO BE MODIFIED IN STORAGE
-    // function decCounterTXFR(
+    // function decrementCounterTXFR(
     //     bytes32 _idxHash,
     //     bytes32 _rgtHash,
     //     uint16 _decAmount
@@ -412,7 +412,7 @@ contract MAL_APP is CORE_MAL {
     /*
      * @dev Modify **Record**.mutableStorage1 with confirmation
      */
-    function modMutableStorage(
+    function modifyMutableStorage(
         bytes32 _idxHash,
         bytes32 _mutableStorage1,
         bytes32 _mutableStorage2
