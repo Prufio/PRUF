@@ -110,7 +110,7 @@ contract APP is CORE {
      * @param _idxHash - hash of asset information created by frontend inputs
      * @param _rgtHash - hash of new rightsholder information created by frontend inputs
      */
-    function forceModRecord(bytes32 _idxHash, bytes32 _rgtHash)
+    function forceModifyRecord(bytes32 _idxHash, bytes32 _rgtHash)
         external
         nonReentrant
         whenNotPaused
