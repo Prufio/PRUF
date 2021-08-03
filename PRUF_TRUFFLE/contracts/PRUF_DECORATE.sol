@@ -120,7 +120,7 @@ contract DECORATE is CORE {
      * @param _tokenContract - token contract of _tokenID
      * @param _newAssetStatus - new status of decorated token (see docs)
      */
-    function modStatus(
+    function modifyStatus(
         uint256 _tokenID,
         address _tokenContract,
         uint8 _newAssetStatus
@@ -155,7 +155,7 @@ contract DECORATE is CORE {
         );
         require(
             needsImport(_newAssetStatus) == 0,
-            "D:MS: Cannot place asset in unregistered, exported, or discarded status using modStatus"
+            "D:MS: Cannot place asset in unregistered, exported, or discarded status using modifyStatus"
         );
         require(
             needsImport(rec.assetStatus) == 0,
@@ -253,7 +253,7 @@ contract DECORATE is CORE {
      * @param _tokenContract - token contract of _tokenID
      * @param _decAmount - desired amount to deduct from countDownStart of asset
      */
-    function decCounter(
+    function decrementCounter(
         uint256 _tokenID,
         address _tokenContract,
         uint32 _decAmount

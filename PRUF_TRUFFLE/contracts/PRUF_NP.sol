@@ -42,7 +42,7 @@ contract NP is CORE {
      * @param _rgtHash rgthash to match in front end
      * @param _newAssetStatus updated status
      */
-    function modStatus(
+    function modifyStatus(
         bytes32 _idxHash,
         bytes32 _rgtHash,
         uint8 _newAssetStatus
@@ -60,7 +60,7 @@ contract NP is CORE {
         );
         require(
             needsImport(_newAssetStatus) == 0,
-            "NP:MS: Cannot place asset in unregistered, exported, or discarded status using modStatus"
+            "NP:MS: Cannot place asset in unregistered, exported, or discarded status using modifyStatus"
         );
         require(
             needsImport(rec.assetStatus) == 0,
@@ -121,7 +121,7 @@ contract NP is CORE {
      * @param _rgtHash rgthash to match in front end
      * @param _decAmount amount to decrement
      */
-    function decCounter(
+    function decrementCounter(
         bytes32 _idxHash,
         bytes32 _rgtHash,
         uint32 _decAmount

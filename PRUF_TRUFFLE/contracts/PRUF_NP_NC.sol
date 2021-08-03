@@ -45,7 +45,7 @@ contract NP_NC is CORE {
      * @param _newRgtHash rew rgtHash to apply
      *
      */
-    function _changeRgt(bytes32 _idxHash, bytes32 _newRgtHash)
+    function changeRgt(bytes32 _idxHash, bytes32 _newRgtHash)
         external
         nonReentrant
         whenNotPaused
@@ -117,7 +117,7 @@ contract NP_NC is CORE {
      * @param _idxHash idx of asset to Modify
      * @param _newAssetStatus Updated status
      */
-    function modStatus(bytes32 _idxHash, uint8 _newAssetStatus)
+    function modifyStatus(bytes32 _idxHash, uint8 _newAssetStatus)
         public
         nonReentrant
         whenNotPaused
@@ -137,7 +137,7 @@ contract NP_NC is CORE {
         );
         require(
             needsImport(_newAssetStatus) == 0,
-            "NPNC:MS: Cannot place asset in unregistered, exported, or discarded status using modStatus"
+            "NPNC:MS: Cannot place asset in unregistered, exported, or discarded status using modifyStatus"
         );
         require(
             needsImport(rec.assetStatus) == 0,
@@ -187,7 +187,7 @@ contract NP_NC is CORE {
      * @param _idxHash idx of asset to Modify
      * @param _decAmount Amount to decrement
      */
-    function decCounter(bytes32 _idxHash, uint32 _decAmount)
+    function decrementCounter(bytes32 _idxHash, uint32 _decAmount)
         external
         nonReentrant
         whenNotPaused
