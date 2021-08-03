@@ -253,7 +253,7 @@ __/\\\\\\\\\\\\\ _____/\\\\\\\\\ _______/\\__/\\ ___/\\\\\\\\\\\\\\\
 *
 * 7 - ROOT5 ('7', 'name', '7', '3', '0', "9500" 0x000...(b32), USER1.address,)   |0|
 *
-* ----------------- ROOT TOKEN PRICING (NODE_MGR.ACTH_setCosts)-----------------|0|
+* ----------------- ROOT TOKEN PRICING (NODE_MGR.setOperationCosts)-----------------|0|
 * 1 - ROOT1 ('1', '1', PRUF+(0*18), PAYMENT_ADDR)   |0|
 *           ('1', '2', PRUF+(0*18), PAYMENT_ADDR)   |0|
 *           ('1', '3', PRUF+(0*18), PAYMENT_ADDR)   |0|

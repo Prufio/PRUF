@@ -1010,97 +1010,97 @@ contract("NODE_MGR", (accounts) => {
   it("Should set costs in minted roots", () => {
     console.log("Setting costs in AC 1");
 
-    return NODE_MGR.ACTH_setCosts("1", "1", "10000000000000000", account1, {
+    return NODE_MGR.setOperationCosts("1", "1", "10000000000000000", account1, {
       from: account1,
     })
 
       .then(() => {
-        return NODE_MGR.ACTH_setCosts("1", "2", "10000000000000000", account1, {
+        return NODE_MGR.setOperationCosts("1", "2", "10000000000000000", account1, {
           from: account1,
         });
       })
 
       .then(() => {
-        return NODE_MGR.ACTH_setCosts("1", "3", "10000000000000000", account1, {
+        return NODE_MGR.setOperationCosts("1", "3", "10000000000000000", account1, {
           from: account1,
         });
       })
 
       .then(() => {
-        return NODE_MGR.ACTH_setCosts("1", "4", "10000000000000000", account1, {
+        return NODE_MGR.setOperationCosts("1", "4", "10000000000000000", account1, {
           from: account1,
         });
       })
 
       .then(() => {
-        return NODE_MGR.ACTH_setCosts("1", "5", "10000000000000000", account1, {
+        return NODE_MGR.setOperationCosts("1", "5", "10000000000000000", account1, {
           from: account1,
         });
       })
 
       .then(() => {
-        return NODE_MGR.ACTH_setCosts("1", "6", "10000000000000000", account1, {
+        return NODE_MGR.setOperationCosts("1", "6", "10000000000000000", account1, {
           from: account1,
         });
       })
 
       .then(() => {
-        return NODE_MGR.ACTH_setCosts("1", "7", "10000000000000000", account1, {
+        return NODE_MGR.setOperationCosts("1", "7", "10000000000000000", account1, {
           from: account1,
         });
       })
 
       .then(() => {
-        return NODE_MGR.ACTH_setCosts("1", "8", "10000000000000000", account1, {
+        return NODE_MGR.setOperationCosts("1", "8", "10000000000000000", account1, {
           from: account1,
         });
       })
 
       .then(() => {
         console.log("Setting base costs in AC 2");
-        return NODE_MGR.ACTH_setCosts("2", "1", "10000000000000000", account1, {
+        return NODE_MGR.setOperationCosts("2", "1", "10000000000000000", account1, {
           from: account1,
         });
       })
 
       .then(() => {
-        return NODE_MGR.ACTH_setCosts("2", "2", "10000000000000000", account1, {
+        return NODE_MGR.setOperationCosts("2", "2", "10000000000000000", account1, {
           from: account1,
         });
       })
 
       .then(() => {
-        return NODE_MGR.ACTH_setCosts("2", "3", "10000000000000000", account1, {
+        return NODE_MGR.setOperationCosts("2", "3", "10000000000000000", account1, {
           from: account1,
         });
       })
 
       .then(() => {
-        return NODE_MGR.ACTH_setCosts("2", "4", "10000000000000000", account1, {
+        return NODE_MGR.setOperationCosts("2", "4", "10000000000000000", account1, {
           from: account1,
         });
       })
 
       .then(() => {
-        return NODE_MGR.ACTH_setCosts("2", "5", "10000000000000000", account1, {
+        return NODE_MGR.setOperationCosts("2", "5", "10000000000000000", account1, {
           from: account1,
         });
       })
 
       .then(() => {
-        return NODE_MGR.ACTH_setCosts("2", "6", "10000000000000000", account1, {
+        return NODE_MGR.setOperationCosts("2", "6", "10000000000000000", account1, {
           from: account1,
         });
       })
 
       .then(() => {
-        return NODE_MGR.ACTH_setCosts("2", "7", "10000000000000000", account1, {
+        return NODE_MGR.setOperationCosts("2", "7", "10000000000000000", account1, {
           from: account1,
         });
       })
 
       .then(() => {
-        return NODE_MGR.ACTH_setCosts("2", "8", "10000000000000000", account1, {
+        return NODE_MGR.setOperationCosts("2", "8", "10000000000000000", account1, {
           from: account1,
         });
       });
@@ -1819,14 +1819,14 @@ contract("NODE_MGR", (accounts) => {
       "//**************************************END updateACipfs FAIL BATCH**********************************************/"
     );
     console.log(
-      "//**************************************BEGIN ACTH_setCosts FAIL BATCH**********************************************/"
+      "//**************************************BEGIN setOperationCosts FAIL BATCH**********************************************/"
     );
     return NODE_MGR.pause({ from: account1 });
   });
 
   //29
   it("Should fail because NODE_MGR is paused", async () => {
-    return NODE_MGR.ACTH_setCosts("1000001", "1", "20000000000000000", account2, {
+    return NODE_MGR.setOperationCosts("1000001", "1", "20000000000000000", account2, {
       from: account2,
     });
   });
@@ -1837,14 +1837,14 @@ contract("NODE_MGR", (accounts) => {
 
   //30
   it("Should fail because caller is not ACTH", async () => {
-    return NODE_MGR.ACTH_setCosts("1000001", "1", "20000000000000000", account2, {
+    return NODE_MGR.setOperationCosts("1000001", "1", "20000000000000000", account2, {
       from: account2,
     });
   });
 
   it("Should pause NODE_MGR", async () => {
     console.log(
-      "//**************************************END ACTH_setCosts FAIL BATCH**********************************************/"
+      "//**************************************END setOperationCosts FAIL BATCH**********************************************/"
     );
     console.log(
       "//**************************************BEGIN updateACImmutable FAIL BATCH**********************************************/"
