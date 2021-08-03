@@ -84,7 +84,7 @@ contract MAL_APP is CORE_MAL {
     /*
      * @dev Modify **Record**.assetStatus with confirmation required
      */
-    function _modStatus(
+    function modStatus(
         bytes32 _idxHash,
         // bytes32 _rgtHash,
         uint8 _newAssetStatus
@@ -160,7 +160,7 @@ contract MAL_APP is CORE_MAL {
     /*
      * @dev set **Record**.assetStatus to lost or stolen, with confirmation required.
      */
-    function _setLostOrStolen(
+    function setLostOrStolen(
         bytes32 _idxHash,
         // bytes32 _rgtHash,
         uint8 _newAssetStatus
@@ -225,7 +225,7 @@ contract MAL_APP is CORE_MAL {
     /*
      * @dev Decrement **Record**.countdown with confirmation required
      */
-    function _decCounter(
+    function decCounter(
         bytes32 _idxHash,
         // bytes32 _rgtHash,
         uint32 _decAmount
@@ -291,7 +291,7 @@ contract MAL_APP is CORE_MAL {
     // /*
     //  * @dev Decrement **Record**.countdown with confirmation required
     //  */
-    // function _decCounterFMR(
+    // function decCounterFMR(
     //     bytes32 _idxHash,
     //     bytes32 _rgtHash,
     //     uint8 _decAmount
@@ -350,7 +350,7 @@ contract MAL_APP is CORE_MAL {
     //     //^^^^^^^interactions^^^^^^^^^
     // }
                                                                                                //NEEDS TO BE MODIFIED IN STORAGE
-    // function _decCounterTXFR(
+    // function decCounterTXFR(
     //     bytes32 _idxHash,
     //     bytes32 _rgtHash,
     //     uint16 _decAmount
@@ -412,7 +412,7 @@ contract MAL_APP is CORE_MAL {
     /*
      * @dev Modify **Record**.mutableStorage1 with confirmation
      */
-    function _modMutableStorage(
+    function modMutableStorage(
         bytes32 _idxHash,
         bytes32 _mutableStorage1,
         bytes32 _mutableStorage2

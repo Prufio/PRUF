@@ -120,7 +120,7 @@ contract DECORATE is CORE {
      * @param _tokenContract - token contract of _tokenID
      * @param _newAssetStatus - new status of decorated token (see docs)
      */
-    function _modStatus(
+    function modStatus(
         uint256 _tokenID,
         address _tokenContract,
         uint8 _newAssetStatus
@@ -253,7 +253,7 @@ contract DECORATE is CORE {
      * @param _tokenContract - token contract of _tokenID
      * @param _decAmount - desired amount to deduct from countDownStart of asset
      */
-    function _decCounter(
+    function decCounter(
         uint256 _tokenID,
         address _tokenContract,
         uint32 _decAmount
@@ -302,7 +302,7 @@ contract DECORATE is CORE {
      * @param _mutableStorage1 - field for external asset data
      * @param _mutableStorage2 - field for external asset data
      */
-    function _modMutableStorage(
+    function modMutableStorage(
         uint256 _tokenID,
         address _tokenContract,
         bytes32 _mutableStorage1,

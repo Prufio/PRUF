@@ -117,7 +117,7 @@ contract NP_NC is CORE {
      * @param _idxHash idx of asset to Modify
      * @param _newAssetStatus Updated status
      */
-    function _modStatus(bytes32 _idxHash, uint8 _newAssetStatus)
+    function modStatus(bytes32 _idxHash, uint8 _newAssetStatus)
         public
         nonReentrant
         whenNotPaused
@@ -157,7 +157,7 @@ contract NP_NC is CORE {
      * @param _idxHash idx of asset to Modify
      * @param _newAssetStatus Updated status
      */
-    function _setLostOrStolen(bytes32 _idxHash, uint8 _newAssetStatus)
+    function setLostOrStolen(bytes32 _idxHash, uint8 _newAssetStatus)
         external
         nonReentrant
         whenNotPaused
@@ -187,7 +187,7 @@ contract NP_NC is CORE {
      * @param _idxHash idx of asset to Modify
      * @param _decAmount Amount to decrement
      */
-    function _decCounter(bytes32 _idxHash, uint32 _decAmount)
+    function decCounter(bytes32 _idxHash, uint32 _decAmount)
         external
         nonReentrant
         whenNotPaused
@@ -219,7 +219,7 @@ contract NP_NC is CORE {
      * @param _mutableStorage1 content addressable storage address part 1
      * @param _mutableStorage2 content addressable storage address part 2
      */
-    function _modMutableStorage(
+    function modMutableStorage(
         bytes32 _idxHash,
         bytes32 _mutableStorage1,
         bytes32 _mutableStorage2

@@ -42,7 +42,7 @@ contract NP is CORE {
      * @param _rgtHash rgthash to match in front end
      * @param _newAssetStatus updated status
      */
-    function _modStatus(
+    function modStatus(
         bytes32 _idxHash,
         bytes32 _rgtHash,
         uint8 _newAssetStatus
@@ -89,7 +89,7 @@ contract NP is CORE {
      * @param _rgtHash rgthash to match in front end
      * @param _newAssetStatus updated status
      */
-    function _setLostOrStolen(
+    function setLostOrStolen(
         bytes32 _idxHash,
         bytes32 _rgtHash,
         uint8 _newAssetStatus
@@ -121,7 +121,7 @@ contract NP is CORE {
      * @param _rgtHash rgthash to match in front end
      * @param _decAmount amount to decrement
      */
-    function _decCounter(
+    function decCounter(
         bytes32 _idxHash,
         bytes32 _rgtHash,
         uint32 _decAmount
@@ -159,7 +159,7 @@ contract NP is CORE {
      * @param _mutableStorage1 content adressable storage adress part 1
      * @param _mutableStorage2 content adressable storage adress part 2
      */
-    function _modMutableStorage(
+    function modMutableStorage(
         bytes32 _idxHash,
         bytes32 _rgtHash,
         bytes32 _mutableStorage1,
