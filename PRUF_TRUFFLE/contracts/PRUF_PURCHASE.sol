@@ -15,7 +15,7 @@ _________\/// _____________\/// _______\/// __\///////// __\/// _____________
  *
  *---------------------------------------------------------------*/
 
- //CTS:EXAMINE quick explainer for the contract
+ //PURCHASE allows users to set a price and currency to sell items, and buyers to purchase the items on chain.Î
 
 // SPDX-License-Identifier: UNLICENSED
 pragma solidity ^0.8.6;

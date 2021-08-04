@@ -11,7 +11,7 @@ _________\/// _____________\/// _______\/// __\///////// __\/// _____________
 *---------------------------------------------------------------------------*/
 
 /**-----------------------------------------------------------------
- *  TO DO --- 
+ *  TO DO ---
  *
  *-----------------------------------------------------------------
  * Wraps and unwraps ERC721 compliant tokens in a PRUF Asset token
@@ -50,7 +50,7 @@ contract WRAP is CORE {
     //--------------------------------------------External Functions--------------------------
 
     /**
-     * @dev Wraps a token, takes original from caller 
+     * @dev Wraps a token, takes original from caller
      * @param _foreignTokenID tokenID of token to wrap
      * @param _foreignTokenContract contract address for token to wrap
      * @param _rgtHash - hash of rightsholder information created by frontend inputs
@@ -69,18 +69,19 @@ contract WRAP is CORE {
         address _foreignTokenContract,
         bytes32 _rgtHash,
         uint32 _node,
-        uint32 _countDownStart
-    ) ///DPS:TEST
+        uint32 _countDownStart ///DPS:TEST
+    )
         external
         nonReentrant
         whenNotPaused
         isTokenHolder(_foreignTokenID, _foreignTokenContract) // without this, the dark forest gets it!
     {
-        bytes32 idxHash =
-            keccak256(abi.encodePacked(_foreignTokenID, _foreignTokenContract));
+        bytes32 idxHash = keccak256(
+            abi.encodePacked(_foreignTokenID, _foreignTokenContract)
+        );
 
         Record memory rec = getRecord(idxHash);
-        Node memory node_info =getNodeinfo(_node);
+        Node memory node_info = getNodeinfo(_node);
 
         uint256 newTokenId = uint256(idxHash);
 
@@ -97,17 +98,18 @@ contract WRAP is CORE {
             (node_info.managementType < 6),
             "ANC:IA: Contract does not support management types > 5 or node is locked"
         );
-        if (    //DPS:TEST NEW
+        if (
+            //DPS:TEST NEW
             (node_info.managementType == 1) ||
             (node_info.managementType == 2) ||
             (node_info.managementType == 5)
         ) {
-            require(    //DPS:TEST NEW
+            require( //DPS:TEST NEW
                 (NODE_TKN.ownerOf(_node) == _msgSender()),
                 "ANC:IA: Cannot create asset in node mgmt type 1||2||5 - caller does not hold node token"
             );
         } else if (node_info.managementType == 3) {
-            require(    //DPS:TEST NEW
+            require( //DPS:TEST NEW
                 NODE_MGR.getUserType(
                     keccak256(abi.encodePacked(_msgSender())),
                     _node
@@ -115,7 +117,7 @@ contract WRAP is CORE {
                 "ANC:IA: Cannot create asset - caller address !authorized"
             );
         } else if (node_info.managementType == 4) {
-            require(    //DPS:TEST NEW
+            require( //DPS:TEST NEW
                 ID_TKN.trustedLevelByAddress(_msgSender()) > 10,
                 "ANC:IA: Caller !trusted ID holder"
             );
@@ -131,14 +133,14 @@ contract WRAP is CORE {
             _msgSender(),
             address(this),
             _foreignTokenID
-        ); // move token to this contract 
+        ); // move token to this contract
 
         if (rec.node == 0) {
             //record does not exist
             createRecord(idxHash, _rgtHash, _node, _countDownStart);
         } else {
             //just mint the token, record already exists
-            A_TKN.mintAssetToken(_msgSender(), newTokenId, "pruf.io");
+            A_TKN.mintAssetToken(_msgSender(), newTokenId, "pruf.io/asset");
         }
         deductServiceCosts(_node, 1);
         //^^^^^^^interactions^^^^^^^^^
@@ -158,7 +160,7 @@ contract WRAP is CORE {
     {
         bytes32 idxHash = bytes32(_tokenID);
         Record memory rec = getRecord(idxHash);
-        Node memory node_info =getNodeinfo(rec.node);
+        Node memory node_info = getNodeinfo(rec.node);
         address foreignTokenContract = wrapped[_tokenID].tokenContract;
         uint256 foreignTokenID = wrapped[_tokenID].tokenID;
 
@@ -217,7 +219,7 @@ contract WRAP is CORE {
         uint32 _countDownStart
     ) internal override {
         uint256 tokenId = uint256(_idxHash);
-        Node memory node_info =getNodeinfo(_node);
+        Node memory node_info = getNodeinfo(_node);
 
         require(
             A_TKN.tokenExists(tokenId) == 0,
@@ -256,7 +258,7 @@ contract WRAP is CORE {
         }
         //^^^^^^^checks^^^^^^^^^
 
-        A_TKN.mintAssetToken(_msgSender(), tokenId, "pruf.io"); //CTS:EXAMINE better URI
+        A_TKN.mintAssetToken(_msgSender(), tokenId, "pruf.io/wrapped");
         STOR.newRecord(_idxHash, _rgtHash, _node, _countDownStart);
         //^^^^^^^interactions^^^^^^^^^
     }

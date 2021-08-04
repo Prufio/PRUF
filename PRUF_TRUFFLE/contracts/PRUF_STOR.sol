@@ -103,9 +103,7 @@ contract STOR is AccessControl, ReentrancyGuard, Pausable {
      * @param _node node to check address auth
      */
     modifier isAuthorized(uint32 _node) {
-        uint8 auth = contractInfo[contractAddressToName[msg.sender]][
-            _node
-        ];
+        uint8 auth = contractInfo[contractAddressToName[msg.sender]][_node];
         require(
             ((auth > 0) && (auth < 5)) || (auth == 10),
             "S:MOD-IAUT: Contract not authorized"
@@ -690,7 +688,8 @@ contract STOR is AccessControl, ReentrancyGuard, Pausable {
         require(isTransferred(rec.assetStatus) == 0, "S:MI1: Txfrd asset"); //STAT UNREACHABLE
 
         require(
-            (rec.mutableStorage1 != _mutableStorage1) || (rec.mutableStorage2 != _mutableStorage2),
+            (rec.mutableStorage1 != _mutableStorage1) ||
+                (rec.mutableStorage2 != _mutableStorage2),
             "S:MI1: New value = old"
         );
         //^^^^^^^checks^^^^^^^^^

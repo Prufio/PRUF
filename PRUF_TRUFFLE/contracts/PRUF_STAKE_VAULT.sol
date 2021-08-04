@@ -113,10 +113,11 @@ contract STAKE_VAULT is ReentrancyGuard, AccessControl, Pausable {
      * @param _utilAddress address of UTIL_TKN contract
      * @param _stakeAddress address of STAKE_TKN contract
      */
-    function setTokenContracts(
-        address _utilAddress,
-        address _stakeAddress
-    ) external virtual isContractAdmin {
+    function setTokenContracts(address _utilAddress, address _stakeAddress)
+        external
+        virtual
+        isContractAdmin
+    {
         //^^^^^^^checks^^^^^^^^^
 
         UTIL_TKN_Address = _utilAddress;
@@ -145,7 +146,7 @@ contract STAKE_VAULT is ReentrancyGuard, AccessControl, Pausable {
         //^^^^^^^effects^^^^^^^^^
 
         UTIL_TKN.trustedAgentTransfer(staker, address(this), _amount);
-        stake[_tokenId] = _amount; //CTS:EXAMINE can this be moved up to effects?
+        stake[_tokenId] = _amount; // here so fails first
         //^^^^^^^interactions^^^^^^^^^
     }
 
@@ -161,11 +162,11 @@ contract STAKE_VAULT is ReentrancyGuard, AccessControl, Pausable {
     {
         //^^^^^^^checks^^^^^^^^^
 
-        address staker = STAKE_TKN.ownerOf(_tokenId); //CTS:EXAMINE can this be moved to interactions?
         uint256 amount = stake[_tokenId];
         delete stake[_tokenId];
         //^^^^^^^effects^^^^^^^^^
 
+        address staker = STAKE_TKN.ownerOf(_tokenId);
         UTIL_TKN.transfer(staker, amount);
         //^^^^^^^interactions^^^^^^^^^
     }

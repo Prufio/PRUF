@@ -57,7 +57,7 @@ contract STAKE_TKN is
 
     Counters.Counter private _tokenIdTracker;
 
-    constructor() ERC721("PRUF Staking Token", "PRST") { //CTS:EXAMINE work on the name a little bit?
+    constructor() ERC721("PRUF EO Staking Token", "PRST") {
         _setupRole(DEFAULT_ADMIN_ROLE, _msgSender());
         _setupRole(MINTER_ROLE, _msgSender());
         _setupRole(PAUSER_ROLE, _msgSender());
@@ -83,12 +83,13 @@ contract STAKE_TKN is
     /**
      * @dev Mint a stake token
      * @param _recipientAddress - Address to mint token into
-     * @param _tokenId - Token ID to mint //CTS:EXAMINE do we want whenNotPaused on this?
+     * @param _tokenId - Token ID to mint 
      */
     function mintStakeToken(address _recipientAddress, uint256 _tokenId)
         external
         isMinter
         nonReentrant
+        whenNotPaused
         returns (uint256)
     {
         //^^^^^^^checks^^^^^^^^^
@@ -100,12 +101,13 @@ contract STAKE_TKN is
 
     /**
      * @dev Burn a stake token
-     * @param _tokenId - Token ID to burn //CTS:EXAMINE do we want whenNotPaused on this?
+     * @param _tokenId - Token ID to burn Î
      */
     function burnStakeToken(uint256 _tokenId)
         external
         isMinter
         nonReentrant
+        whenNotPaused
         returns (uint256)
     {
         //^^^^^^^checks^^^^^^^^^

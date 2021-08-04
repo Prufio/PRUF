@@ -106,10 +106,7 @@ contract NODE_MGR is BASIC {
         external
         isContractAdmin
     {
-        require(
-            (node_data[_node].nodeRoot != 0),
-            "ACM:AIS: node !exist"
-        );
+        require((node_data[_node].nodeRoot != 0), "ACM:AIS: node !exist");
         require(
             _newDiscount >= node_data[_node].discount,
             "ACM:AIS: New share < old share"
@@ -228,7 +225,10 @@ contract NODE_MGR is BASIC {
             (_ac.custodyType == 3) || (_nodeRoot == _node),
             "ACM:AMAC: Root !exist"
         );
-        require(NODE_TKN.tokenExists(tokenId) == 170, "ACM:AMAC: ACtoken !exist");
+        require(
+            NODE_TKN.tokenExists(tokenId) == 170,
+            "ACM:AMAC: ACtoken !exist"
+        );
 
         //^^^^^^^checks^^^^^^^^^
 
@@ -432,7 +432,7 @@ contract NODE_MGR is BASIC {
         //^^^^^^^effects^^^^^^^^^
     }
 
-    /** CTS:EXAMINE Need 2 content adressable storage fields
+    /**Î
      * @dev Modifies an node Node content adressable storage data pointer
      * @param _node - node being modified
      * @param _CAS1 - any external data attatched to node 1/2
@@ -661,10 +661,7 @@ contract NODE_MGR is BASIC {
         returns (uint8)
     {
         //^^^^^^^checks^^^^^^^^^
-        if (
-            node_data[_node1].nodeRoot ==
-            node_data[_node2].nodeRoot
-        ) {
+        if (node_data[_node1].nodeRoot == node_data[_node2].nodeRoot) {
             return uint8(170);
         } else {
             return uint8(0);
@@ -678,11 +675,7 @@ contract NODE_MGR is BASIC {
      *
      * @return name of token @ _tokenID
      */
-    function getNodeName(uint32 node)
-        external
-        view
-        returns (string memory)
-    {
+    function getNodeName(uint32 node) external view returns (string memory) {
         //^^^^^^^checks^^^^^^^^^
 
         return (node_data[node].name);
@@ -695,11 +688,7 @@ contract NODE_MGR is BASIC {
      *
      * @return node number @ _name
      */
-    function resolveNode(string calldata _name)
-        external
-        view
-        returns (uint32)
-    {
+    function resolveNode(string calldata _name) external view returns (uint32) {
         //^^^^^^^checks^^^^^^^^^
         return (node_index[_name]);
         //^^^^^^^effects^^^^^^^^^
@@ -789,7 +778,10 @@ contract NODE_MGR is BASIC {
         uint256 tokenId = uint256(_newNode);
 
         require(tokenId != 0, "ACM:CAC: node = 0"); //sanity check inputs
-        require(_newNodeData.discount <= 10000, "ACM:CAC: Discount > 10000 (100%)");
+        require(
+            _newNodeData.discount <= 10000,
+            "ACM:CAC: Discount > 10000 (100%)"
+        );
         require( //_ac.managementType is a valid type or explicitly unset (255)
             (validManagementTypes[_newNodeData.managementType] > 0) ||
                 (_newNodeData.managementType == 255),
@@ -816,7 +808,10 @@ contract NODE_MGR is BASIC {
                 "ACM:CAC: Restricted from creating node in this root - caller !hold root token"
             );
         }
-        require(node_index[_newNodeData.name] == 0, "ACM:CAC: node name exists");
+        require(
+            node_index[_newNodeData.name] == 0,
+            "ACM:CAC: node name exists"
+        );
         require(
             (node_data[_newNode].nodeRoot == 0),
             "ACM:CAC: node already exists"
@@ -834,11 +829,7 @@ contract NODE_MGR is BASIC {
         node_data[_newNode].CAS2 = _newNodeData.CAS2;
         //^^^^^^^effects^^^^^^^^^
 
-        NODE_TKN.mintACToken(
-            _recipientAddress,
-            tokenId,
-            "pruf.io/nodeToken"
-        );
+        NODE_TKN.mintACToken(_recipientAddress, tokenId, "pruf.io/nodeToken");
         //^^^^^^^interactions^^^^^^^^^
     }
 }

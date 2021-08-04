@@ -1277,10 +1277,7 @@ interface NODE_MGR_Interface {
     /*
      * @dev Retrieve node_index @ Node_name
      */
-    function resolveNode(string calldata _name)
-        external
-        view
-        returns (uint32);
+    function resolveNode(string calldata _name) external view returns (uint32);
 
     /*
      * @dev return current node token index pointer
@@ -1432,9 +1429,7 @@ interface STOR_Interface {
     /*
      * @dev return a record from the database w/o rgt
      */
-    function retrieveShortRecord(
-        bytes32 _idxHash //CTS:EXAMINE, doesn't return same number of params as STOR
-    )
+    function retrieveShortRecord(bytes32 _idxHash)
         external
         view
         returns (
@@ -1443,6 +1438,8 @@ interface STOR_Interface {
             uint32,
             uint32,
             uint32,
+            bytes32,
+            bytes32,
             bytes32,
             bytes32,
             uint16

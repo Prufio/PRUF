@@ -15,7 +15,7 @@ _________\/// _____________\/// _______\/// __\///////// __\/// _____________
  *
  *---------------------------------------------------------------*/
 
- //CTS:EXAMINE quick explainer for the contract
+//RCLR allows discarded items to be re-onboarded to a new holder
 
 // SPDX-License-Identifier: UNLICENSED
 pragma solidity ^0.8.6;
@@ -66,7 +66,7 @@ contract RCLR is ECR_CORE, CORE {
 
     /*
      * @dev reutilize a recycled asset //DPS:CHECK NEW REQUIRES!!!
-     * //CTS:EXAMINE maybe describe the reqs in this one, back us up on the security
+     * //ÎEXAMINE maybe describe the reqs in this one, back us up on the security
      * //CTS:EXAMINE param
      * //CTS:EXAMINE param
      * //CTS:EXAMINE param
@@ -77,10 +77,11 @@ contract RCLR is ECR_CORE, CORE {
         uint32 _node
     ) external nonReentrant whenNotPaused {
         uint256 tokenId = uint256(_idxHash);
-        escrowDataExtLight memory escrowDataLight =
-            getEscrowDataLight(_idxHash);
+        escrowDataExtLight memory escrowDataLight = getEscrowDataLight(
+            _idxHash
+        );
         Record memory rec = getRecord(_idxHash);
-        Node memory node_info =getNodeinfo(_node);
+        Node memory node_info = getNodeinfo(_node);
         require(_rgtHash != 0, "R:R: New rights holder = zero");
         require(rec.assetStatus == 60, "R:R: Asset not discarded");
         require(
@@ -120,7 +121,7 @@ contract RCLR is ECR_CORE, CORE {
         rec.numberOfTransfers = 170;
         //^^^^^^^effects^^^^^^^^^^^^
 
-        A_TKN.mintAssetToken(_msgSender(), tokenId, "pruf.io"); //FIX TO MAKE REAL ASSET URL DPS / CTS
+        A_TKN.mintAssetToken(_msgSender(), tokenId, "pruf.io/asset"); //FIX TO MAKE REAL ASSET URL DPS / CTS
         ECR_MGR.endEscrow(_idxHash);
         STOR.changeAC(_idxHash, _node);
         deductRecycleCosts(_node, escrowDataLight.addr_1);
