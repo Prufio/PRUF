@@ -32,7 +32,7 @@ contract APP2_NC is CORE {
         uint256 tokenId = uint256(_idxHash);
         require(
             (A_TKN.ownerOf(tokenId) == _msgSender()), //_msgSender() is token holder
-            "NPNC:MOD-IA: Caller does not hold token"
+            "APP2_NC:MOD-IA: Caller does not hold token"
         );
         _;
     }
@@ -54,11 +54,11 @@ contract APP2_NC is CORE {
         Record memory rec = getRecord(_idxHash);
         require(
             isLostOrStolen(rec.assetStatus) == 0,
-            "NPNC:CR: Cannot modify asset in lost or stolen status"
+            "APP2_NC:CR: Cannot modify asset in lost or stolen status"
         );
         require(
             needsImport(rec.assetStatus) == 0,
-            "NPNC:CR: Cannot modify asset in unregistered, exported, or discarded status"
+            "APP2_NC:CR: Cannot modify asset in unregistered, exported, or discarded status"
         );
         //^^^^^^^checks^^^^^^^^^
 
@@ -86,20 +86,20 @@ contract APP2_NC is CORE {
 
         require(
             (rec.assetStatus == 51) || (rec.assetStatus == 70), //DPS:check
-            "NPNC:EXT: Must be in transferrable status (51)"
+            "APP2_NC:EXT: Must be in transferrable status (51)"
         );
         require(
             NODE_MGR.isSameRootNode(_exportTo, rec.node) == 170,
-            "NPNC:EXT: Cannot change node to new root"
+            "APP2_NC:EXT: Cannot change node to new root"
         );
         require(
             (node_info.managementType < 6),
-            "NPNC:EXT: Contract does not support management types > 5 or node is locked"
+            "APP2_NC:EXT: Contract does not support management types > 5 or node is locked"
         );
         if ((node_info.managementType == 1) || (node_info.managementType == 5)) {
             require( //holds node token if node is restricted --------DPS:TEST ---- NEW
                 (NODE_TKN.ownerOf(rec.node) == _msgSender()),
-                "NPNC:EXT: Restricted from exporting assets from this node - does not hold ACtoken"
+                "APP2_NC:EXT: Restricted from exporting assets from this node - does not hold ACtoken"
             );
         }
         //^^^^^^^checks^^^^^^^^^
@@ -127,21 +127,21 @@ contract APP2_NC is CORE {
 
         require(
             (_newAssetStatus > 49) && (rec.assetStatus > 49),
-            "NPNC:SLS: Only custodial usertype can set or change status < 50"
+            "APP2_NC:SLS: Only custodial usertype can set or change status < 50"
         );
         require(
             (_newAssetStatus != 57) &&
                 (_newAssetStatus != 58) &&
                 (_newAssetStatus < 100),
-            "NPNC:MS: Stat Rsrvd"
+            "APP2_NC:MS: Stat Rsrvd"
         );
         require(
             needsImport(_newAssetStatus) == 0,
-            "NPNC:MS: Cannot place asset in unregistered, exported, or discarded status using modifyStatus"
+            "APP2_NC:MS: Cannot place asset in unregistered, exported, or discarded status using modifyStatus"
         );
         require(
             needsImport(rec.assetStatus) == 0,
-            "NPNC:MS: Asset is in an unregistered, exported, or discarded status."
+            "APP2_NC:MS: Asset is in an unregistered, exported, or discarded status."
         );
         //^^^^^^^checks^^^^^^^^^
 
@@ -167,11 +167,11 @@ contract APP2_NC is CORE {
 
         require(
             (_newAssetStatus > 49) && (rec.assetStatus > 49),
-            "NPNC:SLS: Only custodial usertype can set or change status < 50"
+            "APP2_NC:SLS: Only custodial usertype can set or change status < 50"
         );
         require(
             needsImport(rec.assetStatus) == 0,
-            "NPNC:SLS: Transferred,exported,or discarded asset cannot be set to lost or stolen"
+            "APP2_NC:SLS: Transferred,exported,or discarded asset cannot be set to lost or stolen"
         );
         //^^^^^^^checks^^^^^^^^^
 
@@ -197,7 +197,7 @@ contract APP2_NC is CORE {
 
         require(
             needsImport(rec.assetStatus) == 0,
-            "NPNC:DC: Record in unregistered, exported, or discarded status"
+            "APP2_NC:DC: Record in unregistered, exported, or discarded status"
         );
         //^^^^^^^checks^^^^^^^^^
 
@@ -228,7 +228,7 @@ contract APP2_NC is CORE {
 
         require(
             needsImport(rec.assetStatus) == 0,
-            "NPNC:MI1: Record in unregistered, exported, or discarded status"
+            "APP2_NC:MI1: Record in unregistered, exported, or discarded status"
         );
         //^^^^^^^checks^^^^^^^^^
 

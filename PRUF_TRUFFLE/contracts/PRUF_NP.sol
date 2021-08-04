@@ -20,7 +20,7 @@ pragma solidity ^0.8.6;
 
 import "./PRUF_CORE.sol";
 
-contract NP is CORE {
+contract APP2 is CORE {
     /**
      * @dev Verify user credentials
      * @param _idxHash asset to check that caller holds token
@@ -29,7 +29,7 @@ contract NP is CORE {
         uint256 tokenId = uint256(_idxHash);
         require(
             (A_TKN.ownerOf(tokenId) == APP_Address),
-            "NP:MOD-IA: Custodial contract does not hold token"
+            "APP2:MOD-IA: Custodial contract does not hold token"
         );
         _;
     }
@@ -50,29 +50,29 @@ contract NP is CORE {
         Record memory rec = getRecord(_idxHash);
         uint8 userType = getCallingUserType(rec.node);
 
-        require((userType > 0) && (userType < 10), "NP:MS: User !auth in node");
+        require((userType > 0) && (userType < 10), "APP2:MS: User !auth in node");
         require(
             (_newAssetStatus != 7) &&
                 (_newAssetStatus != 57) &&
                 (_newAssetStatus != 58) &&
                 (_newAssetStatus < 100),
-            "NP:MS: Stat Rsrvd"
+            "APP2:MS: Stat Rsrvd"
         );
         require(
             needsImport(_newAssetStatus) == 0,
-            "NP:MS: Cannot place asset in unregistered, exported, or discarded status using modifyStatus"
+            "APP2:MS: Cannot place asset in unregistered, exported, or discarded status using modifyStatus"
         );
         require(
             needsImport(rec.assetStatus) == 0,
-            "NP:MS: Record in unregistered, exported, or discarded status"
+            "APP2:MS: Record in unregistered, exported, or discarded status"
         );
         require(
             (rec.assetStatus > 49) || (userType < 5),
-            "NP:MS: Only usertype < 5 can change status < 49"
+            "APP2:MS: Only usertype < 5 can change status < 49"
         );
         require(
             rec.rightsHolder == _rgtHash,
-            "NP:MS: Rightsholder does not match supplied data"
+            "APP2:MS: Rightsholder does not match supplied data"
         );
         //^^^^^^^checks^^^^^^^^^
 
@@ -96,15 +96,15 @@ contract NP is CORE {
     ) external nonReentrant whenNotPaused isAuthorized(_idxHash) {
         Record memory rec = getRecord(_idxHash);
         uint8 userType = getCallingUserType(rec.node);
-        require((userType > 0) && (userType < 10), "NP:SLS: User !auth in node");
+        require((userType > 0) && (userType < 10), "APP2:SLS: User !auth in node");
         require(
             (rec.assetStatus > 49) ||
                 ((_newAssetStatus < 50) && (userType < 5)),
-            "NP:SLS: Only usertype <5 can change a <49 status asset to a >49 status"
+            "APP2:SLS: Only usertype <5 can change a <49 status asset to a >49 status"
         );
         require(
             rec.rightsHolder == _rgtHash,
-            "NP:SLS: Rightsholder does not match supplied data"
+            "APP2:SLS: Rightsholder does not match supplied data"
         );
         //^^^^^^^checks^^^^^^^^^
 
@@ -129,14 +129,14 @@ contract NP is CORE {
         Record memory rec = getRecord(_idxHash);
         uint8 userType = getCallingUserType(rec.node);
 
-        require((userType > 0) && (userType < 10), "NP:DC: User !auth in node");
+        require((userType > 0) && (userType < 10), "APP2:DC: User !auth in node");
         require(
             needsImport(rec.assetStatus) == 0,
-            "NP:DC Record in unregistered, exported, or discarded status"
+            "APP2:DC Record in unregistered, exported, or discarded status"
         );
         require(
             rec.rightsHolder == _rgtHash,
-            "NP:DC: Rightsholder does not match supplied data"
+            "APP2:DC: Rightsholder does not match supplied data"
         );
         //^^^^^^^checks^^^^^^^^^
 
@@ -167,14 +167,14 @@ contract NP is CORE {
     ) external nonReentrant whenNotPaused isAuthorized(_idxHash) {
         Record memory rec = getRecord(_idxHash);
         uint8 userType = getCallingUserType(rec.node);
-        require((userType > 0) && (userType < 10), "NP:MI1: User !auth in node");
+        require((userType > 0) && (userType < 10), "APP2:MI1: User !auth in node");
         require(
             needsImport(rec.assetStatus) == 0,
-            "NP:MI1: Record in unregistered, exported, or discarded status"
+            "APP2:MI1: Record in unregistered, exported, or discarded status"
         );
         require(
             rec.rightsHolder == _rgtHash,
-            "NP:MI1: Rightsholder does not match supplied data"
+            "APP2:MI1: Rightsholder does not match supplied data"
         );
         //^^^^^^^checks^^^^^^^^^
 
@@ -206,11 +206,11 @@ contract NP is CORE {
 
         require(
             (userType > 0) && (userType < 10),
-            "NP:EA: user not auth in node"
+            "APP2:EA: user not auth in node"
         );
         require( // require transferrable (51) status
             (rec.assetStatus == 51) || (rec.assetStatus == 70),
-            "NP:EA: Asset status must be 51 to export"
+            "APP2:EA: Asset status must be 51 to export"
         );
         require(
             NODE_MGR.isSameRootNode(_exportTo, rec.node) == 170,
@@ -218,7 +218,7 @@ contract NP is CORE {
         );
         require(
             rec.rightsHolder == _rgtHash,
-            "NP:MI1: Rightsholder does not match supplied data"
+            "APP2:MI1: Rightsholder does not match supplied data"
         );
         //^^^^^^^checks^^^^^^^^^
 
