@@ -20,7 +20,7 @@ pragma solidity ^0.8.6;
 
 import "./PRUF_CORE.sol";
 
-contract NP_NC is CORE {
+contract APP2_NC is CORE {
     /**
      * @dev Verify user credentials
      * @param _idxHash idx of asset to check

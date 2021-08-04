@@ -12,8 +12,7 @@ __/\\\\\\\\\\\\\ _____/\\\\\\\\\ _______/\\__/\\ ___/\\\\\\\\\\\\\\\
 
 /**-----------------------------------------------------------------
  *  TO DO
- * //CTS:EXAMINE NTH->NTH global
- * //CTS:EXAMINE NP name change
+ * //CTS:EXAMINE APP2_NC name change
  * //CTS:EXAMINE Run through interfaces, make sure is up to date.
  *---------------------------------------------------------------*/
 
@@ -240,7 +239,7 @@ contract STOR is AccessControl, ReentrancyGuard, Pausable {
 
     /**
      * @dev set the default list of 11 contracts (zero index) to be applied to Nodees
-     * APP_NC, NP_NC, NODE_MGR, NODE_TKN, A_TKN, ECR_MGR, RCLR, PIP, PURCHASE, DECORATE, WRAP
+     * APP_NC, APP2_NC, NODE_MGR, NODE_TKN, A_TKN, ECR_MGR, RCLR, PIP, PURCHASE, DECORATE, WRAP
      * @param   _contractNumber - 0-10
      * @param   _name - name
      * @param   _contractAuthLevel - authLevel
