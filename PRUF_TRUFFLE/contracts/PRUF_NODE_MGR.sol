@@ -74,7 +74,7 @@ contract NODE_MGR is BASIC {
     modifier isNodeHolder(uint32 _node) {
         require(
             (NODE_TKN.ownerOf(_node) == _msgSender()),
-            "ACM:MOD-IACTHoC: _msgSender() not authorized in Node"
+            "ACM:MOD-INTHoC: _msgSender() not authorized in Node"
         );
         _;
     }
@@ -718,8 +718,8 @@ contract NODE_MGR is BASIC {
      * @return invoice{
          rootAddress: @ _node root payment address @ _service
          rootPrice: @ _node root service cost @ _service
-         ACTHaddress: @ _node payment address tied @ _service
-         ACTHprice: @ _node service cost @ _service
+         NTHaddress: @ _node payment address tied @ _service
+         NTHprice: @ _node service cost @ _service
          node: Node index
      }
      */
@@ -741,8 +741,8 @@ contract NODE_MGR is BASIC {
 
         invoice.rootAddress = rootCosts.paymentAddress;
         invoice.rootPrice = rootCosts.serviceCost;
-        invoice.ACTHaddress = costs.paymentAddress;
-        invoice.ACTHprice = costs.serviceCost;
+        invoice.NTHaddress = costs.paymentAddress;
+        invoice.NTHprice = costs.serviceCost;
         invoice.node = _node;
 
         return invoice;

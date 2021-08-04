@@ -197,11 +197,11 @@ contract CORE is BASIC {
         //^^^^^^^checks^^^^^^^^^
         Invoice memory pricing = NODE_MGR.getServiceCosts(_node, _service);
 
-        uint256 percent = pricing.ACTHprice / uint256(100); //calculate 1% of listed ACTH price
-        uint256 _ACTHprice = nodeNetPercent * percent; //calculate the share proprotrion% * 1%
-        uint256 prufShare = pricing.ACTHprice - _ACTHprice;
+        uint256 percent = pricing.NTHprice / uint256(100); //calculate 1% of listed NTH price
+        uint256 _NTHprice = nodeNetPercent * percent; //calculate the share proprotrion% * 1%
+        uint256 prufShare = pricing.NTHprice - _NTHprice;
 
-        pricing.ACTHprice = _ACTHprice;
+        pricing.NTHprice = _NTHprice;
         pricing.rootPrice = pricing.rootPrice + prufShare;
         //^^^^^^^effects^^^^^^^^^
 
@@ -227,9 +227,9 @@ contract CORE is BASIC {
         pricing = NODE_MGR.getServiceCosts(_node, 1);
         pricing.rootAddress = _prevOwner;
 
-        half = pricing.ACTHprice / 2;
+        half = pricing.NTHprice / 2;
         pricing.rootPrice = pricing.rootPrice + half;
-        pricing.ACTHprice = pricing.ACTHprice - half;
+        pricing.NTHprice = pricing.NTHprice - half;
         //^^^^^^^effects^^^^^^^^^
 
         deductPayment(pricing);
@@ -249,9 +249,9 @@ contract CORE is BASIC {
             _pricing.rootAddress != address(0),
             "C:DP: root payment address = zero address"
         );
-        if (_pricing.ACTHaddress == address(0)) {
-            //sets ACTHaddress to rootAddress if ACTHaddress is not set
-            _pricing.ACTHaddress = _pricing.rootAddress;
+        if (_pricing.NTHaddress == address(0)) {
+            //sets NTHaddress to rootAddress if NTHaddress is not set
+            _pricing.NTHaddress = _pricing.rootAddress;
         }
         //^^^^^^^checks^^^^^^^^^
 
@@ -261,8 +261,8 @@ contract CORE is BASIC {
             _msgSender(),
             _pricing.rootAddress,
             _pricing.rootPrice,
-            _pricing.ACTHaddress,
-            _pricing.ACTHprice
+            _pricing.NTHaddress,
+            _pricing.NTHprice
         );
         //^^^^^^^interactions^^^^^^^^^
     }

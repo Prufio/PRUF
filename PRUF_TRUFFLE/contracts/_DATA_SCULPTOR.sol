@@ -50,7 +50,7 @@ contract SCULPTOR is AccessControl, BASIC{
     // modifier isNodeHolder(uint32 _node) {
     //     require(
     //         (NODE_TKN.ownerOf(_node) == _msgSender()),
-    //         "ACM:MOD-IACTHoC:_msgSender() not authorized in node"
+    //         "ACM:MOD-INTHoC:_msgSender() not authorized in node"
     //     );
     //     _;
     // }
@@ -63,7 +63,7 @@ contract SCULPTOR is AccessControl, BASIC{
         Record memory rec = getRecord( _idxHash);
         require(
             (NODE_TKN.ownerOf(rec.node) == _msgSender()),
-            "ACM:MOD-IACTHoC:_msgSender() not authorized in node"
+            "ACM:MOD-INTHoC:_msgSender() not authorized in node"
         );
 
         /*  create a new contract for the arifiact

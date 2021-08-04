@@ -137,7 +137,7 @@ contract PIP is CORE {
         Invoice memory pricing = NODE_MGR.getServiceCosts(_node, 1);
 
         pricing.rootPrice = pricing.rootPrice / importDiscount;
-        pricing.ACTHprice = pricing.ACTHprice / importDiscount;
+        pricing.NTHprice = pricing.NTHprice / importDiscount;
         //^^^^^^^effects^^^^^^^^^
 
         deductPayment(pricing);

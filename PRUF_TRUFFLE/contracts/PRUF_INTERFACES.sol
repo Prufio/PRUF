@@ -115,9 +115,9 @@ struct Invoice {
     //invoice struct to facilitate payment messaging in-contract
     uint32 node;
     address rootAddress;
-    address ACTHaddress;
+    address NTHaddress;
     uint256 rootPrice;
-    uint256 ACTHprice;
+    uint256 NTHprice;
 }
 
 struct ID {
@@ -174,7 +174,7 @@ interface UTIL_TKN_Interface {
      * @dev Deducts token payment from transaction
      * Requirements:
      * - the caller must have PAYABLE_ROLE.
-     * - the caller must have a pruf token balance of at least `_rootPrice + _ACTHprice`.
+     * - the caller must have a pruf token balance of at least `_rootPrice + _NTHprice`.
      */
     // ---- NON-LEGACY
     // function payForService(address _senderAddress, Invoice calldata invoice)
@@ -185,8 +185,8 @@ interface UTIL_TKN_Interface {
         address _senderAddress,
         address _rootAddress,
         uint256 _rootPrice,
-        address _ACTHaddress,
-        uint256 _ACTHprice
+        address _NTHaddress,
+        uint256 _NTHprice
     ) external;
 
     /*
@@ -1293,7 +1293,7 @@ interface NODE_MGR_Interface {
         returns (Invoice memory);
 
     /*
-     * @dev Retrieve Node_discount @ _node, in percent ACTH share, * 100 (9000 = 90%)
+     * @dev Retrieve Node_discount @ _node, in percent NTH share, * 100 (9000 = 90%)
      */
     function getNodeDiscount(uint32 _node) external view returns (uint32);
 }

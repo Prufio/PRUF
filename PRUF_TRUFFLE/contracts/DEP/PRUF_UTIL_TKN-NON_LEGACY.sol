@@ -236,7 +236,7 @@ contract UTIL_TKN_DEP is
             "PRUF:PFS: Cold Wallet - Trusted payable functions prohibited"
         );
         require( //redundant? throws on transfer?
-            balanceOf(_senderAddress) >= (invoice.rootPrice + invoice.ACTHprice),
+            balanceOf(_senderAddress) >= (invoice.rootPrice + invoice.NTHprice),
             "PRUF:PFS: Insufficient balance"
         );
         //^^^^^^^checks^^^^^^^^^
@@ -244,7 +244,7 @@ contract UTIL_TKN_DEP is
         if (sharesAddress == address(0)) {
             //IF SHARES ADDRESS IS NOT SET
             _transfer(_senderAddress, invoice.rootAddress, invoice.rootPrice);
-            _transfer(_senderAddress, invoice.ACTHaddress, invoice.ACTHprice);
+            _transfer(_senderAddress, invoice.NTHaddress, invoice.NTHprice);
         } else {
             //IF SHARES ADDRESS IS SET
             uint256 sharesShare = invoice.rootPrice / 4; // sharesShare is 0.25 share of root costs when we transition networks this should be a variable share.
@@ -252,7 +252,7 @@ contract UTIL_TKN_DEP is
 
             _transfer(_senderAddress, invoice.rootAddress, rootShare);
             _transfer(_senderAddress, sharesAddress, sharesShare);
-            _transfer(_senderAddress, invoice.ACTHaddress, invoice.ACTHprice);
+            _transfer(_senderAddress, invoice.NTHaddress, invoice.NTHprice);
         }
         //^^^^^^^interactions^^^^^^^^^
     }
@@ -262,15 +262,15 @@ contract UTIL_TKN_DEP is
     //     address _senderAddress,
     //     address _rootAddress,
     //     uint256 _rootPrice,
-    //     address _ACTHaddress,
-    //     uint256 _ACTHprice
+    //     address _NTHaddress,
+    //     uint256 _NTHprice
     // ) external isPayable {
     //     require(
     //         coldWallet[_senderAddress] == 0,
     //         "PRUF:PFS: Cold Wallet - Trusted payable functions prohibited"
     //     );
     //     require( //redundant? throws on transfer?
-    //         balanceOf(_senderAddress) >= (_rootPrice + _ACTHprice),
+    //         balanceOf(_senderAddress) >= (_rootPrice + _NTHprice),
     //         "PRUF:PFS: insufficient balance"
     //     );
     //     //^^^^^^^checks^^^^^^^^^
@@ -278,7 +278,7 @@ contract UTIL_TKN_DEP is
     //     if (sharesAddress == address(0)) {
     //         //IF SHARES ADDRESS IS NOT SET
     //         _transfer(_senderAddress, _rootAddress, _rootPrice);
-    //         _transfer(_senderAddress, _ACTHaddress, _ACTHprice);
+    //         _transfer(_senderAddress, _NTHaddress, _NTHprice);
     //     } else {
     //         //IF SHARES ADDRESS IS SET
     //         uint256 sharesShare = _rootPrice / 4; // sharesShare is 0.25 share of root costs when we transition networks this should be a variable share.
@@ -286,7 +286,7 @@ contract UTIL_TKN_DEP is
 
     //         _transfer(_senderAddress, _rootAddress, rootShare);
     //         _transfer(_senderAddress, sharesAddress, sharesShare);
-    //         _transfer(_senderAddress, _ACTHaddress, _ACTHprice);
+    //         _transfer(_senderAddress, _NTHaddress, _NTHprice);
     //     }
     //     //^^^^^^^effects / interactions^^^^^^^^^
     // }

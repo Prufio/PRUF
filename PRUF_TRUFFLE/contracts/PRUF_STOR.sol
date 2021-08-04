@@ -12,10 +12,7 @@ __/\\\\\\\\\\\\\ _____/\\\\\\\\\ _______/\\__/\\ ___/\\\\\\\\\\\\\\\
 
 /**-----------------------------------------------------------------
  *  TO DO
- * //CTS:EXAMINE all params/returns defined in comments global
- * //CTS:EXAMINE ACTH->NTH global
- * //CTS:EXAMINE MutableStorage/NonMutableStorage->storProvider/storProvider2 global
- * //CTS:EXAMINE idxHash->assetId global
+ * //CTS:EXAMINE NTH->NTH global
  * //CTS:EXAMINE NP name change
  * //CTS:EXAMINE Run through interfaces, make sure is up to date.
  *---------------------------------------------------------------*/
