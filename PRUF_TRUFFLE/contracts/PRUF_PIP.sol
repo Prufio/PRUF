@@ -29,7 +29,10 @@ contract PIP is CORE {
     /*
      * @dev Sets import discount for this contract
      */
-    function setImportDiscount(uint256 _importDiscount) external isContractAdmin {
+    function setImportDiscount(uint256 _importDiscount)
+        external
+        isContractAdmin
+    {
         //^^^^^^^checks^^^^^^^^^
         if (_importDiscount < 1) {
             importDiscount = 1;
@@ -52,7 +55,10 @@ contract PIP is CORE {
             (NODE_TKN.ownerOf(_node) == _msgSender()), //_msgSender() is node token holder
             "P:MPA: Caller does not hold node token"
         );
-        require(userType == 10, "P:MPA: User not authorized to mint PIP assets");
+        require(
+            userType == 10,
+            "P:MPA: User not authorized to mint PIP assets"
+        );
         require(
             rec.node == 0, //verified as VALID
             "P:MPA: Asset already registered in system"
@@ -60,8 +66,7 @@ contract PIP is CORE {
         // //^^^^^^^checks^^^^^^^^^
 
         string memory tokenURI;
-        bytes32 b32URI =
-            keccak256(abi.encodePacked(_hashedAuthCode, _node));
+        bytes32 b32URI = keccak256(abi.encodePacked(_hashedAuthCode, _node));
         tokenURI = uint256toString(uint256(b32URI));
         //^^^^^^^effects^^^^^^^^^^^^
 
@@ -89,7 +94,7 @@ contract PIP is CORE {
 
         //A_TKN.validatePipToken(tokenId, _newNode, _authCode); //check supplied data matches tokenURI
         STOR.newRecord(_idxHash, _rgtHash, _newNode, _countDownStart); // Make a new record at the tokenId b32
-        A_TKN.setURI(tokenId, "pruf.io"); // set URI
+        A_TKN.setURI(tokenId, "pruf.io/PIP"); // set URI
         A_TKN.safeTransferFrom(address(this), _msgSender(), tokenId); // sends token from this holding contract to caller wallet
         deductImportRecordCosts(_newNode);
 
@@ -126,16 +131,13 @@ contract PIP is CORE {
         return string(buffer);
     }
 
-    function deductImportRecordCosts(uint32 _node)
-        internal
-        whenNotPaused
-    {
+    function deductImportRecordCosts(uint32 _node) internal whenNotPaused {
         //^^^^^^^checks^^^^^^^^^
 
         Invoice memory pricing = NODE_MGR.getServiceCosts(_node, 1);
 
         pricing.rootPrice = pricing.rootPrice / importDiscount;
-        pricing.ACTHprice = pricing.ACTHprice / importDiscount;
+        pricing.NTHprice = pricing.NTHprice / importDiscount;
         //^^^^^^^effects^^^^^^^^^
 
         deductPayment(pricing);

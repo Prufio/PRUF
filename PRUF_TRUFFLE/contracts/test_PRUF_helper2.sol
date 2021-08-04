@@ -295,15 +295,15 @@ contract Helper2 is Ownable, BASIC {
         //address _senderAddress,
         address _rootAddress,
         uint256 _rootPrice,
-        address _ACTHaddress,
-        uint256 _ACTHprice
+        address _NTHaddress,
+        uint256 _NTHprice
     ) external {
         Invoice memory invoice;
 
         invoice.rootAddress = _rootAddress;
         invoice.rootPrice = _rootPrice;
-        invoice.ACTHaddress = _ACTHaddress;
-        invoice.ACTHprice = _ACTHprice;
+        invoice.NTHaddress = _NTHaddress;
+        invoice.NTHprice = _NTHprice;
         invoice.node = _node;
 
         //UTIL_TKN.payForService(_msgSender(), invoice); //-- NON LEGACY TOKEN CONTRACT
@@ -312,16 +312,16 @@ contract Helper2 is Ownable, BASIC {
             _msgSender(),
             invoice.rootAddress,
             invoice.rootPrice,
-            invoice.ACTHaddress,
-            invoice.ACTHprice
+            invoice.NTHaddress,
+            invoice.NTHprice
         );
     }
 
     // struct Invoice { //invoice struct to facilitate payment messaging in-contract
     // address rootAddress;
     // uint256 rootPrice;
-    // address ACTHaddress;
-    // uint256 ACTHprice;
+    // address NTHaddress;
+    // uint256 NTHprice;
 
     /*
     struct node {

@@ -11,21 +11,18 @@ _________\/// _____________\/// _______\/// __\///////// __\/// _____________
 *---------------------------------------------------------------------------*/
 
 /*-----------------------------------------------------------------
- //CTS:EXAMINE quick explainer of the contract
+ //Inheritable functions for core functionality
  *---------------------------------------------------------------*/
-
 
 // SPDX-License-Identifier: UNLICENSED
 pragma solidity ^0.8.6;
 
 import "./PRUF_BASIC.sol";
-//import "./PRUF_INTERFACES.sol"; // CTS:EXAMINE remove
 import "./Imports/utils/ReentrancyGuard.sol";
 
 contract ECR_CORE is BASIC {
-    
     /**
-     * @dev Escrow Data Setter CTS:EXAMINE better
+     * @dev Sets escrow data
      * @param _idxHash - hash of asset information created by frontend inputs
      * @param _newAssetStatus - new escrow status of asset (see docs)
      * @param _escrowOwnerAddressHash - hash of escrow controller address
@@ -46,7 +43,7 @@ contract ECR_CORE is BASIC {
     }
 
     /**
-     * @dev Escrow DataLight Setter CTS:EXAMINE better
+     * @dev function for setting escrow data
      * @param _idxHash - hash of asset information created by frontend inputs
      * @param _escrowDataLight - escrowDataExtLight struct (see interfaces for struct definitions)
      */
@@ -59,7 +56,7 @@ contract ECR_CORE is BASIC {
     }
 
     /**
-     * @dev Escrow DataHeavy Setter CTS:EXAMINE better
+     * @dev function for setting escrow data
      * @param _idxHash - hash of asset information created by frontend inputs
      * @param _escrowDataHeavy - escrowDataExtHeavy struct (see interfaces for struct definitions)
      */
@@ -100,8 +97,8 @@ contract ECR_CORE is BASIC {
     {
         //^^^^^^^checks^^^^^^^^^
 
-        escrowDataExtLight memory escrowDataLight =
-            ECR_MGR.retrieveEscrowDataLight(_idxHash);
+        escrowDataExtLight memory escrowDataLight = ECR_MGR
+            .retrieveEscrowDataLight(_idxHash);
 
         return (escrowDataLight);
         //^^^^^^^interactions^^^^^^^^^
@@ -119,8 +116,8 @@ contract ECR_CORE is BASIC {
     {
         //^^^^^^^checks^^^^^^^^^
 
-        escrowDataExtHeavy memory escrowDataHeavy =
-            ECR_MGR.retrieveEscrowDataHeavy(_idxHash);
+        escrowDataExtHeavy memory escrowDataHeavy = ECR_MGR
+            .retrieveEscrowDataHeavy(_idxHash);
 
         return (escrowDataHeavy);
         //^^^^^^^interactions^^^^^^^^^

@@ -72,7 +72,7 @@ abstract contract BASIC is
     APP_NC_Interface internal APP_NC;
 
     address internal NAKED_Address;
-    address internal NP_Address;
+    address internal APP2_Address;
 
     constructor() {
         _setupRole(DEFAULT_ADMIN_ROLE, _msgSender());
@@ -155,7 +155,7 @@ abstract contract BASIC is
         RCLR = RCLR_Interface(RCLR_Address);
 
         APP_NC_Address = STOR.resolveContractAddress("APP_NC");
-        NP_Address = STOR.resolveContractAddress("NP");
+        APP2_Address = STOR.resolveContractAddress("APP2");
 
         //^^^^^^^effects^^^^^^^^^
     }

@@ -255,7 +255,7 @@ contract A_TKN is
 
             require(
                 NODE_TKN.ownerOf(rec.node) == _msgSender(),
-                "AT:SURI:Caller !ACTH"
+                "AT:SURI:Caller !NTH"
             );
         }
 

@@ -12,7 +12,6 @@ __/\\\\\\\\\\\\\ _____/\\\\\\\\\ _______/\\__/\\ ___/\\\\\\\\\\\\\\\
 
 /**-----------------------------------------------------------------
  *  TO DO
- *  //CTS:!!EXAMINE GLOBAL!! we need to be using pascal case for all acronyms ex. htmlButton or bigHtmlButton, except for things with two acronyms ex. prufIO rather than prufIo !!important
  *-----------------------------------------------------------------
  * IMPORTANT!!! NO EXTERNAL OR PUBLIC FUNCTIONS ALLOWED IN THIS CONTRACT!!!!!!!!
  *-----------------------------------------------------------------
@@ -42,7 +41,7 @@ contract CORE is BASIC {
         uint32 _countDownStart
     ) internal virtual {
         uint256 tokenId = uint256(_idxHash);
-        Node memory node_info =getNodeinfo(_node);
+        Node memory node_info = getNodeinfo(_node);
 
         require(
             A_TKN.tokenExists(tokenId) == 0,
@@ -135,7 +134,7 @@ contract CORE is BASIC {
         virtual
         whenNotPaused
     {
-        Node memory node_info =getNodeinfo(_rec.node);
+        Node memory node_info = getNodeinfo(_rec.node);
 
         require(
             (node_info.managementType < 6),
@@ -149,7 +148,11 @@ contract CORE is BASIC {
         }
         //^^^^^^^Checks^^^^^^^^^
 
-        STOR.modifyMutableStorage(_idxHash, _rec.mutableStorage1, _rec.mutableStorage2); // Send MutableStorage data to storage
+        STOR.modifyMutableStorage(
+            _idxHash,
+            _rec.mutableStorage1,
+            _rec.mutableStorage2
+        ); // Send MutableStorage data to storage
         //^^^^^^^interactions^^^^^^^^^
     }
 
@@ -165,7 +168,11 @@ contract CORE is BASIC {
     {
         //^^^^^^^checks^^^^^^^^^
 
-        STOR.modifyNonMutableStorage(_idxHash, _rec.nonMutableStorage1, _rec.nonMutableStorage2); // Send NonMutableStorage data to storage
+        STOR.modifyNonMutableStorage(
+            _idxHash,
+            _rec.nonMutableStorage1,
+            _rec.nonMutableStorage2
+        ); // Send NonMutableStorage data to storage
         //^^^^^^^interactions^^^^^^^^^
     }
 
@@ -190,11 +197,11 @@ contract CORE is BASIC {
         //^^^^^^^checks^^^^^^^^^
         Invoice memory pricing = NODE_MGR.getServiceCosts(_node, _service);
 
-        uint256 percent = pricing.ACTHprice / uint256(100); //calculate 1% of listed ACTH price
-        uint256 _ACTHprice = nodeNetPercent * percent; //calculate the share proprotrion% * 1%
-        uint256 prufShare = pricing.ACTHprice - _ACTHprice;
+        uint256 percent = pricing.NTHprice / uint256(100); //calculate 1% of listed NTH price
+        uint256 _NTHprice = nodeNetPercent * percent; //calculate the share proprotrion% * 1%
+        uint256 prufShare = pricing.NTHprice - _NTHprice;
 
-        pricing.ACTHprice = _ACTHprice;
+        pricing.NTHprice = _NTHprice;
         pricing.rootPrice = pricing.rootPrice + prufShare;
         //^^^^^^^effects^^^^^^^^^
 
@@ -220,9 +227,9 @@ contract CORE is BASIC {
         pricing = NODE_MGR.getServiceCosts(_node, 1);
         pricing.rootAddress = _prevOwner;
 
-        half = pricing.ACTHprice / 2;
+        half = pricing.NTHprice / 2;
         pricing.rootPrice = pricing.rootPrice + half;
-        pricing.ACTHprice = pricing.ACTHprice - half;
+        pricing.NTHprice = pricing.NTHprice - half;
         //^^^^^^^effects^^^^^^^^^
 
         deductPayment(pricing);
@@ -242,9 +249,9 @@ contract CORE is BASIC {
             _pricing.rootAddress != address(0),
             "C:DP: root payment address = zero address"
         );
-        if (_pricing.ACTHaddress == address(0)) {
-            //sets ACTHaddress to rootAddress if ACTHaddress is not set
-            _pricing.ACTHaddress = _pricing.rootAddress;
+        if (_pricing.NTHaddress == address(0)) {
+            //sets NTHaddress to rootAddress if NTHaddress is not set
+            _pricing.NTHaddress = _pricing.rootAddress;
         }
         //^^^^^^^checks^^^^^^^^^
 
@@ -254,8 +261,8 @@ contract CORE is BASIC {
             _msgSender(),
             _pricing.rootAddress,
             _pricing.rootPrice,
-            _pricing.ACTHaddress,
-            _pricing.ACTHprice
+            _pricing.NTHaddress,
+            _pricing.NTHprice
         );
         //^^^^^^^interactions^^^^^^^^^
     }

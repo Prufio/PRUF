@@ -71,8 +71,8 @@ contract UTIL_TKN is
         //Legacyinvoice struct to facilitate payment messaging in-contract
         address rootAddress;
         uint256 rootPrice;
-        address ACTHaddress;
-        uint256 ACTHprice;
+        address NTHaddress;
+        uint256 NTHprice;
     }
     
     address public childChainManagerProxy = 0xb5505a6d998549090530911180f38aC5130101c6;  //optional add manually
@@ -233,22 +233,22 @@ contract UTIL_TKN is
      * @param _senderAddress - address to send payment from
      * @param _rootAddress - root address for payment
      * @param _rootPrice - root amount for payment
-     * @param _ACTHaddress - ACTH address for payment
-     * @param _ACTHprice - ACTH amount for payment
+     * @param _NTHaddress - NTH address for payment
+     * @param _NTHprice - NTH amount for payment
      */
     function payForService(
         address _senderAddress,
         address _rootAddress,
         uint256 _rootPrice,
-        address _ACTHaddress,
-        uint256 _ACTHprice
+        address _NTHaddress,
+        uint256 _NTHprice
     ) external isPayable {
         require(
             coldWallet[_senderAddress] == 0,
             "PRuF:PFS: Cold Wallet - Trusted payable functions prohibited"
         );
         require( //redundant? throws on transfer?
-            balanceOf(_senderAddress) >= _rootPrice + (_ACTHprice),
+            balanceOf(_senderAddress) >= _rootPrice + (_NTHprice),
             "PRuF:PFS: insufficient balance"
         );
         //^^^^^^^checks^^^^^^^^^
@@ -256,7 +256,7 @@ contract UTIL_TKN is
         if (sharesAddress == address(0)) {
             //IF SHARES ADDRESS IS NOT SET
             _transfer(_senderAddress, _rootAddress, _rootPrice);
-            _transfer(_senderAddress, _ACTHaddress, _ACTHprice);
+            _transfer(_senderAddress, _NTHaddress, _NTHprice);
         } else {
             //IF SHARES ADDRESS IS SET
             uint256 sharesShare = _rootPrice / (uint256(4)); // sharesShare is 0.25 share of root costs
@@ -264,7 +264,7 @@ contract UTIL_TKN is
 
             _transfer(_senderAddress, _rootAddress, rootShare);
             _transfer(_senderAddress, sharesAddress, sharesShare);
-            _transfer(_senderAddress, _ACTHaddress, _ACTHprice);
+            _transfer(_senderAddress, _NTHaddress, _NTHprice);
         }
         //^^^^^^^effects / interactions^^^^^^^^^
     }

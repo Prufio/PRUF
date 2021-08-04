@@ -55,7 +55,7 @@ contract CORE_MAL is BASIC {
         uint32 _countDownStart
     ) internal virtual {
         uint256 tokenId = uint256(_idxHash);
-        Node memory node_info =getNodeinfo(_node);
+        Node memory node_info = getNodeinfo(_node);
 
         require(
             A_TKN.tokenExists(tokenId) == 0,
@@ -79,7 +79,7 @@ contract CORE_MAL is BASIC {
         }
 
         if ((node_info.custodyType == 2) || (node_info.custodyType == 4)) {
-            A_TKN.mintAssetToken(_msgSender(), tokenId, "pruf.io");
+            A_TKN.mintAssetToken(_msgSender(), tokenId, "pruf.io/asset");
         }
 
         STOR.newRecord(_idxHash, _rgtHash, _node, _countDownStart);
@@ -116,7 +116,11 @@ contract CORE_MAL is BASIC {
     {
         //^^^^^^^Checks^^^^^^^^^
 
-        STOR.modifyMutableStorage(_idxHash, _rec.mutableStorage1, _rec.mutableStorage2); // Send data to storage
+        STOR.modifyMutableStorage(
+            _idxHash,
+            _rec.mutableStorage1,
+            _rec.mutableStorage2
+        ); // Send data to storage
         //^^^^^^^interactions^^^^^^^^^
     }
 
@@ -127,7 +131,11 @@ contract CORE_MAL is BASIC {
     {
         //^^^^^^^checks^^^^^^^^^
 
-        STOR.modifyNonMutableStorage(_idxHash, _rec.nonMutableStorage1, _rec.nonMutableStorage2); // Send data to storage
+        STOR.modifyNonMutableStorage(
+            _idxHash,
+            _rec.nonMutableStorage1,
+            _rec.nonMutableStorage2
+        ); // Send data to storage
         //^^^^^^^interactions^^^^^^^^^
     }
 
@@ -154,8 +162,8 @@ contract CORE_MAL is BASIC {
      * @dev Deducts payment from transaction
      */
     function deductPayment(Invoice memory _pricing) internal whenNotPaused {
-        if (_pricing.ACTHaddress == address(0)) {
-            _pricing.ACTHaddress = _pricing.rootAddress;
+        if (_pricing.NTHaddress == address(0)) {
+            _pricing.NTHaddress = _pricing.rootAddress;
         }
         //UTIL_TKN.payForService(_msgSender(), _pricing); //-- NON LEGACY TOKEN CONTRACT
 
@@ -163,8 +171,8 @@ contract CORE_MAL is BASIC {
             _msgSender(),
             _pricing.rootAddress,
             _pricing.rootPrice,
-            _pricing.ACTHaddress,
-            _pricing.ACTHprice
+            _pricing.NTHaddress,
+            _pricing.NTHprice
         );
     }
 

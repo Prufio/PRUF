@@ -12,11 +12,7 @@ __/\\\\\\\\\\\\\ _____/\\\\\\\\\ _______/\\__/\\ ___/\\\\\\\\\\\\\\\
 
 /**-----------------------------------------------------------------
  *  TO DO
- * //CTS:EXAMINE all params/returns defined in comments global
- * //CTS:EXAMINE ACTH->NTH global
- * //CTS:EXAMINE MutableStorage/NonMutableStorage->storProvider/storProvider2 global
- * //CTS:EXAMINE idxHash->assetId global
- * //CTS:EXAMINE NP name change
+ * //CTS:EXAMINE APP2_NC name change
  * //CTS:EXAMINE Run through interfaces, make sure is up to date.
  *---------------------------------------------------------------*/
 
@@ -103,9 +99,7 @@ contract STOR is AccessControl, ReentrancyGuard, Pausable {
      * @param _node node to check address auth
      */
     modifier isAuthorized(uint32 _node) {
-        uint8 auth = contractInfo[contractAddressToName[msg.sender]][
-            _node
-        ];
+        uint8 auth = contractInfo[contractAddressToName[msg.sender]][_node];
         require(
             ((auth > 0) && (auth < 5)) || (auth == 10),
             "S:MOD-IAUT: Contract not authorized"
@@ -245,7 +239,7 @@ contract STOR is AccessControl, ReentrancyGuard, Pausable {
 
     /**
      * @dev set the default list of 11 contracts (zero index) to be applied to Nodees
-     * APP_NC, NP_NC, NODE_MGR, NODE_TKN, A_TKN, ECR_MGR, RCLR, PIP, PURCHASE, DECORATE, WRAP
+     * APP_NC, APP2_NC, NODE_MGR, NODE_TKN, A_TKN, ECR_MGR, RCLR, PIP, PURCHASE, DECORATE, WRAP
      * @param   _contractNumber - 0-10
      * @param   _name - name
      * @param   _contractAuthLevel - authLevel
@@ -690,7 +684,8 @@ contract STOR is AccessControl, ReentrancyGuard, Pausable {
         require(isTransferred(rec.assetStatus) == 0, "S:MI1: Txfrd asset"); //STAT UNREACHABLE
 
         require(
-            (rec.mutableStorage1 != _mutableStorage1) || (rec.mutableStorage2 != _mutableStorage2),
+            (rec.mutableStorage1 != _mutableStorage1) ||
+                (rec.mutableStorage2 != _mutableStorage2),
             "S:MI1: New value = old"
         );
         //^^^^^^^checks^^^^^^^^^
