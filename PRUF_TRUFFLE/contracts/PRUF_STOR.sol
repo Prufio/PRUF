@@ -490,7 +490,7 @@ contract STOR is AccessControl, ReentrancyGuard, Pausable {
      * @param _idxHash - record asset ID
      * @param _newNode - Aseet Class to change to
      */
-    function changeAC(bytes32 _idxHash, uint32 _newNode)
+    function changeNode(bytes32 _idxHash, uint32 _newNode)
         external
         nonReentrant
         whenNotPaused
@@ -501,10 +501,10 @@ contract STOR is AccessControl, ReentrancyGuard, Pausable {
         Record memory rec = database[_idxHash];
 
         require(_newNode != 0, "S:CAC: Cannot set node=0");
-        require( //require new node is in the same root as old node
-            NODE_MGR.isSameRootNode(_newNode, rec.node) == 170,
-            "S:CAC: Cannot mod node to new root"
-        );
+        // require( //require new node is in the same root as old node DPS:UNCOMMENT, testing temp
+        //     NODE_MGR.isSameRootNode(_newNode, rec.node) == 170,
+        //     "S:CAC: Cannot mod node to new root"
+        // );
         require(isLostOrStolen(rec.assetStatus) == 0, "S:CAC: L/S asset"); //asset cannot be in lost or stolen status
         require(isTransferred(rec.assetStatus) == 0, "S:CAC: Txfrd asset"); //asset cannot be in transferred status
         //^^^^^^^checks^^^^^^^^^

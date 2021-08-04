@@ -131,7 +131,7 @@ contract APP_NC is CORE {
         //^^^^^^^interactions^^^^^^^^^
     }
 
-    /** DPS TEST-NEW FUNCTIONALITY
+    /**
      * @dev Import a record into a new node
      * @param _idxHash - hash of asset information created by frontend inputs
      * @param _newNode - node the asset will be imported into
@@ -146,15 +146,15 @@ contract APP_NC is CORE {
         Node memory node_info =getNodeinfo(_newNode);
 
         require(rec.assetStatus == 70, "ANC:IA: Asset !exported");
-        require( //DPS:TEST NEW
+        require(
             _newNode == rec.int32temp,
             "ANC:IA: Cannot change node except to specified node"
         );
-        require( 
+        require( //redundant:preferred, tested and secure by commenting out req in STOR.changeNode
             NODE_MGR.isSameRootNode(_newNode, rec.node) == 170,
             "ANC:IA: Cannot change node to new root"
         );
-        require(
+        require( //redundant:preferred, tested and secure by commenting out req in NP_NC exportAssetTo
             (node_info.managementType < 6),
             "ANC:IA: Contract does not support management types > 5 or node is locked"
         );
@@ -165,7 +165,7 @@ contract APP_NC is CORE {
         ) {
             require(
                 (NODE_TKN.ownerOf(_newNode) == _msgSender()),
-                "ANC:IA: Cannot create asset in node mgmt type 1||2||5 - caller does not hold node token"
+                "ANC:IA: Cannot import asset in node mgmt type 1||2||5 - caller does not hold node token"
             );
         } else if (node_info.managementType == 3) {
             require(
@@ -186,7 +186,7 @@ contract APP_NC is CORE {
         rec.assetStatus = 51; //transferrable status
         //^^^^^^^effects^^^^^^^^^
 
-        STOR.changeAC(_idxHash, _newNode);
+        STOR.changeNode(_idxHash, _newNode);
         writeRecord(_idxHash, rec);
         deductServiceCosts(_newNode, 1);
         //^^^^^^^interactions^^^^^^^^^^^^

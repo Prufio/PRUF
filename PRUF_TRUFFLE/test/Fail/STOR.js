@@ -2485,14 +2485,14 @@ contract('STOR', accounts => {
     it('Should authorize account2 in AC 2', async () => {
 
         console.log("//**************************************END modifyRecord FAIL BATCH**********************************************/")
-        console.log("//**************************************BEGIN changeAC FAIL BATCH**********************************************/")
+        console.log("//**************************************BEGIN changeNode FAIL BATCH**********************************************/")
         return NODE_MGR.addUser('2', account2Hash, '1', { from: account1 })
     })
 
 
     //21
     it('Should fail because record does not exist', async () => {
-        return MAL_APP.changeAC(
+        return MAL_APP.changeNode(
             asset10,
             '2',
             { from: account2 }
@@ -2522,7 +2522,7 @@ contract('STOR', accounts => {
 
     //22
     it('Should fail because asset in escrow', async () => {
-        return MAL_APP.changeAC(
+        return MAL_APP.changeNode(
             asset2,
             '11',
             { from: account2 }
@@ -2563,7 +2563,7 @@ contract('STOR', accounts => {
 
     //23
     it('Should fail because MAL_APP is not authroized in system', async () => {
-        return MAL_APP.changeAC(
+        return MAL_APP.changeNode(
             asset2,
             '11',
             { from: account2 }
@@ -2578,7 +2578,7 @@ contract('STOR', accounts => {
 
     //24
     it('Should fail because AC = 0', async () => {
-        return MAL_APP.changeAC(
+        return MAL_APP.changeNode(
             asset2,
             '0',
             { from: account2 }
@@ -2587,7 +2587,7 @@ contract('STOR', accounts => {
 
     //25
     it('Should fail because you cannot change AC to new root', async () => {
-        return MAL_APP.changeAC(
+        return MAL_APP.changeNode(
             asset2,
             '2',
             { from: account2 }
@@ -2597,7 +2597,7 @@ contract('STOR', accounts => {
 
     //26
     it('Should fail because record is in L/S status', async () => {
-        return MAL_APP.changeAC(
+        return MAL_APP.changeNode(
             asset4,
             '11',
             { from: account2 }
@@ -2607,7 +2607,7 @@ contract('STOR', accounts => {
 
     //27
     it('Should fail because record is in TXFR stat', async () => {
-        return MAL_APP.changeAC(
+        return MAL_APP.changeNode(
             asset3,
             '11',
             { from: account2 }
@@ -2622,7 +2622,7 @@ contract('STOR', accounts => {
     //28
     it('Should fail because record doesnt exist', async () => {
 
-        console.log("//**************************************END changeAC FAIL BATCH**********************************************/")
+        console.log("//**************************************END changeNode FAIL BATCH**********************************************/")
         console.log("//**************************************BEGIN setStolenOrLost FAIL BATCH**********************************************/")
         return MAL_APP.setLostOrStolen(
             asset10,

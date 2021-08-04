@@ -92,10 +92,10 @@ contract NP_NC is CORE {
             NODE_MGR.isSameRootNode(_exportTo, rec.node) == 170,
             "NPNC:EXT: Cannot change node to new root"
         );
-        require(
-            (node_info.managementType < 6),
-            "NPNC:EXT: Contract does not support management types > 5 or node is locked"
-        );
+        // require( DPS:temp
+        //     (node_info.managementType < 6),
+        //     "NPNC:EXT: Contract does not support management types > 5 or node is locked"
+        // );
         if ((node_info.managementType == 1) || (node_info.managementType == 5)) {
             require( //holds node token if node is restricted --------DPS:TEST ---- NEW
                 (NODE_TKN.ownerOf(rec.node) == _msgSender()),

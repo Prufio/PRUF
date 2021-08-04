@@ -122,7 +122,7 @@ contract RCLR is ECR_CORE, CORE {
 
         A_TKN.mintAssetToken(_msgSender(), tokenId, "pruf.io"); //FIX TO MAKE REAL ASSET URL DPS / CTS
         ECR_MGR.endEscrow(_idxHash);
-        STOR.changeAC(_idxHash, _node);
+        STOR.changeNode(_idxHash, _node);
         deductRecycleCosts(_node, escrowDataLight.addr_1);
         rec.assetStatus = 58;
         writeRecord(_idxHash, rec);

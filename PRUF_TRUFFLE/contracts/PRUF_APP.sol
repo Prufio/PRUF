@@ -99,7 +99,7 @@ contract APP is CORE {
         rec.assetStatus = 0;
         //^^^^^^^effects^^^^^^^^^
 
-        STOR.changeAC(_idxHash, _newNode);
+        STOR.changeNode(_idxHash, _newNode);
         writeRecord(_idxHash, rec);
         deductServiceCosts(_newNode, 1);
         //^^^^^^^interactions^^^^^^^^^

@@ -528,7 +528,7 @@ contract DECORATE is CORE {
         rec.assetStatus = 51;
         //^^^^^^^effects^^^^^^^^^
 
-        STOR.changeAC(idxHash, _newNode);
+        STOR.changeNode(idxHash, _newNode);
         writeRecord(idxHash, rec);
         deductServiceCosts(_newNode, 1);
         //^^^^^^^interactions^^^^^^^^^

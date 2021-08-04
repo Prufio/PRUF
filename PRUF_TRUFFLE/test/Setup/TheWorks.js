@@ -1967,7 +1967,6 @@ contract("TheWorks", (accounts) => {
 
   it("Should retrieve asset12 @newStatus(58)", async () => {
     var Record = [];
-
     return await STOR.retrieveShortRecord(
       asset12,
       { from: account2 },

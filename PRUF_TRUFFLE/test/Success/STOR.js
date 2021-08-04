@@ -2121,7 +2121,7 @@ contract('STOR', accounts => {
 
 
     it('Should change asset1 AC from 12 to 13', async () => {
-        return MAL_APP.changeAC(
+        return MAL_APP.changeNode(
             asset1,
             '13',
             { from: account1 }
