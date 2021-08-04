@@ -1,4 +1,4 @@
-/*--------------------------------------------------------PRüF0.8.6
+/**--------------------------------------------------------PRüF0.8.6
 __/\\\\\\\\\\\\\ _____/\\\\\\\\\ _______/\\__/\\ ___/\\\\\\\\\\\\\\\        
 __\/\\\/////////\\\ _/\\\///////\\\ ____\//__\//____\/\\\///////////__       
 ___\/\\\_______\/\\\_\/\\\_____\/\\\ ________________\/\\\ ____________      
@@ -10,7 +10,7 @@ ________\/\\\ ____________\/\\\ _____\//\\\_\//\\\\\\\\\ _\/\\\ ____________
 _________\/// _____________\/// _______\/// __\///////// __\/// _____________
 *---------------------------------------------------------------------------*/
 
-/*-----------------------------------------------------------------
+/**-----------------------------------------------------------------
  *  TO DO
  *
  *---------------------------------------------------------------*/
@@ -24,11 +24,10 @@ import "./PRUF_CORE.sol";
 
 contract PURCHASE is CORE {
 
-    /*
+    /***
      * @dev Verify user credentials
-     * //CTS:EXAMINE param
-     * Originating Address:
-     *      holds asset token at idxHash
+     * @param _idxHash asset ID
+     * Originating Address holds asset token at idxHash
      */
     modifier isAuthorized(bytes32 _idxHash) override {
         uint256 tokenId = uint256(_idxHash);
@@ -39,9 +38,9 @@ contract PURCHASE is CORE {
         _;
     }
 
-    /*
+    /**
      * @dev Purchse an item in transferrable status with price and currency set to pruf
-     * //CTS:EXAMINE param
+     * @param _idxHash asset ID
      */
     function purchaseWithPRUF(
         bytes32 _idxHash
@@ -74,12 +73,12 @@ contract PURCHASE is CORE {
         //^^^^^^^interactions^^^^^^^^^
     }
 
-    /*
+    /**
      * @dev set price and currency in rec.pricer rec.currency
-     * //CTS:EXAMINE param
-     * //CTS:EXAMINE param
-     * //CTS:EXAMINE param
-     * //CTS:EXAMINE param
+     * @param _idxHash asset ID
+     * @param _price units in currency
+     * @param _currency currency
+     * @param _setForSale flag
      */
     function _setPrice(
         bytes32 _idxHash,
@@ -113,9 +112,9 @@ contract PURCHASE is CORE {
         //^^^^^^^interactions^^^^^^^^^
     }
 
-    /*
+    /**
      * @dev set price and currency in rec.pricer rec.currency
-     * //CTS:EXAMINE param
+     * @param _idxHash asset ID
      */
     function _clearPrice(bytes32 _idxHash)
         external
