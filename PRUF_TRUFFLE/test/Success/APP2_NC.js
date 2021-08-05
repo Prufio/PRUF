@@ -12,7 +12,7 @@ _________\/// _____________\/// _______\/// __\///////// __\/// _____________
 
 const PRUF_STOR = artifacts.require('STOR');
 const PRUF_APP = artifacts.require('APP');
-const PRUF_NP = artifacts.require('NP');
+const PRUF_APP2 = artifacts.require('APP2');
 const PRUF_NODE_MGR = artifacts.require('NODE_MGR');
 const PRUF_NODE_TKN = artifacts.require('NODE_TKN');
 const PRUF_A_TKN = artifacts.require('A_TKN');
@@ -21,7 +21,7 @@ const PRUF_ECR_MGR = artifacts.require('ECR_MGR');
 const PRUF_ECR = artifacts.require('ECR');
 const PRUF_ECR2 = artifacts.require('ECR2');
 const PRUF_APP_NC = artifacts.require('APP_NC');
-const PRUF_NP_NC = artifacts.require('NP_NC');
+const PRUF_APP2_NC = artifacts.require('APP2_NC');
 const PRUF_ECR_NC = artifacts.require('ECR_NC');
 const PRUF_RCLR = artifacts.require('RCLR');
 const PRUF_PIP = artifacts.require('PIP');
@@ -31,7 +31,7 @@ const PRUF_UTIL_TKN = artifacts.require('UTIL_TKN');
 
 let STOR;
 let APP;
-let NP;
+let APP2;
 let NODE_MGR;
 let NODE_TKN;
 let A_TKN;
@@ -41,7 +41,7 @@ let ECR;
 let ECR2;
 let ECR_NC;
 let APP_NC;
-let NP_NC;
+let APP2_NC;
 let RCLR;
 let Helper;
 let MAL_APP;
@@ -108,7 +108,7 @@ let trustedAgentRoleB32;
 let assetTransferRoleB32;
 let discardRoleB32;
 
-contract('NP_NC', accounts => {
+contract('APP2_NC', accounts => {
 
     console.log('//**************************BEGIN BOOTSTRAP**************************//')
 
@@ -140,11 +140,11 @@ contract('NP_NC', accounts => {
     })
 
 
-    it('Should deploy PRUF_NP', async () => {
-        const PRUF_NP_TEST = await PRUF_NP.deployed({ from: account1 });
-        console.log(PRUF_NP_TEST.address);
-        assert(PRUF_NP_TEST.address !== '');
-        NP = PRUF_NP_TEST;
+    it('Should deploy PRUF_APP2', async () => {
+        const PRUF_APP2_TEST = await PRUF_APP2.deployed({ from: account1 });
+        console.log(PRUF_APP2_TEST.address);
+        assert(PRUF_APP2_TEST.address !== '');
+        APP2 = PRUF_APP2_TEST;
     })
 
 
@@ -196,11 +196,11 @@ contract('NP_NC', accounts => {
     })
 
 
-    it('Should deploy PRUF_NP_NC', async () => {
-        const PRUF_NP_NC_TEST = await PRUF_NP_NC.deployed({ from: account1 });
-        console.log(PRUF_NP_NC_TEST.address);
-        assert(PRUF_NP_NC_TEST.address !== '')
-        NP_NC = PRUF_NP_NC_TEST;
+    it('Should deploy PRUF_APP2_NC', async () => {
+        const PRUF_APP2_NC_TEST = await PRUF_APP2_NC.deployed({ from: account1 });
+        console.log(PRUF_APP2_NC_TEST.address);
+        assert(PRUF_APP2_NC_TEST.address !== '')
+        APP2_NC = PRUF_APP2_NC_TEST;
     })
 
 
@@ -581,8 +581,8 @@ contract('NP_NC', accounts => {
         return STOR.OO_addContract("APP", APP.address, '0', '1', { from: account1 })
 
             .then(() => {
-                console.log("Adding NP to storage for use in AC 0")
-                return STOR.OO_addContract("NP", NP.address, '0', '1', { from: account1 })
+                console.log("Adding APP2 to storage for use in AC 0")
+                return STOR.OO_addContract("APP2", APP2.address, '0', '1', { from: account1 })
             })
 
             .then(() => {
@@ -626,8 +626,8 @@ contract('NP_NC', accounts => {
             })
 
             .then(() => {
-                console.log("Adding NP_NC to storage for use in AC 0")
-                return STOR.OO_addContract("NP_NC", NP_NC.address, '0', '2', { from: account1 })
+                console.log("Adding APP2_NC to storage for use in AC 0")
+                return STOR.OO_addContract("APP2_NC", APP2_NC.address, '0', '2', { from: account1 })
             })
 
             .then(() => {
@@ -663,8 +663,8 @@ contract('NP_NC', accounts => {
         return APP.OO_setStorageContract(STOR.address, { from: account1 })
 
             .then(() => {
-                console.log("Adding in NP")
-                return NP.OO_setStorageContract(STOR.address, { from: account1 })
+                console.log("Adding in APP2")
+                return APP2.OO_setStorageContract(STOR.address, { from: account1 })
             })
 
             .then(() => {
@@ -708,8 +708,8 @@ contract('NP_NC', accounts => {
             })
 
             .then(() => {
-                console.log("Adding in NP_NC")
-                return NP_NC.OO_setStorageContract(STOR.address, { from: account1 })
+                console.log("Adding in APP2_NC")
+                return APP2_NC.OO_setStorageContract(STOR.address, { from: account1 })
             })
 
             .then(() => {
@@ -740,8 +740,8 @@ contract('NP_NC', accounts => {
         return APP.OO_resolveContractAddresses({ from: account1 })
 
             .then(() => {
-                console.log("Resolving in NP")
-                return NP.OO_resolveContractAddresses({ from: account1 })
+                console.log("Resolving in APP2")
+                return APP2.OO_resolveContractAddresses({ from: account1 })
             })
 
             .then(() => {
@@ -785,8 +785,8 @@ contract('NP_NC', accounts => {
             })
 
             .then(() => {
-                console.log("Resolving in NP_NC")
-                return NP_NC.OO_resolveContractAddresses({ from: account1 })
+                console.log("Resolving in APP2_NC")
+                return APP2_NC.OO_resolveContractAddresses({ from: account1 })
             })
 
             .then(() => {
@@ -812,8 +812,8 @@ contract('NP_NC', accounts => {
 
     it('Should authorize all minter contracts for minting A_TKN(s)', async () => {
 
-        console.log("Authorizing NP")
-        return A_TKN.grantRole(minterRoleB32, NP.address, { from: account1 })
+        console.log("Authorizing APP2")
+        return A_TKN.grantRole(minterRoleB32, APP2.address, { from: account1 })
 
             .then(() => {
                 console.log("Authorizing APP_NC")
@@ -852,13 +852,13 @@ contract('NP_NC', accounts => {
             })
 
             .then(() => {
-                console.log("Authorizing NP")
-                return UTIL_TKN.grantRole(payableRoleB32, NP.address, { from: account1 })
+                console.log("Authorizing APP2")
+                return UTIL_TKN.grantRole(payableRoleB32, APP2.address, { from: account1 })
             })
 
             .then(() => {
-                console.log("Authorizing NP_NC")
-                return UTIL_TKN.grantRole(payableRoleB32, NP_NC.address, { from: account1 })
+                console.log("Authorizing APP2_NC")
+                return UTIL_TKN.grantRole(payableRoleB32, APP2_NC.address, { from: account1 })
             })
     })
 
@@ -878,7 +878,7 @@ contract('NP_NC', accounts => {
 
     it('Should authorize all minter contracts for minting NODE_TKN(s)', async () => {
         console.log("Authorizing NODE_MGR")
-        return APP.grantRole(assetTransferRoleB32, NP.address, { from: account1 })
+        return APP.grantRole(assetTransferRoleB32, APP2.address, { from: account1 })
     })
 
 
@@ -996,13 +996,13 @@ contract('NP_NC', accounts => {
     })
 
 
-    it('Should authorize NP in all relevant nodes', async () => {
+    it('Should authorize APP2 in all relevant nodes', async () => {
 
-        console.log("Authorizing NP")
-        return STOR.enableContractForAC('NP', '10', '1', { from: account1 })
+        console.log("Authorizing APP2")
+        return STOR.enableContractForAC('APP2', '10', '1', { from: account1 })
 
             .then(() => {
-                return STOR.enableContractForAC('NP', '11', '1', { from: account1 })
+                return STOR.enableContractForAC('APP2', '11', '1', { from: account1 })
             })
     })
 
@@ -1018,21 +1018,21 @@ contract('NP_NC', accounts => {
     })
 
 
-    it('Should authorize NP_NC in all relevant nodes', async () => {
+    it('Should authorize APP2_NC in all relevant nodes', async () => {
 
-        console.log("Authorizing NP_NC")
-        return STOR.enableContractForAC('NP_NC', '12', '2', { from: account1 })
+        console.log("Authorizing APP2_NC")
+        return STOR.enableContractForAC('APP2_NC', '12', '2', { from: account1 })
 
             .then(() => {
-                return STOR.enableContractForAC('NP_NC', '13', '2', { from: account1 })
+                return STOR.enableContractForAC('APP2_NC', '13', '2', { from: account1 })
             })
 
             .then(() => {
-                return STOR.enableContractForAC('NP_NC', '14', '2', { from: account1 })
+                return STOR.enableContractForAC('APP2_NC', '14', '2', { from: account1 })
             })
 
             .then(() => {
-                return STOR.enableContractForAC('NP_NC', '16', '2', { from: account10 })
+                return STOR.enableContractForAC('APP2_NC', '16', '2', { from: account10 })
             })
     })
 
@@ -1919,8 +1919,7 @@ contract('NP_NC', accounts => {
 
     it('Should set SharesAddress', async () => {
 
-        console.log("//**************************************BEGIN NP_NC TESTS**********************************************/")
-        console.log("//**************************************BEGIN NP_NC SETUP**********************************************/")
+        console.log("//**************************************BEGIN APP2_NC TESTS**********************************************/")
         return UTIL_TKN.AdminSetSharesAddress(
             account1,
             { from: account1 }
@@ -1946,46 +1945,10 @@ contract('NP_NC', accounts => {
     })
 
 
-    it('Should mint 30000 tokens to account5', async () => {
-        return UTIL_TKN.mint(
-            account5,
-            '30000000000000000000000',
-            { from: account1 }
-        )
-    })
-
-
-    it('Should mint 30000 tokens to account5', async () => {
-        return UTIL_TKN.mint(
-            account10,
-            '30000000000000000000000',
-            { from: account1 }
-        )
-    })
-
-
     it('Should mint ID_TKN(1) to account4', async () => {
         return ID_TKN.mintPRUF_IDToken(
             account4,
             '1',
-            { from: account1 }
-        )
-    })
-
-
-    it('Should mint ID_TKN(2) to account5', async () => {
-        return ID_TKN.mintPRUF_IDToken(
-            account5,
-            '2',
-            { from: account1 }
-        )
-    })
-
-
-    it('Should mint ID_TKN(2) to account5', async () => {
-        return ID_TKN.mintPRUF_IDToken(
-            account10,
-            '7',
             { from: account1 }
         )
     })
@@ -2002,21 +1965,23 @@ contract('NP_NC', accounts => {
     })
 
 
-    it('Should mint asset2 in AC13', async () => {
+    it("Should retrieve asset1", async () => {
+        var Record = [];
+
+        return await STOR.retrieveShortRecord(asset1, { from: account2 }, function (_err, _result) {
+            if (_err) { }
+            else {
+                Record = Object.values(_result)
+                console.log(Record)
+            }
+        })
+    })
+
+
+    it('Should mint asset2 in AC12', async () => {
         return APP_NC.newRecord(
             asset2,
             rgt2,
-            '13',
-            '100',
-            { from: account5 }
-        )
-    })
-
-
-    it('Should mint asset3 in AC12', async () => {
-        return APP_NC.newRecord(
-            asset3,
-            rgt3,
             '12',
             '100',
             { from: account4 }
@@ -2024,345 +1989,174 @@ contract('NP_NC', accounts => {
     })
 
 
-    it('Should mint asset4 in AC12', async () => {
-        return APP_NC.newRecord(
-            asset4,
-            rgt4,
-            '12',
-            '100',
+    it("Should retrieve asset2", async () => {
+        var Record = [];
+
+        return await STOR.retrieveShortRecord(asset2, { from: account2 }, function (_err, _result) {
+            if (_err) { }
+            else {
+                Record = Object.values(_result)
+                console.log(Record)
+            }
+        })
+    })
+
+
+    it('Should change rgt of asset 1 to rgt2', async () => {
+        return APP2_NC.changeRgt(
+            asset1,
+            rgt2,
             { from: account4 }
         )
     })
 
+    it("Should retrieve asset1", async () => {
+        var Record = [];
 
-    it('Should mint asset5 in AC10 to APP', async () => {
-        return APP.newRecord(
-            asset5,
-            rgt5,
-            '10',
-            '100',
-            { from: account2 }
-        )
+        return await STOR.retrieveShortRecord(asset1, { from: account2 }, function (_err, _result) {
+            if (_err) { }
+            else {
+                Record = Object.values(_result)
+                console.log(Record)
+            }
+        })
     })
 
 
-    it('Should put asset2 in to discardable status', async () => {
-        return NP_NC.modifyStatus(
+    it('Should set asset2 stat to 51', async () => {
+        return APP2_NC.modifyStatus(
             asset2,
-            '59',
-            { from: account5 }
-        )
-    })
-
-
-    it('Should discard asset2 to put in unregistered status', async () => {
-        return A_TKN.discard(
-            asset2,
-            { from: account5 }
-        )
-    })
-
-
-    it('Should put asset3 in to exportable status', async () => {
-        return NP_NC.modifyStatus(
-            asset3,
             '51',
             { from: account4 }
         )
     })
 
 
-    it('Should export asset3 to put in unregistered status', async () => {
-        return NP_NC._exportNC(
-            asset3,
+    it("Should retrieve asset2", async () => {
+        var Record = [];
+
+        return await STOR.retrieveShortRecord(asset2, { from: account2 }, function (_err, _result) {
+            if (_err) { }
+            else {
+                Record = Object.values(_result)
+                console.log(Record)
+            }
+        })
+    })
+
+
+    it('Should export asset2', async () => {
+        return APP2_NC._exportNC(
+            asset2,
             { from: account4 }
         )
     })
 
 
-    it('Should put asset4 in to transferable status', async () => {
-        return NP_NC.modifyStatus(
-            asset4,
-            '51',
-            { from: account4 }
-        )
+    it("Should retrieve asset2", async () => {
+        var Record = [];
+
+        return await STOR.retrieveShortRecord(asset2, { from: account2 }, function (_err, _result) {
+            if (_err) { }
+            else {
+                Record = Object.values(_result)
+                console.log(Record)
+            }
+        })
     })
 
 
-    it('Should transfer asset4 to put in unregistered status', async () => {
-        return A_TKN.safeTransferFrom(
-            account4,
-            account1,
-            asset4,
-            { from: account4 }
-        )
-    })
-
-
-    it('Should mint asset6 in AC12', async () => {
-        return APP_NC.newRecord(
-            asset6,
-            rgt6,
-            '12',
-            '100',
-            { from: account4 }
-        )
-    })
-
-
-    it('Should mint asset7 in AC12', async () => {
-        return APP_NC.newRecord(
-            asset7,
-            rgt7,
-            '12',
-            '100',
-            { from: account4 }
-        )
-    })
-
-
-    it('Should put asset6 in to stolen status', async () => {
-        return NP_NC.setLostOrStolen(
-            asset6,
+    it('Should set asset1 to stolen', async () => {
+        return APP2_NC.setLostOrStolen(
+            asset1,
             '53',
             { from: account4 }
         )
     })
 
 
-    it('Should put asset7 in to lost status', async () => {
-        return NP_NC.setLostOrStolen(
-            asset7,
-            '54',
-            { from: account4 }
-        )
+    it("Should retrieve asset1", async () => {
+        var Record = [];
+
+        return await STOR.retrieveShortRecord(asset1, { from: account2 }, function (_err, _result) {
+            if (_err) { }
+            else {
+                Record = Object.values(_result)
+                console.log(Record)
+            }
+        })
     })
 
 
-    it('Should mint asset8 in AC16', async () => {
-        return APP_NC.newRecord(
-            asset8,
-            rgt8,
-            '16',
-            '100',
-            { from: account10 }
-        )
-    })
-
-
-    it('Should put asset4 in to transferable status', async () => {
-        return NP_NC.modifyStatus(
-            asset8,
-            '51',
-            { from: account10 }
-        )
-    })
-
-
-    it('Should transfer asset12 token to PRUF_APP contract', async () => {
-        return A_TKN.safeTransferFrom(
-            account10,
-            account4,
-            asset8,
-            { from: account10 }
-        )
-    })
-
-
-    it('Should put asset4 in to transferable status', async () => {
-        return NP_NC.modifyStatus(
-            asset8,
-            '51',
-            { from: account4 }
-        )
-    })
-
-
-    //1
-    it('Should Fail because caller does not hold token', async () => {
-
-        console.log("//**************************************END NP_NC SETUP**********************************************/")
-        console.log("//**************************************BEGIN NP_NC FAIL BATCH (17)**********************************************/")
-        console.log("//**************************************BEGIN _changeRGT FAIL BATCH**********************************************/")
-        return NP_NC.changeRgt(
-            asset1,
-            rgt2,
-            { from: account5 }
-        )
-    })
-
-    //2
-    it('Should fail because record is in stolen status', async () => {
-        return NP_NC.changeRgt(
-            asset6,
-            rgt5,
-            { from: account4 }
-        )
-    })
-
-    //3
-    it('Should fail because record is in lost status', async () => {
-        return NP_NC.changeRgt(
-            asset7,
-            rgt6,
-            { from: account4 }
-        )
-    })
-
-    //4
-    it('Should fail because caller does not hold token', async () => {
-
-        console.log("//**************************************END changeRgt FAIL BATCH**********************************************/")
-        console.log("//**************************************BEGIN _exportNC FAIL BATCH**********************************************/")
-        return NP_NC._exportNC(
-            asset1,
-            { from: account5 }
-        )
-    })
-
-
-    it('Should set asset1 stat to 52', async () => {
-        return NP_NC.modifyStatus(
-            asset1,
-            '52',
-            { from: account4 }
-        )
-    })
-
-    //5
-    it('Should fail because record != status51', async () => {
-        return NP_NC._exportNC(
-            asset1,
-            { from: account4 }
-        )
-    })
-
-    //6
-    it('Should fail because caller !ACTH', async () => {
-        return NP_NC._exportNC(
-            asset8,
-            { from: account4 }
-        )
-    })
-
-    //7
-    it('Should Fail because caller does not hold token', async () => {
-
-        console.log("//**************************************END _exportNC FAIL BATCH**********************************************/")
-        console.log("//**************************************BEGIN modifyStatus FAIL BATCH**********************************************/")
-        return NP_NC.modifyStatus(
+    it('Should set asset1 stat to 51', async () => {
+        return APP2_NC.modifyStatus(
             asset1,
             '51',
-            { from: account5 }
-        )
-    })
-
-    //8
-    it('Should Fail because being placed in status > 100', async () => {
-        return NP_NC.modifyStatus(
-            asset1,
-            '101',
             { from: account4 }
         )
     })
 
-    //9
-    it('Should Fail because being placed in status 7', async () => {
-        return NP_NC.modifyStatus(
-            asset1,
-            '7',
-            { from: account4 }
-        )
+
+    it("Should retrieve asset1", async () => {
+        var Record = [];
+
+        return await STOR.retrieveShortRecord(asset1, { from: account2 }, function (_err, _result) {
+            if (_err) { }
+            else {
+                Record = Object.values(_result)
+                console.log(Record)
+            }
+        })
     })
 
-    //10
-    it('Should Fail because being placed in reserved status 57', async () => {
-        return NP_NC.modifyStatus(
-            asset1,
-            '57',
-            { from: account4 }
-        )
-    })
-
-    //11
-    it('Should Fail because being placed in reserved status 58', async () => {
-        return NP_NC.modifyStatus(
-            asset1,
-            '58',
-            { from: account4 }
-        )
-    })
-
-    //12
-    it('Should Fail because being placed in exported status', async () => {
-        return NP_NC.modifyStatus(
-            asset1,
-            '70',
-            { from: account4 }
-        )
-    })
-
-    //13
-    it('Should Fail because being placed in status <50', async () => {
-        return NP_NC.modifyStatus(
-            asset1,
-            '1',
-            { from: account4 }
-        )
-    })
-
-    //14
-    it('Should fail because caller does not hold token', async () => {
-
-        console.log("//**************************************END modifyStatus FAIL BATCH**********************************************/")
-        console.log("//**************************************BEGIN setLostOrStolen FAIL BATCH**********************************************/")
-        return NP_NC.setLostOrStolen(
-            asset1,
-            '53',
-            { from: account5 }
-        )
-    })
-
-    //15
-    it('Should fail because assetStatus is < 50', async () => {
-        return NP_NC.setLostOrStolen(
-            asset1,
-            '3',
-            { from: account4 }
-        )
-    })
-
-    //16
-    it('Should fail becasue caller does not hold token', async () => {
-
-        console.log("//**************************************END setLostOrStolen FAIL BATCH**********************************************/")
-        console.log("//**************************************BEGIN decrementCounter FAIL BATCH**********************************************/")
-        return NP_NC.decrementCounter(
+    
+    it('Should decrement 15 off of asset1', async () => {
+        return APP2_NC.decrementCounter(
             asset1,
             '15',
-            { from: account5 }
+            { from: account4 }
         )
     })
 
-    //17
-    it('Should fail because caller does not hold token', async () => {
 
-        console.log("//**************************************END decrementCounter FAIL BATCH**********************************************/")
-        console.log("//**************************************BEGIN modifyMutableStorage FAIL BATCH**********************************************/")
-        return NP_NC.modifyMutableStorage(
+    it("Should retrieve asset1", async () => {
+        var Record = [];
+
+        return await STOR.retrieveShortRecord(asset1, { from: account2 }, function (_err, _result) {
+            if (_err) { }
+            else {
+                Record = Object.values(_result)
+                console.log(Record)
+            }
+        })
+    })
+
+
+    it('Should set mutable to rgt1 rgt2', async () => {
+        return APP2_NC.modifyMutableStorage(
             asset1,
             rgt1,
-            rgt000,
-            { from: account5 }
+            rgt2,
+            { from: account4 }
         )
+    })
+
+
+    it("Should retrieve asset1", async () => {
+        var Record = [];
+
+        return await STOR.retrieveShortRecord(asset1, { from: account2 }, function (_err, _result) {
+            if (_err) { }
+            else {
+                Record = Object.values(_result)
+                console.log(Record)
+            }
+        })
     })
 
 
     it('Should write record in AC 10 @ IDX&RGT(1)', async () => {
-
-        console.log("//**************************************END _exportNC FAIL BATCH**********************************************/")
-        console.log("//**************************************END NP_NC FAIL BATCH**********************************************/")
-        console.log("//**************************************END NP_NC TEST**********************************************/")
+        console.log("//**************************************END APP2_NC TEST**********************************************/")
         console.log("//**************************************BEGIN THE WORKS**********************************************/")
         return APP.newRecord(
             asset12,
@@ -2375,7 +2169,7 @@ contract('NP_NC', accounts => {
 
 
     it('Should change status of new asset12 to status(1)', async () => {
-        return NP.modifyStatus(
+        return APP2.modifyStatus(
             asset12,
             rgt12,
             '1',
@@ -2404,7 +2198,7 @@ contract('NP_NC', accounts => {
 
 
     it('Should change decrement amount @asset12 from (100) to (85)', async () => {
-        return NP.decrementCounter(
+        return APP2.decrementCounter(
             asset12,
             rgt12,
             '15',
@@ -2414,7 +2208,7 @@ contract('NP_NC', accounts => {
 
 
     it('Should modify Mutable note @asset12 to IDX(1)', async () => {
-        return NP.modifyMutableStorage(
+        return APP2.modifyMutableStorage(
             asset12,
             rgt12,
             asset12,
@@ -2425,7 +2219,7 @@ contract('NP_NC', accounts => {
 
 
     it('Should change status of new asset12 to status(51)', async () => {
-        return NP.modifyStatus(
+        return APP2.modifyStatus(
             asset12,
             rgt12,
             '51',
@@ -2435,7 +2229,7 @@ contract('NP_NC', accounts => {
 
 
     it('Should export asset12 to account2', async () => {
-        return NP.exportAsset(
+        return APP2.exportAsset(
             asset12,
             account2,
             { from: account2 }
@@ -2476,7 +2270,7 @@ contract('NP_NC', accounts => {
 
 
     it('Should change status of asset12 to status(51)', async () => {
-        return NP_NC.modifyStatus(
+        return APP2_NC.modifyStatus(
             asset12,
             '51',
             { from: account2 }
@@ -2504,7 +2298,7 @@ contract('NP_NC', accounts => {
 
 
     it('Should change decrement amount @asset12 from (85) to (70)', async () => {
-        return NP_NC.decrementCounter(
+        return APP2_NC.decrementCounter(
             asset12,
             '15',
             { from: account2 }
@@ -2513,7 +2307,7 @@ contract('NP_NC', accounts => {
 
 
     it('Should force modify asset12 RGT(1) to RGT(2)', async () => {
-        return NP_NC.changeRgt(
+        return APP2_NC.changeRgt(
             asset12,
             rgt2,
             { from: account2 }
@@ -2522,7 +2316,7 @@ contract('NP_NC', accounts => {
 
 
     it('Should modify Mutable note @asset12 to RGT(1)', async () => {
-        return NP_NC.modifyMutableStorage(
+        return APP2_NC.modifyMutableStorage(
             asset12,
             rgt12,
             rgt000,
@@ -2531,7 +2325,7 @@ contract('NP_NC', accounts => {
     })
 
     it('Should change status of asset12 to status(51)', async () => {
-        return NP_NC.modifyStatus(
+        return APP2_NC.modifyStatus(
             asset12,
             '51',
             { from: account2 }
@@ -2539,7 +2333,7 @@ contract('NP_NC', accounts => {
     })
 
     it('Should export asset12(status70)', async () => {
-        return NP_NC._exportNC(
+        return APP2_NC._exportNC(
             asset12,
             { from: account2 }
         )
@@ -2567,7 +2361,7 @@ contract('NP_NC', accounts => {
 
 
     it('Should change status of asset12 to status(1)', async () => {
-        return NP.modifyStatus(
+        return APP2.modifyStatus(
             asset12,
             rgt12,
             '1',
@@ -2596,7 +2390,7 @@ contract('NP_NC', accounts => {
 
 
     it('Should change status of asset12 to status(1)', async () => {
-        return NP.modifyStatus(
+        return APP2.modifyStatus(
             asset12,
             rgt12,
             '1',
@@ -2617,7 +2411,7 @@ contract('NP_NC', accounts => {
 
 
     it('Should set asset12 to stolen(3) status', async () => {
-        return NP.setLostOrStolen(
+        return APP2.setLostOrStolen(
             asset12,
             rgt12,
             '3',
@@ -2627,7 +2421,7 @@ contract('NP_NC', accounts => {
 
 
     it('Should change status of asset12 to status(1)', async () => {
-        return NP.modifyStatus(
+        return APP2.modifyStatus(
             asset12,
             rgt12,
             '1',

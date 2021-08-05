@@ -21,7 +21,7 @@ __/\\\\\\\\\\\\\ _____/\\\\\\\\\ _______/\\__/\\ ___/\\\\\\\\\\\\\\\
 *
 * 2 - APP|0|
 *
-* 3 - NP|0|
+* 3 - APP2|0|
 *
 * 4 - NODE_MGR|0|
 *
@@ -35,7 +35,7 @@ __/\\\\\\\\\\\\\ _____/\\\\\\\\\ _______/\\__/\\ ___/\\\\\\\\\\\\\\\
 *
 * 9 - APP_NC|0|
 *
-* 10 - NP_NC|0|
+* 10 - APP2_NC|0|
 *
 * 11 - ECR_NC|0|
 *
@@ -65,7 +65,7 @@ __/\\\\\\\\\\\\\ _____/\\\\\\\\\ _______/\\__/\\ ___/\\\\\\\\\\\\\\\
 *
 * 5 - APP_NC ("4", APP_NC, '2')|0|
 *
-* 6 - NP_NC ("5", NP_NC, '2')|0|
+* 6 - APP2_NC ("5", APP2_NC, '2')|0|
 *
 * 7 - RCLR ("6", RCLR, '3')|0|
 *
@@ -80,7 +80,7 @@ __/\\\\\\\\\\\\\ _____/\\\\\\\\\ _______/\\__/\\ ___/\\\\\\\\\\\\\\\
 * ----------------- ADD CONTRACTS TO STORAGE (STOR.OO_addContract)-----------------|0|
 * 1 - APP ("APP", APP.address, '0', '1')|0|
 *
-* 2 - NP ("NP", NP.address, '0', '1')|0|
+* 2 - APP2 ("APP2", APP2.address, '0', '1')|0|
 *
 * 3 - NODE_MGR ("NODE_MGR", NODE_MGR.address, '0', '1')|0|
 *
@@ -94,7 +94,7 @@ __/\\\\\\\\\\\\\ _____/\\\\\\\\\ _______/\\__/\\ ___/\\\\\\\\\\\\\\\
 *
 * 8 - APP_NC ("APP_NC", APP_NC.address, '0', '2')|0|
 *
-* 9 - NP_NC ("NP_NC", NP_NC.address, '0', '2')|0|
+* 9 - APP2_NC ("APP2_NC", APP2_NC.address, '0', '2')|0|
 *
 * 10 - ECR_NC ("ECR_NC", ECR_NC.address, '0', '3')|0|
 *
@@ -115,7 +115,7 @@ __/\\\\\\\\\\\\\ _____/\\\\\\\\\ _______/\\__/\\ ___/\\\\\\\\\\\\\\\
 * ----------------- ADD STORAGE TO CONTRACTS (CONTRACT.OO_setStorageContract) -----------------|0|
 * 1 - APP (STOR.address)|0|
 *
-* 2 - NP (STOR.address)|0|
+* 2 - APP2 (STOR.address)|0|
 *
 * 3 - NODE_MGR (STOR.address)|0|
 *
@@ -127,7 +127,7 @@ __/\\\\\\\\\\\\\ _____/\\\\\\\\\ _______/\\__/\\ ___/\\\\\\\\\\\\\\\
 *
 * 7 - APP_NC (STOR.address)|0|
 *
-* 8 - NP_NC (STOR.address)|0|
+* 8 - APP2_NC (STOR.address)|0|
 *
 * 9 - ECR_NC (STOR.address)|0|
 *
@@ -144,7 +144,7 @@ __/\\\\\\\\\\\\\ _____/\\\\\\\\\ _______/\\__/\\ ___/\\\\\\\\\\\\\\\
 * ----------------- RESOLVE CONTRACT ADDRESSES (CONTRACT.OO_resolveContractAddresses) -----------------|0|
 * 1 - APP|0|
 *
-* 2 - NP|0|
+* 2 - APP2|0|
 *
 * 3 - NODE_MGR|0|
 *
@@ -156,7 +156,7 @@ __/\\\\\\\\\\\\\ _____/\\\\\\\\\ _______/\\__/\\ ___/\\\\\\\\\\\\\\\
 *
 * 7 - APP_NC|0|
 *
-* 8 - NP_NC|0|
+* 8 - APP2_NC|0|
 *
 * 9 - ECR_NC|0|
 *
@@ -216,8 +216,8 @@ __/\\\\\\\\\\\\\ _____/\\\\\\\\\ _______/\\__/\\ ___/\\\\\\\\\\\\\\\
 *              (PAYABLE_ROLEB32, APP_NC.address),   |0|
 *              (PAYABLE_ROLEB32, APP.address),   |0|
 *              (PAYABLE_ROLEB32, RCLR.address),   |0|
-*              (PAYABLE_ROLEB32, NP.address),   |0|
-*              (PAYABLE_ROLEB32, NP_NC.address),   |0|
+*              (PAYABLE_ROLEB32, APP2.address),   |0|
+*              (PAYABLE_ROLEB32, APP2_NC.address),   |0|
 *              (PAYABLE_ROLEB32, PIP.address),   |0|
 *              (PAYABLE_ROLEB32, PURCHASE.address),   |0|
 *              (PAYABLE_ROLEB32, DECORATE.address),   |0|
@@ -225,7 +225,7 @@ __/\\\\\\\\\\\\\ _____/\\\\\\\\\ _______/\\__/\\ ___/\\\\\\\\\\\\\\\
 *              (TRUSTED_AGENT_ROLEB32, NODE_MGR.address)   |0|
 *              (TRUSTED_AGENT_ROLEB32, PURCHASE.address),   |0|
 *
-* 3 - A_TKN (MINTER_ROLEB32, NP.address),   |0|
+* 3 - A_TKN (MINTER_ROLEB32, APP2.address),   |0|
 *           (MINTER_ROLEB32, APP_NC.address),   |0|
 *           (MINTER_ROLEB32, APP.address),   |0|
 *           (MINTER_ROLEB32, PIP.address),   |0|
@@ -234,7 +234,7 @@ __/\\\\\\\\\\\\\ _____/\\\\\\\\\ _______/\\__/\\ ___/\\\\\\\\\\\\\\\
 *           (TRUSTED_AGENT_ROLEB32), WRAP.address), |0|
 *           (TRUSTED_AGENT_ROLEB32, PURCHASE.address)   |0|               
 *
-* 4 - APP (ASSET_TXFR_ROLEB32, NP.address)   |0|
+* 4 - APP (ASSET_TXFR_ROLEB32, APP2.address)   |0|
 *
 * 5 - RCLR (DISCARD_ROLEB32, A_TKN.address)   |0| 
 * 

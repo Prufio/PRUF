@@ -33,7 +33,7 @@ pragma solidity ^0.6.7;
 
 /*----------------------------------------------------------------
  *TO DO :
- * zero root costs when ACTHcosts are zero? (-NOPE-)
+ * zero root costs when NTHcosts are zero? (-NOPE-)
  *
  * staking, 2% to stskers, 3% to root_address
  *
@@ -218,9 +218,9 @@ pragma solidity ^0.6.7;
  *  STAT201 - 1
  *
  *  APP - 1
- *  NP - 1
+ *  APP2 - 1
  *  APP_NC - 2
- *  NP_NC - 2
+ *  APP2_NC - 2
  *
  *  ECR - 3
  *  ECR_NC - 3

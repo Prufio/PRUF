@@ -92,19 +92,12 @@ contract APP2_NC is CORE {
             NODE_MGR.isSameRootNode(_exportTo, rec.node) == 170,
             "APP2_NC:EXT: Cannot change node to new root"
         );
-<<<<<<< HEAD:PRUF_TRUFFLE/contracts/PRUF_NP_NC.sol
-        // require( DPS:temp
-        //     (node_info.managementType < 6),
-        //     "NPNC:EXT: Contract does not support management types > 5 or node is locked"
-        // );
-=======
         require(
             (node_info.managementType < 6),
             "APP2_NC:EXT: Contract does not support management types > 5 or node is locked"
         );
->>>>>>> indev:PRUF_TRUFFLE/contracts/PRUF_APP2_NC.sol
         if ((node_info.managementType == 1) || (node_info.managementType == 5)) {
-            require( //holds node token if node is restricted --------DPS:TEST ---- NEW
+            require(
                 (NODE_TKN.ownerOf(rec.node) == _msgSender()),
                 "APP2_NC:EXT: Restricted from exporting assets from this node - does not hold ACtoken"
             );
