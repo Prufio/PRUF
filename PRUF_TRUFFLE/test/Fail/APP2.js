@@ -483,123 +483,123 @@ contract("APP2", (accounts) => {
   });
 
   it("Should add contract addresses to storage", () => {
-    console.log("Adding APP to storage for use in AC 0");
+    console.log("Adding APP to storage for use in Node 0");
     return STOR.OO_addContract("APP", APP.address, "0", "1", { from: account1 })
 
       .then(() => {
-        console.log("Adding APP2 to storage for use in AC 0");
+        console.log("Adding APP2 to storage for use in Node 0");
         return STOR.OO_addContract("APP2", APP2.address, "0", "1", {
           from: account1,
         });
       })
 
       .then(() => {
-        console.log("Adding NODE_MGR to storage for use in AC 0");
+        console.log("Adding NODE_MGR to storage for use in Node 0");
         return STOR.OO_addContract("NODE_MGR", NODE_MGR.address, "0", "1", {
           from: account1,
         });
       })
 
       .then(() => {
-        console.log("Adding NODE_TKN to storage for use in AC 0");
+        console.log("Adding NODE_TKN to storage for use in Node 0");
         return STOR.OO_addContract("NODE_TKN", NODE_TKN.address, "0", "1", {
           from: account1,
         });
       })
 
       .then(() => {
-        console.log("Adding A_TKN to storage for use in AC 0");
+        console.log("Adding A_TKN to storage for use in Node 0");
         return STOR.OO_addContract("A_TKN", A_TKN.address, "0", "1", {
           from: account1,
         });
       })
 
       .then(() => {
-        console.log("Adding ID_TKN to storage for use in AC 0");
+        console.log("Adding ID_TKN to storage for use in Node 0");
         return STOR.OO_addContract("ID_TKN", ID_TKN.address, "0", "1", {
           from: account1,
         });
       })
 
       .then(() => {
-        console.log("Adding ECR_MGR to storage for use in AC 0");
+        console.log("Adding ECR_MGR to storage for use in Node 0");
         return STOR.OO_addContract("ECR_MGR", ECR_MGR.address, "0", "1", {
           from: account1,
         });
       })
 
       .then(() => {
-        console.log("Adding ECR to storage for use in AC 0");
+        console.log("Adding ECR to storage for use in Node 0");
         return STOR.OO_addContract("ECR", ECR.address, "0", "3", {
           from: account1,
         });
       })
 
       .then(() => {
-        console.log("Adding ECR2 to storage for use in AC 0");
+        console.log("Adding ECR2 to storage for use in Node 0");
         return STOR.OO_addContract("ECR2", ECR2.address, "0", "3", {
           from: account1,
         });
       })
 
       .then(() => {
-        console.log("Adding APP_NC to storage for use in AC 0");
+        console.log("Adding APP_NC to storage for use in Node 0");
         return STOR.OO_addContract("APP_NC", APP_NC.address, "0", "2", {
           from: account1,
         });
       })
 
       .then(() => {
-        console.log("Adding APP2_NC to storage for use in AC 0");
+        console.log("Adding APP2_NC to storage for use in Node 0");
         return STOR.OO_addContract("APP2_NC", APP2_NC.address, "0", "2", {
           from: account1,
         });
       })
 
       .then(() => {
-        console.log("Adding ECR_NC to storage for use in AC 0");
+        console.log("Adding ECR_NC to storage for use in Node 0");
         return STOR.OO_addContract("ECR_NC", ECR_NC.address, "0", "3", {
           from: account1,
         });
       })
 
       .then(() => {
-        console.log("Adding RCLR to storage for use in AC 0");
+        console.log("Adding RCLR to storage for use in Node 0");
         return STOR.OO_addContract("RCLR", RCLR.address, "0", "3", {
           from: account1,
         });
       })
 
       .then(() => {
-        console.log("Adding MAL_APP to storage for use in AC 0");
+        console.log("Adding MAL_APP to storage for use in Node 0");
         return STOR.OO_addContract("MAL_APP", MAL_APP.address, "0", "1", {
           from: account1,
         });
       })
 
       .then(() => {
-        console.log("Adding UTIL_TKN to storage for use in AC 0");
+        console.log("Adding UTIL_TKN to storage for use in Node 0");
         return STOR.OO_addContract("UTIL_TKN", UTIL_TKN.address, "0", "1", {
           from: account1,
         });
       })
 
       .then(() => {
-        console.log("Adding PURCHASE to storage for use in AC 0");
+        console.log("Adding PURCHASE to storage for use in Node 0");
         return STOR.OO_addContract("PURCHASE", PURCHASE.address, "0", "2", {
           from: account1,
         });
       })
 
       .then(() => {
-        console.log("Adding DECORATE to storage for use in AC 0");
+        console.log("Adding DECORATE to storage for use in Node 0");
         return STOR.OO_addContract("DECORATE", DECORATE.address, "0", "2", {
           from: account1,
         });
       })
 
       .then(() => {
-        console.log("Adding WRAP to storage for use in AC 0");
+        console.log("Adding WRAP to storage for use in Node 0");
         return STOR.OO_addContract("WRAP", WRAP.address, "0", "2", {
           from: account1,
         });
@@ -1007,7 +1007,7 @@ contract("APP2", (accounts) => {
   });
 
   it("Should set costs in minted roots", () => {
-    console.log("Setting costs in AC 1");
+    console.log("Setting costs in Node 1");
 
     return NODE_MGR.setOperationCosts("1", "1", "10000000000000000", account1, {
       from: account1,
@@ -1056,7 +1056,7 @@ contract("APP2", (accounts) => {
       })
 
       .then(() => {
-        console.log("Setting base costs in AC 2");
+        console.log("Setting base costs in Node 2");
         return NODE_MGR.setOperationCosts("2", "1", "10000000000000000", account1, {
           from: account1,
         });
@@ -1105,7 +1105,7 @@ contract("APP2", (accounts) => {
       });
   });
 
-  it("Should Mint 2 cust and 2 non-cust AC tokens in AC_ROOT 1", () => {
+  it("Should Mint 2 cust and 2 non-cust Node tokens in AC_ROOT 1", () => {
     console.log("Minting PRUF to account1");
     return UTIL_TKN.mint(account1, "8000000000000000000000000", {
       from: account1,
@@ -1129,7 +1129,7 @@ contract("APP2", (accounts) => {
       })
 
       .then(() => {
-        console.log("Minting AC 1000001 -C");
+        console.log("Minting Node 1000001 -C");
         return NODE_MGR.purchaseNode(
           "Custodial_AC1",
           "1",
@@ -1141,7 +1141,7 @@ contract("APP2", (accounts) => {
       })
 
       .then(() => {
-        console.log("Minting AC 1000002 -NC");
+        console.log("Minting Node 1000002 -NC");
         return NODE_MGR.purchaseNode(
           "Non_Custodial_AC2",
           "1",
@@ -1153,7 +1153,7 @@ contract("APP2", (accounts) => {
       })
 
       .then(() => {
-        console.log("Minting AC 1000003 -NC");
+        console.log("Minting Node 1000003 -NC");
         return NODE_MGR.purchaseNode(
           "Non_Custodial_AC3",
           "1",
@@ -1165,7 +1165,7 @@ contract("APP2", (accounts) => {
       })
 
       .then(() => {
-        console.log("Minting AC 1000004 -NC");
+        console.log("Minting Node 1000004 -NC");
         return NODE_MGR.purchaseNode(
           "Non_Custodial_AC4",
           "1",
@@ -1177,8 +1177,8 @@ contract("APP2", (accounts) => {
       });
   });
 
-  it("Should Mint 2 non-cust AC tokens in AC_ROOT 2", () => {
-    console.log("Minting AC 1000005 -NC");
+  it("Should Mint 2 non-cust Node tokens in AC_ROOT 2", () => {
+    console.log("Minting Node 1000005 -NC");
     return NODE_MGR.purchaseNode(
       "Non-Custodial_AC5",
       "2",
@@ -1187,7 +1187,7 @@ contract("APP2", (accounts) => {
       rgt000,
       { from: account1 }
     ).then(() => {
-      console.log("Minting AC 1000006 -NC");
+      console.log("Minting Node 1000006 -NC");
       return NODE_MGR.purchaseNode(
         "Non_Custodial_AC6",
         "2",
@@ -1200,7 +1200,7 @@ contract("APP2", (accounts) => {
   });
 
   it("Should finalize all ACs", () => {
-    console.log("Updating AC Immutables");
+    console.log("Updating Node Immutables");
     return NODE_MGR.setNonMutableData(
       "1000001",
       "3",
@@ -1261,7 +1261,7 @@ contract("APP2", (accounts) => {
   });
 
   it("Should finalize all ACs", () => {
-    console.log("Authorizing AC Switch 1");
+    console.log("Authorizing Node Switch 1");
     return NODE_MGR.modifyNodeSwitches("1000001", "1", "1", {
       from: account1,
     })
@@ -1421,7 +1421,7 @@ contract("APP2", (accounts) => {
       });
   });
 
-  it("Should add users to AC 1000001-1000006 in AC_Manager", () => {
+  it("Should add users to Node 1000001-1000006 in AC_Manager", () => {
     console.log(
       "//**************************************END BOOTSTRAP**********************************************/"
     );
@@ -1617,7 +1617,7 @@ contract("APP2", (accounts) => {
     return APP2.modifyStatus(asset4, rgtFFF, "1", { from: account2 });
   });
 
-  it("Should authorize account7 in AC 10", async () => {
+  it("Should authorize account7 in Node 10", async () => {
     return NODE_MGR.addUser("1000001", account7Hash, "9", { from: account1 });
   });
 
@@ -1626,7 +1626,7 @@ contract("APP2", (accounts) => {
     return APP2.modifyStatus(asset1, rgt1, "1", { from: account7 });
   });
 
-  it("Should unauthorize account7 in AC 10", async () => {
+  it("Should unauthorize account7 in Node 10", async () => {
     return NODE_MGR.addUser("1000001", account7Hash, "0", { from: account1 });
   });
 
@@ -1839,7 +1839,7 @@ contract("APP2", (accounts) => {
     });
   });
 
-  it("Should write asset12 in AC 1000001", async () => {
+  it("Should write asset12 in Node 1000001", async () => {
     return APP.newRecord(asset12, rgt12, "1000001", "100", { from: account2 });
   });
 
@@ -2023,7 +2023,7 @@ contract("APP2", (accounts) => {
     );
   });
 
-  it("Should import asset12 to AC(12)(NC)", async () => {
+  it("Should import asset12 to Node(12)(NC)", async () => {
     return APP_NC.importAsset(asset12, "1000003", { from: account2 });
   });
 
@@ -2247,7 +2247,7 @@ contract("APP2", (accounts) => {
     );
   });
 
-  it("Should import asset12 to AC(10)", async () => {
+  it("Should import asset12 to Node(10)", async () => {
     return APP.importAsset(asset12, "1000001", { from: account2 });
   });
 
@@ -2389,7 +2389,7 @@ contract("APP2", (accounts) => {
     );
   });
 
-  it("Should write asset13 in AC 1000003", async () => {
+  it("Should write asset13 in Node 1000003", async () => {
     console.log(
       "//**************************************BEGIN THE WORKS NON CUSTODIAL**********************************************/"
     );
@@ -2638,7 +2638,7 @@ contract("APP2", (accounts) => {
     );
   });
 
-  it("Should import asset13 to AC(10)", async () => {
+  it("Should import asset13 to Node(10)", async () => {
     return APP.importAsset(asset13, "1000001", { from: account4 });
   });
 
@@ -2881,7 +2881,7 @@ contract("APP2", (accounts) => {
     );
   });
 
-  it("Should import asset13 to AC(12)", async () => {
+  it("Should import asset13 to Node(12)", async () => {
     return APP_NC.importAsset(asset13, "1000003", { from: account4 });
   });
 

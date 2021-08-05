@@ -11,7 +11,7 @@ _________\/// _____________\/// _______\/// __\///////// __\/// _____________
 *---------------------------------------------------------------------------*/
 
 /*-----------------------------------------------------------------
- *
+ * CTS:EXAMINE description of contract
  *----------------------------------------------------------------*/
 
 // SPDX-License-Identifier: UNLICENSED
@@ -63,7 +63,7 @@ contract APP is CORE {
     }
 
     /**
-     * @dev import Rercord, must match export node //DPS:TEST
+     * @dev import Rercord, must match export node
      * posessor is considered to be owner. sets rec.assetStatus to 0.
      * @param _idxHash - hash of asset information created by frontend inputs
      * @param _newNode - node the asset will be imported into
@@ -124,7 +124,7 @@ contract APP is CORE {
             isLostOrStolen(rec.assetStatus) == 0,
             "A:FMR: Asset marked L/S"
         );
-        require( //impossible to reach, APP needs to hold token
+        require( //impossible to reach with current contracts, APP needs to hold token
             needsImport(rec.assetStatus) == 0,
             "A:FMR: Asset needs re-imported"
         );
@@ -147,7 +147,6 @@ contract APP is CORE {
      * @param _rgtHash - hash of rightsholder information created by frontend inputs
      * @param _newrgtHash - hash of targeted reciever information created by frontend inputs
      */
-
     function transferAsset(
         bytes32 _idxHash,
         bytes32 _rgtHash,
@@ -210,7 +209,7 @@ contract APP is CORE {
 
         require((userType > 0) && (userType < 10), "A:I2: User not auth in node");
 
-        require( //impossible? to reach
+        require(  //impossible to reach with current contracts, APP needs to hold token
             needsImport(rec.assetStatus) == 0,
             "A:I2: Asset needs re-imported"
         );
