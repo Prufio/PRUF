@@ -112,7 +112,7 @@ let trustedAgentRoleB32;
 let assetTransferRoleB32;
 let discardRoleB32;
 
-contract("ECR_MGR", (accounts) => {
+contract("TheWorks", (accounts) => {
   console.log(
     "//**************************BEGIN BOOTSTRAP**************************//"
   );
@@ -985,6 +985,7 @@ contract("ECR_MGR", (accounts) => {
       "0",
       "9500",
       rgt000,
+      rgt000,
       account1,
       { from: account1 }
     )
@@ -998,6 +999,7 @@ contract("ECR_MGR", (accounts) => {
         "0",
         "0",
         "9500",
+        rgt000,
         rgt000,
         account1,
         { from: account1 }
@@ -1129,43 +1131,73 @@ contract("ECR_MGR", (accounts) => {
 
       .then(() => {
         console.log("Minting Node 1000001 -C");
-        return NODE_MGR.purchaseNode("Custodial_AC1", "1", "1", rgt000, {
-          from: account1,
-        });
+        return NODE_MGR.purchaseNode(
+          "Custodial_AC1",
+          "1",
+          "1",
+          rgt000,
+          rgt000,
+          { from: account1 }
+        );
       })
 
       .then(() => {
         console.log("Minting Node 1000002 -NC");
-        return NODE_MGR.purchaseNode("Non_Custodial_AC2", "1", "2", rgt000, {
-          from: account1,
-        });
+        return NODE_MGR.purchaseNode(
+          "Non_Custodial_AC2",
+          "1",
+          "2",
+          rgt000,
+          rgt000,
+          { from: account1 }
+        );
       })
 
       .then(() => {
         console.log("Minting Node 1000003 -NC");
-        return NODE_MGR.purchaseNode("Non_Custodial_AC3", "1", "2", rgt000, {
-          from: account1,
-        });
+        return NODE_MGR.purchaseNode(
+          "Non_Custodial_AC3",
+          "1",
+          "2",
+          rgt000,
+          rgt000,
+          { from: account1 }
+        );
       })
 
       .then(() => {
         console.log("Minting Node 1000004 -NC");
-        return NODE_MGR.purchaseNode("Non_Custodial_AC4", "1", "2", rgt000, {
-          from: account10,
-        });
+        return NODE_MGR.purchaseNode(
+          "Non_Custodial_AC4",
+          "1",
+          "2",
+          rgt000,
+          rgt000,
+          { from: account10 }
+        );
       });
   });
 
   it("Should Mint 2 non-cust Node tokens in AC_ROOT 2", () => {
     console.log("Minting Node 1000005 -NC");
-    return NODE_MGR.purchaseNode("Non-Custodial_AC5", "2", "2", rgt000, {
-      from: account1,
-    })
+    return NODE_MGR.purchaseNode(
+      "Non-Custodial_AC5",
+      "2",
+      "2",
+      rgt000,
+      rgt000,
+      { from: account1 }
+    )
     .then(() => {
       console.log("Minting Node 1000006 -NC");
-      return NODE_MGR.purchaseNode("Non_Custodial_AC6", "2", "2", rgt000, {
-        from: account10,
-      });
+      return NODE_MGR.purchaseNode(
+        "Non_Custodial_AC6",
+        "2",
+        "2",
+        rgt000,
+        rgt000,
+        { from: account10 }
+      );
     });
   });
 
@@ -1401,18 +1433,8 @@ contract("ECR_MGR", (accounts) => {
       })
 
       .then(() => {
-        console.log("Account1 => 1000003");
-        return NODE_MGR.addUser("1000003", account1Hash, "1", { from: account1 });
-      })
-
-      .then(() => {
         console.log("Account2 => 1000003");
         return NODE_MGR.addUser("1000003", account2Hash, "1", { from: account1 });
-      })
-
-      .then(() => {
-        console.log("Account3 => 1000003");
-        return NODE_MGR.addUser("1000003", account3Hash, "1", { from: account1 });
       })
 
       .then(() => {
@@ -1442,6 +1464,14 @@ contract("ECR_MGR", (accounts) => {
       });
   });
 
+  it("Should mint ID_TKN(3) to account3", async () => {
+    return ID_TKN.mintPRUF_IDToken(account3, "3", { from: account1 });
+  });
+
+  it("Should reMint ID_TKN(1) to account4", async () => {
+    return ID_TKN.reMintPRUF_IDToken(account4, "3", { from: account1 });
+  });
+
 
     it('Should set SharesAddress', async () => {
 
@@ -1466,7 +1496,7 @@ contract("ECR_MGR", (accounts) => {
         return APP.newRecord(
             asset1,
             rgt1,
-            '10',
+            '1000001',
             '100',
             { from: account2 }
         )
@@ -1526,45 +1556,44 @@ contract("ECR_MGR", (accounts) => {
     })
 
 
-    it('Should set asset 1 into escrow', async () => {
-        return ECR.setEscrowExtendedData(
-            asset1,
-            account2Hash,
-            '180',
-            '6',
-            { from: account2 }
-        )
-    })
+    // it('Should set asset 1 into escrow', async () => {
+    //     return ECR.setEscrowExtendedData(
+    //         asset1,
+    //         account2Hash,
+    //         '180',
+    //         '6',
+    //         { from: account2 }
+    //     )
+    // })
 
-    it("Should retrieveEscrowDataLight info of asset1", async () => {
-        var Record = "";
+    // it("Should retrieveEscrowDataLight info of asset1", async () => {
+    //     var Record = "";
 
-        return await ECR_MGR.retrieveEscrowDataLight(asset1, { from: account2 }, function (_err, _result) {
-            if (_err) { }
-            else {
-                Record = _result
-                console.log(Record)
-            }
-        })
-    })
+    //     return await ECR_MGR.retrieveEscrowDataLight(asset1, { from: account2 }, function (_err, _result) {
+    //         if (_err) { }
+    //         else {
+    //             Record = _result
+    //             console.log(Record)
+    //         }
+    //     })
+    // })
 
-    it("Should retrieveEscrowDataHeavy info of asset1", async () => {
-        var Record = "";
+    // it("Should retrieveEscrowDataHeavy info of asset1", async () => {
+    //     var Record = "";
 
-        return await ECR_MGR.retrieveEscrowDataHeavy(asset1, { from: account2 }, function (_err, _result) {
-            if (_err) { }
-            else {
-                Record = _result
-                console.log(Record)
-            }
-        })
-    })
+    //     return await ECR_MGR.retrieveEscrowDataHeavy(asset1, { from: account2 }, function (_err, _result) {
+    //         if (_err) { }
+    //         else {
+    //             Record = _result
+    //             console.log(Record)
+    //         }
+    //     })
+    // })
 
 
-    it('Should set shares address', async () => {
+    it("Should set SharesAddress", async () => {
         console.log("//**************************************END ECR_MGR TEST**********************************************/")
-        
-        console.log(
+          console.log(
             "//**************************************BEGIN THE WORKS CUSTODIAL**********************************************/"
           );
           return UTIL_TKN.AdminSetSharesAddress(account1, { from: account1 });
@@ -1745,7 +1774,9 @@ contract("ECR_MGR", (accounts) => {
         });
       
         it("Should export asset12 to account2", async () => {
-          return APP2.exportAsset(asset12, account2, { from: account2 });
+          return APP2.exportAssetTo(asset12, "1000003", account2, rgt12, {
+            from: account2,
+          });
         });
       
         it("Should retrieve asset12 @newStatus(70(exported)) && +1 N.O.T", async () => {
@@ -1947,7 +1978,7 @@ contract("ECR_MGR", (accounts) => {
         });
       
         it("Should export asset12(status70)", async () => {
-          return APP2_NC._exportNC(asset12, { from: account2 });
+          return APP2_NC.exportAssetTo(asset12, "1000001", { from: account2 });
         });
       
         it("Should retrieve asset12 @newAC (root(1)) && @newStatus(exported(70))", async () => {
@@ -1989,7 +2020,7 @@ contract("ECR_MGR", (accounts) => {
         });
       
         it("Should import asset12 to Node(10)", async () => {
-          return APP.importAsset(asset12, rgt12, "1000001", { from: account2 });
+          return APP.importAsset(asset12, "1000001", { from: account2 });
         });
       
         it("Should retrieve asset12 @newAC(1000001) && +1 FMRcount", async () => {
@@ -2009,7 +2040,7 @@ contract("ECR_MGR", (accounts) => {
         });
       
         it("Should change status of asset12 to status(1)", async () => {
-          return APP2.modifyStatus(asset12, rgt12, "1", { from: account2 });
+          return APP2.modifyStatus(asset12, rgtFFF, "1", { from: account2 });
         });
       
         it("Should retrieve asset12 @newStatus(1)", async () => {
@@ -2056,7 +2087,6 @@ contract("ECR_MGR", (accounts) => {
       
         it("Should retrieve asset12 @newStatus(58)", async () => {
           var Record = [];
-      
           return await STOR.retrieveShortRecord(
             asset12,
             { from: account2 },
@@ -2071,7 +2101,7 @@ contract("ECR_MGR", (accounts) => {
         });
       
         it("Should change status of asset12 to status(1)", async () => {
-          return APP2.modifyStatus(asset12, rgt12, "1", { from: account2 });
+          return APP2.modifyStatus(asset12, rgtFFF, "1", { from: account2 });
         });
       
         it("Should retrieve asset12 @newStatus(1)", async () => {
@@ -2091,7 +2121,7 @@ contract("ECR_MGR", (accounts) => {
         });
       
         it("Should set asset12 to stolen(3) status", async () => {
-          return APP2.setLostOrStolen(asset12, rgt12, "3", { from: account2 });
+          return APP2.setLostOrStolen(asset12, rgtFFF, "3", { from: account2 });
         });
       
         it("Should retrieve asset12 @newStatus(3)", async () => {
@@ -2111,7 +2141,7 @@ contract("ECR_MGR", (accounts) => {
         });
       
         it("Should change status of asset12 to status(51)", async () => {
-          return APP2.modifyStatus(asset12, rgt12, "51", { from: account2 });
+          return APP2.modifyStatus(asset12, rgtFFF, "51", { from: account2 });
         });
       
         it("Should retrieve asset12 @newStaus(51)", async () => {
@@ -2337,9 +2367,8 @@ contract("ECR_MGR", (accounts) => {
           );
         });
       
-        ///
         it("Should export asset13 to account4", async () => {
-          return APP2_NC._exportNC(asset13, { from: account4 });
+          return APP2_NC.exportAssetTo(asset13, "1000001", { from: account4 });
         });
       
         it("Should retrieve asset13 @newStatus(70(exported))", async () => {
@@ -2381,7 +2410,7 @@ contract("ECR_MGR", (accounts) => {
         });
       
         it("Should import asset13 to Node(10)", async () => {
-          return APP.importAsset(asset13, rgt13, "1000001", { from: account4 });
+          return APP.importAsset(asset13, "1000001", { from: account4 });
         });
       
         it("Should retrieve asset13 @newAC(1000001) && newStatus(0)", async () => {
@@ -2401,7 +2430,7 @@ contract("ECR_MGR", (accounts) => {
         });
       
         it("Should change status of asset13 to status(1)", async () => {
-          return APP2.modifyStatus(asset13, rgt13, "1", { from: account4 });
+          return APP2.modifyStatus(asset13, rgtFFF, "1", { from: account4 });
         });
       
         it("Should retrieve asset13 @newStatus(1)", async () => {
@@ -2461,7 +2490,7 @@ contract("ECR_MGR", (accounts) => {
         });
       
         it("Should change decrement amount @asset13 from (85) to (70)", async () => {
-          return APP2.decrementCounter(asset13, rgt13, "15", { from: account4 });
+          return APP2.decrementCounter(asset13, rgtFFF, "15", { from: account4 });
         });
       
         it("Should retrieve asset13 @newDecAmount(70)", async () => {
@@ -2481,7 +2510,7 @@ contract("ECR_MGR", (accounts) => {
         });
       
         it("Should modify Mutable @asset13 to RGT(12)", async () => {
-          return APP2.modifyMutableStorage(asset13, rgt13, rgt13, rgt000, { from: account4 });
+          return APP2.modifyMutableStorage(asset13, rgtFFF, rgt13, rgt000, { from: account4 });
         });
       
         it("Should retrieve asset13 @newMutable(rgt13)", async () => {
@@ -2501,7 +2530,7 @@ contract("ECR_MGR", (accounts) => {
         });
       
         it("Should set asset13 to stolen(3) status", async () => {
-          return APP2.setLostOrStolen(asset13, rgt13, "3", { from: account4 });
+          return APP2.setLostOrStolen(asset13, rgtFFF, "3", { from: account4 });
         });
       
         it("Should retrieve asset13 @newStatus(3)", async () => {
@@ -2521,7 +2550,7 @@ contract("ECR_MGR", (accounts) => {
         });
       
         it("Should change status of asset13 to status(1)", async () => {
-          return APP2.modifyStatus(asset13, rgt13, "1", { from: account4 });
+          return APP2.modifyStatus(asset13, rgtFFF, "1", { from: account4 });
         });
       
         it("Should retrieve asset13 @newStatus(1)", async () => {
@@ -2541,7 +2570,7 @@ contract("ECR_MGR", (accounts) => {
         });
       
         it("Should Transfer asset13 RGT(13) to RGT(2)", async () => {
-          return APP.transferAsset(asset13, rgt13, rgt2, { from: account4 });
+          return APP.transferAsset(asset13, rgtFFF, rgt2, { from: account4 });
         });
       
         it("Should retrieve asset13 @newRgt(rgt2) && +1 N.O.T", async () => {
@@ -2601,7 +2630,7 @@ contract("ECR_MGR", (accounts) => {
         });
       
         it("Should export asset13(status70)", async () => {
-          return APP2.exportAsset(asset13, account4, { from: account4 });
+          return APP2.exportAssetTo(asset13, "1000003", account4, rgt13, { from: account4 });
         });
         ///
       
@@ -2702,7 +2731,7 @@ contract("ECR_MGR", (accounts) => {
         });
       
         it("Should recycle asset13", async () => {
-          return RCLR.recycle(asset13, rgt13, "1000003", { from: account4 });
+          return RCLR.recycle(asset13, rgt13, { from: account4 });
         });
       
         it("Should retrieve asset13  @newRgt(13) && @newAC(1000003) && +1 N.O.T && @newStatus(58)", async () => {
@@ -2846,5 +2875,5 @@ contract("ECR_MGR", (accounts) => {
             }
           );
         });
-
-});
+      });
+      
