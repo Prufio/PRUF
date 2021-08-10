@@ -459,9 +459,8 @@ contract DECORATE is CORE {
      * @param _tokenID - tokenID of assets token @_tokenContract
      * @param _tokenContract - token contract of _tokenID
      * @param _newNode - new node of decorated token
-     * DPS:TEST
      */
-    function _import(
+    function importAsset(
         uint256 _tokenID,
         address _tokenContract,
         uint32 _newNode
