@@ -138,12 +138,12 @@ contract CORE is BASIC {
 
         require(
             (node_info.managementType < 6),
-            "C:CR:Contract does not support management types > 5 or node is locked"
+            "C:WMS:Contract does not support management types > 5 or node is locked"
         );
         if ((node_info.custodyType != 1) && (node_info.managementType == 5)) {
             require(
                 (NODE_TKN.ownerOf(_rec.node) == _msgSender()),
-                "C:WRMS: Caller must hold node (management type 5)"
+                "C:WMS: Caller must hold node (management type 5)"
             );
         }
         //^^^^^^^Checks^^^^^^^^^
