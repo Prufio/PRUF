@@ -911,7 +911,7 @@ interface ID_TKN_Interface {
     /*
      * @dev Mint new PRUF_ID token
      */
-    function mintPRUF_IDToken(
+    function mintIDtoken(
         address _recipientAddress,
         uint256 _tokenId,
         string calldata _URI
@@ -923,7 +923,7 @@ interface ID_TKN_Interface {
      * burns old token
      * Sends new token to original Caller
      */
-    function reMintPRUF_IDToken(address _recipientAddress, uint256 tokenId)
+    function reMintIDtoken(address _recipientAddress, uint256 tokenId)
         external
         returns (uint256);
 

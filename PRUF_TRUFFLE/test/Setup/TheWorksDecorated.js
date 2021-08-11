@@ -2367,7 +2367,7 @@ contract('WRAP', accounts => {
 
 
     it('Should mint ID_TKN(1) to account1', async () => {
-        return ID_TKN.mintPRUF_IDToken(
+        return ID_TKN.mintIDtoken(
             account1,
             '1',
             { from: account1 }

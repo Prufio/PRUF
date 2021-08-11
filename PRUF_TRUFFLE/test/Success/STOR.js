@@ -1994,7 +1994,7 @@ contract('STOR', accounts => {
 
 
     it('Should mint ID_TKN(1) to account4', async () => {
-        return ID_TKN.mintPRUF_IDToken(
+        return ID_TKN.mintIDtoken(
             account4,
             '1',
             { from: account1 }
@@ -2003,7 +2003,7 @@ contract('STOR', accounts => {
 
 
     it('Should write ID_TKN(2) to address2', async () => {
-        return ID_TKN.mintPRUF_IDToken(
+        return ID_TKN.mintIDtoken(
             account2,
             '2',
             { from: account1 }

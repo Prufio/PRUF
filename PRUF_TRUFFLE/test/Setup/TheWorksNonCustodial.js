@@ -2016,7 +2016,7 @@ _________\/// _____________\/// _______\/// __\///////// __\/// _____________
 
 
     it('Should mint ID_TKN(1) to account3', async () => {
-        return ID_TKN.mintPRUF_IDToken(
+        return ID_TKN.mintIDtoken(
         account3,
         '1',
         {from: account1}
@@ -2025,7 +2025,7 @@ _________\/// _____________\/// _______\/// __\///////// __\/// _____________
 
 
     it('Should reMint ID_TKN(1) to account4', async () => {
-        return ID_TKN.reMintPRUF_IDToken(
+        return ID_TKN.reMintIDtoken(
         account4,
         '1',
         {from: account1}

@@ -1134,22 +1134,22 @@ contract("CORE", (accounts) => {
 
       .then(() => {
         console.log("Minting ID_TKN to account1");
-        return ID_TKN.mintPRUF_IDToken(account1, "1", "", { from: account1 });
+        return ID_TKN.mintIDtoken(account1, "1", "", { from: account1 });
       })
 
       .then(() => {
         console.log("Minting ID_TKN to account1");
-        return ID_TKN.mintPRUF_IDToken(account2, "2", "", { from: account1 });
+        return ID_TKN.mintIDtoken(account2, "2", "", { from: account1 });
       })
 
       .then(() => {
         console.log("Minting ID_TKN to account4");
-        return ID_TKN.mintPRUF_IDToken(account4, "3", "", { from: account1 });
+        return ID_TKN.mintIDtoken(account4, "3", "", { from: account1 });
       })
 
       .then(() => {
         console.log("Minting ID_TKN to account10");
-        return ID_TKN.mintPRUF_IDToken(account10, "4", "", { from: account1 });
+        return ID_TKN.mintIDtoken(account10, "4", "", { from: account1 });
       })
 
       .then(() => {

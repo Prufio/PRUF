@@ -1218,12 +1218,12 @@ contract("ECR", (accounts) => {
 
       .then(() => {
         console.log("Minting ID_TKN to account1");
-        return ID_TKN.mintPRUF_IDToken(account1, "1", "", { from: account1 });
+        return ID_TKN.mintIDtoken(account1, "1", "", { from: account1 });
       })
 
       .then(() => {
         console.log("Minting ID_TKN to account10");
-        return ID_TKN.mintPRUF_IDToken(account10, "2", "", { from: account1 });
+        return ID_TKN.mintIDtoken(account10, "2", "", { from: account1 });
       })
 
       .then(() => {
@@ -1579,11 +1579,11 @@ contract("ECR", (accounts) => {
   });
 
   it("Should mint ID_TKN(3) to account3", async () => {
-    return ID_TKN.mintPRUF_IDToken(account3, "3", { from: account1 });
+    return ID_TKN.mintIDtoken(account3, "3", { from: account1 });
   });
 
   it("Should reMint ID_TKN(1) to account4", async () => {
-    return ID_TKN.reMintPRUF_IDToken(account4, "3", { from: account1 });
+    return ID_TKN.reMintIDtoken(account4, "3", { from: account1 });
   });
 
   it("Should mint 30000 tokens to account2", async () => {
@@ -1602,7 +1602,7 @@ contract("ECR", (accounts) => {
   });
 
   it("Should write ID_TKN(1) to address4", async () => {
-    return ID_TKN.mintPRUF_IDToken(account2, "5", { from: account1 });
+    return ID_TKN.mintIDtoken(account2, "5", { from: account1 });
   });
 
   it("Should write asset1 in Node 1000002", async () => {

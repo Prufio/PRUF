@@ -1763,7 +1763,7 @@ _________\/// _____________\/// _______\/// __\///////// __\/// _____________
 
 
     it('Should mint ID token to account2', async () => {
-        return ID_TKN.mintPRUF_IDToken(
+        return ID_TKN.mintIDtoken(
         account2, 
         "1",
         {from: account1}
@@ -1772,7 +1772,7 @@ _________\/// _____________\/// _______\/// __\///////// __\/// _____________
 
 
     it('Should mint ID token to account3', async () => {
-        return ID_TKN.mintPRUF_IDToken(
+        return ID_TKN.mintIDtoken(
         account3, 
         "2",
         {from: account1}

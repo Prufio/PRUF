@@ -252,7 +252,7 @@ contract FAUCET is ReentrancyGuard, Pausable, AccessControl {
             "PP:GI: Caller is PRuF_ID holder"
         );
         tokenId++;
-        ID_TKN.mintPRUF_IDToken(_msgSender(), tokenId, "0");
+        ID_TKN.mintIDtoken(_msgSender(), tokenId, "0");
         ID_TKN.setTrustLevel(tokenId, 10);
         //^^^^^^^Interactions^^^^^^^^^
     }

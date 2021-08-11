@@ -111,7 +111,7 @@ contract ID_TKN is
      * @param _tokenURI - URI string to atatch to token
      * returns Token ID of minted token
      */
-    function mintPRUF_IDToken(
+    function mintIDtoken(
         address _recipientAddress,
         uint256 _tokenId,
         string calldata _tokenURI
@@ -129,7 +129,7 @@ contract ID_TKN is
      * @dev Burn PRUF_ID token
      * @param _tokenId - ID tokenID to burn
      */
-    function burnPRUF_ID(uint256 _tokenId)
+    function burnID(uint256 _tokenId)
         external
         isMinter
         nonReentrant
@@ -148,7 +148,7 @@ contract ID_TKN is
      * @param _recipientAddress - new address for token
      * @param _tokenId - Token ID to teleport
      */
-    function reMintPRUF_IDToken(address _recipientAddress, uint256 _tokenId)
+    function reMintIDtoken(address _recipientAddress, uint256 _tokenId)
         external
         isMinter
         nonReentrant

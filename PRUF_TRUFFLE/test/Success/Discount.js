@@ -1629,7 +1629,7 @@ contract("Discount", (accounts) => {
   });
 
   it("Should mint IDTKN to account1", async () => {
-    return ID_TKN.mintPRUF_IDToken(account1, "1", { from: account1 });
+    return ID_TKN.mintIDtoken(account1, "1", { from: account1 });
   });
 
   it("Should mint 310000 tkns to account1", async () => {
