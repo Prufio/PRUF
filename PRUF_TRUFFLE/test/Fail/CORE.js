@@ -842,7 +842,7 @@ contract("CORE", (accounts) => {
       })
 
       .then(() => {
-        console.log("Authorizing RAdmint");
+        console.log("Authorizing ROOT");
         return NODE_MGR.setCustodyTypes("3", "1", { from: account1 });
       })
 
