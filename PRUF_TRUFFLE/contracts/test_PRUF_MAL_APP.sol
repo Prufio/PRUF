@@ -582,7 +582,7 @@ contract MAL_APP is CORE_MAL {
         uint256 _escrowTime,
         uint8 _escrowStatus
     ) external 
-    // nonReentrant whenNotPaused isAuthorized(_idxHash) 
+    // nonReentrant whenNotPaused 
     {
         // Record memory rec = getRecord(_idxHash);
         // uint8 userType = getCallingUserType(rec.node);

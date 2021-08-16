@@ -211,10 +211,10 @@ contract STOR is AccessControl, ReentrancyGuard, Pausable {
     /**
      * @dev Authorize / Deauthorize ADRESSES permitted to make record modifications, per node
      * populates contract name resolution and data mappings
-     * @param   _contractName - String name of contract
-     * @param   _contractAddr - address of contract
-     * @param   _node - node to authorize in
-     * @param   _contractAuthLevel - auth level to assign
+     * @param _contractName - String name of contract
+     * @param _contractAddr - address of contract
+     * @param _node - node to authorize in
+     * @param _contractAuthLevel - auth level to assign
      */
     function OO_addContract(
         string calldata _contractName,
@@ -240,9 +240,9 @@ contract STOR is AccessControl, ReentrancyGuard, Pausable {
     /**
      * @dev set the default list of 11 contracts (zero index) to be applied to Nodees
      * APP_NC, APP2_NC, NODE_MGR, NODE_TKN, A_TKN, ECR_MGR, RCLR, PIP, PURCHASE, DECORATE, WRAP
-     * @param   _contractNumber - 0-10
-     * @param   _name - name
-     * @param   _contractAuthLevel - authLevel
+     * @param _contractNumber - 0-10
+     * @param _name - name
+     * @param _contractAuthLevel - authLevel
      */
     function addDefaultContracts(
         uint256 _contractNumber,
@@ -266,8 +266,8 @@ contract STOR is AccessControl, ReentrancyGuard, Pausable {
         view
         isContractAdmin
         returns (DefaultContract memory)
-    //^^^^^^^checks^^^^^^^^^
     {
+    //^^^^^^^checks^^^^^^^^^
         return (defaultContracts[_contractNumber]);
         //^^^^^^^interactions^^^^^^^^^
     }
@@ -370,7 +370,7 @@ contract STOR is AccessControl, ReentrancyGuard, Pausable {
 
     //--------------------------------External "write" contract functions / authuser---------------------------------//
 
-    /** //DPS:CHECK (no longer sets rec.countDownStart (nonexist))
+    /**
      * @dev Make a new record, writing to the 'database' mapping with basic initial asset data
      * @param   _idxHash - asset ID
      * @param   _rgtHash - rightsholder id hash
@@ -413,7 +413,7 @@ contract STOR is AccessControl, ReentrancyGuard, Pausable {
         //^^^^^^^interactions^^^^^^^^^
     }
 
-    /**  //DPS:CHECK (NEW PARAM _int32temp)
+    /**
      * @dev Modify a record, writing to the 'database' mapping with updates to multiple fields
      * @param _idxHash - record asset ID
      * @param _rgtHash - record owner ID hash
@@ -532,7 +532,7 @@ contract STOR is AccessControl, ReentrancyGuard, Pausable {
         require( //asset cannot be set L/S if in transferred or locked escrow status
             (rec.assetStatus != 5) &&
                 (rec.assetStatus != 50) &&
-                (rec.assetStatus != 55), //UNREACHABLE
+                (rec.assetStatus != 55),
             "S:SSL: Txfr or ecr-locked asset"
         );
         //^^^^^^^checks^^^^^^^^^
@@ -602,8 +602,6 @@ contract STOR is AccessControl, ReentrancyGuard, Pausable {
 
         database[_idxHash] = rec;
         //^^^^^^^effects^^^^^^^^^
-        //emit REPORT("ECR END:", _idxHash);
-        //^^^^^^^interactions^^^^^^^^^
     }
 
     /**
@@ -632,9 +630,6 @@ contract STOR is AccessControl, ReentrancyGuard, Pausable {
 
         database[_idxHash] = rec;
         //^^^^^^^effects^^^^^^^^^
-
-        //emit REPORT("Price mod", _idxHash);
-        //^^^^^^^interactions^^^^^^^^^
     }
 
     /**
