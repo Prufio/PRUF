@@ -269,7 +269,7 @@ contract UTIL_TKN is
      * @param _amount - amount of tokens to burn
      */
     function trustedAgentBurn(address _addr, uint256 _amount)
-        public
+        external
         isTrustedAgent
     {
         require(
@@ -291,7 +291,7 @@ contract UTIL_TKN is
         address _from,
         address _to,
         uint256 _amount
-    ) public isTrustedAgent {
+    ) external isTrustedAgent {
         require(
             coldWallet[_from] == 0,
             "PRuF:TAT: Cold Wallet - Trusted functions prohibited"
@@ -324,7 +324,7 @@ contract UTIL_TKN is
      * @param _to - Address to send tokens to
      * @param _amount - amount of tokens to mint
      */
-    function mint(address _to, uint256 _amount) public virtual {
+    function mint(address _to, uint256 _amount) external virtual {
         require(
             hasRole(MINTER_ROLE, _msgSender()),
             "PRuF:MOD: must have MINTER_ROLE"
@@ -344,7 +344,7 @@ contract UTIL_TKN is
      *
      * - the caller must have the `PAUSER_ROLE`.
      */
-    function pause() public virtual isPauser {
+    function pause() external virtual isPauser {
         //^^^^^^^checks^^^^^^^^^
         _pause();
         //^^^^^^^effects^^^^^^^^
@@ -359,7 +359,7 @@ contract UTIL_TKN is
      *
      * - the caller must have the `PAUSER_ROLE`.
      */
-    function unpause() public virtual isPauser {
+    function unpause() external virtual isPauser {
         //^^^^^^^checks^^^^^^^^^
         _unpause();
         //^^^^^^^effects^^^^^^^^
@@ -369,7 +369,7 @@ contract UTIL_TKN is
      * @dev Returns the cap on the token's total supply.
      * returns total cap
      */
-    function cap() public view returns (uint256) {
+    function cap() external view returns (uint256) {
         return _cap;
     }
 
