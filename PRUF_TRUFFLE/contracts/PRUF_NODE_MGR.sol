@@ -225,10 +225,7 @@ contract NODE_MGR is BASIC {
             (_ac.custodyType == 3) || (_nodeRoot == _node),
             "NM:AMAC: Root !exist"
         );
-        require(
-            NODE_TKN.tokenExists(tokenId) == 170,
-            "NM:AMAC: Node !exist"
-        );
+        require(NODE_TKN.tokenExists(tokenId) == 170, "NM:AMAC: Node !exist");
 
         //^^^^^^^checks^^^^^^^^^
 
@@ -808,10 +805,7 @@ contract NODE_MGR is BASIC {
                 "NM:CAC: Restricted from creating node in this root - caller !hold root token"
             );
         }
-        require(
-            node_index[_newNodeData.name] == 0,
-            "NM:CAC: node name exists"
-        );
+        require(node_index[_newNodeData.name] == 0, "NM:CAC: node name exists");
         require(
             (node_data[_newNode].nodeRoot == 0),
             "NM:CAC: node already exists"
