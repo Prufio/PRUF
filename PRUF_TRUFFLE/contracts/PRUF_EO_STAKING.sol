@@ -231,7 +231,7 @@ contract EO_STAKING is ReentrancyGuard, AccessControl, Pausable {
      * @param _tokenId token id to check
      */
     function claimBonus(uint256 _tokenId)
-        public
+        external
         isStakeHolder(_tokenId)
         whenNotPaused
         nonReentrant
@@ -264,7 +264,7 @@ contract EO_STAKING is ReentrancyGuard, AccessControl, Pausable {
      * @param _tokenId token id to check
      */
     function breakStake(uint256 _tokenId)
-        public
+        external
         isStakeHolder(_tokenId)
         whenNotPaused
         nonReentrant
@@ -320,7 +320,7 @@ contract EO_STAKING is ReentrancyGuard, AccessControl, Pausable {
      * @param _tokenId token id to check
      */
     function checkEligibleRewards(uint256 _tokenId)
-        public
+        external
         view
         returns (uint256, uint256)
     {
@@ -340,7 +340,7 @@ contract EO_STAKING is ReentrancyGuard, AccessControl, Pausable {
      * @param _tokenId Stake ID to return
      */
     function stakeInfo(uint256 _tokenId)
-        public
+        external
         view
         returns (
             uint256,
