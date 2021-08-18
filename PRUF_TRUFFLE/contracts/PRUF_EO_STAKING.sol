@@ -12,7 +12,7 @@ _________\/// _____________\/// _______\/// __\///////// __\/// _____________
 
 /**-----------------------------------------------------------------
  *  TO DO
- * Create misc front end functions for different stake minimums, times, and rewards. These call newStake.
+ *
  *-----------------------------------------------------------------
  *-----------------------------------------------------------------
  * Early Access Staking Specification V0.1
@@ -193,9 +193,14 @@ contract EO_STAKING is ReentrancyGuard, AccessControl, Pausable {
 
         //^^^^^^^checks^^^^^^^^^
         stakeTier[_stakeTier].minimum = _min;
-        stakeTier[_stakeTier].maximum = _max;
-        stakeTier[_stakeTier].interval = _interval;
-        stakeTier[_stakeTier].bonus = _bonus;
+        stakeTier[_stakeTier].maximum = _max; //set to zero to disable new stkes in this tier DPS:Check
+
+        if (stakeTier[_stakeTier].interval == 0) {  // active reward parameters cannot be changed DPS:Check
+            stakeTier[_stakeTier].interval = _interval;
+        }
+        if (stakeTier[_stakeTier].bonus == 0) {  // active staking reward parameters cannot be changed DPS:Check
+            stakeTier[_stakeTier].bonus = _bonus;
+        }
         //^^^^^^^effects^^^^^^^^^
     }
 
