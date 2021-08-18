@@ -247,7 +247,7 @@ contract STOR is AccessControl, ReentrancyGuard, Pausable {
         uint256 _contractNumber,
         string calldata _name,
         uint8 _contractAuthLevel
-    ) public isContractAdmin {
+    ) external isContractAdmin {
         //^^^^^^^checks^^^^^^^^^
         require(_contractNumber <= 10, "S:ADC: Contract number > 10");
         defaultContracts[_contractNumber].name = _name;
@@ -261,12 +261,12 @@ contract STOR is AccessControl, ReentrancyGuard, Pausable {
      * returns the name and auth level
      */
     function getDefaultContract(uint256 _contractNumber)
-        public
+        external
         view
         isContractAdmin
         returns (DefaultContract memory)
     {
-    //^^^^^^^checks^^^^^^^^^
+        //^^^^^^^checks^^^^^^^^^
         return (defaultContracts[_contractNumber]);
         //^^^^^^^interactions^^^^^^^^^
     }
@@ -275,7 +275,7 @@ contract STOR is AccessControl, ReentrancyGuard, Pausable {
      * @dev Set the default 11 authorized contracts
      * @param _node the Node which will be enabled for the default contracts
      */
-    function enableDefaultContractsForAC(uint32 _node) public {
+    function enableDefaultContractsForAC(uint32 _node) external {
         require(
             (NODE_TKN.ownerOf(_node) == _msgSender()) ||
                 (_msgSender() == contractNameToAddress["NODE_MGR"]),
