@@ -83,7 +83,7 @@ contract STAKE_TKN is
     /**
      * @dev Mint a stake token
      * @param _recipientAddress - Address to mint token into
-     * @param _tokenId - Token ID to mint 
+     * @param _tokenId - Token ID to mint
      */
     function mintStakeToken(address _recipientAddress, uint256 _tokenId)
         external
@@ -197,7 +197,7 @@ contract STAKE_TKN is
      *
      * See {ERC721Pausable} and {Pausable-_pause}.
      */
-    function pause() public virtual {
+    function pause() external virtual {
         require(
             hasRole(PAUSER_ROLE, _msgSender()),
             "ST:P: Caller !have pauser role"
@@ -212,7 +212,7 @@ contract STAKE_TKN is
      *
      * See {ERC721Pausable} and {Pausable-_unpause}.
      */
-    function unpause() public virtual {
+    function unpause() external virtual {
         require(
             hasRole(PAUSER_ROLE, _msgSender()),
             "ST:UP: Caller !have pauser role"
