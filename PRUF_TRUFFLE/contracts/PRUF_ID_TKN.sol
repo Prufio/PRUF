@@ -382,7 +382,7 @@ contract ID_TKN is
      *
      * - the caller must have the `PAUSER_ROLE`.
      */
-    function pause() public virtual {
+    function pause() external virtual {
         require(
             hasRole(PAUSER_ROLE, _msgSender()),
             "PIDT:P: ERC721PresetMinterPauserAutoId: must have pauser role to pause"
@@ -401,7 +401,7 @@ contract ID_TKN is
      *
      * - the caller must have the `PAUSER_ROLE`.
      */
-    function unpause() public virtual {
+    function unpause() external virtual {
         require(
             hasRole(PAUSER_ROLE, _msgSender()),
             "PIDT:UP: ERC721PresetMinterPauserAutoId: must have pauser role to unpause"
