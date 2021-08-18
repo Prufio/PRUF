@@ -75,17 +75,16 @@ contract APP2_NC is CORE {
      * @param _idxHash idx of asset to Modify
      * @param _exportTo node target for export
      */
-    //DPS:TEST
     function exportAssetTo(bytes32 _idxHash, uint32 _exportTo)
         external
         whenNotPaused
         isAuthorized(_idxHash)
     {
         Record memory rec = getRecord(_idxHash);
-        Node memory node_info =getNodeinfo(rec.node);
+        Node memory node_info = getNodeinfo(rec.node);
 
         require(
-            (rec.assetStatus == 51) || (rec.assetStatus == 70), //DPS:check
+            (rec.assetStatus == 51) || (rec.assetStatus == 70),
             "APP2_NC:EXT: Must be in transferrable status (51)"
         );
         require(
@@ -97,7 +96,7 @@ contract APP2_NC is CORE {
             "APP2_NC:EXT: Contract does not support management types > 5 or node is locked"
         );
         if ((node_info.managementType == 1) || (node_info.managementType == 5)) {
-            require( //holds node token if node is restricted --------DPS:TEST ---- NEW
+            require(
                 (NODE_TKN.ownerOf(rec.node) == _msgSender()),
                 "APP2_NC:EXT: Restricted from exporting assets from this node - does not hold ACtoken"
             );

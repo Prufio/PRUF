@@ -62,7 +62,7 @@ contract NODE_MGR is BASIC {
     modifier isNodeMinter() {
         require(
             hasRole(NODE_MINTER_ROLE, _msgSender()),
-            "ACM:MOD-INM: Must have NODE_MINTER_ROLE"
+            "NM:MOD-INM: Must have NODE_MINTER_ROLE"
         );
         _;
     }
@@ -74,7 +74,7 @@ contract NODE_MGR is BASIC {
     modifier isNodeHolder(uint32 _node) {
         require(
             (NODE_TKN.ownerOf(_node) == _msgSender()),
-            "ACM:MOD-INTHoC: _msgSender() not authorized in Node"
+            "NM:MOD-INTHoC: _msgSender() not authorized in Node"
         );
         _;
     }
@@ -106,12 +106,12 @@ contract NODE_MGR is BASIC {
         external
         isContractAdmin
     {
-        require((node_data[_node].nodeRoot != 0), "ACM:AIS: node !exist");
+        require((node_data[_node].nodeRoot != 0), "NM:AIS: node !exist");
         require(
             _newDiscount >= node_data[_node].discount,
-            "ACM:AIS: New share < old share"
+            "NM:AIS: New share < old share"
         );
-        require(_newDiscount <= 10000, "ACM:AIS: Discount > 100% (10000)");
+        require(_newDiscount <= 10000, "NM:AIS: Discount > 100% (10000)");
         //^^^^^^^checks^^^^^^^^^
 
         node_data[_node].discount = _newDiscount;
@@ -177,12 +177,12 @@ contract NODE_MGR is BASIC {
     ) external isContractAdmin {
         require(
             node_index[_name] == _fromNode,
-            "ACM:TN: Name not in source node"
+            "NM:TN: Name not in source node"
         ); //source Node_Name must match name given
 
         require(
             (node_data[_toNode].CAS1 == B320xF_), //dest node must have CAS1 set to 0xFFFF.....
-            "ACM:TN: Destination node not prepared for name transfer"
+            "NM:TN: Destination node not prepared for name transfer"
         );
         //^^^^^^^checks^^^^^^^^^
 
@@ -219,15 +219,15 @@ contract NODE_MGR is BASIC {
         Node memory _ac = node_data[_nodeRoot];
         uint256 tokenId = uint256(_node);
 
-        require((tokenId != 0), "ACM:AMAC: node = 0"); //sanity check inputs
-        require(_discount <= 10000, "ACM:AMAC: Discount > 10000 (100%)");
+        require((tokenId != 0), "NM:AMAC: Node = 0"); //sanity check inputs
+        require(_discount <= 10000, "NM:AMAC: Discount > 10000 (100%)");
         require( //has valid root
             (_ac.custodyType == 3) || (_nodeRoot == _node),
-            "ACM:AMAC: Root !exist"
+            "NM:AMAC: Root !exist"
         );
         require(
             NODE_TKN.tokenExists(tokenId) == 170,
-            "ACM:AMAC: ACtoken !exist"
+            "NM:AMAC: Node !exist"
         );
 
         //^^^^^^^checks^^^^^^^^^
@@ -256,9 +256,9 @@ contract NODE_MGR is BASIC {
     ) external isContractAdmin nonReentrant {
         require(
             (_position > 0) && (_position < 9),
-            "ACM:AMACS: Bit position !>0||<9"
+            "NM:AMACS: Bit position !>0||<9"
         );
-        require(_bit < 2, "ACM:AMACS: Bit != 1 or 0");
+        require(_bit < 2, "NM:AMACS: Bit != 1 or 0");
 
         //^^^^^^^checks^^^^^^^^^
 
@@ -338,11 +338,11 @@ contract NODE_MGR is BASIC {
     ) external nonReentrant returns (uint256) {
         require(
             nodeTokenIndex < 4294000000,
-            "ACM:PACN: Only 4294000000 node tokens allowed"
+            "NM:PACN: Only 4294000000 node tokens allowed"
         );
         require(
             (ID_TKN.balanceOf(_msgSender()) == 1),
-            "ACM:PACN: Caller !valid PRuF_ID holder"
+            "NM:PACN: Caller !valid PRuF_ID holder"
         );
         //^^^^^^^checks^^^^^^^^^
 
@@ -421,7 +421,7 @@ contract NODE_MGR is BASIC {
             (node_index[_name] == 0) || //name is unassigned
                 (keccak256(abi.encodePacked(_name)) == //name is same as old name
                     (keccak256(abi.encodePacked(node_data[_node].name)))),
-            "ACM:UACN: Name already in use or is same as the previous"
+            "NM:UACN: Name already in use or is same as the previous"
         );
         //^^^^^^^checks^^^^^^^^^
 
@@ -445,7 +445,7 @@ contract NODE_MGR is BASIC {
     ) external whenNotPaused isNodeHolder(_node) {
         require(
             getSwitchAt(_node, 1) == 0,
-            "ACM:UNC: CAS for node is locked and cannot be written"
+            "NM:UNC: CAS for node is locked and cannot be written"
         );
         //^^^^^^^checks^^^^^^^^^
         node_data[_node].CAS1 = _CAS1;
@@ -490,19 +490,19 @@ contract NODE_MGR is BASIC {
     ) external whenNotPaused isNodeHolder(_node) {
         require(
             node_data[_node].managementType == 255,
-            "ACM:UACI: Immutable node data already set"
+            "NM:UACI: Immutable node data already set"
         );
         require(
             _managementType != 255,
-            "ACM:UACI: managementType = 255(Unconfigured)"
+            "NM:UACI: managementType = 255(Unconfigured)"
         );
         require( //_managementType is a valid type
             (validManagementTypes[_managementType] > 0),
-            "ACM:UACI: managementType is invalid (0)"
+            "NM:UACI: managementType is invalid (0)"
         );
         require( //_storageProvider is a valid type
             (validStorageProviders[_storageProvider] > 0),
-            "ACM:UACI: storageProvider is invalid (0)"
+            "NM:UACI: storageProvider is invalid (0)"
         );
         //^^^^^^^checks^^^^^^^^^
 
@@ -729,9 +729,9 @@ contract NODE_MGR is BASIC {
         returns (Invoice memory)
     {
         Node memory node_info = node_data[_node];
-        require(node_info.nodeRoot != 0, "ACM:GSC: node !exist");
+        require(node_info.nodeRoot != 0, "NM:GSC: node !exist");
 
-        require(_service != 0, "ACM:GSC: Service type = 0");
+        require(_service != 0, "NM:GSC: Service type = 0");
         //^^^^^^^checks^^^^^^^^^
         uint32 rootNode = node_info.nodeRoot;
 
@@ -777,44 +777,44 @@ contract NODE_MGR is BASIC {
         Node memory _RootNodeData = node_data[_newNodeData.nodeRoot];
         uint256 tokenId = uint256(_newNode);
 
-        require(tokenId != 0, "ACM:CAC: node = 0"); //sanity check inputs
+        require(tokenId != 0, "NM:CAC: node = 0"); //sanity check inputs
         require(
             _newNodeData.discount <= 10000,
-            "ACM:CAC: Discount > 10000 (100%)"
+            "NM:CAC: Discount > 10000 (100%)"
         );
         require( //_ac.managementType is a valid type or explicitly unset (255)
             (validManagementTypes[_newNodeData.managementType] > 0) ||
                 (_newNodeData.managementType == 255),
-            "ACM:CAC: Management type is invalid (0)"
+            "NM:CAC: Management type is invalid (0)"
         );
         require( //_ac.storageProvider is a valid type or not specified (0)
             (validStorageProviders[_newNodeData.storageProvider] > 0) ||
                 (_newNodeData.storageProvider == 0),
-            "ACM:CAC: Storage Provider is invalid (0)"
+            "NM:CAC: Storage Provider is invalid (0)"
         );
         require( //_ac.custodyType is a valid type or specifically unset (255)
             (validCustodyTypes[_newNodeData.custodyType] > 0) ||
                 (_newNodeData.custodyType == 255),
-            "ACM:CAC: Custody type is invalid (0)"
+            "NM:CAC: Custody type is invalid (0)"
         );
         require( //has valid root
             (_RootNodeData.custodyType == 3) ||
                 (_newNodeData.nodeRoot == _newNode),
-            "ACM:CAC: Root !exist"
+            "NM:CAC: Root !exist"
         );
         if (_RootNodeData.managementType != 0) {
             require( //holds root token if root is restricted
                 (NODE_TKN.ownerOf(_newNodeData.nodeRoot) == _msgSender()),
-                "ACM:CAC: Restricted from creating node in this root - caller !hold root token"
+                "NM:CAC: Restricted from creating node in this root - caller !hold root token"
             );
         }
         require(
             node_index[_newNodeData.name] == 0,
-            "ACM:CAC: node name exists"
+            "NM:CAC: node name exists"
         );
         require(
             (node_data[_newNode].nodeRoot == 0),
-            "ACM:CAC: node already exists"
+            "NM:CAC: node already exists"
         );
         //^^^^^^^checks^^^^^^^^^
 

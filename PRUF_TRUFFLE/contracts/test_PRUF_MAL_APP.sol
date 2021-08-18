@@ -533,7 +533,7 @@ contract MAL_APP is CORE_MAL {
     /*
      *     @dev Export FROM Custodial:
      */
-    function changeAC(bytes32 _idxHash, uint32 newNode)
+    function changeNode(bytes32 _idxHash, uint32 newNode)
         external
         // nonReentrant
         // whenNotPaused
@@ -570,7 +570,7 @@ contract MAL_APP is CORE_MAL {
 
         // APP.transferAssetToken(_addr, _idxHash);
         // writeRecord(_idxHash, rec);
-        STOR.changeAC(_idxHash, newNode);
+        STOR.changeNode(_idxHash, newNode);
 
         return rec.assetStatus;
         //^^^^^^^interactions^^^^^^^^^
@@ -582,7 +582,7 @@ contract MAL_APP is CORE_MAL {
         uint256 _escrowTime,
         uint8 _escrowStatus
     ) external 
-    // nonReentrant whenNotPaused isAuthorized(_idxHash) 
+    // nonReentrant whenNotPaused 
     {
         // Record memory rec = getRecord(_idxHash);
         // uint8 userType = getCallingUserType(rec.node);

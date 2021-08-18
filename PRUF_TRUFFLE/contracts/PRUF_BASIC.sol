@@ -241,7 +241,6 @@ abstract contract BASIC is
     /***
      * @dev Returns to normal state. (pausable)
      */
-
     function unpause() external isPauser {
         _unpause();
     }

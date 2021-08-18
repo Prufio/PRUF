@@ -112,7 +112,7 @@ let trustedAgentRoleB32;
 let assetTransferRoleB32;
 let discardRoleB32;
 
-contract("ECR_NC", (accounts) => {
+contract("APP2", (accounts) => {
   console.log(
     "//**************************BEGIN BOOTSTRAP**************************//"
   );
@@ -1579,13 +1579,17 @@ contract("ECR_NC", (accounts) => {
     return ID_TKN.reMintIDtoken(account4, "3", { from: account1 });
   });
 
+  it("Should set SharesAddress", async () => {
+    console.log(
+      "//**************************************BEGIN APP2 TESTS**********************************************/"
+    );
+    console.log(
+      "//**************************************BEGIN APP2 SETUP**********************************************/"
+    );
+    return UTIL_TKN.AdminSetSharesAddress(account1, { from: account1 });
+  });
+
   it("Should mint 30000 tokens to account2", async () => {
-    console.log(
-      "//**************************************BEGIN ECR TEST**********************************************/"
-    );
-    console.log(
-      "//**************************************BEGIN ECR SETUP**********************************************/"
-    );
     return UTIL_TKN.mint(account2, "30000000000000000000000", {
       from: account1,
     });
@@ -1597,230 +1601,360 @@ contract("ECR_NC", (accounts) => {
     });
   });
 
-  it("Should write asset1 in Node 12", async () => {
-    return APP_NC.newRecord(asset1, rgt1, "1000003", "100", { from: account4 });
+  it("Should mint 30000 tokens to account5", async () => {
+    return UTIL_TKN.mint(account5, "30000000000000000000000", {
+      from: account1,
+    });
   });
 
-  it("Should write asset2 in Node 12", async () => {
-    return APP_NC.newRecord(asset2, rgt2, "1000003", "100", { from: account4 });
+  it("Should mint asset1 in AC10 to APP", async () => {
+    return APP.newRecord(asset1, rgt1, "1000001", "100", { from: account2 });
   });
 
-  it("Should write asset3 in Node 12", async () => {
-    return APP_NC.newRecord(asset3, rgt3, "1000003", "100", { from: account4 });
+  it("Should authroize account2 in AC1000002", async () => {
+    return NODE_MGR.addUser("1000002", account2Hash, "1", { from: account1 });
   });
 
-  it("Should set asset3 into status 51", async () => {
-    return APP2_NC.modifyStatus(asset3, "51", { from: account4 });
+  it("Should mint asset2 in AC11 to APP", async () => {
+    return APP.newRecord(asset2, rgt2, "1000002", "100", { from: account2 });
   });
 
-  it("Should set asset3 into status 3(stolen)", async () => {
-    return APP2_NC.setLostOrStolen(asset3, "53", { from: account4 });
+  it("Should mint asset3 in AC11 to APP", async () => {
+    return APP.newRecord(asset3, rgt3, "1000001", "100", { from: account2 });
   });
 
-  it("Should write asset4 in Node 12", async () => {
-    return APP_NC.newRecord(asset4, rgt4, "1000003", "100", { from: account4 });
+  it("Should mint asset4 in AC11 to APP", async () => {
+    return APP.newRecord(asset4, rgt4, "1000001", "100", { from: account2 });
   });
 
-  it("Should set asset4 into status 51", async () => {
-    return APP2_NC.modifyStatus(asset4, "51", { from: account4 });
+  it("Should mint ID_TKN(1) to account5", async () => {
+    return ID_TKN.mintIDtoken(account5, "5", { from: account1 });
   });
 
-  it("Should set asset4 into status 4(lost)", async () => {
-    return APP2_NC.setLostOrStolen(asset4, "54", { from: account4 });
+  it("Should authroize account2 in AC1000002", async () => {
+    return NODE_MGR.addUser("1000004", account5Hash, "1", { from: account10 });
   });
 
-  it("Should write asset5 in Node 12", async () => {
-    return APP.newRecord(asset5, rgt5, "1000001", "100", { from: account2 });
+  it("Should mint asset5 in AC12 to account5", async () => {
+    return APP_NC.newRecord(asset5, rgt5, "1000004", "100", { from: account5 });
   });
 
-  it("Should set asset5 into status 1", async () => {
-    return APP2.modifyStatus(asset5, rgt5, "1", { from: account2 });
+  it("Should put asset3 in to exportable status", async () => {
+    return APP2.modifyStatus(asset3, rgt3, "51", { from: account2 });
   });
 
-  //1
-  it("Should fail because caller is not holder of token", async () => {
-    console.log(
-      "//**************************************END ECR_NC SETUP**********************************************/"
-    );
-    console.log(
-      "//**************************************BEGIN ECR_NC FAIL BATCH (7)**********************************************/"
-    );
-    console.log(
-      "//**************************************BEGIN setEscrow FAIL BATCH**********************************************/"
-    );
-    return ECR_NC.setEscrow(asset5, account2Hash, "180", "50", {
+  it("Should export asset3 to put in unregistered status", async () => {
+    return APP2.exportAssetTo(asset3, "1000003", account2, rgt3, {
       from: account2,
     });
   });
 
-  it("Should make ECR_NC unauthorized", async () => {
-    return STOR.enableContractForAC("ECR_NC", "1000003", "0", { from: account1 })
-      .then(() => {
-        return STOR.enableContractForAC("ECR_NC", "1000004", "0", {
-          from: account10,
-        });
-      })
-      .then(() => {
-        return STOR.enableContractForAC("ECR_NC", "1000005", "0", {
-          from: account1,
-        });
-      });
+  it("Should transfer asset3 to APP", async () => {
+    return A_TKN.safeTransferFrom(account2, APP.address, asset3, {
+      from: account2,
+    });
   });
 
-  it("Should set asset1 into status 1", async () => {
-    return APP2_NC.modifyStatus(asset1, "51", { from: account4 });
+  it("Should put asset4 in to transferable status", async () => {
+    return APP2.modifyStatus(asset4, rgt4, "1", { from: account2 });
+  });
+
+  it("Should transfer asset4 to put in unregistered status", async () => {
+    return APP.transferAsset(asset4, rgt4, "0x0", { from: account2 });
+  });
+
+  it("Should pause APP2", async () => {
+    return APP2.pause({ from: account1 });
+  });
+
+  //1
+  it("Should Fail because APP2 is paused", async () => {
+    console.log(
+      "//**************************************END APP2 SETUP**********************************************/"
+    );
+    console.log(
+      "//**************************************BEGIN APP2 FAIL BATCH (32)**********************************************/"
+    );
+    console.log(
+      "//**************************************BEGIN modifyStatus FAIL BATCH**********************************************/"
+    );
+    return APP2.modifyStatus(asset5, rgt5, "1", { from: account5 });
+  });
+
+  it("Should unpause APP2", async () => {
+    return APP2.unpause({ from: account1 });
   });
 
   //2
-  it("Should fail because ECR_NC is not auth in Node", async () => {
-    return ECR_NC.setEscrow(asset1, account4Hash, "180", "56", {
-      from: account4,
-    });
-  });
-
-  it("Should make ECR_NC Authorized", async () => {
-    console.log("Authorizing ECR_NC");
-    return STOR.enableContractForAC("ECR_NC", "1000003", "3", { from: account1 })
-
-      .then(() => {
-        return STOR.enableContractForAC("ECR_NC", "1000004", "3", {
-          from: account10,
-        });
-      })
-
-      .then(() => {
-        return STOR.enableContractForAC("ECR_NC", "1000005", "3", {
-          from: account1,
-        });
-      });
+  it("Should Fail because APP does not hold token", async () => {
+    return APP2.modifyStatus(asset5, rgt5, "1", { from: account5 });
   });
 
   //3
-  it("Should fail because set status < 50", async () => {
-    return ECR_NC.setEscrow(asset2, account4Hash, "180", "6", {
-      from: account4,
-    });
+  it("Should Fail because account5 != auth for AC10 assets", async () => {
+    return APP2.modifyStatus(asset1, rgt1, "1", { from: account5 });
   });
 
   //4
-  it("Should fail because not being set to auth NC escrow status", async () => {
-    return ECR_NC.setEscrow(asset1, account4Hash, "180", "6", {
-      from: account4,
-    });
-  });
-
-  it("Should set asset1 into status 51", async () => {
-    console.log(
-      "//**************************************END setEscrow FAIL BATCH**********************************************/"
-    );
-    console.log(
-      "//**************************************BEGIN endEscrow FAIL BATCH**********************************************/"
-    );
-    return APP2_NC.modifyStatus(asset1, "51", { from: account4 });
-  });
-
-  it("Should put asset1 into escrow", async () => {
-    return ECR_NC.setEscrow(asset1, account4Hash, "180", "56", {
-      from: account4,
-    });
-  });
-
-  it("Should make ECR_NC unauthorized", async () => {
-    console.log("unAuthorizing ECR_NC");
-    return STOR.enableContractForAC("ECR_NC", "1000003", "0", { from: account1 })
-
-      .then(() => {
-        return STOR.enableContractForAC("ECR_NC", "1000004", "0", {
-          from: account10,
-        });
-      })
-
-      .then(() => {
-        return STOR.enableContractForAC("ECR_NC", "1000005", "0", {
-          from: account1,
-        });
-      });
+  it("Should Fail because being placed in exported status", async () => {
+    return APP2.modifyStatus(asset1, rgt1, "70", { from: account2 });
   });
 
   //5
-  it("Should fail because ECR_NC is not an authroized in Node", async () => {
-    return ECR_NC.endEscrow(asset1, { from: account4 });
-  });
-
-  it("Should make ECR_NC Authorized", async () => {
-    console.log("Authorizing ECR_NC");
-    return STOR.enableContractForAC("ECR_NC", "1000003", "3", { from: account1 })
-
-      .then(() => {
-        return STOR.enableContractForAC("ECR_NC", "1000004", "3", {
-          from: account10,
-        });
-      })
-
-      .then(() => {
-        return STOR.enableContractForAC("ECR_NC", "1000005", "3", {
-          from: account1,
-        });
-      });
-  });
-
-  it("Should take asset1 out of escrow", async () => {
-    return ECR_NC.endEscrow(asset1, { from: account4 });
-  });
-
-  it("Should set asset1 into status 51", async () => {
-    return APP2_NC.modifyStatus(asset1, "51", { from: account4 });
-  });
-
-  it("Should put asset5 into escrow", async () => {
-    return ECR.setEscrow(asset5, account2Hash, "180", "6", { from: account2 });
-  });
-
-  it("Should make ECR_NC authorized in AC10", async () => {
-    return STOR.enableContractForAC("ECR_NC", "1000001", "3", { from: account1 });
+  it("Should Fail because being placed in status > 100", async () => {
+    return APP2.modifyStatus(asset1, rgt1, "101", { from: account2 });
   });
 
   //6
-  it("Should fail because record in escrow <50", async () => {
-    return ECR_NC.endEscrow(asset5, { from: account4 });
-  });
-
-  it("Should make ECR_NC uauthorized in AC10", async () => {
-    return STOR.enableContractForAC("ECR_NC", "1000001", "0", { from: account1 });
-  });
-
-  it("Should take asset5 out of escrow", async () => {
-    return ECR.endEscrow(asset5, { from: account2 });
-  });
-
-  it("Should put asset1 into escrow", async () => {
-    return ECR_NC.setEscrow(asset1, account4Hash, "180", "56", {
-      from: account4,
-    });
+  it("Should Fail because being placed in reserved status 7", async () => {
+    return APP2.modifyStatus(asset1, rgt1, "7", { from: account2 });
   });
 
   //7
-  it("Should fail because caller != escrow owner", async () => {
-    return ECR_NC.endEscrow(asset1, { from: account5 });
+  it("Should Fail because being placed in reserved status 57", async () => {
+    return APP2.modifyStatus(asset1, rgt1, "57", { from: account2 });
   });
 
-  it("Should take asset1 out of escrow", async () => {
-    return ECR_NC.endEscrow(asset1, { from: account4 });
+  //8
+  it("Should Fail because being placed in reserved status 58", async () => {
+    return APP2.modifyStatus(asset1, rgt1, "58", { from: account2 });
   });
 
-  it("Should set asset1 into status 51", async () => {
-    return APP2_NC.modifyStatus(asset1, "51", { from: account4 });
+  //9
+  it("Should fail because asset4 is unregistered(transfered)", async () => {
+    return APP2.modifyStatus(asset4, rgtFFF, "1", { from: account2 });
+  });
+
+  it("Should authorize account7 in Node 10", async () => {
+    return NODE_MGR.addUser("1000001", account7Hash, "9", { from: account1 });
+  });
+
+  //10
+  it("Should fail because account7 is usertype 9 trying to modStatus < 49", async () => {
+    return APP2.modifyStatus(asset1, rgt1, "1", { from: account7 });
+  });
+
+  it("Should unauthorize account7 in Node 10", async () => {
+    return NODE_MGR.addUser("1000001", account7Hash, "0", { from: account1 });
+  });
+
+  //11
+  it("Should fail because wrong rgt", async () => {
+    return APP2.modifyStatus(asset1, rgt2, "1", { from: account2 });
+  });
+
+  it("Should pause APP2", async () => {
+    return APP2.pause({ from: account1 });
+  });
+
+  //12
+  it("Should fail because APP2 is paused", async () => {
+    console.log(
+      "//**************************************END modifyStatus FAIL BATCH**********************************************/"
+    );
+    console.log(
+      "//**************************************BEGIN setLostOrStolen FAIL BATCH**********************************************/"
+    );
+    return APP2.setLostOrStolen(asset5, rgt5, "3", { from: account5 });
+  });
+
+  it("Should unpause APP2", async () => {
+    return APP2.unpause({ from: account1 });
+  });
+
+  //13
+  it("Should fail because APP does not hold token", async () => {
+    return APP2.setLostOrStolen(asset5, rgt5, "3", { from: account5 });
+  });
+
+  //14
+  it("Should Fail because account5 != auth for AC1000001 assets", async () => {
+    return APP2.setLostOrStolen(asset1, rgt1, "3", { from: account5 });
+  });
+
+  it("Should authorize account7 in AC1000001", async () => {
+    return NODE_MGR.addUser("1000001", account7Hash, "9", { from: account1 });
+  });
+
+  //15
+  it("Should fail because account7 is usertype 9 trying to modStatus < 49", async () => {
+    return APP2.setLostOrStolen(asset1, rgt1, "3", { from: account7 });
+  });
+
+  it("Should unauthorize account7 in AC1000001", async () => {
+    return NODE_MGR.addUser("1000001", account7Hash, "0", { from: account1 });
+  });
+
+  //16
+  it("Should fail because wrong rgt", async () => {
+    return APP2.setLostOrStolen(asset1, rgt2, "3", { from: account2 });
+  });
+
+  it("Should pause APP2", async () => {
+    return APP2.pause({ from: account1 });
+  });
+
+  //17
+  it("Should fail because APP2 is paused", async () => {
+    console.log(
+      "//**************************************END setLostOrStolen FAIL BATCH**********************************************/"
+    );
+    console.log(
+      "//**************************************BEGIN decrementCounter FAIL BATCH**********************************************/"
+    );
+    return APP2.decrementCounter(asset5, rgt5, "15", { from: account5 });
+  });
+
+  it("Should unpause APP2", async () => {
+    return APP2.unpause({ from: account1 });
+  });
+
+  //18
+  it("Should fail because APP does not hold token", async () => {
+    return APP2.decrementCounter(asset5, rgt5, "15", { from: account5 });
+  });
+
+  //19
+  it("Should Fail because account4 != auth for AC10 assets", async () => {
+    return APP2.decrementCounter(asset1, rgt1, "15", { from: account5 });
+  });
+
+  //20
+  it("Should fail because asset4 is unregistered(transfered)", async () => {
+    return APP2.decrementCounter(asset4, rgtFFF, "15", { from: account2 });
+  });
+
+  //21
+  it("Should fail because wrong rgt", async () => {
+    return APP2.decrementCounter(asset1, rgt2, "15", { from: account2 });
+  });
+
+  it("Should pause APP2", async () => {
+    return APP2.pause({ from: account1 });
+  });
+
+  //22
+  it("Should fail because APP2 is paused", async () => {
+    console.log(
+      "//**************************************END decrementCounter FAIL BATCH**********************************************/"
+    );
+    console.log(
+      "//**************************************BEGIN modifyMutableStorage FAIL BATCH**********************************************/"
+    );
+    return APP2.modifyMutableStorage(asset5, rgt5, rgt5, rgt000, {
+      from: account5,
+    });
+  });
+
+  it("Should unpause APP2", async () => {
+    return APP2.unpause({ from: account1 });
+  });
+
+  //23
+  it("Should fail because APP does not hold token", async () => {
+    return APP2.modifyMutableStorage(asset5, rgt5, rgt5, rgt000, {
+      from: account5,
+    });
+  });
+
+  //24
+  it("Should Fail because account5 != auth for AC10 assets", async () => {
+    return APP2.modifyMutableStorage(asset1, rgt1, rgt1, rgt000, {
+      from: account5,
+    });
+  });
+
+  //25
+  it("Should fail because asset4 is unregistered(transfered)", async () => {
+    return APP2.modifyMutableStorage(asset4, rgtFFF, rgt4, rgt000, {
+      from: account2,
+    });
+  });
+
+  //26
+  it("Should fail because wrong rgt", async () => {
+    return APP2.modifyMutableStorage(asset1, rgt2, rgt2, rgt000, {
+      from: account2,
+    });
+  });
+
+  it("Should pause APP2", async () => {
+    return APP2.pause({ from: account1 });
+  });
+
+  //27
+  it("Should fail because APP2 is paused", async () => {
+    console.log(
+      "//**************************************END modifyMutableStorage FAIL BATCH**********************************************/"
+    );
+    console.log(
+      "//**************************************BEGIN exportAsset FAIL BATCH**********************************************/"
+    );
+    return APP2.exportAssetTo(asset5, "1000003", account5, rgt5, {
+      from: account5,
+    });
+  });
+
+  it("Should unpause APP2", async () => {
+    return APP2.unpause({ from: account1 });
+  });
+
+  //28
+  it("Should fail because APP does not hold token", async () => {
+    return APP2.exportAssetTo(asset5, "1000003", account5, rgt5, {
+      from: account5,
+    });
+  });
+
+  it("Should set asset1 to newAssetStatus(51)", async () => {
+    return APP2.modifyStatus(asset1, rgt1, "51", { from: account2 });
+  });
+
+  //29
+  it("Should Fail because account5 != auth for AC1000001 assets", async () => {
+    return APP2.exportAssetTo(asset1, "1000003", account4, rgt1, {
+      from: account5,
+    });
+  });
+
+  it("Should set asset1 to newAssetStatus(1)", async () => {
+    return APP2.modifyStatus(asset1, rgt1, "1", { from: account2 });
+  });
+
+  //30
+  it("Should Fail because asset must be in stat 51", async () => {
+    return APP2.exportAssetTo(asset1, "1000003", account4, rgt1, {
+      from: account2,
+    });
+  });
+
+  it("Should set asset1 to newAssetStatus(51)", async () => {
+    return APP2.modifyStatus(asset1, rgt1, "51", { from: account2 });
+  });
+
+  //31
+  it("Should Fail because you cannot set asset to new root", async () => {
+    return APP2.exportAssetTo(asset1, "1000006", account4, rgt1, {
+      from: account2,
+    });
+  });
+
+  //32
+  it("Should Fail because rgt !match", async () => {
+    return APP2.exportAssetTo(asset1, "1000003", account4, rgt5, {
+      from: account2,
+    });
   });
 
   it("Should set SharesAddress", async () => {
     console.log(
-      "//**************************************END endEscrow FAIL BATCH**********************************************/"
+      "//**************************************END modifyMutableStorage FAIL BATCH**********************************************/"
     );
     console.log(
-      "//**************************************END ECR_NC FAIL BATCH**********************************************/"
+      "//**************************************END APP2 FAIL BATCH**********************************************/"
     );
     console.log(
-      "//**************************************END ECR_NC TEST**********************************************/"
+      "//**************************************END APP2 TEST**********************************************/"
     );
     console.log(
       "//**************************************BEGIN THE WORKS CUSTODIAL**********************************************/"

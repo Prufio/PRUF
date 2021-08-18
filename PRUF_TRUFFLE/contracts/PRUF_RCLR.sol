@@ -29,7 +29,7 @@ contract RCLR is ECR_CORE, CORE {
     //--------------------------------------------External Functions--------------------------
 
     /**
-     * @dev //discards item -- caller is assetToken contract
+     * @dev discards item -- caller is assetToken contract
      * @param _idxHash asset ID
      * @param _sender discarder
      * Caller Must have DISCARD_ROLE
@@ -66,12 +66,12 @@ contract RCLR is ECR_CORE, CORE {
     }
 
     /** 
-     * @dev reutilize a recycled asset //DPS:CHECK NEW REQUIRES!!!
+     * @dev reutilize a recycled asset
      * maybe describe the reqs in this one, back us up on the security
      * @param _idxHash asset ID
      * @param _rgtHash rights holder hash to set
      */
-    function recycle( //DPS:CHECK NEW PARAMETERS
+    function recycle(
         bytes32 _idxHash,
         bytes32 _rgtHash
     ) external nonReentrant whenNotPaused {

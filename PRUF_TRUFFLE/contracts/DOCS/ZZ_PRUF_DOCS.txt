@@ -33,11 +33,11 @@ pragma solidity ^0.6.7;
 
 /*----------------------------------------------------------------
  *TO DO :
- * zero root costs when ACTHcosts are zero? (-NOPE-)
+ * zero root costs when NTHcosts are zero? (-NOPE-)
  *
  * staking, 2% to stskers, 3% to root_address
  *
- *      * hash AC with IDX for chain specific stuff?
+ *      * hash Node with IDX for chain specific stuff?
  *
  *      * 25% staker rewards on nodes, nodeholders can stake.
  *      
@@ -67,7 +67,7 @@ pragma solidity ^0.6.7;
  *
  *      *Value proposition - general
  *
- *      *Value proposition - AC token / AC operator
+ *      *Value proposition - Node token / Node operator
  *
  *      *Value proposition - B.Pruf 
  *
@@ -89,7 +89,7 @@ pragma solidity ^0.6.7;
  *  record is locked in escrow and the escrow contract gets the token. The asset is put into an indefinite escrow, 
  *  where the escrow amount is unpaid and time is indefinite. the asset owner is the escrow "holder" and can revert
  *  the escrow if they desire, which reverts the assetToken to their address. escrow amount is determined 
- *  AT THE TIME OF RECYCLING by the new record costs of the AC that the record is being recycled into by
+ *  AT THE TIME OF RECYCLING by the new record costs of the Node that the record is being recycled into by
  *  the new owner.
  *
  *
@@ -140,7 +140,7 @@ pragma solidity ^0.6.7;
 *-----------------------------------------------------------------
  * NOTES 
  * All assetclasses in the same root should use the same data structure to generate the idxHash. Other structures 
- *      will result in a nonconforming "hidden" asset only findable in its own web interface, and not AC transportable.
+ *      will result in a nonconforming "hidden" asset only findable in its own web interface, and not Node transportable.
  *
  * When upgrading a contract, all authorized nodes will be linked to the name, not the newly deplyed contract address
  * PAYABLE CONTRACTS must be given the PAYABLE_ROLE in PRUF_TKN. This includes NODE_MGR
@@ -218,9 +218,9 @@ pragma solidity ^0.6.7;
  *  STAT201 - 1
  *
  *  APP - 1
- *  NP - 1
+ *  APP2 - 1
  *  APP_NC - 2
- *  NP_NC - 2
+ *  APP2_NC - 2
  *
  *  ECR - 3
  *  ECR_NC - 3
@@ -266,7 +266,7 @@ pragma solidity ^0.6.7;
  *              IDtoken is required to mint assets (or foreign token if wrapping / decorating) )
  * 1   -- Restricted (Only ACNode holder can create, export or import - does not require IDtoken)
  * 2   -- Less Restricted (Only ACNode holder can create, import - does not require IDtoken)
- * 3   -- Authorized (caller address must be user authorized type 1 in AC)
+ * 3   -- Authorized (caller address must be user authorized type 1 in Node)
  * 4   -- Trusted (Requires ID token trust level >= 10)
  * 5   -- Remotely Managed (same as 1-restricted except ONLY ACnode hoder can change IPFS1a/b )
  * 255 -- Unconfigured - No minting permitted, not yet activated (set by default on node purchase, cannot be reverted)
@@ -293,10 +293,10 @@ pragma solidity ^0.6.7;
 - -----------------------------------------------------------------
 
 /*-----------------------------------------------------------------
- * ---------------- Authorized User Types, per AC -----------------
+ * ---------------- Authorized User Types, per Node -----------------
  *-----------------------------------------------------------------
  * 
- * -----------------  AC0 stores a count on the number of AC's a given addressHash is registered in
+ * -----------------  AC0 stores a count on the number of Node's a given addressHash is registered in
  * 0 = NO AUTHORIZATIONS
  * 1 - 4 = Standard User types
  * 1 - all priveleges

@@ -911,7 +911,7 @@ interface ID_TKN_Interface {
     /*
      * @dev Mint new PRUF_ID token
      */
-    function mintPRUF_IDToken(
+    function mintIDtoken(
         address _recipientAddress,
         uint256 _tokenId,
         string calldata _URI
@@ -923,7 +923,7 @@ interface ID_TKN_Interface {
      * burns old token
      * Sends new token to original Caller
      */
-    function reMintPRUF_IDToken(address _recipientAddress, uint256 tokenId)
+    function reMintIDtoken(address _recipientAddress, uint256 tokenId)
         external
         returns (uint256);
 
@@ -1359,7 +1359,7 @@ interface STOR_Interface {
     /*
      * @dev Change node of an asset - writes to node in the 'Record' struct of the 'database' at _idxHash
      */
-    function changeAC(bytes32 _idxHash, uint32 _newNode) external;
+    function changeNode(bytes32 _idxHash, uint32 _newNode) external;
 
     /*
      * @dev Set an asset to stolen or lost. Allows narrow modification of status 6/12 assets, normally locked

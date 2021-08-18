@@ -167,14 +167,14 @@ contract APP2 is CORE {
     ) external nonReentrant whenNotPaused isAuthorized(_idxHash) {
         Record memory rec = getRecord(_idxHash);
         uint8 userType = getCallingUserType(rec.node);
-        require((userType > 0) && (userType < 10), "APP2:MI1: User !auth in node");
+        require((userType > 0) && (userType < 10), "APP2:MMS: User !auth in node");
         require(
             needsImport(rec.assetStatus) == 0,
-            "APP2:MI1: Record in unregistered, exported, or discarded status"
+            "APP2:MMS: Record in unregistered, exported, or discarded status"
         );
         require(
             rec.rightsHolder == _rgtHash,
-            "APP2:MI1: Rightsholder does not match supplied data"
+            "APP2:MMS: Rightsholder does not match supplied data"
         );
         //^^^^^^^checks^^^^^^^^^
 
@@ -214,11 +214,11 @@ contract APP2 is CORE {
         );
         require(
             NODE_MGR.isSameRootNode(_exportTo, rec.node) == 170,
-            "A:IA: Cannot export node to new root"
+            "A:EA: Cannot export node to new root"
         );
         require(
             rec.rightsHolder == _rgtHash,
-            "APP2:MI1: Rightsholder does not match supplied data"
+            "APP2:EA: Rightsholder does not match supplied data"
         );
         //^^^^^^^checks^^^^^^^^^
 

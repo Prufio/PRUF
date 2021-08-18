@@ -112,7 +112,7 @@ let trustedAgentRoleB32;
 let assetTransferRoleB32;
 let discardRoleB32;
 
-contract("TheWorks", (accounts) => {
+contract("APP2", (accounts) => {
   console.log(
     "//**************************BEGIN BOOTSTRAP**************************//"
   );
@@ -1433,6 +1433,11 @@ contract("TheWorks", (accounts) => {
       })
 
       .then(() => {
+        console.log("Account2 => 1000002");
+        return NODE_MGR.addUser("1000002", account2Hash, "1", { from: account1 });
+      })
+
+      .then(() => {
         console.log("Account2 => 1000003");
         return NODE_MGR.addUser("1000003", account2Hash, "1", { from: account1 });
       })
@@ -1473,8 +1478,18 @@ contract("TheWorks", (accounts) => {
   });
 
 
+    it('Should set SharesAddress', async () => {
+
+        console.log("//**************************************BEGIN APP2 TESTS**********************************************/")
+        console.log("//**************************************BEGIN APP2 SETUP**********************************************/")
+        return UTIL_TKN.AdminSetSharesAddress(
+            account1,
+            { from: account1 }
+        )
+    })
+
+
     it('Should mint 30000 tokens to account2', async () => {
-        console.log("//**************************************BEGIN RCLR TEST**********************************************/")
         return UTIL_TKN.mint(
             account2,
             '30000000000000000000000',
@@ -1483,115 +1498,201 @@ contract("TheWorks", (accounts) => {
     })
 
 
-    it('Should mint 30000 tokens to account3', async () => {
-        return UTIL_TKN.mint(
-            account3,
-            '30000000000000000000000',
-            { from: account1 }
+    it('Should mint asset1 in AC10 to APP', async () => {
+        return APP.newRecord(
+        asset1, 
+        rgt1,
+        '1000001',
+        '100',
+        {from: account2}
         )
     })
 
 
-    it('Should mint 30000 tokens to account4', async () => {
-        return UTIL_TKN.mint(
-            account4,
-            '30000000000000000000000',
-            { from: account1 }
-        )
-    })
-
-
-    it('Should write asset1 in Node 1000003', async () => {
-        return APP_NC.newRecord(
-            asset1,
-            rgt1,
-            '1000003',
-            '100',
-            { from: account4 }
-        )
-    })
-
-
-    it("Should retrieve asset1", async () => {
+    it("Should retrieve asset1", async () =>{ 
         var Record = [];
-
-        return await STOR.retrieveShortRecord(asset1, { from: account2 }, function (_err, _result) {
-            if (_err) { }
-            else {
-                Record = Object.values(_result)
-                console.log(Record)
-            }
+        
+        return await STOR.retrieveShortRecord(asset1, {from: account2}, function (_err, _result) {
+            if(_err){} 
+            else{Record = Object.values(_result)
+        console.log(Record)}
         })
     })
 
 
-    it('Should change status of asset12 to status(59)', async () => {
-        return APP2_NC.modifyStatus(
-            asset1,
-            '59',
-            { from: account4 }
+    it('Should mint asset2 in AC11 to APP', async () => {
+        return APP.newRecord(
+        asset2, 
+        rgt2,
+        '1000001',
+        '100',
+        {from: account2}
         )
     })
 
 
-    it("Should retrieve asset1", async () => {
+    it("Should retrieve asset2", async () =>{ 
         var Record = [];
-
-        return await STOR.retrieveShortRecord(asset1, { from: account2 }, function (_err, _result) {
-            if (_err) { }
-            else {
-                Record = Object.values(_result)
-                console.log(Record)
-            }
+        
+        return await STOR.retrieveShortRecord(asset2, {from: account2}, function (_err, _result) {
+            if(_err){} 
+            else{Record = Object.values(_result)
+        console.log(Record)}
         })
     })
 
 
-    it('Should discard asset1', async () => {
-        return A_TKN.discard(
-            asset1,
-            { from: account4 }
+    it('Should mod status of asset 1 to 1', async () => {
+        return APP2.modifyStatus(
+        asset1,
+        rgt1,
+        '1',
+        {from: account2}
         )
     })
 
 
-    it("Should retrieve asset1", async () => {
+    it("Should retrieve asset1", async () =>{ 
         var Record = [];
+        
+        return await STOR.retrieveShortRecord(asset1, {from: account2}, function (_err, _result) {
+            if(_err){} 
+            else{Record = Object.values(_result)
+        console.log(Record)}
+        })
+    })
 
-        return await STOR.retrieveShortRecord(asset1, { from: account2 }, function (_err, _result) {
-            if (_err) { }
-            else {
-                Record = Object.values(_result)
-                console.log(Record)
-            }
+    
+    it('Should set asset1 to stolen', async () => {
+        return APP2.setLostOrStolen(
+        asset1,
+        rgt1,
+        '3',
+        {from: account2}
+        )
+    })
+
+
+    it("Should retrieve asset1", async () =>{ 
+        var Record = [];
+        
+        return await STOR.retrieveShortRecord(asset1, {from: account2}, function (_err, _result) {
+            if(_err){} 
+            else{Record = Object.values(_result)
+        console.log(Record)}
         })
     })
 
 
-    it('Should recycle asset1', async () => {
-        return RCLR.recycle(
-            asset1,
-            rgt2,
-            { from: account3 }
+    it('Should mod status of asset 1 to 1', async () => {
+        return APP2.modifyStatus(
+        asset1,
+        rgt1,
+        '1',
+        {from: account2}
         )
     })
 
 
-    it("Should retrieve asset1", async () => {
+    it("Should retrieve asset1", async () =>{ 
         var Record = [];
+        
+        return await STOR.retrieveShortRecord(asset1, {from: account2}, function (_err, _result) {
+            if(_err){} 
+            else{Record = Object.values(_result)
+        console.log(Record)}
+        })
+    })
 
-        return await STOR.retrieveShortRecord(asset1, { from: account2 }, function (_err, _result) {
-            if (_err) { }
-            else {
-                Record = Object.values(_result)
-                console.log(Record)
-            }
+    
+    it('Should decrement asset1 by 15', async () => {
+        return APP2.decrementCounter(
+        asset1,
+        rgt1,
+        '15',
+        {from: account2}
+        )
+    })
+
+
+    it("Should retrieve asset1", async () =>{ 
+        var Record = [];
+        
+        return await STOR.retrieveShortRecord(asset1, {from: account2}, function (_err, _result) {
+            if(_err){} 
+            else{Record = Object.values(_result)
+        console.log(Record)}
+        })
+    })
+
+    
+    it('Should mod mutable to rgt1 and rgt2', async () => {
+        return APP2.modifyMutableStorage(
+        asset1,
+        rgt1,
+        rgt1,
+        rgt2,
+        {from: account2}
+        )
+    })
+
+
+    it("Should retrieve asset1", async () =>{ 
+        var Record = [];
+        
+        return await STOR.retrieveShortRecord(asset1, {from: account2}, function (_err, _result) {
+            if(_err){} 
+            else{Record = Object.values(_result)
+        console.log(Record)}
+        })
+    })
+
+
+    it('Should set asset2 to newAssetStatus(51)', async () => {
+        return APP2.modifyStatus(
+        asset2,
+        rgt2,
+        '51',
+        {from: account2}
+        )
+    })
+
+
+    it("Should retrieve asset1", async () =>{ 
+        var Record = [];
+        
+        return await STOR.retrieveShortRecord(asset1, {from: account2}, function (_err, _result) {
+            if(_err){} 
+            else{Record = Object.values(_result)
+        console.log(Record)}
+        })
+    })
+
+    
+    it('Should export asset2', async () => {
+        return APP2.exportAssetTo(
+        asset2,
+        '1000001',
+        account2,
+        rgt2,
+        {from: account2}
+        )
+    })
+
+
+    it("Should retrieve asset2", async () =>{ 
+        var Record = [];
+        
+        return await STOR.retrieveShortRecord(asset2, {from: account2}, function (_err, _result) {
+            if(_err){} 
+            else{Record = Object.values(_result)
+        console.log(Record)}
         })
     })
 
 
     it("Should set SharesAddress", async () => {
-        console.log("//**************************************END RCLR TEST**********************************************/")
+        console.log("//**************************************END APP2 TEST**********************************************/")
             console.log(
               "//**************************************BEGIN THE WORKS CUSTODIAL**********************************************/"
             );
@@ -2018,7 +2119,7 @@ contract("TheWorks", (accounts) => {
             );
           });
         
-          it("Should import asset12 to Node(10)", async () => {
+          it("Should import asset12 to Node(1000001)", async () => {
             return APP.importAsset(asset12, "1000001", { from: account2 });
           });
         
@@ -2408,7 +2509,7 @@ contract("TheWorks", (accounts) => {
             );
           });
         
-          it("Should import asset13 to Node(10)", async () => {
+          it("Should import asset13 to Node(1000001)", async () => {
             return APP.importAsset(asset13, "1000001", { from: account4 });
           });
         
@@ -2769,7 +2870,7 @@ contract("TheWorks", (accounts) => {
             );
           });
         
-          it("Should set asset12 for sale for 10 pruf", async () => {
+          it("Should set asset12 for sale for 1000001 pruf", async () => {
             return PURCHASE._setPrice(asset13, "10000000000000000000", "2", "0", {
               from: account4,
             });
@@ -2823,7 +2924,7 @@ contract("TheWorks", (accounts) => {
             );
           });
         
-          it("account2 should purchase asset12 for 10 pruf", async () => {
+          it("account2 should purchase asset12 for 1000001 pruf", async () => {
             return PURCHASE.purchaseWithPRUF(asset13, { from: account4 });
           });
         
@@ -2874,5 +2975,5 @@ contract("TheWorks", (accounts) => {
               }
             );
           });
-        });
-        
+
+});
