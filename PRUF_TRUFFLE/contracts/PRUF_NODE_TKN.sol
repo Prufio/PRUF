@@ -239,7 +239,7 @@ contract NODE_TKN is
      *
      * - the caller must have the `PAUSER_ROLE`.
      */
-    function pause() public virtual {
+    function pause() external virtual {
         require(
             hasRole(PAUSER_ROLE, _msgSender()),
             "ACT:P: Caller !have pauser role"
@@ -258,7 +258,7 @@ contract NODE_TKN is
      *
      * - the caller must have the `PAUSER_ROLE`.
      */
-    function unpause() public virtual {
+    function unpause() external virtual {
         require(
             hasRole(PAUSER_ROLE, _msgSender()),
             "ACT:UP: Caller !have pauser role"
