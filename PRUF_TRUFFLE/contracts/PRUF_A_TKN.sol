@@ -400,7 +400,7 @@ contract A_TKN is
         address _from,
         address _to,
         uint256 _tokenId
-    ) public nonReentrant isTrustedAgent {
+    ) external nonReentrant isTrustedAgent {
         bytes32 _idxHash = bytes32(_tokenId);
         Record memory rec = getRecord(_idxHash);
 
@@ -511,7 +511,7 @@ contract A_TKN is
      *
      * - the caller must have the `PAUSER_ROLE`.
      */
-    function pause() public virtual {
+    function pause() external virtual {
         require(
             hasRole(PAUSER_ROLE, _msgSender()),
             "A:P: Caller !have pauser role"
@@ -531,7 +531,7 @@ contract A_TKN is
      *
      * - the caller must have the `PAUSER_ROLE`.
      */
-    function unpause() public virtual {
+    function unpause() external virtual {
         require(
             hasRole(PAUSER_ROLE, _msgSender()),
             "A:UP: Caller !have pauser role"
