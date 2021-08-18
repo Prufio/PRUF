@@ -186,11 +186,10 @@ contract EO_STAKING is ReentrancyGuard, AccessControl, Pausable {
             _interval >= 2,
             "PES:SSL: minumum allowable time for stake is 2 days"
         );
-        require( 
+        require(
             _min > 99999999999999999999, //100 pruf
             "PES:NS: Stake tier minimum amount < 100 not allowed"
         );
-
 
         //^^^^^^^checks^^^^^^^^^
         stakeTier[_stakeTier].minimum = _min;
@@ -219,7 +218,8 @@ contract EO_STAKING is ReentrancyGuard, AccessControl, Pausable {
             "PES:SMT: Stake below minumum for this tier."
         );
 
-        uint256 thisBonus = (_amount / 1000) * thisStakeTier.bonus; // calculate the fixed number of tokens to be paid each interval
+        //DPS:CHECK verify that formula is equivelant uint256 thisBonus = (_amount / 1000) * thisStakeTier.bonus;
+        uint256 thisBonus = (_amount * thisStakeTier.bonus) / 1000; // calculate the fixed number of tokens to be paid each interval
 
         newStake(_amount, thisStakeTier.interval, thisBonus);
     }
