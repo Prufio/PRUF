@@ -95,7 +95,9 @@ contract APP2_NC is CORE {
             (node_info.managementType < 6),
             "APP2_NC:EXT: Contract does not support management types > 5 or node is locked"
         );
-        if ((node_info.managementType == 1) || (node_info.managementType == 5)) {
+        if (
+            (node_info.managementType == 1) || (node_info.managementType == 5)
+        ) {
             require(
                 (NODE_TKN.ownerOf(rec.node) == _msgSender()),
                 "APP2_NC:EXT: Restricted from exporting assets from this node - does not hold ACtoken"
@@ -117,7 +119,7 @@ contract APP2_NC is CORE {
      * @param _newAssetStatus Updated status
      */
     function modifyStatus(bytes32 _idxHash, uint8 _newAssetStatus)
-        public
+        external
         nonReentrant
         whenNotPaused
         isAuthorized(_idxHash)
