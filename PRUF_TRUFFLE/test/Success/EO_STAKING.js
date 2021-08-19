@@ -147,6 +147,8 @@ contract("EO_STAKING", (accounts) => {
     stakeRoleB32 = await Helper.getStringHash("STAKE_ROLE");
 
     stakePayerRoleB32 = await Helper.getStringHash("STAKE_PAYER_ROLE");
+
+    stakeAdminRoleB32 = await Helper.getStringHash("STAKE_ADMIN_ROLE");
   });
 
   it("Should authorize STAKE_VAULT for trusted agent functions in UTIL_TKN", async () => {
@@ -178,6 +180,12 @@ contract("EO_STAKING", (accounts) => {
 
   it("Should authorize EO_STAKING to take stakes out of the STAKE_VAULT", async () => {
     return STAKE_VAULT.grantRole(stakeRoleB32, EO_STAKING.address, {
+      from: account1,
+    });
+  });
+
+  it("Should authorize EO_STAKING as stake admin in stake_vault", async () => {
+    return STAKE_VAULT.grantRole(stakeAdminRoleB32, EO_STAKING.address, {
       from: account1,
     });
   });
@@ -235,11 +243,9 @@ contract("EO_STAKING", (accounts) => {
   });
 
   it("Should set token contracts in STAKE_VAULT", async () => {
-    return STAKE_VAULT.setTokenContracts(
-      UTIL_TKN.address,
-      STAKE_TKN.address,
-      { from: account1 }
-    );
+    return STAKE_VAULT.setTokenContracts(UTIL_TKN.address, STAKE_TKN.address, {
+      from: account1,
+    });
   });
 
   it("Should set token contracts in EO_STAKING", async () => {
@@ -289,7 +295,7 @@ contract("EO_STAKING", (accounts) => {
     var Balance = [];
 
     return await EO_STAKING.getStakeLevel(
-      '1',
+      "1",
       { from: account1 },
       function (_err, _result) {
         if (_err) {
@@ -301,8 +307,7 @@ contract("EO_STAKING", (accounts) => {
     );
   });
 
-  it("Should stake 100000ü on account2", async () => {
-    await timeout(5000);
+  it("Should stake 100000ü on account2 on stakeTier1", async () => {
     return EO_STAKING.stakeMyTokens("100000000000000000000000", "1", {
       from: account2,
     });
@@ -312,7 +317,7 @@ contract("EO_STAKING", (accounts) => {
     var Balance = [];
 
     return await EO_STAKING.stakeInfo(
-      '1',
+      "1",
       { from: account1 },
       function (_err, _result) {
         if (_err) {
@@ -340,65 +345,11 @@ contract("EO_STAKING", (accounts) => {
     );
   });
 
-  it("Should retrieve stakeLevel @stake2", async () => {
-    var Balance = [];
-
-    return await EO_STAKING.getStakeLevel(
-      '2',
-      { from: account1 },
-      function (_err, _result) {
-        if (_err) {
-        } else {
-          Balance = Object.values(_result);
-          console.log(Balance);
-        }
-      }
-    );
-  });
-
-  it("Should stake 50000ü on account2", async () => {
-    return EO_STAKING.stakeMyTokens("50000000000000000000000", "2", {
-      from: account2,
-    });
-  });
-
-  it("Should retrieve stakeInfo @stake2(account2)", async () => {
-    var Balance = [];
-
-    return await EO_STAKING.stakeInfo(
-      '2',
-      { from: account1 },
-      function (_err, _result) {
-        if (_err) {
-        } else {
-          Balance = Object.values(_result);
-          console.log(Balance);
-        }
-      }
-    );
-  });
-
-  it("Should retrieve balanceOf(150000) Pruf tokens @account2", async () => {
-    var Balance = [];
-
-    return await UTIL_TKN.balanceOf(
-      account2,
-      { from: account1 },
-      function (_err, _result) {
-        if (_err) {
-        } else {
-          Balance = Object.values(_result);
-          console.log(Balance);
-        }
-      }
-    );
-  });
-
   it("Should retrieve eligibleRewards on stake1(0) Pruf tokens @account2", async () => {
     var Balance = [];
 
     return await EO_STAKING.eligibleRewards(
-      '1',
+      "1",
       { from: account1 },
       function (_err, _result) {
         if (_err) {
@@ -429,113 +380,241 @@ contract("EO_STAKING", (accounts) => {
   });
 
   it("Should claim bonus on stake1 (account2)", async () => {
-    await timeout(10000);
-
-    var Balance = [];
-
-    await EO_STAKING.eligibleRewards(
-      '1',
-      { from: account1 },
-      function (_err, _result) {
-        if (_err) {
-        } else {
-          Balance = Object.values(_result);
-          console.log('5000');
-          console.log(Balance);
+    await timeout(10000).then(() => {
+    var Balance = []
+    EO_STAKING.eligibleRewards(
+        "1",
+        { from: account1 },
+        function (_err, _result) {
+          if (_err) {
+          } else {
+            Balance = Object.values(_result);
+            console.log("5000");
+            console.log(Balance);
+          }
         }
-      }
-    );
-
-    return EO_STAKING.claimBonus("1", {
-      from: account2,
-    });
+      );
+      return EO_STAKING.claimBonus("1", {
+        from: account2,
+      });
+    })
   });
 
-  it("Should claim bonus on stake2 (account2)", async () => {
-    await timeout(1000);
-
+  it("Should retrieve balanceOf(205000) Pruf tokens @account2", async () => {
     var Balance = [];
 
-    await EO_STAKING.eligibleRewards(
-      '1',
+    return await UTIL_TKN.balanceOf(
+      account2,
       { from: account1 },
       function (_err, _result) {
         if (_err) {
         } else {
           Balance = Object.values(_result);
-          console.log('2500');
           console.log(Balance);
         }
       }
     );
-
-    return EO_STAKING.claimBonus("2", {
-      from: account2,
-    });
   });
 
   it("Should claim bonus on stake1 (account2)", async () => {
-    await timeout(5000);
+    await timeout(5000).then(() => {
+    var Balance = [];
+    EO_STAKING.eligibleRewards(
+        "1",
+        { from: account1 },
+        function (_err, _result) {
+          if (_err) {
+          } else {
+            Balance = Object.values(_result);
+            console.log("2500");
+            console.log(Balance);
+          }
+        }
+      );
+      return EO_STAKING.claimBonus("1", {
+        from: account2,
+      });
+    })
+  });
 
-    await EO_STAKING.eligibleRewards(
-      '1',
+  it("Should retrieve balanceOf(207500) Pruf tokens @account2", async () => {
+    var Balance = [];
+
+    return await UTIL_TKN.balanceOf(
+      account2,
       { from: account1 },
       function (_err, _result) {
         if (_err) {
         } else {
           Balance = Object.values(_result);
-          console.log('25000');
           console.log(Balance);
         }
       }
     );
+  });
 
-    return EO_STAKING.claimBonus("1", {
+  it("Should retrieve stakeLevel @stake2", async () => {
+    var Balance = [];
+
+    return await EO_STAKING.getStakeLevel(
+      "2",
+      { from: account1 },
+      function (_err, _result) {
+        if (_err) {
+        } else {
+          Balance = Object.values(_result);
+          console.log(Balance);
+        }
+      }
+    );
+  });
+
+  it("Should stake 50000ü on account2 stakeTier2", async () => {
+    return EO_STAKING.stakeMyTokens("50000000000000000000000", "2", {
       from: account2,
     });
+  });
+
+  it("Should retrieve stakeInfo @stake2(account2)", async () => {
+    var Balance = [];
+
+    return await EO_STAKING.stakeInfo(
+      "2",
+      { from: account1 },
+      function (_err, _result) {
+        if (_err) {
+        } else {
+          Balance = Object.values(_result);
+          console.log(Balance);
+        }
+      }
+    );
+  });
+
+  it("Should retrieve balanceOf(157500) Pruf tokens @account2", async () => {
+    var Balance = [];
+
+    return await UTIL_TKN.balanceOf(
+      account2,
+      { from: account1 },
+      function (_err, _result) {
+        if (_err) {
+        } else {
+          Balance = Object.values(_result);
+          console.log(Balance);
+        }
+      }
+    );
   });
 
   it("Should claim bonus on stake2 (account2)", async () => {
-    await timeout(5000);
+    await timeout(10000).then(() => {
+      var Balance = []
+      EO_STAKING.eligibleRewards(
+        "2",
+        { from: account1 },
+        function (_err, _result) {
+          if (_err) {
+          } else {
+            Balance = Object.values(_result);
+            console.log("2500");
+            console.log(Balance);
+          }
+        }
+      );
+      return EO_STAKING.claimBonus("2", {
+        from: account2,
+      });
+    })
+  });
 
+  it("Should retrieve balanceOf(157500) Pruf tokens @account2", async () => {
     var Balance = [];
 
-    await EO_STAKING.eligibleRewards(
-      '1',
+    return await UTIL_TKN.balanceOf(
+      account2,
       { from: account1 },
       function (_err, _result) {
         if (_err) {
         } else {
           Balance = Object.values(_result);
-          console.log('12500');
           console.log(Balance);
         }
       }
     );
-
-    return EO_STAKING.claimBonus("2", {
-      from: account2,
-    });
   });
 
-  it("Should brake steak1 with 3 intervals on it", async () => {
-    await timeout(3000);
-    
+  it("Should claim bonus on stake2 (account2)", async () => {
+    await timeout(5000).then(() => {
+      var Balance = []
+      EO_STAKING.eligibleRewards(
+        "2",
+        { from: account1 },
+        function (_err, _result) {
+          if (_err) {
+          } else {
+            Balance = Object.values(_result);
+            console.log("1250");
+            console.log(Balance);
+          }
+        }
+      );
+      return EO_STAKING.claimBonus("2", {
+        from: account2,
+      });
+    })
+  });
+
+  it("Should retrieve balanceOf(158750) Pruf tokens @account2", async () => {
     var Balance = [];
 
-    await EO_STAKING.eligibleRewards(
-      '1',
+    return await UTIL_TKN.balanceOf(
+      account2,
       { from: account1 },
       function (_err, _result) {
         if (_err) {
         } else {
           Balance = Object.values(_result);
-          console.log('15000');
+          console.log(Balance);
+        }
+      }
+    );
+  });
+
+  it("Should brake steak1 with 15 intervals on it", async () => {
+    await timeout(3000);
+
+    var Balance = [];
+
+    await EO_STAKING.eligibleRewards(
+      "1",
+      { from: account1 },
+      function (_err, _result) {
+        if (_err) {
+        } else {
+          Balance = Object.values(_result);
+          console.log("7500");
           console.log(Balance);
         }
       }
     );
 
     return EO_STAKING.breakStake("1", { from: account2 });
+  });
+
+  it("Should retrieve balanceOf(270000) Pruf tokens @account2", async () => {
+    var Balance = [];
+
+    return await UTIL_TKN.balanceOf(
+      account2,
+      { from: account1 },
+      function (_err, _result) {
+        if (_err) {
+        } else {
+          Balance = Object.values(_result);
+          console.log(Balance);
+        }
+      }
+    );
   });
 });

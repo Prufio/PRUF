@@ -188,7 +188,7 @@ contract EO_STAKING is ReentrancyGuard, AccessControl, Pausable {
         );
         require(
             _min > 99999999999999999999, //100 pruf
-            "PES:NS: Stake tier minimum amount < 100 not allowed"
+            "PES:SSL: Stake tier minimum amount < 100 not allowed"
         );
 
         //^^^^^^^checks^^^^^^^^^
@@ -321,7 +321,7 @@ contract EO_STAKING is ReentrancyGuard, AccessControl, Pausable {
 
     /**
      * @dev Check eligible rewards amount for a stake, for verification (may want to remove for production)
-     * returns reward + microIntervals
+     * returns reward and microIntervals
      * @param _tokenId token id to check
      */
     function checkEligibleRewards(uint256 _tokenId)
@@ -415,8 +415,8 @@ contract EO_STAKING is ReentrancyGuard, AccessControl, Pausable {
         uint256 _bonus
     ) private whenNotPaused nonReentrant {
         require(
-            _interval >= 172800, // 2 days in seconds unreachable? throws in setStakeLevels
-            "PES:NS: Interval <= 1"
+            _interval >= 2, // 2 days in seconds unreachable? throws in setStakeLevels
+            "PES:NS: Interval <= 2"
         );
 
         require( //throws in setStakeLevels

@@ -147,6 +147,8 @@ contract("REWARDS_VAULT", (accounts) => {
     stakeRoleB32 = await Helper.getStringHash("STAKE_ROLE");
 
     stakePayerRoleB32 = await Helper.getStringHash("STAKE_PAYER_ROLE");
+
+    stakeAdminRoleB32 = await Helper.getStringHash("STAKE_ADMIN_ROLE");
   });
 
 
@@ -166,6 +168,13 @@ contract("REWARDS_VAULT", (accounts) => {
 
   it("Should authorize EO_STAKING to pay rewards", async () => {
     return REWARDS_VAULT.grantRole(stakePayerRoleB32, EO_STAKING.address, {
+      from: account1,
+    });
+  });
+
+
+  it("Should authorize EO_STAKING as stake admin in stake_vault", async () => {
+    return STAKE_VAULT.grantRole(stakeAdminRoleB32, EO_STAKING.address, {
       from: account1,
     });
   });
@@ -259,7 +268,7 @@ contract("REWARDS_VAULT", (accounts) => {
 
 
   it("Should set stake level 1", async () => {
-    return EO_STAKING.setStakeLevels("1", "1000000000000000000000", "100000000000000000000000", "1", "50", {
+    return EO_STAKING.setStakeLevels("1", "1000000000000000000000", "100000000000000000000000", "2", "50", {
       from: account1,
     });
   });

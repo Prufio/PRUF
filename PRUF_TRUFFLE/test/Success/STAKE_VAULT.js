@@ -147,6 +147,8 @@ _________\/// _____________\/// _______\/// __\///////// __\/// _____________
             stakeRoleB32 = await Helper.getStringHash("STAKE_ROLE");
         
             stakePayerRoleB32 = await Helper.getStringHash("STAKE_PAYER_ROLE");
+
+            stakeAdminRoleB32 = await Helper.getStringHash("STAKE_ADMIN_ROLE");
           });
         
           it("Should authorize STAKE_VAULT for trusted agent functions in UTIL_TKN", async () => {
@@ -172,6 +174,20 @@ _________\/// _____________\/// _______\/// __\///////// __\/// _____________
         
           it("Should authorize EO_STAKING to pay rewards", async () => {
             return REWARDS_VAULT.grantRole(stakePayerRoleB32, EO_STAKING.address, {
+              from: account1,
+            });
+          });
+
+
+          it("Should authorize EO_STAKING as stake admin in stake_vault", async () => {
+            return STAKE_VAULT.grantRole(stakeAdminRoleB32, account1, {
+              from: account1,
+            });
+          });
+
+
+          it("Should authorize EO_STAKING as stake admin in stake_vault", async () => {
+            return STAKE_VAULT.grantRole(stakeAdminRoleB32, EO_STAKING.address, {
               from: account1,
             });
           });
