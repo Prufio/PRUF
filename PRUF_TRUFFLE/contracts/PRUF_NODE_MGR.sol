@@ -774,41 +774,41 @@ contract NODE_MGR is BASIC {
         Node memory _RootNodeData = node_data[_newNodeData.nodeRoot];
         uint256 tokenId = uint256(_newNode);
 
-        require(tokenId != 0, "NM:CAC: node = 0"); //sanity check inputs
+        require(tokenId != 0, "NM:CN: node = 0"); //sanity check inputs
         require(
             _newNodeData.discount <= 10000,
-            "NM:CAC: Discount > 10000 (100%)"
+            "NM:CN: Discount > 10000 (100%)"
         );
         require( //_ac.managementType is a valid type or explicitly unset (255)
             (validManagementTypes[_newNodeData.managementType] > 0) ||
                 (_newNodeData.managementType == 255),
-            "NM:CAC: Management type is invalid (0)"
+            "NM:CN: Management type is invalid (0)"
         );
         require( //_ac.storageProvider is a valid type or not specified (0)
             (validStorageProviders[_newNodeData.storageProvider] > 0) ||
                 (_newNodeData.storageProvider == 0),
-            "NM:CAC: Storage Provider is invalid (0)"
+            "NM:CN: Storage Provider is invalid (0)"
         );
         require( //_ac.custodyType is a valid type or specifically unset (255)
             (validCustodyTypes[_newNodeData.custodyType] > 0) ||
                 (_newNodeData.custodyType == 255),
-            "NM:CAC: Custody type is invalid (0)"
+            "NM:CN: Custody type is invalid (0)"
         );
         require( //has valid root
             (_RootNodeData.custodyType == 3) ||
                 (_newNodeData.nodeRoot == _newNode),
-            "NM:CAC: Root !exist"
+            "NM:CN: Root !exist"
         );
         if (_RootNodeData.managementType != 0) {
             require( //holds root token if root is restricted
                 (NODE_TKN.ownerOf(_newNodeData.nodeRoot) == _msgSender()),
-                "NM:CAC: Restricted from creating node in this root - caller !hold root token"
+                "NM:CN: Restricted from creating node in this root - caller !hold root token"
             );
         }
-        require(node_index[_newNodeData.name] == 0, "NM:CAC: node name exists");
+        require(node_index[_newNodeData.name] == 0, "NM:CN: node name exists");
         require(
             (node_data[_newNode].nodeRoot == 0),
-            "NM:CAC: node already exists"
+            "NM:CN: node already exists"
         );
         //^^^^^^^checks^^^^^^^^^
 
@@ -823,7 +823,7 @@ contract NODE_MGR is BASIC {
         node_data[_newNode].CAS2 = _newNodeData.CAS2;
         //^^^^^^^effects^^^^^^^^^
 
-        NODE_TKN.mintACToken(_recipientAddress, tokenId, "pruf.io/nodeToken");
+        NODE_TKN.mintNodeToken(_recipientAddress, tokenId, "pruf.io/nodeToken");
         //^^^^^^^interactions^^^^^^^^^
     }
 }
