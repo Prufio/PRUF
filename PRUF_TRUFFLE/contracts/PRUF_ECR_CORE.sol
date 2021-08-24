@@ -1,37 +1,32 @@
-/*--------------------------------------------------------PRüF0.8.0
+/*--------------------------------------------------------PRüF0.8.6
 __/\\\\\\\\\\\\\ _____/\\\\\\\\\ _______/\\__/\\ ___/\\\\\\\\\\\\\\\        
- _\/\\\/////////\\\ _/\\\///////\\\ ____\//__\//____\/\\\///////////__       
-  _\/\\\_______\/\\\_\/\\\_____\/\\\ ________________\/\\\ ____________      
-   _\/\\\\\\\\\\\\\/__\/\\\\\\\\\\\/_____/\\\____/\\\_\/\\\\\\\\\\\ ____     
-    _\/\\\/////////____\/\\\//////\\\ ___\/\\\___\/\\\_\/\\\///////______    
-     _\/\\\ ____________\/\\\ ___\//\\\ __\/\\\___\/\\\_\/\\\ ____________   
-      _\/\\\ ____________\/\\\ ____\//\\\ _\/\\\___\/\\\_\/\\\ ____________  
-       _\/\\\ ____________\/\\\ _____\//\\\_\//\\\\\\\\\ _\/\\\ ____________ 
-        _\/// _____________\/// _______\/// __\///////// __\/// _____________
-         *-------------------------------------------------------------------*/
+__\/\\\/////////\\\ _/\\\///////\\\ ____\//__\//____\/\\\///////////__       
+___\/\\\_______\/\\\_\/\\\_____\/\\\ ________________\/\\\ ____________      
+____\/\\\\\\\\\\\\\/__\/\\\\\\\\\\\/_____/\\\____/\\\_\/\\\\\\\\\\\ ____     
+_____\/\\\/////////____\/\\\//////\\\ ___\/\\\___\/\\\_\/\\\///////______
+______\/\\\ ____________\/\\\ ___\//\\\ __\/\\\___\/\\\_\/\\\ ____________
+_______\/\\\ ____________\/\\\ ____\//\\\ _\/\\\___\/\\\_\/\\\ ____________
+________\/\\\ ____________\/\\\ _____\//\\\_\//\\\\\\\\\ _\/\\\ ____________
+_________\/// _____________\/// _______\/// __\///////// __\/// _____________
+*---------------------------------------------------------------------------*/
 
 /*-----------------------------------------------------------------
- *  TO DO
- *
+ //Inheritable functions for core functionality
  *---------------------------------------------------------------*/
 
- //CTS:EXAMINE quick explainer for the contract
-
 // SPDX-License-Identifier: UNLICENSED
-pragma solidity ^0.8.0;
+pragma solidity ^0.8.6;
 
 import "./PRUF_BASIC.sol";
-//import "./PRUF_INTERFACES.sol"; // CTS:EXAMINE remove
 import "./Imports/utils/ReentrancyGuard.sol";
 
 contract ECR_CORE is BASIC {
-    
     /**
-     * Escrow Data Setter
-     * @param _idxHash - Asset ID
-     * @param _newAssetStatus - Escrow status to set
-     * @param _escrowOwnerAddressHash - Hash of escrow controller address
-     * @param _timelock - Timelock parameter for time controlled escrows
+     * @dev Sets escrow data
+     * @param _idxHash - hash of asset information created by frontend inputs
+     * @param _newAssetStatus - new escrow status of asset (see docs)
+     * @param _escrowOwnerAddressHash - hash of escrow controller address
+     * @param _timelock - timelock parameter for time controlled escrows
      */
     function _setEscrowData(
         bytes32 _idxHash,
@@ -48,8 +43,8 @@ contract ECR_CORE is BASIC {
     }
 
     /**
-     * Escrow DataLight Setter
-     * @param _idxHash - Asset ID
+     * @dev function for setting escrow data
+     * @param _idxHash - hash of asset information created by frontend inputs
      * @param _escrowDataLight - escrowDataExtLight struct (see interfaces for struct definitions)
      */
     function _setEscrowDataLight(
@@ -61,8 +56,8 @@ contract ECR_CORE is BASIC {
     }
 
     /**
-     * Escrow DataHeavy Setter
-     * @param _idxHash - Asset ID
+     * @dev function for setting escrow data
+     * @param _idxHash - hash of asset information created by frontend inputs
      * @param _escrowDataHeavy - escrowDataExtHeavy struct (see interfaces for struct definitions)
      */
     function _setEscrowDataHeavy(
@@ -75,8 +70,8 @@ contract ECR_CORE is BASIC {
 
     /**
      * @dev retrieves escrow data
-     * @param _idxHash - Asset ID
-     * returns escrowData struct (see interfaces for struct definitions)
+     * @param _idxHash - hash of asset information created by frontend inputs
+     * @return escrowData struct (see interfaces for struct definitions)
      */
     function getEscrowData(bytes32 _idxHash)
         internal
@@ -92,8 +87,8 @@ contract ECR_CORE is BASIC {
 
     /**
      * @dev retrieves extended escrow data
-     * @param _idxHash - Asset ID
-     * returns escrowDataExtLight struct (see interfaces for struct definitions)
+     * @param _idxHash - hash of asset information created by frontend inputs
+     * @return escrowDataExtLight struct (see interfaces for struct definitions)
      */
     function getEscrowDataLight(bytes32 _idxHash)
         internal
@@ -102,8 +97,8 @@ contract ECR_CORE is BASIC {
     {
         //^^^^^^^checks^^^^^^^^^
 
-        escrowDataExtLight memory escrowDataLight =
-            ECR_MGR.retrieveEscrowDataLight(_idxHash);
+        escrowDataExtLight memory escrowDataLight = ECR_MGR
+            .retrieveEscrowDataLight(_idxHash);
 
         return (escrowDataLight);
         //^^^^^^^interactions^^^^^^^^^
@@ -111,8 +106,8 @@ contract ECR_CORE is BASIC {
 
     /**
      * @dev retrieves extended escrow data
-     * @param _idxHash - Asset ID
-     * returns escrowDataExtHeavy struct (see interfaces for struct definitions)
+     * @param _idxHash - hash of asset information created by frontend inputs
+     * @return escrowDataExtHeavy struct (see interfaces for struct definitions)
      */
     function getEscrowDataHeavy(bytes32 _idxHash)
         internal
@@ -121,8 +116,8 @@ contract ECR_CORE is BASIC {
     {
         //^^^^^^^checks^^^^^^^^^
 
-        escrowDataExtHeavy memory escrowDataHeavy =
-            ECR_MGR.retrieveEscrowDataHeavy(_idxHash);
+        escrowDataExtHeavy memory escrowDataHeavy = ECR_MGR
+            .retrieveEscrowDataHeavy(_idxHash);
 
         return (escrowDataHeavy);
         //^^^^^^^interactions^^^^^^^^^

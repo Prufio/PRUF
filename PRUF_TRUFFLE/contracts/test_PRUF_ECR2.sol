@@ -1,14 +1,14 @@
-/*--------------------------------------------------------PRüF0.8.0
+/*--------------------------------------------------------PRüF0.8.6
 __/\\\\\\\\\\\\\ _____/\\\\\\\\\ _______/\\__/\\ ___/\\\\\\\\\\\\\\\        
- _\/\\\/////////\\\ _/\\\///////\\\ ____\//__\//____\/\\\///////////__       
-  _\/\\\_______\/\\\_\/\\\_____\/\\\ ________________\/\\\ ____________      
-   _\/\\\\\\\\\\\\\/__\/\\\\\\\\\\\/_____/\\\____/\\\_\/\\\\\\\\\\\ ____     
-    _\/\\\/////////____\/\\\//////\\\ ___\/\\\___\/\\\_\/\\\///////______    
-     _\/\\\ ____________\/\\\ ___\//\\\ __\/\\\___\/\\\_\/\\\ ____________   
-      _\/\\\ ____________\/\\\ ____\//\\\ _\/\\\___\/\\\_\/\\\ ____________  
-       _\/\\\ ____________\/\\\ _____\//\\\_\//\\\\\\\\\ _\/\\\ ____________ 
-        _\/// _____________\/// _______\/// __\///////// __\/// _____________
-         *-------------------------------------------------------------------*/
+__\/\\\/////////\\\ _/\\\///////\\\ ____\//__\//____\/\\\///////////__       
+___\/\\\_______\/\\\_\/\\\_____\/\\\ ________________\/\\\ ____________      
+____\/\\\\\\\\\\\\\/__\/\\\\\\\\\\\/_____/\\\____/\\\_\/\\\\\\\\\\\ ____     
+_____\/\\\/////////____\/\\\//////\\\ ___\/\\\___\/\\\_\/\\\///////______
+______\/\\\ ____________\/\\\ ___\//\\\ __\/\\\___\/\\\_\/\\\ ____________
+_______\/\\\ ____________\/\\\ ____\//\\\ _\/\\\___\/\\\_\/\\\ ____________
+________\/\\\ ____________\/\\\ _____\//\\\_\//\\\\\\\\\ _\/\\\ ____________
+_________\/// _____________\/// _______\/// __\///////// __\/// _____________
+*---------------------------------------------------------------------------*/
 
 /*-----------------------------------------------------------------
  *  TO DO
@@ -16,7 +16,7 @@ __/\\\\\\\\\\\\\ _____/\\\\\\\\\ _______/\\__/\\ ___/\\\\\\\\\\\\\\\
  *---------------------------------------------------------------*/
 
 // SPDX-License-Identifier: UNLICENSED
-pragma solidity ^0.8.0;
+pragma solidity ^0.8.6;
 
 import "./PRUF_ECR_CORE.sol";
 
@@ -26,7 +26,7 @@ contract ECR2 is ECR_CORE {
      * @dev Verify user credentials
      * Originating Address:
      *      Exists in registeredUsers as a usertype 1 to 9
-     *      Is authorized for asset class
+     *      Is authorized for node
      */
     modifier isAuthorized(bytes32 _idxHash) override {
         uint256 tokenId = uint256(_idxHash);
@@ -47,22 +47,22 @@ contract ECR2 is ECR_CORE {
         uint8 _escrowStatus
     ) external nonReentrant whenNotPaused isAuthorized(_idxHash) {
         Record memory rec = getRecord(_idxHash);
-        uint8 userType = getCallingUserType(rec.assetClass);
+        uint8 userType = getCallingUserType(rec.node);
         uint256 escrowTime = block.timestamp + _escrowTime;
         uint8 newEscrowStatus;
         ContractDataHash memory contractInfo = getContractInfo(
             address(this),
-            rec.assetClass
+            rec.node
         );
 
         require(
             contractInfo.contractType > 0,
-            "E:SE: This contract not authorized for specified AC"
+            "E:SE: This contract not authorized for specified node"
         );
-        require((rec.assetClass != 0), "E:SE: Record does not exist");
+        require((rec.node != 0), "E:SE: Record does not exist");
         require(
             (userType > 0) && (userType < 10),
-            "E:SE: User not authorized to modify records in specified asset class"
+            "E:SE: User not authorized to modify records in specified node"
         );
         require(
             (escrowTime >= block.timestamp),
@@ -128,20 +128,20 @@ contract ECR2 is ECR_CORE {
         escrowData memory escrow = getEscrowData(_idxHash);
         ContractDataHash memory contractInfo = getContractInfo(
             address(this),
-            rec.assetClass
+            rec.node
         );
-        uint8 userType = getCallingUserType(rec.assetClass);
+        uint8 userType = getCallingUserType(rec.node);
         bytes32 ownerHash = ECR_MGR.retrieveEscrowOwner(_idxHash);
 
         require(
             contractInfo.contractType > 0,
-            "E:EE: This contract not authorized for specified AC"
+            "E:EE: This contract not authorized for specified node"
         );
 
-        require((rec.assetClass != 0), "E:EE: Record does not exist");
+        require((rec.node != 0), "E:EE: Record does not exist");
         require(
             (userType > 0) && (userType < 10),
-            "E:EE: User not authorized to modify records in specified asset class"
+            "E:EE: User not authorized to modify records in specified node"
         );
         require(
             (rec.assetStatus == 6) ||

@@ -1,14 +1,14 @@
-/*--------------------------------------------------------PRuF0.7.1
+/*--------------------------------------------------------PRüF0.8.6
 __/\\\\\\\\\\\\\ _____/\\\\\\\\\ _______/\\__/\\ ___/\\\\\\\\\\\\\\\        
- _\/\\\/////////\\\ _/\\\///////\\\ ____\//__\//____\/\\\///////////__       
-  _\/\\\_______\/\\\_\/\\\_____\/\\\ ________________\/\\\ ____________      
-   _\/\\\\\\\\\\\\\/__\/\\\\\\\\\\\/_____/\\\____/\\\_\/\\\\\\\\\\\ ____     
-    _\/\\\/////////____\/\\\//////\\\ ___\/\\\___\/\\\_\/\\\///////______    
-     _\/\\\ ____________\/\\\ ___\//\\\ __\/\\\___\/\\\_\/\\\ ____________   
-      _\/\\\ ____________\/\\\ ____\//\\\ _\/\\\___\/\\\_\/\\\ ____________  
-       _\/\\\ ____________\/\\\ _____\//\\\_\//\\\\\\\\\ _\/\\\ ____________ 
-        _\/// _____________\/// _______\/// __\///////// __\/// _____________
-         *-------------------------------------------------------------------*/
+__\/\\\/////////\\\ _/\\\///////\\\ ____\//__\//____\/\\\///////////__       
+___\/\\\_______\/\\\_\/\\\_____\/\\\ ________________\/\\\ ____________      
+____\/\\\\\\\\\\\\\/__\/\\\\\\\\\\\/_____/\\\____/\\\_\/\\\\\\\\\\\ ____     
+_____\/\\\/////////____\/\\\//////\\\ ___\/\\\___\/\\\_\/\\\///////______
+______\/\\\ ____________\/\\\ ___\//\\\ __\/\\\___\/\\\_\/\\\ ____________
+_______\/\\\ ____________\/\\\ ____\//\\\ _\/\\\___\/\\\_\/\\\ ____________
+________\/\\\ ____________\/\\\ _____\//\\\_\//\\\\\\\\\ _\/\\\ ____________
+_________\/// _____________\/// _______\/// __\///////// __\/// _____________
+*---------------------------------------------------------------------------*/
 
 /*-----------------------------------------------------------------
  *  TO DO
@@ -19,7 +19,7 @@ __/\\\\\\\\\\\\\ _____/\\\\\\\\\ _______/\\__/\\ ___/\\\\\\\\\\\\\\\
  *---------------------------------------------------------------*/
 
 // SPDX-License-Identifier: UNLICENSED
-pragma solidity ^0.8.0;
+pragma solidity ^0.8.6;
 
 import "./PRUF_INTERFACES.sol";
 import "./Imports/access/AccessControl.sol";
@@ -117,7 +117,7 @@ contract FAUCET is ReentrancyGuard, Pausable, AccessControl {
      * @dev Set address of PRUF_TKN contract to interface with
      * TESTING: ALL REQUIRES, ACCESS ROLE
      */
-    function ADMIN_set_Util_TokenContract(address _address) external isContractAdmin {
+    function setUtilTokenContract(address _address) external isContractAdmin {
         require(
             _address != address(0),
             "PP:STC: token contract address cannot be zero"
@@ -133,7 +133,7 @@ contract FAUCET is ReentrancyGuard, Pausable, AccessControl {
      * @dev Set address of ID_TKN contract to interface with
      * TESTING: ALL REQUIRES, ACCESS ROLE
      */
-    function ADMIN_set_Id_TokenContract(address _address) external isContractAdmin {
+    function setIDtokenContract(address _address) external isContractAdmin {
         require(
             _address != address(0),
             "PP:STC: token contract address cannot be zero"
@@ -149,7 +149,7 @@ contract FAUCET is ReentrancyGuard, Pausable, AccessControl {
      * @dev Set Payment address to send eth to
      * TESTING: ALL REQUIRES, ACCESS ROLE
      */
-    function ADMIN_setPaymentAddress(address payable _address)
+    function setPaymentAddress(address payable _address)
         external
         isContractAdmin
     {
@@ -168,7 +168,7 @@ contract FAUCET is ReentrancyGuard, Pausable, AccessControl {
      * @dev Set airdropAmount
      * TESTING: ALL REQUIRES, ACCESS ROLE, sets airdrop amount for all airdrop functions
      */
-    function ADMIN_setAirDropAmount(uint256 _airdropAmount) external isContractAdmin {
+    function setAirDropAmount(uint256 _airdropAmount) external isContractAdmin {
         require(_airdropAmount != 0, "PP:SAA: airdrop amount cannot be zero");
         //^^^^^^^checks^^^^^^^^^
         airdropAmount = _airdropAmount;
@@ -179,7 +179,7 @@ contract FAUCET is ReentrancyGuard, Pausable, AccessControl {
      * @dev Set presale limit, reset presale counter
      * TESTING: ALL REQUIRES, ACCESS ROLE, presale limit works, presale limit can be reset for new presale
      */
-    function ADMIN_setPresaleLimit(uint256 _presaleLimit) external isContractAdmin {
+    function setPresaleLimit(uint256 _presaleLimit) external isContractAdmin {
         //^^^^^^^checks^^^^^^^^^
         presaleLimit = _presaleLimit;
         presaleCount = 0;
@@ -252,7 +252,7 @@ contract FAUCET is ReentrancyGuard, Pausable, AccessControl {
             "PP:GI: Caller is PRuF_ID holder"
         );
         tokenId++;
-        ID_TKN.mintPRUF_IDToken(_msgSender(), tokenId, "0");
+        ID_TKN.mintIDtoken(_msgSender(), tokenId, "0");
         ID_TKN.setTrustLevel(tokenId, 10);
         //^^^^^^^Interactions^^^^^^^^^
     }

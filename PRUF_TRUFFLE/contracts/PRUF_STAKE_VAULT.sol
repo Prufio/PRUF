@@ -1,41 +1,29 @@
-/*--------------------------------------------------------PRüF0.8.0
+/*--------------------------------------------------------PRüF0.8.6
 __/\\\\\\\\\\\\\ _____/\\\\\\\\\ _______/\\__/\\ ___/\\\\\\\\\\\\\\\        
- _\/\\\/////////\\\ _/\\\///////\\\ ____\//__\//____\/\\\///////////__       
-  _\/\\\_______\/\\\_\/\\\_____\/\\\ ________________\/\\\ ____________      
-   _\/\\\\\\\\\\\\\/__\/\\\\\\\\\\\/_____/\\\____/\\\_\/\\\\\\\\\\\ ____     
-    _\/\\\/////////____\/\\\//////\\\ ___\/\\\___\/\\\_\/\\\///////______    
-     _\/\\\ ____________\/\\\ ___\//\\\ __\/\\\___\/\\\_\/\\\ ____________   
-      _\/\\\ ____________\/\\\ ____\//\\\ _\/\\\___\/\\\_\/\\\ ____________  
-       _\/\\\ ____________\/\\\ _____\//\\\_\//\\\\\\\\\ _\/\\\ ____________ 
-        _\/// _____________\/// _______\/// __\///////// __\/// _____________
-         *-------------------------------------------------------------------*/
+__\/\\\/////////\\\ _/\\\///////\\\ ____\//__\//____\/\\\///////////__       
+___\/\\\_______\/\\\_\/\\\_____\/\\\ ________________\/\\\ ____________      
+____\/\\\\\\\\\\\\\/__\/\\\\\\\\\\\/_____/\\\____/\\\_\/\\\\\\\\\\\ ____     
+_____\/\\\/////////____\/\\\//////\\\ ___\/\\\___\/\\\_\/\\\///////______
+______\/\\\ ____________\/\\\ ___\//\\\ __\/\\\___\/\\\_\/\\\ ____________
+_______\/\\\ ____________\/\\\ ____\//\\\ _\/\\\___\/\\\_\/\\\ ____________
+________\/\\\ ____________\/\\\ _____\//\\\_\//\\\\\\\\\ _\/\\\ ____________
+_________\/// _____________\/// _______\/// __\///////// __\/// _____________
+*---------------------------------------------------------------------------*/
 
 /**-----------------------------------------------------------------
- *  TO DO
- *
- * IMPORTANT!!! EXTERNAL OR PUBLIC FUNCTIONS WITHOUTSTRICT PERMISSIONING NEED
- * TO BE CLOSELY EXAMINED IN THIS CONTRACT AS THEY WILL BE INHERITED NEARLY GLOBALLY
- *-----------------------------------------------------------------
- *-----------------------------------------------------------------
  *PRUF stakeVault holds stakes that were placed into its care.
  *---------------------------------------------------------------*/
 
 // SPDX-License-Identifier: UNLICENSED
-pragma solidity ^0.8.0;
+pragma solidity ^0.8.6;
 
 import "./PRUF_INTERFACES.sol";
 import "./Imports/access/AccessControl.sol";
 import "./Imports/utils/Pausable.sol";
 import "./Imports/utils/ReentrancyGuard.sol";
 import "./Imports/token/ERC721/IERC721.sol";
-import "./Imports/token/ERC721/IERC721Receiver.sol";
 
-contract STAKE_VAULT is
-    ReentrancyGuard,
-    AccessControl,
-    IERC721Receiver,
-    Pausable
-{
+contract STAKE_VAULT is ReentrancyGuard, AccessControl, Pausable {
     mapping(uint256 => uint256) private stake; // holds the stake parameters for each stake tokenId
 
     bytes32 public constant CONTRACT_ADMIN_ROLE =
@@ -59,30 +47,40 @@ contract STAKE_VAULT is
     // --------------------------------------Modifiers--------------------------------------------//
 
     /**
-     * @dev Verify user credentials
+     * @dev Verify caller credentials
      * Originating Address:
-     *      Has role
+     *      Has CONTRACT_ADMIN_ROLE
      */
     modifier isContractAdmin() {
         require(
             hasRole(CONTRACT_ADMIN_ROLE, _msgSender()),
-            "B:MOD:-IADM Caller !CONTRACT_ADMIN_ROLE"
+            "SV:MOD:-ICA: Caller !CONTRACT_ADMIN_ROLE"
         );
         _;
     }
 
+    /**
+     * @dev Verify caller credentials
+     * Originating Address:
+     *      Has STAKE_ADMIN_ROLE
+     */
     modifier isStakeAdmin() {
         require(
             hasRole(STAKE_ADMIN_ROLE, _msgSender()),
-            "B:MOD:-IADM Caller !STAKE_ADMIN_ROLE"
+            "SV:MOD:-ISA: Caller !STAKE_ADMIN_ROLE"
         );
         _;
     }
 
+    /**
+     * @dev Verify caller credentials
+     * Originating Address:
+     *      Has PAUSER_ROLE
+     */
     modifier isPauser() {
         require(
             hasRole(PAUSER_ROLE, _msgSender()),
-            "B:MOD-IP:Calling address is not pauser"
+            "SV:MOD-IP:Calling address !pauser"
         );
         _;
     }
@@ -102,7 +100,7 @@ contract STAKE_VAULT is
     ) external virtual nonReentrant {
         require(
             hasRole(ASSET_TXFR_ROLE, _msgSender()),
-            "B:TX:Must have ASSET_TXFR_ROLE"
+            "SV:TET:Must have ASSET_TXFR_ROLE"
         );
         //^^^^^^^checks^^^^^^^^^
 
@@ -112,13 +110,14 @@ contract STAKE_VAULT is
 
     /**
      * @dev Set address of contracts to interface with
-     * @param _utilAddress address of UTIL_TKN
-     * @param _stakeAddress address of STAKE_TKN
+     * @param _utilAddress address of UTIL_TKN contract
+     * @param _stakeAddress address of STAKE_TKN contract
      */
-    function Admin_setTokenContracts(
-        address _utilAddress,
-        address _stakeAddress
-    ) external virtual isContractAdmin {
+    function setTokenContracts(address _utilAddress, address _stakeAddress)
+        external
+        virtual
+        isContractAdmin
+    {
         //^^^^^^^checks^^^^^^^^^
 
         UTIL_TKN_Address = _utilAddress;
@@ -132,8 +131,8 @@ contract STAKE_VAULT is
     //--------------------------------------External functions--------------------------------------------//
 
     /**
-     * @dev moves (amount)tokens from holder of(tokenID) into itself using trustedAgentTransfer, records the amount in stake map
-     * @param _tokenId token to get stake for
+     * @dev moves tokens(amount) from holder(tokenID) into itself using trustedAgentTransfer, records the amount in stake map
+     * @param _tokenId stake token to take stake for
      * @param _amount amount of stake to pull
      */
     function takeStake(uint256 _tokenId, uint256 _amount)
@@ -143,18 +142,17 @@ contract STAKE_VAULT is
         whenNotPaused
     {
         //^^^^^^^checks^^^^^^^^^
-
         address staker = STAKE_TKN.ownerOf(_tokenId);
         //^^^^^^^effects^^^^^^^^^
 
         UTIL_TKN.trustedAgentTransfer(staker, address(this), _amount);
-        stake[_tokenId] = _amount;
+        stake[_tokenId] = _amount; // here so fails first
         //^^^^^^^interactions^^^^^^^^^
     }
 
     /**
-     * @dev sends stakedAmount[tokenId] tokens to ownerOf(tokenId). updates the stake map
-     * @param _tokenId token to get stake for
+     * @dev sends stakedAmount[tokenId] tokens to ownerOf(tokenId), updates the stake map.
+     * @param _tokenId stake token to release stake for
      */
     function releaseStake(uint256 _tokenId)
         external
@@ -164,11 +162,11 @@ contract STAKE_VAULT is
     {
         //^^^^^^^checks^^^^^^^^^
 
-        address staker = STAKE_TKN.ownerOf(_tokenId);
         uint256 amount = stake[_tokenId];
         delete stake[_tokenId];
         //^^^^^^^effects^^^^^^^^^
 
+        address staker = STAKE_TKN.ownerOf(_tokenId);
         UTIL_TKN.transfer(staker, amount);
         //^^^^^^^interactions^^^^^^^^^
     }
@@ -183,33 +181,15 @@ contract STAKE_VAULT is
     }
 
     /**
-     * @dev Compliance for erc721 reciever
-     * See OZ documentation
-     */
-    function onERC721Received(
-        address,
-        address,
-        uint256,
-        bytes calldata
-    ) external virtual override returns (bytes4) {
-        //^^^^^^^checks^^^^^^^^^
-
-        return this.onERC721Received.selector;
-        //^^^^^^^interactions^^^^^^^^^
-    }
-
-    /**
-     * @dev Triggers stopped state. (pausable)
-     *
+     * @dev Triggers stopped state.
      */
     function pause() external isPauser {
         _pause();
     }
 
     /**
-     * @dev Returns to normal state. (pausable)
+     * @dev Returns to normal state.
      */
-
     function unpause() external isPauser {
         _unpause();
     }

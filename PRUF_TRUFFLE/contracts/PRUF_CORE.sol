@@ -1,4 +1,4 @@
-/**--------------------------------------------------------PRüF0.8.0
+/**--------------------------------------------------------PRüF0.8.6
 __/\\\\\\\\\\\\\ _____/\\\\\\\\\ _______/\\__/\\ ___/\\\\\\\\\\\\\\\        
  _\/\\\/////////\\\ _/\\\///////\\\ ____\//__\//____\/\\\///////////__       
   _\/\\\_______\/\\\_\/\\\_____\/\\\ ________________\/\\\ ____________      
@@ -12,7 +12,6 @@ __/\\\\\\\\\\\\\ _____/\\\\\\\\\ _______/\\__/\\ ___/\\\\\\\\\\\\\\\
 
 /**-----------------------------------------------------------------
  *  TO DO
- *  //CTS:!!EXAMINE GLOBAL!! we need to be using pascal case for all acronyms ex. htmlButton or bigHtmlButton, except for things with two acronyms ex. prufIO rather than prufIo !!important
  *-----------------------------------------------------------------
  * IMPORTANT!!! NO EXTERNAL OR PUBLIC FUNCTIONS ALLOWED IN THIS CONTRACT!!!!!!!!
  *-----------------------------------------------------------------
@@ -20,7 +19,7 @@ __/\\\\\\\\\\\\\ _____/\\\\\\\\\ _______/\\__/\\ ___/\\\\\\\\\\\\\\\
  *---------------------------------------------------------------*/
 
 // SPDX-License-Identifier: UNLICENSED
-pragma solidity ^0.8.0;
+pragma solidity ^0.8.6;
 
 import "./Imports/utils/ReentrancyGuard.sol";
 import "./PRUF_BASIC.sol";
@@ -32,49 +31,49 @@ contract CORE is BASIC {
      * @dev create a Record in Storage @ idxHash (SETTER)
      * @param _idxHash - Asset Index
      * @param _rgtHash - Owner ID Hash
-     * @param _assetClass - asset class to create asset in
+     * @param _node - node to create asset in
      * @param _countDownStart - initial value for decrement only register
      */
     function createRecord(
         bytes32 _idxHash,
         bytes32 _rgtHash,
-        uint32 _assetClass,
+        uint32 _node,
         uint32 _countDownStart
     ) internal virtual {
         uint256 tokenId = uint256(_idxHash);
-        AC memory AC_info = getACinfo(_assetClass);
+        Node memory node_info = getNodeinfo(_node);
 
         require(
             A_TKN.tokenExists(tokenId) == 0,
             "C:CR:Asset token already exists"
         );
         require(
-            AC_info.custodyType != 3,
-            "C:CR:Cannot create asset in a root asset class"
+            node_info.custodyType != 3,
+            "C:CR:Cannot create asset in a root node"
         );
         require(
-            (AC_info.managementType < 6),
-            "C:CR:Contract does not support management types > 5 or AC is locked"
+            (node_info.managementType < 6),
+            "C:CR:Contract does not support management types > 5 or node is locked"
         );
-        if (AC_info.custodyType != 1) {
+        if (node_info.custodyType != 1) {
             if (
-                (AC_info.managementType == 1) ||
-                (AC_info.managementType == 2) ||
-                (AC_info.managementType == 5)
+                (node_info.managementType == 1) ||
+                (node_info.managementType == 2) ||
+                (node_info.managementType == 5)
             ) {
                 require(
-                    (AC_TKN.ownerOf(_assetClass) == _msgSender()),
-                    "C:CR:Cannot create asset in AC mgmt type 1||2||5 - caller does not hold AC token"
+                    (NODE_TKN.ownerOf(_node) == _msgSender()),
+                    "C:CR:Cannot create asset in node mgmt type 1||2||5 - caller does not hold node token"
                 );
-            } else if (AC_info.managementType == 3) {
+            } else if (node_info.managementType == 3) {
                 require(
-                    AC_MGR.getUserType(
+                    NODE_MGR.getUserType(
                         keccak256(abi.encodePacked(_msgSender())),
-                        _assetClass
+                        _node
                     ) == 1,
                     "C:CR:Cannot create asset - caller not authorized"
                 );
-            } else if (AC_info.managementType == 4) {
+            } else if (node_info.managementType == 4) {
                 require(
                     ID_TKN.trustedLevelByAddress(_msgSender()) > 9,
                     "C:CR:Caller does not hold sufficiently trusted ID"
@@ -82,22 +81,22 @@ contract CORE is BASIC {
             }
         }
         require(
-            (AC_info.custodyType == 1) ||
-                (AC_info.custodyType == 2) ||
-                (AC_info.custodyType == 4),
-            "C:CR:Cannot create asset - contract not authorized for asset class custody type"
+            (node_info.custodyType == 1) ||
+                (node_info.custodyType == 2) ||
+                (node_info.custodyType == 4),
+            "C:CR:Cannot create asset - contract not authorized for node custody type"
         );
         //^^^^^^^Checks^^^^^^^^
 
-        if (AC_info.custodyType == 1) {
+        if (node_info.custodyType == 1) {
             A_TKN.mintAssetToken(address(this), tokenId, "");
         }
 
-        if ((AC_info.custodyType == 2) || (AC_info.custodyType == 4)) {
+        if ((node_info.custodyType == 2) || (node_info.custodyType == 4)) {
             A_TKN.mintAssetToken(_msgSender(), tokenId, "");
         }
 
-        STOR.newRecord(_idxHash, _rgtHash, _assetClass, _countDownStart);
+        STOR.newRecord(_idxHash, _rgtHash, _node, _countDownStart);
         //^^^^^^^interactions^^^^^^^^^
     }
 
@@ -118,6 +117,7 @@ contract CORE is BASIC {
             _rec.rightsHolder,
             _rec.assetStatus,
             _rec.countDown,
+            _rec.int32temp,
             _rec.modCount,
             _rec.numberOfTransfers
         ); // Send data to storage
@@ -125,46 +125,54 @@ contract CORE is BASIC {
     }
 
     /**
-     * @dev Write an Ipfs1 Record to Storage @ idxHash (SETTER)
+     * @dev Write an Mutable Storage Record to Storage @ idxHash (SETTER)
      * @param _idxHash - Asset Index
      * @param _rec - a Record Struct (see interfaces for struct definitions)
      */
-    function writeRecordIpfs1(bytes32 _idxHash, Record memory _rec)
+    function writeMutableStorage(bytes32 _idxHash, Record memory _rec)
         internal
         virtual
         whenNotPaused
     {
-        AC memory AC_info = getACinfo(_rec.assetClass);
+        Node memory node_info = getNodeinfo(_rec.node);
 
         require(
-            (AC_info.managementType < 6),
-            "C:CR:Contract does not support management types > 5 or AC is locked"
+            (node_info.managementType < 6),
+            "C:WMS:Contract does not support management types > 5 or node is locked"
         );
-        if ((AC_info.custodyType != 1) && (AC_info.managementType == 5)) {
+        if ((node_info.custodyType != 1) && (node_info.managementType == 5)) {
             require(
-                (AC_TKN.ownerOf(_rec.assetClass) == _msgSender()),
-                "C:WIPFS1: Caller must hold ACnode (management type 5)"
+                (NODE_TKN.ownerOf(_rec.node) == _msgSender()),
+                "C:WMS: Caller must hold node (management type 5)"
             );
         }
         //^^^^^^^Checks^^^^^^^^^
 
-        STOR.modifyIpfs1(_idxHash, _rec.Ipfs1a, _rec.Ipfs1b); // Send IPFS1 data to storage
+        STOR.modifyMutableStorage(
+            _idxHash,
+            _rec.mutableStorage1,
+            _rec.mutableStorage2
+        ); // Send MutableStorage data to storage
         //^^^^^^^interactions^^^^^^^^^
     }
 
     /**
-     * @dev Write an Ipfs2 Record to Storage @ idxHash (SETTER)
+     * @dev Write an NonMutableStorage Record to Storage @ idxHash (SETTER)
      * @param _idxHash - Asset Index
      * @param _rec - a Record Struct (see interfaces for struct definitions)
      */
-    function writeRecordIpfs2(bytes32 _idxHash, Record memory _rec)
+    function writeNonMutableStorage(bytes32 _idxHash, Record memory _rec)
         internal
         virtual
         whenNotPaused
     {
         //^^^^^^^checks^^^^^^^^^
 
-        STOR.modifyIpfs2(_idxHash, _rec.Ipfs2a, _rec.Ipfs2b); // Send IPFS2 data to storage
+        STOR.modifyNonMutableStorage(
+            _idxHash,
+            _rec.nonMutableStorage1,
+            _rec.nonMutableStorage2
+        ); // Send NonMutableStorage data to storage
         //^^^^^^^interactions^^^^^^^^^
     }
 
@@ -172,28 +180,28 @@ contract CORE is BASIC {
 
     /**
      * @dev Send payment to appropriate adresseses for payable function
-     * @param _assetClass - selected asset class for payment
+     * @param _node - selected node for payment
      * @param _service - selected service for payment
      */
-    function deductServiceCosts(uint32 _assetClass, uint16 _service)
+    function deductServiceCosts(uint32 _node, uint16 _service)
         internal
         virtual
         whenNotPaused
     {
-        uint256 ACTHnetPercent =
-            uint256(AC_MGR.getAC_discount(_assetClass)) / uint256(100);
+        uint256 nodeNetPercent = uint256(NODE_MGR.getNodeDiscount(_node)) /
+            uint256(100);
         require( //IMPOSSIBLE TO REACH unless stuff is really broken, still ensures sanity
-            (ACTHnetPercent >= 0) && (ACTHnetPercent <= 100),
+            (nodeNetPercent >= 0) && (nodeNetPercent <= 100),
             "C:DSC:invalid discount value for price calculation"
         );
         //^^^^^^^checks^^^^^^^^^
-        Invoice memory pricing = AC_MGR.getServiceCosts(_assetClass, _service);
+        Invoice memory pricing = NODE_MGR.getServiceCosts(_node, _service);
 
-        uint256 percent = pricing.ACTHprice / uint256(100); //calculate 1% of listed ACTH price
-        uint256 _ACTHprice = ACTHnetPercent * percent; //calculate the share proprotrion% * 1%
-        uint256 prufShare = pricing.ACTHprice - _ACTHprice;
+        uint256 percent = pricing.NTHprice / uint256(100); //calculate 1% of listed NTH price
+        uint256 _NTHprice = nodeNetPercent * percent; //calculate the share proprotrion% * 1%
+        uint256 prufShare = pricing.NTHprice - _NTHprice;
 
-        pricing.ACTHprice = _ACTHprice;
+        pricing.NTHprice = _NTHprice;
         pricing.rootPrice = pricing.rootPrice + prufShare;
         //^^^^^^^effects^^^^^^^^^
 
@@ -203,10 +211,10 @@ contract CORE is BASIC {
 
     /**
      * @dev Send payment to appropriate adresses for recycle operation
-     * @param _assetClass - selected asset class for payment
+     * @param _node - selected node for payment
      * @param _prevOwner - adddress to pay recycle bonus to
      */
-    function deductRecycleCosts(uint32 _assetClass, address _prevOwner)
+    function deductRecycleCosts(uint32 _node, address _prevOwner)
         internal
         virtual
         whenNotPaused
@@ -216,12 +224,12 @@ contract CORE is BASIC {
         Invoice memory pricing;
         uint256 half;
 
-        pricing = AC_MGR.getServiceCosts(_assetClass, 1);
+        pricing = NODE_MGR.getServiceCosts(_node, 1);
         pricing.rootAddress = _prevOwner;
 
-        half = pricing.ACTHprice / 2;
+        half = pricing.NTHprice / 2;
         pricing.rootPrice = pricing.rootPrice + half;
-        pricing.ACTHprice = pricing.ACTHprice - half;
+        pricing.NTHprice = pricing.NTHprice - half;
         //^^^^^^^effects^^^^^^^^^
 
         deductPayment(pricing);
@@ -241,9 +249,9 @@ contract CORE is BASIC {
             _pricing.rootAddress != address(0),
             "C:DP: root payment address = zero address"
         );
-        if (_pricing.ACTHaddress == address(0)) {
-            //sets ACTHaddress to rootAddress if ACTHaddress is not set
-            _pricing.ACTHaddress = _pricing.rootAddress;
+        if (_pricing.NTHaddress == address(0)) {
+            //sets NTHaddress to rootAddress if NTHaddress is not set
+            _pricing.NTHaddress = _pricing.rootAddress;
         }
         //^^^^^^^checks^^^^^^^^^
 
@@ -253,8 +261,8 @@ contract CORE is BASIC {
             _msgSender(),
             _pricing.rootAddress,
             _pricing.rootPrice,
-            _pricing.ACTHaddress,
-            _pricing.ACTHprice
+            _pricing.NTHaddress,
+            _pricing.NTHprice
         );
         //^^^^^^^interactions^^^^^^^^^
     }

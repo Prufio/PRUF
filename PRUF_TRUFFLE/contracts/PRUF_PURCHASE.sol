@@ -1,34 +1,31 @@
-/*--------------------------------------------------------PRüF0.8.0
+/**--------------------------------------------------------PRüF0.8.6
 __/\\\\\\\\\\\\\ _____/\\\\\\\\\ _______/\\__/\\ ___/\\\\\\\\\\\\\\\        
- _\/\\\/////////\\\ _/\\\///////\\\ ____\//__\//____\/\\\///////////__       
-  _\/\\\_______\/\\\_\/\\\_____\/\\\ ________________\/\\\ ____________      
-   _\/\\\\\\\\\\\\\/__\/\\\\\\\\\\\/_____/\\\____/\\\_\/\\\\\\\\\\\ ____     
-    _\/\\\/////////____\/\\\//////\\\ ___\/\\\___\/\\\_\/\\\///////______    
-     _\/\\\ ____________\/\\\ ___\//\\\ __\/\\\___\/\\\_\/\\\ ____________   
-      _\/\\\ ____________\/\\\ ____\//\\\ _\/\\\___\/\\\_\/\\\ ____________  
-       _\/\\\ ____________\/\\\ _____\//\\\_\//\\\\\\\\\ _\/\\\ ____________ 
-        _\/// _____________\/// _______\/// __\///////// __\/// _____________
-         *-------------------------------------------------------------------*/
+__\/\\\/////////\\\ _/\\\///////\\\ ____\//__\//____\/\\\///////////__       
+___\/\\\_______\/\\\_\/\\\_____\/\\\ ________________\/\\\ ____________      
+____\/\\\\\\\\\\\\\/__\/\\\\\\\\\\\/_____/\\\____/\\\_\/\\\\\\\\\\\ ____     
+_____\/\\\/////////____\/\\\//////\\\ ___\/\\\___\/\\\_\/\\\///////______
+______\/\\\ ____________\/\\\ ___\//\\\ __\/\\\___\/\\\_\/\\\ ____________
+_______\/\\\ ____________\/\\\ ____\//\\\ _\/\\\___\/\\\_\/\\\ ____________
+________\/\\\ ____________\/\\\ _____\//\\\_\//\\\\\\\\\ _\/\\\ ____________
+_________\/// _____________\/// _______\/// __\///////// __\/// _____________
+*---------------------------------------------------------------------------*/
 
-/*-----------------------------------------------------------------
- *  TO DO
- *
+/**-----------------------------------------------------------------
+CTS:EXAMINE: better descriptor
+ * PURCHASE allows users to set a price and currency to sell items, and buyers to purchase the items on chain.Î
  *---------------------------------------------------------------*/
 
- //CTS:EXAMINE quick explainer for the contract
-
 // SPDX-License-Identifier: UNLICENSED
-pragma solidity ^0.8.0;
+pragma solidity ^0.8.6;
 
 import "./PRUF_CORE.sol";
 
 contract PURCHASE is CORE {
 
-    /*
+    /***
      * @dev Verify user credentials
-     * //CTS:EXAMINE param
-     * Originating Address:
-     *      holds asset token at idxHash
+     * @param _idxHash asset ID
+     * Originating Address holds asset token at idxHash
      */
     modifier isAuthorized(bytes32 _idxHash) override {
         uint256 tokenId = uint256(_idxHash);
@@ -39,9 +36,9 @@ contract PURCHASE is CORE {
         _;
     }
 
-    /*
+    /**
      * @dev Purchse an item in transferrable status with price and currency set to pruf
-     * //CTS:EXAMINE param
+     * @param _idxHash asset ID
      */
     function purchaseWithPRUF(
         bytes32 _idxHash
@@ -70,16 +67,16 @@ contract PURCHASE is CORE {
         }
         // --- transfer the asset token
         A_TKN.trustedAgentTransferFrom(assetHolder, _msgSender(), tokenId);
-        deductServiceCosts(rec.assetClass, 2);
+        deductServiceCosts(rec.node, 2);
         //^^^^^^^interactions^^^^^^^^^
     }
 
-    /*
+    /**
      * @dev set price and currency in rec.pricer rec.currency
-     * //CTS:EXAMINE param
-     * //CTS:EXAMINE param
-     * //CTS:EXAMINE param
-     * //CTS:EXAMINE param
+     * @param _idxHash asset ID
+     * @param _price units in currency
+     * @param _currency currency
+     * @param _setForSale flag
      */
     function _setPrice(
         bytes32 _idxHash,
@@ -113,9 +110,9 @@ contract PURCHASE is CORE {
         //^^^^^^^interactions^^^^^^^^^
     }
 
-    /*
+    /**
      * @dev set price and currency in rec.pricer rec.currency
-     * //CTS:EXAMINE param
+     * @param _idxHash asset ID
      */
     function _clearPrice(bytes32 _idxHash)
         external

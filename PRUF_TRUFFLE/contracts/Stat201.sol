@@ -1,33 +1,32 @@
-/*--------------------------------------------------------PRüF0.8.0
+/*--------------------------------------------------------PRüF0.8.6
 __/\\\\\\\\\\\\\ _____/\\\\\\\\\ _______/\\__/\\ ___/\\\\\\\\\\\\\\\        
- _\/\\\/////////\\\ _/\\\///////\\\ ____\//__\//____\/\\\///////////__       
-  _\/\\\_______\/\\\_\/\\\_____\/\\\ ________________\/\\\ ____________      
-   _\/\\\\\\\\\\\\\/__\/\\\\\\\\\\\/_____/\\\____/\\\_\/\\\\\\\\\\\ ____     
-    _\/\\\/////////____\/\\\//////\\\ ___\/\\\___\/\\\_\/\\\///////______    
-     _\/\\\ ____________\/\\\ ___\//\\\ __\/\\\___\/\\\_\/\\\ ____________   
-      _\/\\\ ____________\/\\\ ____\//\\\ _\/\\\___\/\\\_\/\\\ ____________  
-       _\/\\\ ____________\/\\\ _____\//\\\_\//\\\\\\\\\ _\/\\\ ____________ 
-        _\/// _____________\/// _______\/// __\///////// __\/// _____________
-         *-------------------------------------------------------------------*/
+__\/\\\/////////\\\ _/\\\///////\\\ ____\//__\//____\/\\\///////////__       
+___\/\\\_______\/\\\_\/\\\_____\/\\\ ________________\/\\\ ____________      
+____\/\\\\\\\\\\\\\/__\/\\\\\\\\\\\/_____/\\\____/\\\_\/\\\\\\\\\\\ ____     
+_____\/\\\/////////____\/\\\//////\\\ ___\/\\\___\/\\\_\/\\\///////______
+______\/\\\ ____________\/\\\ ___\//\\\ __\/\\\___\/\\\_\/\\\ ____________
+_______\/\\\ ____________\/\\\ ____\//\\\ _\/\\\___\/\\\_\/\\\ ____________
+________\/\\\ ____________\/\\\ _____\//\\\_\//\\\\\\\\\ _\/\\\ ____________
+_________\/// _____________\/// _______\/// __\///////// __\/// _____________
+*---------------------------------------------------------------------------*/
 
 /*-----------------------------------------------------------------
- *  TO DO DPS:CHECK this requires this contract to be an authorized 1 in storage.
- *
+ *  TO DO
+ * Sets asset status to 201 in the case that a storage provider becomes invalid, 
+ * to proviion for the rescuing of assets whose storage provider is no longer valid
  *---------------------------------------------------------------*/
 
- //CTS:EXAMINE quick explainer for the contract
-
 // SPDX-License-Identifier: UNLICENSED
-pragma solidity ^0.8.0;
+pragma solidity ^0.8.6;
 
 import "./PRUF_CORE.sol";
 
 contract STAT201 is CORE {
 
 
-    /*
-     * @dev //Sets an item to reserved status 201 when called, if record links to an invalid storage type. Stat201 allows a rewrite of IPFS2
-     * //CTS:EXAMINE param
+    /**
+     * @dev //Sets an item to reserved status 201 when called, if record links to an invalid storage type. Stat201 allows a rewrite of NonMutableStorage
+     * @param _idxHash asset ID of the asset being rescued 
      */
     function set201(bytes32 _idxHash)
         external
@@ -36,8 +35,8 @@ contract STAT201 is CORE {
         isContractAdmin
     {
         Record memory rec = getRecord(_idxHash);
-        AC memory AC_info = getACinfo(rec.assetClass);
-        uint256 storageProviderStatus = AC_MGR.getStorageProviderStatus(AC_info.storageProvider);
+        Node memory node_info =getNodeinfo(rec.node);
+        uint256 storageProviderStatus = NODE_MGR.getStorageProviderStatus(node_info.storageProvider);
 
         require
             (storageProviderStatus == 0,

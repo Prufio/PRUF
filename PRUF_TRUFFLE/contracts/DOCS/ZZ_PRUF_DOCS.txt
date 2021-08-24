@@ -33,10 +33,11 @@ pragma solidity ^0.6.7;
 
 /*----------------------------------------------------------------
  *TO DO :
- * zero root costs when ACTHcosts are zero? (-NOPE-)
+ * zero root costs when NTHcosts are zero? (-NOPE-)
  *
  * staking, 2% to stskers, 3% to root_address
- * 
+ *
+ *      * hash Node with IDX for chain specific stuff?
  *
  *      * 25% staker rewards on nodes, nodeholders can stake.
  *      
@@ -54,7 +55,7 @@ pragma solidity ^0.6.7;
  *
  *      * Define / document protocol
  *
- *      *0xFF for transferred costs more gas than 0x0....fix this?
+ *      * 0xFF for transferred costs more gas than 0x0....fix this?
  *
  *      FIX token URI's TO MAKE REAL ASSET URLs
  *
@@ -66,7 +67,7 @@ pragma solidity ^0.6.7;
  *
  *      *Value proposition - general
  *
- *      *Value proposition - AC token / AC operator
+ *      *Value proposition - Node token / Node operator
  *
  *      *Value proposition - B.Pruf 
  *
@@ -88,14 +89,14 @@ pragma solidity ^0.6.7;
  *  record is locked in escrow and the escrow contract gets the token. The asset is put into an indefinite escrow, 
  *  where the escrow amount is unpaid and time is indefinite. the asset owner is the escrow "holder" and can revert
  *  the escrow if they desire, which reverts the assetToken to their address. escrow amount is determined 
- *  AT THE TIME OF RECYCLING by the new record costs of the AC that the record is being recycled into by
+ *  AT THE TIME OF RECYCLING by the new record costs of the Node that the record is being recycled into by
  *  the new owner.
  *
  *
  * Rules for recycling records:
- *  escrow amount is the same as registration in the asset class where it will be registered (as per the "recycle asset" call),
+ *  escrow amount is the same as registration in the node where it will be registered (as per the "recycle asset" call),
  *  when the fee is paid the escrow is broken, and the asset token is assigned to the sender. The funds (less assetClassRoot fees)
- *  are divided 50/50 between the old owner (setter of the escrow) and the ACtoken holder for the new asset class. If funds are sent 
+ *  are divided 50/50 between the old owner (setter of the escrow) and the ACtoken holder for the new node. If funds are sent 
  *  to a dead escrow or there is an overpayment, the balance can be withdrawn.
  *
  *
@@ -104,7 +105,7 @@ pragma solidity ^0.6.7;
  *
  *
  *  Recycle rules
- *          Not possible in Custodial asset classes
+ *          Not possible in Custodial nodes
  *          Caller must hold token, must be in status 59
  *          Token goes into "indefinite" escrow, RGT set to 0xFFF...
  *              Caller is escrow controller, but escrow contract is "owner", can break escrow (resets to status 51)
@@ -120,7 +121,7 @@ pragma solidity ^0.6.7;
  * FUTURE FEATURES?
  *      "bottle deposit" on asset creation to encourage recycling
  *  New Recycle :
- *          Not possible in Custodial asset classes
+ *          Not possible in Custodial nodes
  *          Caller must hold token, must be in status 59
  *          Caller recieves deposit amount (how the bloody hell do we manage this????)
  *          Token goes into "indefinite" escrow, RGT set to 0xFFF...
@@ -139,15 +140,15 @@ pragma solidity ^0.6.7;
 *-----------------------------------------------------------------
  * NOTES 
  * All assetclasses in the same root should use the same data structure to generate the idxHash. Other structures 
- *      will result in a nonconforming "hidden" asset only findable in its own web interface, and not AC transportable.
+ *      will result in a nonconforming "hidden" asset only findable in its own web interface, and not Node transportable.
  *
- * When upgrading a contract, all authorized asset classes will be linked to the name, not the newly deplyed contract address
- * PAYABLE CONTRACTS must be given the PAYABLE_ROLE in PRUF_TKN. This includes AC_MGR
+ * When upgrading a contract, all authorized nodes will be linked to the name, not the newly deplyed contract address
+ * PAYABLE CONTRACTS must be given the PAYABLE_ROLE in PRUF_TKN. This includes NODE_MGR
 - ----------------------------------------------------------------
 
 *-----------------------------------------------------------------
  * IMPORTANT NOTE : DO NOT REMOVE FROM CODE:
- *      Verification of rgtHash in curated, custodial asset classes are not secure beyond the honorable intentions
+ *      Verification of rgtHash in curated, custodial nodes are not secure beyond the honorable intentions
  * of authorized recorders. All blockchain info is readable, so a bad actor could trivially obtain a copy of the
  * correct rgtHash on chain. This "stumbling block" measure is in place primarily to keep honest people honest, and
  * to require an actual, malicious effort to bypass security rather than a little copy-paste. Actual decentralized
@@ -187,7 +188,7 @@ pragma solidity ^0.6.7;
 - -----------------------------------------------------------------
 
 *-----------------------------------------------------------------
-* Cost indexes:
+* Service types 
 * 1: newRecordCost // Cost to create a new record
 * 2: transferAssetCost // Cost to transfer a record from known rights holder to a new one
 * 3: createNoteCost // Cost to add a static note to an asset
@@ -212,21 +213,21 @@ pragma solidity ^0.6.7;
  *-----------------------------------------------------------------
  *
  *  A_TKN - 1
- *  AC_TKN - 1
+ *  NODE_TKN - 1
  *  ID_TKN - 10
  *  STAT201 - 1
  *
  *  APP - 1
- *  NP - 1
+ *  APP2 - 1
  *  APP_NC - 2
- *  NP_NC - 2
+ *  APP2_NC - 2
  *
  *  ECR - 3
  *  ECR_NC - 3
  *  RCLR - 3
  *
  *  ECR_MGR - 1
- *  AC_MGR - 1
+ *  NODE_MGR - 1
  *  VFY - 1 ????
  *
 - -----------------------------------------------------------------
@@ -244,13 +245,13 @@ pragma solidity ^0.6.7;
 - -----------------------------------------------------------------
 
 *-----------------------------------------------------------------
- * ASSET CLASS Custody Types: AC_data.custodyType (AC_manager)
+ * node Custody Types: AC_data.custodyType (AC_manager)
  * 0   --NONE
  * 1   --Custodial
  * 2   --Non-Custodial
  * 3   --Root (n/a)
  * 4   --Verify-Non-Custodial
- * 5   --Wrapped or decorated ERC721 - Asset class extended data must be set to:
+ * 5   --Wrapped or decorated ERC721 - node extended data must be set to:
  *              '0' for universal, token-contract-independant operation
  *              -or- uint160(ERC721 contract address) for token-contract-specific operation - use to filter for foreign contract address match
  * 11  -- Free Custodial (no contract yet made, must ovveride createRecord in core to allow custody type 11)
@@ -258,30 +259,30 @@ pragma solidity ^0.6.7;
 - -----------------------------------------------------------------
 
 *-----------------------------------------------------------------
- * ASSET CLASS Management Types: AC_data.managementType (AC_manager)
+ * node Management Types: AC_data.managementType (AC_manager)
  *              normal ROOT ACs should be set to type 0 because non type-zero root 
  *              classes will not permit public minting of ACs inside them
  * 0   -- Unrestricted (if root not zero, ACNodes cannot be created in the root w/o root token 
  *              IDtoken is required to mint assets (or foreign token if wrapping / decorating) )
  * 1   -- Restricted (Only ACNode holder can create, export or import - does not require IDtoken)
  * 2   -- Less Restricted (Only ACNode holder can create, import - does not require IDtoken)
- * 3   -- Authorized (caller address must be user authorized type 1 in AC)
+ * 3   -- Authorized (caller address must be user authorized type 1 in Node)
  * 4   -- Trusted (Requires ID token trust level >= 10)
  * 5   -- Remotely Managed (same as 1-restricted except ONLY ACnode hoder can change IPFS1a/b )
  * 255 -- Unconfigured - No minting permitted, not yet activated (set by default on node purchase, cannot be reverted)
 - -----------------------------------------------------------------
 
 *-----------------------------------------------------------------
- * ASSET CLASS Storage Providers: AC_data.storageProvider (AC_manager)
+ * node Storage Providers: AC_data.storageProvider (AC_manager)
  * 0   -- Not Set
- * 1   -- IPFS 
+ * 1   -- Mutable 
  * 2   -- ARweave 
 - -----------------------------------------------------------------
 
 *-----------------------------------------------------------------
- * ASSET CLASS option switches, 1 or 0 : AC_data.switches (AC_manager)  //DPS:TEST
+ * node option switches, 1 or 0 : AC_data.switches (AC_manager)
  *             Switches will be duplicated from root 
- * bit1  -- If set, cannot change URI after initial setting
+ * bit1  -- If set, cannot change URI or CAS data after initial setting
  * bit2  --
  * bit3  --
  * bit4  --
@@ -292,10 +293,10 @@ pragma solidity ^0.6.7;
 - -----------------------------------------------------------------
 
 /*-----------------------------------------------------------------
- * ---------------- Authorized User Types, per AC -----------------
+ * ---------------- Authorized User Types, per Node -----------------
  *-----------------------------------------------------------------
  * 
- * -----------------  AC0 stores a count on the number of AC's a given addressHash is registered in
+ * -----------------  AC0 stores a count on the number of Node's a given addressHash is registered in
  * 0 = NO AUTHORIZATIONS
  * 1 - 4 = Standard User types
  * 1 - all priveleges
@@ -429,11 +430,26 @@ Private Provenance
 
 */
 
+/*-----------------------------------------------------------------
+ * ---------------- PRUF struct definitions -----------------
+ *-----------------------------------------------------------------
+ * SEE ZZ_DEPLOY.txt
+ /*-----------------------------------------------------------------
 
 /*-----------------------------------------------------------------
  * ---------------- PRUF SETUP PROTOCOL -----------------
  *-----------------------------------------------------------------
- * SEE ZZ_DEPLOY.txt
+ * AC_data {
+// string name;
+// uint32 assetClassRoot;
+// uint8 custodyType;
+// uint8 managementType;
+// uint8 storageProvider;
+// uint32 discount;
+// address referenceAddress;
+// uint8 switches;
+// bytes32 Mutable;
+ }
  /*-----------------------------------------------------------------
 
 contract test {

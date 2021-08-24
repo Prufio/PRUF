@@ -1,15 +1,15 @@
 const PRUF_STOR = artifacts.require('STOR');
 const PRUF_APP = artifacts.require('APP');
-const PRUF_NP = artifacts.require('NP');
-const PRUF_AC_MGR = artifacts.require('AC_MGR');
-const PRUF_AC_TKN = artifacts.require('AC_TKN');
+const PRUF_APP2 = artifacts.require('APP2');
+const PRUF_NODE_MGR = artifacts.require('NODE_MGR');
+const PRUF_NODE_TKN = artifacts.require('NODE_TKN');
 const PRUF_A_TKN = artifacts.require('A_TKN');
 const PRUF_ID_TKN = artifacts.require('ID_TKN');
 const PRUF_ECR_MGR = artifacts.require('ECR_MGR');
 const PRUF_ECR = artifacts.require('ECR');
 const PRUF_ECR2 = artifacts.require('ECR2');
 const PRUF_APP_NC = artifacts.require('APP_NC');
-const PRUF_NP_NC = artifacts.require('NP_NC');
+const PRUF_APP2_NC = artifacts.require('APP2_NC');
 const PRUF_ECR_NC = artifacts.require('ECR_NC');
 const PRUF_RCLR = artifacts.require('RCLR');
 const PRUF_PIP = artifacts.require('PIP');
@@ -19,9 +19,9 @@ const PRUF_UTIL_TKN = artifacts.require('UTIL_TKN');
 
 let STOR;
 let APP;
-let NP;
-let AC_MGR;
-let AC_TKN;
+let APP2;
+let NODE_MGR;
+let NODE_TKN;
 let A_TKN;
 let ID_TKN;
 let ECR_MGR;
@@ -29,7 +29,7 @@ let ECR;
 let ECR2;
 let ECR_NC;
 let APP_NC;
-let NP_NC;
+let APP2_NC;
 let RCLR;
 let Helper;
 let MAL_APP;
@@ -118,27 +118,27 @@ contract('ECR_CORE', accounts => {
     })
 
 
-    it('Should deploy PRUF_NP', async () => {
-        const PRUF_NP_TEST = await PRUF_NP.deployed({ from: account1 });
-        console.log(PRUF_NP_TEST.address);
-        assert(PRUF_NP_TEST.address !== '');
-        NP = PRUF_NP_TEST;
+    it('Should deploy PRUF_APP2', async () => {
+        const PRUF_APP2_TEST = await PRUF_APP2.deployed({ from: account1 });
+        console.log(PRUF_APP2_TEST.address);
+        assert(PRUF_APP2_TEST.address !== '');
+        APP2 = PRUF_APP2_TEST;
     })
 
 
-    it('Should deploy PRUF_AC_MGR', async () => {
-        const PRUF_AC_MGR_TEST = await PRUF_AC_MGR.deployed({ from: account1 });
-        console.log(PRUF_AC_MGR_TEST.address);
-        assert(PRUF_AC_MGR_TEST.address !== '');
-        AC_MGR = PRUF_AC_MGR_TEST;
+    it('Should deploy PRUF_NODE_MGR', async () => {
+        const PRUF_NODE_MGR_TEST = await PRUF_NODE_MGR.deployed({ from: account1 });
+        console.log(PRUF_NODE_MGR_TEST.address);
+        assert(PRUF_NODE_MGR_TEST.address !== '');
+        NODE_MGR = PRUF_NODE_MGR_TEST;
     })
 
 
-    it('Should deploy PRUF_AC_TKN', async () => {
-        const PRUF_AC_TKN_TEST = await PRUF_AC_TKN.deployed({ from: account1 });
-        console.log(PRUF_AC_TKN_TEST.address);
-        assert(PRUF_AC_TKN_TEST.address !== '')
-        AC_TKN = PRUF_AC_TKN_TEST;
+    it('Should deploy PRUF_NODE_TKN', async () => {
+        const PRUF_NODE_TKN_TEST = await PRUF_NODE_TKN.deployed({ from: account1 });
+        console.log(PRUF_NODE_TKN_TEST.address);
+        assert(PRUF_NODE_TKN_TEST.address !== '')
+        NODE_TKN = PRUF_NODE_TKN_TEST;
     })
 
 
@@ -174,11 +174,11 @@ contract('ECR_CORE', accounts => {
     })
 
 
-    it('Should deploy PRUF_NP_NC', async () => {
-        const PRUF_NP_NC_TEST = await PRUF_NP_NC.deployed({ from: account1 });
-        console.log(PRUF_NP_NC_TEST.address);
-        assert(PRUF_NP_NC_TEST.address !== '')
-        NP_NC = PRUF_NP_NC_TEST;
+    it('Should deploy PRUF_APP2_NC', async () => {
+        const PRUF_APP2_NC_TEST = await PRUF_APP2_NC.deployed({ from: account1 });
+        console.log(PRUF_APP2_NC_TEST.address);
+        assert(PRUF_APP2_NC_TEST.address !== '')
+        APP2_NC = PRUF_APP2_NC_TEST;
     })
 
 
@@ -516,81 +516,81 @@ contract('ECR_CORE', accounts => {
 
     it('Should add contract addresses', async () => {
 
-        console.log("Adding APP to storage for use in AC 0")
+        console.log("Adding APP to storage for use in Node 0")
         return STOR.OO_addContract("APP", APP.address, '0', '1', { from: account1 })
 
             .then(() => {
-                console.log("Adding NP to storage for use in AC 0")
-                return STOR.OO_addContract("NP", NP.address, '0', '1', { from: account1 })
+                console.log("Adding APP2 to storage for use in Node 0")
+                return STOR.OO_addContract("APP2", APP2.address, '0', '1', { from: account1 })
             })
 
             .then(() => {
-                console.log("Adding AC_MGR to storage for use in AC 0")
-                return STOR.OO_addContract("AC_MGR", AC_MGR.address, '0', '1', { from: account1 })
+                console.log("Adding NODE_MGR to storage for use in Node 0")
+                return STOR.OO_addContract("NODE_MGR", NODE_MGR.address, '0', '1', { from: account1 })
             })
 
             .then(() => {
-                console.log("Adding AC_TKN to storage for use in AC 0")
-                return STOR.OO_addContract("AC_TKN", AC_TKN.address, '0', '1', { from: account1 })
+                console.log("Adding NODE_TKN to storage for use in Node 0")
+                return STOR.OO_addContract("NODE_TKN", NODE_TKN.address, '0', '1', { from: account1 })
             })
 
             .then(() => {
-                console.log("Adding A_TKN to storage for use in AC 0")
+                console.log("Adding A_TKN to storage for use in Node 0")
                 return STOR.OO_addContract("A_TKN", A_TKN.address, '0', '1', { from: account1 })
             })
 
             .then(() => {
-                console.log("Adding ID_TKN to storage for use in AC 0")
+                console.log("Adding ID_TKN to storage for use in Node 0")
                 return STOR.OO_addContract("ID_TKN", ID_TKN.address, '0', '1', { from: account1 })
             })
 
             .then(() => {
-                console.log("Adding ECR_MGR to storage for use in AC 0")
+                console.log("Adding ECR_MGR to storage for use in Node 0")
                 return STOR.OO_addContract("ECR_MGR", ECR_MGR.address, '0', '1', { from: account1 })
             })
 
             .then(() => {
-                console.log("Adding ECR to storage for use in AC 0")
+                console.log("Adding ECR to storage for use in Node 0")
                 return STOR.OO_addContract("ECR", ECR.address, '0', '3', { from: account1 })
             })
 
             .then(() => {
-                console.log("Adding ECR2 to storage for use in AC 0")
+                console.log("Adding ECR2 to storage for use in Node 0")
                 return STOR.OO_addContract("ECR2", ECR2.address, '0', '3', { from: account1 })
             })
 
             .then(() => {
-                console.log("Adding APP_NC to storage for use in AC 0")
+                console.log("Adding APP_NC to storage for use in Node 0")
                 return STOR.OO_addContract("APP_NC", APP_NC.address, '0', '2', { from: account1 })
             })
 
             .then(() => {
-                console.log("Adding NP_NC to storage for use in AC 0")
-                return STOR.OO_addContract("NP_NC", NP_NC.address, '0', '2', { from: account1 })
+                console.log("Adding APP2_NC to storage for use in Node 0")
+                return STOR.OO_addContract("APP2_NC", APP2_NC.address, '0', '2', { from: account1 })
             })
 
             .then(() => {
-                console.log("Adding ECR_NC to storage for use in AC 0")
+                console.log("Adding ECR_NC to storage for use in Node 0")
                 return STOR.OO_addContract("ECR_NC", ECR_NC.address, '0', '3', { from: account1 })
             })
 
             .then(() => {
-                console.log("Adding PIP to storage for use in AC 0")
+                console.log("Adding PIP to storage for use in Node 0")
                 return STOR.OO_addContract("PIP", PIP.address, '0', '2', { from: account1 })
             })
 
             .then(() => {
-                console.log("Adding RCLR to storage for use in AC 0")
+                console.log("Adding RCLR to storage for use in Node 0")
                 return STOR.OO_addContract("RCLR", RCLR.address, '0', '3', { from: account1 })
             })
 
             .then(() => {
-                console.log("Adding MAL_APP to storage for use in AC 0")
+                console.log("Adding MAL_APP to storage for use in Node 0")
                 return STOR.OO_addContract("MAL_APP", MAL_APP.address, '0', '1', { from: account1 })
             })
 
             .then(() => {
-                console.log("Adding UTIL_TKN to storage for use in AC 0")
+                console.log("Adding UTIL_TKN to storage for use in Node 0")
                 return STOR.OO_addContract("UTIL_TKN", UTIL_TKN.address, '0', '1', { from: account1 })
             })
     })
@@ -602,8 +602,8 @@ contract('ECR_CORE', accounts => {
         return APP.OO_setStorageContract(STOR.address, { from: account1 })
 
             .then(() => {
-                console.log("Adding in NP")
-                return NP.OO_setStorageContract(STOR.address, { from: account1 })
+                console.log("Adding in APP2")
+                return APP2.OO_setStorageContract(STOR.address, { from: account1 })
             })
 
             .then(() => {
@@ -612,13 +612,13 @@ contract('ECR_CORE', accounts => {
             })
 
             .then(() => {
-                console.log("Adding in AC_MGR")
-                return AC_MGR.OO_setStorageContract(STOR.address, { from: account1 })
+                console.log("Adding in NODE_MGR")
+                return NODE_MGR.OO_setStorageContract(STOR.address, { from: account1 })
             })
 
             // .then(() => {
-            //     console.log("Adding in AC_TKN")
-            //     return AC_TKN.OO_setStorageContract(STOR.address, { from: account1 })
+            //     console.log("Adding in NODE_TKN")
+            //     return NODE_TKN.OO_setStorageContract(STOR.address, { from: account1 })
             // })
 
             .then(() => {
@@ -647,8 +647,8 @@ contract('ECR_CORE', accounts => {
             })
 
             .then(() => {
-                console.log("Adding in NP_NC")
-                return NP_NC.OO_setStorageContract(STOR.address, { from: account1 })
+                console.log("Adding in APP2_NC")
+                return APP2_NC.OO_setStorageContract(STOR.address, { from: account1 })
             })
 
             .then(() => {
@@ -679,8 +679,8 @@ contract('ECR_CORE', accounts => {
         return APP.OO_resolveContractAddresses({ from: account1 })
 
             .then(() => {
-                console.log("Resolving in NP")
-                return NP.OO_resolveContractAddresses({ from: account1 })
+                console.log("Resolving in APP2")
+                return APP2.OO_resolveContractAddresses({ from: account1 })
             })
 
             .then(() => {
@@ -689,13 +689,13 @@ contract('ECR_CORE', accounts => {
             })
 
             .then(() => {
-                console.log("Resolving in AC_MGR")
-                return AC_MGR.OO_resolveContractAddresses({ from: account1 })
+                console.log("Resolving in NODE_MGR")
+                return NODE_MGR.OO_resolveContractAddresses({ from: account1 })
             })
 
             // .then(() => {
-            //     console.log("Resolving in AC_TKN")
-            //     return AC_TKN.OO_resolveContractAddresses({ from: account1 })
+            //     console.log("Resolving in NODE_TKN")
+            //     return NODE_TKN.OO_resolveContractAddresses({ from: account1 })
             // })
 
             .then(() => {
@@ -724,8 +724,8 @@ contract('ECR_CORE', accounts => {
             })
 
             .then(() => {
-                console.log("Resolving in NP_NC")
-                return NP_NC.OO_resolveContractAddresses({ from: account1 })
+                console.log("Resolving in APP2_NC")
+                return APP2_NC.OO_resolveContractAddresses({ from: account1 })
             })
 
             .then(() => {
@@ -749,64 +749,64 @@ contract('ECR_CORE', accounts => {
         // })
     })
 
-    it('Should authorize all minter contracts for minting AC_TKN(s)', async () => {
-        console.log("Authorizing AC_MGR")
-        return AC_TKN.grantRole(minterRoleB32, AC_MGR.address, { from: account1 })
+    it('Should authorize all minter contracts for minting NODE_TKN(s)', async () => {
+        console.log("Authorizing NODE_MGR")
+        return NODE_TKN.grantRole(minterRoleB32, NODE_MGR.address, { from: account1 })
     })
 
 
     it('Should mint a couple of asset root tokens', async () => {
 
         console.log("Minting root token 1 -C")
-        return AC_MGR.createAssetClass(account1, 'CUSTODIAL_ROOT', '1', '1', '3', rgt000, "0", { from: account1 })
+        return NODE_MGR.createNode(account1, 'CUSTODIAL_ROOT', '1', '1', '3', rgt000, "0", { from: account1 })
 
             .then(() => {
                 console.log("Minting root token 2 -NC")
-                return AC_MGR.createAssetClass(account1, 'NON-CUSTODIAL_ROOT', '2', '2', '3', rgt000, "0", { from: account1 })
+                return NODE_MGR.createNode(account1, 'NON-CUSTODIAL_ROOT', '2', '2', '3', rgt000, "0", { from: account1 })
             })
     })
 
 
-    it("Should Mint 2 cust and 2 non-cust AC tokens in AC_ROOT 1", async () => {
+    it("Should Mint 2 cust and 2 non-cust Node tokens in AC_ROOT 1", async () => {
 
-        console.log("Minting AC 10 -C")
-        return AC_MGR.createAssetClass(account1, "Custodial_AC1", "10", "1", "1", rgt000, "0", { from: account1 })
+        console.log("Minting Node 10 -C")
+        return NODE_MGR.createNode(account1, "Custodial_AC1", "10", "1", "1", rgt000, "0", { from: account1 })
 
             .then(() => {
-                console.log("Minting AC 11 -C")
-                return AC_MGR.createAssetClass(account1, "Custodial_AC2", "11", "1", "1", rgt000, "0", { from: account1 })
+                console.log("Minting Node 11 -C")
+                return NODE_MGR.createNode(account1, "Custodial_AC2", "11", "1", "1", rgt000, "0", { from: account1 })
             })
 
             .then(() => {
-                console.log("Minting AC 12 -NC")
-                return AC_MGR.createAssetClass(account1, "Non-Custodial_AC1", "12", "1", "2", rgt000, "0", { from: account1 })
+                console.log("Minting Node 12 -NC")
+                return NODE_MGR.createNode(account1, "Non-Custodial_AC1", "12", "1", "2", rgt000, "0", { from: account1 })
             })
 
             .then(() => {
-                console.log("Minting AC 13 -NC")
-                return AC_MGR.createAssetClass(account1, "Non-Custodial_AC2", "13", "1", "2", rgt000, "0", { from: account1 })
+                console.log("Minting Node 13 -NC")
+                return NODE_MGR.createNode(account1, "Non-Custodial_AC2", "13", "1", "2", rgt000, "0", { from: account1 })
             })
 
             .then(() => {
-                console.log("Minting AC 16 -NC")
-                return AC_MGR.createAssetClass(account10, "Non_Custodial_AC5", "16", "1", "2", rgt000, "0", { from: account1 })
-            })
-    })
-
-
-    it("Should Mint 2 non-cust AC tokens in AC_ROOT 2", async () => {
-
-        console.log("Minting AC 14 -NC")
-        return AC_MGR.createAssetClass(account1, "Non-Custodial_AC3", "14", "2", "2", rgt000, "0", { from: account1 })
-
-            .then(() => {
-                console.log("Minting AC 15 -NC")
-                return AC_MGR.createAssetClass(account10, "Non_Custodial_AC4", "15", "2", "2", rgt000, "0", { from: account1 })
+                console.log("Minting Node 16 -NC")
+                return NODE_MGR.createNode(account10, "Non_Custodial_AC5", "16", "1", "2", rgt000, "0", { from: account1 })
             })
     })
 
 
-    it('Should authorize APP in all relevant asset classes', async () => {
+    it("Should Mint 2 non-cust Node tokens in AC_ROOT 2", async () => {
+
+        console.log("Minting Node 14 -NC")
+        return NODE_MGR.createNode(account1, "Non-Custodial_AC3", "14", "2", "2", rgt000, "0", { from: account1 })
+
+            .then(() => {
+                console.log("Minting Node 15 -NC")
+                return NODE_MGR.createNode(account10, "Non_Custodial_AC4", "15", "2", "2", rgt000, "0", { from: account1 })
+            })
+    })
+
+
+    it('Should authorize APP in all relevant nodes', async () => {
         console.log("Authorizing APP")
         return STOR.enableContractForAC('APP', '10', '1', { from: account1 })
 
@@ -816,7 +816,7 @@ contract('ECR_CORE', accounts => {
     })
 
 
-    it('Should authorize APP_NC in all relevant asset classes', async () => {
+    it('Should authorize APP_NC in all relevant nodes', async () => {
 
         console.log("Authorizing APP_NC")
         return STOR.enableContractForAC('APP_NC', '12', '2', { from: account1 })
@@ -835,18 +835,18 @@ contract('ECR_CORE', accounts => {
     })
 
 
-    it('Should authorize NP in all relevant asset classes', async () => {
+    it('Should authorize APP2 in all relevant nodes', async () => {
 
-        console.log("Authorizing NP")
-        return STOR.enableContractForAC('NP', '10', '1', { from: account1 })
+        console.log("Authorizing APP2")
+        return STOR.enableContractForAC('APP2', '10', '1', { from: account1 })
 
             .then(() => {
-                return STOR.enableContractForAC('NP', '11', '1', { from: account1 })
+                return STOR.enableContractForAC('APP2', '11', '1', { from: account1 })
             })
     })
 
 
-    it('Should authorize MAL_APP in all relevant asset classes', async () => {
+    it('Should authorize MAL_APP in all relevant nodes', async () => {
 
         console.log("Authorizing MAL_APP")
         return STOR.enableContractForAC('MAL_APP', '10', '1', { from: account1 })
@@ -857,26 +857,26 @@ contract('ECR_CORE', accounts => {
     })
 
 
-    it('Should authorize NP_NC in all relevant asset classes', async () => {
+    it('Should authorize APP2_NC in all relevant nodes', async () => {
 
-        console.log("Authorizing NP_NC")
-        return STOR.enableContractForAC('NP_NC', '12', '2', { from: account1 })
+        console.log("Authorizing APP2_NC")
+        return STOR.enableContractForAC('APP2_NC', '12', '2', { from: account1 })
 
             .then(() => {
-                return STOR.enableContractForAC('NP_NC', '13', '2', { from: account1 })
+                return STOR.enableContractForAC('APP2_NC', '13', '2', { from: account1 })
             })
 
             .then(() => {
-                return STOR.enableContractForAC('NP_NC', '14', '2', { from: account1 })
+                return STOR.enableContractForAC('APP2_NC', '14', '2', { from: account1 })
             })
 
             .then(() => {
-                return STOR.enableContractForAC('NP_NC', '16', '2', { from: account10 })
+                return STOR.enableContractForAC('APP2_NC', '16', '2', { from: account10 })
             })
     })
 
 
-    it('Should authorize ECR in all relevant asset classes', async () => {
+    it('Should authorize ECR in all relevant nodes', async () => {
 
         console.log("Authorizing ECR")
         return STOR.enableContractForAC('ECR', '10', '3', { from: account1 })
@@ -887,7 +887,7 @@ contract('ECR_CORE', accounts => {
     })
 
 
-    it('Should authorize ECR2 in all relevant asset classes', async () => {
+    it('Should authorize ECR2 in all relevant nodes', async () => {
 
         console.log("Authorizing ECR2")
         return STOR.enableContractForAC('ECR2', '10', '3', { from: account1 })
@@ -898,7 +898,7 @@ contract('ECR_CORE', accounts => {
     })
 
 
-    it('Should authorize ECR_NC in all relevant asset classes', async () => {
+    it('Should authorize ECR_NC in all relevant nodes', async () => {
 
         console.log("Authorizing ECR_NC")
         return STOR.enableContractForAC('ECR_NC', '12', '3', { from: account1 })
@@ -917,7 +917,7 @@ contract('ECR_CORE', accounts => {
     })
 
 
-    it('Should authorize ECR_MGR in all relevant asset classes', async () => {
+    it('Should authorize ECR_MGR in all relevant nodes', async () => {
 
         console.log("Authorizing ECR_MGR")
         return STOR.enableContractForAC('ECR_MGR', '10', '3', { from: account1 })
@@ -944,30 +944,30 @@ contract('ECR_CORE', accounts => {
     })
 
 
-    it('Should authorize AC_TKN in all relevant asset classes', async () => {
+    it('Should authorize NODE_TKN in all relevant nodes', async () => {
 
-        console.log("Authorizing AC_TKN")
-        return STOR.enableContractForAC('AC_TKN', '10', '1', { from: account1 })
+        console.log("Authorizing NODE_TKN")
+        return STOR.enableContractForAC('NODE_TKN', '10', '1', { from: account1 })
 
             .then(() => {
-                return STOR.enableContractForAC('AC_TKN', '11', '1', { from: account1 })
+                return STOR.enableContractForAC('NODE_TKN', '11', '1', { from: account1 })
             })
 
             .then(() => {
-                return STOR.enableContractForAC('AC_TKN', '12', '2', { from: account1 })
+                return STOR.enableContractForAC('NODE_TKN', '12', '2', { from: account1 })
             })
 
             .then(() => {
-                return STOR.enableContractForAC('AC_TKN', '13', '2', { from: account1 })
+                return STOR.enableContractForAC('NODE_TKN', '13', '2', { from: account1 })
             })
 
             .then(() => {
-                return STOR.enableContractForAC('AC_TKN', '14', '2', { from: account1 })
+                return STOR.enableContractForAC('NODE_TKN', '14', '2', { from: account1 })
             })
     })
 
 
-    it('Should authorize A_TKN in all relevant asset classes', async () => {
+    it('Should authorize A_TKN in all relevant nodes', async () => {
 
         console.log("Authorizing A_TKN")
         return STOR.enableContractForAC('A_TKN', '10', '1', { from: account1 })
@@ -1006,7 +1006,7 @@ contract('ECR_CORE', accounts => {
     })
 
 
-    it('Should authorize PIP in all relevant asset classes', async () => {
+    it('Should authorize PIP in all relevant nodes', async () => {
 
         console.log("Authorizing PIP")
         return STOR.enableContractForAC('PIP', '10', '1', { from: account1 })
@@ -1045,30 +1045,30 @@ contract('ECR_CORE', accounts => {
     })
 
 
-    it('Should authorize AC_MGR in all relevant asset classes', async () => {
+    it('Should authorize NODE_MGR in all relevant nodes', async () => {
 
-        console.log("Authorizing AC_MGR")
-        return STOR.enableContractForAC('AC_MGR', '10', '1', { from: account1 })
+        console.log("Authorizing NODE_MGR")
+        return STOR.enableContractForAC('NODE_MGR', '10', '1', { from: account1 })
 
             .then(() => {
-                return STOR.enableContractForAC('AC_MGR', '11', '1', { from: account1 })
+                return STOR.enableContractForAC('NODE_MGR', '11', '1', { from: account1 })
             })
 
             .then(() => {
-                return STOR.enableContractForAC('AC_MGR', '12', '2', { from: account1 })
+                return STOR.enableContractForAC('NODE_MGR', '12', '2', { from: account1 })
             })
 
             .then(() => {
-                return STOR.enableContractForAC('AC_MGR', '13', '2', { from: account1 })
+                return STOR.enableContractForAC('NODE_MGR', '13', '2', { from: account1 })
             })
 
             .then(() => {
-                return STOR.enableContractForAC('AC_MGR', '14', '2', { from: account1 })
+                return STOR.enableContractForAC('NODE_MGR', '14', '2', { from: account1 })
             })
     })
 
 
-    it('Should authorize RCLR in all relevant asset classes', async () => {
+    it('Should authorize RCLR in all relevant nodes', async () => {
 
         console.log("Authorizing RCLR")
         return STOR.enableContractForAC('RCLR', '10', '3', { from: account1 })
@@ -1096,8 +1096,8 @@ contract('ECR_CORE', accounts => {
 
     it('Should authorize all payable contracts for transactions', async () => {
 
-        console.log("Authorizing AC_MGR")
-        return UTIL_TKN.grantRole(payableRoleB32, AC_MGR.address, { from: account1 })
+        console.log("Authorizing NODE_MGR")
+        return UTIL_TKN.grantRole(payableRoleB32, NODE_MGR.address, { from: account1 })
 
             .then(() => {
                 console.log("Authorizing APP_NC")
@@ -1117,8 +1117,8 @@ contract('ECR_CORE', accounts => {
 
     it('Should authorize all minter contracts for minting A_TKN(s)', async () => {
 
-        console.log("Authorizing NP")
-        return A_TKN.grantRole(minterRoleB32, NP.address, { from: account1 })
+        console.log("Authorizing APP2")
+        return A_TKN.grantRole(minterRoleB32, APP2.address, { from: account1 })
 
             .then(() => {
                 console.log("Authorizing APP_NC")
@@ -1137,11 +1137,11 @@ contract('ECR_CORE', accounts => {
     })
 
 
-    it("Should set costs in minted AC's", async () => {
+    it("Should set costs in minted Node's", async () => {
 
-        console.log("Setting costs in AC 1")
+        console.log("Setting costs in Node 1")
 
-        return AC_MGR.ACTH_setCosts(
+        return NODE_MGR.setOperationCosts(
             "1",
             "1",
             "10000000000000000",
@@ -1150,7 +1150,7 @@ contract('ECR_CORE', accounts => {
 
 
             .then(() => {
-                return AC_MGR.ACTH_setCosts(
+                return NODE_MGR.setOperationCosts(
                     "1",
                     "2",
                     "10000000000000000",
@@ -1159,7 +1159,7 @@ contract('ECR_CORE', accounts => {
             })
 
             .then(() => {
-                return AC_MGR.ACTH_setCosts(
+                return NODE_MGR.setOperationCosts(
                     "1",
                     "3",
                     "10000000000000000",
@@ -1168,7 +1168,7 @@ contract('ECR_CORE', accounts => {
             })
 
             .then(() => {
-                return AC_MGR.ACTH_setCosts(
+                return NODE_MGR.setOperationCosts(
                     "1",
                     "4",
                     "10000000000000000",
@@ -1177,7 +1177,7 @@ contract('ECR_CORE', accounts => {
             })
 
             .then(() => {
-                return AC_MGR.ACTH_setCosts(
+                return NODE_MGR.setOperationCosts(
                     "1",
                     "5",
                     "10000000000000000",
@@ -1186,7 +1186,7 @@ contract('ECR_CORE', accounts => {
             })
 
             .then(() => {
-                return AC_MGR.ACTH_setCosts(
+                return NODE_MGR.setOperationCosts(
                     "1",
                     "6",
                     "10000000000000000",
@@ -1195,8 +1195,8 @@ contract('ECR_CORE', accounts => {
             })
 
             .then(() => {
-                console.log("Setting base costs in AC 2")
-                return AC_MGR.ACTH_setCosts(
+                console.log("Setting base costs in Node 2")
+                return NODE_MGR.setOperationCosts(
                     "2",
                     "1",
                     "10000000000000000",
@@ -1205,7 +1205,7 @@ contract('ECR_CORE', accounts => {
             })
 
             .then(() => {
-                return AC_MGR.ACTH_setCosts(
+                return NODE_MGR.setOperationCosts(
                     "2",
                     "2",
                     "10000000000000000",
@@ -1214,7 +1214,7 @@ contract('ECR_CORE', accounts => {
             })
 
             .then(() => {
-                return AC_MGR.ACTH_setCosts(
+                return NODE_MGR.setOperationCosts(
                     "2",
                     "3",
                     "10000000000000000",
@@ -1223,7 +1223,7 @@ contract('ECR_CORE', accounts => {
             })
 
             .then(() => {
-                return AC_MGR.ACTH_setCosts(
+                return NODE_MGR.setOperationCosts(
                     "2",
                     "4",
                     "10000000000000000",
@@ -1232,7 +1232,7 @@ contract('ECR_CORE', accounts => {
             })
 
             .then(() => {
-                return AC_MGR.ACTH_setCosts(
+                return NODE_MGR.setOperationCosts(
                     "2",
                     "5",
                     "10000000000000000",
@@ -1241,7 +1241,7 @@ contract('ECR_CORE', accounts => {
             })
 
             .then(() => {
-                return AC_MGR.ACTH_setCosts(
+                return NODE_MGR.setOperationCosts(
                     "2",
                     "6",
                     "10000000000000000",
@@ -1249,8 +1249,8 @@ contract('ECR_CORE', accounts => {
                     { from: account1 })
             })
             .then(() => {
-                console.log("Setting base costs in AC 10")
-                return AC_MGR.ACTH_setCosts(
+                console.log("Setting base costs in Node 10")
+                return NODE_MGR.setOperationCosts(
                     "10",
                     "1",
                     "10000000000000000",
@@ -1259,7 +1259,7 @@ contract('ECR_CORE', accounts => {
             })
 
             .then(() => {
-                return AC_MGR.ACTH_setCosts(
+                return NODE_MGR.setOperationCosts(
                     "10",
                     "2",
                     "10000000000000000",
@@ -1268,7 +1268,7 @@ contract('ECR_CORE', accounts => {
             })
 
             .then(() => {
-                return AC_MGR.ACTH_setCosts(
+                return NODE_MGR.setOperationCosts(
                     "10",
                     "3",
                     "10000000000000000",
@@ -1277,7 +1277,7 @@ contract('ECR_CORE', accounts => {
             })
 
             .then(() => {
-                return AC_MGR.ACTH_setCosts(
+                return NODE_MGR.setOperationCosts(
                     "10",
                     "4",
                     "10000000000000000",
@@ -1286,7 +1286,7 @@ contract('ECR_CORE', accounts => {
             })
 
             .then(() => {
-                return AC_MGR.ACTH_setCosts(
+                return NODE_MGR.setOperationCosts(
                     "10",
                     "5",
                     "10000000000000000",
@@ -1295,7 +1295,7 @@ contract('ECR_CORE', accounts => {
             })
 
             .then(() => {
-                return AC_MGR.ACTH_setCosts(
+                return NODE_MGR.setOperationCosts(
                     "10",
                     "6",
                     "10000000000000000",
@@ -1304,8 +1304,8 @@ contract('ECR_CORE', accounts => {
             })
 
             .then(() => {
-                console.log("Setting base costs in AC 11")
-                return AC_MGR.ACTH_setCosts(
+                console.log("Setting base costs in Node 11")
+                return NODE_MGR.setOperationCosts(
                     "11",
                     "1",
                     "10000000000000000",
@@ -1314,7 +1314,7 @@ contract('ECR_CORE', accounts => {
             })
 
             .then(() => {
-                return AC_MGR.ACTH_setCosts(
+                return NODE_MGR.setOperationCosts(
                     "11",
                     "2",
                     "10000000000000000",
@@ -1323,7 +1323,7 @@ contract('ECR_CORE', accounts => {
             })
 
             .then(() => {
-                return AC_MGR.ACTH_setCosts(
+                return NODE_MGR.setOperationCosts(
                     "11",
                     "3",
                     "10000000000000000",
@@ -1332,7 +1332,7 @@ contract('ECR_CORE', accounts => {
             })
 
             .then(() => {
-                return AC_MGR.ACTH_setCosts(
+                return NODE_MGR.setOperationCosts(
                     "11",
                     "4",
                     "10000000000000000",
@@ -1341,7 +1341,7 @@ contract('ECR_CORE', accounts => {
             })
 
             .then(() => {
-                return AC_MGR.ACTH_setCosts(
+                return NODE_MGR.setOperationCosts(
                     "11",
                     "5",
                     "10000000000000000",
@@ -1350,7 +1350,7 @@ contract('ECR_CORE', accounts => {
             })
 
             .then(() => {
-                return AC_MGR.ACTH_setCosts(
+                return NODE_MGR.setOperationCosts(
                     "11",
                     "6",
                     "10000000000000000",
@@ -1359,8 +1359,8 @@ contract('ECR_CORE', accounts => {
             })
 
             .then(() => {
-                console.log("Setting base costs in AC 12")
-                return AC_MGR.ACTH_setCosts(
+                console.log("Setting base costs in Node 12")
+                return NODE_MGR.setOperationCosts(
                     "12",
                     "1",
                     "10000000000000000",
@@ -1369,7 +1369,7 @@ contract('ECR_CORE', accounts => {
             })
 
             .then(() => {
-                return AC_MGR.ACTH_setCosts(
+                return NODE_MGR.setOperationCosts(
                     "12",
                     "2",
                     "10000000000000000",
@@ -1378,7 +1378,7 @@ contract('ECR_CORE', accounts => {
             })
 
             .then(() => {
-                return AC_MGR.ACTH_setCosts(
+                return NODE_MGR.setOperationCosts(
                     "12",
                     "3",
                     "10000000000000000",
@@ -1387,7 +1387,7 @@ contract('ECR_CORE', accounts => {
             })
 
             .then(() => {
-                return AC_MGR.ACTH_setCosts(
+                return NODE_MGR.setOperationCosts(
                     "12",
                     "4",
                     "10000000000000000",
@@ -1396,7 +1396,7 @@ contract('ECR_CORE', accounts => {
             })
 
             .then(() => {
-                return AC_MGR.ACTH_setCosts(
+                return NODE_MGR.setOperationCosts(
                     "12",
                     "5",
                     "10000000000000000",
@@ -1405,7 +1405,7 @@ contract('ECR_CORE', accounts => {
             })
 
             .then(() => {
-                return AC_MGR.ACTH_setCosts(
+                return NODE_MGR.setOperationCosts(
                     "12",
                     "6",
                     "10000000000000000",
@@ -1414,8 +1414,8 @@ contract('ECR_CORE', accounts => {
             })
 
             .then(() => {
-                console.log("Setting base costs in AC 13")
-                return AC_MGR.ACTH_setCosts(
+                console.log("Setting base costs in Node 13")
+                return NODE_MGR.setOperationCosts(
                     "13",
                     "1",
                     "10000000000000000",
@@ -1424,7 +1424,7 @@ contract('ECR_CORE', accounts => {
             })
 
             .then(() => {
-                return AC_MGR.ACTH_setCosts(
+                return NODE_MGR.setOperationCosts(
                     "13",
                     "2",
                     "10000000000000000",
@@ -1433,7 +1433,7 @@ contract('ECR_CORE', accounts => {
             })
 
             .then(() => {
-                return AC_MGR.ACTH_setCosts(
+                return NODE_MGR.setOperationCosts(
                     "13",
                     "3",
                     "10000000000000000",
@@ -1442,7 +1442,7 @@ contract('ECR_CORE', accounts => {
             })
 
             .then(() => {
-                return AC_MGR.ACTH_setCosts(
+                return NODE_MGR.setOperationCosts(
                     "13",
                     "4",
                     "10000000000000000",
@@ -1451,7 +1451,7 @@ contract('ECR_CORE', accounts => {
             })
 
             .then(() => {
-                return AC_MGR.ACTH_setCosts(
+                return NODE_MGR.setOperationCosts(
                     "13",
                     "5",
                     "10000000000000000",
@@ -1460,7 +1460,7 @@ contract('ECR_CORE', accounts => {
             })
 
             .then(() => {
-                return AC_MGR.ACTH_setCosts(
+                return NODE_MGR.setOperationCosts(
                     "13",
                     "6",
                     "10000000000000000",
@@ -1469,8 +1469,8 @@ contract('ECR_CORE', accounts => {
             })
 
             .then(() => {
-                console.log("Setting base costs in AC 14")
-                return AC_MGR.ACTH_setCosts(
+                console.log("Setting base costs in Node 14")
+                return NODE_MGR.setOperationCosts(
                     "14",
                     "1",
                     "10000000000000000",
@@ -1479,7 +1479,7 @@ contract('ECR_CORE', accounts => {
             })
 
             .then(() => {
-                return AC_MGR.ACTH_setCosts(
+                return NODE_MGR.setOperationCosts(
                     "14",
                     "2",
                     "10000000000000000",
@@ -1488,7 +1488,7 @@ contract('ECR_CORE', accounts => {
             })
 
             .then(() => {
-                return AC_MGR.ACTH_setCosts(
+                return NODE_MGR.setOperationCosts(
                     "14",
                     "3",
                     "10000000000000000",
@@ -1497,7 +1497,7 @@ contract('ECR_CORE', accounts => {
             })
 
             .then(() => {
-                return AC_MGR.ACTH_setCosts(
+                return NODE_MGR.setOperationCosts(
                     "14",
                     "4",
                     "10000000000000000",
@@ -1506,7 +1506,7 @@ contract('ECR_CORE', accounts => {
             })
 
             .then(() => {
-                return AC_MGR.ACTH_setCosts(
+                return NODE_MGR.setOperationCosts(
                     "14",
                     "5",
                     "10000000000000000",
@@ -1515,7 +1515,7 @@ contract('ECR_CORE', accounts => {
             })
 
             .then(() => {
-                return AC_MGR.ACTH_setCosts(
+                return NODE_MGR.setOperationCosts(
                     "14",
                     "6",
                     "10000000000000000",
@@ -1524,8 +1524,8 @@ contract('ECR_CORE', accounts => {
             })
 
             .then(() => {
-                console.log("Setting base costs in AC 15")
-                return AC_MGR.ACTH_setCosts(
+                console.log("Setting base costs in Node 15")
+                return NODE_MGR.setOperationCosts(
                     "15",
                     "1",
                     "10000000000000000",
@@ -1534,7 +1534,7 @@ contract('ECR_CORE', accounts => {
             })
 
             .then(() => {
-                return AC_MGR.ACTH_setCosts(
+                return NODE_MGR.setOperationCosts(
                     "15",
                     "2",
                     "10000000000000000",
@@ -1543,7 +1543,7 @@ contract('ECR_CORE', accounts => {
             })
 
             .then(() => {
-                return AC_MGR.ACTH_setCosts(
+                return NODE_MGR.setOperationCosts(
                     "15",
                     "3",
                     "10000000000000000",
@@ -1552,7 +1552,7 @@ contract('ECR_CORE', accounts => {
             })
 
             .then(() => {
-                return AC_MGR.ACTH_setCosts(
+                return NODE_MGR.setOperationCosts(
                     "15",
                     "4",
                     "10000000000000000",
@@ -1561,7 +1561,7 @@ contract('ECR_CORE', accounts => {
             })
 
             .then(() => {
-                return AC_MGR.ACTH_setCosts(
+                return NODE_MGR.setOperationCosts(
                     "15",
                     "5",
                     "10000000000000000",
@@ -1570,7 +1570,7 @@ contract('ECR_CORE', accounts => {
             })
 
             .then(() => {
-                return AC_MGR.ACTH_setCosts(
+                return NODE_MGR.setOperationCosts(
                     "15",
                     "6",
                     "10000000000000000",
@@ -1580,75 +1580,75 @@ contract('ECR_CORE', accounts => {
     })
 
 
-    it('Should add users to AC 10-14 in AC_Manager', async () => {
+    it('Should add users to Node 10-14 in AC_Manager', async () => {
 
         console.log("//**************************************END BOOTSTRAP**********************************************/")
         console.log("Account2 => AC10")
-        return AC_MGR.OO_addUser(account2, '1', '10', { from: account1 })
+        return NODE_MGR.OO_addUser(account2, '1', '10', { from: account1 })
 
             .then(() => {
                 console.log("Account2 => AC11")
-                return AC_MGR.OO_addUser(account2, '1', '11', { from: account1 })
+                return NODE_MGR.OO_addUser(account2, '1', '11', { from: account1 })
             })
 
             .then(() => {
                 console.log("Account3 => AC11")
-                return AC_MGR.OO_addUser(account3, '1', '11', { from: account1 })
+                return NODE_MGR.OO_addUser(account3, '1', '11', { from: account1 })
             })
 
             .then(() => {
                 console.log("Account4 => AC10")
-                return AC_MGR.OO_addUser(account4, '1', '10', { from: account1 })
+                return NODE_MGR.OO_addUser(account4, '1', '10', { from: account1 })
             })
 
             .then(() => {
                 console.log("Account4 => AC12")
-                return AC_MGR.OO_addUser(account4, '1', '12', { from: account1 })
+                return NODE_MGR.OO_addUser(account4, '1', '12', { from: account1 })
             })
 
             .then(() => {
                 console.log("Account4 => AC12")
-                return AC_MGR.OO_addUser(account4, '1', '16', { from: account10 })
+                return NODE_MGR.OO_addUser(account4, '1', '16', { from: account10 })
             })
 
             .then(() => {
                 console.log("Account5 => AC13")
-                return AC_MGR.OO_addUser(account5, '1', '13', { from: account1 })
+                return NODE_MGR.OO_addUser(account5, '1', '13', { from: account1 })
             })
 
             .then(() => {
                 console.log("Account6 => AC14")
-                return AC_MGR.OO_addUser(account6, '1', '14', { from: account1 })
+                return NODE_MGR.OO_addUser(account6, '1', '14', { from: account1 })
             })
 
             .then(() => {
                 console.log("Account7 => AC14 (ROBOT)")
-                return AC_MGR.OO_addUser(account7, '9', '14', { from: account1 })
+                return NODE_MGR.OO_addUser(account7, '9', '14', { from: account1 })
             })
 
             .then(() => {
                 console.log("Account8 => AC10 (ROBOT)")
-                return AC_MGR.OO_addUser(account8, '9', '10', { from: account1 })
+                return NODE_MGR.OO_addUser(account8, '9', '10', { from: account1 })
             })
 
             .then(() => {
                 console.log("Account9 => AC11 (ROBOT)")
-                return AC_MGR.OO_addUser(account9, '9', '11', { from: account1 })
+                return NODE_MGR.OO_addUser(account9, '9', '11', { from: account1 })
             })
 
             .then(() => {
                 console.log("Account10 => AC15 (PIPMINTER)")
-                return AC_MGR.OO_addUser(account10, '10', '15', { from: account10 })
+                return NODE_MGR.OO_addUser(account10, '10', '15', { from: account10 })
             })
 
             .then(() => {
                 console.log("Account10 => AC15 (PIPMINTER)")
-                return AC_MGR.OO_addUser(account10, '10', '16', { from: account10 })
+                return NODE_MGR.OO_addUser(account10, '10', '16', { from: account10 })
             })
 
             .then(() => {
                 console.log("Account10 => AC15 (PIPMINTER)")
-                return AC_MGR.OO_addUser(account10, '1', '10', { from: account1 })
+                return NODE_MGR.OO_addUser(account10, '1', '10', { from: account1 })
             })
     })
 })

@@ -1,4 +1,4 @@
-/**--------------------------------------------------------PRüF0.8.0
+/**--------------------------------------------------------PRüF0.8.6
 __/\\\\\\\\\\\\\ _____/\\\\\\\\\ _______/\\__/\\ ___/\\\\\\\\\\\\\\\        
  _\/\\\/////////\\\ _/\\\///////\\\ ____\//__\//____\/\\\///////////__       
   _\/\\\_______\/\\\_\/\\\_____\/\\\ ________________\/\\\ ____________      
@@ -12,14 +12,7 @@ __/\\\\\\\\\\\\\ _____/\\\\\\\\\ _______/\\__/\\ ___/\\\\\\\\\\\\\\\
 
 /**-----------------------------------------------------------------
  *  TO DO
- * //CTS:EXAMINE all params/returns defined in comments global
- * //CTS:EXAMINE AssetClass, asset class, assetClass->Node global
- * //CTS:EXAMINE ACTH->NTH global
- * //CTS:EXAMINE AssetClassRoot, asset class root, root->RootNode global
- * //CTS:EXAMINE IPFS1/IPFS2->storProvider/storProvider2 global
- * //CTS:EXAMINE idxHash->assetId global
- * //CTS:EXAMINE NP name change
- * //CTS:EXAMINE Run through interfaces, make sure is up to date. 
+ * //CTS:EXAMINE Run through interfaces, make sure is up to date.
  *---------------------------------------------------------------*/
 
 /**-----------------------------------------------------------------
@@ -38,7 +31,7 @@ __/\\\\\\\\\\\\\ _____/\\\\\\\\\ _______/\\__/\\ ___/\\\\\\\\\\\\\\\
  *-----------------------------------------------------------------*/
 
 // SPDX-License-Identifier: UNLICENSED
-pragma solidity ^0.8.0;
+pragma solidity ^0.8.6;
 
 import "./PRUF_INTERFACES.sol";
 import "./Imports/access/AccessControl.sol";
@@ -53,17 +46,17 @@ contract STOR is AccessControl, ReentrancyGuard, Pausable {
     bytes32 public constant B320xF_ =
         0xFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFF;
 
-    mapping(string => mapping(uint32 => uint8)) internal contractInfo; // name=>AC=>authorization level
+    mapping(string => mapping(uint32 => uint8)) internal contractInfo; // name=>node=>authorization level
     mapping(address => string) private contractAddressToName; // Authorized contract addresses, indexed by address, with auth level 0-255
     mapping(string => address) private contractNameToAddress; // Authorized contract addresses, indexed by name
-    mapping(uint256 => DefaultContract) private defaultContracts; //default contracts for AC creation
+    mapping(uint256 => DefaultContract) private defaultContracts; //default contracts for node creation
     mapping(bytes32 => Record) private database; // Main Data Storage
 
-    //address private AC_TKN_Address;
-    AC_TKN_Interface private AC_TKN; //erc721_token prototype initialization
+    //address private NODE_TKN_Address;
+    NODE_TKN_Interface private NODE_TKN; //erc721_token prototype initialization
 
-    //address internal AC_MGR_Address;
-    AC_MGR_Interface internal AC_MGR; // Set up external contract interface for AC_MGR
+    //address internal NODE_MGR_Address;
+    NODE_MGR_Interface internal NODE_MGR; // Set up external contract interface for NODE_MGR
 
     constructor() {
         _setupRole(DEFAULT_ADMIN_ROLE, _msgSender());
@@ -81,7 +74,7 @@ contract STOR is AccessControl, ReentrancyGuard, Pausable {
     modifier isContractAdmin() {
         require(
             hasRole(CONTRACT_ADMIN_ROLE, _msgSender()),
-            "S:MOD-IADM: Must have CONTRACT_ADMIN_ROLE" //CTS:EXAMINE "S:MOD-ICA"
+            "S:MOD-ICA: Must have CONTRACT_ADMIN_ROLE"
         );
         _;
     }
@@ -101,12 +94,11 @@ contract STOR is AccessControl, ReentrancyGuard, Pausable {
 
     /**
      * @dev Verify user credentials
-     * Requires: Originating Address is authorized for asset class
-     * @param _assetClass asset class to check address auth
+     * Requires: Originating Address is authorized for node
+     * @param _node node to check address auth
      */
-    modifier isAuthorized(uint32 _assetClass) {
-        uint8 auth =
-            contractInfo[contractAddressToName[msg.sender]][_assetClass];
+    modifier isAuthorized(uint32 _node) {
+        uint8 auth = contractInfo[contractAddressToName[msg.sender]][_node];
         require(
             ((auth > 0) && (auth < 5)) || (auth == 10),
             "S:MOD-IAUT: Contract not authorized"
@@ -131,7 +123,7 @@ contract STOR is AccessControl, ReentrancyGuard, Pausable {
      * @param _idxHash idx hash to check for existance in storage data
      */
     modifier exists(bytes32 _idxHash) {
-        require(database[_idxHash].assetClass != 0, "S:MOD-E: Rec !exist");
+        require(database[_idxHash].node != 0, "S:MOD-E: Rec !exist");
         _;
     }
 
@@ -216,28 +208,28 @@ contract STOR is AccessControl, ReentrancyGuard, Pausable {
     }
 
     /**
-     * @dev Authorize / Deauthorize ADRESSES permitted to make record modifications, per AssetClass
+     * @dev Authorize / Deauthorize ADRESSES permitted to make record modifications, per node
      * populates contract name resolution and data mappings
-     * @param   _contractName - String name of contract
-     * @param   _contractAddr - address of contract
-     * @param   _assetClass - asset class to authorize in
-     * @param   _contractAuthLevel - auth level to assign
+     * @param _contractName - String name of contract
+     * @param _contractAddr - address of contract
+     * @param _node - node to authorize in
+     * @param _contractAuthLevel - auth level to assign
      */
     function OO_addContract(
         string calldata _contractName,
         address _contractAddr,
-        uint32 _assetClass,
+        uint32 _node,
         uint8 _contractAuthLevel
     ) external isContractAdmin {
-        require(_assetClass == 0, "S:AC: AC !=0");
+        require(_node == 0, "S:node: node !=0");
         //^^^^^^^checks^^^^^^^^^
 
-        contractInfo[_contractName][_assetClass] = _contractAuthLevel; //does not pose a partial record overwrite risk
+        contractInfo[_contractName][_node] = _contractAuthLevel; //does not pose a partial record overwrite risk
         contractNameToAddress[_contractName] = _contractAddr;
         contractAddressToName[_contractAddr] = _contractName;
 
-        AC_TKN = AC_TKN_Interface(contractNameToAddress["AC_TKN"]); // cheaper than keking to check
-        AC_MGR = AC_MGR_Interface(contractNameToAddress["AC_MGR"]); // cheaper than keking to check
+        NODE_TKN = NODE_TKN_Interface(contractNameToAddress["NODE_TKN"]); // cheaper than keking to check
+        NODE_MGR = NODE_MGR_Interface(contractNameToAddress["NODE_MGR"]); // cheaper than keking to check
         //^^^^^^^effects^^^^^^^^^
 
         emit REPORT("ACDA", bytes32(uint256(_contractAuthLevel))); //report access to the internal user database
@@ -245,17 +237,17 @@ contract STOR is AccessControl, ReentrancyGuard, Pausable {
     }
 
     /**
-     * @dev set the default list of 11 contracts (zero index) to be applied to asset classes
-     * APP_NC, NP_NC, AC_MGR, AC_TKN, A_TKN, ECR_MGR, RCLR, PIP, PURCHASE, DECORATE, WRAP
-     * @param   _contractNumber - 0-10
-     * @param   _name - name
-     * @param   _contractAuthLevel - authLevel
+     * @dev set the default list of 11 contracts (zero index) to be applied to Nodees
+     * APP_NC, APP2_NC, NODE_MGR, NODE_TKN, A_TKN, ECR_MGR, RCLR, PIP, PURCHASE, DECORATE, WRAP
+     * @param _contractNumber - 0-10
+     * @param _name - name
+     * @param _contractAuthLevel - authLevel
      */
     function addDefaultContracts(
         uint256 _contractNumber,
         string calldata _name,
         uint8 _contractAuthLevel
-    ) public isContractAdmin {
+    ) external isContractAdmin {
         //^^^^^^^checks^^^^^^^^^
         require(_contractNumber <= 10, "S:ADC: Contract number > 10");
         defaultContracts[_contractNumber].name = _name;
@@ -264,111 +256,111 @@ contract STOR is AccessControl, ReentrancyGuard, Pausable {
     }
 
     /**
-     * @dev retrieve a record from the default list of 11 contracts to be applied to asset classes
+     * @dev retrieve a record from the default list of 11 contracts to be applied to Nodees
      * @param _contractNumber to look up (0-10)
      * returns the name and auth level
      */
     function getDefaultContract(uint256 _contractNumber)
-        public
+        external
         view
         isContractAdmin
         returns (DefaultContract memory)
-    //^^^^^^^checks^^^^^^^^^
     {
+        //^^^^^^^checks^^^^^^^^^
         return (defaultContracts[_contractNumber]);
         //^^^^^^^interactions^^^^^^^^^
     }
 
     /**
      * @dev Set the default 11 authorized contracts
-     * @param _assetClass the Asset Class which will be enabled for the default contracts
+     * @param _node the Node which will be enabled for the default contracts
      */
-    function enableDefaultContractsForAC(uint32 _assetClass) public {
+    function enableDefaultContractsForAC(uint32 _node) external {
         require(
-            (AC_TKN.ownerOf(_assetClass) == _msgSender()) ||
-                (_msgSender() == contractNameToAddress["AC_MGR"]),
-            "S:EDCFAC: Caller not ACtokenHolder or AC_MGR"
+            (NODE_TKN.ownerOf(_node) == _msgSender()) ||
+                (_msgSender() == contractNameToAddress["NODE_MGR"]),
+            "S:EDCFAC: Caller not ACtokenHolder or NODE_MGR"
         );
         //^^^^^^^checks^^^^^^^^^
         enableContractForAC(
             defaultContracts[0].name,
-            _assetClass,
+            _node,
             defaultContracts[0].contractType
         );
         enableContractForAC(
             defaultContracts[1].name,
-            _assetClass,
+            _node,
             defaultContracts[1].contractType
         );
         enableContractForAC(
             defaultContracts[2].name,
-            _assetClass,
+            _node,
             defaultContracts[2].contractType
         );
         enableContractForAC(
             defaultContracts[3].name,
-            _assetClass,
+            _node,
             defaultContracts[3].contractType
         );
         enableContractForAC(
             defaultContracts[4].name,
-            _assetClass,
+            _node,
             defaultContracts[4].contractType
         );
         enableContractForAC(
             defaultContracts[5].name,
-            _assetClass,
+            _node,
             defaultContracts[5].contractType
         );
         enableContractForAC(
             defaultContracts[6].name,
-            _assetClass,
+            _node,
             defaultContracts[6].contractType
         );
         enableContractForAC(
             defaultContracts[7].name,
-            _assetClass,
+            _node,
             defaultContracts[7].contractType
         );
         enableContractForAC(
             defaultContracts[8].name,
-            _assetClass,
+            _node,
             defaultContracts[8].contractType
         );
         enableContractForAC(
             defaultContracts[9].name,
-            _assetClass,
+            _node,
             defaultContracts[9].contractType
         );
         enableContractForAC(
             defaultContracts[10].name,
-            _assetClass,
+            _node,
             defaultContracts[10].contractType
         );
         //^^^^^^^effects^^^^^^^^^
     }
 
     /**
-     * @dev Authorize / Deauthorize contract NAMES permitted to make record modifications, per AssetClass
-     * allows ACtokenHolder to Authorize / Deauthorize specific contracts to work within their asset class
+     * @dev Authorize / Deauthorize contract NAMES permitted to make record modifications, per node
+     * allows ACtokenHolder to Authorize / Deauthorize specific contracts to work within their node
      * @param   _name -  Name of contract being authed
-     * @param   _assetClass - affected asset class
-     * @param   _contractAuthLevel - auth level to set for thae contract, in that asset class
+     * @param   _node - affected node
+     * @param   _contractAuthLevel - auth level to set for thae contract, in that node
      */
     function enableContractForAC(
         string memory _name,
-        uint32 _assetClass,
+        uint32 _node,
         uint8 _contractAuthLevel
     ) public {
         require(
-            (AC_TKN.ownerOf(_assetClass) == _msgSender()) ||
-                (_msgSender() == contractNameToAddress["AC_MGR"]),
-            "S:ECFAC: Caller not ACtokenHolder or AC_MGR"
+            (NODE_TKN.ownerOf(_node) == _msgSender()) ||
+                (_msgSender() == contractNameToAddress["NODE_MGR"]),
+            "S:ECFAC: Caller not ACtokenHolder or NODE_MGR"
         );
 
         //^^^^^^^checks^^^^^^^^^
 
-        contractInfo[_name][_assetClass] = _contractAuthLevel; //does not pose an partial record overwrite risk
+        contractInfo[_name][_node] = _contractAuthLevel; //does not pose an partial record overwrite risk
         //^^^^^^^effects^^^^^^^^^
 
         emit REPORT("ACDA", bytes32(uint256(_contractAuthLevel))); //report access to the internal user database
@@ -381,61 +373,61 @@ contract STOR is AccessControl, ReentrancyGuard, Pausable {
      * @dev Make a new record, writing to the 'database' mapping with basic initial asset data
      * @param   _idxHash - asset ID
      * @param   _rgtHash - rightsholder id hash
-     * @param   _assetClass - asset class in which to create the asset
+     * @param   _node - node in which to create the asset
      * @param   _countDownStart - initial value for decrement-only value
-     * calling contract must be authorized in relevant assetClass
+     * calling contract must be authorized in relevant node
      */
     function newRecord(
         bytes32 _idxHash,
         bytes32 _rgtHash,
-        uint32 _assetClass,
+        uint32 _node,
         uint32 _countDownStart
-    ) external nonReentrant whenNotPaused isAuthorized(_assetClass) {
+    ) external nonReentrant whenNotPaused isAuthorized(_node) {
         require(
             database[_idxHash].assetStatus != 60,
             "S:NR: Asset discarded use APP_NC rcycl"
         );
-        require(database[_idxHash].assetClass == 0, "S:NR: Rec already exists");
+        require(database[_idxHash].node == 0, "S:NR: Rec already exists");
         require(_rgtHash != 0, "S:NR: RGT = 0");
-        require(_assetClass != 0, "S:NR: AC = 0");
+        require(_node != 0, "S:NR: node = 0");
         //^^^^^^^checks^^^^^^^^^
 
         Record memory rec;
 
         if (
-            contractInfo[contractAddressToName[_msgSender()]][_assetClass] == 1 //EXAMINE, what do management types do to how we handle "custodial" status' ?? change this??? (big)
+            contractInfo[contractAddressToName[_msgSender()]][_node] == 1 //EXAMINE, what do management types do to how we handle "custodial" status' ?? change this??? (big)
         ) {
             rec.assetStatus = 0;
         } else {
             rec.assetStatus = 51;
         }
 
-        rec.assetClass = _assetClass;
+        rec.node = _node;
         rec.countDown = _countDownStart;
-        rec.countDownStart = _countDownStart;
         rec.rightsHolder = _rgtHash;
 
         database[_idxHash] = rec;
         //^^^^^^^effects^^^^^^^^^
 
-        //emit REPORT("NEW REC", _idxHash);
         //^^^^^^^interactions^^^^^^^^^
     }
 
     /**
      * @dev Modify a record, writing to the 'database' mapping with updates to multiple fields
-     * @param   _idxHash - record asset ID
-     * @param   _rgtHash - record owner ID hash
-     * @param   _newAssetStatus - New Status to set
-     * @param   _countDown - New countdown value (must be <= old value)
-     * @param   _incrementModCount - 0 = no 170 = yes
-     * @param   _incrementNumberOfTransfers - 0 = no 170 = yes
+     * @param _idxHash - record asset ID
+     * @param _rgtHash - record owner ID hash
+     * @param _newAssetStatus - New Status to set
+     * @param _countDown - New countdown value (must be <= old value)
+     * @param _int32temp - temp value
+     * @param _incrementModCount - 0 = no 170 = yes
+     * @param _incrementNumberOfTransfers - 0 = no 170 = yes
      */
     function modifyRecord(
         bytes32 _idxHash,
         bytes32 _rgtHash,
         uint8 _newAssetStatus,
         uint32 _countDown,
+        uint32 _int32temp,
         uint256 _incrementModCount,
         uint256 _incrementNumberOfTransfers
     )
@@ -443,7 +435,7 @@ contract STOR is AccessControl, ReentrancyGuard, Pausable {
         nonReentrant
         whenNotPaused
         exists(_idxHash) //asset must exist in 'database'
-        isAuthorized(database[_idxHash].assetClass) //calling contract must be authorized in relevant assetClass
+        isAuthorized(database[_idxHash].node) //calling contract must be authorized in relevant node
         notEscrow(_idxHash) // asset must not be held in escrow status
     {
         Record memory rec = database[_idxHash];
@@ -466,6 +458,7 @@ contract STOR is AccessControl, ReentrancyGuard, Pausable {
 
         rec.rightsHolder = _rgtHash;
         rec.countDown = _countDown;
+        rec.int32temp = _int32temp;
         rec.assetStatus = _newAssetStatus;
 
         if ((_incrementModCount == 170) && (rec.modCount < 255)) {
@@ -486,48 +479,48 @@ contract STOR is AccessControl, ReentrancyGuard, Pausable {
     }
 
     /**
-     * @dev Change asset class of an asset - writes to assetClass in the 'Record' struct of the 'database' at _idxHash
-     * @param    _idxHash - record asset ID
-     * @param    _newAssetClass - Aseet Class to change to
+     * @dev Change node of an asset - writes to node in the 'Record' struct of the 'database' at _idxHash
+     * @param _idxHash - record asset ID
+     * @param _newNode - Aseet Class to change to
      */
-    function changeAC(bytes32 _idxHash, uint32 _newAssetClass)
+    function changeNode(bytes32 _idxHash, uint32 _newNode)
         external
         nonReentrant
         whenNotPaused
         exists(_idxHash) //asset must exist in 'database'
         notEscrow(_idxHash) // asset must not be held in escrow status
-        isAuthorized(0) //is an authorized contract, Asset class nonspecific
+        isAuthorized(0) //is an authorized contract, Node nonspecific
     {
         Record memory rec = database[_idxHash];
 
-        require(_newAssetClass != 0, "S:CAC: Cannot set AC=0");
-        require( //require new assetClass is in the same root as old assetClass
-            AC_MGR.isSameRootAC(_newAssetClass, rec.assetClass) == 170,
-            "S:CAC: Cannot mod AC to new root"
+        require(_newNode != 0, "S:CAC: Cannot set node=0");
+        require( //require new node is in the same root as old node
+            NODE_MGR.isSameRootNode(_newNode, rec.node) == 170,
+            "S:CAC: Cannot mod node to new root"
         );
         require(isLostOrStolen(rec.assetStatus) == 0, "S:CAC: L/S asset"); //asset cannot be in lost or stolen status
         require(isTransferred(rec.assetStatus) == 0, "S:CAC: Txfrd asset"); //asset cannot be in transferred status
         //^^^^^^^checks^^^^^^^^^
 
-        rec.assetClass = _newAssetClass;
+        rec.node = _newNode;
         database[_idxHash] = rec;
         //^^^^^^^effects^^^^^^^^^
 
-        //emit REPORT("UPD AC", _idxHash);
+        //emit REPORT("UPD node", _idxHash);
         //^^^^^^^interactions^^^^^^^^^
     }
 
     /**
      * @dev Set an asset to Lost Or Stolen. Allows narrow modification of status 6/12 assets, normally locked
-     * @param  _idxHash - record asset ID
-     * @param  _newAssetStatus - Status to change to
+     * @param _idxHash - record asset ID
+     * @param _newAssetStatus - Status to change to
      */
     function setLostOrStolen(bytes32 _idxHash, uint8 _newAssetStatus)
         external
         nonReentrant
         whenNotPaused
         exists(_idxHash)
-        isAuthorized(database[_idxHash].assetClass)
+        isAuthorized(database[_idxHash].node)
     {
         Record memory rec = database[_idxHash];
 
@@ -538,7 +531,7 @@ contract STOR is AccessControl, ReentrancyGuard, Pausable {
         require( //asset cannot be set L/S if in transferred or locked escrow status
             (rec.assetStatus != 5) &&
                 (rec.assetStatus != 50) &&
-                (rec.assetStatus != 55), //STATE UNREACHABLE TO SET TO STAT 55 IN CURRENT CONTRACTS
+                (rec.assetStatus != 55),
             "S:SSL: Txfr or ecr-locked asset"
         );
         //^^^^^^^checks^^^^^^^^^
@@ -550,8 +543,8 @@ contract STOR is AccessControl, ReentrancyGuard, Pausable {
 
     /**
      * @dev Set an asset to escrow locked status (6/50/56).
-     * @param   _idxHash - record asset ID
-     * @param   _newAssetStatus - New Status to set
+     * @param _idxHash - record asset ID
+     * @param _newAssetStatus - New Status to set
      */
     function setEscrow(bytes32 _idxHash, uint8 _newAssetStatus)
         external
@@ -575,13 +568,12 @@ contract STOR is AccessControl, ReentrancyGuard, Pausable {
         rec.assetStatus = _newAssetStatus;
         database[_idxHash] = rec;
         //^^^^^^^effects^^^^^^^^^
-        //emit REPORT("ECR SET", _idxHash);
         //^^^^^^^interactions^^^^^^^^^
     }
 
     /**
      * @dev remove an asset from escrow status. Implicitly trusts escrowManager ECR_MGR contract
-     * @param  _idxHash - record asset ID
+     * @param _idxHash - record asset ID
      */
     function endEscrow(bytes32 _idxHash)
         external
@@ -609,8 +601,6 @@ contract STOR is AccessControl, ReentrancyGuard, Pausable {
 
         database[_idxHash] = rec;
         //^^^^^^^effects^^^^^^^^^
-        //emit REPORT("ECR END:", _idxHash);
-        //^^^^^^^interactions^^^^^^^^^
     }
 
     /**
@@ -628,7 +618,7 @@ contract STOR is AccessControl, ReentrancyGuard, Pausable {
         nonReentrant
         whenNotPaused
         exists(_idxHash) //asset must exist in 'database'
-        isAuthorized(database[_idxHash].assetClass) //calling contract must be authorized in relevant assetClass
+        isAuthorized(database[_idxHash].node) //calling contract must be authorized in relevant node
     {
         Record memory rec = database[_idxHash];
         require(isTransferred(rec.assetStatus) == 0, "S:SP: Txfrd asset");
@@ -639,9 +629,6 @@ contract STOR is AccessControl, ReentrancyGuard, Pausable {
 
         database[_idxHash] = rec;
         //^^^^^^^effects^^^^^^^^^
-
-        //emit REPORT("Price mod", _idxHash);
-        //^^^^^^^interactions^^^^^^^^^
     }
 
     /**
@@ -653,7 +640,7 @@ contract STOR is AccessControl, ReentrancyGuard, Pausable {
         nonReentrant
         whenNotPaused
         exists(_idxHash) //asset must exist in 'database'
-        isAuthorized(database[_idxHash].assetClass) //calling contract must be authorized in relevant assetClass
+        isAuthorized(database[_idxHash].node) //calling contract must be authorized in relevant node
     {
         Record memory rec = database[_idxHash];
         require(isTransferred(rec.assetStatus) == 0, "S:CP: Txfrd asset");
@@ -670,34 +657,35 @@ contract STOR is AccessControl, ReentrancyGuard, Pausable {
     }
 
     /**
-     * @dev Modify record Ipfs1 data
+     * @dev Modify record MutableStorage data
      * @param  _idxHash - record asset ID
-     * @param  _Ipfs1a - first half of content adressable storage location
-     * @param  _Ipfs1b - second half of content adressable storage location
+     * @param  _mutableStorage1 - first half of content adressable storage location
+     * @param  _mutableStorage2 - second half of content adressable storage location
      */
-    function modifyIpfs1(
+    function modifyMutableStorage(
         bytes32 _idxHash,
-        bytes32 _Ipfs1a,
-        bytes32 _Ipfs1b
+        bytes32 _mutableStorage1,
+        bytes32 _mutableStorage2
     )
         external
         nonReentrant
         whenNotPaused
         exists(_idxHash) //asset must exist in 'database'
-        isAuthorized(database[_idxHash].assetClass) //calling contract must be authorized in relevant assetClass
+        isAuthorized(database[_idxHash].node) //calling contract must be authorized in relevant node
         notEscrow(_idxHash) // asset must not be held in escrow status
     {
         Record memory rec = database[_idxHash];
         require(isTransferred(rec.assetStatus) == 0, "S:MI1: Txfrd asset"); //STAT UNREACHABLE
 
         require(
-            (rec.Ipfs1a != _Ipfs1a) || (rec.Ipfs1b != _Ipfs1b),
+            (rec.mutableStorage1 != _mutableStorage1) ||
+                (rec.mutableStorage2 != _mutableStorage2),
             "S:MI1: New value = old"
         );
         //^^^^^^^checks^^^^^^^^^
 
-        rec.Ipfs1a = _Ipfs1a;
-        rec.Ipfs1b = _Ipfs1b;
+        rec.mutableStorage1 = _mutableStorage1;
+        rec.mutableStorage2 = _mutableStorage2;
 
         database[_idxHash] = rec;
         //^^^^^^^effects^^^^^^^^^
@@ -706,36 +694,36 @@ contract STOR is AccessControl, ReentrancyGuard, Pausable {
     }
 
     /**
-     * @dev Modify record Ipfs1 data
-     * @param  _idxHash - record asset ID
-     * @param  _Ipfs2a - first half of content adressable storage location
-     * @param  _Ipfs2b - second half of content adressable storage location
+     * @dev Modify NonMutableStorage data
+     * @param _idxHash - record asset ID
+     * @param _nonMutableStorage1 - first half of content adressable storage location
+     * @param _nonMutableStorage2 - second half of content adressable storage location
      */
-    function modifyIpfs2(
+    function modifyNonMutableStorage(
         bytes32 _idxHash,
-        bytes32 _Ipfs2a,
-        bytes32 _Ipfs2b
+        bytes32 _nonMutableStorage1,
+        bytes32 _nonMutableStorage2
     )
         external
         nonReentrant
         whenNotPaused
         exists(_idxHash) //asset must exist in 'database'
-        isAuthorized(database[_idxHash].assetClass) //calling contract must be authorized in relevant assetClass
+        isAuthorized(database[_idxHash].node) //calling contract must be authorized in relevant node
         notEscrow(_idxHash) // asset must not be held in escrow status
     {
         Record memory rec = database[_idxHash];
-        require(isLostOrStolen(rec.assetStatus) == 0, "S:MI2: L/S asset"); //asset cannot be in lost or stolen status
-        require(isTransferred(rec.assetStatus) == 0, "S:MI2: Txfrd. asset"); //asset cannot be in transferred status
+        require(isLostOrStolen(rec.assetStatus) == 0, "S:MNMS: L/S asset"); //asset cannot be in lost or stolen status
+        require(isTransferred(rec.assetStatus) == 0, "S:MNMS: Txfrd. asset"); //asset cannot be in transferred status
 
         require(
-            ((rec.Ipfs2a == 0) && (rec.Ipfs2b == 0)) ||
+            ((rec.nonMutableStorage1 == 0) && (rec.nonMutableStorage2 == 0)) ||
                 (rec.assetStatus == 201),
-            "S:MI2: Cannot overwrite I2"
-        ); //IPFS2 record is immutable after first write unless status 201 is set (Storage provider has died)
+            "S:MNMS: Cannot overwrite NM Storage"
+        ); //NonMutableStorage record is immutable after first write unless status 201 is set (Storage provider has died)
         //^^^^^^^checks^^^^^^^^^
 
-        rec.Ipfs2a = _Ipfs2a;
-        rec.Ipfs2b = _Ipfs2b;
+        rec.nonMutableStorage1 = _nonMutableStorage1;
+        rec.nonMutableStorage2 = _nonMutableStorage2;
 
         database[_idxHash] = rec;
         //^^^^^^^effects^^^^^^^^^
@@ -753,7 +741,7 @@ contract STOR is AccessControl, ReentrancyGuard, Pausable {
     function retrieveRecord(bytes32 _idxHash)
         external
         view
-        isAuthorized(0) //is an authorized contract, Asset class nonspecific
+        isAuthorized(0)
         returns (Record memory)
     {
         return database[_idxHash];
@@ -762,16 +750,16 @@ contract STOR is AccessControl, ReentrancyGuard, Pausable {
 
     /**
      * @dev return a record from the database w/o rgt
-     * @param  _idxHash - record asset ID
+     * @param _idxHash - record asset ID
      * returns rec.assetStatus,
                 rec.modCount,
-                rec.assetClass,
+                rec.node,
                 rec.countDown,
                 rec.countDownStart,
-                rec.Ipfs1a,
-                rec.Ipfs1b,
-                rec.Ipfs2a,
-                rec.Ipfs2b,
+                rec.mutableStorage1,
+                rec.mutableStorage2,
+                rec.nonMutableStorage1,
+                rec.nonMutableStorage2,
      */
     function retrieveShortRecord(bytes32 _idxHash)
         external
@@ -794,13 +782,13 @@ contract STOR is AccessControl, ReentrancyGuard, Pausable {
         return (
             rec.assetStatus,
             rec.modCount,
-            rec.assetClass,
+            rec.node,
             rec.countDown,
-            rec.countDownStart,
-            rec.Ipfs1a,
-            rec.Ipfs1b,
-            rec.Ipfs2a,
-            rec.Ipfs2b,
+            rec.int32temp,
+            rec.mutableStorage1,
+            rec.mutableStorage2,
+            rec.nonMutableStorage1,
+            rec.nonMutableStorage2,
             rec.numberOfTransfers
         );
         //^^^^^^^interactions^^^^^^^^^
@@ -808,7 +796,7 @@ contract STOR is AccessControl, ReentrancyGuard, Pausable {
 
     /**
      * @dev return the pricing and currency data from a record
-     * @param  _idxHash - record asset ID
+     * @param _idxHash - record asset ID
      * returns rec.price,
                 rec.currency
      */
@@ -823,8 +811,8 @@ contract STOR is AccessControl, ReentrancyGuard, Pausable {
 
     /**
      * @dev Compare record.rightsholder with supplied bytes32 rightsholder
-     * @param  _idxHash - record asset ID
-     * @param  _rgtHash - record owner ID hash
+     * @param _idxHash - record asset ID
+     * @param _rgtHash - record owner ID hash
      * returns 170 if matches, 0 if not
      */
     function _verifyRightsHolder(bytes32 _idxHash, bytes32 _rgtHash)
@@ -842,8 +830,8 @@ contract STOR is AccessControl, ReentrancyGuard, Pausable {
 
     /**
      * @dev Compare record.rightsholder with supplied bytes32 rightsholder (writes an emit in blockchain for independant verification)
-     * @param  _idxHash - record asset ID
-     * @param  _rgtHash - record owner ID hash
+     * @param _idxHash - record asset ID
+     * @param _rgtHash - record owner ID hash
      * returns 170 if matches, 0 if not
      */
     function blockchainVerifyRightsHolder(bytes32 _idxHash, bytes32 _rgtHash)
@@ -878,16 +866,16 @@ contract STOR is AccessControl, ReentrancyGuard, Pausable {
     /**
      * @dev //returns the contract type of a contract with address _addr.
      * @param _addr - contract address
-     * @param _assetClass - asset class to look up contract type-in-class
+     * @param _node - node to look up contract type-in-class
      * returns address contract address
      */
-    function ContractInfoHash(address _addr, uint32 _assetClass)
+    function ContractInfoHash(address _addr, uint32 _node)
         external
         view
         returns (uint8, bytes32)
     {
         return (
-            contractInfo[contractAddressToName[_addr]][_assetClass],
+            contractInfo[contractAddressToName[_addr]][_node],
             keccak256(abi.encodePacked(contractAddressToName[_addr]))
         );
         //^^^^^^^interactions^^^^^^^^^

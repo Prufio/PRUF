@@ -18,7 +18,7 @@ __/\\\\\\\\\\\\\ _____/\\\\\\\\\ _______/\\./\\ ___/\\\\\\\\\\\\\\\
 
 // SPDX-License-Identifier: UNLICENSED
 
-pragma solidity ^0.8.0;
+pragma solidity ^0.8.6;
 
 import "./PRUF_INTERFACES.sol";
 import "./Imports/access/AccessControl.sol";
@@ -34,11 +34,7 @@ import "./Imports/token/ERC20/ERC20Snapshot.sol";
  *  - a PAUSER_ROLE that allows to stop all token transfers
  *  - a SNAPSHOT_ROLE that allows to take snapshots
  *  - a PAYABLE_ROLE role that allows authorized addresses to invoke the token splitting payment function (all paybale contracts)
- *  - a TRUSTED_AGENT_ROLE role that allows authorized addresses to transfer and burn tokens (AC_MGR)
-
-
-
-
+ *  - a TRUSTED_AGENT_ROLE role that allows authorized addresses to transfer and burn tokens (Node_MGR)
  *
  * This contract uses {AccessControl} to lock permissioned functions using the
  * different roles - head to its documentation for details.
@@ -71,8 +67,8 @@ contract UTIL_TKN is
         //Legacyinvoice struct to facilitate payment messaging in-contract
         address rootAddress;
         uint256 rootPrice;
-        address ACTHaddress;
-        uint256 ACTHprice;
+        address NTHaddress;
+        uint256 NTHprice;
     }
 
     uint256 trustedAgentEnabled = 1;
@@ -231,22 +227,22 @@ contract UTIL_TKN is
      * @param _senderAddress - address to send payment from
      * @param _rootAddress - root address for payment
      * @param _rootPrice - root amount for payment
-     * @param _ACTHaddress - ACTH address for payment
-     * @param _ACTHprice - ACTH amount for payment
+     * @param _NTHaddress - NTH address for payment
+     * @param _NTHprice - NTH amount for payment
      */
     function payForService(
         address _senderAddress,
         address _rootAddress,
         uint256 _rootPrice,
-        address _ACTHaddress,
-        uint256 _ACTHprice
+        address _NTHaddress,
+        uint256 _NTHprice
     ) external isPayable {
         require(
             coldWallet[_senderAddress] == 0,
             "PRuF:PFS: Cold Wallet - Trusted payable functions prohibited"
         );
         require( //redundant? throws on transfer?
-            balanceOf(_senderAddress) >= _rootPrice + (_ACTHprice),
+            balanceOf(_senderAddress) >= _rootPrice + (_NTHprice),
             "PRuF:PFS: insufficient balance"
         );
         //^^^^^^^checks^^^^^^^^^
@@ -254,7 +250,7 @@ contract UTIL_TKN is
         if (sharesAddress == address(0)) {
             //IF SHARES ADDRESS IS NOT SET
             _transfer(_senderAddress, _rootAddress, _rootPrice);
-            _transfer(_senderAddress, _ACTHaddress, _ACTHprice);
+            _transfer(_senderAddress, _NTHaddress, _NTHprice);
         } else {
             //IF SHARES ADDRESS IS SET
             uint256 sharesShare = _rootPrice / (uint256(4)); // sharesShare is 0.25 share of root costs
@@ -262,7 +258,7 @@ contract UTIL_TKN is
 
             _transfer(_senderAddress, _rootAddress, rootShare);
             _transfer(_senderAddress, sharesAddress, sharesShare);
-            _transfer(_senderAddress, _ACTHaddress, _ACTHprice);
+            _transfer(_senderAddress, _NTHaddress, _NTHprice);
         }
         //^^^^^^^effects / interactions^^^^^^^^^
     }
@@ -273,7 +269,7 @@ contract UTIL_TKN is
      * @param _amount - amount of tokens to burn
      */
     function trustedAgentBurn(address _addr, uint256 _amount)
-        public
+        external
         isTrustedAgent
     {
         require(
@@ -295,7 +291,7 @@ contract UTIL_TKN is
         address _from,
         address _to,
         uint256 _amount
-    ) public isTrustedAgent {
+    ) external isTrustedAgent {
         require(
             coldWallet[_from] == 0,
             "PRuF:TAT: Cold Wallet - Trusted functions prohibited"
@@ -328,7 +324,7 @@ contract UTIL_TKN is
      * @param _to - Address to send tokens to
      * @param _amount - amount of tokens to mint
      */
-    function mint(address _to, uint256 _amount) public virtual {
+    function mint(address _to, uint256 _amount) external virtual {
         require(
             hasRole(MINTER_ROLE, _msgSender()),
             "PRuF:MOD: must have MINTER_ROLE"
@@ -348,7 +344,7 @@ contract UTIL_TKN is
      *
      * - the caller must have the `PAUSER_ROLE`.
      */
-    function pause() public virtual isPauser {
+    function pause() external virtual isPauser {
         //^^^^^^^checks^^^^^^^^^
         _pause();
         //^^^^^^^effects^^^^^^^^
@@ -363,7 +359,7 @@ contract UTIL_TKN is
      *
      * - the caller must have the `PAUSER_ROLE`.
      */
-    function unpause() public virtual isPauser {
+    function unpause() external virtual isPauser {
         //^^^^^^^checks^^^^^^^^^
         _unpause();
         //^^^^^^^effects^^^^^^^^
@@ -373,7 +369,7 @@ contract UTIL_TKN is
      * @dev Returns the cap on the token's total supply.
      * returns total cap
      */
-    function cap() public view returns (uint256) {
+    function cap() external view returns (uint256) {
         return _cap;
     }
 

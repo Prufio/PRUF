@@ -1,14 +1,14 @@
-/*--------------------------------------------------------PRüF0.8.0
+/*--------------------------------------------------------PRüF0.8.6
 __/\\\\\\\\\\\\\ _____/\\\\\\\\\ _______/\\__/\\ ___/\\\\\\\\\\\\\\\        
- _\/\\\/////////\\\ _/\\\///////\\\ ____\//__\//____\/\\\///////////__       
-  _\/\\\_______\/\\\_\/\\\_____\/\\\ ________________\/\\\ ____________      
-   _\/\\\\\\\\\\\\\/__\/\\\\\\\\\\\/_____/\\\____/\\\_\/\\\\\\\\\\\ ____     
-    _\/\\\/////////____\/\\\//////\\\ ___\/\\\___\/\\\_\/\\\///////______    
-     _\/\\\ ____________\/\\\ ___\//\\\ __\/\\\___\/\\\_\/\\\ ____________   
-      _\/\\\ ____________\/\\\ ____\//\\\ _\/\\\___\/\\\_\/\\\ ____________  
-       _\/\\\ ____________\/\\\ _____\//\\\_\//\\\\\\\\\ _\/\\\ ____________ 
-        _\/// _____________\/// _______\/// __\///////// __\/// _____________
-         *-------------------------------------------------------------------*/
+__\/\\\/////////\\\ _/\\\///////\\\ ____\//__\//____\/\\\///////////__       
+___\/\\\_______\/\\\_\/\\\_____\/\\\ ________________\/\\\ ____________      
+____\/\\\\\\\\\\\\\/__\/\\\\\\\\\\\/_____/\\\____/\\\_\/\\\\\\\\\\\ ____     
+_____\/\\\/////////____\/\\\//////\\\ ___\/\\\___\/\\\_\/\\\///////______
+______\/\\\ ____________\/\\\ ___\//\\\ __\/\\\___\/\\\_\/\\\ ____________
+_______\/\\\ ____________\/\\\ ____\//\\\ _\/\\\___\/\\\_\/\\\ ____________
+________\/\\\ ____________\/\\\ _____\//\\\_\//\\\\\\\\\ _\/\\\ ____________
+_________\/// _____________\/// _______\/// __\///////// __\/// _____________
+*---------------------------------------------------------------------------*/
 
 /*-----------------------------------------------------------------
  *  TO DO
@@ -16,35 +16,49 @@ __/\\\\\\\\\\\\\ _____/\\\\\\\\\ _______/\\__/\\ ___/\\\\\\\\\\\\\\\
  *---------------------------------------------------------------*/
 
 // SPDX-License-Identifier: UNLICENSED
-pragma solidity ^0.8.0;
+pragma solidity ^0.8.6;
 
 struct Record {
     uint8 assetStatus; // Status - Transferrable, locked, in transfer, stolen, lost, etc.
     uint8 modCount; // Number of times asset has been forceModded.
     uint8 currency; //currency for price information (0=not for sale, 1=ETH, 2=PRUF, 3=DAI, 4=WBTC.... )
     uint16 numberOfTransfers; //number of transfers and forcemods
-    uint32 assetClass; // Type of asset
-    uint32 countDown; // Variable that can only be dencreased from countDownStart
-    uint32 countDownStart; // Starting point for countdown variable (set once)
+    uint32 node; // Type of asset
+    uint32 countDown; // Variable that can only be decreased from countDownStart
+    uint32 int32temp; // int32 for persisting transitional data
     uint120 price; //price set for items offered for sale
-    bytes32 Ipfs1a; // Publically viewable asset description
-    bytes32 Ipfs2a; // Publically viewable immutable notes
-    bytes32 Ipfs1b; // Publically viewable asset description
-    bytes32 Ipfs2b; // Publically viewable immutable notes
+    bytes32 mutableStorage1; // Publically viewable asset description
+    bytes32 nonMutableStorage1; // Publically viewable immutable notes
+    bytes32 mutableStorage2; // Publically viewable asset description
+    bytes32 nonMutableStorage2; // Publically viewable immutable notes
     bytes32 rightsHolder; // KEK256 Registered owner
 }
 
-struct AC {
-    //Struct for holding and manipulating assetClass data
-    string name; // NameHash for assetClass
-    uint32 assetClassRoot; // asset type root (bicyles - USA Bicycles)             //immutable
+//     proposed ISO standardized
+//     struct Record {
+//     uint8 assetStatus; // Status - Transferrable, locked, in transfer, stolen, lost, etc.
+//     uint32 node; // Type of asset
+//     uint32 countDown; // Variable that can only be decreased from countDownStart
+//     uint32 int32temp; // int32 for persisting transitional data
+//     bytes32 mutableStorage1; // Publically viewable asset description
+//     bytes32 nonMutableStorage1; // Publically viewable immutable notes
+//     bytes32 mutableStorage2; // Publically viewable asset description
+//     bytes32 nonMutableStorage2; // Publically viewable immutable notes
+//     bytes32 rightsHolder; // KEK256  owner
+// }
+
+struct Node {
+    //Struct for holding and manipulating node data
+    string name; // NameHash for node
+    uint32 nodeRoot; // asset type root (bicyles - USA Bicycles)             //immutable
     uint8 custodyType; // custodial or noncustodial, special asset types       //immutable
     uint8 managementType; // type of management for asset creation, import, export //immutable
     uint8 storageProvider; // Storage Provider
     uint32 discount; // price sharing //internal admin                                      //immutable
     address referenceAddress; // Used with wrap / decorate
-    uint8 switches; // bitwise Flags for AC control                          //immutable
-    bytes32 IPFS; //IPFS data for defining idxHash creation attribute fields
+    uint8 switches; // bitwise Flags for node control                          //immutable
+    bytes32 CAS1; //content adressable storage pointer 1
+    bytes32 CAS2; //content adressable storage pointer 1
 }
 
 struct ContractDataHash {
@@ -99,11 +113,11 @@ struct Costs {
 
 struct Invoice {
     //invoice struct to facilitate payment messaging in-contract
-    uint32 assetClass;
+    uint32 node;
     address rootAddress;
-    address ACTHaddress;
+    address NTHaddress;
     uint256 rootPrice;
-    uint256 ACTHprice;
+    uint256 NTHprice;
 }
 
 struct ID {
@@ -160,7 +174,7 @@ interface UTIL_TKN_Interface {
      * @dev Deducts token payment from transaction
      * Requirements:
      * - the caller must have PAYABLE_ROLE.
-     * - the caller must have a pruf token balance of at least `_rootPrice + _ACTHprice`.
+     * - the caller must have a pruf token balance of at least `_rootPrice + _NTHprice`.
      */
     // ---- NON-LEGACY
     // function payForService(address _senderAddress, Invoice calldata invoice)
@@ -171,8 +185,8 @@ interface UTIL_TKN_Interface {
         address _senderAddress,
         address _rootAddress,
         uint256 _rootPrice,
-        address _ACTHaddress,
-        uint256 _ACTHprice
+        address _NTHaddress,
+        uint256 _NTHprice
     ) external;
 
     /*
@@ -439,17 +453,17 @@ interface UTIL_TKN_Interface {
 
 //------------------------------------------------------------------------------------------------
 /*
- * @dev Interface for AC_TKN
+ * @dev Interface for NODE_TKN
  * INHERIANCE:
     import "./Imports/token/ERC721/ERC721.sol";
     import "./Imports/access/Ownable.sol";
     import "./Imports/utils/ReentrancyGuard.sol";
  */
-interface AC_TKN_Interface {
+interface NODE_TKN_Interface {
     /*
-     * @dev Mints assetClass token, must be isContractAdmin
+     * @dev Mints node token, must be isContractAdmin
      */
-    function mintACToken(
+    function mintNodeToken(
         address _recipientAddress,
         uint256 tokenId,
         string calldata _tokenURI
@@ -569,7 +583,7 @@ interface AC_TKN_Interface {
 
 //------------------------------------------------------------------------------------------------
 /*
- * @dev Interface for AC_TKN
+ * @dev Interface for STAKE_TKN
  * INHERIANCE:
     import "./Imports/token/ERC721/ERC721.sol";
     import "./Imports/access/Ownable.sol";
@@ -720,7 +734,7 @@ interface A_TKN_Interface {
     /*
      * @dev Address Setters
      */
-    function Admin_resolveContractAddresses() external;
+    function resolveContractAddresses() external;
 
     /*
      * @dev Mint new asset token
@@ -743,7 +757,7 @@ interface A_TKN_Interface {
     //  */
     // function validatePipToken(
     //     uint256 tokenId,
-    //     uint32 _assetClass,
+    //     uint32 _node,
     //     string calldata _authCode
     // ) external view;
 
@@ -897,7 +911,7 @@ interface ID_TKN_Interface {
     /*
      * @dev Mint new PRUF_ID token
      */
-    function mintPRUF_IDToken(
+    function mintIDtoken(
         address _recipientAddress,
         uint256 _tokenId,
         string calldata _URI
@@ -909,7 +923,7 @@ interface ID_TKN_Interface {
      * burns old token
      * Sends new token to original Caller
      */
-    function reMintPRUF_IDToken(address _recipientAddress, uint256 tokenId)
+    function reMintIDtoken(address _recipientAddress, uint256 tokenId)
         external
         returns (uint256);
 
@@ -1043,142 +1057,161 @@ interface ID_TKN_Interface {
 
 //------------------------------------------------------------------------------------------------
 /*
- * @dev Interface for AC_MGR
+ * @dev Interface for NODE_MGR
  * INHERIANCE:
     import "./PRUF_BASIC.sol";
      
  */
-interface AC_MGR_Interface {
+interface NODE_MGR_Interface {
     /*
-     * @dev Set pricing
-     */
-    function OO_SetACpricing(uint256 _L1) external;
-
-    /*
-     * @dev Tincreases (but cannot decrease) price share for a given AC
-     * !! to be used with great caution
-     * This breaks decentralization and must eventually be given over to some kind of governance contract.
-     */
-    function adminIncreaseShare(uint32 _assetClass, uint32 _newDiscount)
-        external;
-
-    /*
-     * @dev Transfers a name from one asset class to another
+     * @dev Transfers a name from one node to another
      * !! -------- to be used with great caution and only as a result of community governance action -----------
      * Designed to remedy brand infringement issues. This breaks decentralization and must eventually be given
      * over to some kind of governance contract.
-     * Destination AC must have IPFS Set to 0xFFF.....
+     * Destination node must have content adressable storage Set to 0xFFF.....
      *
      */
     function transferName(
-        uint32 _assetClass_source,
-        uint32 _assetClass_dest,
+        uint32 _fromNode,
+        uint32 _toNode,
         string calldata _name
     ) external;
 
     /*
-     * @dev Modifies an asset class with minimal controls
+     * @dev Modifies an node with minimal controls
      *--------DPS TEST ---- NEW args, order
      */
-    function AdminModAssetClass(
-        uint32 _assetClass,
-        uint32 _assetClassRoot,
+    function modifyNode(
+        uint32 _node,
+        uint32 _nodeRoot,
         uint8 _custodyType,
         uint8 _managementType,
         uint8 _storageProvider,
         uint32 _discount,
         address _refAddress,
         uint8 _switches,
-        bytes32 _IPFS
+        bytes32 _CAS1,
+        bytes32 _CAS2
+    ) external;
+
+    /**
+     * @dev Modifies node.switches bitwise (see NODE option switches in ZZ_PRUF_DOCS)
+     * @param _node - node to be modified
+     * @param _position - uint position of bit to be modified
+     * @param _bit - switch - 1 or 0 (true or false)
+     */
+    function modifyNodeSwitches(
+        uint32 _node,
+        uint8 _position,
+        uint8 _bit
     ) external;
 
     /*
-     * @dev Mints asset class token and creates an assetClass. Mints to @address
+     * @dev Mints node token and creates an node. Mints to @address
      * Requires that:
      *  name is unuiqe
-     *  AC is not provisioned with a root (proxy for not yet registered)
+     *  node is not provisioned with a root (proxy for not yet registered)
      *  that ACtoken does not exist
      *  _discount 10000 = 100 percent price share , cannot exceed
      */
-    function createAssetClass(
-        uint32 _assetClass,
+    function createNode(
+        uint32 _node,
         string calldata _name,
-        uint32 _assetClassRoot,
+        uint32 _nodeRoot,
         uint8 _custodyType,
         uint8 _managementType,
+        uint8 _storageProvider,
         uint32 _discount,
-        bytes32 _IPFS,
+        bytes32 _CAS1,
+        bytes32 _CAS2,
         address _recipientAddress
     ) external;
 
     /**
-     * @dev Burns (amount) tokens and mints a new asset class token to the caller address
+     * @dev Burns (amount) tokens and mints a new node token to the caller address
      *
      * Requirements:
      * - the caller must have a balance of at least `amount`.
      */
-    function purchaseACnode(
+    function purchaseNode(
         string calldata _name,
-        uint32 _assetClassRoot,
+        uint32 _nodeRoot,
         uint8 _custodyType,
-        bytes32 _IPFS
+        bytes32 _CAS1,
+        bytes32 _CAS2
     ) external returns (uint256);
 
     /*
      * @dev Authorize / Deauthorize / Authorize users for an address be permitted to make record modifications
      */
     function addUser(
-        uint32 _assetClass,
+        uint32 _node,
         bytes32 _addrHash,
         uint8 _userType
     ) external;
 
     /*
-     * @dev Modifies an assetClass
-     * Sets a new AC name. Asset Classes cannot be moved to a new root or custody type.
+     * @dev Modifies an node
+     * Sets a new node name. Nodees cannot be moved to a new root or custody type.
      * Requires that:
      *  caller holds ACtoken
      *  name is unuiqe or same as old name
      */
-    function updateACname(uint32 _assetClass, string calldata _name) external;
+    function updateNodeName(uint32 _node, string calldata _name) external;
 
     /*
-     * @dev Modifies an assetClass
-     * Sets a new AC IPFS Address. Asset Classes cannot be moved to a new root or custody type.
+     * @dev Modifies an node
+     * Sets a new node content adressable storage Address. Nodees cannot be moved to a new root or custody type.
      * Requires that:
      *  caller holds ACtoken
      */
-    function updateACipfs(uint32 _assetClass, bytes32 _IPFS) external;
+    function updateNodeCAS(
+        uint32 _node,
+        bytes32 _CAS1,
+        bytes32 _CAS2
+    ) external;
 
     /*
-     * @dev Set function costs and payment address per asset class, in Wei
+     * @dev Set function costs and payment address per node, in Wei
      */
-    function ACTH_setCosts(
-        uint32 _assetClass,
+    function setOperationCosts(
+        uint32 _node,
         uint16 _service,
         uint256 _serviceCost,
         address _paymentAddress
     ) external;
 
     /*
-     * @dev Modifies an assetClass
-     * Sets the immutable data on an ACNode
+     * @dev Modifies an node
+     * Sets the immutable data on an node
      * Requires that:
      * caller holds ACtoken
-     * ACnode is managementType 255 (unconfigured)
+     * node is managementType 255 (unconfigured)
      */
     function updateACImmutable(
-        uint32 _assetClass,
+        uint32 _node,
         uint8 _managementType,
         uint8 _storageProvider,
         address _refAddress
     ) external;
 
     //-------------------------------------------Read-only functions ----------------------------------------------
+
+    /**
+     * @dev get bit from .switches at specified position
+     * @param _node - node associated with query
+     * @param _position - bit position associated with query
+     *
+     * @return 1 or 0 (enabled or disabled)
+     */
+    function getSwitchAt(uint32 _node, uint8 _position)
+        external
+        returns (uint256);
+
     /*
      * @dev get a User Record
      */
-    function getUserType(bytes32 _userHash, uint32 _assetClass)
+    function getUserType(bytes32 _userHash, uint32 _node)
         external
         view
         returns (uint8);
@@ -1207,86 +1240,62 @@ interface AC_MGR_Interface {
         view
         returns (uint8);
 
-    /*
-     * @dev Retrieve AC_data @ _assetClass
-     */
-    function getAC_data(uint32 _assetClass)
-        external
-        returns (
-            uint32,
-            uint8,
-            uint8,
-            uint32,
-            address
-        );
+    // /*
+    //  * @dev Retrieve node_data @ _node
+    //  */
+    // functiongetNode_data(uint32 _node)
+    //     external
+    //     returns (
+    //         uint32,
+    //         uint8,
+    //         uint8,
+    //         uint32,
+    //         address
+    //     );
 
     /* CAN'T RETURN A STRUCT WITH A STRING WITHOUT WIERDNESS-0.8.1
-     * @dev Retrieve AC_data @ _assetClass
+     * @dev Retrieve node_data @ _node
      */
-    function getExtAC_data(uint32 _assetClass)
+    function getExtendedNodeData(uint32 _node)
         external
         view
-        returns (AC memory);
-
-    /* CAN'T RETURN A STRUCT WITH A STRING WITHOUT WIERDNESS-0.8.1
-     * @dev Retrieve AC_data @ _assetClass
-     */
-    function getExtAC_data_nostruct(uint32 _assetClass)
-        external
-        view
-        returns (
-            uint8,
-            address,
-            uint8,
-            bytes32
-        );
+        returns (Node memory);
 
     /*
-     * @dev compare the root of two asset classes
+     * @dev compare the root of two Nodees
      */
-    function isSameRootAC(uint32 _assetClass1, uint32 _assetClass2)
+    function isSameRootNode(uint32 _node1, uint32 _node2)
         external
         view
         returns (uint8);
 
     /*
-     * @dev Retrieve AC_name @ _tokenId
+     * @dev Retrieve Node_name @ _tokenId
      */
-    function getAC_name(uint32 _tokenId) external view returns (string memory);
+    function getNodeName(uint32 _tokenId) external view returns (string memory);
 
     /*
-     * @dev Retrieve AC_number @ AC_name
+     * @dev Retrieve node_index @ Node_name
      */
-    function resolveAssetClass(string calldata _name)
-        external
-        view
-        returns (uint32);
+    function resolveNode(string calldata _name) external view returns (uint32);
 
     /*
-     * @dev return current AC token index pointer
+     * @dev return current node token index pointer
      */
-    function currentACpricingInfo() external view returns (uint256, uint256);
+    function currentNodePricingInfo() external view returns (uint256, uint256);
 
     /*
-     * @dev get bit (1/0) from .switches at specified position
+     * @dev Retrieve function costs per node, per service type, in Wei
      */
-    function getSwitchAt(uint32 _assetClass, uint8 _position)
-        external
-        view
-        returns (uint256);
-
-    /*
-     * @dev Retrieve function costs per asset class, per service type, in Wei
-     */
-    function getServiceCosts(uint32 _assetClass, uint16 _service)
+    function getServiceCosts(uint32 _node, uint16 _service)
         external
         view
         returns (Invoice memory);
 
     /*
-     * @dev Retrieve AC_discount @ _assetClass, in percent ACTH share, * 100 (9000 = 90%)
+     * @dev Retrieve Node_discount @ _node, in percent NTH share, * 100 (9000 = 90%)
      */
-    function getAC_discount(uint32 _assetClass) external view returns (uint32);
+    function getNodeDiscount(uint32 _node) external view returns (uint32);
 }
 
 //------------------------------------------------------------------------------------------------
@@ -1310,28 +1319,17 @@ interface STOR_Interface {
     function unpause() external;
 
     /*
-     * @dev Authorize / Deauthorize / Authorize ADRESSES permitted to make record modifications, per AssetClass
-     * populates contract name resolution and data mappings
-     */
-    function OO_addContract(
-        string calldata _name,
-        address _addr,
-        uint32 _assetClass,
-        uint8 _contractAuthLevel
-    ) external;
-
-    /*
      * @dev ASet the default 11 authorized contracts
      */
-    function enableDefaultContractsForAC(uint32 _assetClass) external;
+    function enableDefaultContractsForAC(uint32 _node) external;
 
     /*
-     * @dev Authorize / Deauthorize / Authorize contract NAMES permitted to make record modifications, per AssetClass
-     * allows ACtokenHolder to auithorize or deauthorize specific contracts to work within their asset class
+     * @dev Authorize / Deauthorize / Authorize contract NAMES permitted to make record modifications, per Node
+     * allows ACtokenHolder to auithorize or deauthorize specific contracts to work within their node
      */
     function enableContractForAC(
         string calldata _name,
-        uint32 _assetClass,
+        uint32 _node,
         uint8 _contractAuthLevel
     ) external;
 
@@ -1341,7 +1339,7 @@ interface STOR_Interface {
     function newRecord(
         bytes32 _idxHash,
         bytes32 _rgtHash,
-        uint32 _assetClass,
+        uint32 _node,
         uint32 _countDownStart
     ) external;
 
@@ -1353,14 +1351,15 @@ interface STOR_Interface {
         bytes32 _rgtHash,
         uint8 _newAssetStatus,
         uint32 _countDown,
+        uint32 _int32temp,
         uint256 _incrementForceModCount,
         uint256 _incrementNumberOfTransfers
     ) external;
 
     /*
-     * @dev Change asset class of an asset - writes to assetClass in the 'Record' struct of the 'database' at _idxHash
+     * @dev Change node of an asset - writes to node in the 'Record' struct of the 'database' at _idxHash
      */
-    function changeAC(bytes32 _idxHash, uint32 _newAssetClass) external;
+    function changeNode(bytes32 _idxHash, uint32 _newNode) external;
 
     /*
      * @dev Set an asset to stolen or lost. Allows narrow modification of status 6/12 assets, normally locked
@@ -1392,21 +1391,21 @@ interface STOR_Interface {
     function clearPrice(bytes32 _idxHash) external;
 
     /*
-     * @dev Modify record Ipfs1a data
+     * @dev Modify record mutableStorage1 data
      */
-    function modifyIpfs1(
+    function modifyMutableStorage(
         bytes32 _idxHash,
-        bytes32 _Ipfs1a,
-        bytes32 _Ipfs1b
+        bytes32 _mutableStorage1,
+        bytes32 _mutableStorage2
     ) external;
 
     /*
-     * @dev Write record Ipfs2 data
+     * @dev Write record NonMutableStorage data
      */
-    function modifyIpfs2(
+    function modifyNonMutableStorage(
         bytes32 _idxHash,
-        bytes32 _Ipfs2a,
-        bytes32 _Ipfs2b
+        bytes32 _nonMutableStorage1,
+        bytes32 _nonMutableStorage2
     ) external;
 
     /*
@@ -1430,9 +1429,7 @@ interface STOR_Interface {
     /*
      * @dev return a record from the database w/o rgt
      */
-    function retrieveShortRecord(
-        bytes32 _idxHash //CTS:EXAMINE, doesn't return same number of params as STOR
-    )
+    function retrieveShortRecord(bytes32 _idxHash)
         external
         view
         returns (
@@ -1441,6 +1438,8 @@ interface STOR_Interface {
             uint32,
             uint32,
             uint32,
+            bytes32,
+            bytes32,
             bytes32,
             bytes32,
             uint16
@@ -1482,7 +1481,7 @@ interface STOR_Interface {
     /*
      * @dev //returns the contract type of a contract with address _addr.
      */
-    function ContractInfoHash(address _addr, uint32 _assetClass)
+    function ContractInfoHash(address _addr, uint32 _node)
         external
         view
         returns (uint8, bytes32);

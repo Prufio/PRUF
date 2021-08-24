@@ -1,14 +1,14 @@
-/*--------------------------------------------------------PRüF0.8.0
+/*--------------------------------------------------------PRüF0.8.6
 __/\\\\\\\\\\\\\ _____/\\\\\\\\\ _______/\\__/\\ ___/\\\\\\\\\\\\\\\        
- _\/\\\/////////\\\ _/\\\///////\\\ ____\//__\//____\/\\\///////////__       
-  _\/\\\_______\/\\\_\/\\\_____\/\\\ ________________\/\\\ ____________      
-   _\/\\\\\\\\\\\\\/__\/\\\\\\\\\\\/_____/\\\____/\\\_\/\\\\\\\\\\\ ____     
-    _\/\\\/////////____\/\\\//////\\\ ___\/\\\___\/\\\_\/\\\///////______    
-     _\/\\\ ____________\/\\\ ___\//\\\ __\/\\\___\/\\\_\/\\\ ____________   
-      _\/\\\ ____________\/\\\ ____\//\\\ _\/\\\___\/\\\_\/\\\ ____________  
-       _\/\\\ ____________\/\\\ _____\//\\\_\//\\\\\\\\\ _\/\\\ ____________ 
-        _\/// _____________\/// _______\/// __\///////// __\/// _____________
-         *-------------------------------------------------------------------*/
+__\/\\\/////////\\\ _/\\\///////\\\ ____\//__\//____\/\\\///////////__       
+___\/\\\_______\/\\\_\/\\\_____\/\\\ ________________\/\\\ ____________      
+____\/\\\\\\\\\\\\\/__\/\\\\\\\\\\\/_____/\\\____/\\\_\/\\\\\\\\\\\ ____     
+_____\/\\\/////////____\/\\\//////\\\ ___\/\\\___\/\\\_\/\\\///////______
+______\/\\\ ____________\/\\\ ___\//\\\ __\/\\\___\/\\\_\/\\\ ____________
+_______\/\\\ ____________\/\\\ ____\//\\\ _\/\\\___\/\\\_\/\\\ ____________
+________\/\\\ ____________\/\\\ _____\//\\\_\//\\\\\\\\\ _\/\\\ ____________
+_________\/// _____________\/// _______\/// __\///////// __\/// _____________
+*---------------------------------------------------------------------------*/
          
 /**-----------------------------------------------------------------
 *  TO DO
@@ -18,11 +18,11 @@ __/\\\\\\\\\\\\\ _____/\\\\\\\\\ _______/\\__/\\ ___/\\\\\\\\\\\\\\\
 *-----------------------------------------------------------------
 *-----------------------------------------------------------------
 *PRUF basic provides core data structures and functionality to PRUF contracts.
-*Features include contract name resolution, and getters for records, users, and asset class information.
+*Features include contract name resolution, and getters for records, users, and node information.
 *---------------------------------------------------------------*/
 
 // SPDX-License-Identifier: UNLICENSED
-pragma solidity ^0.8.0;
+pragma solidity ^0.8.6;
 
 import "./PRUF_INTERFACES.sol";
 import "./Imports/access/AccessControl.sol";
@@ -44,8 +44,8 @@ abstract contract BASIC is
     address internal STOR_Address;
     STOR_Interface internal STOR;
 
-    address internal AC_MGR_Address;
-    AC_MGR_Interface internal AC_MGR;
+    address internal NODE_MGR_Address;
+    NODE_MGR_Interface internal NODE_MGR;
 
     address internal UTIL_TKN_Address;
     UTIL_TKN_Interface internal UTIL_TKN;
@@ -53,8 +53,8 @@ abstract contract BASIC is
     address internal A_TKN_Address;
     A_TKN_Interface internal A_TKN;
 
-    address internal AC_TKN_Address;
-    AC_TKN_Interface internal AC_TKN;
+    address internal NODE_TKN_Address;
+    NODE_TKN_Interface internal NODE_TKN;
 
     address internal ID_TKN_Address;
     ID_TKN_Interface internal ID_TKN;
@@ -72,7 +72,7 @@ abstract contract BASIC is
     APP_NC_Interface internal APP_NC;
 
     address internal NAKED_Address;
-    address internal NP_Address;
+    address internal APP2_Address;
 
     constructor() {
         _setupRole(DEFAULT_ADMIN_ROLE, _msgSender());
@@ -87,12 +87,12 @@ abstract contract BASIC is
     // --------------------------------------Modifiers--------------------------------------------//
     /**
      * @dev Verify user credentials
-     * function should always be overridden!!! will always throw.
-     * @param _idxHash - asset index
+     * modifier should always be overridden!!! will always throw.
+     * @param _idxHash - asset index hash
      */
     modifier isAuthorized(bytes32 _idxHash) virtual {
         require(
-            _idxHash == 0, //
+            _idxHash == 0,
             "B:MOD-IAUTH: Modifier must be overridden"
         );
         _;
@@ -101,7 +101,7 @@ abstract contract BASIC is
     /**
      * @dev Verify user credentials
      * Originating Address:
-     *      is contract admin
+     *      has CONTRACT_ADMIN_ROLE
      */
     modifier isContractAdmin() {
         require(
@@ -123,18 +123,18 @@ abstract contract BASIC is
     /**
      * @dev Resolve Contract Addresses from STOR 
      */
-    function Admin_resolveContractAddresses()
+    function resolveContractAddresses()
         external
         virtual
         nonReentrant
         isContractAdmin 
     {
         //^^^^^^^checks^^^^^^^^^
-        AC_TKN_Address = STOR.resolveContractAddress("AC_TKN");
-        AC_TKN = AC_TKN_Interface(AC_TKN_Address);
+        NODE_TKN_Address = STOR.resolveContractAddress("NODE_TKN");
+        NODE_TKN = NODE_TKN_Interface(NODE_TKN_Address);
 
-        AC_MGR_Address = STOR.resolveContractAddress("AC_MGR");
-        AC_MGR = AC_MGR_Interface(AC_MGR_Address);
+        NODE_MGR_Address = STOR.resolveContractAddress("NODE_MGR");
+        NODE_MGR = NODE_MGR_Interface(NODE_MGR_Address);
 
         UTIL_TKN_Address = STOR.resolveContractAddress("UTIL_TKN");
         UTIL_TKN = UTIL_TKN_Interface(UTIL_TKN_Address);
@@ -155,7 +155,7 @@ abstract contract BASIC is
         RCLR = RCLR_Interface(RCLR_Address);
 
         APP_NC_Address = STOR.resolveContractAddress("APP_NC");
-        NP_Address = STOR.resolveContractAddress("NP");
+        APP2_Address = STOR.resolveContractAddress("APP2");
 
         //^^^^^^^effects^^^^^^^^^
     }
@@ -183,18 +183,18 @@ abstract contract BASIC is
     }
 
     /**
-     * @dev Transfer any specified assetClassToken from contract
+     * @dev Transfer any specified nodeToken from contract
      * @param _to - address to send to
-     * @param _tokenID - asset class token ID
+     * @param _tokenID - node token ID
      */
-    function Admin_transferACToken(address _to, uint256 _tokenID)
+    function transferNodeToken(address _to, uint256 _tokenID)
         external
         virtual
         isContractAdmin 
         nonReentrant
     {
         //^^^^^^^checks^^^^^^^^^
-        AC_TKN.safeTransferFrom(address(this), _to, _tokenID);
+        NODE_TKN.safeTransferFrom(address(this), _to, _tokenID);
         //^^^^^^^interactions^^^^^^^^^
     }
 
@@ -202,7 +202,7 @@ abstract contract BASIC is
      * @dev Set address of STOR contract to interface with 
      * @param _storageAddress address of PRUF_STOR
      */
-    function Admin_setStorageContract(address _storageAddress)
+    function setStorageContract(address _storageAddress)
         external
         virtual
         isContractAdmin 
@@ -241,7 +241,6 @@ abstract contract BASIC is
     /***
      * @dev Returns to normal state. (pausable)
      */
-
     function unpause() external isPauser {
         _unpause();
     }
@@ -249,61 +248,62 @@ abstract contract BASIC is
     //--------------------------------------------------------------------------------------INTERNAL functions
 
     /**
-     * @dev Get a User type Record from AC_manager for _msgSender(), by assetClass
-     * @param _assetClass - to check user type in
-     * returns user authorization type of caller, from AC_MGR user mapping
+     * @dev Get a User type Record from Node Manager for _msgSender(), by node
+     * @param _node - to check user type in
+     * @return user authorization type of caller, from NODE_MGR user mapping
      */
-    function getCallingUserType(uint32 _assetClass)
+    function getCallingUserType(uint32 _node)
         internal
         virtual
         returns (uint8)
     {
         //^^^^^^^checks^^^^^^^^^
 
-        uint8 userTypeInAssetClass =
-            AC_MGR.getUserType(
+        uint8 userTypeInNode =
+            NODE_MGR.getUserType(
                 keccak256(abi.encodePacked(_msgSender())),
-                _assetClass
+                _node
             );
 
-        return userTypeInAssetClass;
+        return userTypeInNode;
         //^^^^^^^interactions^^^^^^^^^
     }
 
     /**
-     * @dev Get asset class information from AC_manager and return an AC Struct
-     * @param _assetClass - to retrireve info about
-     * returns entire AC struct (see interfaces for struct definitions)
+     * @dev Get node information from Node Manager and return an node Struct
+     * @param _node - to retrireve info about
+     * @return entire node struct (see interfaces for struct definitions)
      */
-    function getACinfo(uint32 _assetClass)
+    function getNodeinfo(uint32 _node)
         internal
         virtual
-        returns (AC memory)
+        returns (Node memory)
     {
         //^^^^^^^checks^^^^^^^^^
 
-        AC memory AC_info;
-        //^^^^^^^effects^^^^^^^^^
+        // Node memory node_info;
+        // //^^^^^^^effects^^^^^^^^^
 
-        (
-            AC_info.assetClassRoot,
-            AC_info.custodyType,
-            AC_info.managementType,
-            AC_info.discount,
-            AC_info.referenceAddress
-        ) = AC_MGR.getAC_data(_assetClass);
+        // (
+        //     node_info.nodeRoot,
+        //     node_info.custodyType,
+        //     node_info.managementType,
+        //     node_info.discount,
+        //     node_info.referenceAddress
+        // ) = NODE_MGR.getNodeData(_node);
 
-        return AC_info;
+        // return node_info;
+        return NODE_MGR.getExtendedNodeData(_node);
         //^^^^^^^interactions^^^^^^^^^
     }
 
     /**
      * @dev Get contract information from STOR and return a ContractDataHash Struct
      * @param _addr address of contract to check
-     * @param _assetClass asset class to check 
-     * returns ContractDataHash struct, containing the authorization level and hashed name of a given contract X in asset class Y
+     * @param _node node to check 
+     * @return ContractDataHash struct, containing the authorization level and hashed name of a given contract X in node Y
      */
-    function getContractInfo(address _addr, uint32 _assetClass)
+    function getContractInfo(address _addr, uint32 _node)
         internal
         view
         returns (ContractDataHash memory)
@@ -312,7 +312,7 @@ abstract contract BASIC is
 
         ContractDataHash memory contractInfo;
         (contractInfo.contractType, contractInfo.nameHash) = STOR
-            .ContractInfoHash(_addr, _assetClass);
+            .ContractInfoHash(_addr, _node);
         return contractInfo;
         //^^^^^^^interactions^^^^^^^^^
     }
@@ -321,7 +321,7 @@ abstract contract BASIC is
      * @dev Get a Record from Storage @ idxHash and return a Record Struct
     function getRecord(bytes32 _idxHash) internal returns (Record memory) {
      * @param _idxHash - asset index
-     * returns entire record struct form PRUF_STOR (see interfaces for struct definitions)
+     * @return entire record struct form PRUF_STOR (see interfaces for struct definitions)
      */
     function getRecord(bytes32 _idxHash) internal returns (Record memory) {
         //^^^^^^^checks^^^^^^^^^

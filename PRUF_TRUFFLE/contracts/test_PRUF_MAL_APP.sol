@@ -1,14 +1,14 @@
-/*--------------------------------------------------------PRüF0.8.0
+/*--------------------------------------------------------PRüF0.8.6
 __/\\\\\\\\\\\\\ _____/\\\\\\\\\ _______/\\__/\\ ___/\\\\\\\\\\\\\\\        
- _\/\\\/////////\\\ _/\\\///////\\\ ____\//__\//____\/\\\///////////__       
-  _\/\\\_______\/\\\_\/\\\_____\/\\\ ________________\/\\\ ____________      
-   _\/\\\\\\\\\\\\\/__\/\\\\\\\\\\\/_____/\\\____/\\\_\/\\\\\\\\\\\ ____     
-    _\/\\\/////////____\/\\\//////\\\ ___\/\\\___\/\\\_\/\\\///////______    
-     _\/\\\ ____________\/\\\ ___\//\\\ __\/\\\___\/\\\_\/\\\ ____________   
-      _\/\\\ ____________\/\\\ ____\//\\\ _\/\\\___\/\\\_\/\\\ ____________  
-       _\/\\\ ____________\/\\\ _____\//\\\_\//\\\\\\\\\ _\/\\\ ____________ 
-        _\/// _____________\/// _______\/// __\///////// __\/// _____________
-         *-------------------------------------------------------------------*/
+__\/\\\/////////\\\ _/\\\///////\\\ ____\//__\//____\/\\\///////////__       
+___\/\\\_______\/\\\_\/\\\_____\/\\\ ________________\/\\\ ____________      
+____\/\\\\\\\\\\\\\/__\/\\\\\\\\\\\/_____/\\\____/\\\_\/\\\\\\\\\\\ ____     
+_____\/\\\/////////____\/\\\//////\\\ ___\/\\\___\/\\\_\/\\\///////______
+______\/\\\ ____________\/\\\ ___\//\\\ __\/\\\___\/\\\_\/\\\ ____________
+_______\/\\\ ____________\/\\\ ____\//\\\ _\/\\\___\/\\\_\/\\\ ____________
+________\/\\\ ____________\/\\\ _____\//\\\_\//\\\\\\\\\ _\/\\\ ____________
+_________\/// _____________\/// _______\/// __\///////// __\/// _____________
+*---------------------------------------------------------------------------*/
 
 /*-----------------------------------------------------------------
  *  TO DO
@@ -16,7 +16,7 @@ __/\\\\\\\\\\\\\ _____/\\\\\\\\\ _______/\\__/\\ ___/\\\\\\\\\\\\\\\
  *---------------------------------------------------------------*/
 
 // SPDX-License-Identifier: UNLICENSED
-pragma solidity ^0.8.0;
+pragma solidity ^0.8.6;
 
 import "./test_PRUF_CORE_MAL.sol";
  
@@ -32,7 +32,7 @@ contract MAL_APP is CORE_MAL {
     //     uint256 tokenId = uint256(_idxHash);
     //     require(
     //         (A_TKN.ownerOf(tokenId) == APP_Address),
-    //         "NP:MOD-IA: Custodial contract does not hold token"
+    //         "APP2_NC:MOD-IA: Custodial contract does not hold token"
     //     );
     //     _;
     // }
@@ -42,27 +42,27 @@ contract MAL_APP is CORE_MAL {
         function newRecord(
         bytes32 _idxHash,
         bytes32 _rgtHash,
-        uint32 _assetClass,
+        uint32 _node,
         uint32 _countDownStart
     ) external 
     // nonReentrant whenNotPaused 
     {
         // Record memory rec = getRecord(_idxHash);
-        // uint8 userType = getCallingUserType(_assetClass);
-        // AC memory AC_info = getACinfo(_assetClass);
-        // AC memory oldAC_info = getACinfo(rec.assetClass);
+        // uint8 userType = getCallingUserType(_node);
+        // Node memory node_info =getNodeinfo(_node);
+        // Node memory oldNode_info =getNodeinfo(rec.node);
         // ContractDataHash memory contractInfo = getContractInfo(
         //     address(this),
-        //     _assetClass
+        //     _node
         // );
 
         // require(
         //     contractInfo.contractType > 0,
-        //     "A:NR: This contract not authorized for specified AC"
+        //     "A:NR: This contract not authorized for specified node"
         // );
         // require(
         //     (userType > 0) && (userType < 10),
-        //     "A:NR: User not authorized to create records in specified asset class"
+        //     "A:NR: User not authorized to create records in specified node"
         // );
         // require(userType < 5, "A:NR: User not authorized to create records");
         // require(_rgtHash != 0, "A:NR: rights holder cannot be zero");
@@ -71,12 +71,12 @@ contract MAL_APP is CORE_MAL {
         //bytes32 userHash = keccak256(abi.encodePacked(_msgSender()));
         //^^^^^^^effects^^^^^^^^^
 
-        // if (AC_info.assetClassRoot == oldAC_info.assetClassRoot) {
-            // createRecord(_idxHash, _rgtHash, _assetClass, rec.countDownStart);
+        // if (node_info.nodeRoot == oldNode_info.nodeRoot) {
+            // createRecord(_idxHash, _rgtHash, _node, rec.countDownStart);
         // } else {
-            createRecord(_idxHash, _rgtHash, _assetClass, _countDownStart);
+            createRecord(_idxHash, _rgtHash, _node, _countDownStart);
         // }
-        deductServiceCosts(_assetClass, 1);
+        deductServiceCosts(_node, 1);
 
         //^^^^^^^interactions^^^^^^^^^
     }
@@ -84,7 +84,7 @@ contract MAL_APP is CORE_MAL {
     /*
      * @dev Modify **Record**.assetStatus with confirmation required
      */
-    function _modStatus(
+    function modifyStatus(
         bytes32 _idxHash,
         // bytes32 _rgtHash,
         uint8 _newAssetStatus
@@ -96,55 +96,55 @@ contract MAL_APP is CORE_MAL {
         returns (uint8)
     {
         Record memory rec = getRecord(_idxHash);
-        // uint8 userType = getCallingUserType(rec.assetClass);
+        // uint8 userType = getCallingUserType(rec.node);
         // ContractDataHash memory contractInfo = getContractInfo(
         //     address(this),
-        //     rec.assetClass
+        //     rec.node
         // );
 
         // require(
         //     contractInfo.contractType > 0,
-        //     "NP:MS: This contract not authorized for specified AC"
+        //     "APP2_NC:MS: This contract not authorized for specified node"
         // );
         // require(
         //     (userType > 0) && (userType < 10),
-        //     "NP:MS: User not authorized to modify records in specified asset class"
+        //     "APP2_NC:MS: User not authorized to modify records in specified node"
         // );
 
         // require(
         //     isLostOrStolen(_newAssetStatus) == 0,
-        //     "NP:MS: Cannot place asset in lost or stolen status using modStatus"
+        //     "APP2_NC:MS: Cannot place asset in lost or stolen status using modifyStatus"
         // );
         // require(
         //     isEscrow(_newAssetStatus) == 0,
-        //     "NP:MS: Cannot place asset in Escrow using modStatus"
+        //     "APP2_NC:MS: Cannot place asset in Escrow using modifyStatus"
         // );
         // require(
         //     needsImport(_newAssetStatus) == 0,
-        //     "NP:MS: Cannot place asset in unregistered, exported, or discarded status using modStatus"
+        //     "APP2_NC:MS: Cannot place asset in unregistered, exported, or discarded status using modifyStatus"
         // );
         // require(
         //     (_newAssetStatus < 100) &&
         //         (_newAssetStatus != 7) &&
         //         (_newAssetStatus != 57) &&
         //         (_newAssetStatus != 58),
-        //     "NP:MS: Specified Status is reserved."
+        //     "APP2_NC:MS: Specified Status is reserved."
         // );
         // require(
         //     isEscrow(rec.assetStatus) == 0,
-        //     "NP:MS: Cannot change status of asset in Escrow until escrow is expired"
+        //     "APP2_NC:MS: Cannot change status of asset in Escrow until escrow is expired"
         // );
         // require(
         //     needsImport(rec.assetStatus) == 0,
-        //     "NP:MS: Record in unregistered, exported, or discarded status"
+        //     "APP2_NC:MS: Record in unregistered, exported, or discarded status"
         // );
         // require(
         //     (rec.assetStatus > 49) || (userType < 5),
-        //     "NP:MS: Only usertype < 5 can change status < 49"
+        //     "APP2_NC:MS: Only usertype < 5 can change status < 49"
         // );
         // require(
         //     rec.rightsHolder == _rgtHash,
-        //     "NP:MS: Rightsholder does not match supplied data"
+        //     "APP2_NC:MS: Rightsholder does not match supplied data"
         // );
         //^^^^^^^checks^^^^^^^^^
 
@@ -160,7 +160,7 @@ contract MAL_APP is CORE_MAL {
     /*
      * @dev set **Record**.assetStatus to lost or stolen, with confirmation required.
      */
-    function _setLostOrStolen(
+    function setLostOrStolen(
         bytes32 _idxHash,
         // bytes32 _rgtHash,
         uint8 _newAssetStatus
@@ -172,44 +172,44 @@ contract MAL_APP is CORE_MAL {
         returns (uint8)
     {
         Record memory rec = getRecord(_idxHash);
-        // uint8 userType = getCallingUserType(rec.assetClass);
+        // uint8 userType = getCallingUserType(rec.node);
         // ContractDataHash memory contractInfo = getContractInfo(
         //     address(this),
-        //     rec.assetClass
+        //     rec.node
         // );
 
         // require(
         //     contractInfo.contractType > 0,
-        //     "NP:SLS: This contract not authorized for specified AC"
+        //     "APP2_NC:SLS: This contract not authorized for specified node"
         // );
         // require(
         //     (rec.rightsHolder != 0),
-        //     "NP:SLS: Record unclaimed: import required. "
+        //     "APP2_NC:SLS: Record unclaimed: import required. "
         // );
         // require(
         //     (userType > 0) && (userType < 10),
-        //     "NP:SLS: User not authorized to modify records in specified asset class"
+        //     "APP2_NC:SLS: User not authorized to modify records in specified node"
         // );
         // require(
         //     isLostOrStolen(_newAssetStatus) == 170,
-        //     "NP:SLS: Must set to a lost or stolen status"
+        //     "APP2_NC:SLS: Must set to a lost or stolen status"
         // );
         // require(
         //     (rec.assetStatus > 49) ||
         //         ((_newAssetStatus < 50) && (userType < 5)),
-        //     "NP:SLS: Only usertype <5 can change a <49 status asset to a >49 status"
+        //     "APP2_NC:SLS: Only usertype <5 can change a <49 status asset to a >49 status"
         // );
         // require(
         //     (rec.assetStatus != 5) && (rec.assetStatus != 55),
-        //     "NP:SLS: Transferred asset cannot be set to lost or stolen after transfer."
+        //     "APP2_NC:SLS: Transferred asset cannot be set to lost or stolen after transfer."
         // );
         // require(
         //     (rec.assetStatus != 50),
-        //     "NP:SLS: Asset in locked escrow cannot be set to lost or stolen"
+        //     "APP2_NC:SLS: Asset in locked escrow cannot be set to lost or stolen"
         // );
         // require(
         //     rec.rightsHolder == _rgtHash,
-        //     "NP:SLS: Rightsholder does not match supplied data"
+        //     "APP2_NC:SLS: Rightsholder does not match supplied data"
         // );
         //^^^^^^^checks^^^^^^^^^
 
@@ -225,7 +225,7 @@ contract MAL_APP is CORE_MAL {
     /*
      * @dev Decrement **Record**.countdown with confirmation required
      */
-    function _decCounter(
+    function decrementCounter(
         bytes32 _idxHash,
         // bytes32 _rgtHash,
         uint32 _decAmount
@@ -237,38 +237,38 @@ contract MAL_APP is CORE_MAL {
         returns (uint32)
     {
         Record memory rec = getRecord(_idxHash);
-        // uint8 userType = getCallingUserType(rec.assetClass);
+        // uint8 userType = getCallingUserType(rec.node);
         // ContractDataHash memory contractInfo = getContractInfo(
         //     address(this),
-        //     rec.assetClass
+        //     rec.node
         // );
 
         // require(
         //     contractInfo.contractType > 0,
-        //     "NP:DC: This contract not authorized for specified AC"
+        //     "APP2_NC:DC: This contract not authorized for specified node"
         // );
 
         // require(
         //     (rec.rightsHolder != 0),
-        //     "NP:DC: Record unclaimed: import required. "
+        //     "APP2_NC:DC: Record unclaimed: import required. "
         // );
         // require(
         //     (userType > 0) && (userType < 10),
-        //     "NP:DC: User not authorized to modify records in specified asset class"
+        //     "APP2_NC:DC: User not authorized to modify records in specified node"
         // );
         // require(
         //     isEscrow(rec.assetStatus) == 0,
-        //     "NP:DC: Cannot modify asset in Escrow"
+        //     "APP2_NC:DC: Cannot modify asset in Escrow"
         // );
-        // require(_decAmount > 0, "NP:DC: cannot decrement by negative number");
+        // require(_decAmount > 0, "APP2_NC:DC: cannot decrement by negative number");
 
         // require(
         //     needsImport(rec.assetStatus) == 0,
-        //     "NP:DC Record in unregistered, exported, or discarded status"
+        //     "APP2_NC:DC Record in unregistered, exported, or discarded status"
         // );
         // require(
         //     rec.rightsHolder == _rgtHash,
-        //     "NP:DC: Rightsholder does not match supplied data"
+        //     "APP2_NC:DC: Rightsholder does not match supplied data"
         // );
         //^^^^^^^checks^^^^^^^^^
 
@@ -291,7 +291,7 @@ contract MAL_APP is CORE_MAL {
     // /*
     //  * @dev Decrement **Record**.countdown with confirmation required
     //  */
-    // function _decCounterFMR(
+    // function decrementCounterFMR(
     //     bytes32 _idxHash,
     //     bytes32 _rgtHash,
     //     uint8 _decAmount
@@ -303,38 +303,38 @@ contract MAL_APP is CORE_MAL {
     //     returns (uint8)
     // {
     //     Record memory rec = getRecord(_idxHash);
-    //     // uint8 userType = getCallingUserType(rec.assetClass);
+    //     // uint8 userType = getCallingUserType(rec.node);
     //     // ContractDataHash memory contractInfo = getContractInfo(
     //     //     address(this),
-    //     //     rec.assetClass
+    //     //     rec.node
     //     // );
 
     //     // require(
     //     //     contractInfo.contractType > 0,
-    //     //     "NP:DC: This contract not authorized for specified AC"
+    //     //     "APP2_NC:DC: This contract not authorized for specified node"
     //     // );
 
     //     // require(
     //     //     (rec.rightsHolder != 0),
-    //     //     "NP:DC: Record unclaimed: import required. "
+    //     //     "APP2_NC:DC: Record unclaimed: import required. "
     //     // );
     //     // require(
     //     //     (userType > 0) && (userType < 10),
-    //     //     "NP:DC: User not authorized to modify records in specified asset class"
+    //     //     "APP2_NC:DC: User not authorized to modify records in specified node"
     //     // );
     //     // require(
     //     //     isEscrow(rec.assetStatus) == 0,
-    //     //     "NP:DC: Cannot modify asset in Escrow"
+    //     //     "APP2_NC:DC: Cannot modify asset in Escrow"
     //     // );
-    //     // require(_decAmount > 0, "NP:DC: cannot decrement by negative number");
+    //     // require(_decAmount > 0, "APP2_NC:DC: cannot decrement by negative number");
 
     //     // require(
     //     //     needsImport(rec.assetStatus) == 0,
-    //     //     "NP:DC Record in unregistered, exported, or discarded status"
+    //     //     "APP2_NC:DC Record in unregistered, exported, or discarded status"
     //     // );
     //     require(
     //         rec.rightsHolder == _rgtHash,
-    //         "NP:DC: Rightsholder does not match supplied data"
+    //         "APP2_NC:DC: Rightsholder does not match supplied data"
     //     );
     //     //^^^^^^^checks^^^^^^^^^
 
@@ -350,7 +350,7 @@ contract MAL_APP is CORE_MAL {
     //     //^^^^^^^interactions^^^^^^^^^
     // }
                                                                                                //NEEDS TO BE MODIFIED IN STORAGE
-    // function _decCounterTXFR(
+    // function decrementCounterTXFR(
     //     bytes32 _idxHash,
     //     bytes32 _rgtHash,
     //     uint16 _decAmount
@@ -362,38 +362,38 @@ contract MAL_APP is CORE_MAL {
     //     returns (uint16)
     // {
     //     Record memory rec = getRecord(_idxHash);
-    //     // uint8 userType = getCallingUserType(rec.assetClass);
+    //     // uint8 userType = getCallingUserType(rec.node);
     //     // ContractDataHash memory contractInfo = getContractInfo(
     //     //     address(this),
-    //     //     rec.assetClass
+    //     //     rec.node
     //     // );
 
     //     // require(
     //     //     contractInfo.contractType > 0,
-    //     //     "NP:DC: This contract not authorized for specified AC"
+    //     //     "APP2_NC:DC: This contract not authorized for specified node"
     //     // );
 
     //     // require(
     //     //     (rec.rightsHolder != 0),
-    //     //     "NP:DC: Record unclaimed: import required. "
+    //     //     "APP2_NC:DC: Record unclaimed: import required. "
     //     // );
     //     // require(
     //     //     (userType > 0) && (userType < 10),
-    //     //     "NP:DC: User not authorized to modify records in specified asset class"
+    //     //     "APP2_NC:DC: User not authorized to modify records in specified node"
     //     // );
     //     // require(
     //     //     isEscrow(rec.assetStatus) == 0,
-    //     //     "NP:DC: Cannot modify asset in Escrow"
+    //     //     "APP2_NC:DC: Cannot modify asset in Escrow"
     //     // );
-    //     // require(_decAmount > 0, "NP:DC: cannot decrement by negative number");
+    //     // require(_decAmount > 0, "APP2_NC:DC: cannot decrement by negative number");
 
     //     // require(
     //     //     needsImport(rec.assetStatus) == 0,
-    //     //     "NP:DC Record in unregistered, exported, or discarded status"
+    //     //     "APP2_NC:DC Record in unregistered, exported, or discarded status"
     //     // );
     //     require(
     //         rec.rightsHolder == _rgtHash,
-    //         "NP:DC: Rightsholder does not match supplied data"
+    //         "APP2_NC:DC: Rightsholder does not match supplied data"
     //     );
     //     //^^^^^^^checks^^^^^^^^^
 
@@ -410,12 +410,12 @@ contract MAL_APP is CORE_MAL {
     // }
 
     /*
-     * @dev Modify **Record**.Ipfs1a with confirmation
+     * @dev Modify **Record**.mutableStorage1 with confirmation
      */
-    function _modIpfs1(
+    function modifyMutableStorage(
         bytes32 _idxHash,
-        bytes32 _Ipfs1a,
-        bytes32 _Ipfs1b
+        bytes32 _mutableStorage1,
+        bytes32 _mutableStorage2
     )
         external
         // nonReentrant
@@ -423,55 +423,55 @@ contract MAL_APP is CORE_MAL {
         // isAuthorized(_idxHash)
     {
         Record memory rec = getRecord(_idxHash);
-        // uint8 userType = getCallingUserType(rec.assetClass);
+        // uint8 userType = getCallingUserType(rec.node);
         // ContractDataHash memory contractInfo = getContractInfo(
         //     address(this),
-        //     rec.assetClass
+        //     rec.node
         // );
 
         // require(
         //     contractInfo.contractType > 0,
-        //     "NP:MI1: This contract not authorized for specified AC"
+        //     "APP2_NC:MI1: This contract not authorized for specified node"
         // );
         // require(
         //     (rec.rightsHolder != 0),
-        //     "NP:MI1: Record unclaimed: import required."
+        //     "APP2_NC:MI1: Record unclaimed: import required."
         // );
         // require(
         //     (userType > 0) && (userType < 10),
-        //     "NP:MI1: User not authorized to modify records in specified asset class"
+        //     "APP2_NC:MI1: User not authorized to modify records in specified node"
         // );
-        // require(rec.Ipfs1a != _IpfsHash, "NP:MI1: New data same as old");
+        // require(rec.mutableStorage1 != _content adressable storageHash, "APP2_NC:MI1: New data same as old");
 
         // require(
         //     isEscrow(rec.assetStatus) == 0,
-        //    "NP:MI1: Cannot modify asset in Escrow"
+        //    "APP2_NC:MI1: Cannot modify asset in Escrow"
         // );
         // require(
         //     needsImport(rec.assetStatus) == 0,
-        //     "NP:MI1: Record in unregistered, exported, or discarded status"
+        //     "APP2_NC:MI1: Record in unregistered, exported, or discarded status"
         // );
         // require(
         //     rec.rightsHolder == _rgtHash,
-        //     "NP:MI1: Rightsholder does not match supplied data"
+        //     "APP2_NC:MI1: Rightsholder does not match supplied data"
         // );
         //^^^^^^^checks^^^^^^^^^
 
-        rec.Ipfs1a = _Ipfs1a;
-        rec.Ipfs1b = _Ipfs1b;
+        rec.mutableStorage1 = _mutableStorage1;
+        rec.mutableStorage2 = _mutableStorage2;
         //^^^^^^^effects^^^^^^^^^
 
-        writeRecordIpfs1(_idxHash, rec);
+        writeMutableStorage(_idxHash, rec);
         //^^^^^^^interactions^^^^^^^^^
     }
 
     /*
-     * @dev Modify **Record**.Ipfs2 with confirmation
+     * @dev Modify **Record**.NonMutableStorage with confirmation
      */
-    function addIpfs2Note(
+    function addNonMutableNote(
         bytes32 _idxHash,
-        bytes32 _Ipfs2a,
-        bytes32 _Ipfs2b
+        bytes32 _nonMutableStorage1,
+        bytes32 _nonMutableStorage2
     )
         external
         
@@ -480,15 +480,15 @@ contract MAL_APP is CORE_MAL {
         // isAuthorized(_idxHash)
     {
         Record memory rec = getRecord(_idxHash);
-        // uint8 userType = getCallingUserType(rec.assetClass);
+        // uint8 userType = getCallingUserType(rec.node);
         // ContractDataHash memory contractInfo = getContractInfo(
         //     address(this),
-        //     rec.assetClass
+        //     rec.node
         // );
 
         // require(
         //     contractInfo.contractType > 0,
-        //     "A:I2: This contract not authorized for specified AC"
+        //     "A:I2: This contract not authorized for specified node"
         // );
         // require(
         //     (rec.rightsHolder != 0),
@@ -496,7 +496,7 @@ contract MAL_APP is CORE_MAL {
         // );
         // require(
         //     (userType > 0) && (userType < 10),
-        //     "A:I2: User not authorized to modify records in specified asset class"
+        //     "A:I2: User not authorized to modify records in specified node"
         // );
         // require(
         //     isLostOrStolen(rec.assetStatus) == 0,
@@ -511,8 +511,8 @@ contract MAL_APP is CORE_MAL {
         //     "A:FMR: Asset needs re-imported"
         // );
         // require(
-        //     rec.Ipfs2a == 0,
-        //     "A:I2: Ipfs2a has data already. Overwrite not permitted"
+        //     rec.nonMutableStorage1 == 0,
+        //     "A:I2: nonMutableStorage1 has data already. Overwrite not permitted"
         // );
         // require(
         //     rec.rightsHolder == _rgtHash,
@@ -520,20 +520,20 @@ contract MAL_APP is CORE_MAL {
         // );
         //^^^^^^^checks^^^^^^^^^
 
-        rec.Ipfs2a = _Ipfs2a;
-        rec.Ipfs2b = _Ipfs2b;
+        rec.nonMutableStorage1 = _nonMutableStorage1;
+        rec.nonMutableStorage2 = _nonMutableStorage2;
         //^^^^^^^effects^^^^^^^^^
 
-        writeRecordIpfs2(_idxHash, rec);
+        writeNonMutableStorage(_idxHash, rec);
 
-        deductServiceCosts(rec.assetClass, 3);
+        deductServiceCosts(rec.node, 3);
         //^^^^^^^interactions^^^^^^^^^
     }
 
     /*
      *     @dev Export FROM Custodial:
      */
-    function changeAC(bytes32 _idxHash, uint32 newAssetClass)
+    function changeNode(bytes32 _idxHash, uint32 newNode)
         external
         // nonReentrant
         // whenNotPaused
@@ -541,20 +541,20 @@ contract MAL_APP is CORE_MAL {
         returns (uint8)
     {
         Record memory rec = getRecord(_idxHash);
-        // uint8 userType = getCallingUserType(rec.assetClass);
+        // uint8 userType = getCallingUserType(rec.node);
         // ContractDataHash memory contractInfo = getContractInfo(
         //     address(this),
-        //     rec.assetClass
+        //     rec.node
         // );
-        // AC memory AC_info = getACinfo(rec.assetClass);
+        // Node memory node_info =getNodeinfo(rec.node);
 
         // require(
         //     contractInfo.contractType > 0,
-        //     "A:MS: This contract not authorized for specified AC"
+        //     "A:MS: This contract not authorized for specified node"
         // );
         // require(
         //     (userType > 0) && (userType < 10),
-        //     "A:EA: User not authorized to modify records in specified asset class"
+        //     "A:EA: User not authorized to modify records in specified node"
         // );
         // require( // require transferrable (51) status
         //     rec.assetStatus == 51,
@@ -570,7 +570,7 @@ contract MAL_APP is CORE_MAL {
 
         // APP.transferAssetToken(_addr, _idxHash);
         // writeRecord(_idxHash, rec);
-        STOR.changeAC(_idxHash, newAssetClass);
+        STOR.changeNode(_idxHash, newNode);
 
         return rec.assetStatus;
         //^^^^^^^interactions^^^^^^^^^
@@ -582,25 +582,25 @@ contract MAL_APP is CORE_MAL {
         uint256 _escrowTime,
         uint8 _escrowStatus
     ) external 
-    // nonReentrant whenNotPaused isAuthorized(_idxHash) 
+    // nonReentrant whenNotPaused 
     {
         // Record memory rec = getRecord(_idxHash);
-        // uint8 userType = getCallingUserType(rec.assetClass);
+        // uint8 userType = getCallingUserType(rec.node);
         uint256 escrowTime = block.timestamp + _escrowTime;
         uint8 newEscrowStatus;
         // ContractDataHash memory contractInfo = getContractInfo(
         //     address(this),
-        //     rec.assetClass
+        //     rec.node
         // );
 
         // require(                                                                   //Storage IA mod takes care of it?
         //     contractInfo.contractType > 0,
-        //     "E:SE: This contract not authorized for specified AC"
+        //     "E:SE: This contract not authorized for specified node"
         // );
-        // require((rec.assetClass != 0), "E:SE: Record does not exist");
+        // require((rec.node != 0), "E:SE: Record does not exist");
         // require(
         //     (userType > 0) && (userType < 10),
-        //     "E:SE: User not authorized to modify records in specified asset class"
+        //     "E:SE: User not authorized to modify records in specified node"
         // );
         // require(
         //     (escrowTime >= block.timestamp),
@@ -653,22 +653,22 @@ contract MAL_APP is CORE_MAL {
     // nonReentrant whenNotPaused isAuthorized(_idxHash) 
     {
         // Record memory rec = getRecord(_idxHash);
-        // uint8 userType = getCallingUserType(rec.assetClass);
+        // uint8 userType = getCallingUserType(rec.node);
         // uint256 escrowTime = block.timestamp + _escrowTime;
         // uint8 newEscrowStatus;
         // ContractDataHash memory contractInfo = getContractInfo(
         //     address(this),
-        //     rec.assetClass
+        //     rec.node
         // );
 
         // require(                                                                   //Storage IA mod takes care of it?
         //     contractInfo.contractType > 0,
-        //     "E:SE: This contract not authorized for specified AC"
+        //     "E:SE: This contract not authorized for specified node"
         // );
-        // require((rec.assetClass != 0), "E:SE: Record does not exist");
+        // require((rec.node != 0), "E:SE: Record does not exist");
         // require(
         //     (userType > 0) && (userType < 10),
-        //     "E:SE: User not authorized to modify records in specified asset class"
+        //     "E:SE: User not authorized to modify records in specified node"
         // );
         // require(
         //     (escrowTime >= block.timestamp),
@@ -723,20 +723,20 @@ contract MAL_APP is CORE_MAL {
         // escrowData memory escrow = getEscrowData(_idxHash);
         // ContractDataHash memory contractInfo = getContractInfo(
         //     address(this),
-        //     rec.assetClass
+        //     rec.node
         // );
-        // uint8 userType = getCallingUserType(rec.assetClass);
+        // uint8 userType = getCallingUserType(rec.node);
         // bytes32 ownerHash = ECR_MGR.retrieveEscrowOwner(_idxHash);
 
         // require(                                                                 //Storage IA mod takes care of it?
         //     contractInfo.contractType > 0,
-        //     "E:EE: This contract not authorized for specified AC"
+        //     "E:EE: This contract not authorized for specified node"
         // );
 
-        // require((rec.assetClass != 0), "E:EE: Record does not exist");
+        // require((rec.node != 0), "E:EE: Record does not exist");
         // require(
         //     (userType > 0) && (userType < 10),
-        //     "E:EE: User not authorized to modify records in specified asset class"
+        //     "E:EE: User not authorized to modify records in specified node"
         // );
         // require(
         //     (rec.assetStatus == 6) ||
@@ -769,20 +769,20 @@ contract MAL_APP is CORE_MAL {
         // escrowData memory escrow = getEscrowData(_idxHash);
         // ContractDataHash memory contractInfo = getContractInfo(
         //     address(this),
-        //     rec.assetClass
+        //     rec.node
         // );
-        // uint8 userType = getCallingUserType(rec.assetClass);
+        // uint8 userType = getCallingUserType(rec.node);
         // bytes32 ownerHash = ECR_MGR.retrieveEscrowOwner(_idxHash);
 
         // require(                                                                 //Storage IA mod takes care of it?
         //     contractInfo.contractType > 0,
-        //     "E:EE: This contract not authorized for specified AC"
+        //     "E:EE: This contract not authorized for specified node"
         // );
 
-        // require((rec.assetClass != 0), "E:EE: Record does not exist");
+        // require((rec.node != 0), "E:EE: Record does not exist");
         // require(
         //     (userType > 0) && (userType < 10),
-        //     "E:EE: User not authorized to modify records in specified asset class"
+        //     "E:EE: User not authorized to modify records in specified node"
         // );
         // require(
         //     (rec.assetStatus == 6) ||

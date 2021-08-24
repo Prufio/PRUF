@@ -1,14 +1,14 @@
 const PRUF_UTIL_TKN = artifacts.require('UTIL_TKN');
 const PRUF_HELPER = artifacts.require('Helper');
 const PRUF_STOR = artifacts.require('STOR');
-const PRUF_AC_MGR = artifacts.require('AC_MGR');
-const PRUF_AC_TKN = artifacts.require('AC_TKN');
+const PRUF_NODE_MGR = artifacts.require('NODE_MGR');
+const PRUF_NODE_TKN = artifacts.require('NODE_TKN');
 
 let UTIL_TKN;
 let Helper;
 let STOR;
-let AC_MGR;
-let AC_TKN;
+let NODE_MGR;
+let NODE_TKN;
 
 contract('UTIL_TKN', accounts => {
 
@@ -50,19 +50,19 @@ contract('UTIL_TKN', accounts => {
     })
 
 
-    it('Should deploy PRUF_AC_MGR', async () => {
-        const PRUF_AC_MGR_TEST = await PRUF_AC_MGR.deployed({ from: MAIN });
-        console.log(PRUF_AC_MGR_TEST.address);
-        assert(PRUF_AC_MGR_TEST.address !== '');
-        AC_MGR = PRUF_AC_MGR_TEST;
+    it('Should deploy PRUF_NODE_MGR', async () => {
+        const PRUF_NODE_MGR_TEST = await PRUF_NODE_MGR.deployed({ from: MAIN });
+        console.log(PRUF_NODE_MGR_TEST.address);
+        assert(PRUF_NODE_MGR_TEST.address !== '');
+        NODE_MGR = PRUF_NODE_MGR_TEST;
     })
 
 
-    it('Should deploy PRUF_AC_TKN', async () => {
-        const PRUF_AC_TKN_TEST = await PRUF_AC_TKN.deployed({ from: MAIN });
-        console.log(PRUF_AC_TKN_TEST.address);
-        assert(PRUF_AC_TKN_TEST.address !== '')
-        AC_TKN = PRUF_AC_TKN_TEST;
+    it('Should deploy PRUF_NODE_TKN', async () => {
+        const PRUF_NODE_TKN_TEST = await PRUF_NODE_TKN.deployed({ from: MAIN });
+        console.log(PRUF_NODE_TKN_TEST.address);
+        assert(PRUF_NODE_TKN_TEST.address !== '')
+        NODE_TKN = PRUF_NODE_TKN_TEST;
     })
 
 
@@ -95,18 +95,18 @@ contract('UTIL_TKN', accounts => {
             })
 
             .then(() => {
-                console.log("Adding UTIL_TKN to storage for use in AC 0")
+                console.log("Adding UTIL_TKN to storage for use in Node 0")
                 return STOR.OO_addContract("UTIL_TKN", UTIL_TKN.address, '0', '1', { from: MAIN })
             })
 
             .then(() => {
-                console.log("Adding AC_MGR to storage for use in AC 0")
-                return STOR.OO_addContract("AC_MGR", AC_MGR.address, '0', '1', { from: MAIN })
+                console.log("Adding NODE_MGR to storage for use in Node 0")
+                return STOR.OO_addContract("NODE_MGR", NODE_MGR.address, '0', '1', { from: MAIN })
             })
 
             .then(() => {
-                console.log("Adding AC_TKN to storage for use in AC 0")
-                return STOR.OO_addContract("AC_TKN", AC_TKN.address, '0', '1', { from: MAIN })
+                console.log("Adding NODE_TKN to storage for use in Node 0")
+                return STOR.OO_addContract("NODE_TKN", NODE_TKN.address, '0', '1', { from: MAIN })
             })
 
             .then(() => {
@@ -119,7 +119,7 @@ contract('UTIL_TKN', accounts => {
     it('Should mint a couple of asset root tokens', async () => {
 
         console.log("Minting root token 1 -C")
-        return AC_MGR.createAssetClass("1", 'CUSTODIAL_ROOT1', '1', '3', '0', "0", rgt000, account1, { from: account1 })
+        return NODE_MGR.createNode("1", 'CUSTODIAL_ROOT1', '1', '3', '0', "0", rgt000, account1, { from: account1 })
 
     })
 

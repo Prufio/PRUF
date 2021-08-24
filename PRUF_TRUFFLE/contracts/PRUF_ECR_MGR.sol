@@ -1,24 +1,23 @@
-/*--------------------------------------------------------PRüF0.8.0
+/*--------------------------------------------------------PRüF0.8.6
 __/\\\\\\\\\\\\\ _____/\\\\\\\\\ _______/\\__/\\ ___/\\\\\\\\\\\\\\\        
- _\/\\\/////////\\\ _/\\\///////\\\ ____\//__\//____\/\\\///////////__       
-  _\/\\\_______\/\\\_\/\\\_____\/\\\ ________________\/\\\ ____________      
-   _\/\\\\\\\\\\\\\/__\/\\\\\\\\\\\/_____/\\\____/\\\_\/\\\\\\\\\\\ ____     
-    _\/\\\/////////____\/\\\//////\\\ ___\/\\\___\/\\\_\/\\\///////______    
-     _\/\\\ ____________\/\\\ ___\//\\\ __\/\\\___\/\\\_\/\\\ ____________   
-      _\/\\\ ____________\/\\\ ____\//\\\ _\/\\\___\/\\\_\/\\\ ____________  
-       _\/\\\ ____________\/\\\ _____\//\\\_\//\\\\\\\\\ _\/\\\ ____________ 
-        _\/// _____________\/// _______\/// __\///////// __\/// _____________
-         *-------------------------------------------------------------------*/
+__\/\\\/////////\\\ _/\\\///////\\\ ____\//__\//____\/\\\///////////__       
+___\/\\\_______\/\\\_\/\\\_____\/\\\ ________________\/\\\ ____________      
+____\/\\\\\\\\\\\\\/__\/\\\\\\\\\\\/_____/\\\____/\\\_\/\\\\\\\\\\\ ____     
+_____\/\\\/////////____\/\\\//////\\\ ___\/\\\___\/\\\_\/\\\///////______
+______\/\\\ ____________\/\\\ ___\//\\\ __\/\\\___\/\\\_\/\\\ ____________
+_______\/\\\ ____________\/\\\ ____\//\\\ _\/\\\___\/\\\_\/\\\ ____________
+________\/\\\ ____________\/\\\ _____\//\\\_\//\\\\\\\\\ _\/\\\ ____________
+_________\/// _____________\/// _______\/// __\///////// __\/// _____________
+*---------------------------------------------------------------------------*/
 
 /*-----------------------------------------------------------------
  *  TO DO
- *  break escrow down into smaller mappings
+ *  Escrow manager holds and manipultes escrow data for sattelite contracts.
  *
  *-----------------------------------------------------------------
  */
-// CTS:EXAMINE provide a description of ECR_MGR
 // SPDX-License-Identifier: UNLICENSED
-pragma solidity ^0.8.0;
+pragma solidity ^0.8.6;
 
 import "./PRUF_BASIC.sol";
 
@@ -27,29 +26,11 @@ contract ECR_MGR is BASIC {
     mapping(bytes32 => escrowDataExtLight) private EscrowDataLight;
     mapping(bytes32 => escrowDataExtHeavy) private EscrowDataHeavy;
 
-    /*
-    * // CTS:EXAMINE comment
-    * // CTS:EXAMINE param
-    * // CTS:EXAMINE return
-    */
-    function isLostOrStolen(uint8 _assetStatus) private pure returns (uint8) {
-        if (
-            (_assetStatus != 3) &&
-            (_assetStatus != 4) &&
-            (_assetStatus != 53) &&
-            (_assetStatus != 54)
-        ) {
-            return 0;
-        } else {
-            return 170;
-        }
-    }
-
-    /*
-    * // CTS:EXAMINE comment
-    * // CTS:EXAMINE param
-    * // CTS:EXAMINE return
-    */
+    /**
+     * Checks to see if an asset is in escrow status or not
+     * @param _assetStatus - status number (see docs)
+     * @return 170 or 0 (true or false)
+     */
     function isEscrow(uint8 _assetStatus) private pure returns (uint8) {
         if (
             (_assetStatus != 6) &&
@@ -63,12 +44,12 @@ contract ECR_MGR is BASIC {
         }
     }
 
-    /*
+    /**
      * @dev Set an asset to escrow status (6/50/56). Sets timelock for unix timestamp of escrow end.
-     * // CTS:EXAMINE param
-     * // CTS:EXAMINE param
-     * // CTS:EXAMINE param
-     * // CTS:EXAMINE param
+     * @param _idxHash - hash of asset information created by frontend inputs
+     * @param _newAssetStatus - new escrow status of asset (see docs)
+     * @param _escrowOwnerAddressHash - hash of escrow controller address
+     * @param _timelock - timelock parameter for time controlled escrows
      */
     function setEscrow(
         bytes32 _idxHash,
@@ -77,8 +58,10 @@ contract ECR_MGR is BASIC {
         uint256 _timelock
     ) external nonReentrant whenNotPaused {
         Record memory rec = getRecord(_idxHash);
-        ContractDataHash memory contractInfo =
-            getContractInfo(_msgSender(), rec.assetClass);
+        ContractDataHash memory contractInfo = getContractInfo(
+            _msgSender(),
+            rec.node
+        );
         bytes32 controllingContractNameHash = contractInfo.nameHash;
 
         require(
@@ -86,7 +69,6 @@ contract ECR_MGR is BASIC {
             "EM:SE: Escrow can only be set by an authorized escrow contract"
         );
         //^^^^^^^checks^^^^^^^^^
-        //Should never be neccessary:
         // delete escrows[_idxHash];
         // delete EscrowDataLight[_idxHash];
         // delete EscrowDataHeavy[_idxHash];
@@ -101,14 +83,16 @@ contract ECR_MGR is BASIC {
         //^^^^^^^interactions^^^^^^^^^
     }
 
-    /*
-     * @dev remove an asset from escrow status
-     * // CTS:EXAMINE param
+    /**
+     * @dev remove asset from escrow
+     * @param _idxHash - hash of asset information created by frontend inputs
      */
     function endEscrow(bytes32 _idxHash) external nonReentrant whenNotPaused {
         Record memory rec = getRecord(_idxHash);
-        ContractDataHash memory contractInfo =
-            getContractInfo(_msgSender(), rec.assetClass);
+        ContractDataHash memory contractInfo = getContractInfo(
+            _msgSender(),
+            rec.node
+        );
 
         require(
             isEscrow(rec.assetStatus) == 170,
@@ -131,21 +115,20 @@ contract ECR_MGR is BASIC {
         //^^^^^^^interactions^^^^^^^^^
     }
 
-    /*
-     * @dev Set data in EDL mapping
-     * // CTS:EXAMINE param
-     * // CTS:EXAMINE param
-     * // CTS:EXAMINE add req section
-     * Must be setter contract
-     * Must be in escrow
+    /**
+     * @dev Sets data in the Escrow Data Light mapping
+     * @param _idxHash - hash of asset information created by frontend inputs
+     * @param _escrowDataLight - struct of data associated with light load escrows
      */
     function setEscrowDataLight(
         bytes32 _idxHash,
         escrowDataExtLight calldata _escrowDataLight
     ) external nonReentrant whenNotPaused {
         Record memory rec = getRecord(_idxHash);
-        ContractDataHash memory contractInfo =
-            getContractInfo(_msgSender(), rec.assetClass);
+        ContractDataHash memory contractInfo = getContractInfo(
+            _msgSender(),
+            rec.node
+        );
 
         require(
             isEscrow(rec.assetStatus) == 170,
@@ -162,21 +145,20 @@ contract ECR_MGR is BASIC {
         //^^^^^^^effects^^^^^^^^^
     }
 
-    /*
-     * @dev Set data in EDH mapping
-     * // CTS:EXAMINE param
-     * // CTS:EXAMINE param
-     * // CTS:EXAMINE add req section
-     * Must be setter contract
-     * Must be in  escrow
+    /**
+     * @dev Sets data in the Escrow Data Heavy mapping
+     * @param _idxHash - hash of asset information created by frontend inputs
+     * @param escrowDataHeavy - struct of data associated with heavy load escrows
      */
     function setEscrowDataHeavy(
         bytes32 _idxHash,
         escrowDataExtHeavy calldata escrowDataHeavy
     ) external nonReentrant whenNotPaused {
         Record memory rec = getRecord(_idxHash);
-        ContractDataHash memory contractInfo =
-            getContractInfo(_msgSender(), rec.assetClass);
+        ContractDataHash memory contractInfo = getContractInfo(
+            _msgSender(),
+            rec.node
+        );
 
         require(
             isEscrow(rec.assetStatus) == 170,
@@ -193,9 +175,9 @@ contract ECR_MGR is BASIC {
         //^^^^^^^effects^^^^^^^^^
     }
 
-    /*
-     * @dev Permissive removal of asset from escrow status after time-out
-     * // CTS:EXAMINE param
+    /**
+     * @dev Permissive removal of asset from escrow status after time-out (no special qualifiers to end expired escrow)
+     * @param _idxHash - hash of asset information created by frontend inputs
      */
     function permissiveEndEscrow(bytes32 _idxHash)
         external
@@ -206,7 +188,7 @@ contract ECR_MGR is BASIC {
             escrows[_idxHash].timelock < block.timestamp,
             "EM:PEE: Escrow not expired"
         );
-        require( // do not allow escrows with escrow.data > 199 to be ended by this function //STATE UNREACHABLE CTS:PREFERRED
+        require( // do not allow escrows with escrow.data > 199 to be ended by this function //STATE UNREACHABLE PREFERRED
             EscrowDataLight[_idxHash].escrowData < 200,
             "EM:PEE: Escrow not endable with permissiveEndEscrow"
         );
@@ -219,56 +201,71 @@ contract ECR_MGR is BASIC {
         //^^^^^^^interactions^^^^^^^^^
     }
 
-    /*
-     * @dev return escrow OwnerHash
-     * // CTS:EXAMINE param
-     * // CTS:EXAMINE returns
+    /**
+     * @dev return escrow owner hash
+     * @param _idxHash - hash of asset information created by frontend inputs
+     *
+     * @return hash of escrow owner
      */
     function retrieveEscrowOwner(bytes32 _idxHash)
         external
         view
         returns (bytes32)
     {
+        //^^^^^^^checks^^^^^^^^^
+
         return escrows[_idxHash].escrowOwnerAddressHash;
-        //^^^^^^^checks/interactions^^^^^^^^^
+        //^^^^^^^effects^^^^^^^^^
     }
 
-    /*
-     * @dev return escrow data @ IDX
-     * // CTS:EXAMINE param
-     * // CTS:EXAMINE returns
+    /**
+     * @dev return escrow data associated with an asset
+     * @param _idxHash - hash of asset information created by frontend inputs
+     *
+     * @return all escrow data  @ _idxHash
      */
     function retrieveEscrowData(bytes32 _idxHash)
         external
         view
         returns (escrowData memory)
     {
+        //^^^^^^^checks^^^^^^^^^
+
         return escrows[_idxHash];
+        //^^^^^^^effects^^^^^^^^^
     }
 
-    /*
-     * @dev return EscrowDataLight @ IDX
-     * // CTS:EXAMINE param
-     * // CTS:EXAMINE returns
+    /**
+     * @dev return EscrowDataLight
+     * @param _idxHash - hash of asset information created by frontend inputs
+     *
+     * @return EscrowDataLight struct @ _idxHash
      */
     function retrieveEscrowDataLight(bytes32 _idxHash)
         external
         view
         returns (escrowDataExtLight memory)
     {
+        //^^^^^^^checks^^^^^^^^^
+
         return EscrowDataLight[_idxHash];
+        //^^^^^^^effects^^^^^^^^^
     }
 
-    /*
-     * @dev return EscrowDataHeavy @ IDX
-     * // CTS:EXAMINE param
-     * // CTS:EXAMINE returns
+    /**
+     * @dev return EscrowDataHeavy
+     * @param _idxHash - hash of asset information created by frontend inputs
+     *
+     * @return EscrowDataHeavy struct @ _idxHash
      */
     function retrieveEscrowDataHeavy(bytes32 _idxHash)
         external
         view
         returns (escrowDataExtHeavy memory)
     {
+        //^^^^^^^checks^^^^^^^^^
+
         return EscrowDataHeavy[_idxHash];
+        //^^^^^^^effects^^^^^^^^^
     }
 }

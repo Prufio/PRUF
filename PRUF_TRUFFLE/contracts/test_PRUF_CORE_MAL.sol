@@ -1,14 +1,14 @@
-/*--------------------------------------------------------PRüF0.8.0
+/*--------------------------------------------------------PRüF0.8.6
 __/\\\\\\\\\\\\\ _____/\\\\\\\\\ _______/\\__/\\ ___/\\\\\\\\\\\\\\\        
- _\/\\\/////////\\\ _/\\\///////\\\ ____\//__\//____\/\\\///////////__       
-  _\/\\\_______\/\\\_\/\\\_____\/\\\ ________________\/\\\ ____________      
-   _\/\\\\\\\\\\\\\/__\/\\\\\\\\\\\/_____/\\\____/\\\_\/\\\\\\\\\\\ ____     
-    _\/\\\/////////____\/\\\//////\\\ ___\/\\\___\/\\\_\/\\\///////______    
-     _\/\\\ ____________\/\\\ ___\//\\\ __\/\\\___\/\\\_\/\\\ ____________   
-      _\/\\\ ____________\/\\\ ____\//\\\ _\/\\\___\/\\\_\/\\\ ____________  
-       _\/\\\ ____________\/\\\ _____\//\\\_\//\\\\\\\\\ _\/\\\ ____________ 
-        _\/// _____________\/// _______\/// __\///////// __\/// _____________
-         *-------------------------------------------------------------------*/
+__\/\\\/////////\\\ _/\\\///////\\\ ____\//__\//____\/\\\///////////__       
+___\/\\\_______\/\\\_\/\\\_____\/\\\ ________________\/\\\ ____________      
+____\/\\\\\\\\\\\\\/__\/\\\\\\\\\\\/_____/\\\____/\\\_\/\\\\\\\\\\\ ____     
+_____\/\\\/////////____\/\\\//////\\\ ___\/\\\___\/\\\_\/\\\///////______
+______\/\\\ ____________\/\\\ ___\//\\\ __\/\\\___\/\\\_\/\\\ ____________
+_______\/\\\ ____________\/\\\ ____\//\\\ _\/\\\___\/\\\_\/\\\ ____________
+________\/\\\ ____________\/\\\ _____\//\\\_\//\\\\\\\\\ _\/\\\ ____________
+_________\/// _____________\/// _______\/// __\///////// __\/// _____________
+*---------------------------------------------------------------------------*/
 
 /*-----------------------------------------------------------------
  *  TO DO
@@ -16,7 +16,7 @@ __/\\\\\\\\\\\\\ _____/\\\\\\\\\ _______/\\__/\\ ___/\\\\\\\\\\\\\\\
  *---------------------------------------------------------------*/
 
 // SPDX-License-Identifier: UNLICENSED
-pragma solidity ^0.8.0;
+pragma solidity ^0.8.6;
 
 //import "./PRUF_INTERFACES.sol";
 //import "./Imports/payment/PullPayment.sol";
@@ -29,7 +29,7 @@ contract CORE_MAL is BASIC {
     // /*
     //  * @dev retrieves costs from Storage and returns Costs struct
     //  */
-    // function getCost(uint32 _assetClass, ) internal returns (Costs memory) {
+    // function getCost(uint32 _node, ) internal returns (Costs memory) {
     //     //^^^^^^^checks^^^^^^^^^
 
     //     Costs memory cost;
@@ -37,7 +37,7 @@ contract CORE_MAL is BASIC {
     //     (
     //         cost.serviceCost,
     //         cost.paymentAddress
-    //     ) = AC_MGR.retrieveCosts(_assetClass);
+    //     ) = NODE_MGR.retrieveCosts(_node);
 
     //     return (cost);
     //     //^^^^^^^interactions^^^^^^^^^
@@ -51,11 +51,11 @@ contract CORE_MAL is BASIC {
     function createRecord(
         bytes32 _idxHash,
         bytes32 _rgtHash,
-        uint32 _assetClass,
+        uint32 _node,
         uint32 _countDownStart
     ) internal virtual {
         uint256 tokenId = uint256(_idxHash);
-        AC memory AC_info = getACinfo(_assetClass);
+        Node memory node_info = getNodeinfo(_node);
 
         require(
             A_TKN.tokenExists(tokenId) == 0,
@@ -63,26 +63,19 @@ contract CORE_MAL is BASIC {
         );
 
         require(
-            AC_info.custodyType != 3,
-            "C:CR:Cannot create asset in a root asset class"
+            node_info.custodyType != 3,
+            "C:CR:Cannot create asset in a root node"
         );
 
-        require(
-            (AC_info.custodyType == 1) ||
-                (AC_info.custodyType == 2) ||
-                (AC_info.custodyType == 4),
-            "C:CR:Cannot create asset - contract not authorized for asset class custody type"
-        );
-
-        if (AC_info.custodyType == 1) {
+        if (node_info.custodyType == 1) {
             A_TKN.mintAssetToken(address(this), tokenId, "pruf.io");
         }
 
-        if ((AC_info.custodyType == 2) || (AC_info.custodyType == 4)) {
-            A_TKN.mintAssetToken(_msgSender(), tokenId, "pruf.io");
+        if ((node_info.custodyType == 2) || (node_info.custodyType == 4)) {
+            A_TKN.mintAssetToken(_msgSender(), tokenId, "pruf.io/asset");
         }
 
-        STOR.newRecord(_idxHash, _rgtHash, _assetClass, _countDownStart);
+        STOR.newRecord(_idxHash, _rgtHash, _node, _countDownStart);
     }
 
     /*
@@ -91,7 +84,6 @@ contract CORE_MAL is BASIC {
     function writeRecord(bytes32 _idxHash, Record memory _rec)
         internal
         whenNotPaused
-    //isAuthorized(_idxHash)
     {
         //^^^^^^^checks^^^^^^^^^
 
@@ -100,6 +92,7 @@ contract CORE_MAL is BASIC {
             _rec.rightsHolder,
             _rec.assetStatus,
             _rec.countDown,
+            _rec.int32temp,
             _rec.modCount,
             _rec.numberOfTransfers
         ); // Send data and writehash to storage
@@ -107,26 +100,34 @@ contract CORE_MAL is BASIC {
     }
 
     /*
-     * @dev Write an Ipfs Record to Storage @ idxHash
+     * @dev Write an content adressable storage Record to Storage @ idxHash
      */
-    function writeRecordIpfs1(bytes32 _idxHash, Record memory _rec)
+    function writeMutableStorage(bytes32 _idxHash, Record memory _rec)
         internal
         whenNotPaused
     {
         //^^^^^^^Checks^^^^^^^^^
 
-        STOR.modifyIpfs1(_idxHash, _rec.Ipfs1a, _rec.Ipfs1b); // Send data to storage
+        STOR.modifyMutableStorage(
+            _idxHash,
+            _rec.mutableStorage1,
+            _rec.mutableStorage2
+        ); // Send data to storage
         //^^^^^^^interactions^^^^^^^^^
     }
 
-    function writeRecordIpfs2(bytes32 _idxHash, Record memory _rec)
+    function writeNonMutableStorage(bytes32 _idxHash, Record memory _rec)
         internal
         whenNotPaused
     //isAuthorized(_idxHash)
     {
         //^^^^^^^checks^^^^^^^^^
 
-        STOR.modifyIpfs2(_idxHash, _rec.Ipfs2a, _rec.Ipfs2b); // Send data to storage
+        STOR.modifyNonMutableStorage(
+            _idxHash,
+            _rec.nonMutableStorage1,
+            _rec.nonMutableStorage2
+        ); // Send data to storage
         //^^^^^^^interactions^^^^^^^^^
     }
 
@@ -135,14 +136,14 @@ contract CORE_MAL is BASIC {
     /*
      * @dev Send payment to appropriate pullPayment adresses for payable function
      */
-    function deductServiceCosts(uint32 _assetClass, uint16 _service)
+    function deductServiceCosts(uint32 _node, uint16 _service)
         internal
         whenNotPaused
     {
         //^^^^^^^checks^^^^^^^^^
         Invoice memory pricing;
         //^^^^^^^effects^^^^^^^^^
-        pricing = AC_MGR.getServiceCosts(_assetClass, _service);
+        pricing = NODE_MGR.getServiceCosts(_node, _service);
         deductPayment(pricing);
         //^^^^^^^interactions^^^^^^^^^
     }
@@ -153,8 +154,8 @@ contract CORE_MAL is BASIC {
      * @dev Deducts payment from transaction
      */
     function deductPayment(Invoice memory _pricing) internal whenNotPaused {
-        if (_pricing.ACTHaddress == address(0)) {
-            _pricing.ACTHaddress = _pricing.rootAddress;
+        if (_pricing.NTHaddress == address(0)) {
+            _pricing.NTHaddress = _pricing.rootAddress;
         }
         //UTIL_TKN.payForService(_msgSender(), _pricing); //-- NON LEGACY TOKEN CONTRACT
 
@@ -162,8 +163,8 @@ contract CORE_MAL is BASIC {
             _msgSender(),
             _pricing.rootAddress,
             _pricing.rootPrice,
-            _pricing.ACTHaddress,
-            _pricing.ACTHprice
+            _pricing.NTHaddress,
+            _pricing.NTHprice
         );
     }
 

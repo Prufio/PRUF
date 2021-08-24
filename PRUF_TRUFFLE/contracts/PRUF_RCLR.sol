@@ -1,24 +1,24 @@
-/*--------------------------------------------------------PRüF0.8.0
+/*--------------------------------------------------------PRüF0.8.6
 __/\\\\\\\\\\\\\ _____/\\\\\\\\\ _______/\\__/\\ ___/\\\\\\\\\\\\\\\        
- _\/\\\/////////\\\ _/\\\///////\\\ ____\//__\//____\/\\\///////////__       
-  _\/\\\_______\/\\\_\/\\\_____\/\\\ ________________\/\\\ ____________      
-   _\/\\\\\\\\\\\\\/__\/\\\\\\\\\\\/_____/\\\____/\\\_\/\\\\\\\\\\\ ____     
-    _\/\\\/////////____\/\\\//////\\\ ___\/\\\___\/\\\_\/\\\///////______    
-     _\/\\\ ____________\/\\\ ___\//\\\ __\/\\\___\/\\\_\/\\\ ____________   
-      _\/\\\ ____________\/\\\ ____\//\\\ _\/\\\___\/\\\_\/\\\ ____________  
-       _\/\\\ ____________\/\\\ _____\//\\\_\//\\\\\\\\\ _\/\\\ ____________ 
-        _\/// _____________\/// _______\/// __\///////// __\/// _____________
-         *-------------------------------------------------------------------*/
+__\/\\\/////////\\\ _/\\\///////\\\ ____\//__\//____\/\\\///////////__       
+___\/\\\_______\/\\\_\/\\\_____\/\\\ ________________\/\\\ ____________      
+____\/\\\\\\\\\\\\\/__\/\\\\\\\\\\\/_____/\\\____/\\\_\/\\\\\\\\\\\ ____     
+_____\/\\\/////////____\/\\\//////\\\ ___\/\\\___\/\\\_\/\\\///////______
+______\/\\\ ____________\/\\\ ___\//\\\ __\/\\\___\/\\\_\/\\\ ____________
+_______\/\\\ ____________\/\\\ ____\//\\\ _\/\\\___\/\\\_\/\\\ ____________
+________\/\\\ ____________\/\\\ _____\//\\\_\//\\\\\\\\\ _\/\\\ ____________
+_________\/// _____________\/// _______\/// __\///////// __\/// _____________
+*---------------------------------------------------------------------------*/
 
 /*-----------------------------------------------------------------
  *  TO DO
  *
  *---------------------------------------------------------------*/
 
- //CTS:EXAMINE quick explainer for the contract
+//RCLR allows discarded items to be re-onboarded to a new holder
 
 // SPDX-License-Identifier: UNLICENSED
-pragma solidity ^0.8.0;
+pragma solidity ^0.8.6;
 
 import "./PRUF_ECR_CORE.sol";
 import "./PRUF_CORE.sol";
@@ -28,10 +28,11 @@ contract RCLR is ECR_CORE, CORE {
 
     //--------------------------------------------External Functions--------------------------
 
-    /*
-     * @dev //gets item out of recycled status -- caller is assetToken contract
-     * //CTS:EXAMINE param
-     * //CTS:EXAMINE param
+    /**
+     * @dev discards item -- caller is assetToken contract
+     * @param _idxHash asset ID
+     * @param _sender discarder
+     * Caller Must have DISCARD_ROLE
      */
     function discard(bytes32 _idxHash, address _sender)
         external
@@ -64,66 +65,34 @@ contract RCLR is ECR_CORE, CORE {
         //^^^^^^^interactions^^^^^^^^^
     }
 
-    /*
-     * @dev reutilize a recycled asset //DPS:CHECK NEW REQUIRES!!!
-     * //CTS:EXAMINE maybe describe the reqs in this one, back us up on the security
-     * //CTS:EXAMINE param
-     * //CTS:EXAMINE param
-     * //CTS:EXAMINE param
+    /** 
+     * @dev reutilize a recycled asset
+     * maybe describe the reqs in this one, back us up on the security
+     * @param _idxHash asset ID
+     * @param _rgtHash rights holder hash to set
      */
     function recycle(
         bytes32 _idxHash,
-        bytes32 _rgtHash,
-        uint32 _assetClass
+        bytes32 _rgtHash
     ) external nonReentrant whenNotPaused {
         uint256 tokenId = uint256(_idxHash);
-        escrowDataExtLight memory escrowDataLight =
-            getEscrowDataLight(_idxHash);
+        escrowDataExtLight memory escrowDataLight = getEscrowDataLight(
+            _idxHash
+        );
         Record memory rec = getRecord(_idxHash);
-        AC memory AC_info = getACinfo(_assetClass);
+        //Node memory node_info = getNodeinfo(_node);
         require(_rgtHash != 0, "R:R: New rights holder = zero");
         require(rec.assetStatus == 60, "R:R: Asset not discarded");
-        require(
-            AC_MGR.isSameRootAC(_assetClass, rec.assetClass) == 170,
-            "R:R: !Change AC to new root"
-        );
-        require(
-            (AC_info.managementType < 6),
-            "R:R: Contract does not support management types > 5 or AC is locked"
-        );
-        if (
-            (AC_info.managementType == 1) ||
-            (AC_info.managementType == 2) ||
-            (AC_info.managementType == 5)
-        ) {
-            require(
-                (AC_TKN.ownerOf(_assetClass) == _msgSender()),
-                "R:R: Cannot create asset in AC mgmt type 1||2||5 - caller does not hold AC token"
-            );
-        } else if (AC_info.managementType == 3) {
-            require(
-                AC_MGR.getUserType(
-                    keccak256(abi.encodePacked(_msgSender())),
-                    _assetClass
-                ) == 1,
-                "R:R: Cannot create asset - caller address !authorized"
-            );
-        } else if (AC_info.managementType == 4) {
-            require(
-                ID_TKN.trustedLevelByAddress(_msgSender()) > 10,
-                "R:R: Caller !trusted ID holder"
-            );
-        }
+
         //^^^^^^^checks^^^^^^^^^
 
         rec.rightsHolder = _rgtHash;
         rec.numberOfTransfers = 170;
         //^^^^^^^effects^^^^^^^^^^^^
 
-        A_TKN.mintAssetToken(_msgSender(), tokenId, "pruf.io"); //FIX TO MAKE REAL ASSET URL DPS / CTS
+        A_TKN.mintAssetToken(_msgSender(), tokenId, "pruf.io/asset"); //FIX TO MAKE REAL ASSET URL DPS / CTS
         ECR_MGR.endEscrow(_idxHash);
-        STOR.changeAC(_idxHash, _assetClass);
-        deductRecycleCosts(_assetClass, escrowDataLight.addr_1);
+        deductRecycleCosts(rec.node, escrowDataLight.addr_1);
         rec.assetStatus = 58;
         writeRecord(_idxHash, rec);
         //^^^^^^^interactions^^^^^^^^^^^^

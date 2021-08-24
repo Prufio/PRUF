@@ -1,14 +1,14 @@
-/*--------------------------------------------------------PRüF0.8.0
+/*--------------------------------------------------------PRüF0.8.6
 __/\\\\\\\\\\\\\ _____/\\\\\\\\\ _______/\\__/\\ ___/\\\\\\\\\\\\\\\        
- _\/\\\/////////\\\ _/\\\///////\\\ ____\//__\//____\/\\\///////////__       
-  _\/\\\_______\/\\\_\/\\\_____\/\\\ ________________\/\\\ ____________      
-   _\/\\\\\\\\\\\\\/__\/\\\\\\\\\\\/_____/\\\____/\\\_\/\\\\\\\\\\\ ____     
-    _\/\\\/////////____\/\\\//////\\\ ___\/\\\___\/\\\_\/\\\///////______    
-     _\/\\\ ____________\/\\\ ___\//\\\ __\/\\\___\/\\\_\/\\\ ____________   
-      _\/\\\ ____________\/\\\ ____\//\\\ _\/\\\___\/\\\_\/\\\ ____________  
-       _\/\\\ ____________\/\\\ _____\//\\\_\//\\\\\\\\\ _\/\\\ ____________ 
-        _\/// _____________\/// _______\/// __\///////// __\/// _____________
-         *-------------------------------------------------------------------*/
+__\/\\\/////////\\\ _/\\\///////\\\ ____\//__\//____\/\\\///////////__       
+___\/\\\_______\/\\\_\/\\\_____\/\\\ ________________\/\\\ ____________      
+____\/\\\\\\\\\\\\\/__\/\\\\\\\\\\\/_____/\\\____/\\\_\/\\\\\\\\\\\ ____     
+_____\/\\\/////////____\/\\\//////\\\ ___\/\\\___\/\\\_\/\\\///////______
+______\/\\\ ____________\/\\\ ___\//\\\ __\/\\\___\/\\\_\/\\\ ____________
+_______\/\\\ ____________\/\\\ ____\//\\\ _\/\\\___\/\\\_\/\\\ ____________
+________\/\\\ ____________\/\\\ _____\//\\\_\//\\\\\\\\\ _\/\\\ ____________
+_________\/// _____________\/// _______\/// __\///////// __\/// _____________
+*---------------------------------------------------------------------------*/
 
 /*-----------------------------------------------------------------
  *  TO DO
@@ -16,7 +16,7 @@ __/\\\\\\\\\\\\\ _____/\\\\\\\\\ _______/\\__/\\ ___/\\\\\\\\\\\\\\\
 /*-----------------------------------------------------------------
  * only tokenHolder can put items "in pouch" 
  * only trusted entities can take items "out"
- * only pouchholder can mark item status, auth as user type 1+ in asset class
+ * only pouchholder can mark item status, auth as user type 1+ in node
  * joe public can check only?
  * statuses:
  *
@@ -36,7 +36,7 @@ __/\\\\\\\\\\\\\ _____/\\\\\\\\\ _______/\\__/\\ ___/\\\\\\\\\\\\\\\
  *---------------------------------------------------------------*/
 
 // SPDX-License-Identifier: UNLICENSED
-pragma solidity ^0.8.0;
+pragma solidity ^0.8.6;
 
 import "./PRUF_CORE.sol";
 //import "./PRUF_INTERFACES.sol";
@@ -78,26 +78,26 @@ contract VERIFY is CORE {
 
     /*
      * @dev:authorize an asset token _idxHash as a wallet token in verify
-     *      the caller must posess AC token for given asset Class (reverts)
-     *      AC must be VERIFY custody type (4) (reverts)
-     *      AC of Asset token to be approved must be of the same assetClass as the held ACtoken (reverts)
+     *      the caller must posess node token for given Node (reverts)
+     *      node must be VERIFY custody type (4) (reverts)
+     *      node of Asset token to be approved must be of the same node as the held ACtoken (reverts)
      */
     function authorizeTokenForVerify(
         bytes32 _idxHash,
         uint8 _verified, //0 for not verify authorized, 1 for admin level auth, 2 for priveledged level auth and 3 = basic verify authorization
-        uint32 _assetClass
+        uint32 _node
     ) external {
-        AC memory ACdata = getACinfo(_assetClass);
+        Node memory ACdata =getNodeinfo(_node);
         Record memory rec = getRecord(_idxHash);
 
         require(
-            AC_TKN.ownerOf(uint256(_assetClass)) == _msgSender(),
-            "VFY:ATFV: caller does not hold AC token"
+            NODE_TKN.ownerOf(uint256(_node)) == _msgSender(),
+            "VFY:ATFV: caller does not hold node token"
         );
-        require(ACdata.custodyType == 4, "VFY:ATFV: AC not VERIFY enabled");
+        require(ACdata.custodyType == 4, "VFY:ATFV: node not VERIFY enabled");
         require(
-            rec.assetClass == _assetClass,
-            "VFY:ATFV: AC of Asset Token does not match supplied AC "
+            rec.node == _node,
+            "VFY:ATFV: node of Asset Token does not match supplied node "
         );
         //^^^^^^^checks^^^^^^^^^
 
@@ -218,7 +218,7 @@ contract VERIFY is CORE {
      *      the caller must posess Asset token, must pass isAuth (reverts)
      *      item must be registered as "in" the callers wallet (reverts)
      *      item must not be lost/stolen (reverts)
-     *      destination wallet must be in same asset class as sending wallet (reverts)
+     *      destination wallet must be in same node as sending wallet (reverts)
      */
     function transfer(
         //IS THIS A TERRIBLE IDEA? EXAMINE
@@ -230,9 +230,9 @@ contract VERIFY is CORE {
         Record memory newRec = getRecord(_newIdxHash);
 
         require(items[_itemHash] == _idxHash, "VFY:T: Item not held by caller"); //check to see if held by _idxHash
-        require( //must move to same asset class root
-            AC_MGR.isSameRootAC(rec.assetClass, newRec.assetClass) == 170,
-            "VFY:T: Wallet is not in the same asset class root"
+        require( //must move to same node root
+            NODE_MGR.isSameRootNode(rec.node, newRec.node) == 170,
+            "VFY:T: Wallet is not in the same node root"
         );
         require(
             itemData[_itemHash].status != 2,
@@ -256,13 +256,13 @@ contract VERIFY is CORE {
      * @dev:Mark an item conterfeit . Admin function, user marks conterfeit regardless of who holds it
      *      the caller must posess Asset token authorized at userlevel 3
      */
-    function adminMarkCounterfeit(
+    function markCounterfeit(
         bytes32 _idxHash,
         bytes32 _itemHash
     ) external isAuthorized(_idxHash) returns (uint256) {
         require(
             idxAuthInVerify[_idxHash] == 3, //token is auth amdmin
-            "VFY:AMC: Caller not authorized as a admin user (type3) in asset class"
+            "VFY:AMC: Caller not authorized as a admin user (type3) in node"
         );
         //^^^^^^^checks^^^^^^^^^
 
@@ -275,7 +275,7 @@ contract VERIFY is CORE {
 
     /*
      * @dev:Mark an item with a status (see docs at top of contract)
-     *      the caller must posess Asset token, must pass isAuth and user must be auth as a 3 in that AC (reverts)
+     *      the caller must posess Asset token, must pass isAuth and user must be auth as a 3 in that node (reverts)
      *      item must be listed as "in" the callers wallet (reverts)
      *      Other than that, unrestricted power to change ststus of held items
      */
@@ -328,8 +328,8 @@ contract VERIFY is CORE {
  *  TESTING
  *
 /*-----------------------------------------------------------------
- Make a 2 Verify AC's (custody type 4)
- make 2 assets in each new AC (1,2) (3,4)
+ Make a 2 Verify node's (custody type 4)
+ make 2 assets in each new node (1,2) (3,4)
  verify all 4 Assets as pruf verify wallets | 1 = 1 | 2 = 1 | 3 = 2 | 4 = 3 |
 
  put an item A in wallet 1 (should succeed)
@@ -337,7 +337,7 @@ contract VERIFY is CORE {
  try to put item A in wallet 2 (should fail) -- item already held, collision ++
  take item A out of wallet 1 (should succeed)
  put item A in wallet 2 (should succeed) 
- transfer item A to wallet 3 (should fail)  -- non matching asset class
+ transfer item A to wallet 3 (should fail)  -- non matching node
  transfer item A to wallet 1 (should succeed)
  take item A out of wallet 1 (should succeed)
  safePutIn item A to wallet 2 with collision threshold at 1 (should succeed)
@@ -346,7 +346,7 @@ contract VERIFY is CORE {
  take item A out of wallet 2 (should succeed)
  safePutIn item A to wallet 2 with collision threshold at 1 (should Fail) -- excess collisions
  safePutIn item A to wallet 3 with collision threshold at 2 (should succeed)
- transfer item A to wallet 1 (should fail) -- non matching asset class
+ transfer item A to wallet 1 (should fail) -- non matching node
  transfer item A to wallet 4 (should succeed)
 
 

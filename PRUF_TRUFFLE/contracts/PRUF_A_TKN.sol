@@ -1,4 +1,4 @@
-/**--------------------------------------------------------PRüF0.8.0
+/**--------------------------------------------------------PRüF0.8.6
 __/\\\\\\\\\\\\\ _____/\\\\\\\\\ _______/\\__/\\ ___/\\\\\\\\\\\\\\\        
  _\/\\\/////////\\\ _/\\\///////\\\ ____\//__\//____\/\\\///////////__       
   _\/\\\_______\/\\\_\/\\\_____\/\\\ ________________\/\\\ ____________      
@@ -12,13 +12,13 @@ __/\\\\\\\\\\\\\ _____/\\\\\\\\\ _______/\\__/\\ ___/\\\\\\\\\\\\\\\
 
 /**-----------------------------------------------------------------
  *  TO DO
- * Check and see if A_TKN can be permitted in all AC's to prevent safeTransferFrom->writeRecord conflict due to it not being a default authorized contract for AC's
+ * Check and see if A_TKN can be permitted in all nodes to prevent safeTransferFrom->writeRecord conflict due to it not being a default authorized contract for node s
  *-----------------------------------------------------------------
  * PRUF ASSET NFT CONTRACT
  *---------------------------------------------------------------*/
 
 // SPDX-License-Identifier: UNLICENSED
-pragma solidity ^0.8.0;
+pragma solidity ^0.8.6;
 
 import "./Imports/access/AccessControl.sol";
 import "./Imports/utils/Context.sol";
@@ -67,12 +67,12 @@ contract A_TKN is
 
     address internal STOR_Address;
     address internal RCLR_Address;
-    address internal AC_MGR_Address;
-    address internal AC_TKN_Address;
+    address internal NODE_MGR_Address;
+    address internal NODE_TKN_Address;
     STOR_Interface internal STOR;
     RCLR_Interface internal RCLR;
-    AC_MGR_Interface internal AC_MGR;
-    AC_TKN_Interface internal AC_TKN;
+    NODE_MGR_Interface internal NODE_MGR;
+    NODE_TKN_Interface internal NODE_TKN;
 
     bytes32 public constant B320xF_ =
         0xFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFF;
@@ -82,7 +82,7 @@ contract A_TKN is
     constructor() ERC721("PRUF Asset Token", "PRAT") {
         _setupRole(DEFAULT_ADMIN_ROLE, _msgSender());
         _setupRole(CONTRACT_ADMIN_ROLE, _msgSender());
-        _setupRole(MINTER_ROLE, _msgSender()); //ALL CONTRACTS THAT MINT ASSET TOKENS
+        _setupRole(MINTER_ROLE, _msgSender()); //ALL contracts THAT MINT ASSET TOKENS
         _setupRole(PAUSER_ROLE, _msgSender());
     }
 
@@ -117,7 +117,7 @@ contract A_TKN is
     /**
      * @dev Verify user credentials
      * Originating Address:
-     *      has TRUSTED_AGENT_ROLE and TA role is not disabled
+     *      has TRUSTED_AGENT_ROLE and Trusted Agent role is not disabled
      */
     modifier isTrustedAgent() {
         require(
@@ -143,7 +143,7 @@ contract A_TKN is
      * PRuF "banked" in an allowance for use in the system.
      * @param _key - set to 170 to PERMENANTLY REMOVE TRUSTED AGENT CAPABILITY
      */
-    function adminKillTrustedAgent(uint256 _key) external isContractAdmin {
+    function killTrustedAgent(uint256 _key) external isContractAdmin {
         if (_key == 170) {
             trustedAgentEnabled = 0; // !!! THIS IS A PERMANENT ACTION AND CANNOT BE UNDONE
         }
@@ -153,7 +153,7 @@ contract A_TKN is
      * @dev Set storage contract to interface with
      * @param _storageAddress - Storage contract address to set
      */
-    function Admin_setStorageContract(address _storageAddress)
+    function setStorageContract(address _storageAddress)
         external
         isContractAdmin
     {
@@ -167,17 +167,17 @@ contract A_TKN is
     /**
      * @dev Address Setters  - resolves addresses from storage and sets local interfaces
      */
-    function Admin_resolveContractAddresses() external isContractAdmin {
+    function resolveContractAddresses() external isContractAdmin {
         //^^^^^^^checks^^^^^^^^^
 
         RCLR_Address = STOR.resolveContractAddress("RCLR");
         RCLR = RCLR_Interface(RCLR_Address);
 
-        AC_MGR_Address = STOR.resolveContractAddress("AC_MGR");
-        AC_MGR = AC_MGR_Interface(AC_MGR_Address);
+        NODE_MGR_Address = STOR.resolveContractAddress("NODE_MGR");
+        NODE_MGR = NODE_MGR_Interface(NODE_MGR_Address);
 
-        AC_TKN_Address = STOR.resolveContractAddress("AC_TKN");
-        AC_TKN = AC_TKN_Interface(AC_TKN_Address);
+        NODE_TKN_Address = STOR.resolveContractAddress("NODE_TKN");
+        NODE_TKN = NODE_TKN_Interface(NODE_TKN_Address);
         //^^^^^^^effects^^^^^^^^^
     }
 
@@ -206,7 +206,6 @@ contract A_TKN is
      * WALLET ADDRESSES SET TO "Cold" DO NOT WORK WITH TRUSTED_AGENT FUNCTIONS
      * @param _addr - address to check
      * returns 170 if adress is set to "cold wallet" status
-
      */
     function isColdWallet(address _addr) public view returns (uint256) {
         return coldWallet[_addr];
@@ -245,7 +244,7 @@ contract A_TKN is
         bytes32 _idxHash = bytes32(tokenId);
         Record memory rec = getRecord(_idxHash);
 
-        if (AC_MGR.getSwitchAt(rec.assetClass, 1) == 1) {
+        if (NODE_MGR.getSwitchAt(rec.node, 1) == 1) {
             //if switch at bit 1 (0) is set
             string memory tokenURI = tokenURI(tokenId);
 
@@ -255,8 +254,8 @@ contract A_TKN is
             );
 
             require(
-                AC_TKN.ownerOf(rec.assetClass) == _msgSender(),
-                "AT:SURI:Caller !ACTH"
+                NODE_TKN.ownerOf(rec.node) == _msgSender(),
+                "AT:SURI:Caller !NTH"
             );
         }
 
@@ -296,7 +295,7 @@ contract A_TKN is
         address _from,
         address _to,
         uint256 _tokenId
-    ) public override nonReentrant whenNotPaused {
+    ) public override nonReentrant {
         bytes32 _idxHash = bytes32(_tokenId);
         Record memory rec = getRecord(_idxHash);
 
@@ -357,7 +356,7 @@ contract A_TKN is
         address _to,
         uint256 _tokenId,
         bytes memory _data
-    ) public virtual override nonReentrant whenNotPaused {
+    ) public virtual override nonReentrant {
         bytes32 _idxHash = bytes32(_tokenId);
         Record memory rec = getRecord(_idxHash);
         (uint8 isAuth, ) = STOR.ContractInfoHash(_to, 0); // trailing comma because does not use the returned hash
@@ -389,7 +388,7 @@ contract A_TKN is
         //^^^^^^^interactions^^^^^^^^^
     }
 
-        /**
+    /**
      * @dev Transfers the ownership of a given token ID to another address by a TRUSTED_AGENT.
      * Usage of this method is discouraged, use {safeTransferFrom} whenever possible.
      * Requires the _msgSender() to be the owner, approved, or operator.
@@ -401,7 +400,7 @@ contract A_TKN is
         address _from,
         address _to,
         uint256 _tokenId
-    ) public nonReentrant whenNotPaused isTrustedAgent {
+    ) external nonReentrant isTrustedAgent {
         bytes32 _idxHash = bytes32(_tokenId);
         Record memory rec = getRecord(_idxHash);
 
@@ -479,6 +478,7 @@ contract A_TKN is
             _rec.rightsHolder,
             _rec.assetStatus,
             _rec.countDown,
+            _rec.int32temp,
             _rec.modCount,
             _rec.numberOfTransfers
         ); // Send data and writehash to storage
@@ -511,7 +511,7 @@ contract A_TKN is
      *
      * - the caller must have the `PAUSER_ROLE`.
      */
-    function pause() public virtual {
+    function pause() external virtual {
         require(
             hasRole(PAUSER_ROLE, _msgSender()),
             "A:P: Caller !have pauser role"
@@ -531,7 +531,7 @@ contract A_TKN is
      *
      * - the caller must have the `PAUSER_ROLE`.
      */
-    function unpause() public virtual {
+    function unpause() external virtual {
         require(
             hasRole(PAUSER_ROLE, _msgSender()),
             "A:UP: Caller !have pauser role"

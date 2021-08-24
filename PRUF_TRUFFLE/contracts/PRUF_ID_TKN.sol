@@ -1,4 +1,4 @@
-/**--------------------------------------------------------PRüF0.8.0
+/**--------------------------------------------------------PRüF0.8.6
 __/\\\\\\\\\\\\\ _____/\\\\\\\\\ _______/\\../\\ ___/\\\\\\\\\\\\\\\
  _\/\\\/////////\\\ _/\\\///////\\\ ____\//..\//____\/\\\///////////__
   _\/\\\.......\/\\\.\/\\\.....\/\\\ ________________\/\\\ ____________
@@ -17,7 +17,7 @@ __/\\\\\\\\\\\\\ _____/\\\\\\\\\ _______/\\../\\ ___/\\\\\\\\\\\\\\\
  *---------------------------------------------------------------*/
 
 // SPDX-License-Identifier: UNLICENSED
-pragma solidity ^0.8.0;
+pragma solidity ^0.8.6;
 
 import "./Imports/access/AccessControl.sol";
 import "./Imports/utils/Context.sol";
@@ -111,7 +111,7 @@ contract ID_TKN is
      * @param _tokenURI - URI string to atatch to token
      * returns Token ID of minted token
      */
-    function mintPRUF_IDToken(
+    function mintIDtoken(
         address _recipientAddress,
         uint256 _tokenId,
         string calldata _tokenURI
@@ -129,7 +129,7 @@ contract ID_TKN is
      * @dev Burn PRUF_ID token
      * @param _tokenId - ID tokenID to burn
      */
-    function burnPRUF_ID(uint256 _tokenId)
+    function burnID(uint256 _tokenId)
         external
         isMinter
         nonReentrant
@@ -148,7 +148,7 @@ contract ID_TKN is
      * @param _recipientAddress - new address for token
      * @param _tokenId - Token ID to teleport
      */
-    function reMintPRUF_IDToken(address _recipientAddress, uint256 _tokenId)
+    function reMintIDtoken(address _recipientAddress, uint256 _tokenId)
         external
         isMinter
         nonReentrant
@@ -204,7 +204,7 @@ contract ID_TKN is
     }
 
     /**
-     * @dev Set new ID mapp user URI String -- string should eventually be a B32 hash of ID info in a standardized format - verifyable against provided ID //CTS:EXAMINE new comment
+     * @dev Set new ID map user URI String -- string should eventually be a B32 hash of ID info in a standardized format - verifyable against provided ID
      * @param _tokenId - token ID to set URI
      * @param _userName - String for Name
      */
@@ -382,7 +382,7 @@ contract ID_TKN is
      *
      * - the caller must have the `PAUSER_ROLE`.
      */
-    function pause() public virtual {
+    function pause() external virtual {
         require(
             hasRole(PAUSER_ROLE, _msgSender()),
             "PIDT:P: ERC721PresetMinterPauserAutoId: must have pauser role to pause"
@@ -401,7 +401,7 @@ contract ID_TKN is
      *
      * - the caller must have the `PAUSER_ROLE`.
      */
-    function unpause() public virtual {
+    function unpause() external virtual {
         require(
             hasRole(PAUSER_ROLE, _msgSender()),
             "PIDT:UP: ERC721PresetMinterPauserAutoId: must have pauser role to unpause"

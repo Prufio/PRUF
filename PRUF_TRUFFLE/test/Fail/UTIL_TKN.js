@@ -83,7 +83,7 @@ contract('UTIL_TKN', accounts => {
             })
 
             .then(() => {
-                console.log("Adding UTIL_TKN to storage for use in AC 0")
+                console.log("Adding UTIL_TKN to storage for use in Node 0")
                 return STOR.OO_addContract("UTIL_TKN", UTIL_TKN.address, '0', '1', { from: account1 })
             })
 
@@ -120,7 +120,7 @@ contract('UTIL_TKN', accounts => {
     it('Should fail because caller is not admin', async () => {
         console.log('//**************************END BOOTSTRAP**************************//')
         console.log('//**************************BEGIN UTIL_TKN FAIL BATCH (9)**************************//')
-        console.log('//**************************BEGIN adminKillTrustedAgent FAIL BATCH**************************//')
+        console.log('//**************************BEGIN killTrustedAgent FAIL BATCH**************************//')
         return UTIL_TKN.AdminSetSharesAddress(
             account9,
             { from: account2 })
@@ -128,7 +128,7 @@ contract('UTIL_TKN', accounts => {
 
     //2
     it('Should fail because caller is not admin', async () => {
-        console.log('//**************************END adminKillTrustedAgent FAIL BATCH**************************//')
+        console.log('//**************************END killTrustedAgent FAIL BATCH**************************//')
         console.log('//**************************BEGIN AdminSetSharesAddress FAIL BATCH**************************//')
         return UTIL_TKN.AdminSetSharesAddress(
             account9,

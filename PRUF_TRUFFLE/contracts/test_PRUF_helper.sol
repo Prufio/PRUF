@@ -1,14 +1,14 @@
-/*--------------------------------------------------------PRüF0.8.0
+/*--------------------------------------------------------PRüF0.8.6
 __/\\\\\\\\\\\\\ _____/\\\\\\\\\ _______/\\__/\\ ___/\\\\\\\\\\\\\\\        
- _\/\\\/////////\\\ _/\\\///////\\\ ____\//__\//____\/\\\///////////__       
-  _\/\\\_______\/\\\_\/\\\_____\/\\\ ________________\/\\\ ____________      
-   _\/\\\\\\\\\\\\\/__\/\\\\\\\\\\\/_____/\\\____/\\\_\/\\\\\\\\\\\ ____     
-    _\/\\\/////////____\/\\\//////\\\ ___\/\\\___\/\\\_\/\\\///////______    
-     _\/\\\ ____________\/\\\ ___\//\\\ __\/\\\___\/\\\_\/\\\ ____________   
-      _\/\\\ ____________\/\\\ ____\//\\\ _\/\\\___\/\\\_\/\\\ ____________  
-       _\/\\\ ____________\/\\\ _____\//\\\_\//\\\\\\\\\ _\/\\\ ____________ 
-        _\/// _____________\/// _______\/// __\///////// __\/// _____________
-         *-------------------------------------------------------------------*/
+__\/\\\/////////\\\ _/\\\///////\\\ ____\//__\//____\/\\\///////////__       
+___\/\\\_______\/\\\_\/\\\_____\/\\\ ________________\/\\\ ____________      
+____\/\\\\\\\\\\\\\/__\/\\\\\\\\\\\/_____/\\\____/\\\_\/\\\\\\\\\\\ ____     
+_____\/\\\/////////____\/\\\//////\\\ ___\/\\\___\/\\\_\/\\\///////______
+______\/\\\ ____________\/\\\ ___\//\\\ __\/\\\___\/\\\_\/\\\ ____________
+_______\/\\\ ____________\/\\\ ____\//\\\ _\/\\\___\/\\\_\/\\\ ____________
+________\/\\\ ____________\/\\\ _____\//\\\_\//\\\\\\\\\ _\/\\\ ____________
+_________\/// _____________\/// _______\/// __\///////// __\/// _____________
+*---------------------------------------------------------------------------*/
 
 /*-----------------------------------------------------------------
  *  TO DO
@@ -16,7 +16,7 @@ __/\\\\\\\\\\\\\ _____/\\\\\\\\\ _______/\\__/\\ ___/\\\\\\\\\\\\\\\
  *---------------------------------------------------------------*/
 
 // SPDX-License-Identifier: UNLICENSED
-pragma solidity ^0.8.0;
+pragma solidity ^0.8.6;
 
 import "./Imports/access/Ownable.sol";
 import "./PRUF_BASIC.sol";
@@ -29,7 +29,7 @@ contract Helper is Ownable, BASIC {
     address erc721ContractAddress;
     erc721_tokenInterface erc721_tokenContract; //erc721_token prototype initialization
 
-    uint256 private ACtokenIndex = 10000;
+    uint256 private nodeTokenIndex = 10000;
     uint256 private currentACtokenPrice = 5000;
 
     function setErc721_tokenAddress(address contractAddress) public onlyOwner {
@@ -197,26 +197,26 @@ contract Helper is Ownable, BASIC {
         return rawRgtHash;
     }
 
-    function getURIfromAuthcode(uint32 _assetClass, string calldata _authCode)
+    function getURIfromAuthcode(uint32 _node, string calldata _authCode)
         external
         pure
         returns (string memory)
     {
         bytes32 _hashedAuthCode = keccak256(abi.encodePacked(_authCode));
         bytes32 b32URI =
-            keccak256(abi.encodePacked(_hashedAuthCode, _assetClass));
+            keccak256(abi.encodePacked(_hashedAuthCode, _node));
         string memory authString = uint256toString(uint256(b32URI));
 
         return authString;
     }
 
     function getURIb32fromAuthcode(
-        uint32 _assetClass,
+        uint32 _node,
         string calldata _authCode
     ) external pure returns (bytes32) {
         bytes32 _hashedAuthCode = keccak256(abi.encodePacked(_authCode));
         bytes32 b32URI =
-            keccak256(abi.encodePacked(_hashedAuthCode, _assetClass));
+            keccak256(abi.encodePacked(_hashedAuthCode, _node));
 
         return b32URI;
     }
@@ -252,64 +252,59 @@ contract Helper is Ownable, BASIC {
     }
 
     /*
-     * @dev Retrieve AC_data @ _assetClass
+     * @dev Retrieve node_data @ _node
      */
-    function helper_getExtAC_data(uint32 _assetClass)
+    function helper_getExtendedNodeData(uint32 _node)
         external
         view
-        returns (AC memory)
+        returns (Node memory)
     {
         //^^^^^^^checks^^^^^^^^^
-        return AC_MGR.getExtAC_data(_assetClass);
+        return NODE_MGR.getExtendedNodeData(_node);
         //^^^^^^^interactions^^^^^^^^^
     }
 
-    /*
-     * @dev Retrieve AC_data @ _assetClass
+/*
+     * @dev Retrieve node_data @ _node
      */
-    function helper_getExtAC_data_nostruct(uint32 _assetClass)
+    function helper_getExtendedNodeData_nostruct(uint32 _node)
         external
         view
         returns (
             uint8,
-            uint8,
             address,
+            uint8,
+            bytes32,
             bytes32
         )
     {
-        AC memory asset_data;
-        //^^^^^^^checks^^^^^^^^^
-        (
-            asset_data.storageProvider,
-            asset_data.referenceAddress,
-            asset_data.switches,
-            asset_data.IPFS
-        ) = AC_MGR.getExtAC_data_nostruct(_assetClass);
+        Node memory nodeData = NODE_MGR.getExtendedNodeData(_node);
 
         return (
-            asset_data.storageProvider,
-            asset_data.switches,
-            asset_data.referenceAddress,
-            asset_data.IPFS
+            nodeData.storageProvider,
+            nodeData.referenceAddress,
+            nodeData.switches,
+            nodeData.CAS1,
+            nodeData.CAS2
         );
         //^^^^^^^interactions^^^^^^^^^
     }
 
     function helper_payForService(
-        uint32 _assetClass,
+        uint32 _node,
         //address _senderAddress,
         address _rootAddress,
         uint256 _rootPrice,
-        address _ACTHaddress,
-        uint256 _ACTHprice
+        address _NTHaddress,
+        uint256 _NTHprice
     ) external {
         Invoice memory invoice;
 
         invoice.rootAddress = _rootAddress;
         invoice.rootPrice = _rootPrice;
-        invoice.ACTHaddress = _ACTHaddress;
-        invoice.ACTHprice = _ACTHprice;
-        invoice.assetClass = _assetClass;
+        invoice.NTHaddress = _NTHaddress;
+        invoice.NTHprice = _NTHprice;
+        invoice.node = _node;
 
         //UTIL_TKN.payForService(_msgSender(), _pricing); //-- NON LEGACY TOKEN CONTRACT
 
@@ -317,29 +312,29 @@ contract Helper is Ownable, BASIC {
             _msgSender(),
             invoice.rootAddress,
             invoice.rootPrice,
-            invoice.ACTHaddress,
-            invoice.ACTHprice
+            invoice.NTHaddress,
+            invoice.NTHprice
         );
     }
 
     // struct Invoice { //invoice struct to facilitate payment messaging in-contract
     // address rootAddress;
     // uint256 rootPrice;
-    // address ACTHaddress;
-    // uint256 ACTHprice;
+    // address NTHaddress;
+    // uint256 NTHprice;
 
     /*
-    struct AC {
-    //Struct for holding and manipulating assetClass data
-    string name; // NameHash for assetClass
-    uint32 assetClassRoot; // asset type root (bycyles - USA Bicycles)
+    struct node {
+    //Struct for holding and manipulating node data
+    string name; // NameHash for node
+    uint32 nodeRoot; // asset type root (bycyles - USA Bicycles)
     uint8 custodyType; // custodial or noncustodial, special asset types
     uint32 discount; // price sharing
     uint8 storageProvider; // Future Use
     uint8 switches; // Future Use
     uint8 byte3; // Future Use
     address referenceAddress; // Used with wrap / decorate
-    bytes32 IPFS; //IPFS data for defining idxHash creation attribute fields
+    bytes32 content adressable storage; //content adressable storage data for defining idxHash creation attribute fields
 }
     */
 }

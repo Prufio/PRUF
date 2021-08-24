@@ -1,6 +1,6 @@
 // SPDX-License-Identifier: MIT
 
-pragma solidity ^0.8.0;
+pragma solidity ^0.8.6;
 
 import "./Imports/access/AccessControl.sol";
 import "./PRUF_BASIC.sol";
@@ -39,39 +39,39 @@ contract SCULPTOR is AccessControl, BASIC{
         uint256 tokenId = uint256(_idxHash);
         require(
             (A_TKN.ownerOf(tokenId) == _msgSender()), //_msgSender() is token holder
-            "NPNC:MOD-IA: Caller does not hold token"
+            "APP2_NC:MOD-IA: Caller does not hold token"
         );
         _;
     }
 
     // /*
-    //  * @dev Verify caller holds ACtoken of passed assetClass
+    //  * @dev Verify caller holds ACtoken of passed node
     //  */
-    // modifier isACtokenHolderOfClass(uint32 _assetClass) {
+    // modifier isNodeHolder(uint32 _node) {
     //     require(
-    //         (AC_TKN.ownerOf(_assetClass) == _msgSender()),
-    //         "ACM:MOD-IACTHoC:_msgSender() not authorized in asset class"
+    //         (NODE_TKN.ownerOf(_node) == _msgSender()),
+    //         "ACM:MOD-INTHoC:_msgSender() not authorized in node"
     //     );
     //     _;
     // }
 
     /*
      * @dev Creates a contract for a new artifact for A_token(unit256(idxHash))
-     * caller must hod the asset token and the AC token
+     * caller must hod the asset token and the node token
      */
     function createArtiifact(bytes32 _idxHash) external isAuthorized(_idxHash) {
         Record memory rec = getRecord( _idxHash);
         require(
-            (AC_TKN.ownerOf(rec.assetClass) == _msgSender()),
-            "ACM:MOD-IACTHoC:_msgSender() not authorized in asset class"
+            (NODE_TKN.ownerOf(rec.node) == _msgSender()),
+            "ACM:MOD-INTHoC:_msgSender() not authorized in node"
         );
 
         /*  create a new contract for the arifiact
-        *   map the address to the artifact's asset token (set the token IPFS2 to contract address of artifact)
+        *   map the address to the artifact's asset token (set the token NonMutableStorage to contract address of artifact)
         *       
         *   artifact has structure:
         *       key 0 : EOF key number (5 in this case)
-        *       key 1 : IPFS2 reference (IPFS file to reference - should ideally be the same hex file, less keys 0,1,and X))
+        *       key 1 : NonMutableStorage reference (content adressable storage file to reference - should ideally be the same hex file, less keys 0,1,and X))
         *       key 2 : start of Data
         *       key 3 : Data
         *       key 4 : end of Data

@@ -1,24 +1,21 @@
-/*--------------------------------------------------------PRüF0.8.0
+/*--------------------------------------------------------PRüF0.8.6
 __/\\\\\\\\\\\\\ _____/\\\\\\\\\ _______/\\__/\\ ___/\\\\\\\\\\\\\\\        
- _\/\\\/////////\\\ _/\\\///////\\\ ____\//__\//____\/\\\///////////__       
-  _\/\\\_______\/\\\_\/\\\_____\/\\\ ________________\/\\\ ____________      
-   _\/\\\\\\\\\\\\\/__\/\\\\\\\\\\\/_____/\\\____/\\\_\/\\\\\\\\\\\ ____     
-    _\/\\\/////////____\/\\\//////\\\ ___\/\\\___\/\\\_\/\\\///////______    
-     _\/\\\ ____________\/\\\ ___\//\\\ __\/\\\___\/\\\_\/\\\ ____________   
-      _\/\\\ ____________\/\\\ ____\//\\\ _\/\\\___\/\\\_\/\\\ ____________  
-       _\/\\\ ____________\/\\\ _____\//\\\_\//\\\\\\\\\ _\/\\\ ____________ 
-        _\/// _____________\/// _______\/// __\///////// __\/// _____________
-         *-------------------------------------------------------------------*/
+__\/\\\/////////\\\ _/\\\///////\\\ ____\//__\//____\/\\\///////////__       
+___\/\\\_______\/\\\_\/\\\_____\/\\\ ________________\/\\\ ____________      
+____\/\\\\\\\\\\\\\/__\/\\\\\\\\\\\/_____/\\\____/\\\_\/\\\\\\\\\\\ ____     
+_____\/\\\/////////____\/\\\//////\\\ ___\/\\\___\/\\\_\/\\\///////______
+______\/\\\ ____________\/\\\ ___\//\\\ __\/\\\___\/\\\_\/\\\ ____________
+_______\/\\\ ____________\/\\\ ____\//\\\ _\/\\\___\/\\\_\/\\\ ____________
+________\/\\\ ____________\/\\\ _____\//\\\_\//\\\\\\\\\ _\/\\\ ____________
+_________\/// _____________\/// _______\/// __\///////// __\/// _____________
+*---------------------------------------------------------------------------*/
 
 /*-----------------------------------------------------------------
- *  TO DO
- *
+ * CTS:EXAMINE description of contract
  *----------------------------------------------------------------*/
 
- //CTS:EXAMINE quick explainer for the contract
-
 // SPDX-License-Identifier: UNLICENSED
-pragma solidity ^0.8.0;
+pragma solidity ^0.8.6;
 
 import "./PRUF_CORE.sol";
 
@@ -26,15 +23,13 @@ contract APP is CORE {
     bytes32 public constant B320xF_ =
         0xFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFF;
 
-
-    /*
-     * //CTS:EXAMINE comment
-     * //CTS:EXAMINE param
+    /**
+     * Checks that contract holds token
+     * @param _idxHash - idxHash of asset to compare to caller for authority
      */
     modifier isAuthorized(bytes32 _idxHash) override {
-        //require that user is authorized and token is held by contract
         uint256 tokenId = uint256(_idxHash);
-        require(
+        require( //require that user is authorized and token is held by contract
             (A_TKN.ownerOf(tokenId) == address(this)),
             "A:MOD-IA: APP contract !token holder"
         );
@@ -43,98 +38,93 @@ contract APP is CORE {
 
     //--------------------------------------------External Functions--------------------------
 
-    /*
-     * @dev Wrapper for newRecord
-     * //CTS:EXAMINE param
-     * //CTS:EXAMINE param
-     * //CTS:EXAMINE param
-     * //CTS:EXAMINE param
+    /**
+     * @dev Creates a new record  DPS:CHECK no longer sets rec.countDownStart
+     * @param _idxHash - hash of asset information created by frontend inputs
+     * @param _rgtHash - hash of rightsholder information created by frontend inputs
+     * @param _node - node the asset will be created in
+     * @param _countDownStart - decremental counter for an assets lifecycle
      */
     function newRecord(
         bytes32 _idxHash,
         bytes32 _rgtHash,
-        uint32 _assetClass,
+        uint32 _node,
         uint32 _countDownStart
     ) external nonReentrant whenNotPaused {
-        uint8 userType = getCallingUserType(_assetClass);
+        uint8 userType = getCallingUserType(_node);
 
-        require((userType > 0) && (userType < 10), "A:NR: User !auth in AC");
+        require((userType > 0) && (userType < 10), "A:NR: User !auth in node");
         require(userType < 5, "A:NR: User !authorized to create records");
         //^^^^^^^checks^^^^^^^^^
 
-        createRecord(_idxHash, _rgtHash, _assetClass, _countDownStart);
-        deductServiceCosts(_assetClass, 1);
-
+        createRecord(_idxHash, _rgtHash, _node, _countDownStart);
+        deductServiceCosts(_node, 1);
         //^^^^^^^interactions^^^^^^^^^
     }
 
-    /*
-     * @dev import **Record** (no confirmation required - //CTS:EXAMINE what's up with this comment
-     * //CTS:EXAMINE param
-     * //CTS:EXAMINE param
-     * //CTS:EXAMINE param
-     * //CTS:EXAMINE returns
+    /**
+     * @dev import Rercord, must match export node
      * posessor is considered to be owner. sets rec.assetStatus to 0.
+     * @param _idxHash - hash of asset information created by frontend inputs
+     * @param _newNode - node the asset will be imported into
      */
-    function importAsset(
-        bytes32 _idxHash,
-        bytes32 _newRgtHash,
-        uint32 _newAssetClass
-    )
+    function importAsset(bytes32 _idxHash, uint32 _newNode)
         external
         nonReentrant
         whenNotPaused
-        isAuthorized(_idxHash) //contract holds token (user sent to contract)
-        returns (uint8)
+        isAuthorized(_idxHash) ///contract holds token (user sent to contract)
     {
         Record memory rec = getRecord(_idxHash);
-        uint8 userType = getCallingUserType(_newAssetClass);
+        uint8 userType = getCallingUserType(_newNode);
 
         require(userType < 3, "A:IA: User !authorized to import assets");
-        require((userType > 0) && (userType < 10), "A:IA: User !auth in AC");
+        require((userType > 0) && (userType < 10), "A:IA: User !auth in node");
         require(
             (rec.assetStatus == 5) ||
                 (rec.assetStatus == 55) ||
                 (rec.assetStatus == 70),
             "A:IA: Only Transferred or exported assets can be imported"
         );
+        require(
+            _newNode == rec.int32temp,
+            "A:IA: new node must match node authorized for import"
+        );
+        require(
+            NODE_MGR.isSameRootNode(_newNode, rec.node) == 170,
+            "ANC:IA: Cannot change node to new root"
+        );
         //^^^^^^^checks^^^^^^^^^
 
         rec.modCount = 170;
         rec.assetStatus = 0;
-        rec.rightsHolder = _newRgtHash;
         //^^^^^^^effects^^^^^^^^^
 
-        STOR.changeAC(_idxHash, _newAssetClass);
+        STOR.changeNode(_idxHash, _newNode);
         writeRecord(_idxHash, rec);
-        deductServiceCosts(_newAssetClass, 1);
-
-        return rec.assetStatus;
+        deductServiceCosts(_newNode, 1);
         //^^^^^^^interactions^^^^^^^^^
     }
 
-    /*
-     * @dev Modify **Record**.rightsHolder without confirmation required //CTS:EXAMINE with confirmation?
-     * //CTS:EXAMINE param
-     * //CTS:EXAMINE param
-     * //CTS:EXAMINE returns
+    /**
+     * @dev Modify rec.rightsHolder
+     * @param _idxHash - hash of asset information created by frontend inputs
+     * @param _rgtHash - hash of new rightsholder information created by frontend inputs
      */
-    function forceModRecord(bytes32 _idxHash, bytes32 _rgtHash)
+    function forceModifyRecord(bytes32 _idxHash, bytes32 _rgtHash)
         external
         nonReentrant
         whenNotPaused
         isAuthorized(_idxHash)
-        returns (uint8)
     {
         Record memory rec = getRecord(_idxHash);
-        uint8 userType = getCallingUserType(rec.assetClass);
+        uint8 userType = getCallingUserType(rec.node);
 
-        require(userType == 1, "A:FMR: User !auth in AC");
+        require(userType == 1, "A:FMR: User !auth in node");
         require(
             isLostOrStolen(rec.assetStatus) == 0,
             "A:FMR: Asset marked L/S"
         );
-        require(
+        require( //impossible to reach with current contracts, APP needs to hold token
             needsImport(rec.assetStatus) == 0,
             "A:FMR: Asset needs re-imported"
         );
@@ -147,18 +137,15 @@ contract APP is CORE {
         //^^^^^^^effects^^^^^^^^^
 
         writeRecord(_idxHash, rec);
-        deductServiceCosts(rec.assetClass, 6);
-
-        return 170;
+        deductServiceCosts(rec.node, 6);
         //^^^^^^^interactions^^^^^^^^^
     }
 
-    /*
-     * @dev Transfer rights to new rightsHolder with confirmation //CTS:EXAMINE with confirmation?
-     * //CTS:EXAMINE param
-     * //CTS:EXAMINE param
-     * //CTS:EXAMINE param
-     * //CTS:EXAMINE returns
+    /**
+     * @dev Transfer rights to new rightsHolder with confirmation of matching rgthash
+     * @param _idxHash - hash of asset information created by frontend inputs
+     * @param _rgtHash - hash of rightsholder information created by frontend inputs
+     * @param _newrgtHash - hash of targeted reciever information created by frontend inputs
      */
     function transferAsset(
         bytes32 _idxHash,
@@ -169,12 +156,11 @@ contract APP is CORE {
         nonReentrant
         whenNotPaused
         isAuthorized(_idxHash)
-        returns (uint8)
     {
         Record memory rec = getRecord(_idxHash);
-        uint8 userType = getCallingUserType(rec.assetClass);
+        uint8 userType = getCallingUserType(rec.node);
 
-        require((userType > 0) && (userType < 10), "A:TA: User not auth in AC");
+        require((userType > 0) && (userType < 10), "A:TA: User not auth in node");
         require(
             (rec.assetStatus > 49) || (userType < 5),
             "A:TA:Only usertype < 5 can change status < 50"
@@ -201,37 +187,29 @@ contract APP is CORE {
         //^^^^^^^effects^^^^^^^^^
 
         writeRecord(_idxHash, rec);
-
-        deductServiceCosts(rec.assetClass, 2);
-
-        return 170;
+        deductServiceCosts(rec.node, 2);
         //^^^^^^^interactions^^^^^^^^^
     }
 
-    /*
-     * @dev Modify **Record** Ipfs2 with confirmation //CTS:EXAMINE with confirmation?
-     * //CTS:EXAMINE param
-     * //CTS:EXAMINE param
-     * //CTS:EXAMINE param
-     * //CTS:EXAMINE param
+    /**
+     * @dev Modify **Record** NonMutableStorage with confirmation of matching rgthash
+     * @param _idxHash - hash of asset information created by frontend inputs
+     * @param _rgtHash - hash of rightsholder information created by frontend inputs
+     * @param _nonMutableStorage1 - field for permanent external asset data
+     * @param _nonMutableStorage2 - field for permanent external asset data
      */
-    function addIpfs2Note(
+    function addNonMutableNote(
         bytes32 _idxHash,
         bytes32 _rgtHash,
-        bytes32 _Ipfs2a,
-        bytes32 _Ipfs2b
-    )
-        external
-        nonReentrant
-        whenNotPaused
-        isAuthorized(_idxHash)
-    {
+        bytes32 _nonMutableStorage1,
+        bytes32 _nonMutableStorage2
+    ) external nonReentrant whenNotPaused isAuthorized(_idxHash) {
         Record memory rec = getRecord(_idxHash);
-        uint8 userType = getCallingUserType(rec.assetClass);
+        uint8 userType = getCallingUserType(rec.node);
 
-        require((userType > 0) && (userType < 10), "A:I2: User not auth in AC");
+        require((userType > 0) && (userType < 10), "A:I2: User not auth in node");
 
-        require(
+        require(  //impossible to reach with current contracts, APP needs to hold token
             needsImport(rec.assetStatus) == 0,
             "A:I2: Asset needs re-imported"
         );
@@ -241,12 +219,12 @@ contract APP is CORE {
         );
         //^^^^^^^checks^^^^^^^^^
 
-        rec.Ipfs2a = _Ipfs2a;
-        rec.Ipfs2b = _Ipfs2b;
+        rec.nonMutableStorage1 = _nonMutableStorage1;
+        rec.nonMutableStorage2 = _nonMutableStorage2;
         //^^^^^^^effects^^^^^^^^^
 
-        writeRecordIpfs2(_idxHash, rec);
-        deductServiceCosts(rec.assetClass, 3);
+        writeNonMutableStorage(_idxHash, rec);
+        deductServiceCosts(rec.node, 3);
         //^^^^^^^interactions^^^^^^^^^
     }
 }
