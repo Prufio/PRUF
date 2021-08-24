@@ -25,57 +25,53 @@ __/\\\\\\\\\\\\\ _____/\\\\\\\\\ _______/\\__/\\ ___/\\\\\\\\\\\\\\\
 *
 * 4 - NODE_MGR|0|
 *
-* 5 - NODE_TKN|0|
+* 5 - A_TKN|0|
 *
-* 6 - A_TKN|0|
+* 6 - ECR_MGR|0|
 *
-* 7 - ECR_MGR|0|
+* 7 - ECR|0|
 *
-* 8 - ECR|0|
+* 8 - APP_NC|0|
 *
-* 9 - APP_NC|0|
+* 9 - APP2_NC|0|
 *
-* 10 - APP2_NC|0|
+* 10 - ECR_NC|0|
 *
-* 11 - ECR_NC|0|
+* 11 - RCLR|0|
 *
-* 12 - RCLR|0|
+* 12 - ID_TKN|0|
 *
-* 13 - ID_TKN|0|
+* 13 - UTIL_TKN|0|
 *
-* 14 - UTIL_TKN|0|
+* 14 - PIP|0|
 *
-* 15 - PIP|0|
+* 15 - PURCHASE|0|
 *
-* 16 - PURCHASE|0|
+* 16 - DECORATE|0|
 *
-* 17 - DECORATE|0|
-*
-* 18 - WRAP|0|
+* 17 - WRAP|0|
 * 
 * ----------------- ADD DEFAULT CONTRACTS TO STORAGE (STOR.addDefaultContracts)-----------------|0|
 *
 * 1 - NODE_MGR ("0", NODE_MGR, '1')|0|
 *
-* 2 - NODE_TKN ("1", NODE_TKN, '1')|0|
+* 2 - A_TKN ("1", A_TKN, '1')|0|
 *
-* 3 - A_TKN ("2", A_TKN, '1')|0|
+* 3 - ECR_MGR ("2", ECR_MGR, '1')|0|
 *
-* 4 - ECR_MGR ("3", ECR_MGR, '1')|0|
+* 4 - APP_NC ("3", APP_NC, '2')|0|
 *
-* 5 - APP_NC ("4", APP_NC, '2')|0|
+* 5 - APP2_NC ("4", APP2_NC, '2')|0|
 *
-* 6 - APP2_NC ("5", APP2_NC, '2')|0|
+* 6 - RCLR ("5", RCLR, '3')|0|
 *
-* 7 - RCLR ("6", RCLR, '3')|0|
+* 7 - PIP ("6", PIP, '1')|0|
 *
-* 8 - PIP ("7", PIP, '1')|0|
+* 8 - PURCHASE ("7", PURCHASE, '2')|0|
 *
-* 9 - PURCHASE ("8", PURCHASE, '2')|0|
+* 9 - DECORATE ("8", DECORATE, '2')|0|
 *
-* 10 - DECORATE ("9", DECORATE, '2')|0|
-*
-* 11 - WRAP ("10", WRAP, '2')|0|
+* 10 - WRAP ("9", WRAP, '2')|0|
 * 
 * ----------------- ADD CONTRACTS TO STORAGE (STOR.OO_addContract)-----------------|0|
 * 1 - APP ("APP", APP.address, '0', '1')|0|
@@ -84,33 +80,31 @@ __/\\\\\\\\\\\\\ _____/\\\\\\\\\ _______/\\__/\\ ___/\\\\\\\\\\\\\\\
 *
 * 3 - NODE_MGR ("NODE_MGR", NODE_MGR.address, '0', '1')|0|
 *
-* 4 - NODE_TKN ("NODE_TKN", NODE_TKN.address, '0', '1')|0|
+* 4 - A_TKN ("A_TKN", A_TKN.address, '0', '1')|0|
 *
-* 5 - A_TKN ("A_TKN", A_TKN.address, '0', '1')|0|
+* 5 - ECR_MGR ("ECR_MGR", ECR_MGR.address, '0', '1')|0|
 *
-* 6 - ECR_MGR ("ECR_MGR", ECR_MGR.address, '0', '1')|0|
+* 6 - ECR ("ECR", ECR.address, '0', '3')|0|
 *
-* 7 - ECR ("ECR", ECR.address, '0', '3')|0|
+* 7 - APP_NC ("APP_NC", APP_NC.address, '0', '2')|0|
 *
-* 8 - APP_NC ("APP_NC", APP_NC.address, '0', '2')|0|
+* 8 - APP2_NC ("APP2_NC", APP2_NC.address, '0', '2')|0|
 *
-* 9 - APP2_NC ("APP2_NC", APP2_NC.address, '0', '2')|0|
+* 9 - ECR_NC ("ECR_NC", ECR_NC.address, '0', '3')|0|
 *
-* 10 - ECR_NC ("ECR_NC", ECR_NC.address, '0', '3')|0|
+* 10 - RCLR ("RCLR", RCLR.address, '0', '3')|0|
 *
-* 11 - RCLR ("RCLR", RCLR.address, '0', '3')|0|
+* 11 - ID_TKN ("ID_TKN", ID_TKN.address, '0', '1')|0|
 *
-* 12 - ID_TKN ("ID_TKN", ID_TKN.address, '0', '1')|0|
+* 12 - UTIL_TKN ("UTIL_TKN", UTIL_TKN.address, '0', '1')|0|
 *
-* 13 - UTIL_TKN ("UTIL_TKN", UTIL_TKN.address, '0', '1')|0|
+* 13 - PIP ("PIP", PIP.address, '0', '1')|0|
 *
-* 14 - PIP ("PIP", PIP.address, '0', '1')|0|
+* 14 - PURCHASE ("PURCHASE", PURCHASE.address, '0', '2')|0|
 *
-* 15 - PURCHASE ("PURCHASE", PURCHASE.address, '0', '2')|0|
+* 15 - DECORATE ("DECORATE", DECORATE.address, '0', '2')|0|
 *
-* 16 - DECORATE ("DECORATE", DECORATE.address, '0', '2')|0|
-*
-* 17 - WRAP ("WRAP", WRAP.address, '0', '2')|0|
+* 16 - WRAP ("WRAP", WRAP.address, '0', '2')|0|
 * 
 * ----------------- ADD STORAGE TO CONTRACTS (CONTRACT.OO_setStorageContract) -----------------|0|
 * 1 - APP (STOR.address)|0|
