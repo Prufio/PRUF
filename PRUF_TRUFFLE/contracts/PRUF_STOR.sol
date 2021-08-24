@@ -53,7 +53,7 @@ contract STOR is AccessControl, ReentrancyGuard, Pausable {
     mapping(bytes32 => Record) private database; // Main Data Storage
 
     //address private NODE_TKN_Address;
-    NODE_TKN_Interface private NODE_TKN; //erc721_token prototype initialization
+    A_TKN_Interface private A_TKN; //erc721_token prototype initialization
 
     //address internal NODE_MGR_Address;
     NODE_MGR_Interface internal NODE_MGR; // Set up external contract interface for NODE_MGR
@@ -228,7 +228,7 @@ contract STOR is AccessControl, ReentrancyGuard, Pausable {
         contractNameToAddress[_contractName] = _contractAddr;
         contractAddressToName[_contractAddr] = _contractName;
 
-        NODE_TKN = NODE_TKN_Interface(contractNameToAddress["NODE_TKN"]); // cheaper than keking to check
+        A_TKN = A_TKN_Interface(contractNameToAddress["A_TKN"]); // cheaper than keking to check
         NODE_MGR = NODE_MGR_Interface(contractNameToAddress["NODE_MGR"]); // cheaper than keking to check
         //^^^^^^^effects^^^^^^^^^
 
@@ -237,8 +237,8 @@ contract STOR is AccessControl, ReentrancyGuard, Pausable {
     }
 
     /**
-     * @dev set the default list of 11 contracts (zero index) to be applied to Nodees
-     * APP_NC, APP2_NC, NODE_MGR, NODE_TKN, A_TKN, ECR_MGR, RCLR, PIP, PURCHASE, DECORATE, WRAP
+     * @dev set the default list of 10 contracts (zero index) to be applied to Nodees
+     * APP_NC, APP2_NC, NODE_MGR, A_TKN, ECR_MGR, RCLR, PIP, PURCHASE, DECORATE, WRAP
      * @param _contractNumber - 0-10
      * @param _name - name
      * @param _contractAuthLevel - authLevel
@@ -277,7 +277,7 @@ contract STOR is AccessControl, ReentrancyGuard, Pausable {
      */
     function enableDefaultContractsForAC(uint32 _node) external {
         require(
-            (NODE_TKN.ownerOf(_node) == _msgSender()) ||
+            (A_TKN.ownerOf(_node) == _msgSender()) ||
                 (_msgSender() == contractNameToAddress["NODE_MGR"]),
             "S:EDCFAC: Caller not ACtokenHolder or NODE_MGR"
         );
@@ -353,7 +353,7 @@ contract STOR is AccessControl, ReentrancyGuard, Pausable {
         uint8 _contractAuthLevel
     ) public {
         require(
-            (NODE_TKN.ownerOf(_node) == _msgSender()) ||
+            (A_TKN.ownerOf(_node) == _msgSender()) ||
                 (_msgSender() == contractNameToAddress["NODE_MGR"]),
             "S:ECFAC: Caller not ACtokenHolder or NODE_MGR"
         );
@@ -440,7 +440,6 @@ contract STOR is AccessControl, ReentrancyGuard, Pausable {
     {
         Record memory rec = database[_idxHash];
         bytes32 idxHash = _idxHash; //stack saving
-
         require(_countDown <= rec.countDown, "S:MR: CountDown +!"); //prohibit increasing the countdown value
         require(
             (isLostOrStolen(_newAssetStatus) == 0) ||
