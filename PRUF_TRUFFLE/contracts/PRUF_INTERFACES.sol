@@ -463,7 +463,7 @@ interface NODE_TKN_Interface {
     /*
      * @dev Mints node token, must be isContractAdmin
      */
-    function mintACToken(
+    function mintNodeToken(
         address _recipientAddress,
         uint256 tokenId,
         string calldata _tokenURI
