@@ -99,7 +99,7 @@ contract APP2_NC is CORE {
             (node_info.managementType == 1) || (node_info.managementType == 5)
         ) {
             require(
-                (NODE_TKN.ownerOf(rec.node) == _msgSender()),
+                (A_TKN.ownerOf(rec.node) == _msgSender()),
                 "APP2_NC:EXT: Restricted from exporting assets from this node - does not hold ACtoken"
             );
         }

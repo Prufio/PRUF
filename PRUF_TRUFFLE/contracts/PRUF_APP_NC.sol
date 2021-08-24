@@ -164,7 +164,7 @@ contract APP_NC is CORE {
             (node_info.managementType == 5)
         ) {
             require(
-                (NODE_TKN.ownerOf(_newNode) == _msgSender()),
+                (A_TKN.ownerOf(_newNode) == _msgSender()),
                 "ANC:IA: Cannot import asset in node mgmt type 1||2||5 - caller does not hold node token"
             );
         } else if (node_info.managementType == 3) {

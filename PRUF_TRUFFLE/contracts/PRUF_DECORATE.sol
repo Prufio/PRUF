@@ -88,7 +88,7 @@ contract DECORATE is CORE {
             (node_info.managementType == 5)
         ) {
             require(    //DPS:TEST NEW
-                (NODE_TKN.ownerOf(_node) == _msgSender()),
+                (A_TKN.ownerOf(_node) == _msgSender()),
                 "ANC:IA: Cannot create asset in node mgmt type 1||2||5 - caller does not hold node token"
             );
         } else if (node_info.managementType == 3) {
@@ -327,7 +327,7 @@ contract DECORATE is CORE {
         );
         if ((node_info.custodyType != 1) && (node_info.managementType == 5)) {
             require(
-                (NODE_TKN.ownerOf(rec.node) == _msgSender()),
+                (A_TKN.ownerOf(rec.node) == _msgSender()),
                 "C:WRMS: Caller must hold node (management type 5)"
             );
         }
@@ -426,7 +426,7 @@ contract DECORATE is CORE {
         );
         if ((node_info.managementType == 1) || (node_info.managementType == 5)) {
             require(
-                (NODE_TKN.ownerOf(rec.node) == _msgSender()),
+                (A_TKN.ownerOf(rec.node) == _msgSender()),
                 "D:E: Restricted from exporting assets from this node - does not hold ACtoken"
             );
         }
@@ -505,7 +505,7 @@ contract DECORATE is CORE {
             (newNodeInfo.managementType == 5)
         ) {
             require( //DPS:TEST NEW
-                (NODE_TKN.ownerOf(_newNode) == _msgSender()),
+                (A_TKN.ownerOf(_newNode) == _msgSender()),
                 "D:I: Cannot create asset in node mgmt type 1||2||5 - caller does not hold node token"
             );
         } else if (newNodeInfo.managementType == 3) {
@@ -569,7 +569,7 @@ contract DECORATE is CORE {
             (node_info.managementType == 5)
         ) {
             require(
-                (NODE_TKN.ownerOf(_node) == _msgSender()),
+                (A_TKN.ownerOf(_node) == _msgSender()),
                 "D:CRO:Cannot create asset in node mgmt type 1||2||5 - caller does not hold node token"
             );
         } else if (node_info.managementType == 3) {

@@ -62,7 +62,7 @@ contract CORE is BASIC {
                 (node_info.managementType == 5)
             ) {
                 require(
-                    (NODE_TKN.ownerOf(_node) == _msgSender()),
+                    (A_TKN.ownerOf(_node) == _msgSender()),
                     "C:CR:Cannot create asset in node mgmt type 1||2||5 - caller does not hold node token"
                 );
             } else if (node_info.managementType == 3) {
@@ -142,7 +142,7 @@ contract CORE is BASIC {
         );
         if ((node_info.custodyType != 1) && (node_info.managementType == 5)) {
             require(
-                (NODE_TKN.ownerOf(_rec.node) == _msgSender()),
+                (A_TKN.ownerOf(_rec.node) == _msgSender()),
                 "C:WMS: Caller must hold node (management type 5)"
             );
         }

@@ -52,7 +52,7 @@ contract PIP is CORE {
         uint8 userType = getCallingUserType(_node);
 
         require(
-            (NODE_TKN.ownerOf(_node) == _msgSender()), //_msgSender() is node token holder
+            (A_TKN.ownerOf(_node) == _msgSender()), //_msgSender() is node token holder
             "P:MPA: Caller does not hold node token"
         );
         require(

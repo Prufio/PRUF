@@ -91,7 +91,7 @@ contract VERIFY is CORE {
         Record memory rec = getRecord(_idxHash);
 
         require(
-            NODE_TKN.ownerOf(uint256(_node)) == _msgSender(),
+            A_TKN.ownerOf(uint256(_node)) == _msgSender(),
             "VFY:ATFV: caller does not hold node token"
         );
         require(ACdata.custodyType == 4, "VFY:ATFV: node not VERIFY enabled");
