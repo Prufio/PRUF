@@ -14,7 +14,7 @@ const PRUF_STOR = artifacts.require("STOR");
 const PRUF_APP = artifacts.require("APP");
 const PRUF_APP2 = artifacts.require("APP2");
 const PRUF_NODE_MGR = artifacts.require("NODE_MGR");
-const PRUF_NODE_TKN = artifacts.require("NODE_TKN");
+// const PRUF_NODE_TKN = artifacts.require("NODE_TKN");
 const PRUF_A_TKN = artifacts.require("A_TKN");
 const PRUF_ID_TKN = artifacts.require("ID_TKN");
 const PRUF_ECR_MGR = artifacts.require("ECR_MGR");
@@ -35,7 +35,7 @@ let STOR;
 let APP;
 let APP2;
 let NODE_MGR;
-let NODE_TKN;
+// let NODE_TKN;
 let A_TKN;
 let ID_TKN;
 let ECR_MGR;
@@ -321,12 +321,12 @@ contract("TheWorks", (accounts) => {
     NODE_MGR = PRUF_NODE_MGR_TEST;
   });
 
-  it("Should deploy PRUF_NODE_TKN", async () => {
-    const PRUF_NODE_TKN_TEST = await PRUF_NODE_TKN.deployed({ from: account1 });
-    console.log(PRUF_NODE_TKN_TEST.address);
-    assert(PRUF_NODE_TKN_TEST.address !== "");
-    NODE_TKN = PRUF_NODE_TKN_TEST;
-  });
+  // it("Should deploy PRUF_NODE_TKN", async () => {
+  //   const PRUF_NODE_TKN_TEST = await PRUF_NODE_TKN.deployed({ from: account1 });
+  //   console.log(PRUF_NODE_TKN_TEST.address);
+  //   assert(PRUF_NODE_TKN_TEST.address !== "");
+  //   NODE_TKN = PRUF_NODE_TKN_TEST;
+  // });
 
   it("Should deploy PRUF_A_TKN", async () => {
     const PRUF_A_TKN_TEST = await PRUF_A_TKN.deployed({ from: account1 });
@@ -430,10 +430,10 @@ contract("TheWorks", (accounts) => {
     console.log("Adding NODE_MGR to default contract list");
     return STOR.addDefaultContracts("0", "NODE_MGR", "1", { from: account1 })
 
-      .then(() => {
-        console.log("Adding NODE_TKN to default contract list");
-        return STOR.addDefaultContracts("1", "NODE_TKN", "1", { from: account1 });
-      })
+      // .then(() => {
+      //   console.log("Adding NODE_TKN to default contract list");
+      //   return STOR.addDefaultContracts("1", "NODE_TKN", "1", { from: account1 });
+      // })
 
       .then(() => {
         console.log("Adding A_TKN to default contract list");
@@ -500,12 +500,12 @@ contract("TheWorks", (accounts) => {
         });
       })
 
-      .then(() => {
-        console.log("Adding NODE_TKN to storage for use in Node 0");
-        return STOR.OO_addContract("NODE_TKN", NODE_TKN.address, "0", "1", {
-          from: account1,
-        });
-      })
+      // .then(() => {
+      //   console.log("Adding NODE_TKN to storage for use in Node 0");
+      //   return STOR.OO_addContract("NODE_TKN", NODE_TKN.address, "0", "1", {
+      //     from: account1,
+      //   });
+      // })
 
       .then(() => {
         console.log("Adding A_TKN to storage for use in Node 0");
@@ -959,9 +959,14 @@ contract("TheWorks", (accounts) => {
       });
   });
 
+  // it("Should authorize all minter contracts for minting NODE_TKN(s)", () => {
+  //   console.log("Authorizing NODE_MGR");
+  //   return NODE_TKN.grantRole(minterRoleB32, NODE_MGR.address, { from: account1 });
+  // });
+
   it("Should authorize all minter contracts for minting NODE_TKN(s)", () => {
     console.log("Authorizing NODE_MGR");
-    return NODE_TKN.grantRole(minterRoleB32, NODE_MGR.address, { from: account1 });
+    return A_TKN.grantRole(minterRoleB32, NODE_MGR.address, { from: account1 });
   });
 
   it("Should authorize all minter contracts for minting NODE_TKN(s)", () => {
