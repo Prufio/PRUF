@@ -73,7 +73,7 @@ contract NODE_MGR is BASIC {
      */
     modifier isNodeHolder(uint32 _node) {
         require(
-            (NODE_TKN.ownerOf(_node) == _msgSender()),
+            (A_TKN.ownerOf(_node) == _msgSender()),
             "NM:MOD-INTHoC: _msgSender() not authorized in Node"
         );
         _;
@@ -225,7 +225,7 @@ contract NODE_MGR is BASIC {
             (_ac.custodyType == 3) || (_nodeRoot == _node),
             "NM:AMAC: Root !exist"
         );
-        require(NODE_TKN.tokenExists(tokenId) == 170, "NM:AMAC: Node !exist");
+        require(A_TKN.tokenExists(tokenId) == 170, "NM:AMAC: Node !exist");
 
         //^^^^^^^checks^^^^^^^^^
 
@@ -801,7 +801,7 @@ contract NODE_MGR is BASIC {
         );
         if (_RootNodeData.managementType != 0) {
             require( //holds root token if root is restricted
-                (NODE_TKN.ownerOf(_newNodeData.nodeRoot) == _msgSender()),
+                (A_TKN.ownerOf(_newNodeData.nodeRoot) == _msgSender()),
                 "NM:CN: Restricted from creating node in this root - caller !hold root token"
             );
         }
@@ -823,7 +823,7 @@ contract NODE_MGR is BASIC {
         node_data[_newNode].CAS2 = _newNodeData.CAS2;
         //^^^^^^^effects^^^^^^^^^
 
-        NODE_TKN.mintNodeToken(_recipientAddress, tokenId, "pruf.io/nodeToken");
+        A_TKN.mintAssetToken(_recipientAddress, tokenId, "pruf.io/nodeToken");
         //^^^^^^^interactions^^^^^^^^^
     }
 }
