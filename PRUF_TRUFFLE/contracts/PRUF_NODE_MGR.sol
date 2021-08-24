@@ -825,7 +825,7 @@ contract NODE_MGR is BASIC {
 
         A_TKN.mintNodeToken(_recipientAddress, tokenId, "pruf.io/nodeToken");
         STOR.enableDefaultContractsForAC(_newNode);
-        STOR.newRecord(bytes32(tokenId), 0x0000000000000000000000000000000000000000000000000000000000000001, _newNode, 0);
+        STOR.newRecord(bytes32(tokenId), 0x0000000000000000000000000000000000000000000000000000000000000001, _newNode, 4294967295);
         //^^^^^^^interactions^^^^^^^^^
     }
 }
