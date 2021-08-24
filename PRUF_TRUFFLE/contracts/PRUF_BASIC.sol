@@ -53,8 +53,8 @@ abstract contract BASIC is
     address internal A_TKN_Address;
     A_TKN_Interface internal A_TKN;
 
-    address internal NODE_TKN_Address;
-    NODE_TKN_Interface internal NODE_TKN;
+    // address internal NODE_TKN_Address;
+    // NODE_TKN_Interface internal NODE_TKN;
 
     address internal ID_TKN_Address;
     ID_TKN_Interface internal ID_TKN;
@@ -130,8 +130,8 @@ abstract contract BASIC is
         isContractAdmin 
     {
         //^^^^^^^checks^^^^^^^^^
-        NODE_TKN_Address = STOR.resolveContractAddress("NODE_TKN");
-        NODE_TKN = NODE_TKN_Interface(NODE_TKN_Address);
+        // NODE_TKN_Address = STOR.resolveContractAddress("NODE_TKN");
+        // NODE_TKN = NODE_TKN_Interface(NODE_TKN_Address);
 
         NODE_MGR_Address = STOR.resolveContractAddress("NODE_MGR");
         NODE_MGR = NODE_MGR_Interface(NODE_MGR_Address);
@@ -182,21 +182,21 @@ abstract contract BASIC is
         //^^^^^^^interactions^^^^^^^^^
     }
 
-    /**
-     * @dev Transfer any specified nodeToken from contract
-     * @param _to - address to send to
-     * @param _tokenID - node token ID
-     */
-    function transferNodeToken(address _to, uint256 _tokenID)
-        external
-        virtual
-        isContractAdmin 
-        nonReentrant
-    {
-        //^^^^^^^checks^^^^^^^^^
-        NODE_TKN.safeTransferFrom(address(this), _to, _tokenID);
-        //^^^^^^^interactions^^^^^^^^^
-    }
+    // /**
+    //  * @dev Transfer any specified nodeToken from contract
+    //  * @param _to - address to send to
+    //  * @param _tokenID - node token ID
+    //  */
+    // function transferNodeToken(address _to, uint256 _tokenID)
+    //     external
+    //     virtual
+    //     isContractAdmin 
+    //     nonReentrant
+    // {
+    //     //^^^^^^^checks^^^^^^^^^
+    //     A_TKN.safeTransferFrom(address(this), _to, _tokenID);
+    //     //^^^^^^^interactions^^^^^^^^^
+    // }
 
     /**
      * @dev Set address of STOR contract to interface with 
