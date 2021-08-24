@@ -103,7 +103,7 @@ contract NODE_TKN is
      *
      * @return Token ID of minted token
      */
-    function mintACToken(
+    function mintNodeToken(
         address _recipientAddress,
         uint256 _tokenId,
         string calldata _tokenURI
@@ -116,32 +116,32 @@ contract NODE_TKN is
         //^^^^^^^interactions^^^^^^^^^
     }
 
-    /**
-     * @dev remint Node Token - must be minter
-     * burns old token
-     * Sends new token to specified address
-     * @param _recipientAddress - new address for token
-     * @param _tokenId - Token ID to teleport
-     * @param _tokenURI - URI to check match for safety
-     */
-    function teleportACToken(
-        address _recipientAddress,
-        uint256 _tokenId,
-        string calldata _tokenURI
-    ) external isMinter nonReentrant {
-        require(_exists(_tokenId), "ACT:RM: node !exist");
-        require(
-            keccak256(abi.encodePacked(_tokenURI)) ==
-                keccak256(abi.encodePacked(tokenURI(_tokenId))),
-            "ACT:RM:New token URI != URI"
-        );
-        //^^^^^^^checks^^^^^^^^^
+    // /**
+    //  * @dev remint Node Token - must be minter
+    //  * burns old token
+    //  * Sends new token to specified address
+    //  * @param _recipientAddress - new address for token
+    //  * @param _tokenId - Token ID to teleport
+    //  * @param _tokenURI - URI to check match for safety
+    //  */
+    // function teleportNodeToken(
+    //     address _recipientAddress,
+    //     uint256 _tokenId,
+    //     string calldata _tokenURI
+    // ) external isMinter nonReentrant {
+    //     require(_exists(_tokenId), "ACT:RM: node !exist");
+    //     require(
+    //         keccak256(abi.encodePacked(_tokenURI)) ==
+    //             keccak256(abi.encodePacked(tokenURI(_tokenId))),
+    //         "ACT:RM:New token URI != URI"
+    //     );
+    //     //^^^^^^^checks^^^^^^^^^
 
-        _burn(_tokenId);
-        _safeMint(_recipientAddress, _tokenId);
-        _setTokenURI(_tokenId, tokenURI(_tokenId));
-        //^^^^^^^interactions^^^^^^^^^
-    }
+    //     _burn(_tokenId);
+    //     _safeMint(_recipientAddress, _tokenId);
+    //     _setTokenURI(_tokenId, tokenURI(_tokenId));
+    //     //^^^^^^^interactions^^^^^^^^^
+    // }
 
     /**
      * @dev See if node token exists
