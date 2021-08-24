@@ -57,6 +57,7 @@ contract A_TKN is
     bytes32 public constant CONTRACT_ADMIN_ROLE =
         keccak256("CONTRACT_ADMIN_ROLE");
     bytes32 public constant MINTER_ROLE = keccak256("MINTER_ROLE");
+    bytes32 public constant NODE_MINTER_ROLE = keccak256("NODE_MINTER_ROLE");
     bytes32 public constant PAUSER_ROLE = keccak256("PAUSER_ROLE");
     bytes32 public constant TRUSTED_AGENT_ROLE =
         keccak256("TRUSTED_AGENT_ROLE");
@@ -72,7 +73,6 @@ contract A_TKN is
     STOR_Interface internal STOR;
     RCLR_Interface internal RCLR;
     NODE_MGR_Interface internal NODE_MGR;
-    NODE_TKN_Interface internal NODE_TKN;
 
     bytes32 public constant B320xF_ =
         0xFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFF;
@@ -83,6 +83,7 @@ contract A_TKN is
         _setupRole(DEFAULT_ADMIN_ROLE, _msgSender());
         _setupRole(CONTRACT_ADMIN_ROLE, _msgSender());
         _setupRole(MINTER_ROLE, _msgSender()); //ALL contracts THAT MINT ASSET TOKENS
+        _setupRole(NODE_MINTER_ROLE, _msgSender()); //ALL contracts THAT MINT NODE TOKENS
         _setupRole(PAUSER_ROLE, _msgSender());
     }
 
@@ -110,6 +111,19 @@ contract A_TKN is
         require(
             hasRole(MINTER_ROLE, _msgSender()),
             "AT:MOD-IM:Calling address does not belong to a minter"
+        );
+        _;
+    }
+
+    /**
+     * @dev Verify user credentials
+     * Originating Address:
+     *      has MINTER_ROLE
+     */
+    modifier isNodeMinter() {
+        require(
+            hasRole(NODE_MINTER_ROLE, _msgSender()),
+            "AT:MOD-IM:Calling address does not belong to a node minter"
         );
         _;
     }
@@ -176,8 +190,6 @@ contract A_TKN is
         NODE_MGR_Address = STOR.resolveContractAddress("NODE_MGR");
         NODE_MGR = NODE_MGR_Interface(NODE_MGR_Address);
 
-        NODE_TKN_Address = STOR.resolveContractAddress("NODE_TKN");
-        NODE_TKN = NODE_TKN_Interface(NODE_TKN_Address);
         //^^^^^^^effects^^^^^^^^^
     }
 
@@ -223,6 +235,28 @@ contract A_TKN is
         uint256 _tokenId,
         string calldata _tokenURI
     ) external isMinter nonReentrant returns (uint256) {
+        require(_tokenId > 4294967294,"AT:MNT: Asset token ID < 4,294,967,295" ); // DPS:CHECK NOT AN ASSET TOKEN!!!!
+        //^^^^^^^checks^^^^^^^^^
+
+        _safeMint(_recipientAddress, _tokenId);
+        _setTokenURI(_tokenId, _tokenURI);
+        return _tokenId;
+        //^^^^^^^interactions^^^^^^^^^
+    }
+
+    /**
+     * @dev Mint an Asset token
+     * @param _recipientAddress - Address to mint token into
+     * @param _tokenId - Token ID to mint
+     * @param _tokenURI - URI string to atatch to token
+     * returns Token ID of minted token
+     */
+    function mintNodeToken(
+        address _recipientAddress,
+        uint256 _tokenId,
+        string calldata _tokenURI
+    ) external isNodeMinter nonReentrant returns (uint256) {
+        require(_tokenId <= 4294967294,"AT:MNT: Node token ID > 4,294,967,294" ); // DPS:CHECK NOT A NODE TOKEN!!!!
         //^^^^^^^checks^^^^^^^^^
 
         _safeMint(_recipientAddress, _tokenId);
@@ -253,10 +287,7 @@ contract A_TKN is
                 "AT:SURI:URI is set, and immutable"
             );
 
-            require(
-                NODE_TKN.ownerOf(rec.node) == _msgSender(),
-                "AT:SURI:Caller !NTH"
-            );
+            require(ownerOf(rec.node) == _msgSender(), "AT:SURI:Caller Does not hold NODE asset");
         }
 
         require(
