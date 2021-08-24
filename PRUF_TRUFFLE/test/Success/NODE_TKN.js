@@ -1593,7 +1593,7 @@ contract("NODE_TKN", (accounts) => {
   });
 
   it("Should mint AC20", async () => {
-    return NODE_TKN.mintACToken(account2, "20", "Pruf.io", { from: account1 });
+    return NODE_TKN.mintNodeToken(account2, "20", "Pruf.io", { from: account1 });
   });
 
   it("Should retrieve 170", async () => {

@@ -1498,8 +1498,8 @@ contract("NODE_TKN", (accounts) => {
 
         console.log("//**************************************END NODE_TKN SETUP**********************************************/")
         console.log("//**************************************BEGIN NODE_TKN FAIL BATCH(10)**********************************************/")
-        console.log("//********************************BEGIN mintACToken FAIL BATCH****************************************/")
-        return NODE_TKN.mintACToken(
+        console.log("//********************************BEGIN mintNodeToken FAIL BATCH****************************************/")
+        return NODE_TKN.mintNodeToken(
             account1,
             '10',
             'Pruf.io',
@@ -1510,7 +1510,7 @@ contract("NODE_TKN", (accounts) => {
     //2
     it('Should fail because is not minter', async () => {
 
-        console.log("//*********************************END mintACToken FAIL BATCH*****************************************/")
+        console.log("//*********************************END mintNodeToken FAIL BATCH*****************************************/")
         console.log("//********************************BEGIN teleportACToken FAIL BATCH****************************************/")
         return NODE_TKN.teleportACToken(
             account1,
@@ -1561,7 +1561,7 @@ contract("NODE_TKN", (accounts) => {
     
     it('Should pause NODE_TKN', async () => {
 
-        console.log("//*********************************END reMintACToken FAIL BATCH*****************************************/")
+        console.log("//*********************************END remintNodeToken FAIL BATCH*****************************************/")
         console.log("//********************************BEGIN transferFrom FAIL BATCH****************************************/")
         return NODE_TKN.pause(
             { from: account1 }
