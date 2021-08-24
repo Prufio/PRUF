@@ -57,7 +57,7 @@ contract A_TKN is
     bytes32 public constant CONTRACT_ADMIN_ROLE =
         keccak256("CONTRACT_ADMIN_ROLE");
     bytes32 public constant MINTER_ROLE = keccak256("MINTER_ROLE");
-    bytes32 public constant NODE_MINTER_ROLE = keccak256("NODE_MINTER_ROLE");
+    bytes32 public constant NODE_MINTER_ROLE = keccak256("NODE_MINTER_ROLE"); //DPS:CHECK, will need new role for setup!
     bytes32 public constant PAUSER_ROLE = keccak256("PAUSER_ROLE");
     bytes32 public constant TRUSTED_AGENT_ROLE =
         keccak256("TRUSTED_AGENT_ROLE");
