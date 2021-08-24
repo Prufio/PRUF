@@ -1,0 +1,377 @@
+{
+	"deploy": {
+		"VM:-": {
+			"linkReferences": {},
+			"autoDeployLib": true
+		},
+		"main:1": {
+			"linkReferences": {},
+			"autoDeployLib": true
+		},
+		"ropsten:3": {
+			"linkReferences": {},
+			"autoDeployLib": true
+		},
+		"rinkeby:4": {
+			"linkReferences": {},
+			"autoDeployLib": true
+		},
+		"kovan:42": {
+			"linkReferences": {},
+			"autoDeployLib": true
+		},
+		"görli:5": {
+			"linkReferences": {},
+			"autoDeployLib": true
+		},
+		"Custom": {
+			"linkReferences": {},
+			"autoDeployLib": true
+		}
+	},
+	"data": {
+		"bytecode": {
+			"linkReferences": {},
+			"object": "",
+			"opcodes": "",
+			"sourceMap": ""
+		},
+		"deployedBytecode": {
+			"immutableReferences": {},
+			"linkReferences": {},
+			"object": "",
+			"opcodes": "",
+			"sourceMap": ""
+		},
+		"gasEstimates": null,
+		"methodIdentifiers": {
+			"endEscrow(bytes32)": "e8e1152c",
+			"permissiveEndEscrow(bytes32)": "df7518d2",
+			"retrieveEscrowData(bytes32)": "a3b3fe50",
+			"retrieveEscrowDataHeavy(bytes32)": "ca4bc33e",
+			"retrieveEscrowDataLight(bytes32)": "75855a5b",
+			"retrieveEscrowOwner(bytes32)": "019b0f5f",
+			"setEscrow(bytes32,uint8,bytes32,uint256)": "e6308c56",
+			"setEscrowDataHeavy(bytes32,uint32,uint32,uint32,address,bytes32,bytes32,uint256,uint256)": "7a794aa9",
+			"setEscrowDataLight(bytes32,uint8,uint8,uint8,uint8,uint16,uint16,uint32,address)": "ccf09784"
+		}
+	},
+	"abi": [
+		{
+			"inputs": [
+				{
+					"internalType": "bytes32",
+					"name": "_idxHash",
+					"type": "bytes32"
+				}
+			],
+			"name": "endEscrow",
+			"outputs": [],
+			"stateMutability": "nonpayable",
+			"type": "function"
+		},
+		{
+			"inputs": [
+				{
+					"internalType": "bytes32",
+					"name": "_idxHash",
+					"type": "bytes32"
+				}
+			],
+			"name": "permissiveEndEscrow",
+			"outputs": [],
+			"stateMutability": "nonpayable",
+			"type": "function"
+		},
+		{
+			"inputs": [
+				{
+					"internalType": "bytes32",
+					"name": "_idxHash",
+					"type": "bytes32"
+				}
+			],
+			"name": "retrieveEscrowData",
+			"outputs": [
+				{
+					"internalType": "bytes32",
+					"name": "controllingContractNameHash",
+					"type": "bytes32"
+				},
+				{
+					"internalType": "bytes32",
+					"name": "escrowOwnerAddressHash",
+					"type": "bytes32"
+				},
+				{
+					"internalType": "uint256",
+					"name": "timelock",
+					"type": "uint256"
+				}
+			],
+			"stateMutability": "nonpayable",
+			"type": "function"
+		},
+		{
+			"inputs": [
+				{
+					"internalType": "bytes32",
+					"name": "_idxHash",
+					"type": "bytes32"
+				}
+			],
+			"name": "retrieveEscrowDataHeavy",
+			"outputs": [
+				{
+					"internalType": "uint32",
+					"name": "_u32_2",
+					"type": "uint32"
+				},
+				{
+					"internalType": "uint32",
+					"name": "_u32_3",
+					"type": "uint32"
+				},
+				{
+					"internalType": "uint32",
+					"name": "_u32_4",
+					"type": "uint32"
+				},
+				{
+					"internalType": "address",
+					"name": "_addr_2",
+					"type": "address"
+				},
+				{
+					"internalType": "bytes32",
+					"name": "_b32_1",
+					"type": "bytes32"
+				},
+				{
+					"internalType": "bytes32",
+					"name": "_b32_2",
+					"type": "bytes32"
+				},
+				{
+					"internalType": "uint256",
+					"name": "_u256_1",
+					"type": "uint256"
+				},
+				{
+					"internalType": "uint256",
+					"name": "_u256_2",
+					"type": "uint256"
+				}
+			],
+			"stateMutability": "view",
+			"type": "function"
+		},
+		{
+			"inputs": [
+				{
+					"internalType": "bytes32",
+					"name": "_idxHash",
+					"type": "bytes32"
+				}
+			],
+			"name": "retrieveEscrowDataLight",
+			"outputs": [
+				{
+					"internalType": "uint8",
+					"name": "_escrowData",
+					"type": "uint8"
+				},
+				{
+					"internalType": "uint8",
+					"name": "_u8_1",
+					"type": "uint8"
+				},
+				{
+					"internalType": "uint8",
+					"name": "_u8_2",
+					"type": "uint8"
+				},
+				{
+					"internalType": "uint8",
+					"name": "_u8_3",
+					"type": "uint8"
+				},
+				{
+					"internalType": "uint16",
+					"name": "_u16_1",
+					"type": "uint16"
+				},
+				{
+					"internalType": "uint16",
+					"name": "_u16_2",
+					"type": "uint16"
+				},
+				{
+					"internalType": "uint32",
+					"name": "_u32_1",
+					"type": "uint32"
+				},
+				{
+					"internalType": "address",
+					"name": "_addr_1",
+					"type": "address"
+				}
+			],
+			"stateMutability": "view",
+			"type": "function"
+		},
+		{
+			"inputs": [
+				{
+					"internalType": "bytes32",
+					"name": "_idxHash",
+					"type": "bytes32"
+				}
+			],
+			"name": "retrieveEscrowOwner",
+			"outputs": [
+				{
+					"internalType": "bytes32",
+					"name": "hashOfEscrowOwnerAdress",
+					"type": "bytes32"
+				}
+			],
+			"stateMutability": "nonpayable",
+			"type": "function"
+		},
+		{
+			"inputs": [
+				{
+					"internalType": "bytes32",
+					"name": "_idxHash",
+					"type": "bytes32"
+				},
+				{
+					"internalType": "uint8",
+					"name": "_newAssetStatus",
+					"type": "uint8"
+				},
+				{
+					"internalType": "bytes32",
+					"name": "_escrowOwnerAddressHash",
+					"type": "bytes32"
+				},
+				{
+					"internalType": "uint256",
+					"name": "_timelock",
+					"type": "uint256"
+				}
+			],
+			"name": "setEscrow",
+			"outputs": [],
+			"stateMutability": "nonpayable",
+			"type": "function"
+		},
+		{
+			"inputs": [
+				{
+					"internalType": "bytes32",
+					"name": "_idxHash",
+					"type": "bytes32"
+				},
+				{
+					"internalType": "uint32",
+					"name": "_u32_2",
+					"type": "uint32"
+				},
+				{
+					"internalType": "uint32",
+					"name": "_u32_3",
+					"type": "uint32"
+				},
+				{
+					"internalType": "uint32",
+					"name": "_u32_4",
+					"type": "uint32"
+				},
+				{
+					"internalType": "address",
+					"name": "_addr_2",
+					"type": "address"
+				},
+				{
+					"internalType": "bytes32",
+					"name": "_b32_1",
+					"type": "bytes32"
+				},
+				{
+					"internalType": "bytes32",
+					"name": "_b32_2",
+					"type": "bytes32"
+				},
+				{
+					"internalType": "uint256",
+					"name": "_u256_1",
+					"type": "uint256"
+				},
+				{
+					"internalType": "uint256",
+					"name": "_u256_2",
+					"type": "uint256"
+				}
+			],
+			"name": "setEscrowDataHeavy",
+			"outputs": [],
+			"stateMutability": "nonpayable",
+			"type": "function"
+		},
+		{
+			"inputs": [
+				{
+					"internalType": "bytes32",
+					"name": "_idxHash",
+					"type": "bytes32"
+				},
+				{
+					"internalType": "uint8",
+					"name": "_escrowData",
+					"type": "uint8"
+				},
+				{
+					"internalType": "uint8",
+					"name": "_u8_1",
+					"type": "uint8"
+				},
+				{
+					"internalType": "uint8",
+					"name": "_u8_2",
+					"type": "uint8"
+				},
+				{
+					"internalType": "uint8",
+					"name": "_u8_3",
+					"type": "uint8"
+				},
+				{
+					"internalType": "uint16",
+					"name": "_u16_1",
+					"type": "uint16"
+				},
+				{
+					"internalType": "uint16",
+					"name": "_u16_2",
+					"type": "uint16"
+				},
+				{
+					"internalType": "uint32",
+					"name": "_u32_1",
+					"type": "uint32"
+				},
+				{
+					"internalType": "address",
+					"name": "_addr_1",
+					"type": "address"
+				}
+			],
+			"name": "setEscrowDataLight",
+			"outputs": [],
+			"stateMutability": "nonpayable",
+			"type": "function"
+		}
+	]
+}

@@ -1,0 +1,566 @@
+{
+	"deploy": {
+		"VM:-": {
+			"linkReferences": {},
+			"autoDeployLib": true
+		},
+		"main:1": {
+			"linkReferences": {},
+			"autoDeployLib": true
+		},
+		"ropsten:3": {
+			"linkReferences": {},
+			"autoDeployLib": true
+		},
+		"rinkeby:4": {
+			"linkReferences": {},
+			"autoDeployLib": true
+		},
+		"kovan:42": {
+			"linkReferences": {},
+			"autoDeployLib": true
+		},
+		"görli:5": {
+			"linkReferences": {},
+			"autoDeployLib": true
+		},
+		"Custom": {
+			"linkReferences": {},
+			"autoDeployLib": true
+		}
+	},
+	"data": {
+		"bytecode": {
+			"linkReferences": {},
+			"object": "",
+			"opcodes": "",
+			"sourceMap": ""
+		},
+		"deployedBytecode": {
+			"immutableReferences": {},
+			"linkReferences": {},
+			"object": "",
+			"opcodes": "",
+			"sourceMap": ""
+		},
+		"gasEstimates": null,
+		"methodIdentifiers": {
+			"ContractInfoHash(address,uint32)": "df9f6936",
+			"OO_addContract(string,address,uint32,uint8)": "79514e5b",
+			"_verifyRightsHolder(bytes32,bytes32)": "d3dbdbda",
+			"blockchainVerifyRightsHolder(bytes32,bytes32)": "8d9fc872",
+			"changeAC(bytes32,uint32)": "62a02f86",
+			"clearPrice(bytes32)": "63d9fa75",
+			"enableContractForAC(string,uint32,uint8)": "f76b6ac5",
+			"endEscrow(bytes32)": "e8e1152c",
+			"getPriceData(bytes32)": "43fa6211",
+			"modifyIpfs1(bytes32,bytes32)": "42cdc4a4",
+			"modifyIpfs2(bytes32,bytes32)": "a9193045",
+			"modifyRecord(bytes32,bytes32,uint8,uint32,uint256,uint256)": "635d54fe",
+			"newRecord(bytes32,bytes32,uint32,uint32)": "3530d114",
+			"pause()": "8456cb59",
+			"resolveContractAddress(string)": "c771a982",
+			"retrieveRecord(bytes32)": "e248f2c4",
+			"retrieveShortRecord(bytes32)": "6707f608",
+			"setEscrow(bytes32,uint8)": "5afc3cb4",
+			"setPrice(bytes32,uint120,uint8)": "0de1ad90",
+			"setStolenOrLost(bytes32,uint8)": "f22354a6",
+			"unpause()": "3f4ba83a"
+		}
+	},
+	"abi": [
+		{
+			"inputs": [
+				{
+					"internalType": "address",
+					"name": "_addr",
+					"type": "address"
+				},
+				{
+					"internalType": "uint32",
+					"name": "_assetClass",
+					"type": "uint32"
+				}
+			],
+			"name": "ContractInfoHash",
+			"outputs": [
+				{
+					"internalType": "uint8",
+					"name": "",
+					"type": "uint8"
+				},
+				{
+					"internalType": "bytes32",
+					"name": "",
+					"type": "bytes32"
+				}
+			],
+			"stateMutability": "view",
+			"type": "function"
+		},
+		{
+			"inputs": [
+				{
+					"internalType": "string",
+					"name": "_name",
+					"type": "string"
+				},
+				{
+					"internalType": "address",
+					"name": "_addr",
+					"type": "address"
+				},
+				{
+					"internalType": "uint32",
+					"name": "_assetClass",
+					"type": "uint32"
+				},
+				{
+					"internalType": "uint8",
+					"name": "_contractAuthLevel",
+					"type": "uint8"
+				}
+			],
+			"name": "OO_addContract",
+			"outputs": [],
+			"stateMutability": "nonpayable",
+			"type": "function"
+		},
+		{
+			"inputs": [
+				{
+					"internalType": "bytes32",
+					"name": "_idxHash",
+					"type": "bytes32"
+				},
+				{
+					"internalType": "bytes32",
+					"name": "_rgtHash",
+					"type": "bytes32"
+				}
+			],
+			"name": "_verifyRightsHolder",
+			"outputs": [
+				{
+					"internalType": "uint256",
+					"name": "",
+					"type": "uint256"
+				}
+			],
+			"stateMutability": "view",
+			"type": "function"
+		},
+		{
+			"inputs": [
+				{
+					"internalType": "bytes32",
+					"name": "_idxHash",
+					"type": "bytes32"
+				},
+				{
+					"internalType": "bytes32",
+					"name": "_rgtHash",
+					"type": "bytes32"
+				}
+			],
+			"name": "blockchainVerifyRightsHolder",
+			"outputs": [
+				{
+					"internalType": "uint8",
+					"name": "",
+					"type": "uint8"
+				}
+			],
+			"stateMutability": "nonpayable",
+			"type": "function"
+		},
+		{
+			"inputs": [
+				{
+					"internalType": "bytes32",
+					"name": "_idxHash",
+					"type": "bytes32"
+				},
+				{
+					"internalType": "uint32",
+					"name": "_newAssetClass",
+					"type": "uint32"
+				}
+			],
+			"name": "changeAC",
+			"outputs": [],
+			"stateMutability": "nonpayable",
+			"type": "function"
+		},
+		{
+			"inputs": [
+				{
+					"internalType": "bytes32",
+					"name": "_idxHash",
+					"type": "bytes32"
+				}
+			],
+			"name": "clearPrice",
+			"outputs": [],
+			"stateMutability": "nonpayable",
+			"type": "function"
+		},
+		{
+			"inputs": [
+				{
+					"internalType": "string",
+					"name": "_name",
+					"type": "string"
+				},
+				{
+					"internalType": "uint32",
+					"name": "_assetClass",
+					"type": "uint32"
+				},
+				{
+					"internalType": "uint8",
+					"name": "_contractAuthLevel",
+					"type": "uint8"
+				}
+			],
+			"name": "enableContractForAC",
+			"outputs": [],
+			"stateMutability": "nonpayable",
+			"type": "function"
+		},
+		{
+			"inputs": [
+				{
+					"internalType": "bytes32",
+					"name": "_idxHash",
+					"type": "bytes32"
+				}
+			],
+			"name": "endEscrow",
+			"outputs": [],
+			"stateMutability": "nonpayable",
+			"type": "function"
+		},
+		{
+			"inputs": [
+				{
+					"internalType": "bytes32",
+					"name": "_idxHash",
+					"type": "bytes32"
+				}
+			],
+			"name": "getPriceData",
+			"outputs": [
+				{
+					"internalType": "uint120",
+					"name": "",
+					"type": "uint120"
+				},
+				{
+					"internalType": "uint8",
+					"name": "",
+					"type": "uint8"
+				}
+			],
+			"stateMutability": "view",
+			"type": "function"
+		},
+		{
+			"inputs": [
+				{
+					"internalType": "bytes32",
+					"name": "_idxHash",
+					"type": "bytes32"
+				},
+				{
+					"internalType": "bytes32",
+					"name": "_Ipfs1",
+					"type": "bytes32"
+				}
+			],
+			"name": "modifyIpfs1",
+			"outputs": [],
+			"stateMutability": "nonpayable",
+			"type": "function"
+		},
+		{
+			"inputs": [
+				{
+					"internalType": "bytes32",
+					"name": "_idxHash",
+					"type": "bytes32"
+				},
+				{
+					"internalType": "bytes32",
+					"name": "_Ipfs2",
+					"type": "bytes32"
+				}
+			],
+			"name": "modifyIpfs2",
+			"outputs": [],
+			"stateMutability": "nonpayable",
+			"type": "function"
+		},
+		{
+			"inputs": [
+				{
+					"internalType": "bytes32",
+					"name": "_idxHash",
+					"type": "bytes32"
+				},
+				{
+					"internalType": "bytes32",
+					"name": "_rgtHash",
+					"type": "bytes32"
+				},
+				{
+					"internalType": "uint8",
+					"name": "_newAssetStatus",
+					"type": "uint8"
+				},
+				{
+					"internalType": "uint32",
+					"name": "_countDown",
+					"type": "uint32"
+				},
+				{
+					"internalType": "uint256",
+					"name": "_incrementForceModCount",
+					"type": "uint256"
+				},
+				{
+					"internalType": "uint256",
+					"name": "_incrementNumberOfTransfers",
+					"type": "uint256"
+				}
+			],
+			"name": "modifyRecord",
+			"outputs": [],
+			"stateMutability": "nonpayable",
+			"type": "function"
+		},
+		{
+			"inputs": [
+				{
+					"internalType": "bytes32",
+					"name": "_idxHash",
+					"type": "bytes32"
+				},
+				{
+					"internalType": "bytes32",
+					"name": "_rgtHash",
+					"type": "bytes32"
+				},
+				{
+					"internalType": "uint32",
+					"name": "_assetClass",
+					"type": "uint32"
+				},
+				{
+					"internalType": "uint32",
+					"name": "_countDownStart",
+					"type": "uint32"
+				}
+			],
+			"name": "newRecord",
+			"outputs": [],
+			"stateMutability": "nonpayable",
+			"type": "function"
+		},
+		{
+			"inputs": [],
+			"name": "pause",
+			"outputs": [],
+			"stateMutability": "nonpayable",
+			"type": "function"
+		},
+		{
+			"inputs": [
+				{
+					"internalType": "string",
+					"name": "_name",
+					"type": "string"
+				}
+			],
+			"name": "resolveContractAddress",
+			"outputs": [
+				{
+					"internalType": "address",
+					"name": "",
+					"type": "address"
+				}
+			],
+			"stateMutability": "view",
+			"type": "function"
+		},
+		{
+			"inputs": [
+				{
+					"internalType": "bytes32",
+					"name": "_idxHash",
+					"type": "bytes32"
+				}
+			],
+			"name": "retrieveRecord",
+			"outputs": [
+				{
+					"internalType": "bytes32",
+					"name": "",
+					"type": "bytes32"
+				},
+				{
+					"internalType": "uint8",
+					"name": "",
+					"type": "uint8"
+				},
+				{
+					"internalType": "uint32",
+					"name": "",
+					"type": "uint32"
+				},
+				{
+					"internalType": "uint32",
+					"name": "",
+					"type": "uint32"
+				},
+				{
+					"internalType": "uint32",
+					"name": "",
+					"type": "uint32"
+				},
+				{
+					"internalType": "bytes32",
+					"name": "",
+					"type": "bytes32"
+				},
+				{
+					"internalType": "bytes32",
+					"name": "",
+					"type": "bytes32"
+				}
+			],
+			"stateMutability": "view",
+			"type": "function"
+		},
+		{
+			"inputs": [
+				{
+					"internalType": "bytes32",
+					"name": "_idxHash",
+					"type": "bytes32"
+				}
+			],
+			"name": "retrieveShortRecord",
+			"outputs": [
+				{
+					"internalType": "uint8",
+					"name": "",
+					"type": "uint8"
+				},
+				{
+					"internalType": "uint8",
+					"name": "",
+					"type": "uint8"
+				},
+				{
+					"internalType": "uint32",
+					"name": "",
+					"type": "uint32"
+				},
+				{
+					"internalType": "uint32",
+					"name": "",
+					"type": "uint32"
+				},
+				{
+					"internalType": "uint32",
+					"name": "",
+					"type": "uint32"
+				},
+				{
+					"internalType": "bytes32",
+					"name": "",
+					"type": "bytes32"
+				},
+				{
+					"internalType": "bytes32",
+					"name": "",
+					"type": "bytes32"
+				},
+				{
+					"internalType": "uint16",
+					"name": "",
+					"type": "uint16"
+				}
+			],
+			"stateMutability": "view",
+			"type": "function"
+		},
+		{
+			"inputs": [
+				{
+					"internalType": "bytes32",
+					"name": "_idxHash",
+					"type": "bytes32"
+				},
+				{
+					"internalType": "uint8",
+					"name": "_newAssetStatus",
+					"type": "uint8"
+				}
+			],
+			"name": "setEscrow",
+			"outputs": [],
+			"stateMutability": "nonpayable",
+			"type": "function"
+		},
+		{
+			"inputs": [
+				{
+					"internalType": "bytes32",
+					"name": "_idxHash",
+					"type": "bytes32"
+				},
+				{
+					"internalType": "uint120",
+					"name": "_price",
+					"type": "uint120"
+				},
+				{
+					"internalType": "uint8",
+					"name": "_currency",
+					"type": "uint8"
+				}
+			],
+			"name": "setPrice",
+			"outputs": [],
+			"stateMutability": "nonpayable",
+			"type": "function"
+		},
+		{
+			"inputs": [
+				{
+					"internalType": "bytes32",
+					"name": "_idxHash",
+					"type": "bytes32"
+				},
+				{
+					"internalType": "uint8",
+					"name": "_newAssetStatus",
+					"type": "uint8"
+				}
+			],
+			"name": "setStolenOrLost",
+			"outputs": [],
+			"stateMutability": "nonpayable",
+			"type": "function"
+		},
+		{
+			"inputs": [],
+			"name": "unpause",
+			"outputs": [],
+			"stateMutability": "nonpayable",
+			"type": "function"
+		}
+	]
+}

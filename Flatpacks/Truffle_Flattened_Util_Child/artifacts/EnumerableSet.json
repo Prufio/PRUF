@@ -1,0 +1,78 @@
+{
+	"deploy": {
+		"VM:-": {
+			"linkReferences": {},
+			"autoDeployLib": true
+		},
+		"main:1": {
+			"linkReferences": {},
+			"autoDeployLib": true
+		},
+		"ropsten:3": {
+			"linkReferences": {},
+			"autoDeployLib": true
+		},
+		"rinkeby:4": {
+			"linkReferences": {},
+			"autoDeployLib": true
+		},
+		"kovan:42": {
+			"linkReferences": {},
+			"autoDeployLib": true
+		},
+		"görli:5": {
+			"linkReferences": {},
+			"autoDeployLib": true
+		},
+		"Custom": {
+			"linkReferences": {},
+			"autoDeployLib": true
+		}
+	},
+	"data": {
+		"bytecode": {
+			"linkReferences": {},
+			"object": "60566023600b82828239805160001a607314601657fe5b30600052607381538281f3fe73000000000000000000000000000000000000000030146080604052600080fdfea2646970667358221220922b9635cb255d56f2da011071c540d334efca60760f05de9d7c3c3e4ca7809964736f6c63430006070033",
+			"opcodes": "PUSH1 0x56 PUSH1 0x23 PUSH1 0xB DUP3 DUP3 DUP3 CODECOPY DUP1 MLOAD PUSH1 0x0 BYTE PUSH1 0x73 EQ PUSH1 0x16 JUMPI INVALID JUMPDEST ADDRESS PUSH1 0x0 MSTORE PUSH1 0x73 DUP2 MSTORE8 DUP3 DUP2 RETURN INVALID PUSH20 0x0 ADDRESS EQ PUSH1 0x80 PUSH1 0x40 MSTORE PUSH1 0x0 DUP1 REVERT INVALID LOG2 PUSH5 0x6970667358 0x22 SLT KECCAK256 SWAP3 0x2B SWAP7 CALLDATALOAD 0xCB 0x25 0x5D JUMP CALLCODE 0xDA ADD LT PUSH18 0xC540D334EFCA60760F05DE9D7C3C3E4CA780 SWAP10 PUSH5 0x736F6C6343 STOP MOD SMOD STOP CALLER ",
+			"sourceMap": "39273:8598:0:-:0;;132:2:-1;166:7;155:9;146:7;137:37;255:7;249:14;246:1;241:23;235:4;232:33;222:2;;269:9;222:2;293:9;290:1;283:20;323:4;314:7;306:22;347:7;338;331:24"
+		},
+		"deployedBytecode": {
+			"immutableReferences": {},
+			"linkReferences": {},
+			"object": "73000000000000000000000000000000000000000030146080604052600080fdfea2646970667358221220922b9635cb255d56f2da011071c540d334efca60760f05de9d7c3c3e4ca7809964736f6c63430006070033",
+			"opcodes": "PUSH20 0x0 ADDRESS EQ PUSH1 0x80 PUSH1 0x40 MSTORE PUSH1 0x0 DUP1 REVERT INVALID LOG2 PUSH5 0x6970667358 0x22 SLT KECCAK256 SWAP3 0x2B SWAP7 CALLDATALOAD 0xCB 0x25 0x5D JUMP CALLCODE 0xDA ADD LT PUSH18 0xC540D334EFCA60760F05DE9D7C3C3E4CA780 SWAP10 PUSH5 0x736F6C6343 STOP MOD SMOD STOP CALLER ",
+			"sourceMap": "39273:8598:0:-:0;;;;;;12:1:-1;9;2:12"
+		},
+		"gasEstimates": {
+			"creation": {
+				"codeDepositCost": "17200",
+				"executionCost": "97",
+				"totalCost": "17297"
+			},
+			"internal": {
+				"_add(struct EnumerableSet.Set storage pointer,bytes32)": "infinite",
+				"_at(struct EnumerableSet.Set storage pointer,uint256)": "infinite",
+				"_contains(struct EnumerableSet.Set storage pointer,bytes32)": "infinite",
+				"_length(struct EnumerableSet.Set storage pointer)": "infinite",
+				"_remove(struct EnumerableSet.Set storage pointer,bytes32)": "infinite",
+				"add(struct EnumerableSet.AddressSet storage pointer,address)": "infinite",
+				"add(struct EnumerableSet.Bytes32Set storage pointer,bytes32)": "infinite",
+				"add(struct EnumerableSet.UintSet storage pointer,uint256)": "infinite",
+				"at(struct EnumerableSet.AddressSet storage pointer,uint256)": "infinite",
+				"at(struct EnumerableSet.Bytes32Set storage pointer,uint256)": "infinite",
+				"at(struct EnumerableSet.UintSet storage pointer,uint256)": "infinite",
+				"contains(struct EnumerableSet.AddressSet storage pointer,address)": "infinite",
+				"contains(struct EnumerableSet.Bytes32Set storage pointer,bytes32)": "infinite",
+				"contains(struct EnumerableSet.UintSet storage pointer,uint256)": "infinite",
+				"length(struct EnumerableSet.AddressSet storage pointer)": "infinite",
+				"length(struct EnumerableSet.Bytes32Set storage pointer)": "infinite",
+				"length(struct EnumerableSet.UintSet storage pointer)": "infinite",
+				"remove(struct EnumerableSet.AddressSet storage pointer,address)": "infinite",
+				"remove(struct EnumerableSet.Bytes32Set storage pointer,bytes32)": "infinite",
+				"remove(struct EnumerableSet.UintSet storage pointer,uint256)": "infinite"
+			}
+		},
+		"methodIdentifiers": {}
+	},
+	"abi": []
+}

@@ -1,0 +1,577 @@
+{
+	"deploy": {
+		"VM:-": {
+			"linkReferences": {},
+			"autoDeployLib": true
+		},
+		"main:1": {
+			"linkReferences": {},
+			"autoDeployLib": true
+		},
+		"ropsten:3": {
+			"linkReferences": {},
+			"autoDeployLib": true
+		},
+		"rinkeby:4": {
+			"linkReferences": {},
+			"autoDeployLib": true
+		},
+		"kovan:42": {
+			"linkReferences": {},
+			"autoDeployLib": true
+		},
+		"görli:5": {
+			"linkReferences": {},
+			"autoDeployLib": true
+		},
+		"Custom": {
+			"linkReferences": {},
+			"autoDeployLib": true
+		}
+	},
+	"data": {
+		"bytecode": {
+			"linkReferences": {},
+			"object": "",
+			"opcodes": "",
+			"sourceMap": ""
+		},
+		"deployedBytecode": {
+			"immutableReferences": {},
+			"linkReferences": {},
+			"object": "",
+			"opcodes": "",
+			"sourceMap": ""
+		},
+		"gasEstimates": null,
+		"methodIdentifiers": {
+			"ACTH_setCosts(uint32,uint16,uint256,address)": "66089f03",
+			"OO_SetACpricing(uint256,uint256,uint256,uint256,uint256,uint256,uint256)": "ff2185e8",
+			"addUser(bytes32,uint8,uint32)": "780ea09a",
+			"createAssetClass(address,string,uint32,uint32,uint8,bytes32,uint32)": "163d2c43",
+			"currentACpricingInfo()": "2eb6df66",
+			"getAC_data(uint32)": "f2435010",
+			"getAC_discount(uint32)": "084649c6",
+			"getAC_name(uint32)": "1c5bbb4e",
+			"getExtAC_data(uint32)": "5ff84a3f",
+			"getServiceCosts(uint32,uint16)": "859f08db",
+			"getUserType(bytes32,uint32)": "9d2c7cee",
+			"increaseShare(uint32,uint256)": "590d17ac",
+			"isSameRootAC(uint32,uint32)": "9852fdeb",
+			"purchaseACnode(string,uint32,uint8,bytes32)": "3319f7b0",
+			"resolveAssetClass(string)": "d52e10c9",
+			"updateACextendedData(uint160,uint32)": "fe2e87d9",
+			"updateACipfs(bytes32,uint32)": "e887bbbf",
+			"updateACname(string,uint32)": "25c37b43"
+		}
+	},
+	"abi": [
+		{
+			"inputs": [
+				{
+					"internalType": "uint32",
+					"name": "_assetClass",
+					"type": "uint32"
+				},
+				{
+					"internalType": "uint16",
+					"name": "_service",
+					"type": "uint16"
+				},
+				{
+					"internalType": "uint256",
+					"name": "_serviceCost",
+					"type": "uint256"
+				},
+				{
+					"internalType": "address",
+					"name": "_paymentAddress",
+					"type": "address"
+				}
+			],
+			"name": "ACTH_setCosts",
+			"outputs": [],
+			"stateMutability": "nonpayable",
+			"type": "function"
+		},
+		{
+			"inputs": [
+				{
+					"internalType": "uint256",
+					"name": "_L1",
+					"type": "uint256"
+				},
+				{
+					"internalType": "uint256",
+					"name": "_L2",
+					"type": "uint256"
+				},
+				{
+					"internalType": "uint256",
+					"name": "_L3",
+					"type": "uint256"
+				},
+				{
+					"internalType": "uint256",
+					"name": "_L4",
+					"type": "uint256"
+				},
+				{
+					"internalType": "uint256",
+					"name": "_L5",
+					"type": "uint256"
+				},
+				{
+					"internalType": "uint256",
+					"name": "_L6",
+					"type": "uint256"
+				},
+				{
+					"internalType": "uint256",
+					"name": "_L7",
+					"type": "uint256"
+				}
+			],
+			"name": "OO_SetACpricing",
+			"outputs": [],
+			"stateMutability": "nonpayable",
+			"type": "function"
+		},
+		{
+			"inputs": [
+				{
+					"internalType": "bytes32",
+					"name": "_addrHash",
+					"type": "bytes32"
+				},
+				{
+					"internalType": "uint8",
+					"name": "_userType",
+					"type": "uint8"
+				},
+				{
+					"internalType": "uint32",
+					"name": "_assetClass",
+					"type": "uint32"
+				}
+			],
+			"name": "addUser",
+			"outputs": [],
+			"stateMutability": "nonpayable",
+			"type": "function"
+		},
+		{
+			"inputs": [
+				{
+					"internalType": "address",
+					"name": "_recipientAddress",
+					"type": "address"
+				},
+				{
+					"internalType": "string",
+					"name": "_name",
+					"type": "string"
+				},
+				{
+					"internalType": "uint32",
+					"name": "_assetClass",
+					"type": "uint32"
+				},
+				{
+					"internalType": "uint32",
+					"name": "_assetClassRoot",
+					"type": "uint32"
+				},
+				{
+					"internalType": "uint8",
+					"name": "_custodyType",
+					"type": "uint8"
+				},
+				{
+					"internalType": "bytes32",
+					"name": "_IPFS",
+					"type": "bytes32"
+				},
+				{
+					"internalType": "uint32",
+					"name": "_discount",
+					"type": "uint32"
+				}
+			],
+			"name": "createAssetClass",
+			"outputs": [],
+			"stateMutability": "nonpayable",
+			"type": "function"
+		},
+		{
+			"inputs": [],
+			"name": "currentACpricingInfo",
+			"outputs": [
+				{
+					"internalType": "uint256",
+					"name": "",
+					"type": "uint256"
+				},
+				{
+					"internalType": "uint256",
+					"name": "",
+					"type": "uint256"
+				},
+				{
+					"internalType": "uint256",
+					"name": "",
+					"type": "uint256"
+				},
+				{
+					"internalType": "uint256",
+					"name": "",
+					"type": "uint256"
+				},
+				{
+					"internalType": "uint256",
+					"name": "",
+					"type": "uint256"
+				},
+				{
+					"internalType": "uint256",
+					"name": "",
+					"type": "uint256"
+				},
+				{
+					"internalType": "uint256",
+					"name": "",
+					"type": "uint256"
+				},
+				{
+					"internalType": "uint256",
+					"name": "",
+					"type": "uint256"
+				},
+				{
+					"internalType": "uint256",
+					"name": "",
+					"type": "uint256"
+				}
+			],
+			"stateMutability": "nonpayable",
+			"type": "function"
+		},
+		{
+			"inputs": [
+				{
+					"internalType": "uint32",
+					"name": "_assetClass",
+					"type": "uint32"
+				}
+			],
+			"name": "getAC_data",
+			"outputs": [
+				{
+					"internalType": "uint32",
+					"name": "",
+					"type": "uint32"
+				},
+				{
+					"internalType": "uint8",
+					"name": "",
+					"type": "uint8"
+				},
+				{
+					"internalType": "uint32",
+					"name": "",
+					"type": "uint32"
+				},
+				{
+					"internalType": "uint32",
+					"name": "",
+					"type": "uint32"
+				},
+				{
+					"internalType": "bytes32",
+					"name": "",
+					"type": "bytes32"
+				}
+			],
+			"stateMutability": "view",
+			"type": "function"
+		},
+		{
+			"inputs": [
+				{
+					"internalType": "uint32",
+					"name": "_assetClass",
+					"type": "uint32"
+				}
+			],
+			"name": "getAC_discount",
+			"outputs": [
+				{
+					"internalType": "uint32",
+					"name": "",
+					"type": "uint32"
+				}
+			],
+			"stateMutability": "view",
+			"type": "function"
+		},
+		{
+			"inputs": [
+				{
+					"internalType": "uint32",
+					"name": "_tokenId",
+					"type": "uint32"
+				}
+			],
+			"name": "getAC_name",
+			"outputs": [
+				{
+					"internalType": "string",
+					"name": "",
+					"type": "string"
+				}
+			],
+			"stateMutability": "view",
+			"type": "function"
+		},
+		{
+			"inputs": [
+				{
+					"internalType": "uint32",
+					"name": "_assetClass",
+					"type": "uint32"
+				}
+			],
+			"name": "getExtAC_data",
+			"outputs": [
+				{
+					"internalType": "uint8",
+					"name": "",
+					"type": "uint8"
+				},
+				{
+					"internalType": "uint8",
+					"name": "",
+					"type": "uint8"
+				},
+				{
+					"internalType": "uint8",
+					"name": "",
+					"type": "uint8"
+				},
+				{
+					"internalType": "uint160",
+					"name": "",
+					"type": "uint160"
+				}
+			],
+			"stateMutability": "view",
+			"type": "function"
+		},
+		{
+			"inputs": [
+				{
+					"internalType": "uint32",
+					"name": "_assetClass",
+					"type": "uint32"
+				},
+				{
+					"internalType": "uint16",
+					"name": "_service",
+					"type": "uint16"
+				}
+			],
+			"name": "getServiceCosts",
+			"outputs": [
+				{
+					"internalType": "address",
+					"name": "",
+					"type": "address"
+				},
+				{
+					"internalType": "uint256",
+					"name": "",
+					"type": "uint256"
+				},
+				{
+					"internalType": "address",
+					"name": "",
+					"type": "address"
+				},
+				{
+					"internalType": "uint256",
+					"name": "",
+					"type": "uint256"
+				}
+			],
+			"stateMutability": "view",
+			"type": "function"
+		},
+		{
+			"inputs": [
+				{
+					"internalType": "bytes32",
+					"name": "_userHash",
+					"type": "bytes32"
+				},
+				{
+					"internalType": "uint32",
+					"name": "_assetClass",
+					"type": "uint32"
+				}
+			],
+			"name": "getUserType",
+			"outputs": [
+				{
+					"internalType": "uint8",
+					"name": "",
+					"type": "uint8"
+				}
+			],
+			"stateMutability": "view",
+			"type": "function"
+		},
+		{
+			"inputs": [
+				{
+					"internalType": "uint32",
+					"name": "_assetClass",
+					"type": "uint32"
+				},
+				{
+					"internalType": "uint256",
+					"name": "_amount",
+					"type": "uint256"
+				}
+			],
+			"name": "increaseShare",
+			"outputs": [],
+			"stateMutability": "nonpayable",
+			"type": "function"
+		},
+		{
+			"inputs": [
+				{
+					"internalType": "uint32",
+					"name": "_assetClass1",
+					"type": "uint32"
+				},
+				{
+					"internalType": "uint32",
+					"name": "_assetClass2",
+					"type": "uint32"
+				}
+			],
+			"name": "isSameRootAC",
+			"outputs": [
+				{
+					"internalType": "uint8",
+					"name": "",
+					"type": "uint8"
+				}
+			],
+			"stateMutability": "view",
+			"type": "function"
+		},
+		{
+			"inputs": [
+				{
+					"internalType": "string",
+					"name": "_name",
+					"type": "string"
+				},
+				{
+					"internalType": "uint32",
+					"name": "_assetClassRoot",
+					"type": "uint32"
+				},
+				{
+					"internalType": "uint8",
+					"name": "_custodyType",
+					"type": "uint8"
+				},
+				{
+					"internalType": "bytes32",
+					"name": "_IPFS",
+					"type": "bytes32"
+				}
+			],
+			"name": "purchaseACnode",
+			"outputs": [],
+			"stateMutability": "nonpayable",
+			"type": "function"
+		},
+		{
+			"inputs": [
+				{
+					"internalType": "string",
+					"name": "_name",
+					"type": "string"
+				}
+			],
+			"name": "resolveAssetClass",
+			"outputs": [
+				{
+					"internalType": "uint32",
+					"name": "",
+					"type": "uint32"
+				}
+			],
+			"stateMutability": "view",
+			"type": "function"
+		},
+		{
+			"inputs": [
+				{
+					"internalType": "uint160",
+					"name": "_extData",
+					"type": "uint160"
+				},
+				{
+					"internalType": "uint32",
+					"name": "_assetClass",
+					"type": "uint32"
+				}
+			],
+			"name": "updateACextendedData",
+			"outputs": [],
+			"stateMutability": "nonpayable",
+			"type": "function"
+		},
+		{
+			"inputs": [
+				{
+					"internalType": "bytes32",
+					"name": "_IPFS",
+					"type": "bytes32"
+				},
+				{
+					"internalType": "uint32",
+					"name": "_assetClass",
+					"type": "uint32"
+				}
+			],
+			"name": "updateACipfs",
+			"outputs": [],
+			"stateMutability": "nonpayable",
+			"type": "function"
+		},
+		{
+			"inputs": [
+				{
+					"internalType": "string",
+					"name": "_name",
+					"type": "string"
+				},
+				{
+					"internalType": "uint32",
+					"name": "_assetClass",
+					"type": "uint32"
+				}
+			],
+			"name": "updateACname",
+			"outputs": [],
+			"stateMutability": "nonpayable",
+			"type": "function"
+		}
+	]
+}

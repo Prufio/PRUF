@@ -1,0 +1,72 @@
+{
+	"compiler": {
+		"version": "0.6.7+commit.b8d736ae"
+	},
+	"language": "Solidity",
+	"output": {
+		"abi": [
+			{
+				"inputs": [
+					{
+						"internalType": "bytes32",
+						"name": "_idxHash",
+						"type": "bytes32"
+					},
+					{
+						"internalType": "address",
+						"name": "_sender",
+						"type": "address"
+					}
+				],
+				"name": "discard",
+				"outputs": [],
+				"stateMutability": "nonpayable",
+				"type": "function"
+			},
+			{
+				"inputs": [
+					{
+						"internalType": "bytes32",
+						"name": "_idxHash",
+						"type": "bytes32"
+					}
+				],
+				"name": "recycle",
+				"outputs": [],
+				"stateMutability": "nonpayable",
+				"type": "function"
+			}
+		],
+		"devdoc": {
+			"methods": {}
+		},
+		"userdoc": {
+			"methods": {}
+		}
+	},
+	"settings": {
+		"compilationTarget": {
+			"Documents/PRUF/Flatpacks/Truffle_Flattened_Util_Child/FlatUtilChild.sol": "RCLR_Interface"
+		},
+		"evmVersion": "istanbul",
+		"libraries": {},
+		"metadata": {
+			"bytecodeHash": "ipfs"
+		},
+		"optimizer": {
+			"enabled": false,
+			"runs": 200
+		},
+		"remappings": []
+	},
+	"sources": {
+		"Documents/PRUF/Flatpacks/Truffle_Flattened_Util_Child/FlatUtilChild.sol": {
+			"keccak256": "0xbceb4fd189c1786ea2770ac21ac399c23e8c1d6ca9210518ea786fff8968e028",
+			"urls": [
+				"bzz-raw://5aabea3dd843001114f541b77f23f23de78799506bfdc21e9b775ac14f1ef8ef",
+				"dweb:/ipfs/Qmb5gDmfai45wh41bzqY26bYghTdgP5H4m8p1nsfkFRtCt"
+			]
+		}
+	},
+	"version": 1
+}
