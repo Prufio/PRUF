@@ -275,64 +275,64 @@ contract STOR is AccessControl, ReentrancyGuard, Pausable {
      * @dev Set the default 11 authorized contracts
      * @param _node the Node which will be enabled for the default contracts
      */
-    function enableDefaultContractsForAC(uint32 _node) external {
+    function enableDefaultContractsForNode(uint32 _node) external {
         require(
             (NODE_TKN.ownerOf(_node) == _msgSender()) ||
                 (_msgSender() == contractNameToAddress["NODE_MGR"]),
             "S:EDCFAC: Caller not ACtokenHolder or NODE_MGR"
         );
         //^^^^^^^checks^^^^^^^^^
-        enableContractForAC(
+        enableContractForNode(
             defaultContracts[0].name,
             _node,
             defaultContracts[0].contractType
         );
-        enableContractForAC(
+        enableContractForNode(
             defaultContracts[1].name,
             _node,
             defaultContracts[1].contractType
         );
-        enableContractForAC(
+        enableContractForNode(
             defaultContracts[2].name,
             _node,
             defaultContracts[2].contractType
         );
-        enableContractForAC(
+        enableContractForNode(
             defaultContracts[3].name,
             _node,
             defaultContracts[3].contractType
         );
-        enableContractForAC(
+        enableContractForNode(
             defaultContracts[4].name,
             _node,
             defaultContracts[4].contractType
         );
-        enableContractForAC(
+        enableContractForNode(
             defaultContracts[5].name,
             _node,
             defaultContracts[5].contractType
         );
-        enableContractForAC(
+        enableContractForNode(
             defaultContracts[6].name,
             _node,
             defaultContracts[6].contractType
         );
-        enableContractForAC(
+        enableContractForNode(
             defaultContracts[7].name,
             _node,
             defaultContracts[7].contractType
         );
-        enableContractForAC(
+        enableContractForNode(
             defaultContracts[8].name,
             _node,
             defaultContracts[8].contractType
         );
-        enableContractForAC(
+        enableContractForNode(
             defaultContracts[9].name,
             _node,
             defaultContracts[9].contractType
         );
-        enableContractForAC(
+        enableContractForNode(
             defaultContracts[10].name,
             _node,
             defaultContracts[10].contractType
@@ -347,7 +347,7 @@ contract STOR is AccessControl, ReentrancyGuard, Pausable {
      * @param   _node - affected node
      * @param   _contractAuthLevel - auth level to set for thae contract, in that node
      */
-    function enableContractForAC(
+    function enableContractForNode(
         string memory _name,
         uint32 _node,
         uint8 _contractAuthLevel
