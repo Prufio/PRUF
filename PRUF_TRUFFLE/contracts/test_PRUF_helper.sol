@@ -337,4 +337,10 @@ contract Helper is Ownable, BASIC {
     bytes32 content adressable storage; //content adressable storage data for defining idxHash creation attribute fields
 }
     */
+
+    function typeConvertTest (uint32 _number) external pure returns (uint256,bytes32){  //DPS:CHECK/TEST
+        uint256 u256 = _number;
+        bytes32 b32 = bytes32(u256);
+        return (u256,b32);
+    }
 }
