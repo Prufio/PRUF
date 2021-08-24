@@ -53,9 +53,6 @@ abstract contract BASIC is
     address internal A_TKN_Address;
     A_TKN_Interface internal A_TKN;
 
-    // address internal NODE_TKN_Address;
-    // NODE_TKN_Interface internal NODE_TKN;
-
     address internal ID_TKN_Address;
     ID_TKN_Interface internal ID_TKN;
 
@@ -130,9 +127,6 @@ abstract contract BASIC is
         isContractAdmin 
     {
         //^^^^^^^checks^^^^^^^^^
-        // NODE_TKN_Address = STOR.resolveContractAddress("NODE_TKN");
-        // NODE_TKN = NODE_TKN_Interface(NODE_TKN_Address);
-
         NODE_MGR_Address = STOR.resolveContractAddress("NODE_MGR");
         NODE_MGR = NODE_MGR_Interface(NODE_MGR_Address);
 
