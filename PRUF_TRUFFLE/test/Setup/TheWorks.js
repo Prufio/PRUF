@@ -108,6 +108,7 @@ let nakedAuthCode7;
 
 let payableRoleB32;
 let minterRoleB32;
+let nodeMinterRoleB32;
 let trustedAgentRoleB32;
 let assetTransferRoleB32;
 let discardRoleB32;
@@ -285,6 +286,8 @@ contract("TheWorks", (accounts) => {
     payableRoleB32 = await Helper.getStringHash("PAYABLE_ROLE");
 
     minterRoleB32 = await Helper.getStringHash("MINTER_ROLE");
+
+    nodeMinterRoleB32 = await Helper.getStringHash("NODE_MINTER_ROLE");
 
     trustedAgentRoleB32 = await Helper.getStringHash("TRUSTED_AGENT_ROLE");
 
@@ -882,8 +885,18 @@ contract("TheWorks", (accounts) => {
       })
 
       .then(() => {
+        console.log("Authorizing RCLR");
+        return A_TKN.grantRole(minterRoleB32, RCLR.address, { from: account1 });
+      })
+
+      .then(() => {
         console.log("Authorizing PURCHASE");
-        return A_TKN.grantRole(trustedAgentRoleB32, PURCHASE.address, {
+        return A_TKN.grantRole(trustedAgentRoleB32, PURCHASE.address, { from: account1 });
+      })
+
+      .then(() => {
+        console.log("Authorizing NODE_MGR");
+        return A_TKN.grantRole(nodeMinterRoleB32, NODE_MGR.address, {
           from: account1,
         });
       });
