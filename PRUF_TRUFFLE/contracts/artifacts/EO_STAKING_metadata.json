@@ -1,6 +1,6 @@
 {
 	"compiler": {
-		"version": "0.8.1+commit.df193b15"
+		"version": "0.8.7+commit.e28d00a7"
 	},
 	"language": "Solidity",
 	"output": {
@@ -122,67 +122,6 @@
 					}
 				],
 				"stateMutability": "view",
-				"type": "function"
-			},
-			{
-				"inputs": [
-					{
-						"internalType": "uint256",
-						"name": "_stakeTier",
-						"type": "uint256"
-					},
-					{
-						"internalType": "uint256",
-						"name": "_min",
-						"type": "uint256"
-					},
-					{
-						"internalType": "uint256",
-						"name": "_max",
-						"type": "uint256"
-					},
-					{
-						"internalType": "uint256",
-						"name": "_interval",
-						"type": "uint256"
-					},
-					{
-						"internalType": "uint256",
-						"name": "_bonus",
-						"type": "uint256"
-					}
-				],
-				"name": "Admin_setStakeLevels",
-				"outputs": [],
-				"stateMutability": "nonpayable",
-				"type": "function"
-			},
-			{
-				"inputs": [
-					{
-						"internalType": "address",
-						"name": "_utilAddress",
-						"type": "address"
-					},
-					{
-						"internalType": "address",
-						"name": "_stakeAddress",
-						"type": "address"
-					},
-					{
-						"internalType": "address",
-						"name": "_stakeVaultAddress",
-						"type": "address"
-					},
-					{
-						"internalType": "address",
-						"name": "_rewardsVaultAddress",
-						"type": "address"
-					}
-				],
-				"name": "Admin_setTokenContracts",
-				"outputs": [],
-				"stateMutability": "nonpayable",
 				"type": "function"
 			},
 			{
@@ -491,6 +430,67 @@
 				"inputs": [
 					{
 						"internalType": "uint256",
+						"name": "_stakeTier",
+						"type": "uint256"
+					},
+					{
+						"internalType": "uint256",
+						"name": "_min",
+						"type": "uint256"
+					},
+					{
+						"internalType": "uint256",
+						"name": "_max",
+						"type": "uint256"
+					},
+					{
+						"internalType": "uint256",
+						"name": "_interval",
+						"type": "uint256"
+					},
+					{
+						"internalType": "uint256",
+						"name": "_bonus",
+						"type": "uint256"
+					}
+				],
+				"name": "setStakeLevels",
+				"outputs": [],
+				"stateMutability": "nonpayable",
+				"type": "function"
+			},
+			{
+				"inputs": [
+					{
+						"internalType": "address",
+						"name": "_utilAddress",
+						"type": "address"
+					},
+					{
+						"internalType": "address",
+						"name": "_stakeAddress",
+						"type": "address"
+					},
+					{
+						"internalType": "address",
+						"name": "_stakeVaultAddress",
+						"type": "address"
+					},
+					{
+						"internalType": "address",
+						"name": "_rewardsVaultAddress",
+						"type": "address"
+					}
+				],
+				"name": "setTokenContracts",
+				"outputs": [],
+				"stateMutability": "nonpayable",
+				"type": "function"
+			},
+			{
+				"inputs": [
+					{
+						"internalType": "uint256",
 						"name": "_tokenId",
 						"type": "uint256"
 					}
@@ -578,24 +578,6 @@
 		"devdoc": {
 			"kind": "dev",
 			"methods": {
-				"Admin_setStakeLevels(uint256,uint256,uint256,uint256,uint256)": {
-					"details": "Set stake parameters",
-					"params": {
-						"_bonus": "bonus in tenths of a percent: 15 = 1.5% or 15/1000 per interval. Calculated to a fixed amount of tokens in the actual stake",
-						"_interval": "staking interval, in dayUnits - set to the number of days that the stake and reward interval will be based on.",
-						"_max": "Maximum stake",
-						"_min": "Minumum stake",
-						"_stakeTier": "Staking level to set"
-					}
-				},
-				"Admin_setTokenContracts(address,address,address,address)": {
-					"details": "Set address of contracts to interface with",
-					"params": {
-						"_rewardsVaultAddress": "address of REWARDS_VAULT",
-						"_stakeAddress": "address of STAKE_TKN",
-						"_stakeVaultAddress": "address of STAKE_VAULT"
-					}
-				},
 				"breakStake(uint256)": {
 					"details": "Transfers eligible rewards to staker, resets last payment time,",
 					"params": {
@@ -603,7 +585,7 @@
 					}
 				},
 				"checkEligibleRewards(uint256)": {
-					"details": "Check eligible rewards amount for a stake, for verification (may want to remove for production) returns reward + microIntervals",
+					"details": "Check eligible rewards amount for a stake, for verification (may want to remove for production) returns reward and microIntervals",
 					"params": {
 						"_tokenId": "token id to check"
 					}
@@ -653,6 +635,24 @@
 				"revokeRole(bytes32,address)": {
 					"details": "Revokes `role` from `account`. If `account` had been granted `role`, emits a {RoleRevoked} event. Requirements: - the caller must have ``role``'s admin role."
 				},
+				"setStakeLevels(uint256,uint256,uint256,uint256,uint256)": {
+					"details": "Set stake parameters",
+					"params": {
+						"_bonus": "bonus in tenths of a percent: 15 = 1.5% or 15/1000 per interval. Calculated to a fixed amount of tokens in the actual stake",
+						"_interval": "staking interval, in dayUnits - set to the number of days that the stake and reward interval will be based on.",
+						"_max": "Maximum stake",
+						"_min": "Minumum stake",
+						"_stakeTier": "Staking level to set"
+					}
+				},
+				"setTokenContracts(address,address,address,address)": {
+					"details": "Set address of contracts to interface with",
+					"params": {
+						"_rewardsVaultAddress": "address of REWARDS_VAULT",
+						"_stakeAddress": "address of STAKE_TKN",
+						"_stakeVaultAddress": "address of STAKE_VAULT"
+					}
+				},
 				"stakeInfo(uint256)": {
 					"details": "Return Stake info",
 					"params": {
@@ -688,9 +688,9 @@
 	},
 	"settings": {
 		"compilationTarget": {
-			"Documents/DEV/PRUF/PRUF_TRUFFLE/contracts/PRUF_EO_STAKING.sol": "EO_STAKING"
+			"Documents/PRUF/PRUF_TRUFFLE/contracts/PRUF_EO_STAKING.sol": "EO_STAKING"
 		},
-		"evmVersion": "istanbul",
+		"evmVersion": "london",
 		"libraries": {},
 		"metadata": {
 			"bytecodeHash": "ipfs"
@@ -702,7 +702,7 @@
 		"remappings": []
 	},
 	"sources": {
-		"Documents/DEV/PRUF/PRUF_TRUFFLE/contracts/Imports/access/AccessControl.sol": {
+		"Documents/PRUF/PRUF_TRUFFLE/contracts/Imports/access/AccessControl.sol": {
 			"keccak256": "0x6e98c0d315f562a98d915414f948e041531138284dd633b4cdb0361a7172cd97",
 			"license": "MIT",
 			"urls": [
@@ -710,7 +710,7 @@
 				"dweb:/ipfs/QmSWUiJXUDFQbno6WgsadapBtYnQwn1iKuCo1z6A5qHjEV"
 			]
 		},
-		"Documents/DEV/PRUF/PRUF_TRUFFLE/contracts/Imports/introspection/IERC165.sol": {
+		"Documents/PRUF/PRUF_TRUFFLE/contracts/Imports/introspection/IERC165.sol": {
 			"keccak256": "0xa28007762d9da9db878dd421960c8cb9a10471f47ab5c1b3309bfe48e9e79ff4",
 			"license": "MIT",
 			"urls": [
@@ -718,7 +718,7 @@
 				"dweb:/ipfs/QmcsVgLgzWdor3UnAztUkXKNGcysm1MPneWksF72AvnwBx"
 			]
 		},
-		"Documents/DEV/PRUF/PRUF_TRUFFLE/contracts/Imports/token/ERC721/IERC721.sol": {
+		"Documents/PRUF/PRUF_TRUFFLE/contracts/Imports/token/ERC721/IERC721.sol": {
 			"keccak256": "0xe75db2fa62af4f543d39e1d718f77b5091aaf032988329e48839ce3410996fde",
 			"license": "MIT",
 			"urls": [
@@ -726,7 +726,7 @@
 				"dweb:/ipfs/QmcDS45TqG1DaaDbM9khBPV3FU2qi3ztgVGZWF133qujLd"
 			]
 		},
-		"Documents/DEV/PRUF/PRUF_TRUFFLE/contracts/Imports/utils/Address.sol": {
+		"Documents/PRUF/PRUF_TRUFFLE/contracts/Imports/utils/Address.sol": {
 			"keccak256": "0x069b2631bb5b5193a58ccf7a06266c7361bd2c20095667af4402817605627f45",
 			"license": "MIT",
 			"urls": [
@@ -734,7 +734,7 @@
 				"dweb:/ipfs/QmXmxubE3jnatFgZuN8ay1VV6hZ8WRmhvUjNpeVjki15HX"
 			]
 		},
-		"Documents/DEV/PRUF/PRUF_TRUFFLE/contracts/Imports/utils/Context.sol": {
+		"Documents/PRUF/PRUF_TRUFFLE/contracts/Imports/utils/Context.sol": {
 			"keccak256": "0xf930d2df426bfcfc1f7415be724f04081c96f4fb9ec8d0e3a521c07692dface0",
 			"license": "MIT",
 			"urls": [
@@ -742,7 +742,7 @@
 				"dweb:/ipfs/QmTbFya18786ckJfLYUoWau9jBTKfmWnWm5XSViWvB7PXN"
 			]
 		},
-		"Documents/DEV/PRUF/PRUF_TRUFFLE/contracts/Imports/utils/EnumerableSet.sol": {
+		"Documents/PRUF/PRUF_TRUFFLE/contracts/Imports/utils/EnumerableSet.sol": {
 			"keccak256": "0x71e0d1cc75b67306382e055b789b6d3ffe34a9e2e55380d3c9895a36a42229e1",
 			"license": "MIT",
 			"urls": [
@@ -750,7 +750,7 @@
 				"dweb:/ipfs/QmdwRX791f2gdkxLfzQLcyx3ZLvSjGd2wdX8gXFi8sH2uW"
 			]
 		},
-		"Documents/DEV/PRUF/PRUF_TRUFFLE/contracts/Imports/utils/Pausable.sol": {
+		"Documents/PRUF/PRUF_TRUFFLE/contracts/Imports/utils/Pausable.sol": {
 			"keccak256": "0xc6e9bea1d943d97521f0a73f2667eccc2eb0f740c209574d113ec5addb617472",
 			"license": "MIT",
 			"urls": [
@@ -758,7 +758,7 @@
 				"dweb:/ipfs/QmXfPZ8XDfMDMWD4uajioE21AhQhndDdo5tqbMpaM51scV"
 			]
 		},
-		"Documents/DEV/PRUF/PRUF_TRUFFLE/contracts/Imports/utils/ReentrancyGuard.sol": {
+		"Documents/PRUF/PRUF_TRUFFLE/contracts/Imports/utils/ReentrancyGuard.sol": {
 			"keccak256": "0x1278c76b840063ff5e14a2d7c5707812c1eabc2342ed040bf862c2d7552102fe",
 			"license": "MIT",
 			"urls": [
@@ -766,20 +766,20 @@
 				"dweb:/ipfs/Qmdg6rbPsShpnzvqKmPVuFk7eYU53oXTPxqUJXd9WLD4vg"
 			]
 		},
-		"Documents/DEV/PRUF/PRUF_TRUFFLE/contracts/PRUF_EO_STAKING.sol": {
-			"keccak256": "0x0432ed7d0084302d1650c864b78691047bfeab3bad0730d167ba066c351f9673",
+		"Documents/PRUF/PRUF_TRUFFLE/contracts/PRUF_EO_STAKING.sol": {
+			"keccak256": "0xd658f50a653098afc324536197ec1c4fe49209969615c8f02f2e81699409524d",
 			"license": "UNLICENSED",
 			"urls": [
-				"bzz-raw://725376ba0555f46824ba1ef6e63c465bc4c4b2e826d7e499eb09ecd093228e99",
-				"dweb:/ipfs/QmRcsiy6xhdwEABPjatixoA7D1pEebZ3GFbBJyxrDpbCtw"
+				"bzz-raw://28dd13f10f306ccab656c82fff6ea96c43f19a9aed8b1fc4eb7696191269c8f8",
+				"dweb:/ipfs/QmbHHBaH7YubesXxPbNr5Pp74uFDyiesJpkpPaZkhn5ADr"
 			]
 		},
-		"Documents/DEV/PRUF/PRUF_TRUFFLE/contracts/PRUF_INTERFACES.sol": {
-			"keccak256": "0xa003c0219361a6ce0b1fb1c0940b04014fa52425998b708846987c30300171c9",
+		"Documents/PRUF/PRUF_TRUFFLE/contracts/PRUF_INTERFACES.sol": {
+			"keccak256": "0xd6efffd1c1834455c2dab9ee564fa1d611f03288a1981cc34d22bf4bd330d122",
 			"license": "UNLICENSED",
 			"urls": [
-				"bzz-raw://44757101dd999979004bdfcd84305663efc4704d20c14a963d51ed70197fd01d",
-				"dweb:/ipfs/Qmbz4kKcSxfDaWZRKwSqC4YHd57Kgi1Qrx3qPYZdfaCf1b"
+				"bzz-raw://bdd83d9e0fcff53f8269bd5677f0bb2d5b6d863d82e46e70b836480131e281cf",
+				"dweb:/ipfs/QmYTM6s7v4tA1gwudxT2BC5tMPwPcfVQn9pTSntVURt5jW"
 			]
 		}
 	},
