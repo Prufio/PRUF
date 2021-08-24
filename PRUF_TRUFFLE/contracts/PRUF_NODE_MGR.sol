@@ -823,7 +823,7 @@ contract NODE_MGR is BASIC {
         node_data[_newNode].CAS2 = _newNodeData.CAS2;
         //^^^^^^^effects^^^^^^^^^
 
-        A_TKN.mintAssetToken(_recipientAddress, tokenId, "pruf.io/nodeToken");
+        A_TKN.mintNodeToken(_recipientAddress, tokenId, "pruf.io/nodeToken");
         //^^^^^^^interactions^^^^^^^^^
     }
 }
