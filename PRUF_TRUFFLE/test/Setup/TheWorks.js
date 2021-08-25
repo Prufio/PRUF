@@ -58,6 +58,10 @@ let string14Hash;
 
 let ECR_MGRHASH;
 
+let node1;
+let node2;
+let node1000001;
+
 let asset1;
 let asset2;
 let asset3;
@@ -137,6 +141,12 @@ contract("TheWorks", (accounts) => {
   });
 
   it("Should build variables", async () => {
+    node1 = "0x0000000000000000000000000000000000000000000000000000000000000001";
+
+    node2 = "0x0000000000000000000000000000000000000000000000000000000000000002";
+
+    node1000001 = "0x0000000000000000000000000000000000000000000000000000000000f4241";
+
     asset1 = await Helper.getIdxHash("aaa", "aaa", "aaa", "aaa");
 
     asset2 = await Helper.getIdxHash("bbb", "bbb", "bbb", "bbb");
@@ -431,182 +441,194 @@ contract("TheWorks", (accounts) => {
 
   it("Should add default contracts to storage", () => {
     console.log("Adding NODE_MGR to default contract list");
-    return STOR.addDefaultContracts("0", "NODE_MGR", "1", { from: account1 })
+    return (
+      STOR.addDefaultContracts("0", "NODE_MGR", "1", { from: account1 })
 
-      // .then(() => {
-      //   console.log("Adding NODE_TKN to default contract list");
-      //   return STOR.addDefaultContracts("1", "NODE_TKN", "1", { from: account1 });
-      // })
+        // .then(() => {
+        //   console.log("Adding NODE_TKN to default contract list");
+        //   return STOR.addDefaultContracts("1", "NODE_TKN", "1", { from: account1 });
+        // })
 
-      .then(() => {
-        console.log("Adding A_TKN to default contract list");
-        return STOR.addDefaultContracts("2", "A_TKN", "1", { from: account1 });
-      })
+        .then(() => {
+          console.log("Adding A_TKN to default contract list");
+          return STOR.addDefaultContracts("2", "A_TKN", "1", {
+            from: account1,
+          });
+        })
 
-      .then(() => {
-        console.log("Adding ECR_MGR to default contract list");
-        return STOR.addDefaultContracts("3", "ECR_MGR", "1", {
-          from: account1,
-        });
-      })
+        .then(() => {
+          console.log("Adding ECR_MGR to default contract list");
+          return STOR.addDefaultContracts("3", "ECR_MGR", "1", {
+            from: account1,
+          });
+        })
 
-      .then(() => {
-        console.log("Adding APP_NC to default contract list");
-        return STOR.addDefaultContracts("4", "APP_NC", "2", { from: account1 });
-      })
+        .then(() => {
+          console.log("Adding APP_NC to default contract list");
+          return STOR.addDefaultContracts("4", "APP_NC", "2", {
+            from: account1,
+          });
+        })
 
-      .then(() => {
-        console.log("Adding APP2_NC to default contract list");
-        return STOR.addDefaultContracts("5", "APP2_NC", "2", { from: account1 });
-      })
+        .then(() => {
+          console.log("Adding APP2_NC to default contract list");
+          return STOR.addDefaultContracts("5", "APP2_NC", "2", {
+            from: account1,
+          });
+        })
 
-      .then(() => {
-        console.log("Adding RCLR to default contract list");
-        return STOR.addDefaultContracts("6", "RCLR", "3", { from: account1 });
-      })
+        .then(() => {
+          console.log("Adding RCLR to default contract list");
+          return STOR.addDefaultContracts("6", "RCLR", "3", { from: account1 });
+        })
 
-      .then(() => {
-        console.log("Adding PURCHASE to default contract list");
-        return STOR.addDefaultContracts("8", "PURCHASE", "2", {
-          from: account1,
-        });
-      })
+        .then(() => {
+          console.log("Adding PURCHASE to default contract list");
+          return STOR.addDefaultContracts("8", "PURCHASE", "2", {
+            from: account1,
+          });
+        })
 
-      .then(() => {
-        console.log("Adding DECORATE to default contract list");
-        return STOR.addDefaultContracts("9", "DECORATE", "2", {
-          from: account1,
-        });
-      })
+        .then(() => {
+          console.log("Adding DECORATE to default contract list");
+          return STOR.addDefaultContracts("9", "DECORATE", "2", {
+            from: account1,
+          });
+        })
 
-      .then(() => {
-        console.log("Adding WRAP to default contract list");
-        return STOR.addDefaultContracts("10", "WRAP", "2", { from: account1 });
-      });
+        .then(() => {
+          console.log("Adding WRAP to default contract list");
+          return STOR.addDefaultContracts("10", "WRAP", "2", {
+            from: account1,
+          });
+        })
+    );
   });
 
   it("Should add contract addresses to storage", () => {
     console.log("Adding APP to storage for use in Node 0");
-    return STOR.OO_addContract("APP", APP.address, "0", "1", { from: account1 })
+    return (
+      STOR.OO_addContract("APP", APP.address, "0", "1", { from: account1 })
 
-      .then(() => {
-        console.log("Adding APP2 to storage for use in Node 0");
-        return STOR.OO_addContract("APP2", APP2.address, "0", "1", {
-          from: account1,
-        });
-      })
+        .then(() => {
+          console.log("Adding APP2 to storage for use in Node 0");
+          return STOR.OO_addContract("APP2", APP2.address, "0", "1", {
+            from: account1,
+          });
+        })
 
-      .then(() => {
-        console.log("Adding NODE_MGR to storage for use in Node 0");
-        return STOR.OO_addContract("NODE_MGR", NODE_MGR.address, "0", "1", {
-          from: account1,
-        });
-      })
+        .then(() => {
+          console.log("Adding NODE_MGR to storage for use in Node 0");
+          return STOR.OO_addContract("NODE_MGR", NODE_MGR.address, "0", "1", {
+            from: account1,
+          });
+        })
 
-      // .then(() => {
-      //   console.log("Adding NODE_TKN to storage for use in Node 0");
-      //   return STOR.OO_addContract("NODE_TKN", NODE_TKN.address, "0", "1", {
-      //     from: account1,
-      //   });
-      // })
+        // .then(() => {
+        //   console.log("Adding NODE_TKN to storage for use in Node 0");
+        //   return STOR.OO_addContract("NODE_TKN", NODE_TKN.address, "0", "1", {
+        //     from: account1,
+        //   });
+        // })
 
-      .then(() => {
-        console.log("Adding A_TKN to storage for use in Node 0");
-        return STOR.OO_addContract("A_TKN", A_TKN.address, "0", "1", {
-          from: account1,
-        });
-      })
+        .then(() => {
+          console.log("Adding A_TKN to storage for use in Node 0");
+          return STOR.OO_addContract("A_TKN", A_TKN.address, "0", "1", {
+            from: account1,
+          });
+        })
 
-      .then(() => {
-        console.log("Adding ID_TKN to storage for use in Node 0");
-        return STOR.OO_addContract("ID_TKN", ID_TKN.address, "0", "1", {
-          from: account1,
-        });
-      })
+        .then(() => {
+          console.log("Adding ID_TKN to storage for use in Node 0");
+          return STOR.OO_addContract("ID_TKN", ID_TKN.address, "0", "1", {
+            from: account1,
+          });
+        })
 
-      .then(() => {
-        console.log("Adding ECR_MGR to storage for use in Node 0");
-        return STOR.OO_addContract("ECR_MGR", ECR_MGR.address, "0", "1", {
-          from: account1,
-        });
-      })
+        .then(() => {
+          console.log("Adding ECR_MGR to storage for use in Node 0");
+          return STOR.OO_addContract("ECR_MGR", ECR_MGR.address, "0", "1", {
+            from: account1,
+          });
+        })
 
-      .then(() => {
-        console.log("Adding ECR to storage for use in Node 0");
-        return STOR.OO_addContract("ECR", ECR.address, "0", "3", {
-          from: account1,
-        });
-      })
+        .then(() => {
+          console.log("Adding ECR to storage for use in Node 0");
+          return STOR.OO_addContract("ECR", ECR.address, "0", "3", {
+            from: account1,
+          });
+        })
 
-      .then(() => {
-        console.log("Adding ECR2 to storage for use in Node 0");
-        return STOR.OO_addContract("ECR2", ECR2.address, "0", "3", {
-          from: account1,
-        });
-      })
+        .then(() => {
+          console.log("Adding ECR2 to storage for use in Node 0");
+          return STOR.OO_addContract("ECR2", ECR2.address, "0", "3", {
+            from: account1,
+          });
+        })
 
-      .then(() => {
-        console.log("Adding APP_NC to storage for use in Node 0");
-        return STOR.OO_addContract("APP_NC", APP_NC.address, "0", "2", {
-          from: account1,
-        });
-      })
+        .then(() => {
+          console.log("Adding APP_NC to storage for use in Node 0");
+          return STOR.OO_addContract("APP_NC", APP_NC.address, "0", "2", {
+            from: account1,
+          });
+        })
 
-      .then(() => {
-        console.log("Adding APP2_NC to storage for use in Node 0");
-        return STOR.OO_addContract("APP2_NC", APP2_NC.address, "0", "2", {
-          from: account1,
-        });
-      })
+        .then(() => {
+          console.log("Adding APP2_NC to storage for use in Node 0");
+          return STOR.OO_addContract("APP2_NC", APP2_NC.address, "0", "2", {
+            from: account1,
+          });
+        })
 
-      .then(() => {
-        console.log("Adding ECR_NC to storage for use in Node 0");
-        return STOR.OO_addContract("ECR_NC", ECR_NC.address, "0", "3", {
-          from: account1,
-        });
-      })
+        .then(() => {
+          console.log("Adding ECR_NC to storage for use in Node 0");
+          return STOR.OO_addContract("ECR_NC", ECR_NC.address, "0", "3", {
+            from: account1,
+          });
+        })
 
-      .then(() => {
-        console.log("Adding RCLR to storage for use in Node 0");
-        return STOR.OO_addContract("RCLR", RCLR.address, "0", "3", {
-          from: account1,
-        });
-      })
+        .then(() => {
+          console.log("Adding RCLR to storage for use in Node 0");
+          return STOR.OO_addContract("RCLR", RCLR.address, "0", "3", {
+            from: account1,
+          });
+        })
 
-      .then(() => {
-        console.log("Adding MAL_APP to storage for use in Node 0");
-        return STOR.OO_addContract("MAL_APP", MAL_APP.address, "0", "1", {
-          from: account1,
-        });
-      })
+        .then(() => {
+          console.log("Adding MAL_APP to storage for use in Node 0");
+          return STOR.OO_addContract("MAL_APP", MAL_APP.address, "0", "1", {
+            from: account1,
+          });
+        })
 
-      .then(() => {
-        console.log("Adding UTIL_TKN to storage for use in Node 0");
-        return STOR.OO_addContract("UTIL_TKN", UTIL_TKN.address, "0", "1", {
-          from: account1,
-        });
-      })
+        .then(() => {
+          console.log("Adding UTIL_TKN to storage for use in Node 0");
+          return STOR.OO_addContract("UTIL_TKN", UTIL_TKN.address, "0", "1", {
+            from: account1,
+          });
+        })
 
-      .then(() => {
-        console.log("Adding PURCHASE to storage for use in Node 0");
-        return STOR.OO_addContract("PURCHASE", PURCHASE.address, "0", "2", {
-          from: account1,
-        });
-      })
+        .then(() => {
+          console.log("Adding PURCHASE to storage for use in Node 0");
+          return STOR.OO_addContract("PURCHASE", PURCHASE.address, "0", "2", {
+            from: account1,
+          });
+        })
 
-      .then(() => {
-        console.log("Adding DECORATE to storage for use in Node 0");
-        return STOR.OO_addContract("DECORATE", DECORATE.address, "0", "2", {
-          from: account1,
-        });
-      })
+        .then(() => {
+          console.log("Adding DECORATE to storage for use in Node 0");
+          return STOR.OO_addContract("DECORATE", DECORATE.address, "0", "2", {
+            from: account1,
+          });
+        })
 
-      .then(() => {
-        console.log("Adding WRAP to storage for use in Node 0");
-        return STOR.OO_addContract("WRAP", WRAP.address, "0", "2", {
-          from: account1,
-        });
-      });
+        .then(() => {
+          console.log("Adding WRAP to storage for use in Node 0");
+          return STOR.OO_addContract("WRAP", WRAP.address, "0", "2", {
+            from: account1,
+          });
+        })
+    );
   });
 
   it("Should add Storage to each contract", () => {
@@ -891,7 +913,9 @@ contract("TheWorks", (accounts) => {
 
       .then(() => {
         console.log("Authorizing PURCHASE");
-        return A_TKN.grantRole(trustedAgentRoleB32, PURCHASE.address, { from: account1 });
+        return A_TKN.grantRole(trustedAgentRoleB32, PURCHASE.address, {
+          from: account1,
+        });
       })
 
       .then(() => {
@@ -984,7 +1008,9 @@ contract("TheWorks", (accounts) => {
 
   it("Should authorize all minter contracts for minting NODE_TKN(s)", () => {
     console.log("Authorizing NODE_MGR");
-    return APP.grantRole(assetTransferRoleB32, APP2.address, { from: account1 });
+    return APP.grantRole(assetTransferRoleB32, APP2.address, {
+      from: account1,
+    });
   });
 
   it("Should authorize all minter contracts for minting NODE_TKN(s)", () => {
@@ -1006,8 +1032,7 @@ contract("TheWorks", (accounts) => {
       rgt000,
       account1,
       { from: account1 }
-    )
-    .then(() => {
+    ).then(() => {
       console.log("Minting root token 2 -NC");
       return NODE_MGR.createNode(
         "2",
@@ -1033,94 +1058,184 @@ contract("TheWorks", (accounts) => {
     })
 
       .then(() => {
-        return NODE_MGR.setOperationCosts("1", "2", "10000000000000000", account1, {
-          from: account1,
-        });
+        return NODE_MGR.setOperationCosts(
+          "1",
+          "2",
+          "10000000000000000",
+          account1,
+          {
+            from: account1,
+          }
+        );
       })
 
       .then(() => {
-        return NODE_MGR.setOperationCosts("1", "3", "10000000000000000", account1, {
-          from: account1,
-        });
+        return NODE_MGR.setOperationCosts(
+          "1",
+          "3",
+          "10000000000000000",
+          account1,
+          {
+            from: account1,
+          }
+        );
       })
 
       .then(() => {
-        return NODE_MGR.setOperationCosts("1", "4", "10000000000000000", account1, {
-          from: account1,
-        });
+        return NODE_MGR.setOperationCosts(
+          "1",
+          "4",
+          "10000000000000000",
+          account1,
+          {
+            from: account1,
+          }
+        );
       })
 
       .then(() => {
-        return NODE_MGR.setOperationCosts("1", "5", "10000000000000000", account1, {
-          from: account1,
-        });
+        return NODE_MGR.setOperationCosts(
+          "1",
+          "5",
+          "10000000000000000",
+          account1,
+          {
+            from: account1,
+          }
+        );
       })
 
       .then(() => {
-        return NODE_MGR.setOperationCosts("1", "6", "10000000000000000", account1, {
-          from: account1,
-        });
+        return NODE_MGR.setOperationCosts(
+          "1",
+          "6",
+          "10000000000000000",
+          account1,
+          {
+            from: account1,
+          }
+        );
       })
 
       .then(() => {
-        return NODE_MGR.setOperationCosts("1", "7", "10000000000000000", account1, {
-          from: account1,
-        });
+        return NODE_MGR.setOperationCosts(
+          "1",
+          "7",
+          "10000000000000000",
+          account1,
+          {
+            from: account1,
+          }
+        );
       })
 
       .then(() => {
-        return NODE_MGR.setOperationCosts("1", "8", "10000000000000000", account1, {
-          from: account1,
-        });
+        return NODE_MGR.setOperationCosts(
+          "1",
+          "8",
+          "10000000000000000",
+          account1,
+          {
+            from: account1,
+          }
+        );
       })
 
       .then(() => {
         console.log("Setting base costs in Node 2");
-        return NODE_MGR.setOperationCosts("2", "1", "10000000000000000", account1, {
-          from: account1,
-        });
+        return NODE_MGR.setOperationCosts(
+          "2",
+          "1",
+          "10000000000000000",
+          account1,
+          {
+            from: account1,
+          }
+        );
       })
 
       .then(() => {
-        return NODE_MGR.setOperationCosts("2", "2", "10000000000000000", account1, {
-          from: account1,
-        });
+        return NODE_MGR.setOperationCosts(
+          "2",
+          "2",
+          "10000000000000000",
+          account1,
+          {
+            from: account1,
+          }
+        );
       })
 
       .then(() => {
-        return NODE_MGR.setOperationCosts("2", "3", "10000000000000000", account1, {
-          from: account1,
-        });
+        return NODE_MGR.setOperationCosts(
+          "2",
+          "3",
+          "10000000000000000",
+          account1,
+          {
+            from: account1,
+          }
+        );
       })
 
       .then(() => {
-        return NODE_MGR.setOperationCosts("2", "4", "10000000000000000", account1, {
-          from: account1,
-        });
+        return NODE_MGR.setOperationCosts(
+          "2",
+          "4",
+          "10000000000000000",
+          account1,
+          {
+            from: account1,
+          }
+        );
       })
 
       .then(() => {
-        return NODE_MGR.setOperationCosts("2", "5", "10000000000000000", account1, {
-          from: account1,
-        });
+        return NODE_MGR.setOperationCosts(
+          "2",
+          "5",
+          "10000000000000000",
+          account1,
+          {
+            from: account1,
+          }
+        );
       })
 
       .then(() => {
-        return NODE_MGR.setOperationCosts("2", "6", "10000000000000000", account1, {
-          from: account1,
-        });
+        return NODE_MGR.setOperationCosts(
+          "2",
+          "6",
+          "10000000000000000",
+          account1,
+          {
+            from: account1,
+          }
+        );
       })
 
       .then(() => {
-        return NODE_MGR.setOperationCosts("2", "7", "10000000000000000", account1, {
-          from: account1,
-        });
+        return NODE_MGR.setOperationCosts(
+          "2",
+          "7",
+          "10000000000000000",
+          account1,
+          {
+            from: account1,
+          }
+        );
       })
 
       .then(() => {
-        return NODE_MGR.setOperationCosts("2", "8", "10000000000000000", account1, {
-          from: account1,
-        });
+        return NODE_MGR.setOperationCosts(
+          "2",
+          "8",
+          "10000000000000000",
+          account1,
+          {
+            from: account1,
+          }
+        );
       });
   });
 
@@ -1205,8 +1320,7 @@ contract("TheWorks", (accounts) => {
       rgt000,
       rgt000,
       { from: account1 }
-    )
-    .then(() => {
+    ).then(() => {
       console.log("Minting Node 1000006 -NC");
       return NODE_MGR.purchaseNode(
         "Non_Custodial_AC6",
@@ -1319,8 +1433,9 @@ contract("TheWorks", (accounts) => {
 
   it("Should authorize APP in all relevant nodes", () => {
     console.log("Authorizing APP");
-    return STOR.enableContractForAC("APP", "1000001", "1", { from: account1 })
-    .then(() => {
+    return STOR.enableContractForAC("APP", "1000001", "1", {
+      from: account1,
+    }).then(() => {
       return STOR.enableContractForAC("APP", "1000002", "1", {
         from: account1,
       });
@@ -1354,9 +1469,12 @@ contract("TheWorks", (accounts) => {
 
   it("Should authorize APP2 in all relevant nodes", () => {
     console.log("Authorizing APP2");
-    return STOR.enableContractForAC("APP2", "1000001", "1", { from: account1 })
-    .then(() => {
-      return STOR.enableContractForAC("APP2", "1000002", "1", { from: account1 });
+    return STOR.enableContractForAC("APP2", "1000001", "1", {
+      from: account1,
+    }).then(() => {
+      return STOR.enableContractForAC("APP2", "1000002", "1", {
+        from: account1,
+      });
     });
   });
 
@@ -1364,8 +1482,7 @@ contract("TheWorks", (accounts) => {
     console.log("Authorizing MAL_APP");
     return STOR.enableContractForAC("MAL_APP", "1000001", "1", {
       from: account1,
-    })
-    .then(() => {
+    }).then(() => {
       return STOR.enableContractForAC("MAL_APP", "1000002", "1", {
         from: account1,
       });
@@ -1374,8 +1491,9 @@ contract("TheWorks", (accounts) => {
 
   it("Should authorize ECR in all relevant nodes", () => {
     console.log("Authorizing ECR");
-    return STOR.enableContractForAC("ECR", "1000001", "3", { from: account1 })
-    .then(() => {
+    return STOR.enableContractForAC("ECR", "1000001", "3", {
+      from: account1,
+    }).then(() => {
       return STOR.enableContractForAC("ECR", "1000002", "3", {
         from: account1,
       });
@@ -1409,8 +1527,9 @@ contract("TheWorks", (accounts) => {
 
   it("Should authorize ECR2 in all relevant nodes", () => {
     console.log("Authorizing ECR2");
-    return STOR.enableContractForAC("ECR2", "1000001", "3", { from: account1 })
-    .then(() => {
+    return STOR.enableContractForAC("ECR2", "1000001", "3", {
+      from: account1,
+    }).then(() => {
       return STOR.enableContractForAC("ECR2", "1000002", "3", {
         from: account1,
       });
@@ -1446,18 +1565,31 @@ contract("TheWorks", (accounts) => {
     return NODE_MGR.addUser("1000001", account4Hash, "1", { from: account1 })
 
       .then(() => {
-        console.log("Account2 => 1000001");
-        return NODE_MGR.addUser("1000001", account2Hash, "1", { from: account1 });
+        console.log("Account1 => 1000001");
+        return NODE_MGR.addUser("1000001", account2Hash, "1", {
+          from: account1,
+        });
+      })
+
+      .then(() => {
+        console.log("Account1 => 1000001");
+        return NODE_MGR.addUser("1000001", account1Hash, "1", {
+          from: account1,
+        });
       })
 
       .then(() => {
         console.log("Account2 => 1000003");
-        return NODE_MGR.addUser("1000003", account2Hash, "1", { from: account1 });
+        return NODE_MGR.addUser("1000003", account2Hash, "1", {
+          from: account1,
+        });
       })
 
       .then(() => {
         console.log("Account4 => 1000003");
-        return NODE_MGR.addUser("1000003", account4Hash, "1", { from: account1 });
+        return NODE_MGR.addUser("1000003", account4Hash, "1", {
+          from: account1,
+        });
       })
 
       .then(() => {
@@ -1505,6 +1637,12 @@ contract("TheWorks", (accounts) => {
 
   it("Should mint 30000 tokens to account4", async () => {
     return UTIL_TKN.mint(account4, "30000000000000000000000", {
+      from: account1,
+    });
+  });
+
+  it("Should mint 30000 tokens to account1", async () => {
+    return UTIL_TKN.mint(account1, "30000000000000000000000", {
       from: account1,
     });
   });
@@ -1610,7 +1748,9 @@ contract("TheWorks", (accounts) => {
   });
 
   it("Should modify Mutable note @asset12 to (asset12)", async () => {
-    return APP2.modifyMutableStorage(asset12, rgt12, asset12, rgt000, { from: account2 });
+    return APP2.modifyMutableStorage(asset12, rgt12, asset12, rgt000, {
+      from: account2,
+    });
   });
 
   it("Should retrieve asset12 with newMutable(asset12)", async () => {
@@ -1816,7 +1956,9 @@ contract("TheWorks", (accounts) => {
   });
 
   it("Should modify Mutable @asset12 to RGT(12)", async () => {
-    return APP2_NC.modifyMutableStorage(asset12, rgt12, rgt000, { from: account2 });
+    return APP2_NC.modifyMutableStorage(asset12, rgt12, rgt000, {
+      from: account2,
+    });
   });
 
   it("Should retrieve asset12 @newMutable(rgt12)", async () => {
@@ -2104,7 +2246,9 @@ contract("TheWorks", (accounts) => {
   });
 
   it("Should modify Mutable note @asset13 to (asset13)", async () => {
-    return APP2_NC.modifyMutableStorage(asset13, asset13, rgt000, { from: account4 });
+    return APP2_NC.modifyMutableStorage(asset13, asset13, rgt000, {
+      from: account4,
+    });
   });
 
   it("Should retrieve asset13 with newMutable(asset13)", async () => {
@@ -2124,7 +2268,9 @@ contract("TheWorks", (accounts) => {
   });
 
   it("Should set NonMutable note to (asset13)", async () => {
-    return APP_NC.addNonMutableNote(asset13, asset13, rgt000, { from: account4 });
+    return APP_NC.addNonMutableNote(asset13, asset13, rgt000, {
+      from: account4,
+    });
   });
 
   it("Should retrieve asset13 with newNonMutable(asset13)", async () => {
@@ -2408,7 +2554,9 @@ contract("TheWorks", (accounts) => {
   });
 
   it("Should modify Mutable @asset13 to RGT(12)", async () => {
-    return APP2.modifyMutableStorage(asset13, rgtFFF, rgt13, rgt000, { from: account4 });
+    return APP2.modifyMutableStorage(asset13, rgtFFF, rgt13, rgt000, {
+      from: account4,
+    });
   });
 
   it("Should retrieve asset13 @newMutable(rgt13)", async () => {
@@ -2528,7 +2676,9 @@ contract("TheWorks", (accounts) => {
   });
 
   it("Should export asset13(status70)", async () => {
-    return APP2.exportAssetTo(asset13, "1000003", account4, rgt13, { from: account4 });
+    return APP2.exportAssetTo(asset13, "1000003", account4, rgt13, {
+      from: account4,
+    });
   });
   ///
 
@@ -2763,6 +2913,726 @@ contract("TheWorks", (accounts) => {
 
     return await UTIL_TKN.balanceOf(
       account4,
+      { from: account2 },
+      function (_err, _result) {
+        if (_err) {
+        } else {
+          Record = _result;
+          console.log(Record);
+        }
+      }
+    );
+  });
+
+  it("Should retrieve show clean asset node1000001", async () => {
+    console.log(
+      "//**************************************BEGIN THE WORKS NON CUSTODIAL(Node)**********************************************/"
+    );
+    console.log(node1000001);
+    var Record = [];
+
+    return await STOR.retrieveShortRecord(
+      node1000001,
+      { from: account4 },
+      function (_err, _result) {
+        if (_err) {
+        } else {
+          Record = Object.values(_result);
+          console.log(Record);
+        }
+      }
+    );
+  });
+
+  it("Should decrement node1000001 amount by 15", async () => {
+    return APP2_NC.decrementCounter(node1000001, "15", { from: account1 });
+  });
+
+  it("Should retrieve node1000001 @newDecCount", async () => {
+    var Record = [];
+
+    return await STOR.retrieveShortRecord(
+      node1000001,
+      { from: account4 },
+      function (_err, _result) {
+        if (_err) {
+        } else {
+          Record = Object.values(_result);
+          console.log(Record);
+        }
+      }
+    );
+  });
+
+  it("Should modify Mutable note @node1000001 to (node1000001)", async () => {
+    return APP2_NC.modifyMutableStorage(node1000001, node1000001, rgt000, {
+      from: account1,
+    });
+  });
+
+  it("Should retrieve node1000001 with newMutable(node1000001)", async () => {
+    var Record = [];
+
+    return await STOR.retrieveShortRecord(
+      node1000001,
+      { from: account4 },
+      function (_err, _result) {
+        if (_err) {
+        } else {
+          Record = Object.values(_result);
+          console.log(Record);
+        }
+      }
+    );
+  });
+
+  it("Should set NonMutable note to (node1000001)", async () => {
+    return APP_NC.addNonMutableNote(node1000001, node1000001, rgt000, {
+      from: account1,
+    });
+  });
+
+  it("Should retrieve node1000001 with newNonMutable(node1000001)", async () => {
+    var Record = [];
+
+    return await STOR.retrieveShortRecord(
+      node1000001,
+      { from: account4 },
+      function (_err, _result) {
+        if (_err) {
+        } else {
+          Record = Object.values(_result);
+          console.log(Record);
+        }
+      }
+    );
+  });
+
+  it("Should force modify node1000001 rgt13 to RGT(2)", async () => {
+    return APP2_NC.changeRgt(node1000001, rgt2, { from: account1 });
+  });
+
+  it("Should retrieve node1000001 @newRgt(2)", async () => {
+    var Record = [];
+
+    return await STOR.retrieveShortRecord(
+      node1000001,
+      { from: account4 },
+      function (_err, _result) {
+        if (_err) {
+        } else {
+          Record = Object.values(_result);
+          console.log(Record);
+        }
+      }
+    );
+  });
+
+  it("Should set node1000001 to stolen(53) status", async () => {
+    return APP2_NC.setLostOrStolen(node1000001, "53", { from: account1 });
+  });
+
+  it("Should retrieve node1000001 @newStatus(53)", async () => {
+    var Record = [];
+
+    return await STOR.retrieveShortRecord(
+      node1000001,
+      { from: account4 },
+      function (_err, _result) {
+        if (_err) {
+        } else {
+          Record = Object.values(_result);
+          console.log(Record);
+        }
+      }
+    );
+  });
+
+  it("Should change status of new asset12 to status(51)", async () => {
+    return APP2_NC.modifyStatus(node1000001, "51", { from: account1 });
+  });
+
+  it("Should retrieve node1000001 @stat(51)", async () => {
+    var Record = [];
+
+    return await STOR.retrieveShortRecord(
+      node1000001,
+      { from: account4 },
+      function (_err, _result) {
+        if (_err) {
+        } else {
+          Record = Object.values(_result);
+          console.log(Record);
+        }
+      }
+    );
+  });
+
+  it("Should set asset12 into escrow for 3 minutes", async () => {
+    return ECR_NC.setEscrow(node1000001, account4Hash, "180", "56", {
+      from: account1,
+    });
+  });
+
+  it("Should retrieve node1000001 @newStatus((56)(ECR))", async () => {
+    var Record = [];
+
+    return await STOR.retrieveShortRecord(
+      node1000001,
+      { from: account4 },
+      function (_err, _result) {
+        if (_err) {
+        } else {
+          Record = Object.values(_result);
+          console.log(Record);
+        }
+      }
+    );
+  });
+
+  it("Should take asset12 out of escrow", async () => {
+    return ECR_NC.endEscrow(node1000001, { from: account1 });
+  });
+
+  it("Should retrieve node1000001  @newStatus(57)", async () => {
+    var Record = [];
+
+    return await STOR.retrieveShortRecord(
+      node1000001,
+      { from: account1 },
+      function (_err, _result) {
+        if (_err) {
+        } else {
+          Record = Object.values(_result);
+          console.log(Record);
+        }
+      }
+    );
+  });
+
+  it("Should change status of new asset12 to status(51)", async () => {
+    return APP2_NC.modifyStatus(node1000001, "51", { from: account1 });
+  });
+
+  it("Should retrieve node1000001 @stat(51)", async () => {
+    var Record = [];
+
+    return await STOR.retrieveShortRecord(
+      node1000001,
+      { from: account4 },
+      function (_err, _result) {
+        if (_err) {
+        } else {
+          Record = Object.values(_result);
+          console.log(Record);
+        }
+      }
+    );
+  });
+
+  it("Should export node1000001 to account1", async () => {
+    return APP2_NC.exportAssetTo(node1000001, "1000001", { from: account1 });
+  });
+
+  it("Should retrieve node1000001 @newStatus(70(exported))", async () => {
+    var Record = [];
+
+    return await STOR.retrieveShortRecord(
+      node1000001,
+      { from: account4 },
+      function (_err, _result) {
+        if (_err) {
+        } else {
+          Record = Object.values(_result);
+          console.log(Record);
+        }
+      }
+    );
+  });
+
+  it("Should transfer node1000001 token to PRUF_APP contract", async () => {
+    return A_TKN.safeTransferFrom(account4, APP.address, node1000001, {
+      from: account1,
+    });
+  });
+
+  it("Should retrieve node1000001 @ +1 N.O.T", async () => {
+    var Record = [];
+
+    return await STOR.retrieveShortRecord(
+      node1000001,
+      { from: account4 },
+      function (_err, _result) {
+        if (_err) {
+        } else {
+          Record = Object.values(_result);
+          console.log(Record);
+        }
+      }
+    );
+  });
+
+  it("Should import node1000001 to Node(10)", async () => {
+    return APP.importAsset(node1000001, "1000001", { from: account1 });
+  });
+
+  it("Should retrieve node1000001 @newAC(1000001) && newStatus(0)", async () => {
+    var Record = [];
+
+    return await STOR.retrieveShortRecord(
+      node1000001,
+      { from: account1 },
+      function (_err, _result) {
+        if (_err) {
+        } else {
+          Record = Object.values(_result);
+          console.log(Record);
+        }
+      }
+    );
+  });
+
+  it("Should change status of node1000001 to status(1)", async () => {
+    return APP2.modifyStatus(node1000001, rgtFFF, "1", { from: account1 });
+  });
+
+  it("Should retrieve node1000001 @newStatus(1)", async () => {
+    var Record = [];
+
+    return await STOR.retrieveShortRecord(
+      node1000001,
+      { from: account4 },
+      function (_err, _result) {
+        if (_err) {
+        } else {
+          Record = Object.values(_result);
+          console.log(Record);
+        }
+      }
+    );
+  });
+
+  it("Should set node1000001 into escrow for 3 minutes", async () => {
+    return ECR.setEscrow(node1000001, account4Hash, "180", "6", {
+      from: account1,
+    });
+  });
+
+  it("Should retrieve node1000001 @newStatus((6)(ECR))", async () => {
+    var Record = [];
+
+    return await STOR.retrieveShortRecord(
+      node1000001,
+      { from: account4 },
+      function (_err, _result) {
+        if (_err) {
+        } else {
+          Record = Object.values(_result);
+          console.log(Record);
+        }
+      }
+    );
+  });
+
+  it("Should take node1000001 out of escrow", async () => {
+    return ECR.endEscrow(node1000001, { from: account1 });
+  });
+
+  it("Should retrieve node1000001  @newStatus(7)", async () => {
+    var Record = [];
+
+    return await STOR.retrieveShortRecord(
+      node1000001,
+      { from: account4 },
+      function (_err, _result) {
+        if (_err) {
+        } else {
+          Record = Object.values(_result);
+          console.log(Record);
+        }
+      }
+    );
+  });
+
+  it("Should change decrement amount @node1000001", async () => {
+    return APP2.decrementCounter(node1000001, rgtFFF, "15", { from: account1 });
+  });
+
+  it("Should retrieve node1000001 @newDecAmount", async () => {
+    var Record = [];
+
+    return await STOR.retrieveShortRecord(
+      node1000001,
+      { from: account4 },
+      function (_err, _result) {
+        if (_err) {
+        } else {
+          Record = Object.values(_result);
+          console.log(Record);
+        }
+      }
+    );
+  });
+
+  it("Should modify Mutable @node1000001 to RGT(12)", async () => {
+    return APP2.modifyMutableStorage(node1000001, rgtFFF, rgt13, rgt000, {
+      from: account1,
+    });
+  });
+
+  it("Should retrieve node1000001 @newMutable(rgt13)", async () => {
+    var Record = [];
+
+    return await STOR.retrieveShortRecord(
+      node1000001,
+      { from: account4 },
+      function (_err, _result) {
+        if (_err) {
+        } else {
+          Record = Object.values(_result);
+          console.log(Record);
+        }
+      }
+    );
+  });
+
+  it("Should set node1000001 to stolen(3) status", async () => {
+    return APP2.setLostOrStolen(node1000001, rgtFFF, "3", { from: account1 });
+  });
+
+  it("Should retrieve node1000001 @newStatus(3)", async () => {
+    var Record = [];
+
+    return await STOR.retrieveShortRecord(
+      node1000001,
+      { from: account4 },
+      function (_err, _result) {
+        if (_err) {
+        } else {
+          Record = Object.values(_result);
+          console.log(Record);
+        }
+      }
+    );
+  });
+
+  it("Should change status of node1000001 to status(1)", async () => {
+    return APP2.modifyStatus(node1000001, rgtFFF, "1", { from: account1 });
+  });
+
+  it("Should retrieve node1000001 @newStatus(1)", async () => {
+    var Record = [];
+
+    return await STOR.retrieveShortRecord(
+      node1000001,
+      { from: account4 },
+      function (_err, _result) {
+        if (_err) {
+        } else {
+          Record = Object.values(_result);
+          console.log(Record);
+        }
+      }
+    );
+  });
+
+  it("Should Transfer node1000001 RGT(13) to RGT(2)", async () => {
+    return APP.transferAsset(node1000001, rgtFFF, rgt2, { from: account1 });
+  });
+
+  it("Should retrieve node1000001 @newRgt(rgt2) && +1 N.O.T", async () => {
+    var Record = [];
+
+    return await STOR.retrieveShortRecord(
+      node1000001,
+      { from: account4 },
+      function (_err, _result) {
+        if (_err) {
+        } else {
+          Record = Object.values(_result);
+          console.log(Record);
+        }
+      }
+    );
+  });
+
+  it("Should force modify node1000001 RGT(2) to RGT(13)", async () => {
+    return APP.forceModifyRecord(node1000001, rgt13, { from: account1 });
+  });
+
+  it("Should retrieve node1000001 @newStat(0) && @newRgt(rgt12) && +1 FMR count && +1 N.O.T", async () => {
+    var Record = [];
+
+    return await STOR.retrieveShortRecord(
+      node1000001,
+      { from: account4 },
+      function (_err, _result) {
+        if (_err) {
+        } else {
+          Record = Object.values(_result);
+          console.log(Record);
+        }
+      }
+    );
+  });
+
+  it("Should change node1000001 status to (51)", async () => {
+    return APP2.modifyStatus(node1000001, rgt13, "51", { from: account1 });
+  });
+
+  it("Should retrieve node1000001 @newStat(51)", async () => {
+    var Record = [];
+
+    return await STOR.retrieveShortRecord(
+      node1000001,
+      { from: account4 },
+      function (_err, _result) {
+        if (_err) {
+        } else {
+          Record = Object.values(_result);
+          console.log(Record);
+        }
+      }
+    );
+  });
+
+  it("Should export node1000001(status70)", async () => {
+    return APP2.exportAssetTo(node1000001, "1000003", account4, rgt13, {
+      from: account1,
+    });
+  });
+
+  it("Should retrieve node1000001 && @newStatus(exported(70)) && + 1 N.O.T", async () => {
+    var Record = [];
+
+    return await STOR.retrieveShortRecord(
+      node1000001,
+      { from: account4 },
+      function (_err, _result) {
+        if (_err) {
+        } else {
+          Record = Object.values(_result);
+          console.log(Record);
+        }
+      }
+    );
+  });
+
+  it("Should import node1000001 to Node(12)", async () => {
+    return APP_NC.importAsset(node1000001, "1000003", { from: account1 });
+  });
+
+  it("Should retrieve node1000001 @newAC(1000003) && newStatus(52)", async () => {
+    var Record = [];
+
+    return await STOR.retrieveShortRecord(
+      node1000001,
+      { from: account4 },
+      function (_err, _result) {
+        if (_err) {
+        } else {
+          Record = Object.values(_result);
+          console.log(Record);
+        }
+      }
+    );
+  });
+
+  it("Should change status of node1000001 to status(51)", async () => {
+    return APP2_NC.modifyStatus(node1000001, "51", { from: account1 });
+  });
+
+  it("Should retrieve node1000001 @newStatus(51)", async () => {
+    var Record = [];
+
+    return await STOR.retrieveShortRecord(
+      node1000001,
+      { from: account4 },
+      function (_err, _result) {
+        if (_err) {
+        } else {
+          Record = Object.values(_result);
+          console.log(Record);
+        }
+      }
+    );
+  });
+
+  it("Should change status of node1000001 to status(59)", async () => {
+    return APP2_NC.modifyStatus(node1000001, "59", { from: account1 });
+  });
+
+  it("Should retrieve node1000001 @newStaus(59)", async () => {
+    var Record = [];
+
+    return await STOR.retrieveShortRecord(
+      node1000001,
+      { from: account4 },
+      function (_err, _result) {
+        if (_err) {
+        } else {
+          Record = Object.values(_result);
+          console.log(Record);
+        }
+      }
+    );
+  });
+
+  it("Should discard node1000001", async () => {
+    return A_TKN.discard(node1000001, { from: account1 });
+  });
+
+  it("Should retrieve node1000001 @newStaus((60)discarded)", async () => {
+    var Record = [];
+
+    return await STOR.retrieveShortRecord(
+      node1000001,
+      { from: account4 },
+      function (_err, _result) {
+        if (_err) {
+        } else {
+          Record = Object.values(_result);
+          console.log(Record);
+        }
+      }
+    );
+  });
+
+  it("Should recycle node1000001", async () => {
+    return RCLR.recycle(node1000001, rgt13, { from: account1 });
+  });
+
+  it("Should retrieve node1000001 @newRgt(13) && @newAC(1000003) && +1 N.O.T && @newStatus(58)", async () => {
+    var Record = [];
+
+    return await STOR.retrieveShortRecord(
+      node1000001,
+      { from: account4 },
+      function (_err, _result) {
+        if (_err) {
+        } else {
+          Record = Object.values(_result);
+          console.log(Record);
+        }
+      }
+    );
+  });
+
+  it("Should change status of node1000001 to status(51)", async () => {
+    return APP2_NC.modifyStatus(node1000001, "51", { from: account1 });
+  });
+
+  it("Should retrieve node1000001 @newStaus(51)", async () => {
+    var Record = [];
+
+    return await STOR.retrieveShortRecord(
+      node1000001,
+      { from: account2 },
+      function (_err, _result) {
+        if (_err) {
+        } else {
+          Record = Object.values(_result);
+          console.log(Record);
+        }
+      }
+    );
+  });
+
+  it("Should set node1000001 for sale for 10 pruf", async () => {
+    return PURCHASE._setPrice(node1000001, "10000000000000000000", "2", "0", {
+      from: account1,
+    });
+  });
+
+  it("Should retrieve asset12 @newStaus(51)", async () => {
+    var Record = [];
+
+    return await STOR.retrieveShortRecord(
+      node1000001,
+      { from: account2 },
+      function (_err, _result) {
+        if (_err) {
+        } else {
+          Record = Object.values(_result);
+          console.log(Record);
+        }
+      }
+    );
+  });
+
+  it("Should retrieve asset12 PriceData", async () => {
+    var Record = [];
+
+    return await STOR.getPriceData(
+      node1000001,
+      { from: account2 },
+      function (_err, _result) {
+        if (_err) {
+        } else {
+          Record = Object.values(_result);
+          console.log(Record);
+        }
+      }
+    );
+  });
+
+  it("Should retrieve account2 ü bal", async () => {
+    var Record = [];
+
+    return await UTIL_TKN.balanceOf(
+      account4,
+      { from: account2 },
+      function (_err, _result) {
+        if (_err) {
+        } else {
+          Record = _result;
+          console.log(Record);
+        }
+      }
+    );
+  });
+
+  it("account2 should purchase node1000001 for 10 pruf", async () => {
+    return PURCHASE.purchaseWithPRUF(node1000001, { from: account1 });
+  });
+
+  it("Should retrieve node1000001 @newStaus(51)", async () => {
+    var Record = [];
+
+    return await STOR.retrieveShortRecord(
+      node1000001,
+      { from: account2 },
+      function (_err, _result) {
+        if (_err) {
+        } else {
+          Record = Object.values(_result);
+          console.log(Record);
+        }
+      }
+    );
+  });
+
+  it("Should retrieve node1000001 PriceData", async () => {
+    var Record = [];
+
+    return await STOR.getPriceData(
+      node1000001,
+      { from: account2 },
+      function (_err, _result) {
+        if (_err) {
+        } else {
+          Record = Object.values(_result);
+          console.log(Record);
+        }
+      }
+    );
+  });
+
+  it("Should retrieve account1 ü bal", async () => {
+    var Record = [];
+
+    return await UTIL_TKN.balanceOf(
+      account1,
       { from: account2 },
       function (_err, _result) {
         if (_err) {
