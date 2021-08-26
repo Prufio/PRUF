@@ -81,7 +81,7 @@ contract Market is CORE {
      * referenceAddress must be '0' or ERC721 contract address
      *
      */
-    function consign(
+    function consignItem(
         uint256 _foreignTokenId,
         address _foreignTokenContract,
         address _currency,
@@ -165,19 +165,19 @@ contract Market is CORE {
         //^^^^^^^interactions^^^^^^^^^
     }
 
-    /*
+    /**
      * @dev Purchse an item in transferrable status with price and currency set to pruf
-     * @param _idxHash asset ID
+     * @param _tokenId consignment ID
      */
-    function purchase(
+    function purchaseItem(
         uint256 _tokenId //consignment token ID
-    ) external whenNotPaused {
-        require( // this is redundant, will throw upon transfer
-            (IERC721(wrapped[_tokenId].tokenContract).ownerOf(
-                wrapped[_tokenId].tokenId
-            ) == address(this)),
-            "CM:P: Market contract does not hold specified token"
-        );
+    ) external nonReentrant whenNotPaused {
+        // require( // this is redundant, will throw upon transfer attempt
+        //     (IERC721(wrapped[_tokenId].tokenContract).ownerOf(
+        //         wrapped[_tokenId].tokenId
+        //     ) == address(this)),
+        //     "CM:P: Market contract does not hold specified token"
+        // );
 
         address paymentAddress;
 
@@ -190,25 +190,8 @@ contract Market is CORE {
             paymentAddress = charityAddress; //set payment address to the charity address
         }
 
-        if (wrapped[_tokenId].tokenContract == A_TKN_Address) {
-            //If token is a PRüF asset
-            A_TKN.trustedAgentTransferFrom( //Deliver using TAT
-                address(this), //from this address
-                _msgSender(), //to the purchase caller
-                _tokenId //send this PRüF token
-            );
-        } else {
-            //otherwise
-            foreign721Transfer( //Deliver using allowance
-                wrapped[_tokenId].tokenContract, //using this token contract
-                address(this), //from this address
-                _msgSender(), //to the purchase caller
-                wrapped[_tokenId].tokenId //send this (native) tokenId
-            );
-        }
-
         if (
-            //payment currency is PRUF and wallet is permitted for TAT
+            //if payment currency is PRUF and wallet is permitted for TAT
             (wrapped[_tokenId].currency == UTIL_TKN_Address) &&
             (UTIL_TKN.isColdWallet(_msgSender()) == 0)
         ) {
@@ -227,8 +210,16 @@ contract Market is CORE {
                 wrapped[_tokenId].price //amount of tokens to send
             );
         }
+
+        foreign721Transfer( //Deliver token to buyer
+            wrapped[_tokenId].tokenContract, //using this token contract
+            address(this), //from this address
+            _msgSender(), //to the purchase caller
+            wrapped[_tokenId].tokenId //send this (native) tokenId
+        );
     }
 
+    //-------------------------------------------------------------------------
     /**
      * @dev transfer a foreign token
      * @param _tokenContract Address of foreign token contract
