@@ -12,7 +12,7 @@ _________\/// _____________\/// _______\/// __\///////// __\/// _____________
 
 /*-----------------------------------------------------------------
  *  TO DO
- *
+ *   need to enumerate all holding adresses?
  *---------------------------------------------------------------*/
 
 // SPDX-License-Identifier: UNLICENSED
@@ -21,12 +21,12 @@ pragma solidity ^0.8.6;
 struct Record {
     uint8 assetStatus; // Status - Transferrable, locked, in transfer, stolen, lost, etc.
     uint8 modCount; // Number of times asset has been forceModded.
-    uint8 currency; //currency for price information (0=not for sale, 1=ETH, 2=PRUF, 3=DAI, 4=WBTC.... )
+    //uint8 currency; //currency for price information (0=not for sale, 1=ETH, 2=PRUF, 3=DAI, 4=WBTC.... )
     uint16 numberOfTransfers; //number of transfers and forcemods
     uint32 node; // Type of asset
     uint32 countDown; // Variable that can only be decreased from countDownStart
     uint32 int32temp; // int32 for persisting transitional data
-    uint120 price; //price set for items offered for sale
+    //uint120 price; //price set for items offered for sale
     bytes32 mutableStorage1; // Publically viewable asset description
     bytes32 nonMutableStorage1; // Publically viewable immutable notes
     bytes32 mutableStorage2; // Publically viewable asset description
@@ -1505,19 +1505,19 @@ interface STOR_Interface {
      */
     function endEscrow(bytes32 _idxHash) external;
 
-    /*
-     * @dev Modify record sale price and currency data
-     */
-    function setPrice(
-        bytes32 _idxHash,
-        uint120 _price,
-        uint8 _currency
-    ) external;
+    // /*
+    //  * @dev Modify record sale price and currency data
+    //  */
+    // function setPrice(
+    //     bytes32 _idxHash,
+    //     uint120 _price,
+    //     uint8 _currency
+    // ) external;
 
-    /*
-     * @dev set record sale price and currency data to zero
-     */
-    function clearPrice(bytes32 _idxHash) external;
+    // /*
+    //  * @dev set record sale price and currency data to zero
+    //  */
+    // function clearPrice(bytes32 _idxHash) external;
 
     /*
      * @dev Modify record mutableStorage1 data
