@@ -68,18 +68,13 @@ contract Market is CORE {
     }
 
     /**
-     * @dev Wraps a token, takes original from caller
+     * @dev Wraps a token, takes original from caller (holds it in contract)
      * @param _foreignTokenId tokenID of token to wrap
      * @param _foreignTokenContract contract address for token to wrap
      * @param _currency currency to make transaction in
      * @param _price price in _currency to require for transfer
      * Prerequisite: contract authorized for token txfr
      * Takes original 721
-     * Makes a pruf record (exists?) if so does not change
-     * Mints a pruf token to caller (exists?) if so ???????
-     * Node.custodyType must be 5 (wrapped/decorated erc721) / enabled for contract address
-     * referenceAddress must be '0' or ERC721 contract address
-     *
      */
     function consignItem(
         uint256 _foreignTokenId,
@@ -138,10 +133,10 @@ contract Market is CORE {
     }
 
     /**
-     * @dev Unwraps a token, returns original to caller
-     * @param _tokenId tokenID of PRUF token being unwrapped
-     * burns pruf asset from caller wallet
-     * Sends original 721 to caller
+     * @dev Unwraps a token, burns the CNSGN_TKN, returns original to caller
+     * @param _tokenId tokenID of consignment token being redeemed
+     * burns consignment token from caller wallet
+     * Sends original consigned 721 to caller
      */
     function withdrawFromConsignment(uint256 _tokenId)
         external
@@ -166,7 +161,7 @@ contract Market is CORE {
     }
 
     /**
-     * @dev Purchse an item in transferrable status with price and currency set to pruf
+     * @dev Purchse an item from the consignment contract
      * @param _tokenId consignment ID
      */
     function purchaseItem(
