@@ -12,7 +12,7 @@ _________\/// _____________\/// _______\/// __\///////// __\/// _____________
 
 /*-----------------------------------------------------------------
  *  TO DO
- *
+ *   need to enumerate all holding adresses?
  *---------------------------------------------------------------*/
 
 // SPDX-License-Identifier: UNLICENSED
@@ -21,12 +21,12 @@ pragma solidity ^0.8.6;
 struct Record {
     uint8 assetStatus; // Status - Transferrable, locked, in transfer, stolen, lost, etc.
     uint8 modCount; // Number of times asset has been forceModded.
-    uint8 currency; //currency for price information (0=not for sale, 1=ETH, 2=PRUF, 3=DAI, 4=WBTC.... )
+    //uint8 currency; //currency for price information (0=not for sale, 1=ETH, 2=PRUF, 3=DAI, 4=WBTC.... )
     uint16 numberOfTransfers; //number of transfers and forcemods
     uint32 node; // Type of asset
     uint32 countDown; // Variable that can only be decreased from countDownStart
     uint32 int32temp; // int32 for persisting transitional data
-    uint120 price; //price set for items offered for sale
+    //uint120 price; //price set for items offered for sale
     bytes32 mutableStorage1; // Publically viewable asset description
     bytes32 nonMutableStorage1; // Publically viewable immutable notes
     bytes32 mutableStorage2; // Publically viewable asset description
@@ -901,6 +901,135 @@ interface A_TKN_Interface {
 
 //------------------------------------------------------------------------------------------------
 /*
+ * @dev Interface for CNSGN_TKN
+ * INHERIANCE:
+    import "./Imports/token/ERC721/ERC721.sol";
+    import "./Imports/access/Ownable.sol";
+    import "./Imports/utils/ReentrancyGuard.sol";
+ */
+interface CNSGN_TKN_Interface {
+    /*
+     * @dev Set storage contract to interface with
+     */
+    function OO_setStorageContract(address _storageAddress) external;
+
+    /*
+     * @dev Address Setters
+     */
+    function resolveContractAddresses() external;
+
+    /*
+     * @dev Mint new asset token
+     */
+    function mintConsignmentToken(
+        address _recipientAddress,
+        uint256 tokenId,
+        string calldata _tokenURI
+    ) external returns (uint256);
+
+    /*
+     * @dev Set new token URI String
+     */
+    function setURI(uint256 tokenId, string calldata _tokenURI)
+        external
+        returns (uint256);
+
+    /*
+     * @dev See if token exists
+     */
+    function tokenExists(uint256 tokenId) external view returns (uint256);
+
+    /**
+     * @dev Transfers the ownership of a given token ID to another address.
+     * Usage of this method is discouraged, use {safeTransferFrom} whenever possible.
+     * Requires the _msgSender() to be the owner, approved, or operator.
+     * @param from current owner of the token
+     * @param to address to receive the ownership of the given token ID
+     * @param tokenId uint256 ID of the token to be transferred
+     */
+    function transferFrom(
+        address from,
+        address to,
+        uint256 tokenId
+    ) external;
+
+    /**
+     * @dev Burns a token
+     */
+    function trustedAgentBurn(uint256 tokenId) external;
+
+    /**
+     * @dev Safely transfers the ownership of a given token ID to another address
+     * If the target address is a contract, it must implement {IERC721Receiver-onERC721Received},
+     * which is called upon a safe transfer, and return the magic value
+     * `bytes4(keccak256("onERC721Received(address,address,uint256,bytes)"))`; otherwise,
+     * the transfer is reverted.
+     * Requires the _msgSender() to be the owner, approved, or operator
+     * @param from current owner of the token
+     * @param to address to receive the ownership of the given token ID
+     * @param tokenId uint256 ID of the token to be transferred
+     * @param _data bytes data to send along with a safe transfer check
+     */
+    function safeTransferFrom(
+        address from,
+        address to,
+        uint256 tokenId,
+        bytes calldata _data
+    ) external;
+
+    /**
+     * @dev Returns the owner of the `tokenId` token.
+     *
+     * Requirements:
+     *
+     * - `tokenId` must exist.
+     */
+    function ownerOf(uint256 tokenId)
+        external
+        returns (address tokenHolderAdress);
+
+    /**
+     * @dev Returns the amount of tokens owned by `account`.
+     */
+    function balanceOf(address account) external returns (uint256);
+
+    /**
+     * @dev Returns the name of the token.
+     */
+    function name() external returns (string memory tokenName);
+
+    /**
+     * @dev Returns the token collection symbol.
+     */
+    function symbol() external returns (string memory tokenSymbol);
+
+    /**
+     * @dev Returns the Uniform Resource Identifier (URI) for `tokenId` token.
+     */
+    function tokenURI(uint256 tokenId) external returns (string memory URI);
+
+    /**
+     * @dev Returns the total amount of tokens stored by the contract.
+     */
+    function totalSupply() external returns (uint256);
+
+    /**
+     * @dev Returns a token ID owned by `owner` at a given `index` of its token list.
+     * Use along with {balanceOf} to enumerate all of ``owner``'s tokens.
+     */
+    function tokenOfOwnerByIndex(address owner, uint256 index)
+        external
+        returns (uint256 tokenId);
+
+    /**
+     * @dev Returns a token ID at a given `index` of all the tokens stored by the contract.
+     * Use along with {totalSupply} to enumerate all tokens.
+     */
+    function tokenByIndex(uint256 index) external returns (uint256);
+}
+
+//------------------------------------------------------------------------------------------------
+/*
  * @dev Interface for ID_TKN
  * INHERIANCE:
     import "./Imports/token/ERC721/ERC721.sol";
@@ -1376,19 +1505,19 @@ interface STOR_Interface {
      */
     function endEscrow(bytes32 _idxHash) external;
 
-    /*
-     * @dev Modify record sale price and currency data
-     */
-    function setPrice(
-        bytes32 _idxHash,
-        uint120 _price,
-        uint8 _currency
-    ) external;
+    // /*
+    //  * @dev Modify record sale price and currency data
+    //  */
+    // function setPrice(
+    //     bytes32 _idxHash,
+    //     uint120 _price,
+    //     uint8 _currency
+    // ) external;
 
-    /*
-     * @dev set record sale price and currency data to zero
-     */
-    function clearPrice(bytes32 _idxHash) external;
+    // /*
+    //  * @dev set record sale price and currency data to zero
+    //  */
+    // function clearPrice(bytes32 _idxHash) external;
 
     /*
      * @dev Modify record mutableStorage1 data

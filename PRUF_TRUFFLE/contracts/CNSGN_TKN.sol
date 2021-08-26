@@ -12,9 +12,8 @@ __/\\\\\\\\\\\\\ _____/\\\\\\\\\ _______/\\__/\\ ___/\\\\\\\\\\\\\\\
 
 /**-----------------------------------------------------------------
  *  TO DO
- * Check and see if A_TKN can be permitted in all nodes to prevent safeTransferFrom->writeRecord conflict due to it not being a default authorized contract for node s
  *-----------------------------------------------------------------
- * PRUF ASSET NFT CONTRACT
+ * PRUF CONSIGNMENT NFT CONTRACT
  *---------------------------------------------------------------*/
 
 // SPDX-License-Identifier: UNLICENSED
@@ -23,7 +22,6 @@ pragma solidity ^0.8.6;
 import "./Imports/access/AccessControl.sol";
 import "./Imports/utils/Context.sol";
 import "./Imports/utils/Counters.sol";
-import "./Imports/token/ERC721/ERC721.sol";
 import "./Imports/token/ERC721/ERC721Burnable.sol";
 import "./Imports/token/ERC721/ERC721Pausable.sol";
 import "./PRUF_INTERFACES.sol";
@@ -45,7 +43,7 @@ import "./Imports/utils/ReentrancyGuard.sol";
  * roles to other accounts.
  */
 
-contract A_TKN is
+contract CNSGN_TKN is
     ReentrancyGuard,
     Context,
     AccessControl,
@@ -58,28 +56,12 @@ contract A_TKN is
         keccak256("CONTRACT_ADMIN_ROLE");
     bytes32 public constant MINTER_ROLE = keccak256("MINTER_ROLE");
     bytes32 public constant PAUSER_ROLE = keccak256("PAUSER_ROLE");
-    bytes32 public constant TRUSTED_AGENT_ROLE =
-        keccak256("TRUSTED_AGENT_ROLE");
+    bytes32 public constant TRUSTED_AGENT_ROLE = keccak256("TRUSTED_AGENT_ROLE");
 
-    uint256 trustedAgentEnabled = 1;
-
-    mapping(address => uint256) private coldWallet;
-
-    address internal STOR_Address;
-    address internal RCLR_Address;
-    address internal NODE_MGR_Address;
-    address internal NODE_TKN_Address;
-    STOR_Interface internal STOR;
-    RCLR_Interface internal RCLR;
-    NODE_MGR_Interface internal NODE_MGR;
-    NODE_TKN_Interface internal NODE_TKN;
-
-    bytes32 public constant B320xF_ =
-        0xFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFF;
 
     Counters.Counter private _tokenIdTracker;
 
-    constructor() ERC721("PRUF Asset Token", "PRAT") {
+    constructor() ERC721("PRUF COnsignment Token", "PRCT") {
         _setupRole(DEFAULT_ADMIN_ROLE, _msgSender());
         _setupRole(CONTRACT_ADMIN_ROLE, _msgSender());
         _setupRole(MINTER_ROLE, _msgSender()); //ALL contracts THAT MINT ASSET TOKENS
@@ -124,101 +106,97 @@ contract A_TKN is
             hasRole(TRUSTED_AGENT_ROLE, _msgSender()),
             "AT:MOD-ITA:Must have TRUSTED_AGENT_ROLE"
         );
-        require(
-            trustedAgentEnabled == 1,
-            "AT:MOD-ITA:Trusted Agent function permanently disabled - use allowance / transferFrom pattern"
-        );
         _;
     }
 
     //----------------------Admin functions / isContractAdmin ----------------------//
 
-    /**
-     * @dev ----------------------------------------PERMANANTLY !!!  Kills trusted agent and payable functions
-     * this will break the functionality of current payment mechanisms.
-     *
-     * The workaround for this is to create an allowance for pruf contracts for a single or multiple payments,
-     * either ahead of time "loading up your PRUF account" or on demand with an operation. On demand will use quite a bit more gas.
-     * "preloading" should be pretty gas efficient, but will add an extra step to the workflow, requiring users to have sufficient
-     * PRuF "banked" in an allowance for use in the system.
-     * @param _key - set to 170 to PERMENANTLY REMOVE TRUSTED AGENT CAPABILITY
-     */
-    function killTrustedAgent(uint256 _key) external isContractAdmin {
-        if (_key == 170) {
-            trustedAgentEnabled = 0; // !!! THIS IS A PERMANENT ACTION AND CANNOT BE UNDONE
-        }
-    }
+    // /**
+    //  * @dev ----------------------------------------PERMANANTLY !!!  Kills trusted agent and payable functions
+    //  * this will break the functionality of current payment mechanisms.
+    //  *
+    //  * The workaround for this is to create an allowance for pruf contracts for a single or multiple payments,
+    //  * either ahead of time "loading up your PRUF account" or on demand with an operation. On demand will use quite a bit more gas.
+    //  * "preloading" should be pretty gas efficient, but will add an extra step to the workflow, requiring users to have sufficient
+    //  * PRuF "banked" in an allowance for use in the system.
+    //  * @param _key - set to 170 to PERMENANTLY REMOVE TRUSTED AGENT CAPABILITY
+    //  */
+    // function killTrustedAgent(uint256 _key) external isContractAdmin {
+    //     if (_key == 170) {
+    //         trustedAgentEnabled = 0; // !!! THIS IS A PERMANENT ACTION AND CANNOT BE UNDONE
+    //     }
+    // }
 
-    /**
-     * @dev Set storage contract to interface with
-     * @param _storageAddress - Storage contract address to set
-     */
-    function setStorageContract(address _storageAddress)
-        external
-        isContractAdmin
-    {
-        require(_storageAddress != address(0), "AT:SSC:Storage address = 0");
-        //^^^^^^^checks^^^^^^^^^
+    // /**
+    //  * @dev Set storage contract to interface with
+    //  * @param _storageAddress - Storage contract address to set
+    //  */
+    // function setStorageContract(address _storageAddress)
+    //     external
+    //     isContractAdmin
+    // {
+    //     require(_storageAddress != address(0), "AT:SSC:Storage address = 0");
+    //     //^^^^^^^checks^^^^^^^^^
 
-        STOR = STOR_Interface(_storageAddress);
-        //^^^^^^^effects^^^^^^^^^
-    }
+    //     STOR = STOR_Interface(_storageAddress);
+    //     //^^^^^^^effects^^^^^^^^^
+    // }
 
-    /**
-     * @dev Address Setters  - resolves addresses from storage and sets local interfaces
-     */
-    function resolveContractAddresses() external isContractAdmin {
-        //^^^^^^^checks^^^^^^^^^
+    // /**
+    //  * @dev Address Setters  - resolves addresses from storage and sets local interfaces
+    //  */
+    // function resolveContractAddresses() external isContractAdmin {
+    //     //^^^^^^^checks^^^^^^^^^
 
-        RCLR_Address = STOR.resolveContractAddress("RCLR");
-        RCLR = RCLR_Interface(RCLR_Address);
+    //     RCLR_Address = STOR.resolveContractAddress("RCLR");
+    //     RCLR = RCLR_Interface(RCLR_Address);
 
-        NODE_MGR_Address = STOR.resolveContractAddress("NODE_MGR");
-        NODE_MGR = NODE_MGR_Interface(NODE_MGR_Address);
+    //     NODE_MGR_Address = STOR.resolveContractAddress("NODE_MGR");
+    //     NODE_MGR = NODE_MGR_Interface(NODE_MGR_Address);
 
-        NODE_TKN_Address = STOR.resolveContractAddress("NODE_TKN");
-        NODE_TKN = NODE_TKN_Interface(NODE_TKN_Address);
-        //^^^^^^^effects^^^^^^^^^
-    }
+    //     NODE_TKN_Address = STOR.resolveContractAddress("NODE_TKN");
+    //     NODE_TKN = NODE_TKN_Interface(NODE_TKN_Address);
+    //     //^^^^^^^effects^^^^^^^^^
+    // }
 
     ////----------------------Regular operations----------------------//
 
-    /**
-     * @dev Set calling wallet to a "cold Wallet" that cannot be manipulated by TRUSTED_AGENT or PAYABLE permissioned functions
-     * WALLET ADDRESSES SET TO "Cold" DO NOT WORK WITH TRUSTED_AGENT FUNCTIONS and must be unset from cold before it can interact with
-     * contract functions.
-     */
-    function setColdWallet() external {
-        coldWallet[_msgSender()] = 170;
-    }
+    // /**
+    //  * @dev Set calling wallet to a "cold Wallet" that cannot be manipulated by TRUSTED_AGENT or PAYABLE permissioned functions
+    //  * WALLET ADDRESSES SET TO "Cold" DO NOT WORK WITH TRUSTED_AGENT FUNCTIONS and must be unset from cold before it can interact with
+    //  * contract functions.
+    //  */
+    // function setColdWallet() external {
+    //     coldWallet[_msgSender()] = 170;
+    // }
+
+    // /**
+    //  * @dev un-set calling wallet to a "cold Wallet", enabling manipulation by TRUSTED_AGENT and PAYABLE permissioned functions
+    //  * WALLET ADDRESSES SET TO "Cold" DO NOT WORK WITH TRUSTED_AGENT FUNCTIONS and must be unset from cold before it can interact with
+    //  * contract functions.
+    //  */
+    // function unSetColdWallet() external {
+    //     coldWallet[_msgSender()] = 0;
+    // }
+
+    // /**
+    //  * @dev return an adresses "cold wallet" status
+    //  * WALLET ADDRESSES SET TO "Cold" DO NOT WORK WITH TRUSTED_AGENT FUNCTIONS
+    //  * @param _addr - address to check
+    //  * returns 170 if adress is set to "cold wallet" status
+    //  */
+    // function isColdWallet(address _addr) public view returns (uint256) {
+    //     return coldWallet[_addr];
+    // }
 
     /**
-     * @dev un-set calling wallet to a "cold Wallet", enabling manipulation by TRUSTED_AGENT and PAYABLE permissioned functions
-     * WALLET ADDRESSES SET TO "Cold" DO NOT WORK WITH TRUSTED_AGENT FUNCTIONS and must be unset from cold before it can interact with
-     * contract functions.
-     */
-    function unSetColdWallet() external {
-        coldWallet[_msgSender()] = 0;
-    }
-
-    /**
-     * @dev return an adresses "cold wallet" status
-     * WALLET ADDRESSES SET TO "Cold" DO NOT WORK WITH TRUSTED_AGENT FUNCTIONS
-     * @param _addr - address to check
-     * returns 170 if adress is set to "cold wallet" status
-     */
-    function isColdWallet(address _addr) public view returns (uint256) {
-        return coldWallet[_addr];
-    }
-
-    /**
-     * @dev Mint an Asset token
+     * @dev Mint a consignment token
      * @param _recipientAddress - Address to mint token into
      * @param _tokenId - Token ID to mint
      * @param _tokenURI - URI string to atatch to token
      * returns Token ID of minted token
      */
-    function mintAssetToken(
+    function mintConsignmentToken(
         address _recipientAddress,
         uint256 _tokenId,
         string calldata _tokenURI
@@ -241,24 +219,6 @@ contract A_TKN is
         external
         returns (uint256)
     {
-        bytes32 _idxHash = bytes32(tokenId);
-        Record memory rec = getRecord(_idxHash);
-
-        if (NODE_MGR.getSwitchAt(rec.node, 1) == 1) {
-            //if switch at bit 1 (0) is set
-            string memory tokenURI = tokenURI(tokenId);
-
-            require(
-                bytes(tokenURI).length == 0,
-                "AT:SURI:URI is set, and immutable"
-            );
-
-            require(
-                NODE_TKN.ownerOf(rec.node) == _msgSender(),
-                "AT:SURI:Caller !NTH"
-            );
-        }
-
         require(
             _isApprovedOrOwner(_msgSender(), tokenId),
             "AT:SURI:Caller !owner nor approved"
@@ -296,27 +256,14 @@ contract A_TKN is
         address _to,
         uint256 _tokenId
     ) public override nonReentrant {
-        bytes32 _idxHash = bytes32(_tokenId);
-        Record memory rec = getRecord(_idxHash);
-
         require(
             _isApprovedOrOwner(_msgSender(), _tokenId),
             "AT:TF:Transfer caller is not owner nor approved"
         );
-        require(
-            rec.assetStatus == 51,
-            "AT:TF:Asset not in transferrable status"
-        );
+
         //^^^^^^^checks^^^^^^^^
-
-        rec.numberOfTransfers = 170;
-
-        rec.rightsHolder = B320xF_;
-        //^^^^^^^effects^^^^^^^^^
-
-        writeRecord(_idxHash, rec);
         _transfer(_from, _to, _tokenId);
-        //^^^^^^^interactions^^^^^^^^^
+        //^^^^^^^effects^^^^^^^^^
     }
 
     /**
@@ -357,72 +304,34 @@ contract A_TKN is
         uint256 _tokenId,
         bytes memory _data
     ) public virtual override nonReentrant {
-        bytes32 _idxHash = bytes32(_tokenId);
-        Record memory rec = getRecord(_idxHash);
-        (uint8 isAuth, ) = STOR.ContractInfoHash(_to, 0); // trailing comma because does not use the returned hash
-
         require(
             _isApprovedOrOwner(_msgSender(), _tokenId),
             "AT:STF:Transfer caller !owner nor approved"
         );
-        require( // ensure that status 70 assets are only sent to an actual PRUF contract
-            (rec.assetStatus != 70) || (isAuth > 0),
-            "AT:STF:Cannot send status 70 asset to unauthorized address"
-        );
-        require(
-            (rec.assetStatus == 51) || (rec.assetStatus == 70),
-            "AT:STF:Asset !in transferrable status"
-        );
-        require(
-            _to != address(0),
-            "AT:STF:Cannot transfer asset to zero address. Use discard."
-        );
         //^^^^^^^checks^^^^^^^^^
 
-        rec.numberOfTransfers = 170;
-        rec.rightsHolder = B320xF_;
         //^^^^^^^effects^^^^^^^^^
-
-        writeRecord(_idxHash, rec);
         _safeTransfer(_from, _to, _tokenId, _data);
         //^^^^^^^interactions^^^^^^^^^
     }
 
-    /**
-     * @dev Transfers the ownership of a given token ID to another address by a TRUSTED_AGENT.
-     * Usage of this method is discouraged, use {safeTransferFrom} whenever possible.
-     * Requires the _msgSender() to be the owner, approved, or operator.
-     * @param _from current owner of the token
-     * @param _to address to receive the ownership of the given token ID
-     * @param _tokenId uint256 ID of the token to be transferred
-     */
-    function trustedAgentTransferFrom(
-        address _from,
-        address _to,
-        uint256 _tokenId
-    ) external nonReentrant isTrustedAgent {
-        bytes32 _idxHash = bytes32(_tokenId);
-        Record memory rec = getRecord(_idxHash);
-
-        require(
-            rec.assetStatus == 51,
-            "AT:TATF:Asset not in transferrable status"
-        );
-        require(
-            isColdWallet(ownerOf(_tokenId)) != 170,
-            "AT:TATF:Holder is cold Wallet"
-        );
-        //^^^^^^^checks^^^^^^^^
-
-        rec.numberOfTransfers = 170;
-
-        rec.rightsHolder = B320xF_;
-        //^^^^^^^effects^^^^^^^^^
-
-        writeRecord(_idxHash, rec);
-        _transfer(_from, _to, _tokenId);
-        //^^^^^^^interactions^^^^^^^^^
-    }
+    // /**
+    //  * @dev Transfers the ownership of a given token ID to another address by a TRUSTED_AGENT.
+    //  * Usage of this method is discouraged, use {safeTransferFrom} whenever possible.
+    //  * Requires the _msgSender() to be the owner, approved, or operator.
+    //  * @param _from current owner of the token
+    //  * @param _to address to receive the ownership of the given token ID
+    //  * @param _tokenId uint256 ID of the token to be transferred
+    //  */
+    // function trustedAgentTransferFrom(
+    //     address _from,
+    //     address _to,
+    //     uint256 _tokenId
+    // ) external nonReentrant {
+    //     //^^^^^^^checks^^^^^^^^
+    //     _transfer(_from, _to, _tokenId);
+    //     //^^^^^^^effects^^^^^^^^^
+    // }
 
     /**
      * @dev Safely burns an asset token
@@ -434,72 +343,9 @@ contract A_TKN is
         whenNotPaused
         isTrustedAgent
     {
-        require(
-            isColdWallet(ownerOf(_tokenId)) != 170,
-            "AT:TAB:Holder is cold Wallet"
-        );
         //^^^^^^^checks^^^^^^^^^
         _burn(_tokenId);
         //^^^^^^^effects^^^^^^^^^
-    }
-
-    /**
-     * @dev Safely burns a token and sets the corresponding RGT to zero in storage.
-     * @param tokenId - Token ID to discard
-     */
-    function discard(uint256 tokenId) external nonReentrant whenNotPaused {
-        bytes32 _idxHash = bytes32(tokenId);
-        //Record memory rec = getRecord(_idxHash);
-
-        require(
-            _isApprovedOrOwner(_msgSender(), tokenId),
-            "AT:D:Transfer caller !owner nor approved"
-        );
-        //^^^^^^^checks^^^^^^^^^
-
-        RCLR.discard(_idxHash, _msgSender());
-        _burn(tokenId);
-        //^^^^^^^interactions^^^^^^^^^
-    }
-
-    /**
-     * @dev Write a Record to Storage @ idxHash
-     * @param _idxHash - Asset Index
-     * @param _rec - Complete Record Struct (see interfaces for struct definitions)
-     */
-    function writeRecord(bytes32 _idxHash, Record memory _rec)
-        private
-        whenNotPaused
-    {
-        //^^^^^^^checks^^^^^^^^^
-
-        STOR.modifyRecord(
-            _idxHash,
-            _rec.rightsHolder,
-            _rec.assetStatus,
-            _rec.countDown,
-            _rec.int32temp,
-            _rec.modCount,
-            _rec.numberOfTransfers
-        ); // Send data and writehash to storage
-
-        //STOR.clearPrice(_idxHash); //sets price and currency of a record to zero
-        //^^^^^^^interactions^^^^^^^^^
-    }
-
-    /**
-     * @dev Get a Record from Storage @ idxHash and return a Record Struct
-     * @param _idxHash - Asset Index
-     * returns Record Struct (see interfaces for struct definitions)
-     */
-    function getRecord(bytes32 _idxHash) internal returns (Record memory) {
-        //^^^^^^^checks^^^^^^^^^
-
-        Record memory rec = STOR.retrieveRecord(_idxHash);
-        //^^^^^^^effects^^^^^^^^^
-
-        return rec; // Returns Record struct rec
-        //^^^^^^^interactions^^^^^^^^^
     }
 
     /**
