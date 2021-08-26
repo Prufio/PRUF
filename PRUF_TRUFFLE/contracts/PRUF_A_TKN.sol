@@ -463,7 +463,7 @@ contract A_TKN is
     }
 
     /**
-     * @dev Write a Record to Storage @ idxHash, clears price information
+     * @dev Write a Record to Storage @ idxHash
      * @param _idxHash - Asset Index
      * @param _rec - Complete Record Struct (see interfaces for struct definitions)
      */
@@ -483,7 +483,7 @@ contract A_TKN is
             _rec.numberOfTransfers
         ); // Send data and writehash to storage
 
-        STOR.clearPrice(_idxHash); //sets price and currency of a record to zero
+        //STOR.clearPrice(_idxHash); //sets price and currency of a record to zero
         //^^^^^^^interactions^^^^^^^^^
     }
 
