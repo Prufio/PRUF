@@ -25,15 +25,17 @@ import "./PRUF_CORE.sol";
 import "./Imports/token/ERC721/IERC721.sol";
 
 contract Market is CORE {
-    struct ConsignmentTag {
+    struct ConsignmentTags {
         uint256 tokenID;
         address tokenContract;
+        address currency;
+        uint256 price;
     }
 
     address internal CNSGN_TKN_Address;
     CNSGN_TKN_Interface internal CNSGN_TKN;
 
-    mapping(uint256 => ConsignmentTag) private wrapped; // pruf tokenID -> original TokenID, ContractAddress
+    mapping(uint256 => ConsignmentTags) private wrapped; // pruf tokenID -> original TokenID, ContractAddress
 
     /**
      * @dev Verify user credentials
@@ -56,9 +58,8 @@ contract Market is CORE {
      * @dev Wraps a token, takes original from caller
      * @param _foreignTokenID tokenID of token to wrap
      * @param _foreignTokenContract contract address for token to wrap
-     * @param _rgtHash - hash of rightsholder information created by frontend inputs
-     * @param _node - node the asset will be created in
-     * @param _countDownStart - decremental counter for an assets lifecycle
+     * @param _currency currency to make transaction in
+     * @param _price price in _currency to require for transfer
      * Prerequisite: contract authorized for token txfr
      * Takes original 721
      * Makes a pruf record (exists?) if so does not change
@@ -67,68 +68,34 @@ contract Market is CORE {
      * referenceAddress must be '0' or ERC721 contract address
      *
      */
-    function consign(
-        uint256 _foreignTokenID,
-        address _foreignTokenContract,
-        bytes32 _rgtHash,
-        uint32 _node,
-        uint32 _countDownStart ///DPS:TEST
-    )
+    function consign(uint256 _foreignTokenID, address _foreignTokenContract, address _currency, uint256 _price)
         external
         nonReentrant
         whenNotPaused
-        isTokenHolder(_foreignTokenID, _foreignTokenContract) // without this, the dark forest gets it!
-    {
-        bytes32 idxHash = keccak256(
+        isTokenHolder(_foreignTokenID, _foreignTokenContract) 
+    { // without this, the dark forest gets it!
+        bytes32 consignmentTag = keccak256(
             abi.encodePacked(_foreignTokenID, _foreignTokenContract)
         );
 
-        Record memory rec = getRecord(idxHash);
-        Node memory node_info = getNodeinfo(_node);
-
-        uint256 newTokenId = uint256(idxHash);
-
-        require(
-            node_info.custodyType == 5,
-            "W:W:custodyType must be 5 (wrapped/decorated erc721)"
-        );
-        require(
-            (node_info.referenceAddress == _foreignTokenContract) ||
-                (node_info.referenceAddress == address(0)),
-            "W:W:referenceAddress must be '0' or ERC721 contract address"
-        );
-        require( //DPS:TEST NEW
-            (node_info.managementType < 6),
-            "ANC:IA: Contract does not support management types > 5 or node is locked"
-        );
-        if (
-            //DPS:TEST NEW
-            (node_info.managementType == 1) ||
-            (node_info.managementType == 2) ||
-            (node_info.managementType == 5)
-        ) {
-            require( //DPS:TEST NEW
-                (NODE_TKN.ownerOf(_node) == _msgSender()),
-                "ANC:IA: Cannot create asset in node mgmt type 1||2||5 - caller does not hold node token"
+        if (_foreignTokenContract == A_TKN_Address) {
+            bytes32 idxHash = bytes32(_foreignTokenID);
+            Record memory rec = getRecord(idxHash);
+            require(
+                rec.assetStatus == 51,
+                "CM:C:PRUF asset is not status 51 (transferrable)"
             );
-        } else if (node_info.managementType == 3) {
-            require( //DPS:TEST NEW
-                NODE_MGR.getUserType(
-                    keccak256(abi.encodePacked(_msgSender())),
-                    _node
-                ) == 1,
-                "ANC:IA: Cannot create asset - caller address !authorized"
-            );
-        } else if (node_info.managementType == 4) {
-            require( //DPS:TEST NEW
-                ID_TKN.trustedLevelByAddress(_msgSender()) > 10,
-                "ANC:IA: Caller !trusted ID holder"
-            );
+            A_TKN.trustedAgentTransferFrom(_msgSender(), address(this), _foreignTokenID); //takes PRUF asset usint TRUSTED_AGENT_ROLE
         }
+
+        uint256 newTokenId = uint256(consignmentTag);
+
         //^^^^^^^checks^^^^^^^^^
 
         wrapped[newTokenId].tokenID = _foreignTokenID;
         wrapped[newTokenId].tokenContract = _foreignTokenContract;
+        wrapped[newTokenId].currency = _currency;
+        wrapped[newTokenId].price = _price;
         //^^^^^^^effects^^^^^^^^^
 
         foreignTransfer(
@@ -138,14 +105,12 @@ contract Market is CORE {
             _foreignTokenID
         ); // move token to this contract
 
-        if (rec.node == 0) {
-            //record does not exist
-            createRecord(idxHash, _rgtHash, _node, _countDownStart);
-        } else {
-            //just mint the token, record already exists
-            CNSGN_TKN.mintAssetToken(_msgSender(), newTokenId, "pruf.io/asset");
-        }
-        deductServiceCosts(_node, 1);
+        CNSGN_TKN.mintConsignmentToken(
+            _msgSender(),
+            newTokenId,
+            "pruf.io/consign"
+        );
+
         //^^^^^^^interactions^^^^^^^^^
     }
 
@@ -159,24 +124,10 @@ contract Market is CORE {
         external
         nonReentrant
         whenNotPaused
-        isTokenHolder(_tokenID, CNSGN_TKN_Address) 
-    {  //caller holds the consignment ticket
-        bytes32 idxHash = bytes32(_tokenID);
-        Record memory rec = getRecord(idxHash);
-        Node memory node_info = getNodeinfo(rec.node);
+        isTokenHolder(_tokenID, CNSGN_TKN_Address)
+    {    //caller holds the consignment ticket
         address foreignTokenContract = wrapped[_tokenID].tokenContract;
         uint256 foreignTokenID = wrapped[_tokenID].tokenID;
-
-        require(node_info.custodyType == 5, "W:UW: Node.custodyType != 5");
-        require(
-            (node_info.referenceAddress == foreignTokenContract) ||
-                (node_info.referenceAddress == address(0)),
-            "W:UW: Node extended data must be '0' or ERC721 contract address"
-        );
-        require(
-            rec.assetStatus == 51,
-            "W:UW: Asset not in transferrable status"
-        );
         //^^^^^^^checks^^^^^^^^^
 
         CNSGN_TKN.trustedAgentBurn(_tokenID);
@@ -189,6 +140,41 @@ contract Market is CORE {
         );
         //^^^^^^^interactions^^^^^^^^^
     }
+
+    // /**
+    //  * @dev Purchse an item in transferrable status with price and currency set to pruf
+    //  * @param _idxHash asset ID
+    //  */
+    // function purchaseWithPRUF(
+    //     bytes32 _idxHash
+    // ) external whenNotPaused
+    // {
+    //     Record memory rec = getRecord(_idxHash);
+    //     (rec.price, rec.currency) = STOR.getPriceData(_idxHash);
+
+    //     uint256 tokenId = uint256(_idxHash);
+    //     address assetHolder = A_TKN.ownerOf(tokenId);
+
+    //     require(
+    //         rec.assetStatus == 51,
+    //         "PP:P: Must be in transferrable status (51)"
+    //     );
+    //     require(
+    //         rec.currency == 2,
+    //         "PP:P: Payment must be in PRUF tokens for this contract"
+    //     );
+    //     //^^^^^^^checks^^^^^^^^^
+
+    //     // --- transfer the PRUF tokens
+    //     if (rec.price > 0) {
+    //         // allow for freeCycling
+    //         UTIL_TKN.trustedAgentTransfer(_msgSender(), assetHolder, rec.price);
+    //     }
+    //     // --- transfer the asset token
+    //     A_TKN.trustedAgentTransferFrom(assetHolder, _msgSender(), tokenId);
+    //     deductServiceCosts(rec.node, 2);
+    //     //^^^^^^^interactions^^^^^^^^^
+    // }
 
     /**
      * @dev transfer a foreign token
@@ -204,65 +190,5 @@ contract Market is CORE {
         uint256 _tokenID
     ) internal {
         IERC721(_tokenContract).transferFrom(_from, _to, _tokenID);
-    }
-
-    /**
-     * @dev create a Record in Storage @ idxHash (SETTER)
-     * @param _idxHash Asset ID
-     * @param _rgtHash Hash or user data
-     * @param _node Node ID
-     * @param _countDownStart Initial counter value
-     * Asset token already exists
-     * depending on custody type/management type, caller ID token or address myst be authorized
-     */
-    function createRecord(
-        bytes32 _idxHash,
-        bytes32 _rgtHash,
-        uint32 _node,
-        uint32 _countDownStart
-    ) internal override {
-        uint256 tokenId = uint256(_idxHash);
-        Node memory node_info = getNodeinfo(_node);
-
-        require(
-            CNSGN_TKN.tokenExists(tokenId) == 0,
-            "W:CR: Asset token already exists"
-        );
-        require(
-            (node_info.custodyType == 5),
-            "W:CR: Cannot create asset - contract not authorized for node custody type"
-        );
-        require(
-            (node_info.managementType < 6),
-            "W:CR: Contract does not support management types > 5 or node is locked"
-        );
-        if (
-            (node_info.managementType == 1) ||
-            (node_info.managementType == 2) ||
-            (node_info.managementType == 5)
-        ) {
-            require(
-                (NODE_TKN.ownerOf(_node) == _msgSender()),
-                "W:CR: Cannot create asset in node mgmt type 1||2||5 - caller does not hold node token"
-            );
-        } else if (node_info.managementType == 3) {
-            require(
-                NODE_MGR.getUserType(
-                    keccak256(abi.encodePacked(_msgSender())),
-                    _node
-                ) == 1,
-                "W:CR:Cannot create asset - caller address not authorized"
-            );
-        } else if (node_info.managementType == 4) {
-            require(
-                ID_TKN.trustedLevelByAddress(_msgSender()) > 10,
-                "W:CR:Caller does not hold sufficiently trusted ID"
-            );
-        }
-        //^^^^^^^checks^^^^^^^^^
-
-        CNSGN_TKN.mintAssetToken(_msgSender(), tokenId, "pruf.io/wrapped");
-        STOR.newRecord(_idxHash, _rgtHash, _node, _countDownStart);
-        //^^^^^^^interactions^^^^^^^^^
     }
 }
