@@ -15,7 +15,7 @@ _________\/// _____________\/// _______\/// __\///////// __\/// _____________
  *
  *-----------------------------------------------------------------
  * Wraps and unwraps ERC721 compliant tokens in a PRUF Asset token  DPS:NEW CONTRACT DPS:CHECK
- *  MUST BE TRUSTED AGENT IN CNSGN_TKN, Atkn, Util_Tkn
+ *  MUST BE TRUSTED AGENT IN CNSGN_TKN, A_tkn, Util_Tkn
  *----------------------------------------------------------------*/
 
 // SPDX-License-Identifier: UNLICENSED
