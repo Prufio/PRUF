@@ -22,13 +22,13 @@ _________\/// _____________\/// _______\/// __\///////// __\/// _____________
  * interval - maturity interval of stake - also time to first maturity at formation
  * startTime - Last Cycle - stake begin time or last paid time
  * endTime - end of the current cycle (may be in the past in the case of post-maturity stakes)
- * bonus - incentive paid per cycle
+ * bonusPercentag - incentive paid per cycle
  *
  * ----Behavior-----
  *
- * 1: Create the stake - Stake NFT is issued to the creator. A unuiqe stake is formed with the face value, bonus, start time, and interval chosen. (becomes tokenHolder)
- * 2: payment can be taken at any time - will be the full amount or the fraction of the bonus amount (tokenholder)
- * 3: At any time after the end of the stake, the stake can be broken. Breaking the stake pays all tokens and bonus to the stakeHolder, and destroys the stake token. (tokenholder)
+ * 1: Create the stake - Stake NFT is issued to the creator. A unuiqe stake is formed with the face value, bonusPercentag, start time, and interval chosen. (becomes tokenHolder)
+ * 2: payment can be taken at any time - will be the full amount or the fraction of the bonusPercentag amount (tokenholder)
+ * 3: At any time after the end of the stake, the stake can be broken. Breaking the stake pays all tokens and bonusPercentag to the stakeHolder, and destroys the stake token. (tokenholder)
  *
  *---------------------------------------------------------------*/
 
@@ -64,10 +64,10 @@ contract EO_STAKING is ReentrancyGuard, AccessControl, Pausable {
     mapping(uint256 => Stake) private stake; // stake data
 
     struct StakingTier {
-        uint256 minimum;
-        uint256 maximum;
-        uint256 interval;
-        uint256 bonus;
+        uint256 minimum; //Minimum stake for this tier
+        uint256 maximum; //Maximum stake for this tier
+        uint256 interval; //staking interval, in dayUnits
+        uint256 bonusPercentage; //bonusPercentage in tenths of a percent
     }
 
     uint256 constant seconds_in_a_day = 86400;
@@ -173,14 +173,14 @@ contract EO_STAKING is ReentrancyGuard, AccessControl, Pausable {
      * @param _min Minumum stake
      * @param _max Maximum stake
      * @param _interval staking interval, in dayUnits - set to the number of days that the stake and reward interval will be based on.
-     * @param _bonus bonus in tenths of a percent: 15 = 1.5% or 15/1000 per interval. Calculated to a fixed amount of tokens in the actual stake
+     * @param _bonusPercentage bonusPercentage in tenths of a percent: 15 = 1.5% or 15/1000 per interval. Calculated to a fixed amount of tokens in the actual stake
      */
     function setStakeLevels(
         uint256 _stakeTier,
         uint256 _min,
         uint256 _max,
         uint256 _interval,
-        uint256 _bonus
+        uint256 _bonusPercentage
     ) external virtual isContractAdmin {
         require(
             _interval >= 2,
@@ -195,13 +195,13 @@ contract EO_STAKING is ReentrancyGuard, AccessControl, Pausable {
         stakeTier[_stakeTier].minimum = _min;
         stakeTier[_stakeTier].maximum = _max; //set to zero to disable new stkes in this tier DPS:Check
         stakeTier[_stakeTier].interval = _interval;
-        stakeTier[_stakeTier].bonus = _bonus;
+        stakeTier[_stakeTier].bonusPercentage = _bonusPercentage;
 
         // if (stakeTier[_stakeTier].interval == 0) {  // active reward parameters cannot be changed DPS:Check:irrelevant
         //     stakeTier[_stakeTier].interval = _interval;
         // }
-        // if (stakeTier[_stakeTier].bonus == 0) {  // active staking reward parameters cannot be changed DPS:Check:irrelevant
-        //     stakeTier[_stakeTier].bonus = _bonus;
+        // if (stakeTier[_stakeTier].bonusPercentage == 0) {  // active staking reward parameters cannot be changed DPS:Check:irrelevant
+        //     stakeTier[_stakeTier].bonusPercentage = _bonus;
         // }
 
         //^^^^^^^effects^^^^^^^^^
@@ -226,8 +226,8 @@ contract EO_STAKING is ReentrancyGuard, AccessControl, Pausable {
             "PES:SMT: Stake below minumum for this tier."
         );
 
-        //DPS:CHECK verify that formula is equivelant uint256 thisBonus = (_amount / 1000) * thisStakeTier.bonus;
-        uint256 thisBonus = (_amount * thisStakeTier.bonus) / 1000; // calculate the fixed number of tokens to be paid each interval
+        //DPS:CHECK verify that formula is equivelant uint256 thisBonus = (_amount / 1000) * thisStakeTier.bonusPercentage;
+        uint256 thisBonus = (_amount * thisStakeTier.bonusPercentage) / 1000; // calculate the fixed number of tokens to be paid each interval
 
         newStake(_amount, thisStakeTier.interval, thisBonus);
     }
@@ -385,7 +385,7 @@ contract EO_STAKING is ReentrancyGuard, AccessControl, Pausable {
             stakeTier[_stakeTier].minimum,
             stakeTier[_stakeTier].maximum,
             stakeTier[_stakeTier].interval,
-            stakeTier[_stakeTier].bonus
+            stakeTier[_stakeTier].bonusPercentage
         );
     }
 
@@ -410,7 +410,7 @@ contract EO_STAKING is ReentrancyGuard, AccessControl, Pausable {
      * @dev Create a new stake
      * @param _amount stake token amount
      * @param _interval stake maturity interval, in "days"
-     * @param _bonus bonus tokens paid, per _interval
+     * @param _bonus bonusPercentage tokens paid, per _interval
      */
     function newStake(
         uint256 _amount,
