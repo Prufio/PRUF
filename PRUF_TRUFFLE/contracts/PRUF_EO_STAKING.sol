@@ -203,7 +203,7 @@ contract EO_STAKING is ReentrancyGuard, AccessControl, Pausable {
 
     /**
      * @dev Create a new stake
-     * @param _amount stake token amount
+     * @param _amount amount of tokens to stake
      * @param _stakeTier staking tier
      */
     function stakeMyTokens(uint256 _amount, uint256 _stakeTier) external {
@@ -251,7 +251,7 @@ contract EO_STAKING is ReentrancyGuard, AccessControl, Pausable {
         uint256 availableRewards = UTIL_TKN.balanceOf(REWARDS_VAULT_Address);
         uint256 reward = eligibleRewards(_tokenId); //gets reward for current reward period, prior to any changes
         if (reward > availableRewards) {
-            //check that the rewards pool is not empty
+            //check that the rewards pool is not empty, adjust available rewards accordingly
             reward = availableRewards;
         }
         require(
@@ -260,18 +260,20 @@ contract EO_STAKING is ReentrancyGuard, AccessControl, Pausable {
         );
 
         //^^^^^^^checks^^^^^^^^^
-        thisStake.startTime = block.timestamp; //resets interval start for next reward period
         thisStake.stakedAmount = thisStake.stakedAmount + _amount; //increases staked amount by stake increase _amount
+        thisStake.bonus =
+            (thisStake.stakedAmount * thisStake.stakePercentage) /
+            1000; // recalculate the number of tokens to be paid each interval
         thisStake.mintTime = block.timestamp; //Starts mint time of stake over
         thisStake.startTime = thisStake.mintTime; //Starts reward start time over
-        thisStake.bonus = _bonus;
-        stake[_tokenId] = thisStake; //write the new stake parameters to the stake mapping
+        //thisStake.interval and .stakePercentage are unchanged
+
+        stake[_tokenId] = thisStake; //write the updated stake parameters to the stake map
 
         //^^^^^^^effects^^^^^^^^^
         REWARDS_VAULT.payRewards(_tokenId, reward); //get all rewards due first.
 
-        STAKE_VAULT.takeStake(_tokenId, _amount);
-
+        STAKE_VAULT.takeStake(_tokenId, _amount); //move _amount tokens from token holder account to stake_vault
         //^^^^^^^interactions^^^^^^^^^
     }
 
