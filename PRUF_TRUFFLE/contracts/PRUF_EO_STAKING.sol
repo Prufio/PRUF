@@ -26,10 +26,10 @@ _________\/// _____________\/// _______\/// __\///////// __\/// _____________
  *
  * ----Behavior-----
  *
- * 1: Create the stake - Stake NFT is issued to the creator. A unuiqe stake is formed with the face value, bonusPercentag, start time, and interval chosen. (becomes tokenHolder)
+ * 1: Create the stake - Stake NFT is issued to the creator. A unuiqe stake is formed with the face value, bonusPercentag, start time, maximum, and interval chosen. (becomes tokenHolder)
  * 2: payment can be taken at any time - will be the full amount or the fraction of the bonusPercentag amount (tokenholder)
  * 3: At any time after the end of the stake, the stake can be broken. Breaking the stake pays all tokens and bonusPercentag to the stakeHolder, and destroys the stake token. (tokenholder)
- *
+ * 4: the stake can be added to, up to its allowed maximum.
  *---------------------------------------------------------------*/
 
 // SPDX-License-Identifier: UNLICENSED
