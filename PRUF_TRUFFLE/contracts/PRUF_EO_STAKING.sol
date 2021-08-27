@@ -246,12 +246,7 @@ contract EO_STAKING is ReentrancyGuard, AccessControl, Pausable {
             "PES:IMS: amount will raise stake above maximum."
         );
 
-        uint256 availableRewards = UTIL_TKN.balanceOf(REWARDS_VAULT_Address);
         uint256 reward = eligibleRewards(_tokenId); //gets reward for current reward period, prior to any changes
-        if (reward > availableRewards) {
-            //check that the rewards pool is not empty, adjust payable rewards accordingly
-            reward = availableRewards;
-        }
         require(
             (UTIL_TKN.balanceOf(_msgSender()) + reward) >= _amount,
             "SV:IMS:Insufficient Funds at stakeHolder adress to match stake increase"
@@ -290,16 +285,9 @@ contract EO_STAKING is ReentrancyGuard, AccessControl, Pausable {
         );
         //^^^^^^^checks^^^^^^^^^
 
-        uint256 availableRewards = UTIL_TKN.balanceOf(REWARDS_VAULT_Address);
-
         uint256 reward = eligibleRewards(_tokenId); //gets reward for current reward period
 
         stake[_tokenId].startTime = block.timestamp; //resets interval start for next reward period
-
-        if (reward > availableRewards) {
-            //check that the rewards pool is not empty
-            reward = availableRewards;
-        }
         //^^^^^^^effects^^^^^^^^^
 
         REWARDS_VAULT.payRewards(_tokenId, reward);
@@ -323,19 +311,12 @@ contract EO_STAKING is ReentrancyGuard, AccessControl, Pausable {
                 (thisStake.mintTime + (thisStake.interval * seconds_in_a_day)),
             "PES:BS: must wait until stake period has elapsed"
         );
-
         require(
             (block.timestamp - thisStake.startTime) > seconds_in_a_day, // 1 day in seconds
             "PES:BS: must wait 24h from last claim"
         );
         //^^^^^^^checks^^^^^^^^^
-        uint256 availableRewards = UTIL_TKN.balanceOf(REWARDS_VAULT_Address);
         uint256 reward = eligibleRewards(_tokenId);
-        thisStake.startTime = block.timestamp;
-
-        if (reward > availableRewards) {
-            reward = availableRewards;
-        }
         //^^^^^^^effects^^^^^^^^^
 
         REWARDS_VAULT.payRewards(_tokenId, reward);
