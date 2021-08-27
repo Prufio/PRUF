@@ -71,8 +71,8 @@ contract Market is CORE {
 
     /**
      * @dev Wraps a token, takes original from caller (holds it in contract)
-     * @param _foreignTokenId tokenID of token to wrap
-     * @param _foreignTokenContract ERC721 contract address for token to wrap
+     * @param _tokenId tokenID of token to wrap
+     * @param _ERC721TokenContract ERC721 contract address for token to wrap
      * @param _currency currency to make transaction in (ERC20 token contract address)
      * @param _benificiaryAddress price in _currency to require for transfer
      * @param _holderShare price in _currency --> seller share
@@ -81,8 +81,8 @@ contract Market is CORE {
      * Takes original 721
      */
     function consignItem(
-        uint256 _foreignTokenId,
-        address _foreignTokenContract,
+        uint256 _tokenId,
+        address _ERC721TokenContract,
         address _currency,
         address _benificiaryAddress,
         uint256 _holderShare,
@@ -91,26 +91,26 @@ contract Market is CORE {
         external
         nonReentrant
         whenNotPaused
-        isTokenHolder(_foreignTokenId, _foreignTokenContract)
+        isTokenHolder(_tokenId, _ERC721TokenContract)
     {
         // without this, the dark forest gets it!^^^^^^^^^^
 
         //^^^^^^^checks^^^^^^^^^
 
         bytes32 consignmentTag = keccak256(
-            abi.encodePacked(_foreignTokenId, _foreignTokenContract)
+            abi.encodePacked(_tokenId, _ERC721TokenContract)
         );
         uint256 newTokenId = uint256(consignmentTag);
-        wrapped[newTokenId].tokenId = _foreignTokenId;
-        wrapped[newTokenId].tokenContract = _foreignTokenContract;
+        wrapped[newTokenId].tokenId = _tokenId;
+        wrapped[newTokenId].tokenContract = _ERC721TokenContract;
         wrapped[newTokenId].currency = _currency;
         wrapped[newTokenId].benificiaryAddress = _benificiaryAddress;
         wrapped[newTokenId].holderShare = _holderShare;
         wrapped[newTokenId].benificiaryShare = _benificiaryShare;
         //^^^^^^^effects^^^^^^^^^
 
-        if (_foreignTokenContract == A_TKN_Address) {
-            bytes32 idxHash = bytes32(_foreignTokenId);
+        if (_ERC721TokenContract == A_TKN_Address) {
+            bytes32 idxHash = bytes32(_tokenId);
             Record memory rec = getRecord(idxHash);
             require(
                 rec.assetStatus == 51,
@@ -119,14 +119,14 @@ contract Market is CORE {
             A_TKN.trustedAgentTransferFrom(
                 _msgSender(),
                 address(this),
-                _foreignTokenId
+                _tokenId
             ); //move token to this contract using TRUSTED_AGENT_ROLE
         } else {
             foreign721Transfer(
-                _foreignTokenContract,
+                _ERC721TokenContract,
                 _msgSender(),
                 address(this),
-                _foreignTokenId
+                _tokenId
             ); // move token to this contract using allowance
         }
 
@@ -148,17 +148,17 @@ contract Market is CORE {
         isTokenHolder(_tokenId, CNSGN_TKN_Address)
     {
         //caller holds the consignment ticket ^^
-        address foreignTokenContract = wrapped[_tokenId].tokenContract;
-        uint256 foreignTokenID = wrapped[_tokenId].tokenId;
+        address wrapped721TokenContract = wrapped[_tokenId].tokenContract;
+        uint256 wrappedTokenId = wrapped[_tokenId].tokenId;
         //^^^^^^^checks^^^^^^^^^
 
         CNSGN_TKN.trustedAgentBurn(_tokenId);
 
         foreign721Transfer(
-            foreignTokenContract,
+            wrapped721TokenContract,
             address(this),
             _msgSender(),
-            foreignTokenID
+            wrappedTokenId
         );
         //^^^^^^^interactions^^^^^^^^^
     }
