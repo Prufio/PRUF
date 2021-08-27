@@ -30,7 +30,9 @@ contract Market is CORE {
         uint256 tokenId;
         address tokenContract;
         address currency;
-        uint256 price;
+        address benificiaryAddress;
+        uint256 holderShare;
+        uint256 benificiaryShare;
     }
 
     address internal CNSGN_TKN_Address;
@@ -70,9 +72,11 @@ contract Market is CORE {
     /**
      * @dev Wraps a token, takes original from caller (holds it in contract)
      * @param _foreignTokenId tokenID of token to wrap
-     * @param _foreignTokenContract contract address for token to wrap
-     * @param _currency currency to make transaction in
-     * @param _price price in _currency to require for transfer
+     * @param _foreignTokenContract ERC721 contract address for token to wrap
+     * @param _currency currency to make transaction in (ERC20 token contract address)
+     * @param _benificiaryAddress price in _currency to require for transfer
+     * @param _holderShare price in _currency --> seller share
+     * @param _benificiaryShare price in _currency to -->charity share
      * Prerequisite: contract authorized for token txfr
      * Takes original 721
      */
@@ -80,7 +84,9 @@ contract Market is CORE {
         uint256 _foreignTokenId,
         address _foreignTokenContract,
         address _currency,
-        uint256 _price
+        address _benificiaryAddress,
+        uint256 _holderShare,
+        uint256 _benificiaryShare
     )
         external
         nonReentrant
@@ -97,7 +103,9 @@ contract Market is CORE {
         wrapped[newTokenId].tokenId = _foreignTokenId;
         wrapped[newTokenId].tokenContract = _foreignTokenContract;
         wrapped[newTokenId].currency = _currency;
-        wrapped[newTokenId].price = _price;
+        wrapped[newTokenId].benificiaryAddress = _benificiaryAddress;
+        wrapped[newTokenId].holderShare = _holderShare;
+        wrapped[newTokenId].benificiaryShare = _benificiaryShare;
         //^^^^^^^effects^^^^^^^^^
 
         if (_foreignTokenContract == A_TKN_Address) {
@@ -120,6 +128,7 @@ contract Market is CORE {
                 _foreignTokenId
             ); // move token to this contract using allowance
         }
+
         CNSGN_TKN.mintConsignmentToken(_msgSender(), newTokenId, "pruf.io/mkt");
 
         //^^^^^^^interactions^^^^^^^^^
@@ -183,11 +192,15 @@ contract Market is CORE {
             (wrapped[_tokenId].currency == UTIL_TKN_Address) &&
             (UTIL_TKN.isColdWallet(_msgSender()) == 0)
         ) {
-            //Pay in PRüF using TAT
-            UTIL_TKN.trustedAgentTransfer(
-                _msgSender(),
-                paymentAddress,
-                wrapped[_tokenId].price
+            UTIL_TKN.trustedAgentTransfer( //Pay in PRüF using TAT
+                _msgSender(), //from the purchase caller
+                paymentAddress, //to the payment address
+                wrapped[_tokenId].holderShare //amount of tokens to send
+            );
+            UTIL_TKN.trustedAgentTransfer( //Pay in PRüF using TAT
+                _msgSender(),//from the purchase caller
+                wrapped[_tokenId].benificiaryAddress, //to the benificiary address
+                wrapped[_tokenId].benificiaryShare //amount of tokens to send
             );
         } else {
             //otherwise
@@ -195,7 +208,13 @@ contract Market is CORE {
                 wrapped[_tokenId].currency, //send this erc20
                 _msgSender(), //from the purchase caller
                 paymentAddress, //to the payment address
-                wrapped[_tokenId].price //amount of tokens to send
+                wrapped[_tokenId].holderShare //amount of tokens to send
+            );
+            foreign20Transfer( //Pay using allowance
+                wrapped[_tokenId].currency, //send this erc20
+                _msgSender(), //from the purchase caller
+                wrapped[_tokenId].benificiaryAddress, //to the benificiary address
+                wrapped[_tokenId].benificiaryShare //amount of tokens to send
             );
         }
 
