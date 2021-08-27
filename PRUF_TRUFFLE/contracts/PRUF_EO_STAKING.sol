@@ -196,14 +196,6 @@ contract EO_STAKING is ReentrancyGuard, AccessControl, Pausable {
         stakeTier[_stakeTier].maximum = _max; //set to zero to disable new stkes in this tier DPS:Check
         stakeTier[_stakeTier].interval = _interval;
         stakeTier[_stakeTier].bonusPercentage = _bonusPercentage;
-
-        // if (stakeTier[_stakeTier].interval == 0) {  // active reward parameters cannot be changed DPS:Check:irrelevant
-        //     stakeTier[_stakeTier].interval = _interval;
-        // }
-        // if (stakeTier[_stakeTier].bonusPercentage == 0) {  // active staking reward parameters cannot be changed DPS:Check:irrelevant
-        //     stakeTier[_stakeTier].bonusPercentage = _bonus;
-        // }
-
         //^^^^^^^effects^^^^^^^^^
     }
 
@@ -229,7 +221,12 @@ contract EO_STAKING is ReentrancyGuard, AccessControl, Pausable {
         //DPS:CHECK verify that formula is equivelant uint256 thisBonus = (_amount / 1000) * thisStakeTier.bonusPercentage;
         uint256 thisBonus = (_amount * thisStakeTier.bonusPercentage) / 1000; // calculate the fixed number of tokens to be paid each interval
 
-        newStake(_amount, thisStakeTier.interval, thisBonus);
+        newStake(
+            _amount,
+            thisStakeTier.interval,
+            thisBonus,
+            thisStakeTier.bonusPercentage
+        );
     }
 
     //--------------------------------------Public functions--------------------------------------------//
@@ -415,7 +412,8 @@ contract EO_STAKING is ReentrancyGuard, AccessControl, Pausable {
     function newStake(
         uint256 _amount,
         uint256 _interval,
-        uint256 _bonus
+        uint256 _bonus,
+        uint256 _bonusPercentage
     ) private whenNotPaused nonReentrant {
         require(
             _interval >= 2, // 2 days in seconds unreachable? throws in setStakeLevels
@@ -435,6 +433,7 @@ contract EO_STAKING is ReentrancyGuard, AccessControl, Pausable {
         thisStake.startTime = thisStake.mintTime;
         thisStake.interval = _interval;
         thisStake.bonus = _bonus;
+        thisStake.stakePercentage = _bonusPercentage;
 
         stake[currentStake] = thisStake;
         //^^^^^^^effects^^^^^^^^^
