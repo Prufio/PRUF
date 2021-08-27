@@ -218,22 +218,14 @@ contract EO_STAKING is ReentrancyGuard, AccessControl, Pausable {
             "PES:SMT: Stake below minumum for this tier."
         );
 
-        //DPS:CHECK verify that formula is equivelant uint256 thisBonus = (_amount / 1000) * thisStakeTier.bonusPercentage;
-        uint256 thisBonus = (_amount * thisStakeTier.bonusPercentage) / 1000; // calculate the fixed number of tokens to be paid each interval
-
-        newStake(
-            _amount,
-            thisStakeTier.interval,
-            thisBonus,
-            thisStakeTier.bonusPercentage
-        );
+        newStake(_amount, _stakeTier);
     }
 
     //--------------------------------------Public functions--------------------------------------------//
 
     /**
-     * @dev Transfers eligible rewards to staker, resets last payment time
-     * @param _tokenId token id to check
+     * @dev Transfers eligible rewards to staker, resets last payment time, adds _amount tokens to holders stake
+     * @param _tokenId token id to modify stake
      */
     function increaseMyStake(uint256 _tokenId, uint256 _amount)
         external
@@ -399,6 +391,8 @@ contract EO_STAKING is ReentrancyGuard, AccessControl, Pausable {
             uint256,
             uint256,
             uint256,
+            uint256,
+            uint256,
             uint256
         )
     {
@@ -407,7 +401,9 @@ contract EO_STAKING is ReentrancyGuard, AccessControl, Pausable {
             stake[_tokenId].mintTime,
             stake[_tokenId].startTime,
             stake[_tokenId].interval,
-            stake[_tokenId].bonus
+            stake[_tokenId].bonus,
+            stake[_tokenId].stakePercentage,
+            stake[_tokenId].stakeMaximum
         );
     }
 
@@ -453,21 +449,19 @@ contract EO_STAKING is ReentrancyGuard, AccessControl, Pausable {
     /**
      * @dev Create a new stake
      * @param _amount stake token amount
-     * @param _interval stake maturity interval, in "days"
-     * @param _bonus bonusPercentage tokens paid, per _interval
+     * @param _tier stake tier to stake in
      */
-    function newStake(
-        uint256 _amount,
-        uint256 _interval,
-        uint256 _bonus,
-        uint256 _bonusPercentage
-    ) private whenNotPaused nonReentrant {
+    function newStake(uint256 _amount, uint256 _tier)
+        private
+        whenNotPaused
+        nonReentrant
+    {
+        StakingTier memory thisStakeTier = stakeTier[_tier];
         require(
-            _interval >= 2, // 2 days in seconds unreachable? throws in setStakeLevels
+            thisStakeTier.interval >= 2, // 2 days in seconds unreachable? throws in setStakeLevels
             "PES:NS: Interval <= 2"
         );
-
-        require( //throws in setStakeLevels
+        require(
             _amount > 99999999999999999999, //100 pruf
             "PES:NS: Staked amount < 100"
         );
@@ -478,9 +472,9 @@ contract EO_STAKING is ReentrancyGuard, AccessControl, Pausable {
         thisStake.stakedAmount = _amount;
         thisStake.mintTime = block.timestamp;
         thisStake.startTime = thisStake.mintTime;
-        thisStake.interval = _interval;
-        thisStake.bonus = _bonus;
-        thisStake.stakePercentage = _bonusPercentage;
+        thisStake.interval = thisStakeTier.interval;
+        thisStake.bonus = (_amount * thisStakeTier.bonusPercentage) / 1000;
+        thisStake.stakePercentage = thisStakeTier.bonusPercentage;
 
         stake[currentStake] = thisStake;
         //^^^^^^^effects^^^^^^^^^
