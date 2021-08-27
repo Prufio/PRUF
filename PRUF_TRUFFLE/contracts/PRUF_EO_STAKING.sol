@@ -196,14 +196,6 @@ contract EO_STAKING is ReentrancyGuard, AccessControl, Pausable {
         stakeTier[_stakeTier].maximum = _max; //set to zero to disable new stkes in this tier DPS:Check
         stakeTier[_stakeTier].interval = _interval;
         stakeTier[_stakeTier].bonusPercentage = _bonusPercentage;
-
-        // if (stakeTier[_stakeTier].interval == 0) {  // active reward parameters cannot be changed DPS:Check:irrelevant
-        //     stakeTier[_stakeTier].interval = _interval;
-        // }
-        // if (stakeTier[_stakeTier].bonusPercentage == 0) {  // active staking reward parameters cannot be changed DPS:Check:irrelevant
-        //     stakeTier[_stakeTier].bonusPercentage = _bonus;
-        // }
-
         //^^^^^^^effects^^^^^^^^^
     }
 
@@ -229,10 +221,59 @@ contract EO_STAKING is ReentrancyGuard, AccessControl, Pausable {
         //DPS:CHECK verify that formula is equivelant uint256 thisBonus = (_amount / 1000) * thisStakeTier.bonusPercentage;
         uint256 thisBonus = (_amount * thisStakeTier.bonusPercentage) / 1000; // calculate the fixed number of tokens to be paid each interval
 
-        newStake(_amount, thisStakeTier.interval, thisBonus);
+        newStake(
+            _amount,
+            thisStakeTier.interval,
+            thisBonus,
+            thisStakeTier.bonusPercentage
+        );
     }
 
     //--------------------------------------Public functions--------------------------------------------//
+
+    /**
+     * @dev Transfers eligible rewards to staker, resets last payment time
+     * @param _tokenId token id to check
+     */
+    function increaseMyStake(uint256 _tokenId, uint256 _amount)
+        external
+        isStakeHolder(_tokenId)
+        whenNotPaused
+        nonReentrant
+    {
+        Stake memory thisStake = stake[_tokenId];
+
+        require(
+            (block.timestamp - thisStake.startTime) > seconds_in_a_day, // 1 day in seconds
+            "PES:CB: must wait 24h from creation/last claim"
+        );
+
+        uint256 availableRewards = UTIL_TKN.balanceOf(REWARDS_VAULT_Address);
+        uint256 reward = eligibleRewards(_tokenId); //gets reward for current reward period, prior to any changes
+        if (reward > availableRewards) {
+            //check that the rewards pool is not empty
+            reward = availableRewards;
+        }
+        require(
+            (UTIL_TKN.balanceOf(_msgSender()) + reward) >= _amount,
+            "SV:IMS:Insufficient Funds to match stake increase"
+        );
+
+        //^^^^^^^checks^^^^^^^^^
+        thisStake.startTime = block.timestamp; //resets interval start for next reward period
+        thisStake.stakedAmount = thisStake.stakedAmount + _amount; //increases staked amount by stake increase _amount
+        thisStake.mintTime = block.timestamp; //Starts mint time of stake over
+        thisStake.startTime = thisStake.mintTime; //Starts reward start time over
+        thisStake.bonus = _bonus;
+        stake[_tokenId] = thisStake; //write the new stake parameters to the stake mapping
+
+        //^^^^^^^effects^^^^^^^^^
+        REWARDS_VAULT.payRewards(_tokenId, reward); //get all rewards due first.
+
+        STAKE_VAULT.takeStake(_tokenId, _amount);
+
+        //^^^^^^^interactions^^^^^^^^^
+    }
 
     /**
      * @dev Transfers eligible rewards to staker, resets last payment time
@@ -259,6 +300,7 @@ contract EO_STAKING is ReentrancyGuard, AccessControl, Pausable {
         stake[_tokenId].startTime = block.timestamp; //resets interval start for next reward period
 
         if (reward > availableRewards) {
+            //check that the rewards pool is not empty
             reward = availableRewards;
         }
         //^^^^^^^effects^^^^^^^^^
@@ -415,7 +457,8 @@ contract EO_STAKING is ReentrancyGuard, AccessControl, Pausable {
     function newStake(
         uint256 _amount,
         uint256 _interval,
-        uint256 _bonus
+        uint256 _bonus,
+        uint256 _bonusPercentage
     ) private whenNotPaused nonReentrant {
         require(
             _interval >= 2, // 2 days in seconds unreachable? throws in setStakeLevels
@@ -435,6 +478,7 @@ contract EO_STAKING is ReentrancyGuard, AccessControl, Pausable {
         thisStake.startTime = thisStake.mintTime;
         thisStake.interval = _interval;
         thisStake.bonus = _bonus;
+        thisStake.stakePercentage = _bonusPercentage;
 
         stake[currentStake] = thisStake;
         //^^^^^^^effects^^^^^^^^^
