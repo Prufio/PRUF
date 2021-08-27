@@ -132,9 +132,8 @@ struct Stake {
     uint256 mintTime; //blocktime of creation
     uint256 startTime; //blocktime of creation or most recent payout
     uint256 interval; //staking interval in seconds
-    uint256 bonus; //bonus tokens earned per interval
-    uint256 stakePercentage; // % per reward period, in tenths of a percent, assigned to this stake on creation
-    uint256 stakeMaximum // maximum tokens allowed to be held by this stake
+    uint256 bonusPercentage; // % per reward period, in tenths of a percent, assigned to this stake on creation
+    uint256 stakeMaximum; // maximum tokens allowed to be held by this stake
 }
 
 /*
