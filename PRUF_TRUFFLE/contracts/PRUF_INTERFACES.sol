@@ -134,6 +134,7 @@ struct Stake {
     uint256 interval; //staking interval in seconds
     uint256 bonus; //bonus tokens earned per interval
     uint256 stakePercentage; // % per reward period, in tenths of a percent, assigned to this stake on creation
+    uint256 stakeMaximum // maximum tokens allowed to be held by this stake
 }
 
 /*
