@@ -226,6 +226,7 @@ contract EO_STAKING is ReentrancyGuard, AccessControl, Pausable {
     /**
      * @dev Transfers eligible rewards to staker, resets last payment time, adds _amount tokens to holders stake
      * @param _tokenId token id to modify stake
+     * DPS:TEST NEW FUNCTION
      */
     function increaseMyStake(uint256 _tokenId, uint256 _amount)
         external
@@ -237,28 +238,30 @@ contract EO_STAKING is ReentrancyGuard, AccessControl, Pausable {
 
         require(
             (block.timestamp - thisStake.startTime) > seconds_in_a_day, // 1 day in seconds
-            "PES:CB: must wait 24h from creation/last claim"
+            "PES:IMS: must wait 24h from creation/last claim"
+        );
+
+        require(
+            (_amount + thisStake.stakedAmount) <= thisStake.maximum,
+            "PES:IMS: amount will raise stake above maximum."
         );
 
         uint256 availableRewards = UTIL_TKN.balanceOf(REWARDS_VAULT_Address);
         uint256 reward = eligibleRewards(_tokenId); //gets reward for current reward period, prior to any changes
         if (reward > availableRewards) {
-            //check that the rewards pool is not empty, adjust available rewards accordingly
+            //check that the rewards pool is not empty, adjust payable rewards accordingly
             reward = availableRewards;
         }
         require(
             (UTIL_TKN.balanceOf(_msgSender()) + reward) >= _amount,
-            "SV:IMS:Insufficient Funds to match stake increase"
+            "SV:IMS:Insufficient Funds at stakeHolder adress to match stake increase"
         );
 
         //^^^^^^^checks^^^^^^^^^
         thisStake.stakedAmount = thisStake.stakedAmount + _amount; //increases staked amount by stake increase _amount
-        thisStake.bonus =
-            (thisStake.stakedAmount * thisStake.stakePercentage) /
-            1000; // recalculate the number of tokens to be paid each interval
         thisStake.mintTime = block.timestamp; //Starts mint time of stake over
         thisStake.startTime = thisStake.mintTime; //Starts reward start time over
-        //thisStake.interval and .stakePercentage are unchanged
+        //thisStake.interval, .maximum, and .bonusPercentage are unchanged
 
         stake[_tokenId] = thisStake; //write the updated stake parameters to the stake map
 
@@ -323,7 +326,7 @@ contract EO_STAKING is ReentrancyGuard, AccessControl, Pausable {
 
         require(
             (block.timestamp - thisStake.startTime) > seconds_in_a_day, // 1 day in seconds
-            "PES:BS: must wait 24h from creation/last claim"
+            "PES:BS: must wait 24h from last claim"
         );
         //^^^^^^^checks^^^^^^^^^
         uint256 availableRewards = UTIL_TKN.balanceOf(REWARDS_VAULT_Address);
@@ -349,11 +352,13 @@ contract EO_STAKING is ReentrancyGuard, AccessControl, Pausable {
     function eligibleRewards(uint256 _tokenId) public view returns (uint256) {
         Stake memory thisStake = stake[_tokenId];
 
+        uint256 bonusPerInterval = (thisStake.stakedAmount *
+            thisStake.bonusPercentage) / 1000;
         uint256 elapsedMicroIntervals = (((block.timestamp -
             thisStake.startTime) * 1000000) /
             (thisStake.interval * seconds_in_a_day)); //microIntervals since stake start or last payout
 
-        uint256 reward = (elapsedMicroIntervals * thisStake.bonus) / 1000000;
+        uint256 reward = (elapsedMicroIntervals * bonusPerInterval) / 1000000;
 
         return (reward);
     }
@@ -369,12 +374,14 @@ contract EO_STAKING is ReentrancyGuard, AccessControl, Pausable {
         returns (uint256, uint256)
     {
         Stake memory thisStake = stake[_tokenId];
+        uint256 bonusPerInterval = (thisStake.stakedAmount *
+            thisStake.bonusPercentage) / 1000;
 
         uint256 elapsedMicroIntervals = (((block.timestamp -
             thisStake.startTime) * 1000000) /
             (thisStake.interval * seconds_in_a_day)); //microIntervals since stake start or last payout
 
-        uint256 reward = (elapsedMicroIntervals * thisStake.bonus) / 1000000;
+        uint256 reward = (elapsedMicroIntervals * bonusPerInterval) / 1000000;
 
         return (reward, elapsedMicroIntervals); //reward amount and millionths of a reward period that have passed
     }
@@ -392,7 +399,6 @@ contract EO_STAKING is ReentrancyGuard, AccessControl, Pausable {
             uint256,
             uint256,
             uint256,
-            uint256,
             uint256
         )
     {
@@ -401,9 +407,8 @@ contract EO_STAKING is ReentrancyGuard, AccessControl, Pausable {
             stake[_tokenId].mintTime,
             stake[_tokenId].startTime,
             stake[_tokenId].interval,
-            stake[_tokenId].bonus,
-            stake[_tokenId].stakePercentage,
-            stake[_tokenId].stakeMaximum
+            stake[_tokenId].bonusPercentage,
+            stake[_tokenId].maximum
         );
     }
 
@@ -469,12 +474,13 @@ contract EO_STAKING is ReentrancyGuard, AccessControl, Pausable {
 
         currentStake++;
         Stake memory thisStake;
+
         thisStake.stakedAmount = _amount;
         thisStake.mintTime = block.timestamp;
         thisStake.startTime = thisStake.mintTime;
         thisStake.interval = thisStakeTier.interval;
-        thisStake.bonus = (_amount * thisStakeTier.bonusPercentage) / 1000;
-        thisStake.stakePercentage = thisStakeTier.bonusPercentage;
+        thisStake.bonusPercentage = thisStakeTier.bonusPercentage;
+        thisStake.maximum = thisStakeTier.maximum;
 
         stake[currentStake] = thisStake;
         //^^^^^^^effects^^^^^^^^^
