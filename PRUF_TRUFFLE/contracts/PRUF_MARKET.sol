@@ -15,7 +15,7 @@ _________\/// _____________\/// _______\/// __\///////// __\/// _____________
  *
  *-----------------------------------------------------------------
  * Wraps and unwraps ERC721 compliant tokens in a PRUF Asset token  DPS:NEW CONTRACT DPS:CHECK
- *  MUST BE TRUSTED AGENT IN CNSGN_TKN, A_tkn, Util_Tkn
+ *  MUST BE TRUSTED AGENT IN MARKET_TKN, A_tkn, Util_Tkn
  *----------------------------------------------------------------*/
 
 // SPDX-License-Identifier: UNLICENSED
@@ -33,9 +33,9 @@ contract Market is CORE {
         uint256 price;
     }
 
-    address internal CNSGN_TKN_Address;
+    address internal MARKET_TKN_Address;
     address public charityAddress;
-    CNSGN_TKN_Interface internal CNSGN_TKN;
+    MARKET_TKN_Interface internal MARKET_TKN;
 
     mapping(uint256 => ConsignmentTags) private wrapped; // pruf tokenID -> original TokenID, ContractAddress
 
@@ -120,13 +120,13 @@ contract Market is CORE {
                 _tokenId
             ); // move token to this contract using allowance
         }
-        CNSGN_TKN.mintConsignmentToken(_msgSender(), newTokenId, "pruf.io/mkt");
+        MARKET_TKN.mintConsignmentToken(_msgSender(), newTokenId, "pruf.io/mkt");
 
         //^^^^^^^interactions^^^^^^^^^
     }
 
     /**
-     * @dev Unwraps a token, burns the CNSGN_TKN, returns original to caller
+     * @dev Unwraps a token, burns the MARKET_TKN, returns original to caller
      * @param _tokenId tokenID of consignment token being redeemed
      * burns consignment token from caller wallet
      * Sends original consigned 721 to caller
@@ -135,14 +135,14 @@ contract Market is CORE {
         external
         nonReentrant
         whenNotPaused
-        isTokenHolder(_tokenId, CNSGN_TKN_Address)
+        isTokenHolder(_tokenId, MARKET_TKN_Address)
     {
         //caller holds the consignment ticket ^^
         address wrapped721TokenContract = wrapped[_tokenId].tokenContract;
         uint256 wrappedTokenId = wrapped[_tokenId].tokenId;
         //^^^^^^^checks^^^^^^^^^
 
-        CNSGN_TKN.trustedAgentBurn(_tokenId);
+        MARKET_TKN.trustedAgentBurn(_tokenId);
 
         foreign721Transfer(
             wrapped721TokenContract,
@@ -169,10 +169,10 @@ contract Market is CORE {
 
         address paymentAddress;
 
-        if (CNSGN_TKN.tokenExists(_tokenId) != 0) {
+        if (MARKET_TKN.tokenExists(_tokenId) != 0) {
             //if ticket !exist, sale will go through and proceeds will go to the charity address.
-            CNSGN_TKN.trustedAgentBurn(_tokenId); //burn the consignment tag, consignment is over as sale is being completed
-            paymentAddress = CNSGN_TKN.ownerOf(wrapped[_tokenId].tokenId); //set payment address to the holder of the consignment ticket
+            MARKET_TKN.trustedAgentBurn(_tokenId); //burn the consignment tag, consignment is over as sale is being completed
+            paymentAddress = MARKET_TKN.ownerOf(wrapped[_tokenId].tokenId); //set payment address to the holder of the consignment ticket
         } else {
             //otherwise
             paymentAddress = charityAddress; //set payment address to the charity address

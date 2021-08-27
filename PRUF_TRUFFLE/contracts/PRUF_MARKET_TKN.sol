@@ -43,7 +43,7 @@ import "./Imports/utils/ReentrancyGuard.sol";
  * roles to other accounts.
  */
 
-contract CNSGN_TKN is
+contract MARKET_TKN is
     ReentrancyGuard,
     Context,
     AccessControl,

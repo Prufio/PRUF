@@ -901,13 +901,13 @@ interface A_TKN_Interface {
 
 //------------------------------------------------------------------------------------------------
 /*
- * @dev Interface for CNSGN_TKN
+ * @dev Interface for MARKET_TKN
  * INHERIANCE:
     import "./Imports/token/ERC721/ERC721.sol";
     import "./Imports/access/Ownable.sol";
     import "./Imports/utils/ReentrancyGuard.sol";
  */
-interface CNSGN_TKN_Interface {
+interface MARKET_TKN_Interface {
     /*
      * @dev Set storage contract to interface with
      */
