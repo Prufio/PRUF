@@ -62,7 +62,7 @@ contract Market is CORE {
      * @param _charityAddress charity erc20 address
      */
 
-    function setCharityAddress(address _charityAddress)
+    function setDefaultCharityAddress(address _charityAddress)
         external
         isContractAdmin
     {
@@ -93,7 +93,8 @@ contract Market is CORE {
         whenNotPaused
         isTokenHolder(_foreignTokenId, _foreignTokenContract)
     {
-        // without this, the dark forest gets it!
+        // without this, the dark forest gets it!^^^^^^^^^^
+
         //^^^^^^^checks^^^^^^^^^
 
         bytes32 consignmentTag = keccak256(
@@ -198,7 +199,7 @@ contract Market is CORE {
                 wrapped[_tokenId].holderShare //amount of tokens to send
             );
             UTIL_TKN.trustedAgentTransfer( //Pay in PRüF using TAT
-                _msgSender(),//from the purchase caller
+                _msgSender(), //from the purchase caller
                 wrapped[_tokenId].benificiaryAddress, //to the benificiary address
                 wrapped[_tokenId].benificiaryShare //amount of tokens to send
             );
