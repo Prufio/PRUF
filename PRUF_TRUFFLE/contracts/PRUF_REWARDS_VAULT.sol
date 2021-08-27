@@ -11,8 +11,10 @@ _________\/// _____________\/// _______\/// __\///////// __\/// _____________
 *---------------------------------------------------------------------------*/
 
 /**-----------------------------------------------------------------
- *PRUF Rewards Vault holds PRUF to send to stakers.
- *It is funded by the team with the stake rewards amount as needed
+ * PRUF Rewards Vault holds PRUF to send to stakers.
+ * It is funded by the team with the stake rewards amount as needed
+ * As the vault is depleted, payees requesting more than the rewards vault balance 
+ * will be paid 1/2 the balance instead, ensuring a semi-fair FCFS endstage distribution
  *---------------------------------------------------------------
  */
 
