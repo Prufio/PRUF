@@ -112,7 +112,6 @@ contract REWARDS_VAULT is ReentrancyGuard, AccessControl, Pausable {
     {
         //^^^^^^^checks^^^^^^^^^
         if (_amount > UTIL_TKN.balanceOf(address(this))) {
-            //DPS:CHECK NEW -- Prevents stuck stakes at the end of staking
             _amount = (UTIL_TKN.balanceOf(address(this))) / 2; //as the rewards vault becomes empty, enforce a semi-fair FCFS distruibution favoring small holders
         }
 

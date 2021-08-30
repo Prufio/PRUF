@@ -70,7 +70,8 @@ contract EO_STAKING is ReentrancyGuard, AccessControl, Pausable {
         uint256 bonusPercentage; //bonusPercentage in tenths of a percent
     }
 
-    uint256 constant seconds_in_a_day = 86400;
+    // uint256 constant seconds_in_a_day = 86400;
+    uint256 constant seconds_in_a_day = 1;
 
     mapping(uint256 => StakingTier) private stakeTier; //stake level parameters
 
@@ -193,7 +194,7 @@ contract EO_STAKING is ReentrancyGuard, AccessControl, Pausable {
 
         //^^^^^^^checks^^^^^^^^^
         stakeTier[_stakeTier].minimum = _min;
-        stakeTier[_stakeTier].maximum = _max; //set to zero to disable new stkes in this tier DPS:Check
+        stakeTier[_stakeTier].maximum = _max; //set to zero to disable new stkes in this tier
         stakeTier[_stakeTier].interval = _interval;
         stakeTier[_stakeTier].bonusPercentage = _bonusPercentage;
         //^^^^^^^effects^^^^^^^^^
@@ -226,7 +227,6 @@ contract EO_STAKING is ReentrancyGuard, AccessControl, Pausable {
     /**
      * @dev Transfers eligible rewards to staker, resets last payment time, adds _amount tokens to holders stake
      * @param _tokenId token id to modify stake
-     * DPS:TEST NEW FUNCTION
      */
     function increaseMyStake(uint256 _tokenId, uint256 _amount)
         external
@@ -447,7 +447,7 @@ contract EO_STAKING is ReentrancyGuard, AccessControl, Pausable {
             thisStakeTier.interval >= 2, // 2 days in seconds unreachable? throws in setStakeLevels
             "PES:NS: Interval <= 2"
         );
-        require(
+        require( //CTS:EXAMINE redundant, setStakeLevels handles it
             _amount > 99999999999999999999, //100 pruf
             "PES:NS: Staked amount < 100"
         );

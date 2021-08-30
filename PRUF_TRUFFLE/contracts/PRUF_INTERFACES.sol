@@ -1209,7 +1209,6 @@ interface NODE_MGR_Interface {
 
     /*
      * @dev Modifies an node with minimal controls
-     *--------DPS TEST ---- NEW args, order
      */
     function modifyNode(
         uint32 _node,
@@ -1347,7 +1346,7 @@ interface NODE_MGR_Interface {
         returns (uint8);
 
     /*
-     * @dev get the authorization status of a management type 0 = not allowed  DPS:TEST -- NEW
+     * @dev get the authorization status of a management type 0 = not allowed
      */
     function getManagementTypeStatus(uint8 _managementType)
         external
@@ -1355,7 +1354,7 @@ interface NODE_MGR_Interface {
         returns (uint8);
 
     /*
-     * @dev get the authorization status of a storage type 0 = not allowed   DPS:TEST -- NEW
+     * @dev get the authorization status of a storage type 0 = not allowed
      */
     function getStorageProviderStatus(uint8 _storageProvider)
         external
@@ -1363,7 +1362,7 @@ interface NODE_MGR_Interface {
         returns (uint8);
 
     /*
-     * @dev get the authorization status of a custody type 0 = not allowed   DPS:TEST -- NEW
+     * @dev get the authorization status of a custody type 0 = not allowed
      */
     function getCustodyTypeStatus(uint8 _custodyType)
         external
