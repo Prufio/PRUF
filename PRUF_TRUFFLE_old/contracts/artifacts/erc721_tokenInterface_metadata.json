@@ -1,0 +1,89 @@
+{
+	"compiler": {
+		"version": "0.8.7+commit.e28d00a7"
+	},
+	"language": "Solidity",
+	"output": {
+		"abi": [
+			{
+				"inputs": [
+					{
+						"internalType": "uint256",
+						"name": "",
+						"type": "uint256"
+					}
+				],
+				"name": "ownerOf",
+				"outputs": [
+					{
+						"internalType": "address",
+						"name": "",
+						"type": "address"
+					}
+				],
+				"stateMutability": "view",
+				"type": "function"
+			}
+		],
+		"devdoc": {
+			"kind": "dev",
+			"methods": {},
+			"version": 1
+		},
+		"userdoc": {
+			"kind": "user",
+			"methods": {},
+			"version": 1
+		}
+	},
+	"settings": {
+		"compilationTarget": {
+			"Documents/DEV/PRUF/PRUF_TRUFFLE_old/contracts/PRUF_helper.sol": "erc721_tokenInterface"
+		},
+		"evmVersion": "london",
+		"libraries": {},
+		"metadata": {
+			"bytecodeHash": "ipfs"
+		},
+		"optimizer": {
+			"enabled": false,
+			"runs": 200
+		},
+		"remappings": []
+	},
+	"sources": {
+		"Documents/DEV/PRUF/PRUF_TRUFFLE_old/contracts/Imports/access/Ownable.sol": {
+			"keccak256": "0x1cae4f85f114ff17b90414f5da67365b1d00337abb5bce9bf944eb78a2c0673c",
+			"license": "MIT",
+			"urls": [
+				"bzz-raw://d5ff16b336ce8f906478d5f2eecc6435e00833bdc0b92f6b209cf9e92cb5b2b7",
+				"dweb:/ipfs/QmRD1rAZEqQ73C33cdA3QoUyBDMEWnNKNMc6PNkAZWHeQQ"
+			]
+		},
+		"Documents/DEV/PRUF/PRUF_TRUFFLE_old/contracts/Imports/math/SafeMath.sol": {
+			"keccak256": "0x7908cfdd251e757c98021c9f6120d646aa143b48685e323309aa097702d6bc5d",
+			"license": "MIT",
+			"urls": [
+				"bzz-raw://034566979e4ccf14ad663ce29328e4a2973a7928f98367953628595977ed5f7e",
+				"dweb:/ipfs/QmYawrSEq7mLmbsammQtM1x1up77CBvJN8Lzvm4wp1ePXb"
+			]
+		},
+		"Documents/DEV/PRUF/PRUF_TRUFFLE_old/contracts/Imports/utils/Context.sol": {
+			"keccak256": "0xf930d2df426bfcfc1f7415be724f04081c96f4fb9ec8d0e3a521c07692dface0",
+			"license": "MIT",
+			"urls": [
+				"bzz-raw://fc2bfdea0d2562c76fb3c4cf70a86c6ba25c5a30e8f8515c95aafdf8383f8395",
+				"dweb:/ipfs/QmTbFya18786ckJfLYUoWau9jBTKfmWnWm5XSViWvB7PXN"
+			]
+		},
+		"Documents/DEV/PRUF/PRUF_TRUFFLE_old/contracts/PRUF_helper.sol": {
+			"keccak256": "0x7f9c4322bdd6e5a977c5ec50533b561071cbeb4183a926016eaf502781800e0f",
+			"license": "UNLICENSED",
+			"urls": [
+				"bzz-raw://f82f632c2980f53abe15fb6ea438cbc0249b99a8e36668aead192f47e17f36b9",
+				"dweb:/ipfs/QmV9LS1xuiJ6uhEGBQX1ULxbHBthWa9EFMncrpg7pFVzwJ"
+			]
+		}
+	},
+	"version": 1
+}
