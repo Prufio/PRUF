@@ -11,8 +11,10 @@ _________\/// _____________\/// _______\/// __\///////// __\/// _____________
 *---------------------------------------------------------------------------*/
 
 /**-----------------------------------------------------------------
- *PRUF Rewards Vault holds PRUF to send to stakers.
- *It is funded by the team with the stake rewards amount as needed
+ * PRUF Rewards Vault holds PRUF to send to stakers.
+ * It is funded by the team with the stake rewards amount as needed
+ * As the vault is depleted, payees requesting more than the rewards vault balance 
+ * will be paid 1/2 the balance instead, ensuring a semi-fair FCFS endstage distribution
  *---------------------------------------------------------------
  */
 
@@ -80,10 +82,11 @@ contract REWARDS_VAULT is ReentrancyGuard, AccessControl, Pausable {
      * @param _utilAddress address of UTIL_TKN
      * @param _stakeAddress address of STAKE_TKN
      */
-    function setTokenContracts(
-        address _utilAddress,
-        address _stakeAddress
-    ) external virtual isContractAdmin {
+    function setTokenContracts(address _utilAddress, address _stakeAddress)
+        external
+        virtual
+        isContractAdmin
+    {
         //^^^^^^^checks^^^^^^^^^
 
         UTIL_TKN_Address = _utilAddress;
@@ -108,6 +111,10 @@ contract REWARDS_VAULT is ReentrancyGuard, AccessControl, Pausable {
         isStakePayer
     {
         //^^^^^^^checks^^^^^^^^^
+        if (_amount > UTIL_TKN.balanceOf(address(this))) {
+            //DPS:CHECK NEW -- Prevents stuck stakes at the end of staking
+            _amount = (UTIL_TKN.balanceOf(address(this))) / 2; //as the rewards vault becomes empty, enforce a semi-fair FCFS distruibution favoring small holders
+        }
 
         address recipient = STAKE_TKN.ownerOf(_tokenId);
         UTIL_TKN.transfer(recipient, _amount);

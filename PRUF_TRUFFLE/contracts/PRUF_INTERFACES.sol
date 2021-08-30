@@ -132,7 +132,8 @@ struct Stake {
     uint256 mintTime; //blocktime of creation
     uint256 startTime; //blocktime of creation or most recent payout
     uint256 interval; //staking interval in seconds
-    uint256 bonus; //bonus tokens earned per interval
+    uint256 bonusPercentage; // % per reward period, in tenths of a percent, assigned to this stake on creation
+    uint256 maximum; // maximum tokens allowed to be held by this stake
 }
 
 /*
@@ -901,13 +902,13 @@ interface A_TKN_Interface {
 
 //------------------------------------------------------------------------------------------------
 /*
- * @dev Interface for CNSGN_TKN
+ * @dev Interface for MARKET_TKN
  * INHERIANCE:
     import "./Imports/token/ERC721/ERC721.sol";
     import "./Imports/access/Ownable.sol";
     import "./Imports/utils/ReentrancyGuard.sol";
  */
-interface CNSGN_TKN_Interface {
+interface MARKET_TKN_Interface {
     /*
      * @dev Set storage contract to interface with
      */

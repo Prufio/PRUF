@@ -145,8 +145,8 @@ contract STAKE_VAULT is ReentrancyGuard, AccessControl, Pausable {
         address staker = STAKE_TKN.ownerOf(_tokenId);
         //^^^^^^^effects^^^^^^^^^
 
-        UTIL_TKN.trustedAgentTransfer(staker, address(this), _amount);
-        stake[_tokenId] = _amount; // here so fails first
+        UTIL_TKN.trustedAgentTransfer(staker, address(this), _amount); // here so fails first
+        stake[_tokenId] = stake[_tokenId] + _amount;  //DPS:TEST New, adds instead of replaces
         //^^^^^^^interactions^^^^^^^^^
     }
 
