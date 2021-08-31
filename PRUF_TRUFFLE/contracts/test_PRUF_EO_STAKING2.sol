@@ -41,7 +41,7 @@ import "./Imports/utils/Pausable.sol";
 import "./Imports/utils/ReentrancyGuard.sol";
 import "./Imports/token/ERC721/IERC721.sol";
 
-contract EO_STAKING is ReentrancyGuard, AccessControl, Pausable {
+contract EO_STAKING2 is ReentrancyGuard, AccessControl, Pausable {
     bytes32 public constant CONTRACT_ADMIN_ROLE =
         keccak256("CONTRACT_ADMIN_ROLE");
     bytes32 public constant PAUSER_ROLE = keccak256("PAUSER_ROLE");
@@ -425,6 +425,7 @@ contract EO_STAKING is ReentrancyGuard, AccessControl, Pausable {
     /**
      * @dev Returns to normal state. (pausable)
      */
+
     function unpause() external isPauser {
         _unpause();
     }

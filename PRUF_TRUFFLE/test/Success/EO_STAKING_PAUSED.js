@@ -15,6 +15,7 @@ const PRUF_STAKE_TKN = artifacts.require("STAKE_TKN");
 const PRUF_STAKE_VAULT = artifacts.require("STAKE_VAULT");
 const PRUF_REWARD_VAULT = artifacts.require("REWARDS_VAULT");
 const PRUF_EO_STAKING = artifacts.require("EO_STAKING");
+const PRUF_EO_STAKING2 = artifacts.require("EO_STAKING2");
 const PRUF_HELPER = artifacts.require("Helper");
 
 let UTIL_TKN;
@@ -22,6 +23,7 @@ let STAKE_TKN;
 let STAKE_VAULT;
 let REWARDS_VAULT;
 let EO_STAKING;
+let EO_STAKING2;
 let Helper;
 
 let account1Hash;
@@ -112,6 +114,15 @@ contract("EO_STAKING", (accounts) => {
     EO_STAKING = PRUF_EO_STAKING_TEST;
   });
 
+  it("Should deploy PRUF_EO_STAKING2", async () => {
+    const PRUF_EO_STAKING2_TEST = await PRUF_EO_STAKING2.deployed({
+      from: account1,
+    });
+    console.log(PRUF_EO_STAKING2_TEST.address);
+    assert(PRUF_EO_STAKING2_TEST.address !== "");
+    EO_STAKING2 = PRUF_EO_STAKING2_TEST;
+  });
+
   it("Should build variables", async () => {
     account1Hash = await Helper.getAddrHash(account1);
 
@@ -193,13 +204,37 @@ contract("EO_STAKING", (accounts) => {
     });
   });
 
-  it("Should authorize EO_STAKING to take stakes out of the STAKE_VAULT", async () => {
+  it("Should authorize EO_STAKING2 to mint STAKE_TKNs", async () => {
+    return STAKE_TKN.grantRole(minterRoleB32, EO_STAKING2.address, {
+      from: account1,
+    });
+  });
+
+  it("Should authorize EO_STAKING2 to pay rewards", async () => {
+    return REWARDS_VAULT.grantRole(stakePayerRoleB32, EO_STAKING2.address, {
+      from: account1,
+    });
+  });
+
+  it("Should authorize EO_STAKING2 to take stakes out of the STAKE_VAULT", async () => {
+    return STAKE_VAULT.grantRole(stakeRoleB32, EO_STAKING2.address, {
+      from: account1,
+    });
+  });
+
+  it("Should authorize EO_STAKING2 as stake admin in stake_vault", async () => {
+    return STAKE_VAULT.grantRole(stakeAdminRoleB32, EO_STAKING2.address, {
+      from: account1,
+    });
+  });
+
+  it("Should authorize STAKE_VAULT to take stakes out of the STAKE_VAULT", async () => {
     return UTIL_TKN.grantRole(pauserRoleB32, STAKE_VAULT.address, {
       from: account1,
     });
   });
 
-  it("Should authorize EO_STAKING to take stakes out of the STAKE_VAULT", async () => {
+  it("Should authorize REWARDS_VAULT to take stakes out of the STAKE_VAULT", async () => {
     return UTIL_TKN.grantRole(pauserRoleB32, REWARDS_VAULT.address, {
       from: account1,
     });
@@ -265,6 +300,16 @@ contract("EO_STAKING", (accounts) => {
 
   it("Should set token contracts in EO_STAKING", async () => {
     return EO_STAKING.setTokenContracts(
+      UTIL_TKN.address,
+      STAKE_TKN.address,
+      STAKE_VAULT.address,
+      REWARDS_VAULT.address,
+      { from: account1 }
+    );
+  });
+
+  it("Should set token contracts in EO_STAKING", async () => {
+    return EO_STAKING2.setTokenContracts(
       UTIL_TKN.address,
       STAKE_TKN.address,
       STAKE_VAULT.address,
