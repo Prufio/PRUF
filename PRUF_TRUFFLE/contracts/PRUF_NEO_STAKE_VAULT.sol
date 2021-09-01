@@ -23,7 +23,7 @@ import "./Imports/utils/Pausable.sol";
 import "./Imports/utils/ReentrancyGuard.sol";
 import "./Imports/token/ERC721/IERC721.sol";
 
-contract STAKE_VAULT is ReentrancyGuard, AccessControl, Pausable {
+contract NEO_STAKE_VAULT is ReentrancyGuard, AccessControl, Pausable {
     mapping(uint256 => uint256) private stake; // holds the stake parameters for each stake tokenId
 
     bytes32 public constant CONTRACT_ADMIN_ROLE =
@@ -37,6 +37,9 @@ contract STAKE_VAULT is ReentrancyGuard, AccessControl, Pausable {
 
     address internal STAKE_TKN_Address;
     STAKE_TKN_Interface internal STAKE_TKN;
+
+    address internal STAKE_VAULT_Address;
+    STAKE_VAULT_Interface internal STAKE_VAULT;
 
     constructor() {
         _setupRole(DEFAULT_ADMIN_ROLE, _msgSender());
@@ -113,11 +116,11 @@ contract STAKE_VAULT is ReentrancyGuard, AccessControl, Pausable {
      * @param _utilAddress address of UTIL_TKN contract
      * @param _stakeAddress address of STAKE_TKN contract
      */
-    function setTokenContracts(address _utilAddress, address _stakeAddress)
-        external
-        virtual
-        isContractAdmin
-    {
+    function setContracts(
+        address _utilAddress,
+        address _stakeAddress,
+        address _legacyStakeVaultAddress // UPGRADEABLE ONLY
+    ) external isContractAdmin {
         //^^^^^^^checks^^^^^^^^^
 
         UTIL_TKN_Address = _utilAddress;
@@ -125,6 +128,8 @@ contract STAKE_VAULT is ReentrancyGuard, AccessControl, Pausable {
 
         STAKE_TKN_Address = _stakeAddress;
         STAKE_TKN = STAKE_TKN_Interface(STAKE_TKN_Address);
+
+        STAKE_VAULT_Address = _legacyStakeVaultAddress; // UPGRADEABLE ONLY
         //^^^^^^^effects^^^^^^^^^
     }
 
@@ -146,6 +151,28 @@ contract STAKE_VAULT is ReentrancyGuard, AccessControl, Pausable {
         //^^^^^^^effects^^^^^^^^^
 
         UTIL_TKN.trustedAgentTransfer(staker, address(this), _amount); // here so fails first
+        stake[_tokenId] = stake[_tokenId] + _amount;
+        //^^^^^^^interactions^^^^^^^^^
+    }
+
+    /** // UPGRADEABLE ONLY
+     * @dev moves tokens(amount) from holder(tokenID) into itself using trustedAgentTransfer, records the amount in stake map
+     * @param _tokenId stake token to take stake for
+     * @param _amount amount of stake to pull
+     */
+    function importStake(uint256 _tokenId, uint256 _amount)
+        external
+        isStakeAdmin
+        nonReentrant
+        whenNotPaused
+    {
+        //^^^^^^^checks^^^^^^^^^
+
+        UTIL_TKN.trustedAgentTransfer(
+            STAKE_VAULT_Address,
+            address(this),
+            _amount
+        ); // here so fails first
         stake[_tokenId] = stake[_tokenId] + _amount;
         //^^^^^^^interactions^^^^^^^^^
     }
