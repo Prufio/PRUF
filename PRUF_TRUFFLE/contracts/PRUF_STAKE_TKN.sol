@@ -98,6 +98,7 @@ contract STAKE_TKN is
      * @dev Mint a stake key token to specified address
      * @param _recipientAddress - Address to mint token into
      * @param _tokenId - Token ID to mint
+     * @return minted token ID
      */
     function mintStakeToken(address _recipientAddress, uint256 _tokenId)
         external
@@ -116,6 +117,7 @@ contract STAKE_TKN is
     /**
      * @dev Burn a stake key token
      * @param _tokenId - Token ID to burn
+     * @return burned Token ID
      */
     function burnStakeToken(uint256 _tokenId)
         external
