@@ -79,6 +79,8 @@ contract NEO_STAKING is ReentrancyGuard, AccessControl, Pausable {
     uint256 constant seconds_in_a_day = 86400;
     //uint256 constant seconds_in_a_day = 1; //TESTING ONLY
 
+    uint256 endOfStaking = block.timestamp + (seconds_in_a_day * 36500); //100 years in the future
+
     mapping(uint256 => StakingTier) private stakeTier; //stake level parameters
 
     constructor() {
@@ -123,6 +125,14 @@ contract NEO_STAKING is ReentrancyGuard, AccessControl, Pausable {
     }
 
     //----------------------External Admin functions / isContractAdmin----------------------//
+
+    /**
+     * @dev Kill switch for staking reward earning
+     * @param _delay delay in seconds to end stake earning
+     */
+    function endStaking(uint256 _delay) external isContractAdmin {
+        endOfStaking = block.timestamp + _delay;
+    }
 
     /**
      * @dev Transfer any specified ERC721 Token from contract
@@ -344,7 +354,6 @@ contract NEO_STAKING is ReentrancyGuard, AccessControl, Pausable {
         }
         //^^^^^^^effects^^^^^^^^^
 
-        
         //make new stake
         currentStake++;
         NeoStake memory thisStake;
@@ -357,7 +366,7 @@ contract NEO_STAKING is ReentrancyGuard, AccessControl, Pausable {
         thisStake.maximum = 100000000000000000000000000; //set max stake for all imported stakes to ü100,000,000
 
         stake[currentStake] = thisStake;
-        
+
         REWARDS_VAULT.payRewards(_tokenId, reward);
         STAKE_TKN.burnStakeToken(_tokenId);
         STAKE_TKN.mintStakeToken(_msgSender(), currentStake);
@@ -437,11 +446,17 @@ contract NEO_STAKING is ReentrancyGuard, AccessControl, Pausable {
     function eligibleRewards(uint256 _tokenId) public view returns (uint256) {
         NeoStake memory thisStake = stake[_tokenId];
 
+        uint256 timeNow;
+        if (block.timestamp > endOfStaking) {
+            timeNow = endOfStaking;
+        } else {
+            timeNow = block.timestamp;
+        }
+
         uint256 bonusPerInterval = (thisStake.stakedAmount *
             thisStake.bonusPercentage) / 1000;
-        uint256 elapsedMicroIntervals = (((block.timestamp -
-            thisStake.startTime) * 1000000) /
-            (thisStake.interval * seconds_in_a_day)); //microIntervals since stake start or last payout
+        uint256 elapsedMicroIntervals = (((timeNow - thisStake.startTime) *
+            1000000) / (thisStake.interval * seconds_in_a_day)); //microIntervals since stake start or last payout
 
         uint256 reward = (elapsedMicroIntervals * bonusPerInterval) / 1000000;
 
@@ -459,12 +474,19 @@ contract NEO_STAKING is ReentrancyGuard, AccessControl, Pausable {
         returns (uint256, uint256)
     {
         NeoStake memory thisStake = stake[_tokenId];
+
+        uint256 timeNow;
+        if (block.timestamp > endOfStaking) {
+            timeNow = endOfStaking;
+        } else {
+            timeNow = block.timestamp;
+        }
+
         uint256 bonusPerInterval = (thisStake.stakedAmount *
             thisStake.bonusPercentage) / 1000;
 
-        uint256 elapsedMicroIntervals = (((block.timestamp -
-            thisStake.startTime) * 1000000) /
-            (thisStake.interval * seconds_in_a_day)); //microIntervals since stake start or last payout
+        uint256 elapsedMicroIntervals = (((timeNow - thisStake.startTime) *
+            1000000) / (thisStake.interval * seconds_in_a_day)); //microIntervals since stake start or last payout
 
         uint256 reward = (elapsedMicroIntervals * bonusPerInterval) / 1000000;
 
