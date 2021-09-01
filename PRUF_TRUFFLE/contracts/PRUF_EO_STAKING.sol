@@ -30,6 +30,11 @@ _________\/// _____________\/// _______\/// __\///////// __\/// _____________
  * 2: payment can be taken at any time - will be the full amount or the fraction of the bonusPercentag amount (tokenholder)
  * 3: At any time after the end of the stake, the stake can be broken. Breaking the stake pays all tokens and bonusPercentag to the stakeHolder, and destroys the stake token. (tokenholder)
  * 4: the stake can be added to, up to its allowed maximum.
+ *
+ * ----To terminate staking rewards and to ensure fair distributions----
+ * 1: Deactivate all stakeTiers by setting the stakeTier.maximum to 0
+ * 2: Set endOfStaking to calculated fair distribution deadline by externally iterating all active stakes and calculating the last second for fair distribution based on balance of REWARDS_VAULT.
+ * NOTE: if no external action is taken, final rewards will be distributed in a semi-fair first-come first-served basis favoring smaller balance stakes.
  *---------------------------------------------------------------*/
 
 // SPDX-License-Identifier: UNLICENSED
@@ -47,8 +52,8 @@ contract EO_STAKING is ReentrancyGuard, AccessControl, Pausable {
     bytes32 public constant PAUSER_ROLE = keccak256("PAUSER_ROLE");
     bytes32 public constant ASSET_TXFR_ROLE = keccak256("ASSET_TXFR_ROLE");
 
-    address internal NEO_STAKE_VAULT_Address;
-    NEO_STAKE_VAULT_Interface internal NEO_STAKE_VAULT;
+    address internal STAKE_VAULT_Address;
+    STAKE_VAULT_Interface internal STAKE_VAULT;
 
     address internal STAKE_TKN_Address;
     STAKE_TKN_Interface internal STAKE_TKN;
@@ -61,7 +66,7 @@ contract EO_STAKING is ReentrancyGuard, AccessControl, Pausable {
 
     uint256 currentStake = 100000000;
 
-    mapping(uint256 => NeoStake) private stake; // stake data
+    mapping(uint256 => Stake) private stake; // stake data
 
     struct StakingTier {
         uint256 minimum; //Minimum stake for this tier
@@ -71,6 +76,8 @@ contract EO_STAKING is ReentrancyGuard, AccessControl, Pausable {
     }
 
     uint256 constant seconds_in_a_day = 86400;
+
+    uint256 endOfStaking = block.timestamp + (seconds_in_a_day * 36500); //100 years in the future
 
     mapping(uint256 => StakingTier) private stakeTier; //stake level parameters
 
@@ -118,6 +125,14 @@ contract EO_STAKING is ReentrancyGuard, AccessControl, Pausable {
     //----------------------External Admin functions / isContractAdmin----------------------//
 
     /**
+     * @dev Kill switch for staking reward earning
+     * @param _delay delay in seconds to end stake earning
+     */
+    function endStaking(uint256 _delay) external isContractAdmin {
+        endOfStaking = block.timestamp + _delay;
+    }
+
+    /**
      * @dev Transfer any specified ERC721 Token from contract
      * @param _to - address to send to
      * @param _tokenId - token ID
@@ -142,7 +157,7 @@ contract EO_STAKING is ReentrancyGuard, AccessControl, Pausable {
      * @dev Set address of contracts to interface with
      * @param _utilAddress address of UTIL_TKN(PRUF)
      * @param _stakeAddress address of STAKE_TKN
-     * @param _stakeVaultAddress address of NEO_STAKE_VAULT
+     * @param _stakeVaultAddress address of STAKE_VAULT
      * @param _rewardsVaultAddress address of REWARDS_VAULT
      */
     function setTokenContracts(
@@ -159,8 +174,8 @@ contract EO_STAKING is ReentrancyGuard, AccessControl, Pausable {
         STAKE_TKN_Address = _stakeAddress;
         STAKE_TKN = STAKE_TKN_Interface(STAKE_TKN_Address);
 
-        NEO_STAKE_VAULT_Address = _stakeVaultAddress;
-        NEO_STAKE_VAULT = NEO_STAKE_VAULT_Interface(NEO_STAKE_VAULT_Address);
+        STAKE_VAULT_Address = _stakeVaultAddress;
+        STAKE_VAULT = STAKE_VAULT_Interface(STAKE_VAULT_Address);
 
         REWARDS_VAULT_Address = _rewardsVaultAddress;
         REWARDS_VAULT = REWARDS_VAULT_Interface(REWARDS_VAULT_Address);
@@ -234,7 +249,12 @@ contract EO_STAKING is ReentrancyGuard, AccessControl, Pausable {
         whenNotPaused
         nonReentrant
     {
-        NeoStake memory thisStake = stake[_tokenId];
+        Stake memory thisStake = stake[_tokenId];
+
+        require(
+            endOfStaking > block.timestamp,
+            "PES:IMS: New stakes cannot be created."
+        );
 
         require(
             (block.timestamp - thisStake.startTime) > seconds_in_a_day, // 1 day in seconds
@@ -247,7 +267,7 @@ contract EO_STAKING is ReentrancyGuard, AccessControl, Pausable {
         uint256 reward = eligibleRewards(_tokenId); //gets reward for current reward period, prior to any changes
         require(
             (UTIL_TKN.balanceOf(_msgSender()) + reward) >= _amount,
-            "SV:IMS:Insufficient Funds at stakeHolder adress to match stake increase"
+            "PES:IMS:Insufficient Funds at stakeHolder address to match stake increase"
         );
 
         //^^^^^^^checks^^^^^^^^^
@@ -266,11 +286,9 @@ contract EO_STAKING is ReentrancyGuard, AccessControl, Pausable {
 
         REWARDS_VAULT.payRewards(_tokenId, reward); //get all rewards due first.
 
-        NEO_STAKE_VAULT.takeStake(_tokenId, _amount); //move _amount tokens from token holder account to stake_vault
+        STAKE_VAULT.takeStake(_tokenId, _amount); //move _amount tokens from token holder account to stake_vault
         //^^^^^^^interactions^^^^^^^^^
     }
-
-    
 
     /**
      * @dev Transfers eligible rewards to staker, resets last payment time
@@ -282,7 +300,7 @@ contract EO_STAKING is ReentrancyGuard, AccessControl, Pausable {
         whenNotPaused
         nonReentrant
     {
-        NeoStake memory thisStake = stake[_tokenId];
+        Stake memory thisStake = stake[_tokenId];
 
         require(
             (block.timestamp - thisStake.startTime) > seconds_in_a_day, // 1 day in seconds
@@ -312,7 +330,7 @@ contract EO_STAKING is ReentrancyGuard, AccessControl, Pausable {
         whenNotPaused
         nonReentrant
     {
-        NeoStake memory thisStake = stake[_tokenId];
+        Stake memory thisStake = stake[_tokenId];
 
         require(
             block.timestamp >
@@ -332,7 +350,7 @@ contract EO_STAKING is ReentrancyGuard, AccessControl, Pausable {
         }
 
         REWARDS_VAULT.payRewards(_tokenId, reward);
-        NEO_STAKE_VAULT.releaseStake(_tokenId);
+        STAKE_VAULT.releaseStake(_tokenId);
         STAKE_TKN.burnStakeToken(_tokenId);
         delete stake[_tokenId];
         //^^^^^^^interactions^^^^^^^^^
@@ -342,14 +360,20 @@ contract EO_STAKING is ReentrancyGuard, AccessControl, Pausable {
      * @dev Check eligible rewards amount for a stake
      * @param _tokenId token id to check
      */
-    function eligibleRewards(uint256 _tokenId) public view returns (uint256) {
-        NeoStake memory thisStake = stake[_tokenId];
+    function eligibleRewards(uint256 _tokenId) internal view returns (uint256) {
+        Stake memory thisStake = stake[_tokenId];
+        uint256 timeNow;
+
+        if (block.timestamp > endOfStaking) {
+            timeNow = endOfStaking;
+        } else {
+            timeNow = block.timestamp;
+        }
 
         uint256 bonusPerInterval = (thisStake.stakedAmount *
             thisStake.bonusPercentage) / 1000;
-        uint256 elapsedMicroIntervals = (((block.timestamp -
-            thisStake.startTime) * 1000000) /
-            (thisStake.interval * seconds_in_a_day)); //microIntervals since stake start or last payout
+        uint256 elapsedMicroIntervals = (((timeNow - thisStake.startTime) *
+            1000000) / (thisStake.interval * seconds_in_a_day)); //microIntervals since stake start or last payout
 
         uint256 reward = (elapsedMicroIntervals * bonusPerInterval) / 1000000;
 
@@ -366,7 +390,7 @@ contract EO_STAKING is ReentrancyGuard, AccessControl, Pausable {
         view
         returns (uint256, uint256)
     {
-        NeoStake memory thisStake = stake[_tokenId];
+        Stake memory thisStake = stake[_tokenId];
         uint256 bonusPerInterval = (thisStake.stakedAmount *
             thisStake.bonusPercentage) / 1000;
 
@@ -465,7 +489,7 @@ contract EO_STAKING is ReentrancyGuard, AccessControl, Pausable {
         //^^^^^^^checks^^^^^^^^^
 
         currentStake++;
-        NeoStake memory thisStake;
+        Stake memory thisStake;
 
         thisStake.stakedAmount = _amount;
         thisStake.mintTime = block.timestamp;
@@ -478,7 +502,7 @@ contract EO_STAKING is ReentrancyGuard, AccessControl, Pausable {
         //^^^^^^^effects^^^^^^^^^
 
         STAKE_TKN.mintStakeToken(_msgSender(), currentStake);
-        NEO_STAKE_VAULT.takeStake(currentStake, _amount);
+        STAKE_VAULT.takeStake(currentStake, _amount);
         //^^^^^^^interactions^^^^^^^^^
     }
 }

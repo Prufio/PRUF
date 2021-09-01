@@ -127,21 +127,13 @@ struct ID {
     string userName; //admin only///caller address match can set
 }
 
-struct NeoStake {
+struct Stake {
     uint256 stakedAmount; //tokens in stake
     uint256 mintTime; //blocktime of creation
     uint256 startTime; //blocktime of creation or most recent payout
     uint256 interval; //staking interval in seconds
     uint256 bonusPercentage; // % per reward period, in tenths of a percent, assigned to this stake on creation
     uint256 maximum; // maximum tokens allowed to be held by this stake
-}
-
-struct Stake {
-    uint256 stakedAmount;
-    uint256 mintTime;
-    uint256 startTime;
-    uint256 interval;
-    uint256 bonus;
 }
 
 /*
