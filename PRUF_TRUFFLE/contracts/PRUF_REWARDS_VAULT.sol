@@ -114,27 +114,6 @@ contract REWARDS_VAULT is ReentrancyGuard, AccessControl, Pausable {
         //^^^^^^^interactions^^^^^^^^
     }
 
-    /**
-     * @dev Transfer any specified ERC721 Token from contract
-     * @param _to - address to send to
-     * @param _tokenId - token ID
-     * @param _ERC721Contract - token contract address
-     */
-    function transferERC721Token(
-        address _to,
-        uint256 _tokenId,
-        address _ERC721Contract
-    ) external virtual nonReentrant {
-        require(
-            hasRole(ASSET_TXFR_ROLE, _msgSender()),
-            "RV:TET:Must have ASSET_TXFR_ROLE"
-        );
-        //^^^^^^^checks^^^^^^^^^
-
-        IERC721(_ERC721Contract).safeTransferFrom(address(this), _to, _tokenId);
-        //^^^^^^^interactions^^^^^^^^^
-    }
-
     /***
      * @dev Triggers stopped state.
      */
