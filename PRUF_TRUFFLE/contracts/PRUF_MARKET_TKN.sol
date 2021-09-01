@@ -56,8 +56,8 @@ contract MARKET_TKN is
         keccak256("CONTRACT_ADMIN_ROLE");
     bytes32 public constant MINTER_ROLE = keccak256("MINTER_ROLE");
     bytes32 public constant PAUSER_ROLE = keccak256("PAUSER_ROLE");
-    bytes32 public constant TRUSTED_AGENT_ROLE = keccak256("TRUSTED_AGENT_ROLE");
-
+    bytes32 public constant TRUSTED_AGENT_ROLE =
+        keccak256("TRUSTED_AGENT_ROLE");
 
     Counters.Counter private _tokenIdTracker;
 
@@ -110,7 +110,6 @@ contract MARKET_TKN is
     }
 
     //----------------------Admin functions / isContractAdmin ----------------------//
-
 
     /**
      * @dev Mint a consignment token
@@ -237,7 +236,6 @@ contract MARKET_TKN is
         _safeTransfer(_from, _to, _tokenId, _data);
         //^^^^^^^interactions^^^^^^^^^
     }
-
 
     /**
      * @dev Safely burns an asset token
