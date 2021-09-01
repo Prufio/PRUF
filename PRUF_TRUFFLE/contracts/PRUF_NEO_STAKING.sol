@@ -14,8 +14,7 @@ _________\/// _____________\/// _______\/// __\///////// __\/// _____________
  *  TO DO
  *
  *-----------------------------------------------------------------
- *-----------------------------------------------------------------
- * Early Access Staking Specification V0.1
+ * Early Access Staking Specification V0.2
  * EO Staking is a straght time-return staking model, based on Tokenized stakes.
  * Each "stake" is a staking "contract" with the following params:
  * amount  - Amount of stake
@@ -24,12 +23,43 @@ _________\/// _____________\/// _______\/// __\///////// __\/// _____________
  * endTime - end of the current cycle (may be in the past in the case of post-maturity stakes)
  * bonusPercentag - incentive paid per cycle
  *
- * ----Behavior-----
+ * ----Upgrade Behavior-----
+ *
+ * Upgrading stakes: Stakes made with legacy contract can be upgraded by the NEO contract set. In this case, EO_STAKING, and STAKE_VAULT 
+ * are deprecated and replaced with NEO_STAKING and NEO_STAKE_VAULT. NEO_STAKE_VAULT.takeStake now can increase stakes by adding to the previously staked amount.  
+ * The function importStake has been added and uses TAT to move stake-funds from STAKE_VAULT to NEO_STAKE_VAULT.
+ *
+ * the upgrade process is as follows:
+ *
+ * 1: the stake information is read from EO_staking. Corresponding values are stored into the NEO_STAKING mapping, calculating the bonusPercentage 
+ *    from the bonus amount and the stake amount of the old stake information. The maximum stake is set to 100,000,000.
+ * 2: Any rewards are collected from the old stake, and sent to the (old) token holder's address
+ * 3: The original stake token is burned
+ * 4: A new stake token is minted, in a series that begins at token ID > 100,000,000 - differentiating old tokens  (<100,000,000) from new ones (>100,000,000)
+ * 5: NEO_STAKE_VAULT.importStake TAT's funds from STAKE_VAULT to NEO_STAKE_VAULT, making the funds availble to withdraw when the stake is broken
+ *
+ * In importing the stake information from STAKE_VAULT into NEO_STAKE_VAULT's tokenId->staked amount map, the old stake data is left behind, but
+ * cannot be used to exfiltrate funds from the STAKE_VAULT contract : NEO_STAKE_VAULT.importStake is only called from NEO_STAKING.upgradeStake,
+ * which also burns the tokenId corresponding to the mapped stake value as part of the upgrade process.
+ *
+ * While this leaves the corresponding STAKE_VAULT mapping in place, this mapping is only used to release funds in a call from 
+ * STAKE_VAULT.releaseStake(_tokenId), which is only called from EO_STAKING.breakStake, which requires the caller to posess the corresponding token,
+ * which was burned in the NEO_STAKING.upgradeStake call that initiated the upgrade process.
+ * 
+ * Thus, Since the original token was burned, the stake asssociated with the original token cannot be claimed. The users stake is now only available using the new token in
+ * NEO_STAKE_VAULT.
+ *
+ *--STAKING---
  *
  * 1: Create the stake - Stake NFT is issued to the creator. A unuiqe stake is formed with the face value, bonusPercentag, start time, maximum, and interval chosen. (becomes tokenHolder)
  * 2: payment can be taken at any time - will be the full amount or the fraction of the bonusPercentag amount (tokenholder)
  * 3: At any time after the end of the stake, the stake can be broken. Breaking the stake pays all tokens and bonusPercentag to the stakeHolder, and destroys the stake token. (tokenholder)
  * 4: the stake can be added to, up to its allowed maximum.
+ *
+ * ----To terminate staking rewards and to ensure fair distributions----
+ * 1: Deactivate all stakeTiers by setting the stakeTier.maximum to 0
+ * 2: Set endOfStaking to calculated fair distribution deadline by externally iterating all active stakes and calculating the last second for fair distribution based on balance of REWARDS_VAULT.
+ * NOTE: if no external action is taken, final rewards will be distributed in a semi-fair first-come first-served basis favoring smaller balance stakes.
  *---------------------------------------------------------------*/
 
 // SPDX-License-Identifier: UNLICENSED
