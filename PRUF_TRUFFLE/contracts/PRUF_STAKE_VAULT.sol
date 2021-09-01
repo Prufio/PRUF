@@ -153,6 +153,7 @@ contract STAKE_VAULT is ReentrancyGuard, AccessControl, Pausable {
     /**
      * @dev Returns the amount of tokens staked on (tokenId)
      * @param _tokenId token to check
+     * @return Stake of _tokenId
      */
     function stakeOfToken(uint256 _tokenId) external view returns (uint256) {
         //^^^^^^^checks^^^^^^^^^
