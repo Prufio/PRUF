@@ -78,6 +78,14 @@ contract STAKE_TKN is
         _;
     }
 
+    modifier isPauser() {
+        require(
+            hasRole(PAUSER_ROLE, _msgSender()),
+            "RV:MOD-IP: Caller !PAUSER_ROLE"
+        );
+        _;
+    }
+
     //---------------------- External Functions ----------------------//
 
     /**
@@ -87,9 +95,9 @@ contract STAKE_TKN is
      */
     function mintStakeToken(address _recipientAddress, uint256 _tokenId)
         external
-        isMinter
         nonReentrant
         whenNotPaused
+        isMinter
         returns (uint256)
     {
         //^^^^^^^checks^^^^^^^^^
@@ -105,9 +113,9 @@ contract STAKE_TKN is
      */
     function burnStakeToken(uint256 _tokenId)
         external
-        isMinter
         nonReentrant
         whenNotPaused
+        isMinter
         returns (uint256)
     {
         //^^^^^^^checks^^^^^^^^^
@@ -197,11 +205,7 @@ contract STAKE_TKN is
      *
      * See {ERC721Pausable} and {Pausable-_pause}.
      */
-    function pause() external virtual {
-        require(
-            hasRole(PAUSER_ROLE, _msgSender()),
-            "ST:P: Caller !have pauser role"
-        );
+    function pause() external virtual isPauser{
         //^^^^^^^checks^^^^^^^^^
         _pause();
         //^^^^^^^interactions^^^^^^^^^
@@ -212,11 +216,7 @@ contract STAKE_TKN is
      *
      * See {ERC721Pausable} and {Pausable-_unpause}.
      */
-    function unpause() external virtual {
-        require(
-            hasRole(PAUSER_ROLE, _msgSender()),
-            "ST:UP: Caller !have pauser role"
-        );
+    function unpause() external virtual isPauser{
         //^^^^^^^checks^^^^^^^^^
         _unpause();
         //^^^^^^^interactions^^^^^^^^^

@@ -113,7 +113,7 @@ contract STAKE_VAULT is ReentrancyGuard, AccessControl, Pausable {
      * @param _utilAddress address of UTIL_TKN contract
      * @param _stakeAddress address of STAKE_TKN contract
      */
-    function setContracts(address _utilAddress, address _stakeAddress)
+    function setTokenContracts(address _utilAddress, address _stakeAddress)
         external
         isContractAdmin
     {
@@ -137,9 +137,9 @@ contract STAKE_VAULT is ReentrancyGuard, AccessControl, Pausable {
      */
     function takeStake(uint256 _tokenId, uint256 _amount)
         external
-        isStakeAdmin
         nonReentrant
         whenNotPaused
+        isStakeAdmin
     {
         //^^^^^^^checks^^^^^^^^^
         address staker = STAKE_TKN.ownerOf(_tokenId);
@@ -156,9 +156,9 @@ contract STAKE_VAULT is ReentrancyGuard, AccessControl, Pausable {
      */
     function releaseStake(uint256 _tokenId)
         external
-        isStakeAdmin
         nonReentrant
         whenNotPaused
+        isStakeAdmin
     {
         //^^^^^^^checks^^^^^^^^^
 

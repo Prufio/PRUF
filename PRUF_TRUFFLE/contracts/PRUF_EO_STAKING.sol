@@ -74,7 +74,8 @@ contract EO_STAKING is ReentrancyGuard, AccessControl, Pausable {
         uint256 bonusPercentage; //bonusPercentage in tenths of a percent
     }
 
-    uint256 constant seconds_in_a_day = 86400;
+    uint256 constant seconds_in_a_day = 1;
+    // uint256 constant seconds_in_a_day = 86400;
 
     uint256 endOfStaking = block.timestamp + (seconds_in_a_day * 36500); //100 years in the future
 
@@ -390,12 +391,18 @@ contract EO_STAKING is ReentrancyGuard, AccessControl, Pausable {
         returns (uint256, uint256)
     {
         Stake memory thisStake = stake[_tokenId];
+        uint256 timeNow;
+
+        if (block.timestamp > endOfStaking) {
+            timeNow = endOfStaking;
+        } else {
+            timeNow = block.timestamp;
+        }
         uint256 bonusPerInterval = (thisStake.stakedAmount *
             thisStake.bonusPercentage) / 1000;
 
-        uint256 elapsedMicroIntervals = (((block.timestamp -
-            thisStake.startTime) * 1000000) /
-            (thisStake.interval * seconds_in_a_day)); //microIntervals since stake start or last payout
+        uint256 elapsedMicroIntervals = (((timeNow - thisStake.startTime) *
+            1000000) / (thisStake.interval * seconds_in_a_day)); //microIntervals since stake start or last payout
 
         uint256 reward = (elapsedMicroIntervals * bonusPerInterval) / 1000000;
 
@@ -480,10 +487,6 @@ contract EO_STAKING is ReentrancyGuard, AccessControl, Pausable {
         require(
             thisStakeTier.interval >= 2, // 2 days in seconds unreachable? throws in setStakeLevels
             "PES:NS: Interval <= 2"
-        );
-        require(
-            _amount > 99999999999999999999, //100 pruf
-            "PES:NS: Staked amount < 100"
         );
         //^^^^^^^checks^^^^^^^^^
 

@@ -270,6 +270,10 @@ _________\/// _____________\/// _______\/// __\///////// __\/// _____________
           it("Should pause UTIL_TKN", async () => {
             return UTIL_TKN.pause({ from: account1 });
           });
+
+          it("Should pause STAKE_TKN", async () => {
+            return STAKE_TKN.pause({ from: account1 });
+          });
         
           function timeout(ms) {
             console.log(
@@ -278,10 +282,23 @@ _________\/// _____________\/// _______\/// __\///////// __\/// _____________
             return new Promise((resolve) => setTimeout(resolve, ms));
           }
           //1
-          it("Should fail because caller !minter", async () => {
+          it("Should fail because contract is paused", async () => {
             console.log("//**************************************BEGIN STAKE_TKN TEST**********************************************/");
-            console.log("//**************************************BEGIN STAKE_TKN Fail Batch(8)**********************************************/");
+            console.log("//**************************************BEGIN STAKE_TKN Fail Batch(12)**********************************************/");
             console.log("//**************************************BEGIN mintStakeToken Fail Batch**********************************************/");
+            return STAKE_TKN.mintStakeToken(
+                account2,
+                '1',
+              { from: account2 }
+            );
+          });
+
+          it("Should unpause STAKE_TKN", async () => {
+            return STAKE_TKN.unpause({ from: account1 });
+          });
+
+          //2
+          it("Should fail because caller !minter", async () => {
             return STAKE_TKN.mintStakeToken(
                 account2,
                 '1',
@@ -296,8 +313,13 @@ _________\/// _____________\/// _______\/// __\///////// __\/// _____________
               { from: account1 }
             );
           });
-          //2
-          it("Should fail because caller !minter", async () => {
+
+          it("Should pause STAKE_TKN", async () => {
+            return STAKE_TKN.pause({ from: account1 });
+          });
+
+          //3
+          it("Should fail because contract is paused", async () => {
             console.log("//**************************************END mintStakeToken Fail Batch**********************************************/");
             console.log("//**************************************BEGIN burnStakeToken Fail Batch**********************************************/");
             return STAKE_TKN.burnStakeToken(
@@ -305,8 +327,25 @@ _________\/// _____________\/// _______\/// __\///////// __\/// _____________
               { from: account2 }
             );
           });
-          //3
-          it("Should fail because caller !owner||approved", async () => {
+
+          it("Should unpause STAKE_TKN", async () => {
+            return STAKE_TKN.unpause({ from: account1 });
+          });
+
+          //4
+          it("Should fail because caller !minter", async () => {
+            return STAKE_TKN.burnStakeToken(
+                '1',
+              { from: account2 }
+            );
+          });
+
+          it("Should pause STAKE_TKN", async () => {
+            return STAKE_TKN.pause({ from: account1 });
+          });
+
+          //5
+          it("Should fail because contract is paused", async () => {
             console.log("//**************************************END burnStakeToken Fail Batch**********************************************/");
             console.log("//**************************************BEGIN transferFrom Fail Batch**********************************************/");
             return STAKE_TKN.transferFrom(
@@ -316,13 +355,28 @@ _________\/// _____________\/// _______\/// __\///////// __\/// _____________
               { from: account1 }
             );
           });
+
+          it("Should unpause STAKE_TKN", async () => {
+            return STAKE_TKN.unpause({ from: account1 });
+          });
+
+          //6
+          it("Should fail because caller !owner||approved", async () => {
+            return STAKE_TKN.transferFrom(
+                account2,
+                account1,
+                '1',
+              { from: account1 }
+            );
+          });
         
           it("Should pause STAKE_TKN", async () => {
             return STAKE_TKN.pause(
               { from: account1 }
             );
           });
-          //4
+
+          //7
           it("Should fail because STAKE_TKN is paused and caller !pauser", async () => {
             return STAKE_TKN.transferFrom(
                 account2,
@@ -337,10 +391,29 @@ _________\/// _____________\/// _______\/// __\///////// __\/// _____________
               { from: account1 }
             );
           });
-          //5
-          it("Should fail because caller !owner||approved", async () => {
+
+          it("Should pause STAKE_TKN", async () => {
+            return STAKE_TKN.pause({ from: account1 });
+          });
+
+          //8
+          it("Should fail because contract is paused", async () => {
             console.log("//**************************************END transferFrom Fail Batch**********************************************/");
             console.log("//**************************************BEGIN safeTransferFrom Fail Batch**********************************************/");
+            return STAKE_TKN.safeTransferFrom(
+                account2,
+                account1,
+                '1',
+              { from: account1 }
+            );
+          });
+
+          it("Should unpause STAKE_TKN", async () => {
+            return STAKE_TKN.unpause({ from: account1 });
+          });
+
+          //9
+          it("Should fail because caller !owner||approved", async () => {
             return STAKE_TKN.safeTransferFrom(
                 account2,
                 account1,
@@ -354,7 +427,8 @@ _________\/// _____________\/// _______\/// __\///////// __\/// _____________
               { from: account1 }
             );
           });
-          //6
+
+          //10
           it("Should fail because STAKE_TKN is paused and caller !pauser", async () => {
             return STAKE_TKN.safeTransferFrom(
                 account2,
@@ -369,15 +443,15 @@ _________\/// _____________\/// _______\/// __\///////// __\/// _____________
               { from: account1 }
             );
           });
-          //7
+          //11
           it("Should fail because caller !pauser", async () => {
-            console.log("//**************************************END transferFrom Fail Batch**********************************************/");
+            console.log("//**************************************END safeTransferFrom Fail Batch**********************************************/");
             console.log("//**************************************BEGIN pause Fail Batch**********************************************/");
             return STAKE_TKN.pause(
               { from: account2 }
             );
           });
-          //8
+          //12
           it("Should fail because caller !pauser", async () => {
             console.log("//**************************************END pause Fail Batch**********************************************/");
             console.log("//**************************************BEGIN unpause Fail Batch**********************************************/");
