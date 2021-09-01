@@ -11,7 +11,8 @@ _________\/// _____________\/// _______\/// __\///////// __\/// _____________
 *---------------------------------------------------------------------------*/
 
 /*-----------------------------------------------------------------
- * PRUF  NODE NFT CONTRACT
+ * PRüF STAKE KEY NFT CONTRACT
+ *CTS:EXAMINE description of contract
  *-----------------------------------------------------------------*/
 
 // SPDX-License-Identifier: UNLICENSED
@@ -78,10 +79,15 @@ contract STAKE_TKN is
         _;
     }
 
+    /**
+     * @dev Verify user credentials
+     * Originating Address:
+     *      has PAUSER_ROLE
+     */
     modifier isPauser() {
         require(
             hasRole(PAUSER_ROLE, _msgSender()),
-            "RV:MOD-IP: Caller !PAUSER_ROLE"
+            "ST:MOD-IP: Caller !PAUSER_ROLE"
         );
         _;
     }
@@ -89,7 +95,7 @@ contract STAKE_TKN is
     //---------------------- External Functions ----------------------//
 
     /**
-     * @dev Mint a stake token
+     * @dev Mint a stake key token to specified address
      * @param _recipientAddress - Address to mint token into
      * @param _tokenId - Token ID to mint
      */
@@ -108,8 +114,8 @@ contract STAKE_TKN is
     }
 
     /**
-     * @dev Burn a stake token
-     * @param _tokenId - Token ID to burn Î
+     * @dev Burn a stake key token
+     * @param _tokenId - Token ID to burn
      */
     function burnStakeToken(uint256 _tokenId)
         external
@@ -122,6 +128,28 @@ contract STAKE_TKN is
 
         _burn(_tokenId);
         return _tokenId;
+        //^^^^^^^interactions^^^^^^^^^
+    }
+
+    /**
+     * @dev Pauses all token transfers.
+     *
+     * See {ERC721Pausable} and {Pausable-_pause}.
+     */
+    function pause() external virtual isPauser {
+        //^^^^^^^checks^^^^^^^^^
+        _pause();
+        //^^^^^^^interactions^^^^^^^^^
+    }
+
+    /**
+     * @dev Unpauses all token transfers.
+     *
+     * See {ERC721Pausable} and {Pausable-_unpause}.
+     */
+    function unpause() external virtual isPauser {
+        //^^^^^^^checks^^^^^^^^^
+        _unpause();
         //^^^^^^^interactions^^^^^^^^^
     }
 
@@ -197,28 +225,6 @@ contract STAKE_TKN is
         //^^^^^^^checks^^^^^^^^^
 
         _safeTransfer(_from, _to, _tokenId, _data);
-        //^^^^^^^interactions^^^^^^^^^
-    }
-
-    /**
-     * @dev Pauses all token transfers.
-     *
-     * See {ERC721Pausable} and {Pausable-_pause}.
-     */
-    function pause() external virtual isPauser{
-        //^^^^^^^checks^^^^^^^^^
-        _pause();
-        //^^^^^^^interactions^^^^^^^^^
-    }
-
-    /**
-     * @dev Unpauses all token transfers.
-     *
-     * See {ERC721Pausable} and {Pausable-_unpause}.
-     */
-    function unpause() external virtual isPauser{
-        //^^^^^^^checks^^^^^^^^^
-        _unpause();
         //^^^^^^^interactions^^^^^^^^^
     }
 

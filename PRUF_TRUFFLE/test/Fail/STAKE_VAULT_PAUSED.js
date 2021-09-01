@@ -275,26 +275,14 @@ contract("STAKE_VAULT", (accounts) => {
     );
     return new Promise((resolve) => setTimeout(resolve, ms));
   }
+
   //1
-  it("Should fail because caller !have ASSET_TXFR_ROLE", async () => {
+  it("Should fail because caller !CONTRACT_ADMIN", async () => {
     console.log(
       "//**************************************BEGIN STAKE_VAULT TEST**********************************************/"
     );
     console.log(
-      "//**************************************BEGIN STAKE_VAULT Fail Batch(8)**********************************************/"
-    );
-    console.log(
-      "//**************************************BEGIN transferERC721Token Fail Batch**********************************************/"
-    );
-    return STAKE_VAULT.transferERC721Token(account2, "1", STAKE_TKN.address, {
-      from: account2,
-    });
-  });
-
-  //2
-  it("Should fail because caller !CONTRACT_ADMIN", async () => {
-    console.log(
-      "//**************************************END transferERC721Token Fail Batch**********************************************/"
+      "//**************************************BEGIN STAKE_VAULT Fail Batch(7)**********************************************/"
     );
     console.log(
       "//**************************************BEGIN setTokenContracts Fail Batch**********************************************/"
@@ -308,7 +296,7 @@ contract("STAKE_VAULT", (accounts) => {
     return STAKE_VAULT.pause({ from: account1 });
   });
 
-  //3
+  //2
   it("Should fail because contract is paused", async () => {
     console.log(
       "//**************************************END setTokenContracts Fail Batch**********************************************/"
@@ -325,7 +313,7 @@ contract("STAKE_VAULT", (accounts) => {
     return STAKE_VAULT.unpause({ from: account1 });
   });
 
-  //4
+  //3
   it("Should fail because caller !STAKE_ADMIN", async () => {
     return STAKE_VAULT.takeStake("1", "1000000000000000000000", {
       from: account1,
@@ -336,7 +324,7 @@ contract("STAKE_VAULT", (accounts) => {
     return STAKE_VAULT.pause({ from: account1 });
   });
 
-  //5
+  //4
   it("Should fail because contract is paused", async () => {
     console.log(
       "//**************************************END takeStake Fail Batch**********************************************/"
@@ -351,12 +339,12 @@ contract("STAKE_VAULT", (accounts) => {
     return STAKE_VAULT.unpause({ from: account1 });
   });
 
-  //6
+  //5
   it("Should fail because caller !STAKE_ADMIN", async () => {
     return STAKE_VAULT.releaseStake("1", { from: account1 });
   });
 
-  //7
+  //6
   it("Should fail because caller !pauser", async () => {
     console.log(
       "//**************************************END releaseStake Fail Batch**********************************************/"
@@ -367,7 +355,7 @@ contract("STAKE_VAULT", (accounts) => {
     return STAKE_VAULT.pause({ from: account2 });
   });
 
-  //8
+  //7
   it("Should fail because caller !pauser", async () => {
     console.log(
       "//**************************************END pause Fail Batch**********************************************/"

@@ -11,7 +11,8 @@ _________\/// _____________\/// _______\/// __\///////// __\/// _____________
 *---------------------------------------------------------------------------*/
 
 /**-----------------------------------------------------------------
- *PRUF stakeVault holds stakes that were placed into its care.
+ *PRUF Stake Vault
+ *Holds staked PRUF that were placed into its care.
  *---------------------------------------------------------------*/
 
 // SPDX-License-Identifier: UNLICENSED
@@ -88,27 +89,6 @@ contract STAKE_VAULT is ReentrancyGuard, AccessControl, Pausable {
     //----------------------External Admin functions / isContractAdmin----------------------//
 
     /**
-     * @dev Transfer any specified ERC721 Token from contract
-     * @param _to - address to send to
-     * @param _tokenId - token ID
-     * @param _ERC721Contract - token contract address
-     */
-    function transferERC721Token(
-        address _to,
-        uint256 _tokenId,
-        address _ERC721Contract
-    ) external virtual nonReentrant {
-        require(
-            hasRole(ASSET_TXFR_ROLE, _msgSender()),
-            "SV:TET:Must have ASSET_TXFR_ROLE"
-        );
-        //^^^^^^^checks^^^^^^^^^
-
-        IERC721(_ERC721Contract).safeTransferFrom(address(this), _to, _tokenId);
-        //^^^^^^^interactions^^^^^^^^^
-    }
-
-    /**
      * @dev Set address of contracts to interface with
      * @param _utilAddress address of UTIL_TKN contract
      * @param _stakeAddress address of STAKE_TKN contract
@@ -176,19 +156,26 @@ contract STAKE_VAULT is ReentrancyGuard, AccessControl, Pausable {
      * @param _tokenId token to check
      */
     function stakeOfToken(uint256 _tokenId) external view returns (uint256) {
+        //^^^^^^^checks^^^^^^^^^
+
         return stake[_tokenId];
-        //^^^^^^^interactions^^^^^^^^^
     }
 
     /**
-     * @dev Triggers stopped state.
+     * @dev Pauses contract.
+     *
+     * See {ERC721Pausable} and {Pausable-_pause}.
      */
     function pause() external isPauser {
+        //^^^^^^^checks^^^^^^^^^
+
         _pause();
     }
 
     /**
-     * @dev Returns to normal state.
+     * @dev Unpauses contract.
+     *
+     * See {ERC721Pausable} and {Pausable-_unpause}.
      */
     function unpause() external isPauser {
         _unpause();

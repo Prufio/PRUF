@@ -154,7 +154,7 @@ contract("REWARDS_VAULT", (accounts) => {
   it("Should fail because caller !contractAdmin", async () => {
     console.log("//**************************************END BOOTSTRAP**********************************************/");
     console.log("//**************************************BEGIN REWARDS_VAULT TEST**********************************************/");
-    console.log("//**************************************BEGIN REWARDS_VAULT Fail Batch(6)**********************************************/");
+    console.log("//**************************************BEGIN REWARDS_VAULT Fail Batch(5)**********************************************/");
     console.log("//**************************************BEGIN setTokenContracts Fail Batch**********************************************/");
     return REWARDS_VAULT.setTokenContracts(UTIL_TKN.address, STAKE_TKN.address, { from: account2 });
   });
@@ -182,20 +182,13 @@ contract("REWARDS_VAULT", (accounts) => {
   });
 
   //4
-  it("Should fail because caller !have ASSET_TXFR_ROLE", async () => {
-    console.log("//**************************************END payRewards Fail Batch**********************************************/");
-    console.log("//**************************************BEGIN transferERC721Token Fail Batch**********************************************/");
-    return REWARDS_VAULT.transferERC721Token(account2, '1', STAKE_TKN.address, { from: account1 });
-  });
-
-  //5
   it("Should fail because caller !have PAUSER_ROLE", async () => {
-    console.log("//**************************************END transferERC721Token Fail Batch**********************************************/");
+    console.log("//**************************************END payRewards Fail Batch**********************************************/");
     console.log("//**************************************BEGIN pause Fail Batch**********************************************/");
     return REWARDS_VAULT.pause({ from: account2 });
   });
 
-  //6
+  //5
   it("Should fail because caller !have PAUSER_ROLE", async () => {
     console.log("//**************************************END pause Fail Batch**********************************************/");
     console.log("//**************************************BEGIN unpause Fail Batch**********************************************/");
