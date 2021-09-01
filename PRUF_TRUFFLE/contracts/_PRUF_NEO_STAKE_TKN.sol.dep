@@ -41,7 +41,7 @@ import "./Imports/token/ERC721/ERC721Pausable.sol";
  * roles to other accounts.
  */
 
-contract STAKE_TKN is
+contract NEO_STAKE_TKN is
     ReentrancyGuard,
     Context,
     AccessControl,
