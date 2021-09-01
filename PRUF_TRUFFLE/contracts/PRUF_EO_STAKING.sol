@@ -14,8 +14,7 @@ _________\/// _____________\/// _______\/// __\///////// __\/// _____________
  *  TO DO
  *
  *-----------------------------------------------------------------
- *-----------------------------------------------------------------
- * Early Access Staking Specification V0.1
+ * Early Access Staking Specification V0.2
  * EO Staking is a straght time-return staking model, based on Tokenized stakes.
  * Each "stake" is a staking "contract" with the following params:
  * amount  - Amount of stake
@@ -64,7 +63,7 @@ contract EO_STAKING is ReentrancyGuard, AccessControl, Pausable {
     address internal REWARDS_VAULT_Address;
     REWARDS_VAULT_Interface internal REWARDS_VAULT;
 
-    uint256 currentStake = 100000000;
+    uint256 currentStake;
 
     mapping(uint256 => Stake) private stake; // stake data
 
@@ -482,7 +481,7 @@ contract EO_STAKING is ReentrancyGuard, AccessControl, Pausable {
             thisStakeTier.interval >= 2, // 2 days in seconds unreachable? throws in setStakeLevels
             "PES:NS: Interval <= 2"
         );
-        require( //CTS:EXAMINE redundant, setStakeLevels handles it
+        require(
             _amount > 99999999999999999999, //100 pruf
             "PES:NS: Staked amount < 100"
         );
