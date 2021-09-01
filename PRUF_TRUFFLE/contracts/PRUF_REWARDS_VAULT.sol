@@ -11,8 +11,8 @@ _________\/// _____________\/// _______\/// __\///////// __\/// _____________
 *---------------------------------------------------------------------------*/
 
 /**-----------------------------------------------------------------
- *PRUF Rewards Vault holds PRUF to send to stakers.
- *It is funded by the team with the stake rewards amount as needed
+ *PRUF Rewards Vault
+ *Holds PRUF to send to stakers, funded by the team with the stake rewards amount as needed
  *---------------------------------------------------------------
  */
 
@@ -48,7 +48,7 @@ contract REWARDS_VAULT is ReentrancyGuard, AccessControl, Pausable {
     /**
      * @dev Verify user credentials
      * Originating Address:
-     *      Has appropriate role
+     *      Has CONTRACT_ADMIN_ROLE role
      */
     modifier isContractAdmin() {
         require(
@@ -57,6 +57,12 @@ contract REWARDS_VAULT is ReentrancyGuard, AccessControl, Pausable {
         );
         _;
     }
+
+    /**
+     * @dev Verify user credentials
+     * Originating Address:
+     *      Has PAUSER_ROLE role
+     */
     modifier isPauser() {
         require(
             hasRole(PAUSER_ROLE, _msgSender()),
@@ -64,6 +70,12 @@ contract REWARDS_VAULT is ReentrancyGuard, AccessControl, Pausable {
         );
         _;
     }
+
+    /**
+     * @dev Verify user credentials
+     * Originating Address:
+     *      Has STAKE_PAYER_ROLE role
+     */
     modifier isStakePayer() {
         require(
             hasRole(STAKE_PAYER_ROLE, _msgSender()),
@@ -72,7 +84,7 @@ contract REWARDS_VAULT is ReentrancyGuard, AccessControl, Pausable {
         _;
     }
 
-    //----------------------External Admin functions / isContractAdmin----------------------//
+    //--------------------------------------External functions--------------------------------------------//
 
     /**
      * @dev Set address of contracts to interface with
@@ -81,7 +93,6 @@ contract REWARDS_VAULT is ReentrancyGuard, AccessControl, Pausable {
      */
     function setTokenContracts(address _utilAddress, address _stakeAddress)
         external
-        virtual
         isContractAdmin
     {
         //^^^^^^^checks^^^^^^^^^
@@ -94,17 +105,15 @@ contract REWARDS_VAULT is ReentrancyGuard, AccessControl, Pausable {
         //^^^^^^^effects^^^^^^^^^
     }
 
-    //--------------------------------------External functions--------------------------------------------//
-
     /**
      * @dev Sends (amount) pruf to ownerOf(tokenId)
-     * @param _tokenId - token ID
+     * @param _tokenId - stake key token ID
      * @param _amount - amount to pay to owner of (tokenId)
      */
     function payRewards(uint256 _tokenId, uint256 _amount)
         external
-        whenNotPaused
         nonReentrant
+        whenNotPaused
         isStakePayer
     {
         //^^^^^^^checks^^^^^^^^^
@@ -114,17 +123,20 @@ contract REWARDS_VAULT is ReentrancyGuard, AccessControl, Pausable {
         //^^^^^^^interactions^^^^^^^^
     }
 
-    /***
-     * @dev Triggers stopped state.
+    /**
+     * @dev Pauses contract.
+     *
+     * See {ERC721Pausable} and {Pausable-_pause}.
      */
     function pause() external isPauser {
         _pause();
     }
 
-    /***
-     * @dev Returns to normal state.
+    /**
+     * @dev Unpauses contract.
+     *
+     * See {ERC721Pausable} and {Pausable-_unpause}.
      */
-
     function unpause() external isPauser {
         _unpause();
     }

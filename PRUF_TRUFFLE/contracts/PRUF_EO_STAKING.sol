@@ -11,9 +11,6 @@ _________\/// _____________\/// _______\/// __\///////// __\/// _____________
 *---------------------------------------------------------------------------*/
 
 /**-----------------------------------------------------------------
- *  TO DO
- *
- *-----------------------------------------------------------------
  * Early Access Staking Specification V0.2
  * EO Staking is a straght time-return staking model, based on Tokenized stakes.
  * Each "stake" is a staking "contract" with the following params:
@@ -70,8 +67,8 @@ contract EO_STAKING is ReentrancyGuard, AccessControl, Pausable {
     REWARDS_VAULT_Interface internal REWARDS_VAULT;
 
     uint256 currentStake;
-    //uint256 constant seconds_in_a_day = 1; //--------------------TESTING ONLY
-    uint256 constant seconds_in_a_day = 86400; //------------------VALUE FOR PRODUCTION
+    uint256 constant seconds_in_a_day = 1;
+    // uint256 constant seconds_in_a_day = 86400;
     uint256 endOfStaking = block.timestamp + (seconds_in_a_day * 36500); //100 years in the future
 
     mapping(uint256 => Stake) private stake; // stake data
@@ -110,6 +107,12 @@ contract EO_STAKING is ReentrancyGuard, AccessControl, Pausable {
         _;
     }
 
+
+    /**
+     * @dev Verify user credentials
+     * Originating Address:
+     *      Has PAUSER_ROLE
+     */
     modifier isPauser() {
         require(
             hasRole(PAUSER_ROLE, _msgSender()),
@@ -118,7 +121,7 @@ contract EO_STAKING is ReentrancyGuard, AccessControl, Pausable {
         _;
     }
 
-    //----------------------External Admin functions / isContractAdmin----------------------//
+    //--------------------------------------External functions--------------------------------------------//
 
     /**
      * @dev Kill switch for staking reward earning
@@ -158,7 +161,7 @@ contract EO_STAKING is ReentrancyGuard, AccessControl, Pausable {
     }
 
     /**
-     * @dev Set stake parameters
+     * @dev Set stake tier parameters
      * @param _stakeTier Staking level to set
      * @param _min Minumum stake
      * @param _max Maximum stake
@@ -171,7 +174,7 @@ contract EO_STAKING is ReentrancyGuard, AccessControl, Pausable {
         uint256 _max,
         uint256 _interval,
         uint256 _bonusPercentage
-    ) external virtual isContractAdmin {
+    ) external isContractAdmin {
         require(
             _interval >= 2,
             "PES:SSL: minumum allowable time for stake is 2 days"
@@ -188,8 +191,6 @@ contract EO_STAKING is ReentrancyGuard, AccessControl, Pausable {
         stakeTier[_stakeTier].bonusPercentage = _bonusPercentage;
         //^^^^^^^effects^^^^^^^^^
     }
-
-    //--------------------------------------External functions--------------------------------------------//
 
     /**
      * @dev Create a new stake
@@ -210,8 +211,6 @@ contract EO_STAKING is ReentrancyGuard, AccessControl, Pausable {
 
         newStake(_amount, _stakeTier);
     }
-
-    //--------------------------------------Public functions--------------------------------------------//
 
     /**
      * @dev Transfers eligible rewards to staker, resets last payment time, adds _amount tokens to holders stake
@@ -265,7 +264,7 @@ contract EO_STAKING is ReentrancyGuard, AccessControl, Pausable {
 
     /**
      * @dev Transfers eligible rewards to staker, resets last payment time
-     * @param _tokenId token id to check
+     * @param _tokenId token id to claim rewards on
      */
     function claimBonus(uint256 _tokenId)
         external
@@ -294,8 +293,8 @@ contract EO_STAKING is ReentrancyGuard, AccessControl, Pausable {
     }
 
     /**
-     * @dev Transfers eligible rewards to staker, resets last payment time,
-     * @param _tokenId token id to check
+     * @dev Burns stake, transfers eligible rewards and staked tokens to staker
+     * @param _tokenId stake key token id
      */
     function breakStake(uint256 _tokenId)
         external
@@ -315,11 +314,13 @@ contract EO_STAKING is ReentrancyGuard, AccessControl, Pausable {
             "PES:BS: must wait 24h from last claim"
         );
         //^^^^^^^checks^^^^^^^^^
+
         uint256 reward = eligibleRewards(_tokenId);
         //^^^^^^^effects^^^^^^^^^
+
         uint256 rewardsVaultBalance = UTIL_TKN.balanceOf(REWARDS_VAULT_Address);
         if (reward > rewardsVaultBalance) {
-            reward = rewardsVaultBalance / 2; //as the rewards vault becomes empty, enforce a semi-fair FCFS distruibution favoring small holders
+            reward = rewardsVaultBalance / 2; //as the rewards vault becomes empty, enforce a semi-fair first-come first-serve distruibution favoring small holders
         }
 
         REWARDS_VAULT.payRewards(_tokenId, reward);
@@ -330,33 +331,27 @@ contract EO_STAKING is ReentrancyGuard, AccessControl, Pausable {
     }
 
     /**
-     * @dev Check eligible rewards amount for a stake
-     * @param _tokenId token id to check
+     * @dev Pauses contract.
+     *
+     * See {ERC721Pausable} and {Pausable-_pause}.
      */
-    function eligibleRewards(uint256 _tokenId) internal view returns (uint256) {
-        Stake memory thisStake = stake[_tokenId];
-        uint256 timeNow;
-
-        if (block.timestamp > endOfStaking) {
-            timeNow = endOfStaking;
-        } else {
-            timeNow = block.timestamp;
-        }
-
-        uint256 bonusPerInterval = (thisStake.stakedAmount *
-            thisStake.bonusPercentage) / 1000;
-        uint256 elapsedMicroIntervals = (((timeNow - thisStake.startTime) *
-            1000000) / (thisStake.interval * seconds_in_a_day)); //microIntervals since stake start or last payout
-
-        uint256 reward = (elapsedMicroIntervals * bonusPerInterval) / 1000000;
-
-        return (reward);
+    function pause() external isPauser {
+        _pause();
     }
 
     /**
-     * @dev Check eligible rewards amount for a stake, for verification (may want to remove for production)
-     * returns reward and microIntervals
+     * @dev Unpauses contract.
+     *
+     * See {ERC721Pausable} and {Pausable-_unpause}.
+     */
+    function unpause() external isPauser {
+        _unpause();
+    }
+
+    /**
+     * @dev Check eligible rewards amount for a stake, for verification
      * @param _tokenId token id to check
+     * @return reward and microIntervals
      */
     function checkEligibleRewards(uint256 _tokenId)
         external
@@ -383,8 +378,9 @@ contract EO_STAKING is ReentrancyGuard, AccessControl, Pausable {
     }
 
     /**
-     * @dev Return Stake info
+     * @dev Returns info of given stake key tokenId
      * @param _tokenId Stake ID to return
+     * @return Stake struct, see Interfaces.sol
      */
     function stakeInfo(uint256 _tokenId)
         external
@@ -409,8 +405,9 @@ contract EO_STAKING is ReentrancyGuard, AccessControl, Pausable {
     }
 
     /**
-     * @dev Return Sa stakeTier specification
+     * @dev Return specific stakeTier specification
      * @param _stakeTier stake level to inspect
+     * @return StakingTier @ given index, see declaration in beginning of contract
      */
     function getStakeLevel(uint256 _stakeTier)
         external
@@ -430,21 +427,32 @@ contract EO_STAKING is ReentrancyGuard, AccessControl, Pausable {
         );
     }
 
-    /**
-     * @dev Triggers stopped state. (pausable)
-     */
-    function pause() external isPauser {
-        _pause();
-    }
-
-    /**
-     * @dev Returns to normal state. (pausable)
-     */
-    function unpause() external isPauser {
-        _unpause();
-    }
-
     //--------------------------------------------------------------------------------------Internal/Private functions
+
+    /**
+     * @dev Check eligible rewards amount for a stake
+     * @param _tokenId token id to check
+     * @return eligible rewards @ given staking key ID
+     */
+    function eligibleRewards(uint256 _tokenId) internal view returns (uint256) {
+        Stake memory thisStake = stake[_tokenId];
+        uint256 timeNow;
+
+        if (block.timestamp > endOfStaking) {
+            timeNow = endOfStaking;
+        } else {
+            timeNow = block.timestamp;
+        }
+
+        uint256 bonusPerInterval = (thisStake.stakedAmount *
+            thisStake.bonusPercentage) / 1000;
+        uint256 elapsedMicroIntervals = (((timeNow - thisStake.startTime) *
+            1000000) / (thisStake.interval * seconds_in_a_day)); //microIntervals since stake start or last payout
+
+        uint256 reward = (elapsedMicroIntervals * bonusPerInterval) / 1000000;
+
+        return (reward);
+    }
 
     /**
      * @dev Create a new stake
@@ -453,8 +461,8 @@ contract EO_STAKING is ReentrancyGuard, AccessControl, Pausable {
      */
     function newStake(uint256 _amount, uint256 _tier)
         private
-        whenNotPaused
         nonReentrant
+        whenNotPaused
     {
         StakingTier memory thisStakeTier = stakeTier[_tier];
         require(
