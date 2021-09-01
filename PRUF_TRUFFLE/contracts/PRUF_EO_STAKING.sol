@@ -22,14 +22,14 @@ _________\/// _____________\/// _______\/// __\///////// __\/// _____________
  * interval - maturity interval of stake - also time to first maturity at formation
  * startTime - Last Cycle - stake begin time or last paid time
  * endTime - end of the current cycle (may be in the past in the case of post-maturity stakes)
- * bonus - incentive paid per cycle
+ * bonusPercentag - incentive paid per cycle
  *
  * ----Behavior-----
  *
- * 1: Create the stake - Stake NFT is issued to the creator. A unuiqe stake is formed with the face value, bonus, start time, and interval chosen. (becomes tokenHolder)
- * 2: payment can be taken at any time - will be the full amount or the fraction of the bonus amount (tokenholder)
- * 3: At any time after the end of the stake, the stake can be broken. Breaking the stake pays all tokens and bonus to the stakeHolder, and destroys the stake token. (tokenholder)
- *
+ * 1: Create the stake - Stake NFT is issued to the creator. A unuiqe stake is formed with the face value, bonusPercentag, start time, maximum, and interval chosen. (becomes tokenHolder)
+ * 2: payment can be taken at any time - will be the full amount or the fraction of the bonusPercentag amount (tokenholder)
+ * 3: At any time after the end of the stake, the stake can be broken. Breaking the stake pays all tokens and bonusPercentag to the stakeHolder, and destroys the stake token. (tokenholder)
+ * 4: the stake can be added to, up to its allowed maximum.
  *---------------------------------------------------------------*/
 
 // SPDX-License-Identifier: UNLICENSED
@@ -47,11 +47,8 @@ contract EO_STAKING is ReentrancyGuard, AccessControl, Pausable {
     bytes32 public constant PAUSER_ROLE = keccak256("PAUSER_ROLE");
     bytes32 public constant ASSET_TXFR_ROLE = keccak256("ASSET_TXFR_ROLE");
 
-    address internal STAKE_VAULT_Address;
-    STAKE_VAULT_Interface internal STAKE_VAULT;
-
-    address internal REWARDS_VAULT_Address;
-    REWARDS_VAULT_Interface internal REWARDS_VAULT;
+    address internal NEO_STAKE_VAULT_Address;
+    NEO_STAKE_VAULT_Interface internal NEO_STAKE_VAULT;
 
     address internal STAKE_TKN_Address;
     STAKE_TKN_Interface internal STAKE_TKN;
@@ -59,15 +56,18 @@ contract EO_STAKING is ReentrancyGuard, AccessControl, Pausable {
     address internal UTIL_TKN_Address;
     UTIL_TKN_Interface internal UTIL_TKN;
 
-    uint256 currentStake;
+    address internal REWARDS_VAULT_Address;
+    REWARDS_VAULT_Interface internal REWARDS_VAULT;
 
-    mapping(uint256 => Stake) private stake; // stake data
+    uint256 currentStake = 100000000;
+
+    mapping(uint256 => NeoStake) private stake; // stake data
 
     struct StakingTier {
-        uint256 minimum;
-        uint256 maximum;
-        uint256 interval;
-        uint256 bonus;
+        uint256 minimum; //Minimum stake for this tier
+        uint256 maximum; //Maximum stake for this tier
+        uint256 interval; //staking interval, in dayUnits
+        uint256 bonusPercentage; //bonusPercentage in tenths of a percent
     }
 
     uint256 constant seconds_in_a_day = 86400;
@@ -140,9 +140,9 @@ contract EO_STAKING is ReentrancyGuard, AccessControl, Pausable {
 
     /**
      * @dev Set address of contracts to interface with
-     * @param _stakeAddress address of UTIL_TKN(PRUF)
+     * @param _utilAddress address of UTIL_TKN(PRUF)
      * @param _stakeAddress address of STAKE_TKN
-     * @param _stakeVaultAddress address of STAKE_VAULT
+     * @param _stakeVaultAddress address of NEO_STAKE_VAULT
      * @param _rewardsVaultAddress address of REWARDS_VAULT
      */
     function setTokenContracts(
@@ -150,7 +150,7 @@ contract EO_STAKING is ReentrancyGuard, AccessControl, Pausable {
         address _stakeAddress,
         address _stakeVaultAddress,
         address _rewardsVaultAddress
-    ) external virtual isContractAdmin {
+    ) external isContractAdmin {
         //^^^^^^^checks^^^^^^^^^
 
         UTIL_TKN_Address = _utilAddress;
@@ -159,11 +159,12 @@ contract EO_STAKING is ReentrancyGuard, AccessControl, Pausable {
         STAKE_TKN_Address = _stakeAddress;
         STAKE_TKN = STAKE_TKN_Interface(STAKE_TKN_Address);
 
-        STAKE_VAULT_Address = _stakeVaultAddress;
-        STAKE_VAULT = STAKE_VAULT_Interface(STAKE_VAULT_Address);
+        NEO_STAKE_VAULT_Address = _stakeVaultAddress;
+        NEO_STAKE_VAULT = NEO_STAKE_VAULT_Interface(NEO_STAKE_VAULT_Address);
 
         REWARDS_VAULT_Address = _rewardsVaultAddress;
         REWARDS_VAULT = REWARDS_VAULT_Interface(REWARDS_VAULT_Address);
+
         //^^^^^^^effects^^^^^^^^^
     }
 
@@ -173,14 +174,14 @@ contract EO_STAKING is ReentrancyGuard, AccessControl, Pausable {
      * @param _min Minumum stake
      * @param _max Maximum stake
      * @param _interval staking interval, in dayUnits - set to the number of days that the stake and reward interval will be based on.
-     * @param _bonus bonus in tenths of a percent: 15 = 1.5% or 15/1000 per interval. Calculated to a fixed amount of tokens in the actual stake
+     * @param _bonusPercentage bonusPercentage in tenths of a percent: 15 = 1.5% or 15/1000 per interval. Calculated to a fixed amount of tokens in the actual stake
      */
     function setStakeLevels(
         uint256 _stakeTier,
         uint256 _min,
         uint256 _max,
         uint256 _interval,
-        uint256 _bonus
+        uint256 _bonusPercentage
     ) external virtual isContractAdmin {
         require(
             _interval >= 2,
@@ -193,9 +194,9 @@ contract EO_STAKING is ReentrancyGuard, AccessControl, Pausable {
 
         //^^^^^^^checks^^^^^^^^^
         stakeTier[_stakeTier].minimum = _min;
-        stakeTier[_stakeTier].maximum = _max; //set to zero to disable new stkes in this tier DPS:Check
+        stakeTier[_stakeTier].maximum = _max; //set to zero to disable new stkes in this tier
         stakeTier[_stakeTier].interval = _interval;
-        stakeTier[_stakeTier].bonus = _bonus;
+        stakeTier[_stakeTier].bonusPercentage = _bonusPercentage;
         //^^^^^^^effects^^^^^^^^^
     }
 
@@ -203,7 +204,7 @@ contract EO_STAKING is ReentrancyGuard, AccessControl, Pausable {
 
     /**
      * @dev Create a new stake
-     * @param _amount stake token amount
+     * @param _amount amount of tokens to stake
      * @param _stakeTier staking tier
      */
     function stakeMyTokens(uint256 _amount, uint256 _stakeTier) external {
@@ -218,13 +219,58 @@ contract EO_STAKING is ReentrancyGuard, AccessControl, Pausable {
             "PES:SMT: Stake below minumum for this tier."
         );
 
-        //DPS:CHECK verify that formula is equivelant uint256 thisBonus = (_amount / 1000) * thisStakeTier.bonus;
-        uint256 thisBonus = (_amount * thisStakeTier.bonus) / 1000; // calculate the fixed number of tokens to be paid each interval
-
-        newStake(_amount, thisStakeTier.interval, thisBonus);
+        newStake(_amount, _stakeTier);
     }
 
     //--------------------------------------Public functions--------------------------------------------//
+
+    /**
+     * @dev Transfers eligible rewards to staker, resets last payment time, adds _amount tokens to holders stake
+     * @param _tokenId token id to modify stake
+     */
+    function increaseMyStake(uint256 _tokenId, uint256 _amount)
+        external
+        isStakeHolder(_tokenId)
+        whenNotPaused
+        nonReentrant
+    {
+        NeoStake memory thisStake = stake[_tokenId];
+
+        require(
+            (block.timestamp - thisStake.startTime) > seconds_in_a_day, // 1 day in seconds
+            "PES:IMS: must wait 24h from creation/last claim"
+        );
+        require(
+            (_amount + thisStake.stakedAmount) <= thisStake.maximum,
+            "PES:IMS: amount will raise stake above maximum."
+        );
+        uint256 reward = eligibleRewards(_tokenId); //gets reward for current reward period, prior to any changes
+        require(
+            (UTIL_TKN.balanceOf(_msgSender()) + reward) >= _amount,
+            "SV:IMS:Insufficient Funds at stakeHolder adress to match stake increase"
+        );
+
+        //^^^^^^^checks^^^^^^^^^
+        thisStake.stakedAmount = thisStake.stakedAmount + _amount; //increases staked amount by stake increase _amount
+        thisStake.mintTime = block.timestamp; //Starts mint time of stake over
+        thisStake.startTime = thisStake.mintTime; //Starts reward start time over
+        //thisStake.interval, .maximum, and .bonusPercentage are unchanged
+
+        stake[_tokenId] = thisStake; //write the updated stake parameters to the stake map
+
+        //^^^^^^^effects^^^^^^^^^
+        uint256 rewardsVaultBalance = UTIL_TKN.balanceOf(REWARDS_VAULT_Address);
+        if (reward > rewardsVaultBalance) {
+            reward = rewardsVaultBalance / 2; //as the rewards vault becomes empty, enforce a semi-fair FCFS distruibution favoring small holders
+        }
+
+        REWARDS_VAULT.payRewards(_tokenId, reward); //get all rewards due first.
+
+        NEO_STAKE_VAULT.takeStake(_tokenId, _amount); //move _amount tokens from token holder account to stake_vault
+        //^^^^^^^interactions^^^^^^^^^
+    }
+
+    
 
     /**
      * @dev Transfers eligible rewards to staker, resets last payment time
@@ -236,7 +282,7 @@ contract EO_STAKING is ReentrancyGuard, AccessControl, Pausable {
         whenNotPaused
         nonReentrant
     {
-        Stake memory thisStake = stake[_tokenId];
+        NeoStake memory thisStake = stake[_tokenId];
 
         require(
             (block.timestamp - thisStake.startTime) > seconds_in_a_day, // 1 day in seconds
@@ -244,17 +290,14 @@ contract EO_STAKING is ReentrancyGuard, AccessControl, Pausable {
         );
         //^^^^^^^checks^^^^^^^^^
 
-        uint256 availableRewards = UTIL_TKN.balanceOf(REWARDS_VAULT_Address);
-
         uint256 reward = eligibleRewards(_tokenId); //gets reward for current reward period
 
         stake[_tokenId].startTime = block.timestamp; //resets interval start for next reward period
-
-        if (reward > availableRewards) {
-            reward = availableRewards;
-        }
         //^^^^^^^effects^^^^^^^^^
-
+        uint256 rewardsVaultBalance = UTIL_TKN.balanceOf(REWARDS_VAULT_Address);
+        if (reward > rewardsVaultBalance) {
+            reward = rewardsVaultBalance / 2; //as the rewards vault becomes empty, enforce a semi-fair FCFS distruibution favoring small holders
+        }
         REWARDS_VAULT.payRewards(_tokenId, reward);
         //^^^^^^^interactions^^^^^^^^^
     }
@@ -269,30 +312,27 @@ contract EO_STAKING is ReentrancyGuard, AccessControl, Pausable {
         whenNotPaused
         nonReentrant
     {
-        Stake memory thisStake = stake[_tokenId];
+        NeoStake memory thisStake = stake[_tokenId];
 
         require(
             block.timestamp >
                 (thisStake.mintTime + (thisStake.interval * seconds_in_a_day)),
             "PES:BS: must wait until stake period has elapsed"
         );
-
         require(
             (block.timestamp - thisStake.startTime) > seconds_in_a_day, // 1 day in seconds
-            "PES:BS: must wait 24h from creation/last claim"
+            "PES:BS: must wait 24h from last claim"
         );
         //^^^^^^^checks^^^^^^^^^
-        uint256 availableRewards = UTIL_TKN.balanceOf(REWARDS_VAULT_Address);
         uint256 reward = eligibleRewards(_tokenId);
-        thisStake.startTime = block.timestamp;
-
-        if (reward > availableRewards) {
-            reward = availableRewards;
-        }
         //^^^^^^^effects^^^^^^^^^
+        uint256 rewardsVaultBalance = UTIL_TKN.balanceOf(REWARDS_VAULT_Address);
+        if (reward > rewardsVaultBalance) {
+            reward = rewardsVaultBalance / 2; //as the rewards vault becomes empty, enforce a semi-fair FCFS distruibution favoring small holders
+        }
 
         REWARDS_VAULT.payRewards(_tokenId, reward);
-        STAKE_VAULT.releaseStake(_tokenId);
+        NEO_STAKE_VAULT.releaseStake(_tokenId);
         STAKE_TKN.burnStakeToken(_tokenId);
         delete stake[_tokenId];
         //^^^^^^^interactions^^^^^^^^^
@@ -303,13 +343,15 @@ contract EO_STAKING is ReentrancyGuard, AccessControl, Pausable {
      * @param _tokenId token id to check
      */
     function eligibleRewards(uint256 _tokenId) public view returns (uint256) {
-        Stake memory thisStake = stake[_tokenId];
+        NeoStake memory thisStake = stake[_tokenId];
 
+        uint256 bonusPerInterval = (thisStake.stakedAmount *
+            thisStake.bonusPercentage) / 1000;
         uint256 elapsedMicroIntervals = (((block.timestamp -
             thisStake.startTime) * 1000000) /
             (thisStake.interval * seconds_in_a_day)); //microIntervals since stake start or last payout
 
-        uint256 reward = (elapsedMicroIntervals * thisStake.bonus) / 1000000;
+        uint256 reward = (elapsedMicroIntervals * bonusPerInterval) / 1000000;
 
         return (reward);
     }
@@ -324,13 +366,15 @@ contract EO_STAKING is ReentrancyGuard, AccessControl, Pausable {
         view
         returns (uint256, uint256)
     {
-        Stake memory thisStake = stake[_tokenId];
+        NeoStake memory thisStake = stake[_tokenId];
+        uint256 bonusPerInterval = (thisStake.stakedAmount *
+            thisStake.bonusPercentage) / 1000;
 
         uint256 elapsedMicroIntervals = (((block.timestamp -
             thisStake.startTime) * 1000000) /
             (thisStake.interval * seconds_in_a_day)); //microIntervals since stake start or last payout
 
-        uint256 reward = (elapsedMicroIntervals * thisStake.bonus) / 1000000;
+        uint256 reward = (elapsedMicroIntervals * bonusPerInterval) / 1000000;
 
         return (reward, elapsedMicroIntervals); //reward amount and millionths of a reward period that have passed
     }
@@ -347,6 +391,7 @@ contract EO_STAKING is ReentrancyGuard, AccessControl, Pausable {
             uint256,
             uint256,
             uint256,
+            uint256,
             uint256
         )
     {
@@ -355,7 +400,8 @@ contract EO_STAKING is ReentrancyGuard, AccessControl, Pausable {
             stake[_tokenId].mintTime,
             stake[_tokenId].startTime,
             stake[_tokenId].interval,
-            stake[_tokenId].bonus
+            stake[_tokenId].bonusPercentage,
+            stake[_tokenId].maximum
         );
     }
 
@@ -377,7 +423,7 @@ contract EO_STAKING is ReentrancyGuard, AccessControl, Pausable {
             stakeTier[_stakeTier].minimum,
             stakeTier[_stakeTier].maximum,
             stakeTier[_stakeTier].interval,
-            stakeTier[_stakeTier].bonus
+            stakeTier[_stakeTier].bonusPercentage
         );
     }
 
@@ -391,7 +437,6 @@ contract EO_STAKING is ReentrancyGuard, AccessControl, Pausable {
     /**
      * @dev Returns to normal state. (pausable)
      */
-
     function unpause() external isPauser {
         _unpause();
     }
@@ -401,38 +446,39 @@ contract EO_STAKING is ReentrancyGuard, AccessControl, Pausable {
     /**
      * @dev Create a new stake
      * @param _amount stake token amount
-     * @param _interval stake maturity interval, in "days"
-     * @param _bonus bonus tokens paid, per _interval
+     * @param _tier stake tier to stake in
      */
-    function newStake(
-        uint256 _amount,
-        uint256 _interval,
-        uint256 _bonus
-    ) private whenNotPaused nonReentrant {
+    function newStake(uint256 _amount, uint256 _tier)
+        private
+        whenNotPaused
+        nonReentrant
+    {
+        StakingTier memory thisStakeTier = stakeTier[_tier];
         require(
-            _interval >= 2, // 2 days in seconds unreachable? throws in setStakeLevels
+            thisStakeTier.interval >= 2, // 2 days in seconds unreachable? throws in setStakeLevels
             "PES:NS: Interval <= 2"
         );
-
-        require( //throws in setStakeLevels
+        require( //CTS:EXAMINE redundant, setStakeLevels handles it
             _amount > 99999999999999999999, //100 pruf
             "PES:NS: Staked amount < 100"
         );
         //^^^^^^^checks^^^^^^^^^
 
         currentStake++;
-        Stake memory thisStake;
+        NeoStake memory thisStake;
+
         thisStake.stakedAmount = _amount;
         thisStake.mintTime = block.timestamp;
         thisStake.startTime = thisStake.mintTime;
-        thisStake.interval = _interval;
-        thisStake.bonus = _bonus;
+        thisStake.interval = thisStakeTier.interval;
+        thisStake.bonusPercentage = thisStakeTier.bonusPercentage;
+        thisStake.maximum = thisStakeTier.maximum;
 
         stake[currentStake] = thisStake;
         //^^^^^^^effects^^^^^^^^^
 
         STAKE_TKN.mintStakeToken(_msgSender(), currentStake);
-        STAKE_VAULT.takeStake(currentStake, _amount);
+        NEO_STAKE_VAULT.takeStake(currentStake, _amount);
         //^^^^^^^interactions^^^^^^^^^
     }
 }
