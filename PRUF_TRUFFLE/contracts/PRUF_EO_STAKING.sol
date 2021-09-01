@@ -46,10 +46,16 @@ import "./Imports/utils/ReentrancyGuard.sol";
 import "./Imports/token/ERC721/IERC721.sol";
 
 contract EO_STAKING is ReentrancyGuard, AccessControl, Pausable {
+    struct StakingTier {
+        uint256 minimum; //Minimum stake for this tier
+        uint256 maximum; //Maximum stake for this tier
+        uint256 interval; //staking interval, in dayUnits
+        uint256 bonusPercentage; //bonusPercentage in tenths of a percent
+    }
+
     bytes32 public constant CONTRACT_ADMIN_ROLE =
         keccak256("CONTRACT_ADMIN_ROLE");
     bytes32 public constant PAUSER_ROLE = keccak256("PAUSER_ROLE");
-    bytes32 public constant ASSET_TXFR_ROLE = keccak256("ASSET_TXFR_ROLE");
 
     address internal STAKE_VAULT_Address;
     STAKE_VAULT_Interface internal STAKE_VAULT;
@@ -64,22 +70,12 @@ contract EO_STAKING is ReentrancyGuard, AccessControl, Pausable {
     REWARDS_VAULT_Interface internal REWARDS_VAULT;
 
     uint256 currentStake;
-
-    mapping(uint256 => Stake) private stake; // stake data
-
-    struct StakingTier {
-        uint256 minimum; //Minimum stake for this tier
-        uint256 maximum; //Maximum stake for this tier
-        uint256 interval; //staking interval, in dayUnits
-        uint256 bonusPercentage; //bonusPercentage in tenths of a percent
-    }
-
-    uint256 constant seconds_in_a_day = 1;
-    // uint256 constant seconds_in_a_day = 86400;
-
+    //uint256 constant seconds_in_a_day = 1; //--------------------TESTING ONLY
+    uint256 constant seconds_in_a_day = 86400; //------------------VALUE FOR PRODUCTION
     uint256 endOfStaking = block.timestamp + (seconds_in_a_day * 36500); //100 years in the future
 
-    mapping(uint256 => StakingTier) private stakeTier; //stake level parameters
+    mapping(uint256 => Stake) private stake; // stake data
+    mapping(uint256 => StakingTier) private stakeTier; //stake tier parameters
 
     constructor() {
         _setupRole(DEFAULT_ADMIN_ROLE, _msgSender());
@@ -133,27 +129,6 @@ contract EO_STAKING is ReentrancyGuard, AccessControl, Pausable {
     }
 
     /**
-     * @dev Transfer any specified ERC721 Token from contract
-     * @param _to - address to send to
-     * @param _tokenId - token ID
-     * @param _ERC721Contract - token contract address
-     */
-    function transferERC721Token(
-        address _to,
-        uint256 _tokenId,
-        address _ERC721Contract
-    ) external virtual nonReentrant {
-        require(
-            hasRole(ASSET_TXFR_ROLE, _msgSender()),
-            "PES:TET:Must have ASSET_TXFR_ROLE"
-        );
-        //^^^^^^^checks^^^^^^^^^
-
-        IERC721(_ERC721Contract).safeTransferFrom(address(this), _to, _tokenId);
-        //^^^^^^^interactions^^^^^^^^^
-    }
-
-    /**
      * @dev Set address of contracts to interface with
      * @param _utilAddress address of UTIL_TKN(PRUF)
      * @param _stakeAddress address of STAKE_TKN
@@ -179,7 +154,6 @@ contract EO_STAKING is ReentrancyGuard, AccessControl, Pausable {
 
         REWARDS_VAULT_Address = _rewardsVaultAddress;
         REWARDS_VAULT = REWARDS_VAULT_Interface(REWARDS_VAULT_Address);
-
         //^^^^^^^effects^^^^^^^^^
     }
 
@@ -255,7 +229,6 @@ contract EO_STAKING is ReentrancyGuard, AccessControl, Pausable {
             endOfStaking > block.timestamp,
             "PES:IMS: New stakes cannot be created."
         );
-
         require(
             (block.timestamp - thisStake.startTime) > seconds_in_a_day, // 1 day in seconds
             "PES:IMS: must wait 24h from creation/last claim"

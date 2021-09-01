@@ -30,7 +30,6 @@ contract REWARDS_VAULT is ReentrancyGuard, AccessControl, Pausable {
         keccak256("CONTRACT_ADMIN_ROLE");
     bytes32 public constant PAUSER_ROLE = keccak256("PAUSER_ROLE");
     bytes32 public constant STAKE_PAYER_ROLE = keccak256("STAKE_PAYER_ROLE");
-    bytes32 public constant ASSET_TXFR_ROLE = keccak256("ASSET_TXFR_ROLE");
 
     address internal UTIL_TKN_Address;
     UTIL_TKN_Interface internal UTIL_TKN;
@@ -80,10 +79,11 @@ contract REWARDS_VAULT is ReentrancyGuard, AccessControl, Pausable {
      * @param _utilAddress address of UTIL_TKN
      * @param _stakeAddress address of STAKE_TKN
      */
-    function setTokenContracts(
-        address _utilAddress,
-        address _stakeAddress
-    ) external virtual isContractAdmin {
+    function setTokenContracts(address _utilAddress, address _stakeAddress)
+        external
+        virtual
+        isContractAdmin
+    {
         //^^^^^^^checks^^^^^^^^^
 
         UTIL_TKN_Address = _utilAddress;
@@ -112,27 +112,6 @@ contract REWARDS_VAULT is ReentrancyGuard, AccessControl, Pausable {
         address recipient = STAKE_TKN.ownerOf(_tokenId);
         UTIL_TKN.transfer(recipient, _amount);
         //^^^^^^^interactions^^^^^^^^
-    }
-
-    /**
-     * @dev Transfer any specified ERC721 Token from contract
-     * @param _to - address to send to
-     * @param _tokenId - token ID
-     * @param _ERC721Contract - token contract address
-     */
-    function transferERC721Token(
-        address _to,
-        uint256 _tokenId,
-        address _ERC721Contract
-    ) external virtual nonReentrant {
-        require(
-            hasRole(ASSET_TXFR_ROLE, _msgSender()),
-            "RV:TET:Must have ASSET_TXFR_ROLE"
-        );
-        //^^^^^^^checks^^^^^^^^^
-
-        IERC721(_ERC721Contract).safeTransferFrom(address(this), _to, _tokenId);
-        //^^^^^^^interactions^^^^^^^^^
     }
 
     /***
