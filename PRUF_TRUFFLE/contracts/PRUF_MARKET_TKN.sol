@@ -111,83 +111,6 @@ contract MARKET_TKN is
 
     //----------------------Admin functions / isContractAdmin ----------------------//
 
-    // /**
-    //  * @dev ----------------------------------------PERMANANTLY !!!  Kills trusted agent and payable functions
-    //  * this will break the functionality of current payment mechanisms.
-    //  *
-    //  * The workaround for this is to create an allowance for pruf contracts for a single or multiple payments,
-    //  * either ahead of time "loading up your PRUF account" or on demand with an operation. On demand will use quite a bit more gas.
-    //  * "preloading" should be pretty gas efficient, but will add an extra step to the workflow, requiring users to have sufficient
-    //  * PRuF "banked" in an allowance for use in the system.
-    //  * @param _key - set to 170 to PERMENANTLY REMOVE TRUSTED AGENT CAPABILITY
-    //  */
-    // function killTrustedAgent(uint256 _key) external isContractAdmin {
-    //     if (_key == 170) {
-    //         trustedAgentEnabled = 0; // !!! THIS IS A PERMANENT ACTION AND CANNOT BE UNDONE
-    //     }
-    // }
-
-    // /**
-    //  * @dev Set storage contract to interface with
-    //  * @param _storageAddress - Storage contract address to set
-    //  */
-    // function setStorageContract(address _storageAddress)
-    //     external
-    //     isContractAdmin
-    // {
-    //     require(_storageAddress != address(0), "AT:SSC:Storage address = 0");
-    //     //^^^^^^^checks^^^^^^^^^
-
-    //     STOR = STOR_Interface(_storageAddress);
-    //     //^^^^^^^effects^^^^^^^^^
-    // }
-
-    // /**
-    //  * @dev Address Setters  - resolves addresses from storage and sets local interfaces
-    //  */
-    // function resolveContractAddresses() external isContractAdmin {
-    //     //^^^^^^^checks^^^^^^^^^
-
-    //     RCLR_Address = STOR.resolveContractAddress("RCLR");
-    //     RCLR = RCLR_Interface(RCLR_Address);
-
-    //     NODE_MGR_Address = STOR.resolveContractAddress("NODE_MGR");
-    //     NODE_MGR = NODE_MGR_Interface(NODE_MGR_Address);
-
-    //     NODE_TKN_Address = STOR.resolveContractAddress("NODE_TKN");
-    //     NODE_TKN = NODE_TKN_Interface(NODE_TKN_Address);
-    //     //^^^^^^^effects^^^^^^^^^
-    // }
-
-    ////----------------------Regular operations----------------------//
-
-    // /**
-    //  * @dev Set calling wallet to a "cold Wallet" that cannot be manipulated by TRUSTED_AGENT or PAYABLE permissioned functions
-    //  * WALLET ADDRESSES SET TO "Cold" DO NOT WORK WITH TRUSTED_AGENT FUNCTIONS and must be unset from cold before it can interact with
-    //  * contract functions.
-    //  */
-    // function setColdWallet() external {
-    //     coldWallet[_msgSender()] = 170;
-    // }
-
-    // /**
-    //  * @dev un-set calling wallet to a "cold Wallet", enabling manipulation by TRUSTED_AGENT and PAYABLE permissioned functions
-    //  * WALLET ADDRESSES SET TO "Cold" DO NOT WORK WITH TRUSTED_AGENT FUNCTIONS and must be unset from cold before it can interact with
-    //  * contract functions.
-    //  */
-    // function unSetColdWallet() external {
-    //     coldWallet[_msgSender()] = 0;
-    // }
-
-    // /**
-    //  * @dev return an adresses "cold wallet" status
-    //  * WALLET ADDRESSES SET TO "Cold" DO NOT WORK WITH TRUSTED_AGENT FUNCTIONS
-    //  * @param _addr - address to check
-    //  * returns 170 if adress is set to "cold wallet" status
-    //  */
-    // function isColdWallet(address _addr) public view returns (uint256) {
-    //     return coldWallet[_addr];
-    // }
 
     /**
      * @dev Mint a consignment token
@@ -315,23 +238,6 @@ contract MARKET_TKN is
         //^^^^^^^interactions^^^^^^^^^
     }
 
-    // /**
-    //  * @dev Transfers the ownership of a given token ID to another address by a TRUSTED_AGENT.
-    //  * Usage of this method is discouraged, use {safeTransferFrom} whenever possible.
-    //  * Requires the _msgSender() to be the owner, approved, or operator.
-    //  * @param _from current owner of the token
-    //  * @param _to address to receive the ownership of the given token ID
-    //  * @param _tokenId uint256 ID of the token to be transferred
-    //  */
-    // function trustedAgentTransferFrom(
-    //     address _from,
-    //     address _to,
-    //     uint256 _tokenId
-    // ) external nonReentrant {
-    //     //^^^^^^^checks^^^^^^^^
-    //     _transfer(_from, _to, _tokenId);
-    //     //^^^^^^^effects^^^^^^^^^
-    // }
 
     /**
      * @dev Safely burns an asset token
