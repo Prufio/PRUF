@@ -1,6 +1,6 @@
 {
 	"compiler": {
-		"version": "0.6.7+commit.b8d736ae"
+		"version": "0.6.12+commit.27d51765"
 	},
 	"language": "Solidity",
 	"output": {
@@ -905,13 +905,14 @@
 			}
 		],
 		"devdoc": {
-			"details": "{ERC20} token, including: *  - ability for holders to burn (destroy) their tokens - a MINTER_ROLE that allows for token minting (creation) - a PAUSER_ROLE that allows to stop all token transfers - a SNAPSHOT_ROLE that allows to take snapshots - a PAYABLE_ROLE role that allows authorized addresses to invoke the token splitting payment function (all paybale contracts) - a TRUSTED_AGENT_ROLE role that allows authorized addresses to transfer and burn tokens (AC_MGR) * This contract uses {AccessControl} to lock permissioned functions using the different roles - head to its documentation for details. * The account that deploys the contract will be granted the minter and pauser roles, as well as the default admin role, which will let it grant both minter and pauser roles to other accounts.",
+			"details": "{ERC20} token, including:  - ability for holders to burn (destroy) their tokens  - a MINTER_ROLE that allows for token minting (creation)  - a PAUSER_ROLE that allows to stop all token transfers  - a SNAPSHOT_ROLE that allows to take snapshots  - a PAYABLE_ROLE role that allows authorized addresses to invoke the token splitting payment function (all paybale contracts)  - a TRUSTED_AGENT_ROLE role that allows authorized addresses to transfer and burn tokens (AC_MGR) This contract uses {AccessControl} to lock permissioned functions using the different roles - head to its documentation for details. The account that deploys the contract will be granted the minter and pauser roles, as well as the default admin role, which will let it grant both minter and pauser roles to other accounts.",
+			"kind": "dev",
 			"methods": {
 				"allowance(address,address)": {
 					"details": "See {IERC20-allowance}."
 				},
 				"approve(address,uint256)": {
-					"details": "See {IERC20-approve}.     * Requirements:     * - `spender` cannot be the zero address."
+					"details": "See {IERC20-approve}. Requirements: - `spender` cannot be the zero address."
 				},
 				"balanceOf(address)": {
 					"details": "See {IERC20-balanceOf}."
@@ -920,58 +921,58 @@
 					"details": "Retrieves the balance of `account` at the time `snapshotId` was created."
 				},
 				"burn(uint256)": {
-					"details": "Destroys `amount` tokens from the caller.     * See {ERC20-_burn}."
+					"details": "Destroys `amount` tokens from the caller. See {ERC20-_burn}."
 				},
 				"burnFrom(address,uint256)": {
-					"details": "Destroys `amount` tokens from `account`, deducting from the caller's allowance.     * See {ERC20-_burn} and {ERC20-allowance}.     * Requirements:     * - the caller must have allowance for ``accounts``'s tokens of at least `amount`."
+					"details": "Destroys `amount` tokens from `account`, deducting from the caller's allowance. See {ERC20-_burn} and {ERC20-allowance}. Requirements: - the caller must have allowance for ``accounts``'s tokens of at least `amount`."
 				},
 				"cap()": {
 					"details": "Returns the cap on the token's total supply."
 				},
 				"constructor": {
-					"details": "Grants `DEFAULT_ADMIN_ROLE`, `CONTRACT_ADMIN_ROLE`, `MINTER_ROLE` and `PAUSER_ROLE` to the account that deploys the contract.     * See {ERC20-constructor}."
+					"details": "Grants `DEFAULT_ADMIN_ROLE`, `CONTRACT_ADMIN_ROLE`, `MINTER_ROLE` and `PAUSER_ROLE` to the account that deploys the contract. See {ERC20-constructor}."
 				},
 				"decimals()": {
-					"details": "Returns the number of decimals used to get its user representation. For example, if `decimals` equals `2`, a balance of `505` tokens should be displayed to a user as `5,05` (`505 / 10 ** 2`).     * Tokens usually opt for a value of 18, imitating the relationship between Ether and Wei. This is the value {ERC20} uses, unless {_setupDecimals} is called.     * NOTE: This information is only used for _display_ purposes: it in no way affects any of the arithmetic of the contract, including {IERC20-balanceOf} and {IERC20-transfer}."
+					"details": "Returns the number of decimals used to get its user representation. For example, if `decimals` equals `2`, a balance of `505` tokens should be displayed to a user as `5,05` (`505 / 10 ** 2`). Tokens usually opt for a value of 18, imitating the relationship between Ether and Wei. This is the value {ERC20} uses, unless {_setupDecimals} is called. NOTE: This information is only used for _display_ purposes: it in no way affects any of the arithmetic of the contract, including {IERC20-balanceOf} and {IERC20-transfer}."
 				},
 				"decreaseAllowance(address,uint256)": {
-					"details": "Atomically decreases the allowance granted to `spender` by the caller.     * This is an alternative to {approve} that can be used as a mitigation for problems described in {IERC20-approve}.     * Emits an {Approval} event indicating the updated allowance.     * Requirements:     * - `spender` cannot be the zero address. - `spender` must have allowance for the caller of at least `subtractedValue`."
+					"details": "Atomically decreases the allowance granted to `spender` by the caller. This is an alternative to {approve} that can be used as a mitigation for problems described in {IERC20-approve}. Emits an {Approval} event indicating the updated allowance. Requirements: - `spender` cannot be the zero address. - `spender` must have allowance for the caller of at least `subtractedValue`."
 				},
 				"getRoleAdmin(bytes32)": {
-					"details": "Returns the admin role that controls `role`. See {grantRole} and {revokeRole}.     * To change a role's admin, use {_setRoleAdmin}."
+					"details": "Returns the admin role that controls `role`. See {grantRole} and {revokeRole}. To change a role's admin, use {_setRoleAdmin}."
 				},
 				"getRoleMember(bytes32,uint256)": {
-					"details": "Returns one of the accounts that have `role`. `index` must be a value between 0 and {getRoleMemberCount}, non-inclusive.     * Role bearers are not sorted in any particular way, and their ordering may change at any point.     * WARNING: When using {getRoleMember} and {getRoleMemberCount}, make sure you perform all queries on the same block. See the following https://forum.openzeppelin.com/t/iterating-over-elements-on-enumerableset-in-openzeppelin-contracts/2296[forum post] for more information."
+					"details": "Returns one of the accounts that have `role`. `index` must be a value between 0 and {getRoleMemberCount}, non-inclusive. Role bearers are not sorted in any particular way, and their ordering may change at any point. WARNING: When using {getRoleMember} and {getRoleMemberCount}, make sure you perform all queries on the same block. See the following https://forum.openzeppelin.com/t/iterating-over-elements-on-enumerableset-in-openzeppelin-contracts/2296[forum post] for more information."
 				},
 				"getRoleMemberCount(bytes32)": {
 					"details": "Returns the number of accounts that have `role`. Can be used together with {getRoleMember} to enumerate all bearers of a role."
 				},
 				"grantRole(bytes32,address)": {
-					"details": "Grants `role` to `account`.     * If `account` had not been already granted `role`, emits a {RoleGranted} event.     * Requirements:     * - the caller must have ``role``'s admin role."
+					"details": "Grants `role` to `account`. If `account` had not been already granted `role`, emits a {RoleGranted} event. Requirements: - the caller must have ``role``'s admin role."
 				},
 				"hasRole(bytes32,address)": {
 					"details": "Returns `true` if `account` has been granted `role`."
 				},
 				"increaseAllowance(address,uint256)": {
-					"details": "Atomically increases the allowance granted to `spender` by the caller.     * This is an alternative to {approve} that can be used as a mitigation for problems described in {IERC20-approve}.     * Emits an {Approval} event indicating the updated allowance.     * Requirements:     * - `spender` cannot be the zero address."
+					"details": "Atomically increases the allowance granted to `spender` by the caller. This is an alternative to {approve} that can be used as a mitigation for problems described in {IERC20-approve}. Emits an {Approval} event indicating the updated allowance. Requirements: - `spender` cannot be the zero address."
 				},
 				"mint(address,uint256)": {
-					"details": "Creates `_amount` new tokens for `to`.     * See {ERC20-_mint}.     * Requirements:     * - the caller must have the `MINTER_ROLE`."
+					"details": "Creates `_amount` new tokens for `to`. See {ERC20-_mint}. Requirements: - the caller must have the `MINTER_ROLE`."
 				},
 				"name()": {
 					"details": "Returns the name of the token."
 				},
 				"pause()": {
-					"details": "Pauses all token transfers.     * See {ERC20Pausable} and {Pausable-_pause}.     * Requirements:     * - the caller must have the `PAUSER_ROLE`."
+					"details": "Pauses all token transfers. See {ERC20Pausable} and {Pausable-_pause}. Requirements: - the caller must have the `PAUSER_ROLE`."
 				},
 				"paused()": {
 					"details": "Returns true if the contract is paused, and false otherwise."
 				},
 				"renounceRole(bytes32,address)": {
-					"details": "Revokes `role` from the calling account.     * Roles are often managed via {grantRole} and {revokeRole}: this function's purpose is to provide a mechanism for accounts to lose their privileges if they are compromised (such as when a trusted device is misplaced).     * If the calling account had been granted `role`, emits a {RoleRevoked} event.     * Requirements:     * - the caller must be `account`."
+					"details": "Revokes `role` from the calling account. Roles are often managed via {grantRole} and {revokeRole}: this function's purpose is to provide a mechanism for accounts to lose their privileges if they are compromised (such as when a trusted device is misplaced). If the calling account had been granted `role`, emits a {RoleRevoked} event. Requirements: - the caller must be `account`."
 				},
 				"revokeRole(bytes32,address)": {
-					"details": "Revokes `role` from `account`.     * If `account` had been granted `role`, emits a {RoleRevoked} event.     * Requirements:     * - the caller must have ``role``'s admin role."
+					"details": "Revokes `role` from `account`. If `account` had been granted `role`, emits a {RoleRevoked} event. Requirements: - the caller must have ``role``'s admin role."
 				},
 				"symbol()": {
 					"details": "Returns the symbol of the token, usually a shorter version of the name."
@@ -983,18 +984,21 @@
 					"details": "Retrieves the total supply at the time `snapshotId` was created."
 				},
 				"transfer(address,uint256)": {
-					"details": "See {IERC20-transfer}.     * Requirements:     * - `recipient` cannot be the zero address. - the caller must have a balance of at least `amount`."
+					"details": "See {IERC20-transfer}. Requirements: - `recipient` cannot be the zero address. - the caller must have a balance of at least `amount`."
 				},
 				"transferFrom(address,address,uint256)": {
-					"details": "See {IERC20-transferFrom}.     * Emits an {Approval} event indicating the updated allowance. This is not required by the EIP. See the note at the beginning of {ERC20}.     * Requirements:     * - `sender` and `recipient` cannot be the zero address. - `sender` must have a balance of at least `amount`. - the caller must have allowance for ``sender``'s tokens of at least `amount`."
+					"details": "See {IERC20-transferFrom}. Emits an {Approval} event indicating the updated allowance. This is not required by the EIP. See the note at the beginning of {ERC20}. Requirements: - `sender` and `recipient` cannot be the zero address. - `sender` must have a balance of at least `amount`. - the caller must have allowance for ``sender``'s tokens of at least `amount`."
 				},
 				"unpause()": {
-					"details": "Unpauses all token transfers.     * See {ERC20Pausable} and {Pausable-_unpause}.     * Requirements:     * - the caller must have the `PAUSER_ROLE`."
+					"details": "Unpauses all token transfers. See {ERC20Pausable} and {Pausable-_unpause}. Requirements: - the caller must have the `PAUSER_ROLE`."
 				}
-			}
+			},
+			"version": 1
 		},
 		"userdoc": {
-			"methods": {}
+			"kind": "user",
+			"methods": {},
+			"version": 1
 		}
 	},
 	"settings": {
@@ -1015,6 +1019,7 @@
 	"sources": {
 		"Documents/PRUF/Flatpacks/Launched/Util_Tkn_07_flatpack/AccessControl.sol": {
 			"keccak256": "0xc79a28eb13e953d47dde245023e5d4644ed6ad69b34affaefe42d4ae95eb19af",
+			"license": "MIT",
 			"urls": [
 				"bzz-raw://fc2098f9fd7970372699e3598fff9217013a218fe27ef547af732ddffa824dd8",
 				"dweb:/ipfs/Qmf2XZz27NEmYMN6cFhAnnEtLiGH8zQ2kn7cn5YoSauy7E"
@@ -1022,6 +1027,7 @@
 		},
 		"Documents/PRUF/Flatpacks/Launched/Util_Tkn_07_flatpack/Address.sol": {
 			"keccak256": "0x1845481964ebacf35afe1a006fa574793b52e698eba0a8db6e3d30202bc45429",
+			"license": "MIT",
 			"urls": [
 				"bzz-raw://40da60a9727380e21c3527060691b2179bc7afc1e2e10ee41cd81e58a75f58e3",
 				"dweb:/ipfs/Qmc1mhjoT9LShTuUWFHaLfjj43qim2Fq7shMstU5bjkxcm"
@@ -1029,6 +1035,7 @@
 		},
 		"Documents/PRUF/Flatpacks/Launched/Util_Tkn_07_flatpack/Arrays.sol": {
 			"keccak256": "0x0eb4cd87b8beab90269700f7d53bd56da74d7c55c98eab5eb2efe263e96122a1",
+			"license": "MIT",
 			"urls": [
 				"bzz-raw://3b4bf59afec37f3a112a7a472876d15532745e1ad3ce3b41b2599a3710a2d079",
 				"dweb:/ipfs/QmZKaMDdLwGo16Sn7thc5th5jX6UYkpzZFQvWiX7HWmWfM"
@@ -1036,6 +1043,7 @@
 		},
 		"Documents/PRUF/Flatpacks/Launched/Util_Tkn_07_flatpack/Context.sol": {
 			"keccak256": "0xdb26cbf4d028490f49831a7865c2fe1b28db44b535ca8d343785a3b768aae183",
+			"license": "MIT",
 			"urls": [
 				"bzz-raw://840b14ce0315c47d49ba328f1f9fa7654ded1c9e1559e6c5e777a7b2dc28bf0a",
 				"dweb:/ipfs/QmTLLabn4wcfGro9LEmUXUN2nwKqZSotXMvjDCLXEnLtZP"
@@ -1043,6 +1051,7 @@
 		},
 		"Documents/PRUF/Flatpacks/Launched/Util_Tkn_07_flatpack/Counters.sol": {
 			"keccak256": "0xb182a09f1431860662a96fc0b84a87233dba6e6e8ffcb136377891e88a1783a7",
+			"license": "MIT",
 			"urls": [
 				"bzz-raw://ebdbdcea1bd4925f69a02fde386227e700db1f80a1ee1484c930c1bb30ee7ea9",
 				"dweb:/ipfs/QmZ62d2UoE6ZRDLYfBB71oS7Lika8iA3NC3CNH3K9jKgnT"
@@ -1050,6 +1059,7 @@
 		},
 		"Documents/PRUF/Flatpacks/Launched/Util_Tkn_07_flatpack/ERC20.sol": {
 			"keccak256": "0x3d0eb49ca9313ec4be88633da0a2a82d5b077e055fa6b9bb1b952b1e79908230",
+			"license": "MIT",
 			"urls": [
 				"bzz-raw://737b321685eabd057543360689d4269b89e0400a6d86a56b9d50da0d9847a4a6",
 				"dweb:/ipfs/QmSH1iCaf6LbDA49wxBK86qHmQZuWWKymckKZQx6PQrGx3"
@@ -1057,6 +1067,7 @@
 		},
 		"Documents/PRUF/Flatpacks/Launched/Util_Tkn_07_flatpack/ERC20Burnable.sol": {
 			"keccak256": "0xed5a44f9f0e40a786c60b2388a51de5b7b3fa699596196ed35f1ad2c7610f94a",
+			"license": "MIT",
 			"urls": [
 				"bzz-raw://c092a51a52d7a9fe8a5317f4278e968a38049e7fb06a4f36e94b7e0c43e6d396",
 				"dweb:/ipfs/QmW4UWBjPqKmx88VrbywrLAKygi2LusaELSNNYBSERYe5r"
@@ -1064,6 +1075,7 @@
 		},
 		"Documents/PRUF/Flatpacks/Launched/Util_Tkn_07_flatpack/ERC20Snapshot.sol": {
 			"keccak256": "0xbc32eca79867721a697bd66532a4f3db3856ae52fb2c2c0a59e1eeab6b84100e",
+			"license": "MIT",
 			"urls": [
 				"bzz-raw://aff9c214b3c54abe3c363928eed7f92533b961a574297956e67a51603ed8b091",
 				"dweb:/ipfs/QmVSA7jjLTbPhTtm9UQriAgi43xs9cqXnVETEJPRAH4RtD"
@@ -1071,6 +1083,7 @@
 		},
 		"Documents/PRUF/Flatpacks/Launched/Util_Tkn_07_flatpack/EnumerableSet.sol": {
 			"keccak256": "0x30912f281b544bc2a75f687df825521f11567048b5e704dd68414a1335635b88",
+			"license": "MIT",
 			"urls": [
 				"bzz-raw://85efaa3fd24df1eb6ee01bc76b22fc26ed80c8fe163f99faa14b761b13892d06",
 				"dweb:/ipfs/QmcHiHVz3u9xCKLEAsgUbUnisDcrhT1zHDyWXtBBU7VW5t"
@@ -1078,6 +1091,7 @@
 		},
 		"Documents/PRUF/Flatpacks/Launched/Util_Tkn_07_flatpack/IERC20.sol": {
 			"keccak256": "0x5c26b39d26f7ed489e555d955dcd3e01872972e71fdd1528e93ec164e4f23385",
+			"license": "MIT",
 			"urls": [
 				"bzz-raw://efdc632af6960cf865dbc113665ea1f5b90eab75cc40ec062b2f6ae6da582017",
 				"dweb:/ipfs/QmfAZFDuG62vxmAN9DnXApv7e7PMzPqi4RkqqZHLMSQiY5"
@@ -1085,6 +1099,7 @@
 		},
 		"Documents/PRUF/Flatpacks/Launched/Util_Tkn_07_flatpack/Math.sol": {
 			"keccak256": "0x6c234834003dfb86e2c23d12dfdde7cc01e78013d71b52162cb308b4873562cb",
+			"license": "MIT",
 			"urls": [
 				"bzz-raw://f0e3f39b2ec26694a42c89a5d9e489d5228f1880fcf5e375c5c975ba816e5ffe",
 				"dweb:/ipfs/QmUErheHopnbBUSLDQAtWsmw6HsEvqTNp1QiBEuSJhmhHn"
@@ -1092,6 +1107,7 @@
 		},
 		"Documents/PRUF/Flatpacks/Launched/Util_Tkn_07_flatpack/PRUF_INTERFACES.sol": {
 			"keccak256": "0x7de34665d2fd22655ece4cfddcf2ef5e99076ceb3a7a9773ee2df00cd5cb2328",
+			"license": "UNLICENSED",
 			"urls": [
 				"bzz-raw://fb1aa4dc3f3087fdfc1189be51d340e7eaa349c9d0772464c9c6c2b0fa57bad1",
 				"dweb:/ipfs/QmV1JwWdC3QsZN4dgniRB1A9cuTp2Y4uHTuFZnRGGA1Tjr"
@@ -1099,6 +1115,7 @@
 		},
 		"Documents/PRUF/Flatpacks/Launched/Util_Tkn_07_flatpack/PRUF_UTIL_TKN.sol": {
 			"keccak256": "0xc47d3b2a120418d79ecc8e4ad860b76244adb3de3b8cc3a6bd1710d2b34ef2fb",
+			"license": "UNLICENSED",
 			"urls": [
 				"bzz-raw://c8547073b36c91a594dfa6b001588a69972f07be1a24f2f973b4e1ba3d47c0a4",
 				"dweb:/ipfs/QmaXPP11AEraekN1ezAVANkjs9cjtdSbKGepAhDpRNfYRg"
@@ -1106,6 +1123,7 @@
 		},
 		"Documents/PRUF/Flatpacks/Launched/Util_Tkn_07_flatpack/Pausable.sol": {
 			"keccak256": "0x7a954b44956885960b1eee4ab2520f744d19643a551c5af9b011eb6009b54a13",
+			"license": "MIT",
 			"urls": [
 				"bzz-raw://deabf335fc26d8989c3ed55c4a20dbec59c1c10a299acb65f49aa7773e3cd9cb",
 				"dweb:/ipfs/Qme7gxSwwmpQkBNKca7N5WHJBfdNgQsbrcdT3GhMUUmdMv"
@@ -1113,6 +1131,7 @@
 		},
 		"Documents/PRUF/Flatpacks/Launched/Util_Tkn_07_flatpack/SafeMath.sol": {
 			"keccak256": "0x9a9cf02622cd7a64261b10534fc3260449da25c98c9e96d1b4ae8110a20e5806",
+			"license": "MIT",
 			"urls": [
 				"bzz-raw://2df142592d1dc267d9549049ee3317fa190d2f87eaa565f86ab05ec83f7ab8f5",
 				"dweb:/ipfs/QmSkJtcfWo7c42KnL5hho6GFxK6HRNV91XABx1P7xDtfLV"
