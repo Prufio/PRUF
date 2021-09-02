@@ -11,8 +11,10 @@ _________\/// _____________\/// _______\/// __\///////// __\/// _____________
 *---------------------------------------------------------------------------*/
 
 /**-----------------------------------------------------------------
- *PRUF Rewards Vault
- *Holds PRUF to send to stakers, funded by the team with the stake rewards amount as needed
+ * PRUF Rewards Vault holds PRUF to send to stakers.
+ * It is funded by the team with the stake rewards amount as needed
+ * As the vault is depleted, payees requesting more than the rewards vault balance 
+ * will be paid 1/2 the balance instead, ensuring a semi-fair FCFS endstage distribution
  *---------------------------------------------------------------
  */
 
@@ -25,17 +27,18 @@ import "./Imports/utils/Pausable.sol";
 import "./Imports/utils/ReentrancyGuard.sol";
 import "./Imports/token/ERC721/IERC721.sol";
 
-contract REWARDS_VAULT is ReentrancyGuard, AccessControl, Pausable {
+contract NEO_REWARDS_VAULT is ReentrancyGuard, AccessControl, Pausable {
     bytes32 public constant CONTRACT_ADMIN_ROLE =
         keccak256("CONTRACT_ADMIN_ROLE");
     bytes32 public constant PAUSER_ROLE = keccak256("PAUSER_ROLE");
     bytes32 public constant STAKE_PAYER_ROLE = keccak256("STAKE_PAYER_ROLE");
+    bytes32 public constant ASSET_TXFR_ROLE = keccak256("ASSET_TXFR_ROLE");
 
     address internal UTIL_TKN_Address;
     UTIL_TKN_Interface internal UTIL_TKN;
 
-    address internal STAKE_TKN_Address;
-    STAKE_TKN_Interface internal STAKE_TKN;
+    address internal NEO_STAKE_TKN_Address;
+    NEO_STAKE_TKN_Interface internal NEO_STAKE_TKN;
 
     constructor() {
         _setupRole(DEFAULT_ADMIN_ROLE, _msgSender());
@@ -48,7 +51,7 @@ contract REWARDS_VAULT is ReentrancyGuard, AccessControl, Pausable {
     /**
      * @dev Verify user credentials
      * Originating Address:
-     *      Has CONTRACT_ADMIN_ROLE role
+     *      Has appropriate role
      */
     modifier isContractAdmin() {
         require(
@@ -57,12 +60,6 @@ contract REWARDS_VAULT is ReentrancyGuard, AccessControl, Pausable {
         );
         _;
     }
-
-    /**
-     * @dev Verify user credentials
-     * Originating Address:
-     *      Has PAUSER_ROLE role
-     */
     modifier isPauser() {
         require(
             hasRole(PAUSER_ROLE, _msgSender()),
@@ -70,12 +67,6 @@ contract REWARDS_VAULT is ReentrancyGuard, AccessControl, Pausable {
         );
         _;
     }
-
-    /**
-     * @dev Verify user credentials
-     * Originating Address:
-     *      Has STAKE_PAYER_ROLE role
-     */
     modifier isStakePayer() {
         require(
             hasRole(STAKE_PAYER_ROLE, _msgSender()),
@@ -84,15 +75,16 @@ contract REWARDS_VAULT is ReentrancyGuard, AccessControl, Pausable {
         _;
     }
 
-    //--------------------------------------External functions--------------------------------------------//
+    //----------------------External Admin functions / isContractAdmin----------------------//
 
     /**
      * @dev Set address of contracts to interface with
      * @param _utilAddress address of UTIL_TKN
-     * @param _stakeAddress address of STAKE_TKN
+     * @param _stakeAddress address of NEO_STAKE_TKN
      */
     function setTokenContracts(address _utilAddress, address _stakeAddress)
         external
+        virtual
         isContractAdmin
     {
         //^^^^^^^checks^^^^^^^^^
@@ -100,43 +92,66 @@ contract REWARDS_VAULT is ReentrancyGuard, AccessControl, Pausable {
         UTIL_TKN_Address = _utilAddress;
         UTIL_TKN = UTIL_TKN_Interface(UTIL_TKN_Address);
 
-        STAKE_TKN_Address = _stakeAddress;
-        STAKE_TKN = STAKE_TKN_Interface(STAKE_TKN_Address);
+        NEO_STAKE_TKN_Address = _stakeAddress;
+        NEO_STAKE_TKN = NEO_STAKE_TKN_Interface(NEO_STAKE_TKN_Address);
         //^^^^^^^effects^^^^^^^^^
     }
 
+    //--------------------------------------External functions--------------------------------------------//
+
     /**
      * @dev Sends (amount) pruf to ownerOf(tokenId)
-     * @param _tokenId - stake key token ID
+     * @param _tokenId - token ID
      * @param _amount - amount to pay to owner of (tokenId)
      */
     function payRewards(uint256 _tokenId, uint256 _amount)
         external
-        nonReentrant
         whenNotPaused
+        nonReentrant
         isStakePayer
     {
         //^^^^^^^checks^^^^^^^^^
+        if (_amount > UTIL_TKN.balanceOf(address(this))) {
+            _amount = (UTIL_TKN.balanceOf(address(this))) / 2; //as the rewards vault becomes empty, enforce a semi-fair FCFS distruibution favoring small holders
+        }
 
-        address recipient = STAKE_TKN.ownerOf(_tokenId);
+        address recipient = NEO_STAKE_TKN.ownerOf(_tokenId);
         UTIL_TKN.transfer(recipient, _amount);
         //^^^^^^^interactions^^^^^^^^
     }
 
     /**
-     * @dev Pauses contract.
-     *
-     * See {ERC721Pausable} and {Pausable-_pause}.
+     * @dev Transfer any specified ERC721 Token from contract
+     * @param _to - address to send to
+     * @param _tokenId - token ID
+     * @param _ERC721Contract - token contract address
+     */
+    function transferERC721Token(
+        address _to,
+        uint256 _tokenId,
+        address _ERC721Contract
+    ) external virtual nonReentrant {
+        require(
+            hasRole(ASSET_TXFR_ROLE, _msgSender()),
+            "RV:TET:Must have ASSET_TXFR_ROLE"
+        );
+        //^^^^^^^checks^^^^^^^^^
+
+        IERC721(_ERC721Contract).safeTransferFrom(address(this), _to, _tokenId);
+        //^^^^^^^interactions^^^^^^^^^
+    }
+
+    /***
+     * @dev Triggers stopped state.
      */
     function pause() external isPauser {
         _pause();
     }
 
-    /**
-     * @dev Unpauses contract.
-     *
-     * See {ERC721Pausable} and {Pausable-_unpause}.
+    /***
+     * @dev Returns to normal state.
      */
+
     function unpause() external isPauser {
         _unpause();
     }

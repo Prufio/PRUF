@@ -132,12 +132,13 @@ struct Stake {
     uint256 mintTime; //blocktime of creation
     uint256 startTime; //blocktime of creation or most recent payout
     uint256 interval; //staking interval in seconds
-    uint256 bonus; //bonus tokens earned per interval
+    uint256 bonusPercentage; // % per reward period, in tenths of a percent, assigned to this stake on creation
+    uint256 maximum; // maximum tokens allowed to be held by this stake
 }
 
 /*
  * @dev Interface for UTIL_TKN
- * INHERIANCE:
+ * INHERITANCE:
     import "./Imports/access/AccessControl.sol";
     import "./Imports/token/ERC20/ERC20.sol";
     import "./Imports/token/ERC20/ERC20Burnable.sol";
@@ -454,7 +455,7 @@ interface UTIL_TKN_Interface {
 //------------------------------------------------------------------------------------------------
 /*
  * @dev Interface for NODE_TKN
- * INHERIANCE:
+ * INHERITANCE:
     import "./Imports/token/ERC721/ERC721.sol";
     import "./Imports/access/Ownable.sol";
     import "./Imports/utils/ReentrancyGuard.sol";
@@ -584,7 +585,7 @@ interface NODE_TKN_Interface {
 //------------------------------------------------------------------------------------------------
 /*
  * @dev Interface for STAKE_TKN
- * INHERIANCE:
+ * INHERITANCE:
     import "./Imports/token/ERC721/ERC721.sol";
     import "./Imports/access/Ownable.sol";
     import "./Imports/utils/ReentrancyGuard.sol";
@@ -718,9 +719,10 @@ interface STAKE_TKN_Interface {
 }
 
 //------------------------------------------------------------------------------------------------
+
 /*
  * @dev Interface for A_TKN
- * INHERIANCE:
+ * INHERITANCE:
     import "./Imports/token/ERC721/ERC721.sol";
     import "./Imports/access/Ownable.sol";
     import "./Imports/utils/ReentrancyGuard.sol";
@@ -901,13 +903,13 @@ interface A_TKN_Interface {
 
 //------------------------------------------------------------------------------------------------
 /*
- * @dev Interface for CNSGN_TKN
- * INHERIANCE:
+ * @dev Interface for MARKET_TKN
+ * INHERITANCE:
     import "./Imports/token/ERC721/ERC721.sol";
     import "./Imports/access/Ownable.sol";
     import "./Imports/utils/ReentrancyGuard.sol";
  */
-interface CNSGN_TKN_Interface {
+interface MARKET_TKN_Interface {
     /*
      * @dev Set storage contract to interface with
      */
@@ -1031,7 +1033,7 @@ interface CNSGN_TKN_Interface {
 //------------------------------------------------------------------------------------------------
 /*
  * @dev Interface for ID_TKN
- * INHERIANCE:
+ * INHERITANCE:
     import "./Imports/token/ERC721/ERC721.sol";
     import "./Imports/access/Ownable.sol";
     import "./Imports/utils/ReentrancyGuard.sol";
@@ -1187,7 +1189,7 @@ interface ID_TKN_Interface {
 //------------------------------------------------------------------------------------------------
 /*
  * @dev Interface for NODE_MGR
- * INHERIANCE:
+ * INHERITANCE:
     import "./PRUF_BASIC.sol";
      
  */
@@ -1208,7 +1210,6 @@ interface NODE_MGR_Interface {
 
     /*
      * @dev Modifies an node with minimal controls
-     *--------DPS TEST ---- NEW args, order
      */
     function modifyNode(
         uint32 _node,
@@ -1346,7 +1347,7 @@ interface NODE_MGR_Interface {
         returns (uint8);
 
     /*
-     * @dev get the authorization status of a management type 0 = not allowed  DPS:TEST -- NEW
+     * @dev get the authorization status of a management type 0 = not allowed
      */
     function getManagementTypeStatus(uint8 _managementType)
         external
@@ -1354,7 +1355,7 @@ interface NODE_MGR_Interface {
         returns (uint8);
 
     /*
-     * @dev get the authorization status of a storage type 0 = not allowed   DPS:TEST -- NEW
+     * @dev get the authorization status of a storage type 0 = not allowed
      */
     function getStorageProviderStatus(uint8 _storageProvider)
         external
@@ -1362,7 +1363,7 @@ interface NODE_MGR_Interface {
         returns (uint8);
 
     /*
-     * @dev get the authorization status of a custody type 0 = not allowed   DPS:TEST -- NEW
+     * @dev get the authorization status of a custody type 0 = not allowed
      */
     function getCustodyTypeStatus(uint8 _custodyType)
         external
@@ -1430,7 +1431,7 @@ interface NODE_MGR_Interface {
 //------------------------------------------------------------------------------------------------
 /*
  * @dev Interface for STOR
- * INHERIANCE:
+ * INHERITANCE:
     import "./Imports/access/Ownable.sol";
     import "./Imports/utils/Pausable.sol";
      
@@ -1619,7 +1620,7 @@ interface STOR_Interface {
 //------------------------------------------------------------------------------------------------
 /*
  * @dev Interface for ECR_MGR
- * INHERIANCE:
+ * INHERITANCE:
     import "./PRUF_BASIC.sol";
      
  */
@@ -1698,7 +1699,7 @@ interface ECR_MGR_Interface {
 //------------------------------------------------------------------------------------------------
 /*
  * @dev Interface for RCLR
- * INHERIANCE:
+ * INHERITANCE:
     import "./PRUF_ECR_CORE.sol";
     import "./PRUF_CORE.sol";
  */
@@ -1711,7 +1712,7 @@ interface RCLR_Interface {
 //------------------------------------------------------------------------------------------------
 /*
  * @dev Interface for APP
- * INHERIANCE:
+ * INHERITANCE:
     import "./PRUF_CORE.sol";
  */
 interface APP_Interface {
@@ -1721,7 +1722,7 @@ interface APP_Interface {
 //------------------------------------------------------------------------------------------------
 /*
  * @dev Interface for APP_NC
- * INHERIANCE:
+ * INHERITANCE:
     import "./PRUF_CORE.sol";
  */
 interface APP_NC_Interface {
@@ -1730,7 +1731,7 @@ interface APP_NC_Interface {
 
 /*
  * @dev Interface for EO_STAKING
- * INHERIANCE:
+ * INHERITANCE:
     import "./Imports/access/AccessControl.sol";
     import "./Imports/utils/Pausable.sol";
     import "./Imports/utils/ReentrancyGuard.sol";
@@ -1742,14 +1743,25 @@ interface EO_STAKING_Interface {
 
     function breakStake(uint256 _tokenId) external;
 
-    function eligibleRewards(uint256 _tokenId) external;
+    function eligibleRewards(uint256 _tokenId)
+        external
+        returns (uint256 rewards);
 
-    function stakeInfo(uint256 _tokenId) external;
+    function stakeInfo(uint256 _tokenId)
+        external
+        returns (
+            uint256 stakedAmount,
+            uint256 mintTime,
+            uint256 startTime,
+            uint256 interval,
+            uint256 bonusPercentage,
+            uint256 maximum
+        );
 }
 
 /*
  * @dev Interface for STAKE_VAULT
- * INHERIANCE:
+ * INHERITANCE:
     import "./Imports/access/AccessControl.sol";
     import "./Imports/utils/Pausable.sol";
     import "./Imports/utils/ReentrancyGuard.sol";
@@ -1759,6 +1771,7 @@ interface EO_STAKING_Interface {
 interface STAKE_VAULT_Interface {
     function takeStake(uint256 _tokenID, uint256 _amount) external;
 
+    //function releaseStake(address _addr, uint256 _tokenID) external;
     function releaseStake(uint256 _tokenID) external;
 
     function stakeOfToken(uint256 _tokenID) external returns (uint256 stake);
@@ -1766,7 +1779,7 @@ interface STAKE_VAULT_Interface {
 
 /*
  * @dev Interface for REWARDS_VAULT
- * INHERIANCE:
+ * INHERITANCE:
     import "./Imports/access/AccessControl.sol";
     import "./Imports/utils/Pausable.sol";
     import "./Imports/utils/ReentrancyGuard.sol";
@@ -1776,3 +1789,4 @@ interface STAKE_VAULT_Interface {
 interface REWARDS_VAULT_Interface {
     function payRewards(uint256 _tokenId, uint256 _amount) external;
 }
+

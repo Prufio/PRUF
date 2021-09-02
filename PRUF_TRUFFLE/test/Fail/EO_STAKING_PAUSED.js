@@ -43,6 +43,7 @@ let trustedAgentRoleB32;
 let assetTransferRoleB32;
 let discardRoleB32;
 let stakeRoleB32;
+let stakeAdminRoleB32;
 let stakePayerRoleB32;
 let pauserRoleB32;
 
@@ -147,6 +148,8 @@ contract("EO_STAKING", (accounts) => {
 
     stakeRoleB32 = await Helper.getStringHash("STAKE_ROLE");
 
+    stakeAdminRoleB32 = await Helper.getStringHash("STAKE_ADMIN_ROLE");
+
     stakePayerRoleB32 = await Helper.getStringHash("STAKE_PAYER_ROLE");
 
     pauserRoleB32 = await Helper.getStringHash("PAUSER_ROLE");
@@ -186,6 +189,12 @@ contract("EO_STAKING", (accounts) => {
   });
 
   it("Should authorize EO_STAKING to take stakes out of the STAKE_VAULT", async () => {
+    return STAKE_VAULT.grantRole(stakeAdminRoleB32, EO_STAKING.address, {
+      from: account1,
+    });
+  });
+
+  it("Should authorize EO_STAKING to take stakes out of the STAKE_VAULT", async () => {
     return UTIL_TKN.grantRole(pauserRoleB32, STAKE_VAULT.address, {
       from: account1,
     });
@@ -219,13 +228,19 @@ contract("EO_STAKING", (accounts) => {
     );
   });
 
-  it("Should mint 300000 tokens to account2", async () => {
-    return UTIL_TKN.mint(account2, "300000000000000000000000", {
+  it("Should mint 50000 tokens to account2", async () => {
+    return UTIL_TKN.mint(account2, "50000000000000000000000", {
       from: account1,
     });
   });
 
-  it("Should retrieve balanceOf(300000) Pruf tokens @account2", async () => {
+  it("Should mint 300000 tokens to account2", async () => {
+    return UTIL_TKN.mint(account3, "300000000000000000000000", {
+      from: account1,
+    });
+  });
+
+  it("Should retrieve balanceOf(50000) Pruf tokens @account2", async () => {
     var Balance = [];
 
     return await UTIL_TKN.balanceOf(
@@ -281,7 +296,7 @@ contract("EO_STAKING", (accounts) => {
       "//**************************************END REWARDS_VAULT SETUP**********************************************/"
     );
     console.log(
-      "//**************************************BEGIN EO_STAKING Fail Batch(14)**********************************************/"
+      "//**************************************BEGIN EO_STAKING Fail Batch(21)**********************************************/"
     );
     console.log(
       "//**************************************BEGIN transferERC721Token Fail Batch**********************************************/"
@@ -329,9 +344,9 @@ contract("EO_STAKING", (accounts) => {
   });
 
   //4
-  it("Should fail because interval !>=1", async () => {
+  it("Should fail because interval !>=2", async () => {
     return EO_STAKING.setStakeLevels(
-      "1",
+      "2",
       "1000000000000000000000",
       "100000000000000000000000",
       "0",
@@ -343,6 +358,20 @@ contract("EO_STAKING", (accounts) => {
   });
 
   //5
+  it("Should fail because min < ü100", async () => {
+    return EO_STAKING.setStakeLevels(
+      "2",
+      "99999999999999999999",
+      "100000000000000000000000",
+      "2",
+      "50",
+      {
+        from: account1,
+      }
+    );
+  });
+
+  //6
   it("Should fail because staking tier is inactive", async () => {
     console.log(
       "//**************************************END setStakeLevels Fail Batch**********************************************/"
@@ -359,8 +388,8 @@ contract("EO_STAKING", (accounts) => {
     return EO_STAKING.setStakeLevels(
       "1",
       "1000000000000000000000",
-      "100000000000000000000000",
-      "1",
+      "1000000000000000000000000",
+      "2",
       "50",
       {
         from: account1,
@@ -368,14 +397,14 @@ contract("EO_STAKING", (accounts) => {
     );
   });
 
-  //6
+  //7
   it("Should fail because stake above maximum for this tier", async () => {
     return EO_STAKING.stakeMyTokens("100000000000000000000001", "1", {
-      from: account2,
+      from: account3,
     });
   });
 
-  //7
+  //8
   it("Should fail because stake below minimum for this tier", async () => {
     return EO_STAKING.stakeMyTokens("990000000000000000000", "1", {
       from: account2,
@@ -388,10 +417,82 @@ contract("EO_STAKING", (accounts) => {
     });
   });
 
-  //8
+  //9
   it("Should fail because caller !stakeHolder", async () => {
     console.log(
       "//**************************************END stakeMyTokens Fail Batch**********************************************/"
+    );
+    console.log(
+      "//**************************************BEGIN increaseMyStake Fail Batch**********************************************/"
+    );
+    return EO_STAKING.increaseMyStake("1", "10000000000", {
+      from: account1,
+    });
+  });
+
+  it("Should pause EO_STAKING", async () => {
+    return EO_STAKING.pause({ from: account1 });
+  });
+
+  //10
+  it("Should fail because contract is paused and caller !have pauser_role", async () => {
+    return EO_STAKING.increaseMyStake("1", "10000000000", {
+      from: account2,
+    });
+  });
+
+  it("Should unpause EO_STAKING", async () => {
+    return EO_STAKING.unpause({ from: account1 });
+  });
+
+  it("should end staking", async () => {
+    return EO_STAKING.endStaking(0, { from: account1});
+  })
+
+  //11
+  it("Should fail because new stakes cannot be created", async () => {
+    return EO_STAKING.increaseMyStake("1", "10000000000", {
+      from: account2,
+    });
+  });
+
+  it("should resume staking", async () => {
+    return EO_STAKING.endStaking(100000000, { from: account1});
+  })
+
+  //12
+  it("Should fail because caller has not waited 24h since stake", async () => {
+    return EO_STAKING.increaseMyStake("1", "10000000000", {
+      from: account2,
+    });
+  });
+
+  //13
+  it("Should fail because caller cannot increase stake > maximum", async () => {
+    await timeout(2000).then(() => {
+    return EO_STAKING.increaseMyStake("1", "1000000000000000000000000", {
+      from: account2,
+    });
+  })
+  });
+
+  //14
+  it("Should fail because caller does not hold sufficient tokens", async () => {
+    return EO_STAKING.increaseMyStake("1", "95000000000000000000000", {
+      from: account2,
+    });
+  });
+
+  it("Should mint 300000 tokens to account2", async () => {
+    return UTIL_TKN.mint(account2, "300000000000000000000000", {
+      from: account1,
+    });
+  });
+
+  //15
+  it("Should fail because caller !stakeHolder", async () => {
+    console.log(
+      "//**************************************END increaseMyStake Fail Batch**********************************************/"
     );
     console.log(
       "//**************************************BEGIN claimBonus Fail Batch**********************************************/"
@@ -405,7 +506,7 @@ contract("EO_STAKING", (accounts) => {
     return EO_STAKING.pause({ from: account1 });
   });
 
-  //9
+  //16
   it("Should fail because contract is paused and caller !have pauser_role", async () => {
     return EO_STAKING.claimBonus("1", { from: account2 });
   });
@@ -433,7 +534,12 @@ contract("EO_STAKING", (accounts) => {
     });
   });
 
-  //10
+  //17
+  it("Should fail because caller has not waited 24h since staking", async () => {
+    return EO_STAKING.claimBonus("2", { from: account2 });
+  });
+
+  //18
   it("Should fail because caller !stakeHolder", async () => {
     console.log(
       "//**************************************END stakeMyTokens Fail Batch**********************************************/"
@@ -448,7 +554,7 @@ contract("EO_STAKING", (accounts) => {
     return EO_STAKING.pause({ from: account1 });
   });
 
-  //11
+  //19
   it("Should fail because contract is paused and caller !have pauser_role", async () => {
     return EO_STAKING.breakStake("1", { from: account2 });
   });
@@ -457,7 +563,7 @@ contract("EO_STAKING", (accounts) => {
     return EO_STAKING.unpause({ from: account1 });
   });
 
-  //12
+  //20
   it("Should fail because stake period has not elapsed", async () => {
     return EO_STAKING.breakStake("2", { from: account2 });
   });
@@ -467,7 +573,7 @@ contract("EO_STAKING", (accounts) => {
     return EO_STAKING.claimBonus("1", { from: account2 });
   });
 
-  //13
+  //21
   it("Should fail because must wait full iteration before breaking stake", async () => {
     return EO_STAKING.breakStake("1", { from: account2 });
   });
@@ -481,7 +587,7 @@ contract("EO_STAKING", (accounts) => {
     );
     return EO_STAKING.setStakeLevels(
       "3",
-      "1000000000000000000",
+      "100000000000000000000",
       "100000000000000000000000",
       "10",
       "50",
@@ -489,12 +595,5 @@ contract("EO_STAKING", (accounts) => {
         from: account1,
       }
     );
-  });
-
-  //14
-  it("Should fail because staked amount > 100", async () => {
-    return EO_STAKING.stakeMyTokens("99999999999999999999", "3", {
-      from: account2,
-    });
   });
 });

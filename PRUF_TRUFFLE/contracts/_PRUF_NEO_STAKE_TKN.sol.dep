@@ -11,8 +11,7 @@ _________\/// _____________\/// _______\/// __\///////// __\/// _____________
 *---------------------------------------------------------------------------*/
 
 /*-----------------------------------------------------------------
- * PRüF STAKE KEY ERC721 CONTRACT - Tokenized staking FTW
- *
+ * PRUF BONDED STAKING NFT CONTRACT
  *-----------------------------------------------------------------*/
 
 // SPDX-License-Identifier: UNLICENSED
@@ -42,7 +41,7 @@ import "./Imports/token/ERC721/ERC721Pausable.sol";
  * roles to other accounts.
  */
 
-contract STAKE_TKN is
+contract NEO_STAKE_TKN is
     ReentrancyGuard,
     Context,
     AccessControl,
@@ -79,32 +78,18 @@ contract STAKE_TKN is
         _;
     }
 
-    /**
-     * @dev Verify user credentials
-     * Originating Address:
-     *      has PAUSER_ROLE
-     */
-    modifier isPauser() {
-        require(
-            hasRole(PAUSER_ROLE, _msgSender()),
-            "ST:MOD-IP: Caller !PAUSER_ROLE"
-        );
-        _;
-    }
-
     //---------------------- External Functions ----------------------//
 
     /**
-     * @dev Mint a stake key token to specified address
+     * @dev Mint a stake token
      * @param _recipientAddress - Address to mint token into
      * @param _tokenId - Token ID to mint
-     * @return minted token ID
      */
     function mintStakeToken(address _recipientAddress, uint256 _tokenId)
         external
+        isMinter
         nonReentrant
         whenNotPaused
-        isMinter
         returns (uint256)
     {
         //^^^^^^^checks^^^^^^^^^
@@ -115,43 +100,20 @@ contract STAKE_TKN is
     }
 
     /**
-     * @dev Burn a stake key token
-     * @param _tokenId - Token ID to burn
-     * @return burned Token ID
+     * @dev Burn a stake token
+     * @param _tokenId - Token ID to burn Î
      */
     function burnStakeToken(uint256 _tokenId)
         external
+        isMinter
         nonReentrant
         whenNotPaused
-        isMinter
         returns (uint256)
     {
         //^^^^^^^checks^^^^^^^^^
 
         _burn(_tokenId);
         return _tokenId;
-        //^^^^^^^interactions^^^^^^^^^
-    }
-
-    /**
-     * @dev Pauses all token transfers.
-     *
-     * See {ERC721Pausable} and {Pausable-_pause}.
-     */
-    function pause() external virtual isPauser {
-        //^^^^^^^checks^^^^^^^^^
-        _pause();
-        //^^^^^^^interactions^^^^^^^^^
-    }
-
-    /**
-     * @dev Unpauses all token transfers.
-     *
-     * See {ERC721Pausable} and {Pausable-_unpause}.
-     */
-    function unpause() external virtual isPauser {
-        //^^^^^^^checks^^^^^^^^^
-        _unpause();
         //^^^^^^^interactions^^^^^^^^^
     }
 
@@ -227,6 +189,36 @@ contract STAKE_TKN is
         //^^^^^^^checks^^^^^^^^^
 
         _safeTransfer(_from, _to, _tokenId, _data);
+        //^^^^^^^interactions^^^^^^^^^
+    }
+
+    /**
+     * @dev Pauses all token transfers.
+     *
+     * See {ERC721Pausable} and {Pausable-_pause}.
+     */
+    function pause() external virtual {
+        require(
+            hasRole(PAUSER_ROLE, _msgSender()),
+            "ST:P: Caller !have pauser role"
+        );
+        //^^^^^^^checks^^^^^^^^^
+        _pause();
+        //^^^^^^^interactions^^^^^^^^^
+    }
+
+    /**
+     * @dev Unpauses all token transfers.
+     *
+     * See {ERC721Pausable} and {Pausable-_unpause}.
+     */
+    function unpause() external virtual {
+        require(
+            hasRole(PAUSER_ROLE, _msgSender()),
+            "ST:UP: Caller !have pauser role"
+        );
+        //^^^^^^^checks^^^^^^^^^
+        _unpause();
         //^^^^^^^interactions^^^^^^^^^
     }
 
