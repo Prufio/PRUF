@@ -1451,13 +1451,13 @@ interface STOR_Interface {
     /*
      * @dev ASet the default 11 authorized contracts
      */
-    function enableDefaultContractsForAC(uint32 _node) external;
+    function enableDefaultContractsForNode(uint32 _node) external;
 
     /*
      * @dev Authorize / Deauthorize / Authorize contract NAMES permitted to make record modifications, per Node
      * allows ACtokenHolder to auithorize or deauthorize specific contracts to work within their node
      */
-    function enableContractForAC(
+    function enableContractForNode(
         string calldata _name,
         uint32 _node,
         uint8 _contractAuthLevel

@@ -369,7 +369,7 @@ contract NODE_MGR is BASIC {
 
         //Set the default 11 authorized contracts
         if (_custodyType == 2) {
-            STOR.enableDefaultContractsForAC(uint32(nodeTokenIndex));
+            STOR.enableDefaultContractsForNode(uint32(nodeTokenIndex));
         }
 
         return nodeTokenIndex; //returns Node # of minted token

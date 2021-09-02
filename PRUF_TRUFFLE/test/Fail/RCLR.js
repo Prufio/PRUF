@@ -27,7 +27,7 @@ const PRUF_RCLR = artifacts.require("RCLR");
 const PRUF_HELPER = artifacts.require("Helper");
 const PRUF_MAL_APP = artifacts.require("MAL_APP");
 const PRUF_UTIL_TKN = artifacts.require("UTIL_TKN");
-const PRUF_PURCHASE = artifacts.require("PURCHASE");
+// const PRUF_PURCHASE = artifacts.require("PURCHASE");
 const PRUF_DECORATE = artifacts.require("DECORATE");
 const PRUF_WRAP = artifacts.require("WRAP");
 
@@ -405,12 +405,12 @@ contract("RCLR", (accounts) => {
     UTIL_TKN = PRUF_UTIL_TKN_TEST;
   });
 
-  it("Should deploy PURCHASE", async () => {
-    const PRUF_PURCHASE_TEST = await PRUF_PURCHASE.deployed({ from: account1 });
-    console.log(PRUF_PURCHASE_TEST.address);
-    assert(PRUF_PURCHASE_TEST.address !== "");
-    PURCHASE = PRUF_PURCHASE_TEST;
-  });
+  // it("Should deploy PURCHASE", async () => {
+  //   const PRUF_PURCHASE_TEST = await PRUF_PURCHASE.deployed({ from: account1 });
+  //   console.log(PRUF_PURCHASE_TEST.address);
+  //   assert(PRUF_PURCHASE_TEST.address !== "");
+  //   PURCHASE = PRUF_PURCHASE_TEST;
+  // });
 
   it("Should deploy DECORATE", async () => {
     const PRUF_DECORATE_TEST = await PRUF_DECORATE.deployed({ from: account1 });
@@ -466,12 +466,12 @@ contract("RCLR", (accounts) => {
         return STOR.addDefaultContracts("6", "RCLR", "3", { from: account1 });
       })
 
-      .then(() => {
-        console.log("Adding PURCHASE to default contract list");
-        return STOR.addDefaultContracts("8", "PURCHASE", "2", {
-          from: account1,
-        });
-      })
+      // .then(() => {
+      //   console.log("Adding PURCHASE to default contract list");
+      //   return STOR.addDefaultContracts("8", "PURCHASE", "2", {
+      //     from: account1,
+      //   });
+      // })
 
       .then(() => {
         console.log("Adding DECORATE to default contract list");
@@ -588,12 +588,12 @@ contract("RCLR", (accounts) => {
         });
       })
 
-      .then(() => {
-        console.log("Adding PURCHASE to storage for use in Node 0");
-        return STOR.OO_addContract("PURCHASE", PURCHASE.address, "0", "2", {
-          from: account1,
-        });
-      })
+      // .then(() => {
+      //   console.log("Adding PURCHASE to storage for use in Node 0");
+      //   return STOR.OO_addContract("PURCHASE", PURCHASE.address, "0", "2", {
+      //     from: account1,
+      //   });
+      // })
 
       .then(() => {
         console.log("Adding DECORATE to storage for use in Node 0");
@@ -679,12 +679,12 @@ contract("RCLR", (accounts) => {
         return RCLR.setStorageContract(STOR.address, { from: account1 });
       })
 
-      .then(() => {
-        console.log("Adding in PURCHASE");
-        return PURCHASE.setStorageContract(STOR.address, {
-          from: account1,
-        });
-      })
+      // .then(() => {
+      //   console.log("Adding in PURCHASE");
+      //   return PURCHASE.setStorageContract(STOR.address, {
+      //     from: account1,
+      //   });
+      // })
 
       .then(() => {
         console.log("Adding in DECORATE");
@@ -758,10 +758,10 @@ contract("RCLR", (accounts) => {
         return RCLR.resolveContractAddresses({ from: account1 });
       })
 
-      .then(() => {
-        console.log("Resolving in PURCHASE");
-        return PURCHASE.resolveContractAddresses({ from: account1 });
-      })
+      // .then(() => {
+      //   console.log("Resolving in PURCHASE");
+      //   return PURCHASE.resolveContractAddresses({ from: account1 });
+      // })
 
       .then(() => {
         console.log("Resolving in DECORATE");
@@ -885,12 +885,12 @@ contract("RCLR", (accounts) => {
         return A_TKN.grantRole(minterRoleB32, RCLR.address, { from: account1 });
       })
 
-      .then(() => {
-        console.log("Authorizing PURCHASE");
-        return A_TKN.grantRole(trustedAgentRoleB32, PURCHASE.address, {
-          from: account1,
-        });
-      });
+      // .then(() => {
+      //   console.log("Authorizing PURCHASE");
+      //   return A_TKN.grantRole(trustedAgentRoleB32, PURCHASE.address, {
+      //     from: account1,
+      //   });
+      // });
   });
 
   it("Should authorize all payable contracts for transactions", () => {
@@ -948,19 +948,19 @@ contract("RCLR", (accounts) => {
         });
       })
 
-      .then(() => {
-        console.log("Authorizing PURCHASE");
-        return UTIL_TKN.grantRole(payableRoleB32, PURCHASE.address, {
-          from: account1,
-        });
-      })
+      // .then(() => {
+      //   console.log("Authorizing PURCHASE");
+      //   return UTIL_TKN.grantRole(payableRoleB32, PURCHASE.address, {
+      //     from: account1,
+      //   });
+      // })
 
-      .then(() => {
-        console.log("Authorizing PURCHASE");
-        return UTIL_TKN.grantRole(trustedAgentRoleB32, PURCHASE.address, {
-          from: account1,
-        });
-      });
+      // .then(() => {
+      //   console.log("Authorizing PURCHASE");
+      //   return UTIL_TKN.grantRole(trustedAgentRoleB32, PURCHASE.address, {
+      //     from: account1,
+      //   });
+      // });
   });
 
   it("Should authorize all minter contracts for minting NODE_TKN(s)", () => {
@@ -1397,10 +1397,10 @@ contract("RCLR", (accounts) => {
 
   it("Should authorize APP in all relevant nodes", () => {
     console.log("Authorizing APP");
-    return STOR.enableContractForAC("APP", "1000001", "1", {
+    return STOR.enableContractForNode("APP", "1000001", "1", {
       from: account1,
     }).then(() => {
-      return STOR.enableContractForAC("APP", "1000002", "1", {
+      return STOR.enableContractForNode("APP", "1000002", "1", {
         from: account1,
       });
     });
@@ -1408,24 +1408,24 @@ contract("RCLR", (accounts) => {
 
   it("Should authorize APP_NC in all relevant nodes", () => {
     console.log("Authorizing APP_NC");
-    return STOR.enableContractForAC("APP_NC", "1000003", "2", {
+    return STOR.enableContractForNode("APP_NC", "1000003", "2", {
       from: account1,
     })
 
       .then(() => {
-        return STOR.enableContractForAC("APP_NC", "1000003", "2", {
+        return STOR.enableContractForNode("APP_NC", "1000003", "2", {
           from: account1,
         });
       })
 
       .then(() => {
-        return STOR.enableContractForAC("APP_NC", "1000004", "2", {
+        return STOR.enableContractForNode("APP_NC", "1000004", "2", {
           from: account10,
         });
       })
 
       .then(() => {
-        return STOR.enableContractForAC("APP_NC", "1000006", "2", {
+        return STOR.enableContractForNode("APP_NC", "1000006", "2", {
           from: account10,
         });
       });
@@ -1433,10 +1433,10 @@ contract("RCLR", (accounts) => {
 
   it("Should authorize APP2 in all relevant nodes", () => {
     console.log("Authorizing APP2");
-    return STOR.enableContractForAC("APP2", "1000001", "1", {
+    return STOR.enableContractForNode("APP2", "1000001", "1", {
       from: account1,
     }).then(() => {
-      return STOR.enableContractForAC("APP2", "1000002", "1", {
+      return STOR.enableContractForNode("APP2", "1000002", "1", {
         from: account1,
       });
     });
@@ -1444,10 +1444,10 @@ contract("RCLR", (accounts) => {
 
   it("Should authorize MAL_APP in all relevant nodes", () => {
     console.log("Authorizing MAL_APP");
-    return STOR.enableContractForAC("MAL_APP", "1000001", "1", {
+    return STOR.enableContractForNode("MAL_APP", "1000001", "1", {
       from: account1,
     }).then(() => {
-      return STOR.enableContractForAC("MAL_APP", "1000002", "1", {
+      return STOR.enableContractForNode("MAL_APP", "1000002", "1", {
         from: account1,
       });
     });
@@ -1455,10 +1455,10 @@ contract("RCLR", (accounts) => {
 
   it("Should authorize ECR in all relevant nodes", () => {
     console.log("Authorizing ECR");
-    return STOR.enableContractForAC("ECR", "1000001", "3", {
+    return STOR.enableContractForNode("ECR", "1000001", "3", {
       from: account1,
     }).then(() => {
-      return STOR.enableContractForAC("ECR", "1000002", "3", {
+      return STOR.enableContractForNode("ECR", "1000002", "3", {
         from: account1,
       });
     });
@@ -1466,24 +1466,24 @@ contract("RCLR", (accounts) => {
 
   it("Should authorize ECR_NC in all relevant nodes", () => {
     console.log("Authorizing ECR_NC");
-    return STOR.enableContractForAC("ECR_NC", "1000003", "3", {
+    return STOR.enableContractForNode("ECR_NC", "1000003", "3", {
       from: account1,
     })
 
       .then(() => {
-        return STOR.enableContractForAC("ECR_NC", "1000004", "3", {
+        return STOR.enableContractForNode("ECR_NC", "1000004", "3", {
           from: account10,
         });
       })
 
       .then(() => {
-        return STOR.enableContractForAC("ECR_NC", "1000005", "3", {
+        return STOR.enableContractForNode("ECR_NC", "1000005", "3", {
           from: account1,
         });
       })
 
       .then(() => {
-        return STOR.enableContractForAC("ECR_NC", "1000006", "3", {
+        return STOR.enableContractForNode("ECR_NC", "1000006", "3", {
           from: account10,
         });
       });
@@ -1491,10 +1491,10 @@ contract("RCLR", (accounts) => {
 
   it("Should authorize ECR2 in all relevant nodes", () => {
     console.log("Authorizing ECR2");
-    return STOR.enableContractForAC("ECR2", "1000001", "3", {
+    return STOR.enableContractForNode("ECR2", "1000001", "3", {
       from: account1,
     }).then(() => {
-      return STOR.enableContractForAC("ECR2", "1000002", "3", {
+      return STOR.enableContractForNode("ECR2", "1000002", "3", {
         from: account1,
       });
     });
@@ -1502,20 +1502,20 @@ contract("RCLR", (accounts) => {
 
   it("Should authorize A_TKN in all relevant nodes", () => {
     console.log("Authorizing A_TKN");
-    return STOR.enableContractForAC("A_TKN", "1", "1", { from: account1 })
+    return STOR.enableContractForNode("A_TKN", "1", "1", { from: account1 })
 
       .then(() => {
-        return STOR.enableContractForAC("A_TKN", "2", "1", { from: account1 });
+        return STOR.enableContractForNode("A_TKN", "2", "1", { from: account1 });
       })
 
       .then(() => {
-        return STOR.enableContractForAC("A_TKN", "1000001", "1", {
+        return STOR.enableContractForNode("A_TKN", "1000001", "1", {
           from: account1,
         });
       })
 
       .then(() => {
-        return STOR.enableContractForAC("A_TKN", "1000002", "1", {
+        return STOR.enableContractForNode("A_TKN", "1000002", "1", {
           from: account1,
         });
       });
@@ -2884,109 +2884,109 @@ contract("RCLR", (accounts) => {
     );
   });
 
-  it("Should set asset12 for sale for 10 pruf", async () => {
-    return PURCHASE._setPrice(asset13, "10000000000000000000", "2", "0", {
-      from: account4,
-    });
-  });
+  // it("Should set asset12 for sale for 10 pruf", async () => {
+  //   return PURCHASE._setPrice(asset13, "10000000000000000000", "2", "0", {
+  //     from: account4,
+  //   });
+  // });
 
-  it("Should retrieve asset12 @newStaus(51)", async () => {
-    var Record = [];
+  // it("Should retrieve asset12 @newStaus(51)", async () => {
+  //   var Record = [];
 
-    return await STOR.retrieveShortRecord(
-      asset13,
-      { from: account2 },
-      function (_err, _result) {
-        if (_err) {
-        } else {
-          Record = Object.values(_result);
-          console.log(Record);
-        }
-      }
-    );
-  });
+  //   return await STOR.retrieveShortRecord(
+  //     asset13,
+  //     { from: account2 },
+  //     function (_err, _result) {
+  //       if (_err) {
+  //       } else {
+  //         Record = Object.values(_result);
+  //         console.log(Record);
+  //       }
+  //     }
+  //   );
+  // });
 
-  it("Should retrieve asset12 PriceData", async () => {
-    var Record = [];
+  // it("Should retrieve asset12 PriceData", async () => {
+  //   var Record = [];
 
-    return await STOR.getPriceData(
-      asset13,
-      { from: account2 },
-      function (_err, _result) {
-        if (_err) {
-        } else {
-          Record = Object.values(_result);
-          console.log(Record);
-        }
-      }
-    );
-  });
+  //   return await STOR.getPriceData(
+  //     asset13,
+  //     { from: account2 },
+  //     function (_err, _result) {
+  //       if (_err) {
+  //       } else {
+  //         Record = Object.values(_result);
+  //         console.log(Record);
+  //       }
+  //     }
+  //   );
+  // });
 
-  it("Should retrieve account2 ü bal", async () => {
-    var Record = [];
+  // it("Should retrieve account2 ü bal", async () => {
+  //   var Record = [];
 
-    return await UTIL_TKN.balanceOf(
-      account4,
-      { from: account2 },
-      function (_err, _result) {
-        if (_err) {
-        } else {
-          Record = _result;
-          console.log(Record);
-        }
-      }
-    );
-  });
+  //   return await UTIL_TKN.balanceOf(
+  //     account4,
+  //     { from: account2 },
+  //     function (_err, _result) {
+  //       if (_err) {
+  //       } else {
+  //         Record = _result;
+  //         console.log(Record);
+  //       }
+  //     }
+  //   );
+  // });
 
-  it("account2 should purchase asset12 for 10 pruf", async () => {
-    return PURCHASE.purchaseWithPRUF(asset13, { from: account4 });
-  });
+  // it("account2 should purchase asset12 for 10 pruf", async () => {
+  //   return PURCHASE.purchaseWithPRUF(asset13, { from: account4 });
+  // });
 
-  it("Should retrieve asset12 @newStaus(51)", async () => {
-    var Record = [];
+  // it("Should retrieve asset12 @newStaus(51)", async () => {
+  //   var Record = [];
 
-    return await STOR.retrieveShortRecord(
-      asset13,
-      { from: account2 },
-      function (_err, _result) {
-        if (_err) {
-        } else {
-          Record = Object.values(_result);
-          console.log(Record);
-        }
-      }
-    );
-  });
+  //   return await STOR.retrieveShortRecord(
+  //     asset13,
+  //     { from: account2 },
+  //     function (_err, _result) {
+  //       if (_err) {
+  //       } else {
+  //         Record = Object.values(_result);
+  //         console.log(Record);
+  //       }
+  //     }
+  //   );
+  // });
 
-  it("Should retrieve asset12 PriceData", async () => {
-    var Record = [];
+  // it("Should retrieve asset12 PriceData", async () => {
+  //   var Record = [];
 
-    return await STOR.getPriceData(
-      asset13,
-      { from: account2 },
-      function (_err, _result) {
-        if (_err) {
-        } else {
-          Record = Object.values(_result);
-          console.log(Record);
-        }
-      }
-    );
-  });
+  //   return await STOR.getPriceData(
+  //     asset13,
+  //     { from: account2 },
+  //     function (_err, _result) {
+  //       if (_err) {
+  //       } else {
+  //         Record = Object.values(_result);
+  //         console.log(Record);
+  //       }
+  //     }
+  //   );
+  // });
 
-  it("Should retrieve account2 ü bal", async () => {
-    var Record = [];
+  // it("Should retrieve account2 ü bal", async () => {
+  //   var Record = [];
 
-    return await UTIL_TKN.balanceOf(
-      account4,
-      { from: account2 },
-      function (_err, _result) {
-        if (_err) {
-        } else {
-          Record = _result;
-          console.log(Record);
-        }
-      }
-    );
-  });
+  //   return await UTIL_TKN.balanceOf(
+  //     account4,
+  //     { from: account2 },
+  //     function (_err, _result) {
+  //       if (_err) {
+  //       } else {
+  //         Record = _result;
+  //         console.log(Record);
+  //       }
+  //     }
+  //   );
+  // });
 });

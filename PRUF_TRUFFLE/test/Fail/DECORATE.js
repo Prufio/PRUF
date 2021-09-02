@@ -1416,10 +1416,10 @@ contract("DECORATE", (accounts) => {
 
   it("Should authorize APP in all relevant nodes", () => {
     console.log("Authorizing APP");
-    return STOR.enableContractForAC("APP", "1000001", "1", {
+    return STOR.enableContractForNode("APP", "1000001", "1", {
       from: account1,
     }).then(() => {
-      return STOR.enableContractForAC("APP", "1000002", "1", {
+      return STOR.enableContractForNode("APP", "1000002", "1", {
         from: account1,
       });
     });
@@ -1427,24 +1427,24 @@ contract("DECORATE", (accounts) => {
 
   it("Should authorize APP_NC in all relevant nodes", () => {
     console.log("Authorizing APP_NC");
-    return STOR.enableContractForAC("APP_NC", "1000003", "2", {
+    return STOR.enableContractForNode("APP_NC", "1000003", "2", {
       from: account1,
     })
 
       .then(() => {
-        return STOR.enableContractForAC("APP_NC", "1000003", "2", {
+        return STOR.enableContractForNode("APP_NC", "1000003", "2", {
           from: account1,
         });
       })
 
       .then(() => {
-        return STOR.enableContractForAC("APP_NC", "1000004", "2", {
+        return STOR.enableContractForNode("APP_NC", "1000004", "2", {
           from: account10,
         });
       })
 
       .then(() => {
-        return STOR.enableContractForAC("APP_NC", "1000006", "2", {
+        return STOR.enableContractForNode("APP_NC", "1000006", "2", {
           from: account10,
         });
       });
@@ -1452,10 +1452,10 @@ contract("DECORATE", (accounts) => {
 
   it("Should authorize APP2 in all relevant nodes", () => {
     console.log("Authorizing APP2");
-    return STOR.enableContractForAC("APP2", "1000001", "1", {
+    return STOR.enableContractForNode("APP2", "1000001", "1", {
       from: account1,
     }).then(() => {
-      return STOR.enableContractForAC("APP2", "1000002", "1", {
+      return STOR.enableContractForNode("APP2", "1000002", "1", {
         from: account1,
       });
     });
@@ -1463,10 +1463,10 @@ contract("DECORATE", (accounts) => {
 
   it("Should authorize MAL_APP in all relevant nodes", () => {
     console.log("Authorizing MAL_APP");
-    return STOR.enableContractForAC("MAL_APP", "1000001", "1", {
+    return STOR.enableContractForNode("MAL_APP", "1000001", "1", {
       from: account1,
     }).then(() => {
-      return STOR.enableContractForAC("MAL_APP", "1000002", "1", {
+      return STOR.enableContractForNode("MAL_APP", "1000002", "1", {
         from: account1,
       });
     });
@@ -1474,10 +1474,10 @@ contract("DECORATE", (accounts) => {
 
   it("Should authorize ECR in all relevant nodes", () => {
     console.log("Authorizing ECR");
-    return STOR.enableContractForAC("ECR", "1000001", "3", {
+    return STOR.enableContractForNode("ECR", "1000001", "3", {
       from: account1,
     }).then(() => {
-      return STOR.enableContractForAC("ECR", "1000002", "3", {
+      return STOR.enableContractForNode("ECR", "1000002", "3", {
         from: account1,
       });
     });
@@ -1485,24 +1485,24 @@ contract("DECORATE", (accounts) => {
 
   it("Should authorize ECR_NC in all relevant nodes", () => {
     console.log("Authorizing ECR_NC");
-    return STOR.enableContractForAC("ECR_NC", "1000003", "3", {
+    return STOR.enableContractForNode("ECR_NC", "1000003", "3", {
       from: account1,
     })
 
       .then(() => {
-        return STOR.enableContractForAC("ECR_NC", "1000004", "3", {
+        return STOR.enableContractForNode("ECR_NC", "1000004", "3", {
           from: account10,
         });
       })
 
       .then(() => {
-        return STOR.enableContractForAC("ECR_NC", "1000005", "3", {
+        return STOR.enableContractForNode("ECR_NC", "1000005", "3", {
           from: account1,
         });
       })
 
       .then(() => {
-        return STOR.enableContractForAC("ECR_NC", "1000006", "3", {
+        return STOR.enableContractForNode("ECR_NC", "1000006", "3", {
           from: account10,
         });
       });
@@ -1510,10 +1510,10 @@ contract("DECORATE", (accounts) => {
 
   it("Should authorize ECR2 in all relevant nodes", () => {
     console.log("Authorizing ECR2");
-    return STOR.enableContractForAC("ECR2", "1000001", "3", {
+    return STOR.enableContractForNode("ECR2", "1000001", "3", {
       from: account1,
     }).then(() => {
-      return STOR.enableContractForAC("ECR2", "1000002", "3", {
+      return STOR.enableContractForNode("ECR2", "1000002", "3", {
         from: account1,
       });
     });
@@ -1521,20 +1521,20 @@ contract("DECORATE", (accounts) => {
 
   it("Should authorize A_TKN in all relevant nodes", () => {
     console.log("Authorizing A_TKN");
-    return STOR.enableContractForAC("A_TKN", "1", "1", { from: account1 })
+    return STOR.enableContractForNode("A_TKN", "1", "1", { from: account1 })
 
       .then(() => {
-        return STOR.enableContractForAC("A_TKN", "2", "1", { from: account1 });
+        return STOR.enableContractForNode("A_TKN", "2", "1", { from: account1 });
       })
 
       .then(() => {
-        return STOR.enableContractForAC("A_TKN", "1000001", "1", {
+        return STOR.enableContractForNode("A_TKN", "1000001", "1", {
           from: account1,
         });
       })
 
       .then(() => {
-        return STOR.enableContractForAC("A_TKN", "1000002", "1", {
+        return STOR.enableContractForNode("A_TKN", "1000002", "1", {
           from: account1,
         });
       });

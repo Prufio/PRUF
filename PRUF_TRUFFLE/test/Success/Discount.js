@@ -973,73 +973,73 @@ contract("Discount", (accounts) => {
 
   it("Should authorize APP in all relevant nodes", async () => {
     console.log("Authorizing APP");
-    return STOR.enableContractForAC("APP", "10", "1", { from: account1 })
+    return STOR.enableContractForNode("APP", "10", "1", { from: account1 })
 
       .then(() => {
-        return STOR.enableContractForAC("APP", "11", "1", { from: account1 });
+        return STOR.enableContractForNode("APP", "11", "1", { from: account1 });
       })
 
       .then(() => {
-        return STOR.enableContractForAC("APP", "12", "1", { from: account1 });
+        return STOR.enableContractForNode("APP", "12", "1", { from: account1 });
       })
 
       .then(() => {
-        return STOR.enableContractForAC("APP", "13", "1", { from: account1 });
+        return STOR.enableContractForNode("APP", "13", "1", { from: account1 });
       })
 
       .then(() => {
-        return STOR.enableContractForAC("APP", "14", "1", { from: account1 });
+        return STOR.enableContractForNode("APP", "14", "1", { from: account1 });
       });
   });
 
   it("Should authorize APP2 in all relevant nodes", async () => {
     console.log("Authorizing APP2");
-    return STOR.enableContractForAC("APP2", "10", "1", { from: account1 })
+    return STOR.enableContractForNode("APP2", "10", "1", { from: account1 })
     .then(() => {
-      return STOR.enableContractForAC("APP2", "11", "1", { from: account1 });
+      return STOR.enableContractForNode("APP2", "11", "1", { from: account1 });
     });
   });
 
   it("Should authorize MAL_APP in all relevant nodes", async () => {
     console.log("Authorizing MAL_APP");
-    return STOR.enableContractForAC("MAL_APP", "10", "1", { from: account1 })
+    return STOR.enableContractForNode("MAL_APP", "10", "1", { from: account1 })
     .then(() => {
-      return STOR.enableContractForAC("MAL_APP", "11", "1", { from: account1 });
+      return STOR.enableContractForNode("MAL_APP", "11", "1", { from: account1 });
     });
   });
 
   it("Should authorize ECR in all relevant nodes", async () => {
     console.log("Authorizing ECR");
-    return STOR.enableContractForAC("ECR", "10", "3", { from: account1 })
+    return STOR.enableContractForNode("ECR", "10", "3", { from: account1 })
     .then(() => {
-      return STOR.enableContractForAC("ECR", "11", "3", { from: account1 });
+      return STOR.enableContractForNode("ECR", "11", "3", { from: account1 });
     });
   });
 
   it("Should authorize ECR_MGR in all relevant nodes", async () => {
     console.log("Authorizing ECR_MGR");
-    return STOR.enableContractForAC("ECR_MGR", "10", "3", { from: account1 })
+    return STOR.enableContractForNode("ECR_MGR", "10", "3", { from: account1 })
 
       .then(() => {
-        return STOR.enableContractForAC("ECR_MGR", "11", "3", {
+        return STOR.enableContractForNode("ECR_MGR", "11", "3", {
           from: account1,
         });
       })
 
       .then(() => {
-        return STOR.enableContractForAC("ECR_MGR", "12", "3", {
+        return STOR.enableContractForNode("ECR_MGR", "12", "3", {
           from: account1,
         });
       })
 
       .then(() => {
-        return STOR.enableContractForAC("ECR_MGR", "13", "3", {
+        return STOR.enableContractForNode("ECR_MGR", "13", "3", {
           from: account1,
         });
       })
 
       .then(() => {
-        return STOR.enableContractForAC("ECR_MGR", "14", "3", {
+        return STOR.enableContractForNode("ECR_MGR", "14", "3", {
           from: account1,
         });
       });
@@ -1047,28 +1047,28 @@ contract("Discount", (accounts) => {
 
   it("Should authorize NODE_TKN in all relevant nodes", async () => {
     console.log("Authorizing NODE_TKN");
-    return STOR.enableContractForAC("NODE_TKN", "10", "1", { from: account1 })
+    return STOR.enableContractForNode("NODE_TKN", "10", "1", { from: account1 })
 
       .then(() => {
-        return STOR.enableContractForAC("NODE_TKN", "11", "1", {
+        return STOR.enableContractForNode("NODE_TKN", "11", "1", {
           from: account1,
         });
       })
 
       .then(() => {
-        return STOR.enableContractForAC("NODE_TKN", "12", "2", {
+        return STOR.enableContractForNode("NODE_TKN", "12", "2", {
           from: account1,
         });
       })
 
       .then(() => {
-        return STOR.enableContractForAC("NODE_TKN", "13", "2", {
+        return STOR.enableContractForNode("NODE_TKN", "13", "2", {
           from: account1,
         });
       })
 
       .then(() => {
-        return STOR.enableContractForAC("NODE_TKN", "14", "2", {
+        return STOR.enableContractForNode("NODE_TKN", "14", "2", {
           from: account1,
         });
       });
@@ -1076,86 +1076,86 @@ contract("Discount", (accounts) => {
 
   it("Should authorize A_TKN in all relevant nodes", async () => {
     console.log("Authorizing A_TKN");
-    return STOR.enableContractForAC("A_TKN", "10", "1", { from: account1 })
+    return STOR.enableContractForNode("A_TKN", "10", "1", { from: account1 })
 
       .then(() => {
-        return STOR.enableContractForAC("A_TKN", "11", "1", { from: account1 });
+        return STOR.enableContractForNode("A_TKN", "11", "1", { from: account1 });
       })
 
       .then(() => {
-        return STOR.enableContractForAC("A_TKN", "12", "2", { from: account1 });
+        return STOR.enableContractForNode("A_TKN", "12", "2", { from: account1 });
       })
 
       .then(() => {
-        return STOR.enableContractForAC("A_TKN", "13", "2", { from: account1 });
+        return STOR.enableContractForNode("A_TKN", "13", "2", { from: account1 });
       })
 
       .then(() => {
-        return STOR.enableContractForAC("A_TKN", "14", "2", { from: account1 });
+        return STOR.enableContractForNode("A_TKN", "14", "2", { from: account1 });
       })
 
       .then(() => {
-        return STOR.enableContractForAC("A_TKN", "1", "1", { from: account1 });
+        return STOR.enableContractForNode("A_TKN", "1", "1", { from: account1 });
       })
 
       .then(() => {
-        return STOR.enableContractForAC("A_TKN", "2", "1", { from: account1 });
+        return STOR.enableContractForNode("A_TKN", "2", "1", { from: account1 });
       });
   });
 
   it("Should authorize PIP in all relevant nodes", async () => {
     console.log("Authorizing PIP");
-    return STOR.enableContractForAC("PIP", "10", "1", { from: account1 })
+    return STOR.enableContractForNode("PIP", "10", "1", { from: account1 })
 
       .then(() => {
-        return STOR.enableContractForAC("PIP", "11", "1", { from: account1 });
+        return STOR.enableContractForNode("PIP", "11", "1", { from: account1 });
       })
 
       .then(() => {
-        return STOR.enableContractForAC("PIP", "12", "2", { from: account1 });
+        return STOR.enableContractForNode("PIP", "12", "2", { from: account1 });
       })
 
       .then(() => {
-        return STOR.enableContractForAC("PIP", "13", "2", { from: account1 });
+        return STOR.enableContractForNode("PIP", "13", "2", { from: account1 });
       })
 
       .then(() => {
-        return STOR.enableContractForAC("PIP", "14", "2", { from: account1 });
+        return STOR.enableContractForNode("PIP", "14", "2", { from: account1 });
       })
 
       .then(() => {
-        return STOR.enableContractForAC("PIP", "1", "1", { from: account1 });
+        return STOR.enableContractForNode("PIP", "1", "1", { from: account1 });
       })
 
       .then(() => {
-        return STOR.enableContractForAC("PIP", "2", "1", { from: account1 });
+        return STOR.enableContractForNode("PIP", "2", "1", { from: account1 });
       });
   });
 
   it("Should authorize NODE_MGR in all relevant nodes", async () => {
     console.log("Authorizing NODE_MGR");
-    return STOR.enableContractForAC("NODE_MGR", "10", "1", { from: account1 })
+    return STOR.enableContractForNode("NODE_MGR", "10", "1", { from: account1 })
 
       .then(() => {
-        return STOR.enableContractForAC("NODE_MGR", "11", "1", {
+        return STOR.enableContractForNode("NODE_MGR", "11", "1", {
           from: account1,
         });
       })
 
       .then(() => {
-        return STOR.enableContractForAC("NODE_MGR", "12", "2", {
+        return STOR.enableContractForNode("NODE_MGR", "12", "2", {
           from: account1,
         });
       })
 
       .then(() => {
-        return STOR.enableContractForAC("NODE_MGR", "13", "2", {
+        return STOR.enableContractForNode("NODE_MGR", "13", "2", {
           from: account1,
         });
       })
 
       .then(() => {
-        return STOR.enableContractForAC("NODE_MGR", "14", "2", {
+        return STOR.enableContractForNode("NODE_MGR", "14", "2", {
           from: account1,
         });
       });
@@ -1163,22 +1163,22 @@ contract("Discount", (accounts) => {
 
   it("Should authorize RCLR in all relevant nodes", async () => {
     console.log("Authorizing RCLR");
-    return STOR.enableContractForAC("RCLR", "10", "3", { from: account1 })
+    return STOR.enableContractForNode("RCLR", "10", "3", { from: account1 })
 
       .then(() => {
-        return STOR.enableContractForAC("RCLR", "11", "3", { from: account1 });
+        return STOR.enableContractForNode("RCLR", "11", "3", { from: account1 });
       })
 
       .then(() => {
-        return STOR.enableContractForAC("RCLR", "12", "3", { from: account1 });
+        return STOR.enableContractForNode("RCLR", "12", "3", { from: account1 });
       })
 
       .then(() => {
-        return STOR.enableContractForAC("RCLR", "13", "3", { from: account1 });
+        return STOR.enableContractForNode("RCLR", "13", "3", { from: account1 });
       })
 
       .then(() => {
-        return STOR.enableContractForAC("RCLR", "14", "3", { from: account1 });
+        return STOR.enableContractForNode("RCLR", "14", "3", { from: account1 });
       });
   });
 
