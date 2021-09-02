@@ -6,10 +6,6 @@ yarn-debug.log*
 yarn-error.log*
 lerna-debug.log*
 
-PRUF_TRUFFLE/contracts/artifacts/
-Flatpacks/Launched/artifacts/
-.DS_Store
-
 # Diagnostic reports (https://nodejs.org/api/report.html)
 report.[0-9]*.[0-9]*.[0-9]*.[0-9]*.json
 solc-output*.json
@@ -59,6 +55,7 @@ typings/
 
 # JSON FILES
 .json
+.JSON
 
 # DS_Store
 .DS_Store
