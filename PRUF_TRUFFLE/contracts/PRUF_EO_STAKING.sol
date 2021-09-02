@@ -67,7 +67,7 @@ contract EO_STAKING is ReentrancyGuard, AccessControl, Pausable {
     REWARDS_VAULT_Interface internal REWARDS_VAULT;
 
     uint256 currentStake;
-    uint256 constant seconds_in_a_day = 1;
+    uint256 constant seconds_in_a_day = 1; //TESTING
     // uint256 constant seconds_in_a_day = 86400;
     uint256 endOfStaking = block.timestamp + (seconds_in_a_day * 36500); //100 years in the future
 
