@@ -113,19 +113,6 @@
 			},
 			{
 				"inputs": [],
-				"name": "ASSET_TXFR_ROLE",
-				"outputs": [
-					{
-						"internalType": "bytes32",
-						"name": "",
-						"type": "bytes32"
-					}
-				],
-				"stateMutability": "view",
-				"type": "function"
-			},
-			{
-				"inputs": [],
 				"name": "CONTRACT_ADMIN_ROLE",
 				"outputs": [
 					{
@@ -217,19 +204,13 @@
 				"inputs": [
 					{
 						"internalType": "uint256",
-						"name": "_tokenId",
+						"name": "_delay",
 						"type": "uint256"
 					}
 				],
-				"name": "eligibleRewards",
-				"outputs": [
-					{
-						"internalType": "uint256",
-						"name": "",
-						"type": "uint256"
-					}
-				],
-				"stateMutability": "view",
+				"name": "endStaking",
+				"outputs": [],
+				"stateMutability": "nonpayable",
 				"type": "function"
 			},
 			{
@@ -371,6 +352,24 @@
 				"type": "function"
 			},
 			{
+				"inputs": [
+					{
+						"internalType": "uint256",
+						"name": "_tokenId",
+						"type": "uint256"
+					},
+					{
+						"internalType": "uint256",
+						"name": "_amount",
+						"type": "uint256"
+					}
+				],
+				"name": "increaseMyStake",
+				"outputs": [],
+				"stateMutability": "nonpayable",
+				"type": "function"
+			},
+			{
 				"inputs": [],
 				"name": "pause",
 				"outputs": [],
@@ -450,7 +449,7 @@
 					},
 					{
 						"internalType": "uint256",
-						"name": "_bonus",
+						"name": "_bonusPercentage",
 						"type": "uint256"
 					}
 				],
@@ -521,6 +520,11 @@
 						"internalType": "uint256",
 						"name": "",
 						"type": "uint256"
+					},
+					{
+						"internalType": "uint256",
+						"name": "",
+						"type": "uint256"
 					}
 				],
 				"stateMutability": "view",
@@ -545,29 +549,6 @@
 				"type": "function"
 			},
 			{
-				"inputs": [
-					{
-						"internalType": "address",
-						"name": "_to",
-						"type": "address"
-					},
-					{
-						"internalType": "uint256",
-						"name": "_tokenId",
-						"type": "uint256"
-					},
-					{
-						"internalType": "address",
-						"name": "_ERC721Contract",
-						"type": "address"
-					}
-				],
-				"name": "transferERC721Token",
-				"outputs": [],
-				"stateMutability": "nonpayable",
-				"type": "function"
-			},
-			{
 				"inputs": [],
 				"name": "unpause",
 				"outputs": [],
@@ -579,27 +560,30 @@
 			"kind": "dev",
 			"methods": {
 				"breakStake(uint256)": {
-					"details": "Transfers eligible rewards to staker, resets last payment time,",
+					"details": "Burns stake, transfers eligible rewards and staked tokens to staker",
 					"params": {
-						"_tokenId": "token id to check"
+						"_tokenId": "stake key token id"
 					}
 				},
 				"checkEligibleRewards(uint256)": {
-					"details": "Check eligible rewards amount for a stake, for verification (may want to remove for production) returns reward and microIntervals",
+					"details": "Check eligible rewards amount for a stake, for verification",
 					"params": {
 						"_tokenId": "token id to check"
+					},
+					"returns": {
+						"_0": "reward and microIntervals"
 					}
 				},
 				"claimBonus(uint256)": {
 					"details": "Transfers eligible rewards to staker, resets last payment time",
 					"params": {
-						"_tokenId": "token id to check"
+						"_tokenId": "token id to claim rewards on"
 					}
 				},
-				"eligibleRewards(uint256)": {
-					"details": "Check eligible rewards amount for a stake",
+				"endStaking(uint256)": {
+					"details": "Kill switch for staking reward earning",
 					"params": {
-						"_tokenId": "token id to check"
+						"_delay": "delay in seconds to end stake earning"
 					}
 				},
 				"getRoleAdmin(bytes32)": {
@@ -612,9 +596,12 @@
 					"details": "Returns the number of accounts that have `role`. Can be used together with {getRoleMember} to enumerate all bearers of a role."
 				},
 				"getStakeLevel(uint256)": {
-					"details": "Return Sa stakeTier specification",
+					"details": "Return specific stakeTier specification",
 					"params": {
 						"_stakeTier": "stake level to inspect"
+					},
+					"returns": {
+						"_0": "StakingTier @ given index, see declaration in beginning of contract"
 					}
 				},
 				"grantRole(bytes32,address)": {
@@ -623,8 +610,14 @@
 				"hasRole(bytes32,address)": {
 					"details": "Returns `true` if `account` has been granted `role`."
 				},
+				"increaseMyStake(uint256,uint256)": {
+					"details": "Transfers eligible rewards to staker, resets last payment time, adds _amount tokens to holders stake",
+					"params": {
+						"_tokenId": "token id to modify stake"
+					}
+				},
 				"pause()": {
-					"details": "Triggers stopped state. (pausable)"
+					"details": "Pauses contract. See {ERC721Pausable} and {Pausable-_pause}."
 				},
 				"paused()": {
 					"details": "Returns true if the contract is paused, and false otherwise."
@@ -636,9 +629,9 @@
 					"details": "Revokes `role` from `account`. If `account` had been granted `role`, emits a {RoleRevoked} event. Requirements: - the caller must have ``role``'s admin role."
 				},
 				"setStakeLevels(uint256,uint256,uint256,uint256,uint256)": {
-					"details": "Set stake parameters",
+					"details": "Set stake tier parameters",
 					"params": {
-						"_bonus": "bonus in tenths of a percent: 15 = 1.5% or 15/1000 per interval. Calculated to a fixed amount of tokens in the actual stake",
+						"_bonusPercentage": "bonusPercentage in tenths of a percent: 15 = 1.5% or 15/1000 per interval. Calculated to a fixed amount of tokens in the actual stake",
 						"_interval": "staking interval, in dayUnits - set to the number of days that the stake and reward interval will be based on.",
 						"_max": "Maximum stake",
 						"_min": "Minumum stake",
@@ -650,32 +643,28 @@
 					"params": {
 						"_rewardsVaultAddress": "address of REWARDS_VAULT",
 						"_stakeAddress": "address of STAKE_TKN",
-						"_stakeVaultAddress": "address of STAKE_VAULT"
+						"_stakeVaultAddress": "address of STAKE_VAULT",
+						"_utilAddress": "address of UTIL_TKN(PRUF)"
 					}
 				},
 				"stakeInfo(uint256)": {
-					"details": "Return Stake info",
+					"details": "Returns info of given stake key tokenId",
 					"params": {
 						"_tokenId": "Stake ID to return"
+					},
+					"returns": {
+						"_0": "Stake struct, see Interfaces.sol"
 					}
 				},
 				"stakeMyTokens(uint256,uint256)": {
 					"details": "Create a new stake",
 					"params": {
-						"_amount": "stake token amount",
+						"_amount": "amount of tokens to stake",
 						"_stakeTier": "staking tier"
 					}
 				},
-				"transferERC721Token(address,uint256,address)": {
-					"details": "Transfer any specified ERC721 Token from contract",
-					"params": {
-						"_ERC721Contract": "- token contract address",
-						"_to": "- address to send to",
-						"_tokenId": "- token ID"
-					}
-				},
 				"unpause()": {
-					"details": "Returns to normal state. (pausable)"
+					"details": "Unpauses contract. See {ERC721Pausable} and {Pausable-_unpause}."
 				}
 			},
 			"version": 1
@@ -688,7 +677,7 @@
 	},
 	"settings": {
 		"compilationTarget": {
-			"Documents/PRUF/PRUF_TRUFFLE/contracts/PRUF_EO_STAKING.sol": "EO_STAKING"
+			"Documents/DEV/PRUF/PRUF_TRUFFLE/contracts/PRUF_EO_STAKING.sol": "EO_STAKING"
 		},
 		"evmVersion": "london",
 		"libraries": {},
@@ -702,7 +691,7 @@
 		"remappings": []
 	},
 	"sources": {
-		"Documents/PRUF/PRUF_TRUFFLE/contracts/Imports/access/AccessControl.sol": {
+		"Documents/DEV/PRUF/PRUF_TRUFFLE/contracts/Imports/access/AccessControl.sol": {
 			"keccak256": "0x6e98c0d315f562a98d915414f948e041531138284dd633b4cdb0361a7172cd97",
 			"license": "MIT",
 			"urls": [
@@ -710,7 +699,7 @@
 				"dweb:/ipfs/QmSWUiJXUDFQbno6WgsadapBtYnQwn1iKuCo1z6A5qHjEV"
 			]
 		},
-		"Documents/PRUF/PRUF_TRUFFLE/contracts/Imports/introspection/IERC165.sol": {
+		"Documents/DEV/PRUF/PRUF_TRUFFLE/contracts/Imports/introspection/IERC165.sol": {
 			"keccak256": "0xa28007762d9da9db878dd421960c8cb9a10471f47ab5c1b3309bfe48e9e79ff4",
 			"license": "MIT",
 			"urls": [
@@ -718,7 +707,7 @@
 				"dweb:/ipfs/QmcsVgLgzWdor3UnAztUkXKNGcysm1MPneWksF72AvnwBx"
 			]
 		},
-		"Documents/PRUF/PRUF_TRUFFLE/contracts/Imports/token/ERC721/IERC721.sol": {
+		"Documents/DEV/PRUF/PRUF_TRUFFLE/contracts/Imports/token/ERC721/IERC721.sol": {
 			"keccak256": "0xe75db2fa62af4f543d39e1d718f77b5091aaf032988329e48839ce3410996fde",
 			"license": "MIT",
 			"urls": [
@@ -726,7 +715,7 @@
 				"dweb:/ipfs/QmcDS45TqG1DaaDbM9khBPV3FU2qi3ztgVGZWF133qujLd"
 			]
 		},
-		"Documents/PRUF/PRUF_TRUFFLE/contracts/Imports/utils/Address.sol": {
+		"Documents/DEV/PRUF/PRUF_TRUFFLE/contracts/Imports/utils/Address.sol": {
 			"keccak256": "0x069b2631bb5b5193a58ccf7a06266c7361bd2c20095667af4402817605627f45",
 			"license": "MIT",
 			"urls": [
@@ -734,7 +723,7 @@
 				"dweb:/ipfs/QmXmxubE3jnatFgZuN8ay1VV6hZ8WRmhvUjNpeVjki15HX"
 			]
 		},
-		"Documents/PRUF/PRUF_TRUFFLE/contracts/Imports/utils/Context.sol": {
+		"Documents/DEV/PRUF/PRUF_TRUFFLE/contracts/Imports/utils/Context.sol": {
 			"keccak256": "0xf930d2df426bfcfc1f7415be724f04081c96f4fb9ec8d0e3a521c07692dface0",
 			"license": "MIT",
 			"urls": [
@@ -742,7 +731,7 @@
 				"dweb:/ipfs/QmTbFya18786ckJfLYUoWau9jBTKfmWnWm5XSViWvB7PXN"
 			]
 		},
-		"Documents/PRUF/PRUF_TRUFFLE/contracts/Imports/utils/EnumerableSet.sol": {
+		"Documents/DEV/PRUF/PRUF_TRUFFLE/contracts/Imports/utils/EnumerableSet.sol": {
 			"keccak256": "0x71e0d1cc75b67306382e055b789b6d3ffe34a9e2e55380d3c9895a36a42229e1",
 			"license": "MIT",
 			"urls": [
@@ -750,7 +739,7 @@
 				"dweb:/ipfs/QmdwRX791f2gdkxLfzQLcyx3ZLvSjGd2wdX8gXFi8sH2uW"
 			]
 		},
-		"Documents/PRUF/PRUF_TRUFFLE/contracts/Imports/utils/Pausable.sol": {
+		"Documents/DEV/PRUF/PRUF_TRUFFLE/contracts/Imports/utils/Pausable.sol": {
 			"keccak256": "0xc6e9bea1d943d97521f0a73f2667eccc2eb0f740c209574d113ec5addb617472",
 			"license": "MIT",
 			"urls": [
@@ -758,7 +747,7 @@
 				"dweb:/ipfs/QmXfPZ8XDfMDMWD4uajioE21AhQhndDdo5tqbMpaM51scV"
 			]
 		},
-		"Documents/PRUF/PRUF_TRUFFLE/contracts/Imports/utils/ReentrancyGuard.sol": {
+		"Documents/DEV/PRUF/PRUF_TRUFFLE/contracts/Imports/utils/ReentrancyGuard.sol": {
 			"keccak256": "0x1278c76b840063ff5e14a2d7c5707812c1eabc2342ed040bf862c2d7552102fe",
 			"license": "MIT",
 			"urls": [
@@ -766,20 +755,20 @@
 				"dweb:/ipfs/Qmdg6rbPsShpnzvqKmPVuFk7eYU53oXTPxqUJXd9WLD4vg"
 			]
 		},
-		"Documents/PRUF/PRUF_TRUFFLE/contracts/PRUF_EO_STAKING.sol": {
-			"keccak256": "0xd658f50a653098afc324536197ec1c4fe49209969615c8f02f2e81699409524d",
+		"Documents/DEV/PRUF/PRUF_TRUFFLE/contracts/PRUF_EO_STAKING.sol": {
+			"keccak256": "0xcb2092715241d54811a70418b2f142846aa2aa4b1857c2daa2d7c3a65d612973",
 			"license": "UNLICENSED",
 			"urls": [
-				"bzz-raw://28dd13f10f306ccab656c82fff6ea96c43f19a9aed8b1fc4eb7696191269c8f8",
-				"dweb:/ipfs/QmbHHBaH7YubesXxPbNr5Pp74uFDyiesJpkpPaZkhn5ADr"
+				"bzz-raw://0d5ba101ed9c27b7fe014bfff7a3eebd804d407834f27b4a88e9ce063eb91d65",
+				"dweb:/ipfs/QmNb4R7589rTMRCdYyyGhRLwAzjSgMp82eHBapUFwN4ecA"
 			]
 		},
-		"Documents/PRUF/PRUF_TRUFFLE/contracts/PRUF_INTERFACES.sol": {
-			"keccak256": "0xd6efffd1c1834455c2dab9ee564fa1d611f03288a1981cc34d22bf4bd330d122",
+		"Documents/DEV/PRUF/PRUF_TRUFFLE/contracts/PRUF_INTERFACES.sol": {
+			"keccak256": "0x1bab48e428da78333f376ad63ab2ebd2dc398156b35bf855d8104730a29e2794",
 			"license": "UNLICENSED",
 			"urls": [
-				"bzz-raw://bdd83d9e0fcff53f8269bd5677f0bb2d5b6d863d82e46e70b836480131e281cf",
-				"dweb:/ipfs/QmYTM6s7v4tA1gwudxT2BC5tMPwPcfVQn9pTSntVURt5jW"
+				"bzz-raw://507150882d8a38dc8a3623e2caf811fc165c458baf5d955a19139c2e69c6fac0",
+				"dweb:/ipfs/QmePVvxF6wLFgaYFErNEWCqq585MxvKGBdFeV7jF74FqaV"
 			]
 		}
 	},

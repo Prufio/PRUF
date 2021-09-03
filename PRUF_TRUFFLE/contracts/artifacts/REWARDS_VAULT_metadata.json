@@ -1,6 +1,6 @@
 {
 	"compiler": {
-		"version": "0.8.1+commit.df193b15"
+		"version": "0.8.7+commit.e28d00a7"
 	},
 	"language": "Solidity",
 	"output": {
@@ -110,37 +110,6 @@
 				],
 				"name": "Unpaused",
 				"type": "event"
-			},
-			{
-				"inputs": [],
-				"name": "ASSET_TXFR_ROLE",
-				"outputs": [
-					{
-						"internalType": "bytes32",
-						"name": "",
-						"type": "bytes32"
-					}
-				],
-				"stateMutability": "view",
-				"type": "function"
-			},
-			{
-				"inputs": [
-					{
-						"internalType": "address",
-						"name": "_utilAddress",
-						"type": "address"
-					},
-					{
-						"internalType": "address",
-						"name": "_stakeAddress",
-						"type": "address"
-					}
-				],
-				"name": "Admin_setTokenContracts",
-				"outputs": [],
-				"stateMutability": "nonpayable",
-				"type": "function"
 			},
 			{
 				"inputs": [],
@@ -376,21 +345,16 @@
 				"inputs": [
 					{
 						"internalType": "address",
-						"name": "_to",
+						"name": "_utilAddress",
 						"type": "address"
-					},
-					{
-						"internalType": "uint256",
-						"name": "_tokenId",
-						"type": "uint256"
 					},
 					{
 						"internalType": "address",
-						"name": "_ERC721Contract",
+						"name": "_stakeAddress",
 						"type": "address"
 					}
 				],
-				"name": "transferERC721Token",
+				"name": "setTokenContracts",
 				"outputs": [],
 				"stateMutability": "nonpayable",
 				"type": "function"
@@ -406,13 +370,6 @@
 		"devdoc": {
 			"kind": "dev",
 			"methods": {
-				"Admin_setTokenContracts(address,address)": {
-					"details": "Set address of contracts to interface with",
-					"params": {
-						"_stakeAddress": "address of STAKE_TKN",
-						"_utilAddress": "address of UTIL_TKN"
-					}
-				},
 				"getRoleAdmin(bytes32)": {
 					"details": "Returns the admin role that controls `role`. See {grantRole} and {revokeRole}. To change a role's admin, use {_setRoleAdmin}."
 				},
@@ -428,6 +385,9 @@
 				"hasRole(bytes32,address)": {
 					"details": "Returns `true` if `account` has been granted `role`."
 				},
+				"pause()": {
+					"details": "Pauses contract. See {ERC721Pausable} and {Pausable-_pause}."
+				},
 				"paused()": {
 					"details": "Returns true if the contract is paused, and false otherwise."
 				},
@@ -435,7 +395,7 @@
 					"details": "Sends (amount) pruf to ownerOf(tokenId)",
 					"params": {
 						"_amount": "- amount to pay to owner of (tokenId)",
-						"_tokenId": "- token ID"
+						"_tokenId": "- stake key token ID"
 					}
 				},
 				"renounceRole(bytes32,address)": {
@@ -444,13 +404,15 @@
 				"revokeRole(bytes32,address)": {
 					"details": "Revokes `role` from `account`. If `account` had been granted `role`, emits a {RoleRevoked} event. Requirements: - the caller must have ``role``'s admin role."
 				},
-				"transferERC721Token(address,uint256,address)": {
-					"details": "Transfer any specified ERC721 Token from contract",
+				"setTokenContracts(address,address)": {
+					"details": "Set address of contracts to interface with",
 					"params": {
-						"_ERC721Contract": "- token contract address",
-						"_to": "- address to send to",
-						"_tokenId": "- token ID"
+						"_stakeAddress": "address of STAKE_TKN",
+						"_utilAddress": "address of UTIL_TKN"
 					}
+				},
+				"unpause()": {
+					"details": "Unpauses contract. See {ERC721Pausable} and {Pausable-_unpause}."
 				}
 			},
 			"version": 1
@@ -465,7 +427,7 @@
 		"compilationTarget": {
 			"Documents/DEV/PRUF/PRUF_TRUFFLE/contracts/PRUF_REWARDS_VAULT.sol": "REWARDS_VAULT"
 		},
-		"evmVersion": "istanbul",
+		"evmVersion": "london",
 		"libraries": {},
 		"metadata": {
 			"bytecodeHash": "ipfs"
@@ -542,19 +504,19 @@
 			]
 		},
 		"Documents/DEV/PRUF/PRUF_TRUFFLE/contracts/PRUF_INTERFACES.sol": {
-			"keccak256": "0xa003c0219361a6ce0b1fb1c0940b04014fa52425998b708846987c30300171c9",
+			"keccak256": "0x1bab48e428da78333f376ad63ab2ebd2dc398156b35bf855d8104730a29e2794",
 			"license": "UNLICENSED",
 			"urls": [
-				"bzz-raw://44757101dd999979004bdfcd84305663efc4704d20c14a963d51ed70197fd01d",
-				"dweb:/ipfs/Qmbz4kKcSxfDaWZRKwSqC4YHd57Kgi1Qrx3qPYZdfaCf1b"
+				"bzz-raw://507150882d8a38dc8a3623e2caf811fc165c458baf5d955a19139c2e69c6fac0",
+				"dweb:/ipfs/QmePVvxF6wLFgaYFErNEWCqq585MxvKGBdFeV7jF74FqaV"
 			]
 		},
 		"Documents/DEV/PRUF/PRUF_TRUFFLE/contracts/PRUF_REWARDS_VAULT.sol": {
-			"keccak256": "0xe2eb023e5de5c2b71161578c6225f78f9ce953ae45711f9f09452c68b2d55b8e",
+			"keccak256": "0xafa54cb6837bd4f129676f04b1db4cc61157395dcd5e90ee0aaeb8139820178c",
 			"license": "UNLICENSED",
 			"urls": [
-				"bzz-raw://94636ef20b1f33afee0cd0a272a05706bb414ca17d34c858e737f762f65b606c",
-				"dweb:/ipfs/QmWHu7wH9S5CzNNngM6kVj7a6tdqG2THVKy2QdTcwf4mQ4"
+				"bzz-raw://40a5be770f91884c41c197243728a36e7a7db4649f5610c328218471645c97dd",
+				"dweb:/ipfs/QmNrKqsHmrKSccUH5oBvNmzzti1PJLXhcMmGUnFSvTKTfw"
 			]
 		}
 	},
