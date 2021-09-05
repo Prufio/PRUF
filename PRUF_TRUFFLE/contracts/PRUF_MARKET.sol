@@ -31,6 +31,8 @@ contract Market is BASIC {
     uint32 defaultNode;
     address internal MARKET_TKN_Address;
     address public charityAddress;
+    uint256 listingPrice; //price in pruf(18) of listing a non-pruf asset
+    // uint256 defaultCommission; //as divisor: 1 = 100% ---- 10 = 10% ---- 100 = 1% ---- 1000 = 0.1%
     MARKET_TKN_Interface internal MARKET_TKN;
 
     //mapping(uint256 => ConsignmentTag) private tag; // pruf tokenID -> original TokenID, ContractAddress
@@ -83,6 +85,24 @@ contract Market is BASIC {
         defaultNode = _node;
     }
 
+    // /**
+    //  * @dev sets the default commission as a divisor of the principal price (1 = 100%, 1000 = 0.1%)
+    //  * @param _commission default PRüF node
+    //  */
+
+    // function setDefaultCommission(uint32 _commission) external isContractAdmin {
+    //     defaultCommission = _commission;
+    // }
+
+    /**
+     * @dev sets the default cost in PRüF of listing a non-PRüF NFT
+     * @param _price cost in PRüF(18) of listing a non-PRüF NFT
+     */
+
+    function setListingPrice(uint32 _price) external isContractAdmin {
+        listingPrice = _price;
+    }
+
     /**
      * @dev Wraps a pruf asset, takes original from caller (holds it in contract)
      * @param _tokenId tokenID of token to wrap
@@ -98,7 +118,8 @@ contract Market is BASIC {
     function consignPrufAsset(
         uint256 _tokenId,
         address _currency,
-        uint256 _price
+        uint256 _price,
+        uint256 _node
     )
         external
         nonReentrant
@@ -121,7 +142,7 @@ contract Market is BASIC {
         thisTag.tokenContract = A_TKN_Address;
         thisTag.currency = _currency;
         thisTag.price = _price;
-        thisTag.node = rec.node;
+        thisTag.listingNode = _node;
         //^^^^^^^effects^^^^^^^^^
 
         require(
@@ -167,7 +188,7 @@ contract Market is BASIC {
         thisTag.tokenContract = _ERC721TokenContract;
         thisTag.currency = _currency;
         thisTag.price = _price;
-        thisTag.node = defaultNode;
+        thisTag.listingNode = defaultNode;
         //^^^^^^^effects^^^^^^^^^
 
         foreign721Transfer(
@@ -176,10 +197,10 @@ contract Market is BASIC {
             address(this),
             _tokenId
         ); // move token to this contract using allowance
-        thisTag.node = defaultNode;
+        thisTag.listingNode = defaultNode;
         MARKET_TKN.mintConsignmentToken(_msgSender(), newTokenId, uri, thisTag);
 
-        //-------------------------To do: Add payment!
+        //no payment required to list pruf assets in pruf!
 
         //^^^^^^^interactions^^^^^^^^^
     }
