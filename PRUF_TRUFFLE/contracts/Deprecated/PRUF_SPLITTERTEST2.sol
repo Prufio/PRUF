@@ -21,8 +21,8 @@ _________\/// _____________\/// _______\/// __\///////// __\/// _____________
 // SPDX-License-Identifier: UNLICENSED
 pragma solidity ^0.8.6;
 
-import "../PRUF_INTERFACES.sol";
-import "../PRUF_TKN_INTERFACES.sol";
+import "../RESOURCE_PRUF_INTERFACES.sol";
+import "../RESOURCE_PRUF_TKN_INTERFACES.sol";
 import "../Imports/access/AccessControl.sol";
 import "../Imports/utils/Pausable.sol";
 import "../Imports/utils/ReentrancyGuard.sol";

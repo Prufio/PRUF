@@ -25,7 +25,7 @@ import "./Imports/utils/Counters.sol";
 import "./Imports/token/ERC721/ERC721.sol";
 import "./Imports/token/ERC721/ERC721Burnable.sol";
 import "./Imports/token/ERC721/ERC721Pausable.sol";
-import "./PRUF_INTERFACES.sol";
+import "./RESOURCE_PRUF_INTERFACES.sol";
 import "./Imports/utils/ReentrancyGuard.sol";
 
 /**

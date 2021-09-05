@@ -17,7 +17,7 @@ _________\/// _____________\/// _______\/// __\///////// __\/// _____________
 
 // SPDX-License-Identifier: UNLICENSED
 pragma solidity ^0.8.6;
-import "./PRUF_STRUCTS.sol";
+import "./RESOURCE_PRUF_STRUCTS.sol";
 
 /*
  * @dev Interface for UTIL_TKN

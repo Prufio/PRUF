@@ -41,8 +41,8 @@ contract NODE_MGR is BASIC {
     uint256 private nodeTokenIndex = 1000000; //Starting index for purchased node tokens
     uint256 public node_price = 200000 ether;
     uint32 private constant startingDiscount = 9500; // Purchased nodes start with 95% profit share
-    mapping(uint32 => mapping(uint16 => Costs)) private cost; // Cost per function by Node => Costs struct (see PRUF_INTERFACES for struct definitions)
-    mapping(uint32 => Node) private node_data; // node info database Node to node struct (see PRUF_INTERFACES for struct definitions)
+    mapping(uint32 => mapping(uint16 => Costs)) private cost; // Cost per function by Node => Costs struct (see RESOURCE_PRUF_INTERFACES for struct definitions)
+    mapping(uint32 => Node) private node_data; // node info database Node to node struct (see RESOURCE_PRUF_INTERFACES for struct definitions)
     mapping(string => uint32) private node_index; //name to Node resolution map
     mapping(bytes32 => mapping(uint32 => uint8)) private registeredUsers; // Authorized recorder database by Node, by address hash
     mapping(uint8 => uint8) private validStorageProviders; //storageProvider -> status (enabled or disabled)

@@ -20,7 +20,7 @@ __/\\\\\\\\\\\\\ _____/\\\\\\\\\ _______/\\./\\ ___/\\\\\\\\\\\\\\\
 
 pragma solidity ^0.8.6;
 
-import "./PRUF_INTERFACES.sol";
+import "./RESOURCE_PRUF_INTERFACES.sol";
 import "./Imports/access/AccessControl.sol";
 import "./Imports/token/ERC20/ERC20Burnable.sol";
 import "./Imports/utils/Pausable.sol";
