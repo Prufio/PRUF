@@ -83,7 +83,6 @@ contract A_TKN is
     constructor() ERC721("PRUF Asset Token", "PRAT") {
         _setupRole(DEFAULT_ADMIN_ROLE, _msgSender());
         _setupRole(CONTRACT_ADMIN_ROLE, _msgSender());
-        _setupRole(MINTER_ROLE, _msgSender()); //ALL contracts THAT MINT ASSET TOKENS
         _setupRole(PAUSER_ROLE, _msgSender());
     }
 

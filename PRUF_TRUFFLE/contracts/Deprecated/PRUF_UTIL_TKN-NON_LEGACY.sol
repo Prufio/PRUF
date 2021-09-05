@@ -81,7 +81,6 @@ contract UTIL_TKN_DEP is
     constructor() ERC20("PRUF Network", "PRUF") {
         _setupRole(DEFAULT_ADMIN_ROLE, _msgSender());
         _setupRole(CONTRACT_ADMIN_ROLE, _msgSender());
-        _setupRole(MINTER_ROLE, _msgSender());
         _setupRole(PAUSER_ROLE, _msgSender());
     }
 

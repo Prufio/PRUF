@@ -60,7 +60,6 @@ contract STAKE_TKN is
 
     constructor() ERC721("PRUF EO Staking Token", "PRST") {
         _setupRole(DEFAULT_ADMIN_ROLE, _msgSender());
-        _setupRole(MINTER_ROLE, _msgSender());
         _setupRole(PAUSER_ROLE, _msgSender());
     }
 
