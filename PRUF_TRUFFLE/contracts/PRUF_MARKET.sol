@@ -12,6 +12,7 @@ _________\/// _____________\/// _______\/// __\///////// __\/// _____________
 
 /**-----------------------------------------------------------------
  *  TO DO --- Find more needed requires?
+ *  Add payment based on node info
  *
  *-----------------------------------------------------------------
  * Wraps and unwraps ERC721 compliant tokens in a PRUF Asset token  DPS:NEW CONTRACT DPS:CHECK
@@ -21,11 +22,12 @@ _________\/// _____________\/// _______\/// __\///////// __\/// _____________
 // SPDX-License-Identifier: UNLICENSED
 pragma solidity ^0.8.6;
 
-import "./PRUF_CORE.sol";
-import "./Imports/token/ERC721/IERC721.sol";
-import "./Imports/token/ERC20/IERC20.sol";
+import "./PRUF_BASIC.sol";
 
-contract Market is CORE {
+//import "./Imports/token/ERC721/IERC721.sol";
+//import "./Imports/token/ERC20/IERC20.sol";
+
+contract Market is BASIC {
     uint32 defaultNode;
     address internal MARKET_TKN_Address;
     address public charityAddress;
@@ -49,6 +51,17 @@ contract Market is CORE {
     }
 
     //--------------------------------------------External Functions--------------------------
+
+    /**
+     * @dev sets the MARKET_TKN contract address
+     * @param _address MARKET_TKN contract address
+     */
+
+    function setTokenAddress(address _address) external isContractAdmin {
+        MARKET_TKN_Address = _address;
+        MARKET_TKN = MARKET_TKN_Interface(MARKET_TKN_Address);
+    }
+
     /**
      * @dev sets the charity donation address
      * @param _charityAddress charity erc20 address
@@ -71,13 +84,16 @@ contract Market is CORE {
     }
 
     /**
-     * @dev Wraps a token, takes original from caller (holds it in contract)
+     * @dev Wraps a pruf asset, takes original from caller (holds it in contract)
      * @param _tokenId tokenID of token to wrap
-     * @param _ERC721TokenContract contract address for token to wrap
      * @param _currency currency to make transaction in
      * @param _price price in _currency to require for transfer
-     * Prerequisite: contract authorized for token txfr
-     * Takes original 721
+ 
+     address _recipientAddress,
+        uint256 tokenId,
+        string calldata _tokenURI,
+        ConsignmentTag calldata _tag
+
      */
     function consignPrufAsset(
         uint256 _tokenId,
@@ -99,6 +115,7 @@ contract Market is CORE {
         uint256 newTokenId = uint256(consignmentTag);
         bytes32 idxHash = bytes32(_tokenId);
         Record memory rec = getRecord(idxHash);
+        string memory uri = A_TKN.tokenURI(_tokenId);
 
         thisTag.tokenId = _tokenId;
         thisTag.tokenContract = A_TKN_Address;
@@ -112,9 +129,8 @@ contract Market is CORE {
             "M:C:PRUF asset is not status 51 (transferrable)"
         );
         A_TKN.trustedAgentTransferFrom(_msgSender(), address(this), _tokenId); //move token to this contract using TRUSTED_AGENT_ROLE
-        thisTag.node = rec.node;
 
-        MARKET_TKN.mintConsignmentToken(_msgSender(), newTokenId, A_TKN.tokenURI(_tokenId), thisTag);
+        MARKET_TKN.mintConsignmentToken(_msgSender(), newTokenId, uri, thisTag);
     }
 
     /**
@@ -130,7 +146,8 @@ contract Market is CORE {
         uint256 _tokenId,
         address _ERC721TokenContract,
         address _currency,
-        uint256 _price
+        uint256 _price,
+        string calldata uri
     )
         external
         nonReentrant
@@ -153,31 +170,16 @@ contract Market is CORE {
         thisTag.node = defaultNode;
         //^^^^^^^effects^^^^^^^^^
 
-        if (_ERC721TokenContract == A_TKN_Address) {
-            bytes32 idxHash = bytes32(_tokenId);
-            Record memory rec = getRecord(idxHash);
-            require(
-                rec.assetStatus == 51,
-                "M:C:PRUF asset is not status 51 (transferrable)"
-            );
-            A_TKN.trustedAgentTransferFrom(
-                _msgSender(),
-                address(this),
-                _tokenId
-            ); //move token to this contract using TRUSTED_AGENT_ROLE
-            thisTag.node = rec.node;
+        foreign721Transfer(
+            _ERC721TokenContract,
+            _msgSender(),
+            address(this),
+            _tokenId
+        ); // move token to this contract using allowance
+        thisTag.node = defaultNode;
+        MARKET_TKN.mintConsignmentToken(_msgSender(), newTokenId, uri, thisTag);
 
-            MARKET_TKN.mintConsignmentToken(_msgSender(), newTokenId, thisTag);
-        } else {
-            foreign721Transfer(
-                _ERC721TokenContract,
-                _msgSender(),
-                address(this),
-                _tokenId
-            ); // move token to this contract using allowance
-            thisTag.node = defaultNode;
-            MARKET_TKN.mintConsignmentToken(_msgSender(), newTokenId, thisTag);
-        }
+        //-------------------------To do: Add payment!
 
         //^^^^^^^interactions^^^^^^^^^
     }
@@ -208,6 +210,9 @@ contract Market is CORE {
             _msgSender(),
             tagTokenId
         );
+
+        //-------------------------To do: Add payment!
+
         //^^^^^^^interactions^^^^^^^^^
     }
 
@@ -218,19 +223,12 @@ contract Market is CORE {
     function purchaseItem(
         uint256 _tokenId //consignment token ID
     ) external nonReentrant whenNotPaused {
-        // require( // this is redundant, will throw upon transfer attempt
-        //     (IERC721(tag[_tokenId].tokenContract).ownerOf(
-        //         tag[_tokenId].tokenId
-        //     ) == address(this)),
-        //     "CM:P: Market contract does not hold specified token"
-        // );
-
         address paymentAddress;
+        ConsignmentTag memory thisTag = MARKET_TKN.getTag(_tokenId);
 
         if (MARKET_TKN.tokenExists(_tokenId) != 0) {
             //if ticket !exist, sale will go through and proceeds will go to the charity address.
-            MARKET_TKN.trustedAgentBurn(_tokenId); //burn the consignment tag, consignment is over as sale is being completed
-            paymentAddress = MARKET_TKN.ownerOf(tag[_tokenId].tokenId); //set payment address to the holder of the consignment ticket
+            paymentAddress = MARKET_TKN.ownerOf(thisTag.tokenId); //set payment address to the holder of the consignment ticket
         } else {
             //otherwise
             paymentAddress = charityAddress; //set payment address to the charity address
@@ -238,30 +236,34 @@ contract Market is CORE {
 
         if (
             //if payment currency is PRUF and wallet is permitted for TAT
-            (tag[_tokenId].currency == UTIL_TKN_Address) &&
+            (thisTag.currency == UTIL_TKN_Address) &&
             (UTIL_TKN.isColdWallet(_msgSender()) == 0)
         ) {
             //Pay in PRüF using TAT
             UTIL_TKN.trustedAgentTransfer(
                 _msgSender(),
                 paymentAddress,
-                tag[_tokenId].price
+                thisTag.price
             );
         } else {
             //otherwise
             foreign20Transfer( //Pay using allowance
-                tag[_tokenId].currency, //send this erc20
+                thisTag.currency, //send this erc20
                 _msgSender(), //from the purchase caller
                 paymentAddress, //to the payment address
-                tag[_tokenId].price //amount of tokens to send
+                thisTag.price //amount of tokens to send
             );
+
+            //-------------------------To do: Add payment!
+
+            MARKET_TKN.trustedAgentBurn(_tokenId); //burn the consignment tag, consignment is over as sale has been completed
         }
 
         foreign721Transfer( //Deliver token to buyer
-            tag[_tokenId].tokenContract, //using this token contract
+            thisTag.tokenContract, //using this token contract
             address(this), //from this address
             _msgSender(), //to the purchase caller
-            tag[_tokenId].tokenId //send this (native) tokenId
+            thisTag.tokenId //send this (native) tokenId
         );
     }
 
@@ -271,7 +273,7 @@ contract Market is CORE {
      * @param _tokenContract Address of foreign token contract
      * @param _from origin
      * @param _to destination
-     * @param _tokenID Token ID
+     * @param _tokenID Token ID to transfer
      */
     function foreign721Transfer(
         address _tokenContract,
@@ -279,7 +281,7 @@ contract Market is CORE {
         address _to,
         uint256 _tokenID
     ) internal {
-        IERC721(_tokenContract).transferFrom(_from, _to, _tokenID);
+        IERC721(_tokenContract).safeTransferFrom(_from, _to, _tokenID);
     }
 
     /**
