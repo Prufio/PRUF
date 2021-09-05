@@ -51,20 +51,21 @@ contract MARKET_TKN is
     ERC721Pausable
 {
     using Counters for Counters.Counter;
+    Counters.Counter private _tokenIdTracker;
 
     bytes32 public constant CONTRACT_ADMIN_ROLE =
         keccak256("CONTRACT_ADMIN_ROLE");
     bytes32 public constant MINTER_ROLE = keccak256("MINTER_ROLE");
     bytes32 public constant PAUSER_ROLE = keccak256("PAUSER_ROLE");
+    bytes32 public constant TAG_ADMIN_ROLE = keccak256("TAG_ADMIN_ROLE");
     bytes32 public constant TRUSTED_AGENT_ROLE =
         keccak256("TRUSTED_AGENT_ROLE");
 
-    Counters.Counter private _tokenIdTracker;
+    mapping(uint256 => ConsignmentTag) private tag; // pruf tokenID -> original TokenID, ContractAddress
 
     constructor() ERC721("PRUF COnsignment Token", "PRCT") {
         _setupRole(DEFAULT_ADMIN_ROLE, _msgSender());
         _setupRole(CONTRACT_ADMIN_ROLE, _msgSender());
-        _setupRole(MINTER_ROLE, _msgSender()); //ALL contracts THAT MINT ASSET TOKENS
         _setupRole(PAUSER_ROLE, _msgSender());
     }
 
@@ -78,6 +79,19 @@ contract MARKET_TKN is
     modifier isContractAdmin() {
         require(
             hasRole(CONTRACT_ADMIN_ROLE, _msgSender()),
+            "AT:MOD-IA:Calling address does not belong to a contract admin"
+        );
+        _;
+    }
+
+    /**
+     * @dev Verify user credentials
+     * Originating Address:
+     *      has CONTRACT_ADMIN_ROLE
+     */
+    modifier isTagAdmin() {
+        require(
+            hasRole(TAG_ADMIN_ROLE, _msgSender()),
             "AT:MOD-IA:Calling address does not belong to a contract admin"
         );
         _;
@@ -112,7 +126,7 @@ contract MARKET_TKN is
     //----------------------Admin functions / isContractAdmin ----------------------//
 
     /**
-     * @dev Mint a consignment token
+     * @dev Mint new consignment Tag token, store consignment data
      * @param _recipientAddress - Address to mint token into
      * @param _tokenId - Token ID to mint
      * @param _tokenURI - URI string to atatch to token
@@ -121,12 +135,14 @@ contract MARKET_TKN is
     function mintConsignmentToken(
         address _recipientAddress,
         uint256 _tokenId,
-        string calldata _tokenURI
+        string calldata _tokenURI,
+        ConsignmentTag calldata _tag
     ) external isMinter nonReentrant returns (uint256) {
         //^^^^^^^checks^^^^^^^^^
 
         _safeMint(_recipientAddress, _tokenId);
         _setTokenURI(_tokenId, _tokenURI);
+        tag[_tokenId] = _tag;
         return _tokenId;
         //^^^^^^^interactions^^^^^^^^^
     }
@@ -153,7 +169,7 @@ contract MARKET_TKN is
     }
 
     /**
-     * @dev See if asset token exists
+     * @dev See if consignment token exists
      * @param tokenId - Token ID to set URI
      * returns 170 if token exists, otherwise 0
      */
@@ -238,7 +254,7 @@ contract MARKET_TKN is
     }
 
     /**
-     * @dev Safely burns an asset token
+     * @dev Safely burns an consignment token, consignment data
      * @param _tokenId - Token ID to Burn
      */
     function trustedAgentBurn(uint256 _tokenId)
@@ -248,7 +264,39 @@ contract MARKET_TKN is
         isTrustedAgent
     {
         //^^^^^^^checks^^^^^^^^^
-        _burn(_tokenId);
+        if (_exists(_tokenId)) {
+            _burn(_tokenId);
+        }
+        delete tag[_tokenId];
+        //^^^^^^^effects^^^^^^^^^
+    }
+
+    /**
+     * @dev Writes tag data to a tag
+     * @param _tokenId - Token ID to write to
+     */
+    function writeTag(uint256 _tokenId, ConsignmentTag memory thisTag)
+        internal
+        nonReentrant
+        whenNotPaused
+        isTagAdmin
+    {
+        //^^^^^^^checks^^^^^^^^^
+        tag[_tokenId] = thisTag;
+        //^^^^^^^effects^^^^^^^^^
+    }
+
+    /**
+     * @dev Writes tag data to a tag
+     * @param _tokenId - Token ID to write to
+     */
+    function getTag(uint256 _tokenId)
+        external
+        view
+        returns (ConsignmentTag memory)
+    {
+        //^^^^^^^checks^^^^^^^^^
+        return tag[_tokenId];
         //^^^^^^^effects^^^^^^^^^
     }
 
