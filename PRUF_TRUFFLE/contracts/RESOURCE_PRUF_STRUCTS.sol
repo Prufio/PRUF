@@ -135,3 +135,11 @@ struct Stake {
     uint256 bonusPercentage; // % per reward period, in tenths of a percent, assigned to this stake on creation
     uint256 maximum; // maximum tokens allowed to be held by this stake
 }
+
+struct ConsignmentTag {
+        uint256 tokenId;
+        address tokenContract;
+        address currency;
+        uint256 price;
+        uint256 node;
+}
