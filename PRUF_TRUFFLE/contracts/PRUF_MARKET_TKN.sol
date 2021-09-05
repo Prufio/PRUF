@@ -51,6 +51,7 @@ contract MARKET_TKN is
     ERC721Pausable
 {
     using Counters for Counters.Counter;
+    Counters.Counter private _tokenIdTracker;
 
     bytes32 public constant CONTRACT_ADMIN_ROLE =
         keccak256("CONTRACT_ADMIN_ROLE");
@@ -58,8 +59,6 @@ contract MARKET_TKN is
     bytes32 public constant PAUSER_ROLE = keccak256("PAUSER_ROLE");
     bytes32 public constant TRUSTED_AGENT_ROLE =
         keccak256("TRUSTED_AGENT_ROLE");
-
-    Counters.Counter private _tokenIdTracker;
 
     constructor() ERC721("PRUF COnsignment Token", "PRCT") {
         _setupRole(DEFAULT_ADMIN_ROLE, _msgSender());
