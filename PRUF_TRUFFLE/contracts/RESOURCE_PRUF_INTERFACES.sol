@@ -259,6 +259,13 @@ interface NODE_MGR_Interface {
      * @dev Retrieve Node_discount @ _node, in percent NTH share, * 100 (9000 = 90%)
      */
     function getNodeDiscount(uint32 _node) external view returns (uint32);
+
+    /**
+     * @dev Retrieve Node_discount @ _node
+     * @param _node - node associated with query
+     * @return percentage of rewards distribution @ _node
+     */
+    function getNodeComission(uint32 _node) external view returns (uint8)
 }
 
 //------------------------------------------------------------------------------------------------

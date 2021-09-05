@@ -42,8 +42,8 @@ contract NODE_MGR is BASIC {
     uint256 public node_price = 200000 ether;
     uint32 private constant startingDiscount = 9500; // Purchased nodes start with 95% profit share
     mapping(uint32 => mapping(uint16 => Costs)) private cost; // Cost per function by Node => Costs struct (see RESOURCE_PRUF_INTERFACES for struct definitions)
-    mapping(uint32 => Node) private node_data; // node info database Node to node struct (see RESOURCE_PRUF_INTERFACES for struct definitions)
-    mapping(string => uint32) private node_index; //name to Node resolution map
+    mapping(uint32 => Node) private nodeData; // node info database Node to node struct (see RESOURCE_PRUF_INTERFACES for struct definitions)
+    mapping(string => uint32) private nodeId; //name to Node resolution map
     mapping(bytes32 => mapping(uint32 => uint8)) private registeredUsers; // Authorized recorder database by Node, by address hash
     mapping(uint8 => uint8) private validStorageProviders; //storageProvider -> status (enabled or disabled)
     mapping(uint8 => uint8) private validManagementTypes; //managementTypes -> status (enabled or disabled)
@@ -51,7 +51,7 @@ contract NODE_MGR is BASIC {
 
     constructor() {
         _setupRole(NODE_MINTER_ROLE, _msgSender());
-        node_index[""] = 4294967295; //points the blank string name to node 4294967295 to make "" owned
+        nodeId[""] = 4294967295; //points the blank string name to node 4294967295 to make "" owned
     }
 
     /**
@@ -106,15 +106,15 @@ contract NODE_MGR is BASIC {
         external
         isContractAdmin
     {
-        require((node_data[_node].nodeRoot != 0), "NM:AIS: node !exist");
+        require((nodeData[_node].nodeRoot != 0), "NM:AIS: node !exist");
         require(
-            _newDiscount >= node_data[_node].discount,
+            _newDiscount >= nodeData[_node].discount,
             "NM:AIS: New share < old share"
         );
         require(_newDiscount <= 10000, "NM:AIS: Discount > 100% (10000)");
         //^^^^^^^checks^^^^^^^^^
 
-        node_data[_node].discount = _newDiscount;
+        nodeData[_node].discount = _newDiscount;
         //^^^^^^^effects^^^^^^^^^
     }
 
@@ -168,27 +168,27 @@ contract NODE_MGR is BASIC {
      *   -over to some kind of governance contract.
      * @param _fromNode - source node
      * @param _toNode - destination node
-     * @param _name - name to be transferred
+     * @param _thisName - name to be transferred
      */
     function transferName(
         uint32 _fromNode,
         uint32 _toNode,
-        string calldata _name
+        string calldata _thisName
     ) external isContractAdmin {
         require(
-            node_index[_name] == _fromNode,
+            nodeId[_thisName] == _fromNode,
             "NM:TN: Name not in source node"
         ); //source Node_Name must match name given
 
         require(
-            (node_data[_toNode].CAS1 == B320xF_), //dest node must have CAS1 set to 0xFFFF.....
+            (nodeData[_toNode].CAS1 == B320xF_), //dest node must have CAS1 set to 0xFFFF.....
             "NM:TN: Destination node not prepared for name transfer"
         );
         //^^^^^^^checks^^^^^^^^^
 
-        node_index[_name] = _toNode;
-        node_data[_toNode].name = _name;
-        node_data[_fromNode].name = "";
+        nodeId[_thisName] = _toNode;
+        nodeData[_toNode].name = _thisName;
+        nodeData[_fromNode].name = "";
         //^^^^^^^effects^^^^^^^^^
     }
 
@@ -216,7 +216,7 @@ contract NODE_MGR is BASIC {
         bytes32 _CAS1,
         bytes32 _CAS2
     ) external isContractAdmin nonReentrant {
-        Node memory _ac = node_data[_nodeRoot];
+        Node memory _ac = nodeData[_nodeRoot];
         uint256 tokenId = uint256(_node);
 
         require((tokenId != 0), "NM:AMAC: Node = 0"); //sanity check inputs
@@ -229,14 +229,14 @@ contract NODE_MGR is BASIC {
 
         //^^^^^^^checks^^^^^^^^^
 
-        node_data[_node].nodeRoot = _nodeRoot;
-        node_data[_node].discount = _discount;
-        node_data[_node].custodyType = _custodyType;
-        node_data[_node].managementType = _managementType;
-        node_data[_node].storageProvider = _storageProvider;
-        node_data[_node].referenceAddress = _refAddress;
-        node_data[_node].CAS1 = _CAS1;
-        node_data[_node].CAS2 = _CAS2;
+        nodeData[_node].nodeRoot = _nodeRoot;
+        nodeData[_node].discount = _discount;
+        nodeData[_node].custodyType = _custodyType;
+        nodeData[_node].managementType = _managementType;
+        nodeData[_node].storageProvider = _storageProvider;
+        nodeData[_node].referenceAddress = _refAddress;
+        nodeData[_node].CAS1 = _CAS1;
+        nodeData[_node].CAS2 = _CAS2;
         //^^^^^^^effects^^^^^^^^^
     }
 
@@ -259,7 +259,7 @@ contract NODE_MGR is BASIC {
 
         //^^^^^^^checks^^^^^^^^^
 
-        uint256 switches = node_data[_node].switches;
+        uint256 switches = nodeData[_node].switches;
 
         if (_bit == 1) {
             switches = switches | (1 << (_position - 1));
@@ -269,7 +269,7 @@ contract NODE_MGR is BASIC {
             switches = switches & ~(1 << (_position - 1)); //make zero mask
         }
 
-        node_data[_node].switches = uint8(switches);
+        nodeData[_node].switches = uint8(switches);
         //^^^^^^^effects^^^^^^^^^
     }
 
@@ -407,25 +407,25 @@ contract NODE_MGR is BASIC {
     /**
      * @dev Modifies an node Node name for its exclusive namespace
      * @param _node - node being modified
-     * @param _name - updated name associated with node (unique)
+     * @param _newName - updated name associated with node (unique)
      */
-    function updateNodeName(uint32 _node, string calldata _name)
+    function updateNodeName(uint32 _node, string calldata _newName)
         external
         whenNotPaused
         isNodeHolder(_node)
     {
         require( //should pass if name is same as old name or name is unassigned. Should fail if name is assigned to other node
-            (node_index[_name] == 0) || //name is unassigned
-                (keccak256(abi.encodePacked(_name)) == //name is same as old name
-                    (keccak256(abi.encodePacked(node_data[_node].name)))),
+            (nodeId[_newName] == 0) || //name is unassigned
+                (keccak256(abi.encodePacked(_newName)) == //name is same as old name
+                    (keccak256(abi.encodePacked(nodeData[_node].name)))),
             "NM:UACN: Name already in use or is same as the previous"
         );
         //^^^^^^^checks^^^^^^^^^
 
-        delete node_index[node_data[_node].name];
+        delete nodeId[nodeData[_node].name];
 
-        node_index[_name] = _node;
-        node_data[_node].name = _name;
+        nodeId[_newName] = _node;
+        nodeData[_node].name = _newName;
         //^^^^^^^effects^^^^^^^^^
     }
 
@@ -445,8 +445,8 @@ contract NODE_MGR is BASIC {
             "NM:UNC: CAS for node is locked and cannot be written"
         );
         //^^^^^^^checks^^^^^^^^^
-        node_data[_node].CAS1 = _CAS1;
-        node_data[_node].CAS2 = _CAS2;
+        nodeData[_node].CAS1 = _CAS1;
+        nodeData[_node].CAS2 = _CAS2;
         //^^^^^^^effects^^^^^^^^^
     }
 
@@ -470,6 +470,22 @@ contract NODE_MGR is BASIC {
         //^^^^^^^effects^^^^^^^^^
     }
 
+    /**
+     * @dev Set function costs and payment address per Node, in PRUF(18 decimals)
+     * @param _node - node to set service costs
+     * @param _commision - service type being modified (see service types in ZZ_PRUF_DOCS)
+     */
+    function setMarketComission(uint32 _node, uint8 _commision)
+        external
+        whenNotPaused
+        isNodeHolder(_node)
+    {
+        //^^^^^^^checks^^^^^^^^^
+
+        nodeData[_node].marketCommission = _commision;
+        //^^^^^^^effects^^^^^^^^^
+    }
+
     //-------------------------------------------Functions dealing with immutable data ---------------------------------------------
 
     /**
@@ -486,7 +502,7 @@ contract NODE_MGR is BASIC {
         address _refAddress
     ) external whenNotPaused isNodeHolder(_node) {
         require(
-            node_data[_node].managementType == 255,
+            nodeData[_node].managementType == 255,
             "NM:UACI: Immutable node data already set"
         );
         require(
@@ -503,9 +519,9 @@ contract NODE_MGR is BASIC {
         );
         //^^^^^^^checks^^^^^^^^^
 
-        node_data[_node].managementType = _managementType;
-        node_data[_node].storageProvider = _storageProvider;
-        node_data[_node].referenceAddress = _refAddress;
+        nodeData[_node].managementType = _managementType;
+        nodeData[_node].storageProvider = _storageProvider;
+        nodeData[_node].referenceAddress = _refAddress;
         //^^^^^^^effects^^^^^^^^^
     }
 
@@ -529,7 +545,7 @@ contract NODE_MGR is BASIC {
         );
         //^^^^^^^checks^^^^^^^^^
 
-        if ((node_data[_node].switches & (1 << (_position - 1))) > 0) {
+        if ((nodeData[_node].switches & (1 << (_position - 1))) > 0) {
             return 1;
         } else {
             return 0;
@@ -603,7 +619,7 @@ contract NODE_MGR is BASIC {
     }
 
     /**
-     * @dev Retrieve node_data @ _node
+     * @dev Retrieve nodeData @ _node
      * @param _node - node associated with query
      * DPS:THIS FUNCTION REMAINS FOR EXTERNAL TESTING ACCESS. try using getExtAcData, it should be depricated prior to production.
      */
@@ -620,20 +636,20 @@ contract NODE_MGR is BASIC {
     {
         //^^^^^^^checks^^^^^^^^^
         return (
-            node_data[_node].nodeRoot,
-            node_data[_node].custodyType,
-            node_data[_node].managementType,
-            node_data[_node].discount,
-            node_data[_node].referenceAddress
+            nodeData[_node].nodeRoot,
+            nodeData[_node].custodyType,
+            nodeData[_node].managementType,
+            nodeData[_node].discount,
+            nodeData[_node].referenceAddress
         );
         //^^^^^^^interactions^^^^^^^^^
     }
 
     /**
-     * @dev Retrieve extended node_data @ _node
+     * @dev Retrieve extended nodeData @ _node
      * @param _node - node associated with query
      *
-     * @return node_data (see docs)
+     * @return nodeData (see docs)
      */
     function getExtendedNodeData(uint32 _node)
         external
@@ -641,7 +657,7 @@ contract NODE_MGR is BASIC {
         returns (Node memory)
     {
         //^^^^^^^checks^^^^^^^^^
-        return (node_data[_node]);
+        return (nodeData[_node]);
         //^^^^^^^effects^^^^^^^^^
     }
 
@@ -658,7 +674,7 @@ contract NODE_MGR is BASIC {
         returns (uint8)
     {
         //^^^^^^^checks^^^^^^^^^
-        if (node_data[_node1].nodeRoot == node_data[_node2].nodeRoot) {
+        if (nodeData[_node1].nodeRoot == nodeData[_node2].nodeRoot) {
             return uint8(170);
         } else {
             return uint8(0);
@@ -675,19 +691,23 @@ contract NODE_MGR is BASIC {
     function getNodeName(uint32 node) external view returns (string memory) {
         //^^^^^^^checks^^^^^^^^^
 
-        return (node_data[node].name);
+        return (nodeData[node].name);
         //^^^^^^^effects^^^^^^^^^
     }
 
     /**
      * @dev Retrieve node @ Node_name
-     * @param _name - name of node for nodeNumber query
+     * @param _forThisName - name of node for nodeNumber query
      *
      * @return node number @ _name
      */
-    function resolveNode(string calldata _name) external view returns (uint32) {
+    function resolveNode(string calldata _forThisName)
+        external
+        view
+        returns (uint32)
+    {
         //^^^^^^^checks^^^^^^^^^
-        return (node_index[_name]);
+        return (nodeId[_forThisName]);
         //^^^^^^^effects^^^^^^^^^
     }
 
@@ -725,7 +745,7 @@ contract NODE_MGR is BASIC {
         view
         returns (Invoice memory)
     {
-        Node memory node_info = node_data[_node];
+        Node memory node_info = nodeData[_node];
         require(node_info.nodeRoot != 0, "NM:GSC: node !exist");
 
         require(_service != 0, "NM:GSC: Service type = 0");
@@ -754,7 +774,19 @@ contract NODE_MGR is BASIC {
      */
     function getNodeDiscount(uint32 _node) external view returns (uint32) {
         //^^^^^^^checks^^^^^^^^^
-        return (node_data[_node].discount);
+        return (nodeData[_node].discount);
+        //^^^^^^^interactions^^^^^^^^^
+    }
+
+    /**
+     * @dev Retrieve Node_discount @ _node
+     * @param _node - node associated with query
+     *
+     * @return percentage of rewards distribution @ _node
+     */
+    function getNodeComission(uint32 _node) external view returns (uint8) {
+        //^^^^^^^checks^^^^^^^^^
+        return (nodeData[_node].marketCommission);
         //^^^^^^^interactions^^^^^^^^^
     }
 
@@ -771,7 +803,7 @@ contract NODE_MGR is BASIC {
         uint32 _newNode,
         address _recipientAddress
     ) private whenNotPaused {
-        Node memory _RootNodeData = node_data[_newNodeData.nodeRoot];
+        Node memory _RootNodeData = nodeData[_newNodeData.nodeRoot];
         uint256 tokenId = uint256(_newNode);
 
         require(tokenId != 0, "NM:CN: node = 0"); //sanity check inputs
@@ -805,22 +837,22 @@ contract NODE_MGR is BASIC {
                 "NM:CN: Restricted from creating node in this root - caller !hold root token"
             );
         }
-        require(node_index[_newNodeData.name] == 0, "NM:CN: node name exists");
+        require(nodeId[_newNodeData.name] == 0, "NM:CN: node name exists");
         require(
-            (node_data[_newNode].nodeRoot == 0),
+            (nodeData[_newNode].nodeRoot == 0),
             "NM:CN: node already exists"
         );
         //^^^^^^^checks^^^^^^^^^
 
-        node_index[_newNodeData.name] = _newNode;
-        node_data[_newNode].name = _newNodeData.name;
-        node_data[_newNode].nodeRoot = _newNodeData.nodeRoot;
-        node_data[_newNode].discount = _newNodeData.discount;
-        node_data[_newNode].custodyType = _newNodeData.custodyType;
-        node_data[_newNode].managementType = _newNodeData.managementType;
-        node_data[_newNode].switches = _RootNodeData.switches;
-        node_data[_newNode].CAS1 = _newNodeData.CAS1;
-        node_data[_newNode].CAS2 = _newNodeData.CAS2;
+        nodeId[_newNodeData.name] = _newNode;
+        nodeData[_newNode].name = _newNodeData.name;
+        nodeData[_newNode].nodeRoot = _newNodeData.nodeRoot;
+        nodeData[_newNode].discount = _newNodeData.discount;
+        nodeData[_newNode].custodyType = _newNodeData.custodyType;
+        nodeData[_newNode].managementType = _newNodeData.managementType;
+        nodeData[_newNode].switches = _RootNodeData.switches;
+        nodeData[_newNode].CAS1 = _newNodeData.CAS1;
+        nodeData[_newNode].CAS2 = _newNodeData.CAS2;
         //^^^^^^^effects^^^^^^^^^
 
         NODE_TKN.mintNodeToken(_recipientAddress, tokenId, "pruf.io/nodeToken");
