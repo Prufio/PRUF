@@ -261,9 +261,9 @@ interface NODE_MGR_Interface {
     function getNodeDiscount(uint32 _node) external view returns (uint32);
 
     /**
-     * @dev Retrieve Node_discount @ _node
-     * @param _node - node associated with query
-     * @return percentage of rewards distribution @ _node
+     * @dev get comission to charge for sales in marketplace for listing under the node's ID
+     * @param _node - node to get comission
+     * @return uint8 the divisor for comission charges
      */
     function getNodeComission(uint32 _node) external view returns (uint8)
 }

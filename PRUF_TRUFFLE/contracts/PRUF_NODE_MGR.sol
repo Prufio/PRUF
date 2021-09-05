@@ -470,10 +470,10 @@ contract NODE_MGR is BASIC {
         //^^^^^^^effects^^^^^^^^^
     }
 
-    /**
-     * @dev Set function costs and payment address per Node, in PRUF(18 decimals)
+    /** //DPS:TESNT:NEW
+     * @dev Set comission to charge for sales in marketplace for listing under the node's ID
      * @param _node - node to set service costs
-     * @param _commision - service type being modified (see service types in ZZ_PRUF_DOCS)
+     * @param _commision - commission to charge, as a divisor
      */
     function setMarketComission(uint32 _node, uint8 _commision)
         external
@@ -778,7 +778,7 @@ contract NODE_MGR is BASIC {
         //^^^^^^^interactions^^^^^^^^^
     }
 
-    /**
+    /** //DPS:TESNT:NEW
      * @dev Retrieve Node_discount @ _node
      * @param _node - node associated with query
      *
