@@ -9,22 +9,23 @@ _______\/\\\ ____________\/\\\ ____\//\\\ _\/\\\___\/\\\_\/\\\ ____________
 ________\/\\\ ____________\/\\\ _____\//\\\_\//\\\\\\\\\ _\/\\\ ____________
 _________\/// _____________\/// _______\/// __\///////// __\/// _____________
 *---------------------------------------------------------------------------*/
-         
+
 /**-----------------------------------------------------------------
-*  TO DO
-*
-* IMPORTANT!!! EXTERNAL OR PUBLIC FUNCTIONS WITHOUTSTRICT PERMISSIONING NEED 
-* TO BE CLOSELY EXAMINED IN THIS CONTRACT AS THEY WILL BE INHERITED NEARLY GLOBALLY
-*-----------------------------------------------------------------
-*-----------------------------------------------------------------
-*PRUF basic provides core data structures and functionality to PRUF contracts.
-*Features include contract name resolution, and getters for records, users, and node information.
-*---------------------------------------------------------------*/
+ *  TO DO
+ *
+ * IMPORTANT!!! EXTERNAL OR PUBLIC FUNCTIONS WITHOUTSTRICT PERMISSIONING NEED
+ * TO BE CLOSELY EXAMINED IN THIS CONTRACT AS THEY WILL BE INHERITED NEARLY GLOBALLY
+ *-----------------------------------------------------------------
+ *-----------------------------------------------------------------
+ *PRUF basic provides core data structures and functionality to PRUF contracts.
+ *Features include contract name resolution, and getters for records, users, and node information.
+ *---------------------------------------------------------------*/
 
 // SPDX-License-Identifier: UNLICENSED
 pragma solidity ^0.8.6;
 
 import "./PRUF_INTERFACES.sol";
+import "./PRUF_TKN_INTERFACES.sol";
 import "./Imports/access/AccessControl.sol";
 import "./Imports/utils/Pausable.sol";
 import "./Imports/utils/ReentrancyGuard.sol";
@@ -91,10 +92,7 @@ abstract contract BASIC is
      * @param _idxHash - asset index hash
      */
     modifier isAuthorized(bytes32 _idxHash) virtual {
-        require(
-            _idxHash == 0,
-            "B:MOD-IAUTH: Modifier must be overridden"
-        );
+        require(_idxHash == 0, "B:MOD-IAUTH: Modifier must be overridden");
         _;
     }
 
@@ -121,13 +119,13 @@ abstract contract BASIC is
 
     //----------------------External Admin functions / isContractAdmin----------------------//
     /**
-     * @dev Resolve Contract Addresses from STOR 
+     * @dev Resolve Contract Addresses from STOR
      */
     function resolveContractAddresses()
         external
         virtual
         nonReentrant
-        isContractAdmin 
+        isContractAdmin
     {
         //^^^^^^^checks^^^^^^^^^
         NODE_TKN_Address = STOR.resolveContractAddress("NODE_TKN");
@@ -170,7 +168,7 @@ abstract contract BASIC is
         virtual
         nonReentrant
     {
-        require( 
+        require(
             hasRole(ASSET_TXFR_ROLE, _msgSender()),
             "B:TX:Must have ASSET_TXFR_ROLE"
         );
@@ -190,7 +188,7 @@ abstract contract BASIC is
     function transferNodeToken(address _to, uint256 _tokenID)
         external
         virtual
-        isContractAdmin 
+        isContractAdmin
         nonReentrant
     {
         //^^^^^^^checks^^^^^^^^^
@@ -199,13 +197,13 @@ abstract contract BASIC is
     }
 
     /**
-     * @dev Set address of STOR contract to interface with 
+     * @dev Set address of STOR contract to interface with
      * @param _storageAddress address of PRUF_STOR
      */
     function setStorageContract(address _storageAddress)
         external
         virtual
-        isContractAdmin 
+        isContractAdmin
     {
         require(_storageAddress != address(0), "B:SSC: Address = 0");
         //^^^^^^^checks^^^^^^^^^
@@ -217,7 +215,7 @@ abstract contract BASIC is
     //--------------------------------------External functions--------------------------------------------//
     /**
      * @dev Compliance for erc721 reciever
-     * See OZ documentation 
+     * See OZ documentation
      */
     function onERC721Received(
         address,
@@ -252,18 +250,13 @@ abstract contract BASIC is
      * @param _node - to check user type in
      * @return user authorization type of caller, from NODE_MGR user mapping
      */
-    function getCallingUserType(uint32 _node)
-        internal
-        virtual
-        returns (uint8)
-    {
+    function getCallingUserType(uint32 _node) internal virtual returns (uint8) {
         //^^^^^^^checks^^^^^^^^^
 
-        uint8 userTypeInNode =
-            NODE_MGR.getUserType(
-                keccak256(abi.encodePacked(_msgSender())),
-                _node
-            );
+        uint8 userTypeInNode = NODE_MGR.getUserType(
+            keccak256(abi.encodePacked(_msgSender())),
+            _node
+        );
 
         return userTypeInNode;
         //^^^^^^^interactions^^^^^^^^^
@@ -274,11 +267,7 @@ abstract contract BASIC is
      * @param _node - to retrireve info about
      * @return entire node struct (see interfaces for struct definitions)
      */
-    function getNodeinfo(uint32 _node)
-        internal
-        virtual
-        returns (Node memory)
-    {
+    function getNodeinfo(uint32 _node) internal virtual returns (Node memory) {
         //^^^^^^^checks^^^^^^^^^
 
         // Node memory node_info;
@@ -300,7 +289,7 @@ abstract contract BASIC is
     /**
      * @dev Get contract information from STOR and return a ContractDataHash Struct
      * @param _addr address of contract to check
-     * @param _node node to check 
+     * @param _node node to check
      * @return ContractDataHash struct, containing the authorization level and hashed name of a given contract X in node Y
      */
     function getContractInfo(address _addr, uint32 _node)
