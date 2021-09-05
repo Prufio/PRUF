@@ -30,6 +30,8 @@ import "./Imports/access/AccessControl.sol";
 import "./Imports/utils/Pausable.sol";
 import "./Imports/utils/ReentrancyGuard.sol";
 import "./Imports/token/ERC721/IERC721Receiver.sol";
+import "./Imports/token/ERC721/IERC721.sol";
+import "./Imports/token/ERC20/IERC20.sol";
 
 abstract contract BASIC is
     ReentrancyGuard,
@@ -109,6 +111,19 @@ abstract contract BASIC is
         _;
     }
 
+    /**
+     * @dev Verify user credentials
+     * Originating Address:
+     *      has CONTRACT_ADMIN_ROLE
+     */
+    modifier isContractAssetAdmin() {
+        require(
+            hasRole(ASSET_TXFR_ROLE, _msgSender()),
+            "B:MOD:-IADM Caller !ASSET_TXFR_ROLE"
+        );
+        _;
+    }
+
     modifier isPauser() {
         require(
             hasRole(PAUSER_ROLE, _msgSender()),
@@ -159,41 +174,31 @@ abstract contract BASIC is
     }
 
     /**
-     * @dev Transfer any specified assetToken from contract
-     * @param _to - address to send to
-     * @param _idxHash - asset index
+     * @dev send an ERC721 token from this contract
+     * @param _tokenContract Address of foreign token contract
+     * @param _to destination
+     * @param _tokenID Token ID
      */
-    function transferAssetToken(address _to, bytes32 _idxHash)
-        external
-        virtual
-        nonReentrant
-    {
-        require(
-            hasRole(ASSET_TXFR_ROLE, _msgSender()),
-            "B:TX:Must have ASSET_TXFR_ROLE"
-        );
-        //^^^^^^^checks^^^^^^^^^
-
-        uint256 tokenId = uint256(_idxHash);
-
-        A_TKN.safeTransferFrom(address(this), _to, tokenId);
-        //^^^^^^^interactions^^^^^^^^^
+    function ERC721Transfer(
+        address _tokenContract,
+        address _to,
+        uint256 _tokenID
+    ) external virtual isContractAssetAdmin nonReentrant {
+        IERC721(_tokenContract).safeTransferFrom(address(this), _to, _tokenID);
     }
 
     /**
-     * @dev Transfer any specified nodeToken from contract
-     * @param _to - address to send to
-     * @param _tokenID - node token ID
+     * @dev send an ERC20 token from this contract
+     * @param _tokenContract Address of foreign token contract
+     * @param _to destination
+     * @param _amount amount to transfer
      */
-    function transferNodeToken(address _to, uint256 _tokenID)
-        external
-        virtual
-        isContractAdmin
-        nonReentrant
-    {
-        //^^^^^^^checks^^^^^^^^^
-        NODE_TKN.safeTransferFrom(address(this), _to, _tokenID);
-        //^^^^^^^interactions^^^^^^^^^
+    function ERC20Transfer(
+        address _tokenContract,
+        address _to,
+        uint256 _amount
+    ) external virtual isContractAssetAdmin nonReentrant {
+        IERC20(_tokenContract).transferFrom(address(this), _to, _amount);
     }
 
     /**
