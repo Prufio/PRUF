@@ -21,12 +21,11 @@ pragma solidity ^0.8.6;
 struct Record {
     uint8 assetStatus; // Status - Transferrable, locked, in transfer, stolen, lost, etc.
     uint8 modCount; // Number of times asset has been forceModded.
-    //uint8 currency; //currency for price information (0=not for sale, 1=ETH, 2=PRUF, 3=DAI, 4=WBTC.... )
     uint16 numberOfTransfers; //number of transfers and forcemods
     uint32 node; // Type of asset
     uint32 countDown; // Variable that can only be decreased from countDownStart
     uint32 int32temp; // int32 for persisting transitional data
-    //uint120 price; //price set for items offered for sale
+    //128 bits left in this packing)
     bytes32 mutableStorage1; // Publically viewable asset description
     bytes32 nonMutableStorage1; // Publically viewable immutable notes
     bytes32 mutableStorage2; // Publically viewable asset description
@@ -55,6 +54,7 @@ struct Node {
     uint8 managementType; // type of management for asset creation, import, export //immutable
     uint8 storageProvider; // Storage Provider
     uint32 discount; // price sharing //internal admin                                      //immutable
+    uint8 marketCommission; //comission to charge for sales in marketplace for listing under the node's ID - as a divisor
     address referenceAddress; // Used with wrap / decorate
     uint8 switches; // bitwise Flags for node control                          //immutable
     bytes32 CAS1; //content adressable storage pointer 1
@@ -137,9 +137,9 @@ struct Stake {
 }
 
 struct ConsignmentTag {
-        uint256 tokenId;
-        address tokenContract;
-        address currency;
-        uint256 price;
-        uint256 node;
+    uint256 tokenId;
+    address tokenContract;
+    address currency;
+    uint256 price;
+    uint256 listingNode;
 }
