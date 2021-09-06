@@ -812,12 +812,6 @@ interface MARKET_TKN_Interface {
         string calldata _tokenURI
     ) external returns (uint256);
 
-    /**
-     * @dev Writes tag data to a tag
-     * @param _tokenId - Token ID to write to
-     */
-    function getTag(uint256 _tokenId) external returns (ConsignmentTag memory);
-
     /*
      * @dev Set new token URI String
      */
