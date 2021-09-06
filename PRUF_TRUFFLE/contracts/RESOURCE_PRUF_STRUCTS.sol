@@ -54,7 +54,7 @@ struct Node {
     uint8 managementType; // type of management for asset creation, import, export //immutable
     uint8 storageProvider; // Storage Provider
     uint32 discount; // price sharing //internal admin                                      //immutable
-    uint8 marketCommission; //comission to charge for sales in marketplace for listing under the node's ID - as a divisor
+    uint8 U8; //Spare uint8
     address referenceAddress; // Used with wrap / decorate
     uint8 switches; // bitwise Flags for node control                          //immutable
     bytes32 CAS1; //content adressable storage pointer 1
@@ -120,6 +120,14 @@ struct Invoice {
     uint256 NTHprice;
 }
 
+struct MarketFees {
+    //data for PRUF_MARKET fees and commissions
+    address listingFeePaymentAddress;
+    address saleCommissionPaymentAddress;
+    uint256 listingFee;
+    uint256 saleCommission;
+}
+
 struct ID {
     //ID struct for ID info
     uint256 trustLevel; //admin only
@@ -141,5 +149,5 @@ struct ConsignmentTag {
     address tokenContract;
     address currency;
     uint256 price;
-    uint256 listingNode;
+    uint32 node;
 }
