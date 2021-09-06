@@ -201,6 +201,30 @@ contract Market is BASIC {
     }
 
     /**
+     * @dev Updates pricing information for an active consignment
+     * @param _tokenId ID of consignment
+     * @param _currency currency to make transaction in
+     * @param _price price in _currency to require for transfer
+     */
+    function updateConsignment(
+        uint256 _tokenId,
+        address _currency,
+        uint256 _price
+    )
+        external
+        nonReentrant
+        whenNotPaused
+        isTokenHolder(_tokenId, MARKET_TKN_Address)
+    {
+        //^^^^^^^checks^^^^^^^
+
+        tag[_tokenId].currency = _currency;
+        tag[_tokenId].price = _price;
+
+        //^^^^^^^effects^^^^^^^^^
+    }
+
+    /**
      * @dev Unwraps a token, burns the MARKET_TKN, returns original to caller
      * @param _tokenId tokenID of consignment token being redeemed
      * burns consignment token from caller wallet
