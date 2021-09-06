@@ -470,22 +470,6 @@ contract NODE_MGR is BASIC {
         //^^^^^^^effects^^^^^^^^^
     }
 
-    /** //DPS:TESNT:NEW
-     * @dev Set comission to charge for sales in marketplace for listing under the node's ID
-     * @param _node - node to set service costs
-     * @param _commision - commission to charge, as a divisor
-     */
-    function setMarketComission(uint32 _node, uint8 _commision)
-        external
-        whenNotPaused
-        isNodeHolder(_node)
-    {
-        //^^^^^^^checks^^^^^^^^^
-
-        nodeData[_node].marketCommission = _commision;
-        //^^^^^^^effects^^^^^^^^^
-    }
-
     //-------------------------------------------Functions dealing with immutable data ---------------------------------------------
 
     /**
@@ -778,15 +762,26 @@ contract NODE_MGR is BASIC {
         //^^^^^^^interactions^^^^^^^^^
     }
 
-    /** //DPS:TESNT:NEW
-     * @dev Retrieve Node_discount @ _node
+    /** //DPS:TEST:NEW
+     * @dev Retrieve PRUF_MARKET Commisiions and feed for _node
      * @param _node - node associated with query
      *
-     * @return percentage of rewards distribution @ _node
+     * @return marketFees Struct for_node
      */
-    function getNodeComission(uint32 _node) external view returns (uint8) {
+    function getNodeMarketFees(uint32 _node)
+        external
+        view
+        returns (MarketFees memory)
+    {
         //^^^^^^^checks^^^^^^^^^
-        return (nodeData[_node].marketCommission);
+        MarketFees memory fees;
+
+        fees.listingFeePaymentAddress = cost[_node][1000].paymentAddress;
+        fees.saleCommissionPaymentAddress = cost[_node][1001].paymentAddress;
+        fees.listingFee = cost[_node][1000].serviceCost;
+        fees.saleCommission = cost[_node][1001].serviceCost;
+
+        return fees;
         //^^^^^^^interactions^^^^^^^^^
     }
 
