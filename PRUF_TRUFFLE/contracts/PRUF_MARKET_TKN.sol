@@ -61,9 +61,7 @@ contract MARKET_TKN is
     bytes32 public constant TRUSTED_AGENT_ROLE =
         keccak256("TRUSTED_AGENT_ROLE");
 
-    mapping(uint256 => ConsignmentTag) private tag; // pruf tokenID -> original TokenID, ContractAddress
-
-    constructor() ERC721("PRUF COnsignment Token", "PRCT") {
+    constructor() ERC721("PRUF Consignment Token", "PRCT") {
         _setupRole(DEFAULT_ADMIN_ROLE, _msgSender());
         _setupRole(CONTRACT_ADMIN_ROLE, _msgSender());
         _setupRole(PAUSER_ROLE, _msgSender());
@@ -84,18 +82,6 @@ contract MARKET_TKN is
         _;
     }
 
-    /**
-     * @dev Verify user credentials
-     * Originating Address:
-     *      has CONTRACT_ADMIN_ROLE
-     */
-    modifier isTagAdmin() {
-        require(
-            hasRole(TAG_ADMIN_ROLE, _msgSender()),
-            "AT:MOD-IA:Calling address does not belong to a contract admin"
-        );
-        _;
-    }
 
     /**
      * @dev Verify user credentials
@@ -135,14 +121,12 @@ contract MARKET_TKN is
     function mintConsignmentToken(
         address _recipientAddress,
         uint256 _tokenId,
-        string calldata _tokenURI,
-        ConsignmentTag calldata _tag
+        string calldata _tokenURI
     ) external isMinter nonReentrant returns (uint256) {
         //^^^^^^^checks^^^^^^^^^
 
         _safeMint(_recipientAddress, _tokenId);
         _setTokenURI(_tokenId, _tokenURI);
-        tag[_tokenId] = _tag;
         return _tokenId;
         //^^^^^^^interactions^^^^^^^^^
     }
@@ -267,38 +251,10 @@ contract MARKET_TKN is
         if (_exists(_tokenId)) {
             _burn(_tokenId);
         }
-        delete tag[_tokenId];
+        
         //^^^^^^^effects^^^^^^^^^
     }
 
-    /**
-     * @dev Writes tag data to a tag
-     * @param _tokenId - Token ID to write to
-     */
-    function writeTag(uint256 _tokenId, ConsignmentTag memory thisTag)
-        internal
-        nonReentrant
-        whenNotPaused
-        isTagAdmin
-    {
-        //^^^^^^^checks^^^^^^^^^
-        tag[_tokenId] = thisTag;
-        //^^^^^^^effects^^^^^^^^^
-    }
-
-    /**
-     * @dev Writes tag data to a tag
-     * @param _tokenId - Token ID to write to
-     */
-    function getTag(uint256 _tokenId)
-        external
-        view
-        returns (ConsignmentTag memory)
-    {
-        //^^^^^^^checks^^^^^^^^^
-        return tag[_tokenId];
-        //^^^^^^^effects^^^^^^^^^
-    }
 
     /**
      * @dev Pauses all token transfers.

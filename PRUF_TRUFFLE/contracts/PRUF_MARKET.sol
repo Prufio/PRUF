@@ -35,7 +35,7 @@ contract Market is BASIC {
     // uint256 defaultCommission; //as divisor: 1 = 100% ---- 10 = 10% ---- 100 = 1% ---- 1000 = 0.1%
     MARKET_TKN_Interface internal MARKET_TKN;
 
-    //mapping(uint256 => ConsignmentTag) private tag; // pruf tokenID -> original TokenID, ContractAddress
+    mapping(uint256 => ConsignmentTag) private tag; // pruf tokenID -> original TokenID, ContractAddress
 
     /**
      * @dev Verify user credentials
@@ -85,15 +85,6 @@ contract Market is BASIC {
         defaultNode = _node;
     }
 
-    // /**
-    //  * @dev sets the default commission as a divisor of the principal price (1 = 100%, 1000 = 0.1%)
-    //  * @param _commission default PRüF node
-    //  */
-
-    // function setDefaultCommission(uint32 _commission) external isContractAdmin {
-    //     defaultCommission = _commission;
-    // }
-
     /**
      * @dev sets the default cost in PRüF of listing a non-PRüF NFT
      * @param _price cost in PRüF(18) of listing a non-PRüF NFT
@@ -108,12 +99,7 @@ contract Market is BASIC {
      * @param _tokenId tokenID of token to wrap
      * @param _currency currency to make transaction in
      * @param _price price in _currency to require for transfer
- 
-     address _recipientAddress,
-        uint256 tokenId,
-        string calldata _tokenURI,
-        ConsignmentTag calldata _tag
-
+     * @param _node node doing the consignment
      */
     function consignPrufAsset(
         uint256 _tokenId,
@@ -149,9 +135,13 @@ contract Market is BASIC {
             rec.assetStatus == 51,
             "M:C:PRUF asset is not status 51 (transferrable)"
         );
+        tag[newTokenId] = thisTag;
+
         A_TKN.trustedAgentTransferFrom(_msgSender(), address(this), _tokenId); //move token to this contract using TRUSTED_AGENT_ROLE
 
-        MARKET_TKN.mintConsignmentToken(_msgSender(), newTokenId, uri, thisTag);
+        MARKET_TKN.mintConsignmentToken(_msgSender(), newTokenId, uri);
+
+        //no payment required to list pruf assets in pruf!
     }
 
     /**
@@ -160,6 +150,8 @@ contract Market is BASIC {
      * @param _ERC721TokenContract contract address for token to wrap
      * @param _currency currency to make transaction in
      * @param _price price in _currency to require for transfer
+     * @param _node node doing the consignment
+     * @param uri string for URI
      * Prerequisite: contract authorized for token txfr
      * Takes original 721
      */
@@ -168,6 +160,7 @@ contract Market is BASIC {
         address _ERC721TokenContract,
         address _currency,
         uint256 _price,
+        uint256 _node,
         string calldata uri
     )
         external
@@ -198,9 +191,9 @@ contract Market is BASIC {
             _tokenId
         ); // move token to this contract using allowance
         thisTag.listingNode = defaultNode;
-        MARKET_TKN.mintConsignmentToken(_msgSender(), newTokenId, uri, thisTag);
+        MARKET_TKN.mintConsignmentToken(_msgSender(), newTokenId, uri);
 
-        //no payment required to list pruf assets in pruf!
+        //TODO: charge the listing price in pruf, payable to the node holder
 
         //^^^^^^^interactions^^^^^^^^^
     }
@@ -223,6 +216,7 @@ contract Market is BASIC {
         uint256 tagTokenId = thisTag.tokenId;
         //^^^^^^^checks^^^^^^^^^
 
+        delete tag[_tokenId];
         MARKET_TKN.trustedAgentBurn(_tokenId);
 
         foreign721Transfer(
@@ -231,8 +225,6 @@ contract Market is BASIC {
             _msgSender(),
             tagTokenId
         );
-
-        //-------------------------To do: Add payment!
 
         //^^^^^^^interactions^^^^^^^^^
     }
@@ -275,8 +267,10 @@ contract Market is BASIC {
                 thisTag.price //amount of tokens to send
             );
 
-            //-------------------------To do: Add payment!
+            //-------------------------TODO: Charge the thisTag.marketCommission (price/comission) and send it 
+            //                               to the node holder, subtracting this amount from the amount the seller recieves.
 
+            delete tag[_tokenId];
             MARKET_TKN.trustedAgentBurn(_tokenId); //burn the consignment tag, consignment is over as sale has been completed
         }
 
@@ -289,6 +283,8 @@ contract Market is BASIC {
     }
 
     //-------------------------------------------------------------------------
+
+
     /**
      * @dev transfer a foreign token
      * @param _tokenContract Address of foreign token contract

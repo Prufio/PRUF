@@ -809,8 +809,7 @@ interface MARKET_TKN_Interface {
     function mintConsignmentToken(
         address _recipientAddress,
         uint256 tokenId,
-        string calldata _tokenURI,
-        ConsignmentTag calldata _tag
+        string calldata _tokenURI
     ) external returns (uint256);
 
     /**
