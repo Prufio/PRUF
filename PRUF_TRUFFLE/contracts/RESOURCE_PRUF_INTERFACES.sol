@@ -265,10 +265,11 @@ interface NODE_MGR_Interface {
      * @param _node - node to get comission
      * @return uint8 the divisor for comission charges
      */
-    function getNodeComission(uint32 _node) external view returns (uint8)
+    function getNodeComission(uint32 _node) external view returns (uint8);
 }
 
 //------------------------------------------------------------------------------------------------
+
 /*
  * @dev Interface for STOR
  * INHERITANCE:
