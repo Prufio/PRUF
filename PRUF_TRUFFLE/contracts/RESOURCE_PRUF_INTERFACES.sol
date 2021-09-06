@@ -203,19 +203,6 @@ interface NODE_MGR_Interface {
         view
         returns (uint8);
 
-    // /*
-    //  * @dev Retrieve node_data @ _node
-    //  */
-    // functiongetNode_data(uint32 _node)
-    //     external
-    //     returns (
-    //         uint32,
-    //         uint8,
-    //         uint8,
-    //         uint32,
-    //         address
-    //     );
-
     /* CAN'T RETURN A STRUCT WITH A STRING WITHOUT WIERDNESS-0.8.1
      * @dev Retrieve node_data @ _node
      */
@@ -254,6 +241,17 @@ interface NODE_MGR_Interface {
         external
         view
         returns (Invoice memory);
+
+    /**
+     * @dev Retrieve PRUF_MARKET Commisiions and feed for _node
+     * @param _node - node associated with query
+     *
+     * @return marketFees Struct for_node
+     */
+    function getNodeMarketFees(uint32 _node)
+        external
+        view
+        returns (MarketFees memory);
 
     /*
      * @dev Retrieve Node_discount @ _node, in percent NTH share, * 100 (9000 = 90%)
