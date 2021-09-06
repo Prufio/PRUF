@@ -28,7 +28,6 @@ import "./PRUF_BASIC.sol";
 //import "./Imports/token/ERC20/IERC20.sol";
 
 contract Market is BASIC {
-    uint32 defaultNode;
     address internal MARKET_TKN_Address;
     address public charityAddress;
     uint256 listingPrice; //price in pruf(18) of listing a non-pruf asset
@@ -36,6 +35,7 @@ contract Market is BASIC {
     MARKET_TKN_Interface internal MARKET_TKN;
 
     mapping(uint256 => ConsignmentTag) private tag; // pruf tokenID -> original TokenID, ContractAddress
+    mapping(uint256 => MarketFees) private tagFees; // pruf tokenID -> original TokenID, ContractAddress
 
     /**
      * @dev Verify user credentials
@@ -74,15 +74,6 @@ contract Market is BASIC {
         isContractAdmin
     {
         charityAddress = _charityAddress;
-    }
-
-    /**
-     * @dev sets the default PRüF node
-     * @param _node default PRüF node
-     */
-
-    function setDefaultNode(uint32 _node) external isContractAdmin {
-        defaultNode = _node;
     }
 
     /**
@@ -133,9 +124,9 @@ contract Market is BASIC {
         thisTag.tokenContract = A_TKN_Address;
         thisTag.currency = _currency;
         thisTag.price = _price;
-        thisTag.node = _node;
 
         tag[newTokenId] = thisTag;
+        tagFees[newTokenId] = NODE_MGR.getNodeMarketFees(_node);
         //^^^^^^^effects^^^^^^^^^
 
         A_TKN.trustedAgentTransferFrom(_msgSender(), address(this), _tokenId); //move token to this contract using TRUSTED_AGENT_ROLE
@@ -155,7 +146,7 @@ contract Market is BASIC {
      * Prerequisite: contract authorized for token txfr
      * Takes original 721
      */
-    function consignItem(
+    function consignToken(
         uint256 _tokenId,
         address _ERC721TokenContract,
         address _currency,
@@ -181,29 +172,21 @@ contract Market is BASIC {
 
         MarketFees memory fees = NODE_MGR.getNodeMarketFees(_node);
 
-        // if a payment address for listing fees does not exist, get the default listing fees instead
-        if (fees.listingFeePaymentAddress == address(0)) {
-            thisTag.node = defaultNode;
-            fees = NODE_MGR.getNodeMarketFees(thisTag.node);
-        }
-
         thisTag.tokenId = _tokenId;
         thisTag.tokenContract = _ERC721TokenContract;
         thisTag.currency = _currency;
         thisTag.price = _price;
+
+        tag[newTokenId] = thisTag;
+        tagFees[newTokenId] = fees;
         //^^^^^^^effects^^^^^^^^^
 
-        foreign721Transfer(
+        foreign721Transfer( // move token to this contract using allowance
             _ERC721TokenContract,
             _msgSender(),
             address(this),
             _tokenId
-        ); // move token to this contract using allowance
-
-        //if the listing fee address is not set, set it to the charity address
-        if (fees.listingFeePaymentAddress == address(0)) {
-            fees.listingFeePaymentAddress = charityAddress;
-        }
+        );
 
         if (fees.listingFee != 0) {
             UTIL_TKN.trustedAgentTransfer( //Pay listing fee in PRüF using TAT
@@ -232,8 +215,9 @@ contract Market is BASIC {
         //caller holds the consignment ticket ^^
         //^^^^^^^checks^^^^^^^^^
 
-        ConsignmentTag memory thisTag = MARKET_TKN.getTag(_tokenId);
+        ConsignmentTag memory thisTag = tag[_tokenId];
         delete tag[_tokenId];
+        delete tagFees[_tokenId];
         MARKET_TKN.trustedAgentBurn(_tokenId);
         //^^^^^^^effects^^^^^^^^^
 
@@ -256,21 +240,21 @@ contract Market is BASIC {
         //^^^^^^^checks^^^^^^^^^
 
         //collect relevant information for this consignement
-        ConsignmentTag memory thisTag = MARKET_TKN.getTag(_tokenId);
-        MarketFees memory fees = NODE_MGR.getNodeMarketFees(thisTag.node); //get fees defined by the node that put the item on consignment
+        ConsignmentTag memory thisTag = tag[_tokenId];
+        MarketFees memory theseFees = tagFees[_tokenId];
+        if (theseFees.listingFeePaymentAddress == address(0)) {
+            theseFees.listingFeePaymentAddress = charityAddress;
+        }
+        if (theseFees.saleCommissionPaymentAddress == address(0)) {
+            theseFees.saleCommissionPaymentAddress = charityAddress;
+        }
 
         //calculate payable amount less commission
         uint256 commission;
-        if (fees.saleCommission > 0) {
-            commission = thisTag.price / fees.saleCommission; //amount to go to listing node
+        if (theseFees.saleCommission > 0) {
+            commission = thisTag.price / theseFees.saleCommission; //amount to go to listing node
         }
         uint256 payableAmount = thisTag.price - commission; //amount to go to ticket holder
-
-        //Set the commission address from the fees struct. If no address set, set to charity address
-        address commissionAddress = fees.saleCommissionPaymentAddress;
-        if (commissionAddress == address(0)) {
-            commissionAddress = charityAddress; // if commissionAddress == 0 set commissionAddress to the charity address
-        }
 
         //Set the payment address from the tokenholder. if ticket !exist or no address set, set to the charity address.
         address paymentAddress;
@@ -278,9 +262,6 @@ contract Market is BASIC {
             paymentAddress = MARKET_TKN.ownerOf(thisTag.tokenId); //set payment address to the holder of the consignment ticket
         } else {
             paymentAddress = charityAddress; // otherwise set payment address to the charity address
-        }
-        if (paymentAddress == address(0)) {
-            paymentAddress = charityAddress; // if payment address == 0 set payment address to the charity address
         }
 
         delete tag[_tokenId]; //delete the consignmentTag struct from the tag mapping
@@ -301,7 +282,7 @@ contract Market is BASIC {
             if (commission > 0) {
                 UTIL_TKN.trustedAgentTransfer( //Pay commission using TAT
                     _msgSender(),
-                    commissionAddress,
+                    theseFees.saleCommissionPaymentAddress,
                     commission
                 );
             }
@@ -319,7 +300,7 @@ contract Market is BASIC {
                 foreign20Transfer( //Pay commission using ERC20 allowance
                     thisTag.currency, //send this erc20
                     _msgSender(), //from the purchase caller
-                    commissionAddress, //to the payment address
+                    theseFees.saleCommissionPaymentAddress, //to the payment address
                     commission //amount of tokens to send
                 );
             }
