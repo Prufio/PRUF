@@ -105,7 +105,7 @@ contract Market is BASIC {
         uint256 _tokenId,
         address _currency,
         uint256 _price,
-        uint256 _node
+        uint32 _node
     )
         external
         nonReentrant
@@ -113,6 +113,12 @@ contract Market is BASIC {
         isTokenHolder(_tokenId, A_TKN_Address)
     {
         // without this, the dark forest gets it!
+        bytes32 idxHash = bytes32(_tokenId);
+        Record memory rec = getRecord(idxHash);
+        require(
+            rec.assetStatus == 51,
+            "M:C:PRUF asset is not status 51 (transferrable)"
+        );
         //^^^^^^^checks^^^^^^^^^
 
         ConsignmentTag memory thisTag;
@@ -120,28 +126,22 @@ contract Market is BASIC {
             abi.encodePacked(_tokenId, A_TKN_Address)
         );
         uint256 newTokenId = uint256(consignmentTag);
-        bytes32 idxHash = bytes32(_tokenId);
-        Record memory rec = getRecord(idxHash);
+
         string memory uri = A_TKN.tokenURI(_tokenId);
 
         thisTag.tokenId = _tokenId;
         thisTag.tokenContract = A_TKN_Address;
         thisTag.currency = _currency;
         thisTag.price = _price;
-        thisTag.listingNode = _node;
-        //^^^^^^^effects^^^^^^^^^
+        thisTag.node = _node;
 
-        require(
-            rec.assetStatus == 51,
-            "M:C:PRUF asset is not status 51 (transferrable)"
-        );
         tag[newTokenId] = thisTag;
+        //^^^^^^^effects^^^^^^^^^
 
         A_TKN.trustedAgentTransferFrom(_msgSender(), address(this), _tokenId); //move token to this contract using TRUSTED_AGENT_ROLE
 
         MARKET_TKN.mintConsignmentToken(_msgSender(), newTokenId, uri);
-
-        //no payment required to list pruf assets in pruf!
+        //^^^^^^^interactions^^^^^^^^^
     }
 
     /**
@@ -160,8 +160,8 @@ contract Market is BASIC {
         address _ERC721TokenContract,
         address _currency,
         uint256 _price,
-        uint256 _node,
-        string calldata uri
+        uint32 _node,
+        string memory uri
     )
         external
         nonReentrant
@@ -172,16 +172,25 @@ contract Market is BASIC {
         //^^^^^^^checks^^^^^^^^^
 
         ConsignmentTag memory thisTag;
+
         bytes32 consignmentTag = keccak256(
             abi.encodePacked(_tokenId, _ERC721TokenContract)
         );
+
         uint256 newTokenId = uint256(consignmentTag);
+
+        MarketFees memory fees = NODE_MGR.getNodeMarketFees(_node);
+
+        // if a payment address for listing fees does not exist, get the default listing fees instead
+        if (fees.listingFeePaymentAddress == address(0)) {
+            thisTag.node = defaultNode;
+            fees = NODE_MGR.getNodeMarketFees(thisTag.node);
+        }
 
         thisTag.tokenId = _tokenId;
         thisTag.tokenContract = _ERC721TokenContract;
         thisTag.currency = _currency;
         thisTag.price = _price;
-        thisTag.listingNode = defaultNode;
         //^^^^^^^effects^^^^^^^^^
 
         foreign721Transfer(
@@ -190,11 +199,21 @@ contract Market is BASIC {
             address(this),
             _tokenId
         ); // move token to this contract using allowance
-        thisTag.listingNode = defaultNode;
+
+        //if the listing fee address is not set, set it to the charity address
+        if (fees.listingFeePaymentAddress == address(0)) {
+            fees.listingFeePaymentAddress = charityAddress;
+        }
+
+        if (fees.listingFee != 0) {
+            UTIL_TKN.trustedAgentTransfer( //Pay listing fee in PRüF using TAT
+                _msgSender(),
+                fees.listingFeePaymentAddress,
+                fees.listingFee
+            );
+        }
+
         MARKET_TKN.mintConsignmentToken(_msgSender(), newTokenId, uri);
-
-        //TODO: charge the listing price in pruf, payable to the node holder
-
         //^^^^^^^interactions^^^^^^^^^
     }
 
@@ -211,21 +230,19 @@ contract Market is BASIC {
         isTokenHolder(_tokenId, MARKET_TKN_Address)
     {
         //caller holds the consignment ticket ^^
-        ConsignmentTag memory thisTag = MARKET_TKN.getTag(_tokenId);
-        address tag721TokenContract = thisTag.tokenContract;
-        uint256 tagTokenId = thisTag.tokenId;
         //^^^^^^^checks^^^^^^^^^
 
+        ConsignmentTag memory thisTag = MARKET_TKN.getTag(_tokenId);
         delete tag[_tokenId];
         MARKET_TKN.trustedAgentBurn(_tokenId);
+        //^^^^^^^effects^^^^^^^^^
 
         foreign721Transfer(
-            tag721TokenContract,
+            thisTag.tokenContract,
             address(this),
             _msgSender(),
-            tagTokenId
+            thisTag.tokenId
         );
-
         //^^^^^^^interactions^^^^^^^^^
     }
 
@@ -236,54 +253,90 @@ contract Market is BASIC {
     function purchaseItem(
         uint256 _tokenId //consignment token ID
     ) external nonReentrant whenNotPaused {
-        address paymentAddress;
-        ConsignmentTag memory thisTag = MARKET_TKN.getTag(_tokenId);
+        //^^^^^^^checks^^^^^^^^^
 
-        if (MARKET_TKN.tokenExists(_tokenId) != 0) {
-            //if ticket !exist, sale will go through and proceeds will go to the charity address.
-            paymentAddress = MARKET_TKN.ownerOf(thisTag.tokenId); //set payment address to the holder of the consignment ticket
-        } else {
-            //otherwise
-            paymentAddress = charityAddress; //set payment address to the charity address
+        //collect relevant information for this consignement
+        ConsignmentTag memory thisTag = MARKET_TKN.getTag(_tokenId);
+        MarketFees memory fees = NODE_MGR.getNodeMarketFees(thisTag.node); //get fees defined by the node that put the item on consignment
+
+        //calculate payable amount less commission
+        uint256 commission;
+        if (fees.saleCommission > 0) {
+            commission = thisTag.price / fees.saleCommission; //amount to go to listing node
+        }
+        uint256 payableAmount = thisTag.price - commission; //amount to go to ticket holder
+
+        //Set the commission address from the fees struct. If no address set, set to charity address
+        address commissionAddress = fees.saleCommissionPaymentAddress;
+        if (commissionAddress == address(0)) {
+            commissionAddress = charityAddress; // if commissionAddress == 0 set commissionAddress to the charity address
         }
 
+        //Set the payment address from the tokenholder. if ticket !exist or no address set, set to the charity address.
+        address paymentAddress;
+        if (MARKET_TKN.tokenExists(_tokenId) != 0) {
+            paymentAddress = MARKET_TKN.ownerOf(thisTag.tokenId); //set payment address to the holder of the consignment ticket
+        } else {
+            paymentAddress = charityAddress; // otherwise set payment address to the charity address
+        }
+        if (paymentAddress == address(0)) {
+            paymentAddress = charityAddress; // if payment address == 0 set payment address to the charity address
+        }
+
+        delete tag[_tokenId]; //delete the consignmentTag struct from the tag mapping
+        //^^^^^^^effects^^^^^^^^^
+
+        //if payment currency is PRUF && wallet is permitted for TAT, Pay in PRüF using TAT
         if (
-            //if payment currency is PRUF and wallet is permitted for TAT
             (thisTag.currency == UTIL_TKN_Address) &&
             (UTIL_TKN.isColdWallet(_msgSender()) == 0)
         ) {
-            //Pay in PRüF using TAT
-            UTIL_TKN.trustedAgentTransfer(
-                _msgSender(),
-                paymentAddress,
-                thisTag.price
-            );
+            if (payableAmount > 0) {
+                UTIL_TKN.trustedAgentTransfer( //Pay payableAmount using TAT
+                    _msgSender(),
+                    paymentAddress,
+                    payableAmount
+                );
+            }
+            if (commission > 0) {
+                UTIL_TKN.trustedAgentTransfer( //Pay commission using TAT
+                    _msgSender(),
+                    commissionAddress,
+                    commission
+                );
+            }
+            // otherwise Pay using ERC20 allowance
         } else {
-            //otherwise
-            foreign20Transfer( //Pay using allowance
-                thisTag.currency, //send this erc20
-                _msgSender(), //from the purchase caller
-                paymentAddress, //to the payment address
-                thisTag.price //amount of tokens to send
-            );
-
-            //-------------------------TODO: Charge the thisTag.marketCommission (price/comission) and send it 
-            //                               to the node holder, subtracting this amount from the amount the seller recieves.
-
-            delete tag[_tokenId];
-            MARKET_TKN.trustedAgentBurn(_tokenId); //burn the consignment tag, consignment is over as sale has been completed
+            if (payableAmount > 0) {
+                foreign20Transfer( //Pay payableAmount using ERC20 allowance
+                    thisTag.currency, //send this erc20
+                    _msgSender(), //from the purchase caller
+                    paymentAddress, //to the payment address
+                    payableAmount //amount of tokens to send
+                );
+            }
+            if (commission > 0) {
+                foreign20Transfer( //Pay commission using ERC20 allowance
+                    thisTag.currency, //send this erc20
+                    _msgSender(), //from the purchase caller
+                    commissionAddress, //to the payment address
+                    commission //amount of tokens to send
+                );
+            }
         }
 
-        foreign721Transfer( //Deliver token to buyer
+        MARKET_TKN.trustedAgentBurn(_tokenId); //burn the consignment tag, consignment is over as sale has been completed
+
+        foreign721Transfer( //Deliver token to buyer , PRUF or Foreign
             thisTag.tokenContract, //using this token contract
             address(this), //from this address
             _msgSender(), //to the purchase caller
             thisTag.tokenId //send this (native) tokenId
         );
+        //^^^^^^^interactions^^^^^^^^^
     }
 
     //-------------------------------------------------------------------------
-
 
     /**
      * @dev transfer a foreign token
