@@ -55,7 +55,7 @@ contract ID_MGR is Pausable, AccessControl {
     bytes32 public constant PAUSER_ROLE = keccak256("PAUSER_ROLE");
     uint256 currentIdNumber;
 
-    mapping(address => ID) private id; // storage for extended ID data
+    mapping(address => PRUFID) private id; // storage for extended ID data
     mapping(bytes32 => address) private addressOfIdHash; // storage for name resolution to token ID
 
     constructor() {
@@ -156,18 +156,18 @@ contract ID_MGR is Pausable, AccessControl {
     /**
      * @dev get ID data given an address to look up
      * @param _addr - address to check
-     * returns ID struct (see interfaces for struct definitions)
+     * returns PRUFID struct (see interfaces for struct definitions)
      */
-    function IdDataByAddress(address _addr) external view returns (ID memory) {
+    function IdDataByAddress(address _addr) external view returns (PRUFID memory) {
         return id[_addr];
     }
 
     /**
      * @dev get ID data given an IdHash to look up
      * @param _IdHash - IdHash to check
-     * returns ID struct (see interfaces for struct definitions)
+     * returns IPRUFIDD struct (see interfaces for struct definitions)
      */
-    function IdDataByIdHash(bytes32 _IdHash) external view returns (ID memory) {
+    function IdDataByIdHash(bytes32 _IdHash) external view returns (PRUFID memory) {
         return id[addressOfIdHash[_IdHash]];
     }
 
