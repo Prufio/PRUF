@@ -131,8 +131,7 @@ struct MarketFees {
 struct ID {
     //ID struct for ID info
     uint256 trustLevel; //admin only
-    bytes32 URI; //caller address match
-    string userName; //admin only///caller address match can set
+    bytes32 IdHash;
 }
 
 struct Stake {
