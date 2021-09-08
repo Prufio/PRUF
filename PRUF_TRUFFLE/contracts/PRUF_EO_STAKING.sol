@@ -68,9 +68,11 @@ contract EO_STAKING is ReentrancyGuard, AccessControl, Pausable {
     REWARDS_VAULT_Interface internal REWARDS_VAULT;
 
     uint256 currentStake;
-    uint256 constant seconds_in_a_day = 86400;
+    uint256 constant seconds_in_a_day = 86400; //never set to less than 24 for tesing
     uint256 endOfStaking = block.timestamp + (seconds_in_a_day * 36500); //100 years in the future
 
+    uint256 minUpgradeInterval = seconds_in_a_day / 24; //1 hour, based on seconds_in_a_day
+ 
     mapping(uint256 => Stake) private stake; // stake data
     mapping(uint256 => StakingTier) private stakeTier; //stake tier parameters
 
@@ -121,6 +123,19 @@ contract EO_STAKING is ReentrancyGuard, AccessControl, Pausable {
     }
 
     //--------------------------------------External functions--------------------------------------------//
+
+    /**
+     * @dev Setter for setting fractions of a day for minimum interval
+     * @param _minUpgradeInterval this value will be used to divide seconds_in_a_day to arrive at minimum reward periods.
+     *                          for example, a value of 24 would mean (seconds_in_a_day / 24), or 1 hour.
+     */
+    function setMinimumPeriod(uint256 _minUpgradeInterval) external isContractAdmin {
+        require(
+            _minUpgradeInterval <= (seconds_in_a_day / 24),
+            "ES:SMP:Cannot set minimum period to less than 1 hour"
+        );
+        minUpgradeInterval = _minUpgradeInterval;
+    }
 
     /**
      * @dev Kill switch for staking reward earning
@@ -228,8 +243,8 @@ contract EO_STAKING is ReentrancyGuard, AccessControl, Pausable {
             "PES:IMS: New stakes cannot be created."
         );
         require(
-            (block.timestamp - thisStake.startTime) > seconds_in_a_day, // 1 day in seconds
-            "PES:IMS: must wait 24h from creation/last claim"
+            (block.timestamp - thisStake.startTime) > minUpgradeInterval, //DPS:TEST:NEW
+            "PES:IMS: must wait more time from creation/last claim"
         );
         require(
             (_amount + thisStake.stakedAmount) <= thisStake.maximum,
