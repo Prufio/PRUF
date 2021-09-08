@@ -1,6 +1,6 @@
 {
 	"compiler": {
-		"version": "0.8.7+commit.e28d00a7"
+		"version": "0.8.6+commit.11564f7e"
 	},
 	"language": "Solidity",
 	"output": {
@@ -474,7 +474,7 @@
 		"compilationTarget": {
 			"Documents/DEV/PRUF/PRUF_TRUFFLE/contracts/PRUF_STAKE_VAULT.sol": "STAKE_VAULT"
 		},
-		"evmVersion": "london",
+		"evmVersion": "berlin",
 		"libraries": {},
 		"metadata": {
 			"bytecodeHash": "ipfs"
