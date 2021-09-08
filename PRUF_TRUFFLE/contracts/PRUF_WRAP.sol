@@ -118,7 +118,7 @@ contract WRAP is CORE {
             );
         } else if (node_info.managementType == 4) {
             require( //DPS:TEST NEW
-                ID_TKN.trustedLevelByAddress(_msgSender()) > 10,
+                ID_MGR.trustLevel(_msgSender()) > 10,
                 "ANC:IA: Caller !trusted ID holder"
             );
         }
@@ -252,7 +252,7 @@ contract WRAP is CORE {
             );
         } else if (node_info.managementType == 4) {
             require(
-                ID_TKN.trustedLevelByAddress(_msgSender()) > 10,
+                ID_MGR.trustLevel(_msgSender()) > 10,
                 "W:CR:Caller does not hold sufficiently trusted ID"
             );
         }

@@ -338,7 +338,7 @@ contract NODE_MGR is BASIC {
             "NM:PACN: Only 4294000000 node tokens allowed"
         );
         require(
-            (ID_TKN.balanceOf(_msgSender()) == 1),
+            (ID_MGR.trustLevel(_msgSender()) > 0),
             "NM:PACN: Caller !valid PRuF_ID holder"
         );
         //^^^^^^^checks^^^^^^^^^

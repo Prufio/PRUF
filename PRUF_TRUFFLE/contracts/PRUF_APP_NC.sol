@@ -57,7 +57,7 @@ contract APP_NC is CORE {
         bytes32 _mutableStorage2
     ) external nonReentrant whenNotPaused {
         require(
-            (ID_TKN.balanceOf(_msgSender()) == 1), //_msgSender() is ID token holder
+            (ID_MGR.trustLevel(_msgSender()) > 0), //_msgSender() is ID token holder
             "ANC:NRWD: Caller !PRuF_ID holder"
         );
         //^^^^^^^Checks^^^^^^^^^
@@ -91,7 +91,7 @@ contract APP_NC is CORE {
         bytes32 _nonMutableStorage2
     ) external nonReentrant whenNotPaused {
         require(
-            (ID_TKN.balanceOf(_msgSender()) == 1), //_msgSender() is ID token holder
+            (ID_MGR.trustLevel(_msgSender()) > 0), //_msgSender() is ID token holder
             "ANC:NRWD: Caller !PRuF_ID holder"
         );
         //^^^^^^^Checks^^^^^^^^^
@@ -121,7 +121,7 @@ contract APP_NC is CORE {
         uint32 _countDownStart
     ) external nonReentrant whenNotPaused {
         require(
-            (ID_TKN.balanceOf(_msgSender()) == 1), //_msgSender() is ID token holder
+            (ID_MGR.trustLevel(_msgSender()) > 0), //_msgSender() is ID token holder
             "ANC:NR: Caller !PRuF_ID holder"
         );
         //^^^^^^^Checks^^^^^^^^^
@@ -177,7 +177,7 @@ contract APP_NC is CORE {
             );
         } else if (node_info.managementType == 4) {
             require(
-                ID_TKN.trustedLevelByAddress(_msgSender()) > 10,
+                ID_MGR.trustLevel(_msgSender()) > 10,
                 "ANC:IA: Caller !trusted ID holder"
             );
         }

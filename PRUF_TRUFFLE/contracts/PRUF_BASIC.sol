@@ -59,8 +59,8 @@ abstract contract BASIC is
     address internal NODE_TKN_Address;
     NODE_TKN_Interface internal NODE_TKN;
 
-    address internal ID_TKN_Address;
-    ID_TKN_Interface internal ID_TKN;
+    address internal ID_MGR_Address;
+    ID_MGR_Interface internal ID_MGR;
 
     address internal ECR_MGR_Address;
     ECR_MGR_Interface internal ECR_MGR;
@@ -155,8 +155,8 @@ abstract contract BASIC is
         A_TKN_Address = STOR.resolveContractAddress("A_TKN");
         A_TKN = A_TKN_Interface(A_TKN_Address);
 
-        ID_TKN_Address = STOR.resolveContractAddress("ID_TKN");
-        ID_TKN = ID_TKN_Interface(ID_TKN_Address);
+        ID_MGR_Address = STOR.resolveContractAddress("ID_MGR");
+        ID_MGR = ID_MGR_Interface(ID_MGR_Address);
 
         ECR_MGR_Address = STOR.resolveContractAddress("ECR_MGR");
         ECR_MGR = ECR_MGR_Interface(ECR_MGR_Address);
