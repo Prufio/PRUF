@@ -914,157 +914,157 @@ interface MARKET_TKN_Interface {
 }
 
 //------------------------------------------------------------------------------------------------
-/*
- * @dev Interface for ID_TKN
- * INHERITANCE:
-    import "./Imports/token/ERC721/ERC721.sol";
-    import "./Imports/access/Ownable.sol";
-    import "./Imports/utils/ReentrancyGuard.sol";
- */
-interface ID_TKN_Interface {
-    /*
-     * @dev Mint new PRUF_ID token
-     */
-    function mintIDtoken(
-        address _recipientAddress,
-        uint256 _tokenId,
-        string calldata _URI
-    ) external returns (uint256);
+// /*
+//  * @dev Interface for ID_TKN
+//  * INHERITANCE:
+//     import "./Imports/token/ERC721/ERC721.sol";
+//     import "./Imports/access/Ownable.sol";
+//     import "./Imports/utils/ReentrancyGuard.sol";
+//  */
+// interface ID_TKN_Interface {
+//     /*
+//      * @dev Mint new PRUF_ID token
+//      */
+//     function mintIDtoken(
+//         address _recipientAddress,
+//         uint256 _tokenId,
+//         string calldata _URI
+//     ) external returns (uint256);
 
-    /*
-     * @dev remint ID Token
-     * must set a new and unuiqe rgtHash
-     * burns old token
-     * Sends new token to original Caller
-     */
-    function reMintIDtoken(address _recipientAddress, uint256 tokenId)
-        external
-        returns (uint256);
+//     /*
+//      * @dev remint ID Token
+//      * must set a new and unuiqe rgtHash
+//      * burns old token
+//      * Sends new token to original Caller
+//      */
+//     function reMintIDtoken(address _recipientAddress, uint256 tokenId)
+//         external
+//         returns (uint256);
 
-    /*
-     * @dev See if token exists
-     */
-    function tokenExists(uint256 tokenId) external view returns (uint256);
+//     /*
+//      * @dev See if token exists
+//      */
+//     function tokenExists(uint256 tokenId) external view returns (uint256);
 
-    /**
-     * @dev @dev Blocks the transfer of a given token ID to another address
-     * Usage of this method is discouraged, use {safeTransferFrom} whenever possible.
-     * Requires the _msgSender() to be the owner, approved, or operator.
-     */
-    function transferFrom(
-        address from,
-        address to,
-        uint256 tokenId
-    ) external;
+//     /**
+//      * @dev @dev Blocks the transfer of a given token ID to another address
+//      * Usage of this method is discouraged, use {safeTransferFrom} whenever possible.
+//      * Requires the _msgSender() to be the owner, approved, or operator.
+//      */
+//     function transferFrom(
+//         address from,
+//         address to,
+//         uint256 tokenId
+//     ) external;
 
-    /**
-     * @dev Safely blocks the transfer of a given token ID to another address
-     * If the target address is a contract, it must implement {IERC721Receiver-onERC721Received},
-     * which is called upon a safe transfer, and return the magic value
-     * `bytes4(keccak256("onERC721Received(address,address,uint256,bytes)"))`; otherwise,
-     * the transfer is reverted.
-     * Requires the _msgSender() to be the owner, approved, or operator
-     */
-    function safeTransferFrom(
-        address from,
-        address to,
-        uint256 tokenId
-    ) external;
+//     /**
+//      * @dev Safely blocks the transfer of a given token ID to another address
+//      * If the target address is a contract, it must implement {IERC721Receiver-onERC721Received},
+//      * which is called upon a safe transfer, and return the magic value
+//      * `bytes4(keccak256("onERC721Received(address,address,uint256,bytes)"))`; otherwise,
+//      * the transfer is reverted.
+//      * Requires the _msgSender() to be the owner, approved, or operator
+//      */
+//     function safeTransferFrom(
+//         address from,
+//         address to,
+//         uint256 tokenId
+//     ) external;
 
-    /**
-     * @dev Safely blocks the transfer of a given token ID to another address
-     * If the target address is a contract, it must implement {IERC721Receiver-onERC721Received},
-     * which is called upon a safe transfer, and return the magic value
-     * `bytes4(keccak256("onERC721Received(address,address,uint256,bytes)"))`; otherwise,
-     * the transfer is reverted.
-     * Requires the _msgSender() to be the owner, approved, or operator
-     * @param from current owner of the token
-     * @param to address to receive the ownership of the given token ID
-     * @param tokenId uint256 ID of the token to be transferred
-     * @param _data bytes data to send along with a safe transfer check
-     */
-    function safeTransferFrom(
-        address from,
-        address to,
-        uint256 tokenId,
-        bytes calldata _data
-    ) external;
+//     /**
+//      * @dev Safely blocks the transfer of a given token ID to another address
+//      * If the target address is a contract, it must implement {IERC721Receiver-onERC721Received},
+//      * which is called upon a safe transfer, and return the magic value
+//      * `bytes4(keccak256("onERC721Received(address,address,uint256,bytes)"))`; otherwise,
+//      * the transfer is reverted.
+//      * Requires the _msgSender() to be the owner, approved, or operator
+//      * @param from current owner of the token
+//      * @param to address to receive the ownership of the given token ID
+//      * @param tokenId uint256 ID of the token to be transferred
+//      * @param _data bytes data to send along with a safe transfer check
+//      */
+//     function safeTransferFrom(
+//         address from,
+//         address to,
+//         uint256 tokenId,
+//         bytes calldata _data
+//     ) external;
 
-    /*
-     * @dev Set new ID data fields
-     */
-    function setTrustLevel(uint256 _tokenId, uint256 _trustLevel) external;
+//     /*
+//      * @dev Set new ID data fields
+//      */
+//     function setTrustLevel(uint256 _tokenId, uint256 _trustLevel) external;
 
-    /*
-     * @dev get ID data
-     */
-    function IdData(uint256 _tokenId) external view returns (ID memory);
+//     /*
+//      * @dev get ID data
+//      */
+//     function IdData(uint256 _tokenId) external view returns (ID memory);
 
-    /*
-     * @dev get ID trustLevel
-     */
-    function trustedLevel(uint256 _tokenId) external view returns (uint256);
+//     /*
+//      * @dev get ID trustLevel
+//      */
+//     function trustedLevel(uint256 _tokenId) external view returns (uint256);
 
-    /*
-     * @dev get ID trustLevel by address (token 0 at address)
-     */
-    function trustedLevelByAddress(address _addr)
-        external
-        view
-        returns (uint256);
+//     /*
+//      * @dev get ID trustLevel by address (token 0 at address)
+//      */
+//     function trustedLevelByAddress(address _addr)
+//         external
+//         view
+//         returns (uint256);
 
-    /**
-     * @dev Returns the owner of the `tokenId` token.
-     *
-     * Requirements:
-     *
-     * - `tokenId` must exist.
-     */
-    function ownerOf(uint256 tokenId)
-        external
-        view
-        returns (address tokenHolderAdress);
+//     /**
+//      * @dev Returns the owner of the `tokenId` token.
+//      *
+//      * Requirements:
+//      *
+//      * - `tokenId` must exist.
+//      */
+//     function ownerOf(uint256 tokenId)
+//         external
+//         view
+//         returns (address tokenHolderAdress);
 
-    /**
-     * @dev Returns the amount of tokens owned by `account`.
-     */
-    function balanceOf(address account) external returns (uint256);
+//     /**
+//      * @dev Returns the amount of tokens owned by `account`.
+//      */
+//     function balanceOf(address account) external returns (uint256);
 
-    /**
-     * @dev Returns the name of the token.
-     */
-    function name() external view returns (string memory tokenName);
+//     /**
+//      * @dev Returns the name of the token.
+//      */
+//     function name() external view returns (string memory tokenName);
 
-    /**
-     * @dev Returns the token collection symbol.
-     */
-    function symbol() external view returns (string memory tokenSymbol);
+//     /**
+//      * @dev Returns the token collection symbol.
+//      */
+//     function symbol() external view returns (string memory tokenSymbol);
 
-    /**
-     * @dev Returns the Uniform Resource Identifier (URI) for `tokenId` token.
-     */
-    function tokenURI(uint256 tokenId)
-        external
-        view
-        returns (string memory URI);
+//     /**
+//      * @dev Returns the Uniform Resource Identifier (URI) for `tokenId` token.
+//      */
+//     function tokenURI(uint256 tokenId)
+//         external
+//         view
+//         returns (string memory URI);
 
-    /**
-     * @dev Returns the total amount of tokens stored by the contract.
-     */
-    function totalSupply() external view returns (uint256);
+//     /**
+//      * @dev Returns the total amount of tokens stored by the contract.
+//      */
+//     function totalSupply() external view returns (uint256);
 
-    /**
-     * @dev Returns a token ID owned by `owner` at a given `index` of its token list.
-     * Use along with {balanceOf} to enumerate all of ``owner``'s tokens.
-     */
-    function tokenOfOwnerByIndex(address owner, uint256 index)
-        external
-        view
-        returns (uint256 tokenId);
+//     /**
+//      * @dev Returns a token ID owned by `owner` at a given `index` of its token list.
+//      * Use along with {balanceOf} to enumerate all of ``owner``'s tokens.
+//      */
+//     function tokenOfOwnerByIndex(address owner, uint256 index)
+//         external
+//         view
+//         returns (uint256 tokenId);
 
-    /**
-     * @dev Returns a token ID at a given `index` of all the tokens stored by the contract.
-     * Use along with {totalSupply} to enumerate all tokens.
-     */
-    function tokenByIndex(uint256 index) external view returns (uint256);
-}
+//     /**
+//      * @dev Returns a token ID at a given `index` of all the tokens stored by the contract.
+//      * Use along with {totalSupply} to enumerate all tokens.
+//      */
+//     function tokenByIndex(uint256 index) external view returns (uint256);
+// }
