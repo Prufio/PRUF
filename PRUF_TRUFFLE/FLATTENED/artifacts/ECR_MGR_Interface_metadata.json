@@ -1,0 +1,397 @@
+{
+	"compiler": {
+		"version": "0.8.7+commit.e28d00a7"
+	},
+	"language": "Solidity",
+	"output": {
+		"abi": [
+			{
+				"inputs": [
+					{
+						"internalType": "bytes32",
+						"name": "_idxHash",
+						"type": "bytes32"
+					}
+				],
+				"name": "endEscrow",
+				"outputs": [],
+				"stateMutability": "nonpayable",
+				"type": "function"
+			},
+			{
+				"inputs": [
+					{
+						"internalType": "bytes32",
+						"name": "_idxHash",
+						"type": "bytes32"
+					}
+				],
+				"name": "permissiveEndEscrow",
+				"outputs": [],
+				"stateMutability": "nonpayable",
+				"type": "function"
+			},
+			{
+				"inputs": [
+					{
+						"internalType": "bytes32",
+						"name": "_idxHash",
+						"type": "bytes32"
+					}
+				],
+				"name": "retrieveEscrowData",
+				"outputs": [
+					{
+						"components": [
+							{
+								"internalType": "bytes32",
+								"name": "controllingContractNameHash",
+								"type": "bytes32"
+							},
+							{
+								"internalType": "bytes32",
+								"name": "escrowOwnerAddressHash",
+								"type": "bytes32"
+							},
+							{
+								"internalType": "uint256",
+								"name": "timelock",
+								"type": "uint256"
+							}
+						],
+						"internalType": "struct escrowData",
+						"name": "",
+						"type": "tuple"
+					}
+				],
+				"stateMutability": "nonpayable",
+				"type": "function"
+			},
+			{
+				"inputs": [
+					{
+						"internalType": "bytes32",
+						"name": "_idxHash",
+						"type": "bytes32"
+					}
+				],
+				"name": "retrieveEscrowDataHeavy",
+				"outputs": [
+					{
+						"components": [
+							{
+								"internalType": "uint32",
+								"name": "u32_2",
+								"type": "uint32"
+							},
+							{
+								"internalType": "uint32",
+								"name": "u32_3",
+								"type": "uint32"
+							},
+							{
+								"internalType": "uint32",
+								"name": "u32_4",
+								"type": "uint32"
+							},
+							{
+								"internalType": "address",
+								"name": "addr_2",
+								"type": "address"
+							},
+							{
+								"internalType": "bytes32",
+								"name": "b32_1",
+								"type": "bytes32"
+							},
+							{
+								"internalType": "bytes32",
+								"name": "b32_2",
+								"type": "bytes32"
+							},
+							{
+								"internalType": "uint256",
+								"name": "u256_1",
+								"type": "uint256"
+							},
+							{
+								"internalType": "uint256",
+								"name": "u256_2",
+								"type": "uint256"
+							}
+						],
+						"internalType": "struct escrowDataExtHeavy",
+						"name": "",
+						"type": "tuple"
+					}
+				],
+				"stateMutability": "view",
+				"type": "function"
+			},
+			{
+				"inputs": [
+					{
+						"internalType": "bytes32",
+						"name": "_idxHash",
+						"type": "bytes32"
+					}
+				],
+				"name": "retrieveEscrowDataLight",
+				"outputs": [
+					{
+						"components": [
+							{
+								"internalType": "uint8",
+								"name": "escrowData",
+								"type": "uint8"
+							},
+							{
+								"internalType": "uint8",
+								"name": "u8_1",
+								"type": "uint8"
+							},
+							{
+								"internalType": "uint8",
+								"name": "u8_2",
+								"type": "uint8"
+							},
+							{
+								"internalType": "uint8",
+								"name": "u8_3",
+								"type": "uint8"
+							},
+							{
+								"internalType": "uint16",
+								"name": "u16_1",
+								"type": "uint16"
+							},
+							{
+								"internalType": "uint16",
+								"name": "u16_2",
+								"type": "uint16"
+							},
+							{
+								"internalType": "uint32",
+								"name": "u32_1",
+								"type": "uint32"
+							},
+							{
+								"internalType": "address",
+								"name": "addr_1",
+								"type": "address"
+							}
+						],
+						"internalType": "struct escrowDataExtLight",
+						"name": "",
+						"type": "tuple"
+					}
+				],
+				"stateMutability": "view",
+				"type": "function"
+			},
+			{
+				"inputs": [
+					{
+						"internalType": "bytes32",
+						"name": "_idxHash",
+						"type": "bytes32"
+					}
+				],
+				"name": "retrieveEscrowOwner",
+				"outputs": [
+					{
+						"internalType": "bytes32",
+						"name": "hashOfEscrowOwnerAdress",
+						"type": "bytes32"
+					}
+				],
+				"stateMutability": "nonpayable",
+				"type": "function"
+			},
+			{
+				"inputs": [
+					{
+						"internalType": "bytes32",
+						"name": "_idxHash",
+						"type": "bytes32"
+					},
+					{
+						"internalType": "uint8",
+						"name": "_newAssetStatus",
+						"type": "uint8"
+					},
+					{
+						"internalType": "bytes32",
+						"name": "_escrowOwnerAddressHash",
+						"type": "bytes32"
+					},
+					{
+						"internalType": "uint256",
+						"name": "_timelock",
+						"type": "uint256"
+					}
+				],
+				"name": "setEscrow",
+				"outputs": [],
+				"stateMutability": "nonpayable",
+				"type": "function"
+			},
+			{
+				"inputs": [
+					{
+						"internalType": "bytes32",
+						"name": "_idxHash",
+						"type": "bytes32"
+					},
+					{
+						"components": [
+							{
+								"internalType": "uint32",
+								"name": "u32_2",
+								"type": "uint32"
+							},
+							{
+								"internalType": "uint32",
+								"name": "u32_3",
+								"type": "uint32"
+							},
+							{
+								"internalType": "uint32",
+								"name": "u32_4",
+								"type": "uint32"
+							},
+							{
+								"internalType": "address",
+								"name": "addr_2",
+								"type": "address"
+							},
+							{
+								"internalType": "bytes32",
+								"name": "b32_1",
+								"type": "bytes32"
+							},
+							{
+								"internalType": "bytes32",
+								"name": "b32_2",
+								"type": "bytes32"
+							},
+							{
+								"internalType": "uint256",
+								"name": "u256_1",
+								"type": "uint256"
+							},
+							{
+								"internalType": "uint256",
+								"name": "u256_2",
+								"type": "uint256"
+							}
+						],
+						"internalType": "struct escrowDataExtHeavy",
+						"name": "escrowDataHeavy",
+						"type": "tuple"
+					}
+				],
+				"name": "setEscrowDataHeavy",
+				"outputs": [],
+				"stateMutability": "nonpayable",
+				"type": "function"
+			},
+			{
+				"inputs": [
+					{
+						"internalType": "bytes32",
+						"name": "_idxHash",
+						"type": "bytes32"
+					},
+					{
+						"components": [
+							{
+								"internalType": "uint8",
+								"name": "escrowData",
+								"type": "uint8"
+							},
+							{
+								"internalType": "uint8",
+								"name": "u8_1",
+								"type": "uint8"
+							},
+							{
+								"internalType": "uint8",
+								"name": "u8_2",
+								"type": "uint8"
+							},
+							{
+								"internalType": "uint8",
+								"name": "u8_3",
+								"type": "uint8"
+							},
+							{
+								"internalType": "uint16",
+								"name": "u16_1",
+								"type": "uint16"
+							},
+							{
+								"internalType": "uint16",
+								"name": "u16_2",
+								"type": "uint16"
+							},
+							{
+								"internalType": "uint32",
+								"name": "u32_1",
+								"type": "uint32"
+							},
+							{
+								"internalType": "address",
+								"name": "addr_1",
+								"type": "address"
+							}
+						],
+						"internalType": "struct escrowDataExtLight",
+						"name": "_escrowDataLight",
+						"type": "tuple"
+					}
+				],
+				"name": "setEscrowDataLight",
+				"outputs": [],
+				"stateMutability": "nonpayable",
+				"type": "function"
+			}
+		],
+		"devdoc": {
+			"kind": "dev",
+			"methods": {},
+			"version": 1
+		},
+		"userdoc": {
+			"kind": "user",
+			"methods": {},
+			"version": 1
+		}
+	},
+	"settings": {
+		"compilationTarget": {
+			"Documents/DEV/PRUF/PRUF_TRUFFLE/FLATTENED/Flattened_EO_STAKING.sol": "ECR_MGR_Interface"
+		},
+		"evmVersion": "london",
+		"libraries": {},
+		"metadata": {
+			"bytecodeHash": "ipfs"
+		},
+		"optimizer": {
+			"enabled": false,
+			"runs": 200
+		},
+		"remappings": []
+	},
+	"sources": {
+		"Documents/DEV/PRUF/PRUF_TRUFFLE/FLATTENED/Flattened_EO_STAKING.sol": {
+			"keccak256": "0x630881b4e546f115da902f66030c77aa553d2e12cf2867b1c7a65f23e2a1ee40",
+			"license": "UNLICENSED AND MIT",
+			"urls": [
+				"bzz-raw://4a7b6772f8a4f6473fa9613261c7b529083f497bdb2c017a2d529f916674bc17",
+				"dweb:/ipfs/QmUPi2bmBfi5XPDpX6Nmby8FXc9HqDiyxCg6VmXM8W6efj"
+			]
+		}
+	},
+	"version": 1
+}

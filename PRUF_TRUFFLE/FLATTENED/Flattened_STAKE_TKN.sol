@@ -17,7 +17,7 @@ _________\/// _____________\/// _______\/// __\///////// __\/// _____________
  *   need to enumerate all holding adresses?
  *---------------------------------------------------------------*/
 
-// SPDX-License-Identifier: UNLICENSED
+// SPDX-License-Identifier: UNLICENSED AND MIT
 pragma solidity ^0.8.6;
 
 struct Record {
@@ -1793,7 +1793,6 @@ interface REWARDS_VAULT_Interface {
 
 // File: contracts/Imports/utils/EnumerableSet.sol
 
-// SPDX-License-Identifier: MIT
 
 pragma solidity ^0.8.0;
 
@@ -2093,7 +2092,6 @@ library EnumerableSet {
 
 // File: contracts/Imports/utils/Address.sol
 
-// SPDX-License-Identifier: MIT
 
 pragma solidity ^0.8.0;
 
@@ -2285,7 +2283,6 @@ library Address {
 
 // File: contracts/Imports/utils/Context.sol
 
-// SPDX-License-Identifier: MIT
 
 pragma solidity ^0.8.0;
 
@@ -2312,7 +2309,6 @@ abstract contract Context {
 
 // File: contracts/Imports/access/AccessControl.sol
 
-// SPDX-License-Identifier: MIT
 
 pragma solidity ^0.8.0;
 
@@ -2531,7 +2527,6 @@ abstract contract AccessControl is Context {
 
 // File: contracts/Imports/utils/Counters.sol
 
-// SPDX-License-Identifier: MIT
 
 pragma solidity ^0.8.0;
 
@@ -2572,7 +2567,6 @@ library Counters {
 
 // File: contracts/Imports/utils/ReentrancyGuard.sol
 
-// SPDX-License-Identifier: MIT
 
 pragma solidity ^0.8.0;
 
@@ -2637,7 +2631,6 @@ abstract contract ReentrancyGuard {
 
 // File: contracts/Imports/introspection/IERC165.sol
 
-// SPDX-License-Identifier: MIT
 
 pragma solidity ^0.8.0;
 
@@ -2664,7 +2657,6 @@ interface IERC165 {
 
 // File: contracts/Imports/token/ERC721/IERC721.sol
 
-// SPDX-License-Identifier: MIT
 
 pragma solidity ^0.8.0;
 
@@ -2795,7 +2787,6 @@ interface IERC721 is IERC165 {
 
 // File: contracts/Imports/token/ERC721/IERC721Metadata.sol
 
-// SPDX-License-Identifier: MIT
 
 pragma solidity ^0.8.0;
 
@@ -2824,7 +2815,6 @@ interface IERC721Metadata is IERC721 {
 
 // File: contracts/Imports/token/ERC721/IERC721Enumerable.sol
 
-// SPDX-License-Identifier: MIT
 
 pragma solidity ^0.8.0;
 
@@ -2855,7 +2845,6 @@ interface IERC721Enumerable is IERC721 {
 
 // File: contracts/Imports/token/ERC721/IERC721Receiver.sol
 
-// SPDX-License-Identifier: MIT
 
 pragma solidity ^0.8.0;
 
@@ -2879,7 +2868,6 @@ interface IERC721Receiver {
 
 // File: contracts/Imports/introspection/ERC165.sol
 
-// SPDX-License-Identifier: MIT
 
 pragma solidity ^0.8.0;
 
@@ -2909,7 +2897,6 @@ abstract contract ERC165 is IERC165 {
 
 // File: contracts/Imports/utils/EnumerableMap.sol
 
-// SPDX-License-Identifier: MIT
 
 pragma solidity ^0.8.0;
 
@@ -3135,7 +3122,6 @@ library EnumerableMap {
 
 // File: contracts/Imports/utils/Strings.sol
 
-// SPDX-License-Identifier: MIT
 
 pragma solidity ^0.8.0;
 
@@ -3205,7 +3191,6 @@ library Strings {
 
 // File: contracts/Imports/token/ERC721/ERC721.sol
 
-// SPDX-License-Identifier: MIT
 
 pragma solidity ^0.8.0;
 
@@ -3649,7 +3634,6 @@ contract ERC721 is Context, ERC165, IERC721, IERC721Metadata, IERC721Enumerable 
 
 // File: contracts/Imports/token/ERC721/ERC721Burnable.sol
 
-// SPDX-License-Identifier: MIT
 
 pragma solidity ^0.8.0;
 
@@ -3676,7 +3660,6 @@ abstract contract ERC721Burnable is Context, ERC721 {
 
 // File: contracts/Imports/utils/Pausable.sol
 
-// SPDX-License-Identifier: MIT
 
 pragma solidity ^0.8.0;
 
@@ -3768,7 +3751,6 @@ abstract contract Pausable is Context {
 
 // File: contracts/Imports/token/ERC721/ERC721Pausable.sol
 
-// SPDX-License-Identifier: MIT
 
 pragma solidity ^0.8.0;
 
@@ -3815,7 +3797,6 @@ _________\/// _____________\/// _______\/// __\///////// __\/// _____________
  *
  *-----------------------------------------------------------------*/
 
-// SPDX-License-Identifier: UNLICENSED
 pragma solidity ^0.8.6;
 
 

@@ -1,0 +1,540 @@
+{
+	"compiler": {
+		"version": "0.8.7+commit.e28d00a7"
+	},
+	"language": "Solidity",
+	"output": {
+		"abi": [
+			{
+				"inputs": [
+					{
+						"internalType": "address",
+						"name": "_addr",
+						"type": "address"
+					},
+					{
+						"internalType": "uint32",
+						"name": "_node",
+						"type": "uint32"
+					}
+				],
+				"name": "ContractInfoHash",
+				"outputs": [
+					{
+						"internalType": "uint8",
+						"name": "",
+						"type": "uint8"
+					},
+					{
+						"internalType": "bytes32",
+						"name": "",
+						"type": "bytes32"
+					}
+				],
+				"stateMutability": "view",
+				"type": "function"
+			},
+			{
+				"inputs": [
+					{
+						"internalType": "bytes32",
+						"name": "_idxHash",
+						"type": "bytes32"
+					},
+					{
+						"internalType": "bytes32",
+						"name": "_rgtHash",
+						"type": "bytes32"
+					}
+				],
+				"name": "_verifyRightsHolder",
+				"outputs": [
+					{
+						"internalType": "uint256",
+						"name": "",
+						"type": "uint256"
+					}
+				],
+				"stateMutability": "view",
+				"type": "function"
+			},
+			{
+				"inputs": [
+					{
+						"internalType": "bytes32",
+						"name": "_idxHash",
+						"type": "bytes32"
+					},
+					{
+						"internalType": "bytes32",
+						"name": "_rgtHash",
+						"type": "bytes32"
+					}
+				],
+				"name": "blockchainVerifyRightsHolder",
+				"outputs": [
+					{
+						"internalType": "uint8",
+						"name": "",
+						"type": "uint8"
+					}
+				],
+				"stateMutability": "nonpayable",
+				"type": "function"
+			},
+			{
+				"inputs": [
+					{
+						"internalType": "bytes32",
+						"name": "_idxHash",
+						"type": "bytes32"
+					},
+					{
+						"internalType": "uint32",
+						"name": "_newNode",
+						"type": "uint32"
+					}
+				],
+				"name": "changeNode",
+				"outputs": [],
+				"stateMutability": "nonpayable",
+				"type": "function"
+			},
+			{
+				"inputs": [
+					{
+						"internalType": "string",
+						"name": "_name",
+						"type": "string"
+					},
+					{
+						"internalType": "uint32",
+						"name": "_node",
+						"type": "uint32"
+					},
+					{
+						"internalType": "uint8",
+						"name": "_contractAuthLevel",
+						"type": "uint8"
+					}
+				],
+				"name": "enableContractForNode",
+				"outputs": [],
+				"stateMutability": "nonpayable",
+				"type": "function"
+			},
+			{
+				"inputs": [
+					{
+						"internalType": "uint32",
+						"name": "_node",
+						"type": "uint32"
+					}
+				],
+				"name": "enableDefaultContractsForNode",
+				"outputs": [],
+				"stateMutability": "nonpayable",
+				"type": "function"
+			},
+			{
+				"inputs": [
+					{
+						"internalType": "bytes32",
+						"name": "_idxHash",
+						"type": "bytes32"
+					}
+				],
+				"name": "endEscrow",
+				"outputs": [],
+				"stateMutability": "nonpayable",
+				"type": "function"
+			},
+			{
+				"inputs": [
+					{
+						"internalType": "bytes32",
+						"name": "_idxHash",
+						"type": "bytes32"
+					}
+				],
+				"name": "getPriceData",
+				"outputs": [
+					{
+						"internalType": "uint120",
+						"name": "",
+						"type": "uint120"
+					},
+					{
+						"internalType": "uint8",
+						"name": "",
+						"type": "uint8"
+					}
+				],
+				"stateMutability": "view",
+				"type": "function"
+			},
+			{
+				"inputs": [
+					{
+						"internalType": "bytes32",
+						"name": "_idxHash",
+						"type": "bytes32"
+					},
+					{
+						"internalType": "bytes32",
+						"name": "_mutableStorage1",
+						"type": "bytes32"
+					},
+					{
+						"internalType": "bytes32",
+						"name": "_mutableStorage2",
+						"type": "bytes32"
+					}
+				],
+				"name": "modifyMutableStorage",
+				"outputs": [],
+				"stateMutability": "nonpayable",
+				"type": "function"
+			},
+			{
+				"inputs": [
+					{
+						"internalType": "bytes32",
+						"name": "_idxHash",
+						"type": "bytes32"
+					},
+					{
+						"internalType": "bytes32",
+						"name": "_nonMutableStorage1",
+						"type": "bytes32"
+					},
+					{
+						"internalType": "bytes32",
+						"name": "_nonMutableStorage2",
+						"type": "bytes32"
+					}
+				],
+				"name": "modifyNonMutableStorage",
+				"outputs": [],
+				"stateMutability": "nonpayable",
+				"type": "function"
+			},
+			{
+				"inputs": [
+					{
+						"internalType": "bytes32",
+						"name": "_idxHash",
+						"type": "bytes32"
+					},
+					{
+						"internalType": "bytes32",
+						"name": "_rgtHash",
+						"type": "bytes32"
+					},
+					{
+						"internalType": "uint8",
+						"name": "_newAssetStatus",
+						"type": "uint8"
+					},
+					{
+						"internalType": "uint32",
+						"name": "_countDown",
+						"type": "uint32"
+					},
+					{
+						"internalType": "uint32",
+						"name": "_int32temp",
+						"type": "uint32"
+					},
+					{
+						"internalType": "uint256",
+						"name": "_incrementForceModCount",
+						"type": "uint256"
+					},
+					{
+						"internalType": "uint256",
+						"name": "_incrementNumberOfTransfers",
+						"type": "uint256"
+					}
+				],
+				"name": "modifyRecord",
+				"outputs": [],
+				"stateMutability": "nonpayable",
+				"type": "function"
+			},
+			{
+				"inputs": [
+					{
+						"internalType": "bytes32",
+						"name": "_idxHash",
+						"type": "bytes32"
+					},
+					{
+						"internalType": "bytes32",
+						"name": "_rgtHash",
+						"type": "bytes32"
+					},
+					{
+						"internalType": "uint32",
+						"name": "_node",
+						"type": "uint32"
+					},
+					{
+						"internalType": "uint32",
+						"name": "_countDownStart",
+						"type": "uint32"
+					}
+				],
+				"name": "newRecord",
+				"outputs": [],
+				"stateMutability": "nonpayable",
+				"type": "function"
+			},
+			{
+				"inputs": [],
+				"name": "pause",
+				"outputs": [],
+				"stateMutability": "nonpayable",
+				"type": "function"
+			},
+			{
+				"inputs": [
+					{
+						"internalType": "string",
+						"name": "_name",
+						"type": "string"
+					}
+				],
+				"name": "resolveContractAddress",
+				"outputs": [
+					{
+						"internalType": "address",
+						"name": "",
+						"type": "address"
+					}
+				],
+				"stateMutability": "view",
+				"type": "function"
+			},
+			{
+				"inputs": [
+					{
+						"internalType": "bytes32",
+						"name": "_idxHash",
+						"type": "bytes32"
+					}
+				],
+				"name": "retrieveRecord",
+				"outputs": [
+					{
+						"components": [
+							{
+								"internalType": "uint8",
+								"name": "assetStatus",
+								"type": "uint8"
+							},
+							{
+								"internalType": "uint8",
+								"name": "modCount",
+								"type": "uint8"
+							},
+							{
+								"internalType": "uint16",
+								"name": "numberOfTransfers",
+								"type": "uint16"
+							},
+							{
+								"internalType": "uint32",
+								"name": "node",
+								"type": "uint32"
+							},
+							{
+								"internalType": "uint32",
+								"name": "countDown",
+								"type": "uint32"
+							},
+							{
+								"internalType": "uint32",
+								"name": "int32temp",
+								"type": "uint32"
+							},
+							{
+								"internalType": "bytes32",
+								"name": "mutableStorage1",
+								"type": "bytes32"
+							},
+							{
+								"internalType": "bytes32",
+								"name": "nonMutableStorage1",
+								"type": "bytes32"
+							},
+							{
+								"internalType": "bytes32",
+								"name": "mutableStorage2",
+								"type": "bytes32"
+							},
+							{
+								"internalType": "bytes32",
+								"name": "nonMutableStorage2",
+								"type": "bytes32"
+							},
+							{
+								"internalType": "bytes32",
+								"name": "rightsHolder",
+								"type": "bytes32"
+							}
+						],
+						"internalType": "struct Record",
+						"name": "",
+						"type": "tuple"
+					}
+				],
+				"stateMutability": "nonpayable",
+				"type": "function"
+			},
+			{
+				"inputs": [
+					{
+						"internalType": "bytes32",
+						"name": "_idxHash",
+						"type": "bytes32"
+					}
+				],
+				"name": "retrieveShortRecord",
+				"outputs": [
+					{
+						"internalType": "uint8",
+						"name": "",
+						"type": "uint8"
+					},
+					{
+						"internalType": "uint8",
+						"name": "",
+						"type": "uint8"
+					},
+					{
+						"internalType": "uint32",
+						"name": "",
+						"type": "uint32"
+					},
+					{
+						"internalType": "uint32",
+						"name": "",
+						"type": "uint32"
+					},
+					{
+						"internalType": "uint32",
+						"name": "",
+						"type": "uint32"
+					},
+					{
+						"internalType": "bytes32",
+						"name": "",
+						"type": "bytes32"
+					},
+					{
+						"internalType": "bytes32",
+						"name": "",
+						"type": "bytes32"
+					},
+					{
+						"internalType": "bytes32",
+						"name": "",
+						"type": "bytes32"
+					},
+					{
+						"internalType": "bytes32",
+						"name": "",
+						"type": "bytes32"
+					},
+					{
+						"internalType": "uint16",
+						"name": "",
+						"type": "uint16"
+					}
+				],
+				"stateMutability": "view",
+				"type": "function"
+			},
+			{
+				"inputs": [
+					{
+						"internalType": "bytes32",
+						"name": "_idxHash",
+						"type": "bytes32"
+					},
+					{
+						"internalType": "uint8",
+						"name": "_newAssetStatus",
+						"type": "uint8"
+					}
+				],
+				"name": "setEscrow",
+				"outputs": [],
+				"stateMutability": "nonpayable",
+				"type": "function"
+			},
+			{
+				"inputs": [
+					{
+						"internalType": "bytes32",
+						"name": "_idxHash",
+						"type": "bytes32"
+					},
+					{
+						"internalType": "uint8",
+						"name": "_newAssetStatus",
+						"type": "uint8"
+					}
+				],
+				"name": "setLostOrStolen",
+				"outputs": [],
+				"stateMutability": "nonpayable",
+				"type": "function"
+			},
+			{
+				"inputs": [],
+				"name": "unpause",
+				"outputs": [],
+				"stateMutability": "nonpayable",
+				"type": "function"
+			}
+		],
+		"devdoc": {
+			"kind": "dev",
+			"methods": {},
+			"version": 1
+		},
+		"userdoc": {
+			"kind": "user",
+			"methods": {},
+			"version": 1
+		}
+	},
+	"settings": {
+		"compilationTarget": {
+			"Documents/DEV/PRUF/PRUF_TRUFFLE/FLATTENED/Flattened_EO_STAKING.sol": "STOR_Interface"
+		},
+		"evmVersion": "london",
+		"libraries": {},
+		"metadata": {
+			"bytecodeHash": "ipfs"
+		},
+		"optimizer": {
+			"enabled": false,
+			"runs": 200
+		},
+		"remappings": []
+	},
+	"sources": {
+		"Documents/DEV/PRUF/PRUF_TRUFFLE/FLATTENED/Flattened_EO_STAKING.sol": {
+			"keccak256": "0x630881b4e546f115da902f66030c77aa553d2e12cf2867b1c7a65f23e2a1ee40",
+			"license": "UNLICENSED AND MIT",
+			"urls": [
+				"bzz-raw://4a7b6772f8a4f6473fa9613261c7b529083f497bdb2c017a2d529f916674bc17",
+				"dweb:/ipfs/QmUPi2bmBfi5XPDpX6Nmby8FXc9HqDiyxCg6VmXM8W6efj"
+			]
+		}
+	},
+	"version": 1
+}

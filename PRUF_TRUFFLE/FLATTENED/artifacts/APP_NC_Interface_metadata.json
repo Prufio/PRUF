@@ -1,0 +1,64 @@
+{
+	"compiler": {
+		"version": "0.8.7+commit.e28d00a7"
+	},
+	"language": "Solidity",
+	"output": {
+		"abi": [
+			{
+				"inputs": [
+					{
+						"internalType": "address",
+						"name": "_to",
+						"type": "address"
+					},
+					{
+						"internalType": "bytes32",
+						"name": "_idxHash",
+						"type": "bytes32"
+					}
+				],
+				"name": "transferAssetToken",
+				"outputs": [],
+				"stateMutability": "nonpayable",
+				"type": "function"
+			}
+		],
+		"devdoc": {
+			"kind": "dev",
+			"methods": {},
+			"version": 1
+		},
+		"userdoc": {
+			"kind": "user",
+			"methods": {},
+			"version": 1
+		}
+	},
+	"settings": {
+		"compilationTarget": {
+			"Documents/DEV/PRUF/PRUF_TRUFFLE/FLATTENED/Flattened_EO_STAKING.sol": "APP_NC_Interface"
+		},
+		"evmVersion": "london",
+		"libraries": {},
+		"metadata": {
+			"bytecodeHash": "ipfs"
+		},
+		"optimizer": {
+			"enabled": false,
+			"runs": 200
+		},
+		"remappings": []
+	},
+	"sources": {
+		"Documents/DEV/PRUF/PRUF_TRUFFLE/FLATTENED/Flattened_EO_STAKING.sol": {
+			"keccak256": "0x630881b4e546f115da902f66030c77aa553d2e12cf2867b1c7a65f23e2a1ee40",
+			"license": "UNLICENSED AND MIT",
+			"urls": [
+				"bzz-raw://4a7b6772f8a4f6473fa9613261c7b529083f497bdb2c017a2d529f916674bc17",
+				"dweb:/ipfs/QmUPi2bmBfi5XPDpX6Nmby8FXc9HqDiyxCg6VmXM8W6efj"
+			]
+		}
+	},
+	"version": 1
+}
