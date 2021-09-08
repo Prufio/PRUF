@@ -126,8 +126,7 @@ contract EO_STAKING is ReentrancyGuard, AccessControl, Pausable {
 
     /**
      * @dev Setter for setting fractions of a day for minimum interval
-     * @param _minUpgradeInterval this value will be used to divide seconds_in_a_day to arrive at minimum reward periods.
-     *                          for example, a value of 24 would mean (seconds_in_a_day / 24), or 1 hour.
+     * @param _minUpgradeInterval in seconds
      */
     function setMinimumPeriod(uint256 _minUpgradeInterval) external isContractAdmin {
         require(
@@ -380,6 +379,7 @@ contract EO_STAKING is ReentrancyGuard, AccessControl, Pausable {
         } else {
             timeNow = block.timestamp;
         }
+        
         uint256 bonusPerInterval = (thisStake.stakedAmount *
             thisStake.bonusPercentage) / 1000;
 
