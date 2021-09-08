@@ -55,6 +55,23 @@ contract Market is CORE {
     }
 
     //--------------------------------------------External Functions--------------------------
+    
+    /**
+     * @dev sets the MARKET_TKN contract address
+     * @param _address MARKET_TKN contract address
+     */
+
+    function setTokenAddress(address _address)
+        external
+        isContractAdmin
+    {
+        MARKET_TKN_Address = _address;
+        MARKET_TKN = MARKET_TKN_Interface(MARKET_TKN_Address);
+    }
+    
+    
+    
+    
     /**
      * @dev sets the charity donation address
      * @param _charityAddress charity erc20 address
@@ -66,6 +83,7 @@ contract Market is CORE {
     {
         charityAddress = _charityAddress;
     }
+
 
     /**
      * @dev Wraps a token, takes original from caller (holds it in contract)
@@ -120,7 +138,11 @@ contract Market is CORE {
                 _tokenId
             ); // move token to this contract using allowance
         }
-        MARKET_TKN.mintConsignmentToken(_msgSender(), newTokenId, "pruf.io/mkt");
+        MARKET_TKN.mintConsignmentToken(
+            _msgSender(),
+            newTokenId,
+            "pruf.io/mkt"
+        );
 
         //^^^^^^^interactions^^^^^^^^^
     }
