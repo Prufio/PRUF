@@ -20,7 +20,7 @@ pragma solidity ^0.8.6;
 
 //import "./RESOURCE_PRUF_INTERFACES.sol";
 //import "./Imports/payment/PullPayment.sol";
-import "./Imports/utils/ReentrancyGuard.sol";
+import "./Imports/security/ReentrancyGuard.sol";
 import "./PRUF_BASIC.sol";
 
 contract CORE_MAL is BASIC {

@@ -21,8 +21,8 @@ pragma solidity ^0.8.6;
 import "./RESOURCE_PRUF_INTERFACES.sol";
 import "./RESOURCE_PRUF_TKN_INTERFACES.sol";
 import "./Imports/access/AccessControl.sol";
-import "./Imports/utils/Pausable.sol";
-import "./Imports/utils/ReentrancyGuard.sol";
+import "./Imports/security/Pausable.sol";
+import "./Imports/security/ReentrancyGuard.sol";
 import "./Imports/token/ERC721/IERC721.sol";
 
 contract STAKE_VAULT is ReentrancyGuard, AccessControl, Pausable {

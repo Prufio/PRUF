@@ -21,8 +21,8 @@ pragma solidity ^0.8.6;
 
 import "./RESOURCE_PRUF_STRUCTS.sol";
 import "./Imports/access/AccessControl.sol";
-import "./Imports/utils/Pausable.sol";
-//import "./Imports/utils/ReentrancyGuard.sol";
+import "./Imports/security/Pausable.sol";
+//import "./Imports/security/ReentrancyGuard.sol";
 
 /**
  * @dev {ERC721} token, including:

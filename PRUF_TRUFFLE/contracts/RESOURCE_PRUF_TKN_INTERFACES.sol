@@ -24,9 +24,9 @@ import "./RESOURCE_PRUF_STRUCTS.sol";
  * INHERITANCE:
     import "./Imports/access/AccessControl.sol";
     import "./Imports/token/ERC20/ERC20.sol";
-    import "./Imports/token/ERC20/ERC20Burnable.sol";
+    import "./Imports/token/ERC20/extensions/ERC20Burnable.sol";
     import "./Imports/token/ERC20/ERC20Pausable.sol";
-    import "./Imports/token/ERC20/ERC20Snapshot.sol";
+    import "./Imports/token/ERC20/extensions/ERC20Snapshot.sol";
  */
 interface UTIL_TKN_Interface {
     /*
@@ -341,7 +341,7 @@ interface UTIL_TKN_Interface {
  * INHERITANCE:
     import "./Imports/token/ERC721/ERC721.sol";
     import "./Imports/access/Ownable.sol";
-    import "./Imports/utils/ReentrancyGuard.sol";
+    import "./Imports/security/ReentrancyGuard.sol";
  */
 interface NODE_TKN_Interface {
     /*
@@ -471,7 +471,7 @@ interface NODE_TKN_Interface {
  * INHERITANCE:
     import "./Imports/token/ERC721/ERC721.sol";
     import "./Imports/access/Ownable.sol";
-    import "./Imports/utils/ReentrancyGuard.sol";
+    import "./Imports/security/ReentrancyGuard.sol";
  */
 interface STAKE_TKN_Interface {
     /**
@@ -608,7 +608,7 @@ interface STAKE_TKN_Interface {
  * INHERITANCE:
     import "./Imports/token/ERC721/ERC721.sol";
     import "./Imports/access/Ownable.sol";
-    import "./Imports/utils/ReentrancyGuard.sol";
+    import "./Imports/security/ReentrancyGuard.sol";
  */
 interface A_TKN_Interface {
     /*
@@ -790,7 +790,7 @@ interface A_TKN_Interface {
  * INHERITANCE:
     import "./Imports/token/ERC721/ERC721.sol";
     import "./Imports/access/Ownable.sol";
-    import "./Imports/utils/ReentrancyGuard.sol";
+    import "./Imports/security/ReentrancyGuard.sol";
  */
 interface MARKET_TKN_Interface {
     /*

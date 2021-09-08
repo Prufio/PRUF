@@ -22,10 +22,10 @@ import "./RESOURCE_PRUF_INTERFACES.sol";
 import "./Imports/access/AccessControl.sol";
 import "./Imports/utils/Context.sol";
 import "./Imports/utils/Counters.sol";
-import "./Imports/utils/ReentrancyGuard.sol";
+import "./Imports/security/ReentrancyGuard.sol";
 import "./Imports/token/ERC721/ERC721.sol";
-import "./Imports/token/ERC721/ERC721Burnable.sol";
-import "./Imports/token/ERC721/ERC721Pausable.sol";
+import "./Imports/token/ERC721/extensions/ERC721Burnable.sol";
+import "./Imports/token/ERC721/extensions/ERC721Pausable.sol";
 
 /**
  * @dev {ERC721} token, including:

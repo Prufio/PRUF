@@ -272,9 +272,9 @@ interface NODE_MGR_Interface {
  * @dev Interface for STOR
  * INHERITANCE:
     import "./Imports/access/Ownable.sol";
-    import "./Imports/utils/Pausable.sol";
+    import "./Imports/security/Pausable.sol";
      
-    import "./Imports/utils/ReentrancyGuard.sol";
+    import "./Imports/security/ReentrancyGuard.sol";
  */
 interface STOR_Interface {
     /*
@@ -572,8 +572,8 @@ interface APP_NC_Interface {
  * @dev Interface for EO_STAKING
  * INHERITANCE:
     import "./Imports/access/AccessControl.sol";
-    import "./Imports/utils/Pausable.sol";
-    import "./Imports/utils/ReentrancyGuard.sol";
+    import "./Imports/security/Pausable.sol";
+    import "./Imports/security/ReentrancyGuard.sol";
     import "./Imports/token/ERC721/IERC721.sol";
     import "./Imports/token/ERC721/IERC721Receiver.sol";
  */
@@ -602,8 +602,8 @@ interface EO_STAKING_Interface {
  * @dev Interface for STAKE_VAULT
  * INHERITANCE:
     import "./Imports/access/AccessControl.sol";
-    import "./Imports/utils/Pausable.sol";
-    import "./Imports/utils/ReentrancyGuard.sol";
+    import "./Imports/security/Pausable.sol";
+    import "./Imports/security/ReentrancyGuard.sol";
     import "./Imports/token/ERC721/IERC721.sol";
     import "./Imports/token/ERC721/IERC721Receiver.sol";
  */
@@ -620,8 +620,8 @@ interface STAKE_VAULT_Interface {
  * @dev Interface for REWARDS_VAULT
  * INHERITANCE:
     import "./Imports/access/AccessControl.sol";
-    import "./Imports/utils/Pausable.sol";
-    import "./Imports/utils/ReentrancyGuard.sol";
+    import "./Imports/security/Pausable.sol";
+    import "./Imports/security/ReentrancyGuard.sol";
     import "./Imports/token/ERC721/IERC721.sol";
     import "./Imports/token/ERC721/IERC721Receiver.sol";
  */
@@ -634,7 +634,7 @@ interface REWARDS_VAULT_Interface {
  * INHERITANCE:
 // import "./RESOURCE_PRUF_STRUCTS.sol";
 // import "./Imports/access/AccessControl.sol";
-// import "./Imports/utils/Pausable.sol";
+// import "./Imports/security/Pausable.sol";
 */
 
 

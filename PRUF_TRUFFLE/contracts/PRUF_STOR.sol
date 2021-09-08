@@ -36,8 +36,8 @@ pragma solidity ^0.8.6;
 import "./RESOURCE_PRUF_INTERFACES.sol";
 import "./RESOURCE_PRUF_TKN_INTERFACES.sol";
 import "./Imports/access/AccessControl.sol";
-import "./Imports/utils/Pausable.sol";
-import "./Imports/utils/ReentrancyGuard.sol";
+import "./Imports/security/Pausable.sol";
+import "./Imports/security/ReentrancyGuard.sol";
 
 contract STOR is AccessControl, ReentrancyGuard, Pausable {
     bytes32 public constant PAUSER_ROLE = keccak256("PAUSER_ROLE");

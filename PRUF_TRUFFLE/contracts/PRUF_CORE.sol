@@ -21,7 +21,7 @@ __/\\\\\\\\\\\\\ _____/\\\\\\\\\ _______/\\__/\\ ___/\\\\\\\\\\\\\\\
 // SPDX-License-Identifier: UNLICENSED
 pragma solidity ^0.8.6;
 
-import "./Imports/utils/ReentrancyGuard.sol";
+import "./Imports/security/ReentrancyGuard.sol";
 import "./PRUF_BASIC.sol";
 
 contract CORE is BASIC {

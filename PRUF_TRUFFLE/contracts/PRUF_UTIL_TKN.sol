@@ -22,9 +22,9 @@ pragma solidity ^0.8.6;
 
 import "./RESOURCE_PRUF_INTERFACES.sol";
 import "./Imports/access/AccessControl.sol";
-import "./Imports/token/ERC20/ERC20Burnable.sol";
-import "./Imports/utils/Pausable.sol";
-import "./Imports/token/ERC20/ERC20Snapshot.sol";
+import "./Imports/token/ERC20/extensions/ERC20Burnable.sol";
+import "./Imports/security/Pausable.sol";
+import "./Imports/token/ERC20/extensions/ERC20Snapshot.sol";
 
 /**
  * @dev {ERC20} token, including:
