@@ -12,8 +12,9 @@ __/\\\\\\\\\\\\\ _____/\\\\\\\\\ _______/\\__/\\ ___/\\\\\\\\\\\\\\\
 
 /**-----------------------------------------------------------------
  *  TO DO
+ * Check and see if A_TKN can be permitted in all nodes to prevent safeTransferFrom->writeRecord conflict due to it not being a default authorized contract for node s
  *-----------------------------------------------------------------
- * PRUF CONSIGNMENT NFT CONTRACT
+ * PRUF ASSET NFT CONTRACT
  *---------------------------------------------------------------*/
 
 // SPDX-License-Identifier: UNLICENSED
@@ -47,8 +48,7 @@ import "./RESOURCE_PRUF_TKN_INTERFACES.sol";
  * roles, as well as the default admin role, which will let it grant both minter
  * and pauser roles to other accounts.
  */
-
-contract MARKET_TKN is
+contract ERC721MinterPauserAutoId is
     ReentrancyGuard,
     Context,
     AccessControlEnumerable,
@@ -70,16 +70,26 @@ contract MARKET_TKN is
         keccak256("CONTRACT_ADMIN_ROLE");
     bytes32 public constant MINTER_ROLE = keccak256("MINTER_ROLE");
     bytes32 public constant PAUSER_ROLE = keccak256("PAUSER_ROLE");
-    bytes32 public constant TAG_ADMIN_ROLE = keccak256("TAG_ADMIN_ROLE");
     bytes32 public constant TRUSTED_AGENT_ROLE =
         keccak256("TRUSTED_AGENT_ROLE");
 
     uint256 trustedAgentEnabled = 1;
 
+    mapping(address => uint256) private coldWallet;
+
+    address internal STOR_Address;
+    address internal RCLR_Address;
+    address internal NODE_MGR_Address;
+    address internal NODE_TKN_Address;
+    STOR_Interface internal STOR;
+    RCLR_Interface internal RCLR;
+    NODE_MGR_Interface internal NODE_MGR;
+    NODE_TKN_Interface internal NODE_TKN;
+
     bytes32 public constant B320xF_ =
         0xFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFF;
 
-    constructor() ERC721("PRUF Consignment Token", "PRCT") {
+    constructor() ERC721("PRUF Asset Token", "PRAT") {
         _setupRole(DEFAULT_ADMIN_ROLE, _msgSender());
         _setupRole(CONTRACT_ADMIN_ROLE, _msgSender());
         _setupRole(PAUSER_ROLE, _msgSender());
@@ -128,154 +138,90 @@ contract MARKET_TKN is
         _;
     }
 
+    //----------------------Admin functions / isContractAdmin ----------------------//
+
+    /**
+     * @dev ----------------------------------------PERMANANTLY !!!  Kills trusted agent and payable functions
+     * this will break the functionality of current payment mechanisms.
+     *
+     * The workaround for this is to create an allowance for pruf contracts for a single or multiple payments,
+     * either ahead of time "loading up your PRUF account" or on demand with an operation. On demand will use quite a bit more gas.
+     * "preloading" should be pretty gas efficient, but will add an extra step to the workflow, requiring users to have sufficient
+     * PRuF "banked" in an allowance for use in the system.
+     * @param _key - set to 170 to PERMENANTLY REMOVE TRUSTED AGENT CAPABILITY
+     */
+    function killTrustedAgent(uint256 _key) external isContractAdmin {
+        if (_key == 170) {
+            trustedAgentEnabled = 0; // !!! THIS IS A PERMANENT ACTION AND CANNOT BE UNDONE
+        }
+    }
+
+    /**
+     * @dev Set storage contract to interface with
+     * @param _storageAddress - Storage contract address to set
+     */
+    function setStorageContract(address _storageAddress)
+        external
+        isContractAdmin
+    {
+        require(_storageAddress != address(0), "AT:SSC:Storage address = 0");
+        //^^^^^^^checks^^^^^^^^^
+
+        STOR = STOR_Interface(_storageAddress);
+        //^^^^^^^effects^^^^^^^^^
+    }
+
+    /**
+     * @dev Address Setters  - resolves addresses from storage and sets local interfaces
+     */
+    function resolveContractAddresses() external isContractAdmin {
+        //^^^^^^^checks^^^^^^^^^
+
+        RCLR_Address = STOR.resolveContractAddress("RCLR");
+        RCLR = RCLR_Interface(RCLR_Address);
+
+        NODE_MGR_Address = STOR.resolveContractAddress("NODE_MGR");
+        NODE_MGR = NODE_MGR_Interface(NODE_MGR_Address);
+
+        NODE_TKN_Address = STOR.resolveContractAddress("NODE_TKN");
+        NODE_TKN = NODE_TKN_Interface(NODE_TKN_Address);
+        //^^^^^^^effects^^^^^^^^^
+    }
 
     ////----------------------Regular operations----------------------//
 
+    /**
+     * @dev Set calling wallet to a "cold Wallet" that cannot be manipulated by TRUSTED_AGENT or PAYABLE permissioned functions
+     * WALLET ADDRESSES SET TO "Cold" DO NOT WORK WITH TRUSTED_AGENT FUNCTIONS and must be unset from cold before it can interact with
+     * contract functions.
+     */
+    function setColdWallet() external {
+        coldWallet[_msgSender()] = 170;
+    }
+
+    /**
+     * @dev un-set calling wallet to a "cold Wallet", enabling manipulation by TRUSTED_AGENT and PAYABLE permissioned functions
+     * WALLET ADDRESSES SET TO "Cold" DO NOT WORK WITH TRUSTED_AGENT FUNCTIONS and must be unset from cold before it can interact with
+     * contract functions.
+     */
+    function unSetColdWallet() external {
+        coldWallet[_msgSender()] = 0;
+    }
+
+    /**
+     * @dev return an adresses "cold wallet" status
+     * WALLET ADDRESSES SET TO "Cold" DO NOT WORK WITH TRUSTED_AGENT FUNCTIONS
+     * @param _addr - address to check
+     * returns 170 if adress is set to "cold wallet" status
+     */
+    function isColdWallet(address _addr) public view returns (uint256) {
+        return coldWallet[_addr];
+    }
 
     event REPORT(string _msg);
 
-    /**
-     * @dev Mint new consignment Tag token, store consignment data
-     * @param _recipientAddress - Address to mint token into
-     * @param _tokenId - Token ID to mint
-     * @param _tokenURI - URI string to atatch to token
-     * returns Token ID of minted token
-     */
-    function mintConsignmentToken(
-        address _recipientAddress,
-        uint256 _tokenId,
-        string calldata _tokenURI
-    ) external isMinter nonReentrant returns (uint256) {
-        //^^^^^^^checks^^^^^^^^^
-
-        _safeMint(_recipientAddress, _tokenId);
-        _setTokenURI(_tokenId, _tokenURI);
-        return _tokenId;
-        //^^^^^^^interactions^^^^^^^^^
-    }
-
-    /**
-     * @dev Set new token URI String
-     * @param tokenId - Token ID to set URI
-     * @param _tokenURI - URI string to atatch to token
-     * returns Token ID
-     */
-    function setURI(uint256 tokenId, string calldata _tokenURI)
-        external
-        returns (uint256)
-    {
-        require(
-            _isApprovedOrOwner(_msgSender(), tokenId),
-            "AT:SURI:Caller !owner nor approved"
-        );
-        //^^^^^^^checks^^^^^^^^^
-
-        _setTokenURI(tokenId, _tokenURI);
-        return tokenId;
-        //^^^^^^^interactions^^^^^^^^^
-    }
-
-    /**
-     * @dev See if consignment token exists
-     * @param tokenId - Token ID to set URI
-     * returns 170 if token exists, otherwise 0
-     */
-    function tokenExists(uint256 tokenId) external view returns (uint256) {
-        if (_exists(tokenId)) {
-            return 170;
-        } else {
-            return 0;
-        }
-    }
-
-    /**
-     * @dev Transfers the ownership of a given token ID to another address.
-     * Usage of this method is discouraged, use {safeTransferFrom} whenever possible.
-     * Requires the _msgSender() to be the owner, approved, or operator.
-     * @param _from current owner of the token
-     * @param _to address to receive the ownership of the given token ID
-     * @param _tokenId uint256 ID of the token to be transferred
-     */
-    function transferFrom(
-        address _from,
-        address _to,
-        uint256 _tokenId
-    ) public override nonReentrant {
-        require(
-            _isApprovedOrOwner(_msgSender(), _tokenId),
-            "AT:TF:Transfer caller is not owner nor approved"
-        );
-
-        //^^^^^^^checks^^^^^^^^
-        _transfer(_from, _to, _tokenId);
-        //^^^^^^^effects^^^^^^^^^
-    }
-
-    /**
-     * @dev Safely transfers the ownership of a given token ID to another address
-     * If the target address is a contract, it must implement {IERC721Receiver-onERC721Received},
-     * which is called upon a safe transfer, and return the magic value
-     * `bytes4(keccak256("onERC721Received(address,address,uint256,bytes)"))`; otherwise,
-     * the transfer is reverted.
-     * Requires the _msgSender() to be the owner, approved, or operator
-     * @param _from current owner of the token
-     * @param _to address to receive the ownership of the given token ID
-     * @param _tokenId uint256 ID of the token to be transferred
-     */
-    function safeTransferFrom(
-        address _from,
-        address _to,
-        uint256 _tokenId
-    ) public override {
-        safeTransferFrom(_from, _to, _tokenId, "");
-        //^^^^^^^interactions^^^^^^^^^
-    }
-
-    /**
-     * @dev Safely transfers the ownership of a given token ID to another address
-     * If the target address is a contract, it must implement {IERC721Receiver-onERC721Received},
-     * which is called upon a safe transfer, and return the magic value
-     * `bytes4(keccak256("onERC721Received(address,address,uint256,bytes)"))`; otherwise,
-     * the transfer is reverted.
-     * Requires the _msgSender() to be the owner, approved, or operator
-     * @param _from current owner of the token
-     * @param _to address to receive the ownership of the given token ID
-     * @param _tokenId uint256 ID of the token to be transferred
-     * @param _data bytes data to send along with a safe transfer check
-     */
-    function safeTransferFrom(
-        address _from,
-        address _to,
-        uint256 _tokenId,
-        bytes memory _data
-    ) public virtual override nonReentrant {
-        require(
-            _isApprovedOrOwner(_msgSender(), _tokenId),
-            "AT:STF:Transfer caller !owner nor approved"
-        );
-        //^^^^^^^checks^^^^^^^^^
-
-        //^^^^^^^effects^^^^^^^^^
-        _safeTransfer(_from, _to, _tokenId, _data);
-        //^^^^^^^interactions^^^^^^^^^
-    }
-
-    /**
-     * @dev Safely burns an consignment token, consignment data
-     * @param _tokenId - Token ID to Burn
-     */
-    function trustedAgentBurn(uint256 _tokenId)
-        external
-        nonReentrant
-        whenNotPaused
-        isTrustedAgent
-    {
-        //^^^^^^^checks^^^^^^^^^
-        if (_exists(_tokenId)) {
-            _burn(_tokenId);
-        }
-        
-        //^^^^^^^effects^^^^^^^^^
+    function _baseURI() internal view virtual override returns (string memory) {
+        return _baseTokenURI;
     }
 
     /**
@@ -306,14 +252,6 @@ contract MARKET_TKN is
         }
 
         return super.tokenURI(tokenId);
-    }
-
-
-    /**
-     * @dev gets baseURI 
-     */
-    function _baseURI() internal view virtual override returns (string memory) {
-        return _baseTokenURI;
     }
 
     /**
@@ -352,6 +290,26 @@ contract MARKET_TKN is
         }
     }
 
+    // /**
+    //  * @dev Creates a new token for `to`. Its token ID will be automatically
+    //  * assigned (and available on the emitted {IERC721-Transfer} event), and the token
+    //  * URI autogenerated based on the base URI passed at construction.
+    //  *
+    //  * See {ERC721-_mint}.
+    //  *
+    //  * Requirements:
+    //  *
+    //  * - the caller must have the `MINTER_ROLE`.
+    //  */
+    // function mint(address to) public virtual {
+    //     require(hasRole(MINTER_ROLE, _msgSender()), "ERC721PresetMinterPauserAutoId: must have minter role to mint");
+
+    //     // We cannot just use balanceOf to create the new tokenId because tokens
+    //     // can be burned (destroyed), so we need a separate counter.
+    //     _mint(to, _tokenIdTracker.current());
+    //     _tokenIdTracker.increment();
+    // }
+
     /**
      * @dev Pauses all token transfers.
      *
@@ -361,15 +319,12 @@ contract MARKET_TKN is
      *
      * - the caller must have the `PAUSER_ROLE`.
      */
-    function pause() external virtual {
+    function pause() public virtual {
         require(
             hasRole(PAUSER_ROLE, _msgSender()),
-            "A:P: Caller !have pauser role"
+            "ERC721PresetMinterPauserAutoId: must have pauser role to pause"
         );
-        //^^^^^^^checks^^^^^^^^^
-
         _pause();
-        //^^^^^^^interactions^^^^^^^^^
     }
 
     /**
@@ -381,15 +336,12 @@ contract MARKET_TKN is
      *
      * - the caller must have the `PAUSER_ROLE`.
      */
-    function unpause() external virtual {
+    function unpause() public virtual {
         require(
             hasRole(PAUSER_ROLE, _msgSender()),
-            "A:UP: Caller !have pauser role"
+            "ERC721PresetMinterPauserAutoId: must have pauser role to unpause"
         );
-        //^^^^^^^checks^^^^^^^^^
-
         _unpause();
-        //^^^^^^^interactions^^^^^^^^^
     }
 
     function _beforeTokenTransfer(
