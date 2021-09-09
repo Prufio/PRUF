@@ -19,7 +19,7 @@
 	},
 	"settings": {
 		"compilationTarget": {
-			"Documents/DEV/PRUF/PRUF_TRUFFLE/FLATTENED/Flattened_EO_STAKING.sol": "Address"
+			"Documents/DEV/PRUF/PRUF_TRUFFLE/FLATTENED/Flattened_REWARDS_VAULT.sol": "Address"
 		},
 		"evmVersion": "london",
 		"libraries": {},
@@ -33,12 +33,12 @@
 		"remappings": []
 	},
 	"sources": {
-		"Documents/DEV/PRUF/PRUF_TRUFFLE/FLATTENED/Flattened_EO_STAKING.sol": {
-			"keccak256": "0x630881b4e546f115da902f66030c77aa553d2e12cf2867b1c7a65f23e2a1ee40",
+		"Documents/DEV/PRUF/PRUF_TRUFFLE/FLATTENED/Flattened_REWARDS_VAULT.sol": {
+			"keccak256": "0x75d8099ae2cd3b7a4206c1f5c4aa53e38d4f9648c89b63fe9b6502dd4b71df47",
 			"license": "UNLICENSED AND MIT",
 			"urls": [
-				"bzz-raw://4a7b6772f8a4f6473fa9613261c7b529083f497bdb2c017a2d529f916674bc17",
-				"dweb:/ipfs/QmUPi2bmBfi5XPDpX6Nmby8FXc9HqDiyxCg6VmXM8W6efj"
+				"bzz-raw://e8069ace87298c3e2516feb1bf223e0140a4607261db55a90ca0b50223cdb449",
+				"dweb:/ipfs/QmedoHrn4hTs1pu6CQeeNaBqdhrdedSArDdLsc7kJVAkVZ"
 			]
 		}
 	},
