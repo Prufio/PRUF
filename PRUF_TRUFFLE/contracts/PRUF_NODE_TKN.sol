@@ -110,6 +110,8 @@ contract NODE_TKN is
         _;
     }
 
+    event REPORT(string _msg);
+
     //----------------------Admin functions - isContractAdmin or isMinter----------------------//
 
     /**
@@ -131,20 +133,6 @@ contract NODE_TKN is
         _setTokenURI(_tokenId, _tokenURI);
         return _tokenId;
         //^^^^^^^interactions^^^^^^^^^
-    }
-
-    /**
-     * @dev See if node token exists
-     * @param tokenId - Token ID to set URI
-     *
-     * @return 170 or 0 (true or false)
-     */
-    function tokenExists(uint256 tokenId) external view returns (uint256) {
-        if (_exists(tokenId)) {
-            return 170;
-        } else {
-            return 0;
-        }
     }
 
     /**
@@ -220,12 +208,6 @@ contract NODE_TKN is
         //^^^^^^^interactions^^^^^^^^^
     }
 
-    event REPORT(string _msg);
-
-    function _baseURI() internal view virtual override returns (string memory) {
-        return _baseTokenURI;
-    }
-
     /**
      * @dev See {IERC721Metadata-tokenURI}.
      */
@@ -257,38 +239,16 @@ contract NODE_TKN is
     }
 
     /**
-     * @dev Sets `_tokenURI` as the tokenURI of `tokenId`.
+     * @dev See if node token exists
+     * @param tokenId - Token ID to set URI
      *
-     * Requirements:
-     *
-     * - `tokenId` must exist.
+     * @return 170 or 0 (true or false)
      */
-    function _setTokenURI(uint256 tokenId, string memory _tokenURI)
-        internal
-        virtual
-    {
-        require(
-            _exists(tokenId),
-            "ERC721URIStorage: URI set of nonexistent token"
-        );
-        _tokenURIs[tokenId] = _tokenURI;
-    }
-
-    /**
-     * @dev Destroys `tokenId`.
-     * The approval is cleared when the token is burned.
-     *
-     * Requirements:
-     *
-     * - `tokenId` must exist.
-     *
-     * Emits a {Transfer} event.
-     */
-    function _burn(uint256 tokenId) internal virtual override {
-        super._burn(tokenId);
-
-        if (bytes(_tokenURIs[tokenId]).length != 0) {
-            delete _tokenURIs[tokenId];
+    function tokenExists(uint256 tokenId) external view returns (uint256) {
+        if (_exists(tokenId)) {
+            return 170;
+        } else {
+            return 0;
         }
     }
 
@@ -330,12 +290,55 @@ contract NODE_TKN is
         //^^^^^^^interactions^^^^^^^^^
     }
 
+    /**
+     * @dev returns base URI
+     */
+    function _baseURI() internal view virtual override returns (string memory) {
+        return _baseTokenURI;
+    }
+
     function _beforeTokenTransfer(
         address from,
         address to,
         uint256 tokenId
     ) internal virtual override(ERC721, ERC721Enumerable, ERC721Pausable) {
         super._beforeTokenTransfer(from, to, tokenId);
+    }
+
+    /**
+     * @dev Sets `_tokenURI` as the tokenURI of `tokenId`.
+     *
+     * Requirements:
+     *
+     * - `tokenId` must exist.
+     */
+    function _setTokenURI(uint256 tokenId, string memory _tokenURI)
+        internal
+        virtual
+    {
+        require(
+            _exists(tokenId),
+            "ERC721URIStorage: URI set of nonexistent token"
+        );
+        _tokenURIs[tokenId] = _tokenURI;
+    }
+
+    /**
+     * @dev Destroys `tokenId`.
+     * The approval is cleared when the token is burned.
+     *
+     * Requirements:
+     *
+     * - `tokenId` must exist.
+     *
+     * Emits a {Transfer} event.
+     */
+    function _burn(uint256 tokenId) internal virtual override {
+        super._burn(tokenId);
+
+        if (bytes(_tokenURIs[tokenId]).length != 0) {
+            delete _tokenURIs[tokenId];
+        }
     }
 
     /**
