@@ -325,4 +325,39 @@ abstract contract BASIC is
         return rec; // Returns Record struct rec
         //^^^^^^^effects/interactions^^^^^^^^^
     }
+
+    /**
+     * @dev Transfer any specified assetToken from contract
+     * @param _to - address to send to
+     * @param _idxHash - asset index
+     */
+    function transferAssetToken(address _to, bytes32 _idxHash)
+        external
+        virtual
+        nonReentrant
+        isContractAdmin
+    {
+        //^^^^^^^checks^^^^^^^^^
+
+        uint256 tokenId = uint256(_idxHash);
+
+        A_TKN.safeTransferFrom(address(this), _to, tokenId);
+        //^^^^^^^interactions^^^^^^^^^
+    }
+
+    /**
+     * @dev Transfer any specified nodeToken from contract
+     * @param _to - address to send to
+     * @param _tokenID - node token ID
+     */
+    function transferNodeToken(address _to, uint256 _tokenID)
+        external
+        virtual
+        isContractAdmin
+        nonReentrant
+    {
+        //^^^^^^^checks^^^^^^^^^
+        NODE_TKN.safeTransferFrom(address(this), _to, _tokenID);
+        //^^^^^^^interactions^^^^^^^^^
+    }
 }

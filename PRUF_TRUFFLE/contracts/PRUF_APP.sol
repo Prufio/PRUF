@@ -151,16 +151,14 @@ contract APP is CORE {
         bytes32 _idxHash,
         bytes32 _rgtHash,
         bytes32 _newrgtHash
-    )
-        external
-        nonReentrant
-        whenNotPaused
-        isAuthorized(_idxHash)
-    {
+    ) external nonReentrant whenNotPaused isAuthorized(_idxHash) {
         Record memory rec = getRecord(_idxHash);
         uint8 userType = getCallingUserType(rec.node);
 
-        require((userType > 0) && (userType < 10), "A:TA: User not auth in node");
+        require(
+            (userType > 0) && (userType < 10),
+            "A:TA: User not auth in node"
+        );
         require(
             (rec.assetStatus > 49) || (userType < 5),
             "A:TA:Only usertype < 5 can change status < 50"
@@ -207,9 +205,12 @@ contract APP is CORE {
         Record memory rec = getRecord(_idxHash);
         uint8 userType = getCallingUserType(rec.node);
 
-        require((userType > 0) && (userType < 10), "A:I2: User not auth in node");
+        require(
+            (userType > 0) && (userType < 10),
+            "A:I2: User not auth in node"
+        );
 
-        require(  //impossible to reach with current contracts, APP needs to hold token
+        require( //impossible to reach with current contracts, APP needs to hold token
             needsImport(rec.assetStatus) == 0,
             "A:I2: Asset needs re-imported"
         );
@@ -225,6 +226,28 @@ contract APP is CORE {
 
         writeNonMutableStorage(_idxHash, rec);
         deductServiceCosts(rec.node, 3);
+        //^^^^^^^interactions^^^^^^^^^
+    }
+
+    /**
+     * @dev Transfer any specified assetToken from contract
+     * @param _to - address to send to
+     * @param _idxHash - asset index
+     */
+    function transferAssetToken(address _to, bytes32 _idxHash)
+        external
+        override
+        nonReentrant
+    {
+        require(
+            hasRole(ASSET_TXFR_ROLE, _msgSender()),
+            "B:TX:Must have ASSET_TXFR_ROLE"
+        );
+        //^^^^^^^checks^^^^^^^^^
+
+        uint256 tokenId = uint256(_idxHash);
+
+        A_TKN.safeTransferFrom(address(this), _to, tokenId);
         //^^^^^^^interactions^^^^^^^^^
     }
 }
