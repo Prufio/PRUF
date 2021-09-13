@@ -316,6 +316,12 @@ contract STAKE_TKN is
         //^^^^^^^interactions^^^^^^^^^
     }
 
+    /**
+     * @dev all paused functions are blocked here (inside ERC720Pausable.sol)
+     * @param from - from address
+     * @param to - to address
+     * @param tokenId - token ID to transfer
+     */
     function _beforeTokenTransfer(
         address from,
         address to,
