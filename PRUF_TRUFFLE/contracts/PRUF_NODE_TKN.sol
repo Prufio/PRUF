@@ -296,7 +296,7 @@ contract NODE_TKN is
     function _baseURI() internal view virtual override returns (string memory) {
         return _baseTokenURI;
     }
-
+//CTS:EXAMINE comment
     function _beforeTokenTransfer(
         address from,
         address to,
@@ -321,24 +321,6 @@ contract NODE_TKN is
             "ERC721URIStorage: URI set of nonexistent token"
         );
         _tokenURIs[tokenId] = _tokenURI;
-    }
-
-    /**
-     * @dev Destroys `tokenId`.
-     * The approval is cleared when the token is burned.
-     *
-     * Requirements:
-     *
-     * - `tokenId` must exist.
-     *
-     * Emits a {Transfer} event.
-     */
-    function _burn(uint256 tokenId) internal virtual override {
-        super._burn(tokenId);
-
-        if (bytes(_tokenURIs[tokenId]).length != 0) {
-            delete _tokenURIs[tokenId];
-        }
     }
 
     /**
