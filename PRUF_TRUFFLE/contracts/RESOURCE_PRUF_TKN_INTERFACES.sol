@@ -335,7 +335,7 @@ interface UTIL_TKN_Interface {
     function renounceRole(bytes32 role, address account) external;
 }
 
-//------------------------------------------------------------------------------------------------
+//=========================================================================================================================================================================================================
 /*
  * @dev Interface for NODE_TKN
  * INHERITANCE:
@@ -404,6 +404,28 @@ interface NODE_TKN_Interface {
     ) external;
 
     /**
+     * @dev Pauses all token transfers.
+     *
+     * See {ERC721Pausable} and {Pausable-_pause}.
+     *
+     * Requirements:
+     *
+     * - the caller must have the `PAUSER_ROLE`.
+     */
+    function pause() external;
+
+    /**
+     * @dev Unpauses all token transfers.
+     *
+     * See {ERC721Pausable} and {Pausable-_unpause}.
+     *
+     * Requirements:
+     *
+     * - the caller must have the `PAUSER_ROLE`.
+     */
+    function unpause() external;
+
+    /**
      * @dev Returns the owner of the `tokenId` token.
      *
      * Requirements:
@@ -465,7 +487,7 @@ interface NODE_TKN_Interface {
     function tokenByIndex(uint256 index) external view returns (uint256);
 }
 
-//------------------------------------------------------------------------------------------------
+//=========================================================================================================================================================================================================
 /*
  * @dev Interface for STAKE_TKN
  * INHERITANCE:
@@ -540,6 +562,28 @@ interface STAKE_TKN_Interface {
     ) external;
 
     /**
+     * @dev Pauses all token transfers.
+     *
+     * See {ERC721Pausable} and {Pausable-_pause}.
+     *
+     * Requirements:
+     *
+     * - the caller must have the `PAUSER_ROLE`.
+     */
+    function pause() external;
+
+    /**
+     * @dev Unpauses all token transfers.
+     *
+     * See {ERC721Pausable} and {Pausable-_unpause}.
+     *
+     * Requirements:
+     *
+     * - the caller must have the `PAUSER_ROLE`.
+     */
+    function unpause() external;
+
+    /**
      * @dev Returns the owner of the `tokenId` token.
      *
      * Requirements:
@@ -601,7 +645,7 @@ interface STAKE_TKN_Interface {
     function tokenByIndex(uint256 index) external view returns (uint256);
 }
 
-//------------------------------------------------------------------------------------------------
+//=========================================================================================================================================================================================================
 
 /*
  * @dev Interface for A_TKN
@@ -611,6 +655,18 @@ interface STAKE_TKN_Interface {
     import "./Imports/security/ReentrancyGuard.sol";
  */
 interface A_TKN_Interface {
+    /**
+     * @dev ----------------------------------------PERMANANTLY !!!  Kills trusted agent and payable functions
+     * this will break the functionality of current payment mechanisms.
+     *
+     * The workaround for this is to create an allowance for pruf contracts for a single or multiple payments,
+     * either ahead of time "loading up your PRUF account" or on demand with an operation. On demand will use quite a bit more gas.
+     * "preloading" should be pretty gas efficient, but will add an extra step to the workflow, requiring users to have sufficient
+     * PRuF "banked" in an allowance for use in the system.
+     * @param _key - set to 170 to PERMENANTLY REMOVE TRUSTED AGENT CAPABILITY
+     */
+    function killTrustedAgent(uint256 _key) external;
+
     /*
      * @dev Set storage contract to interface with
      */
@@ -620,6 +676,33 @@ interface A_TKN_Interface {
      * @dev Address Setters
      */
     function resolveContractAddresses() external;
+
+    /**
+     * @dev Set calling wallet to a "cold Wallet" that cannot be manipulated by TRUSTED_AGENT or PAYABLE permissioned functions
+     * WALLET ADDRESSES SET TO "Cold" DO NOT WORK WITH TRUSTED_AGENT FUNCTIONS and must be unset from cold before it can interact with
+     * contract functions.
+     */
+    function setColdWallet() external;
+
+    /**
+     * @dev un-set calling wallet to a "cold Wallet", enabling manipulation by TRUSTED_AGENT and PAYABLE permissioned functions
+     * WALLET ADDRESSES SET TO "Cold" DO NOT WORK WITH TRUSTED_AGENT FUNCTIONS and must be unset from cold before it can interact with
+     * contract functions.
+     */
+    function unSetColdWallet() external;
+
+    /**
+     * @dev return an adresses "cold wallet" status
+     * WALLET ADDRESSES SET TO "Cold" DO NOT WORK WITH TRUSTED_AGENT FUNCTIONS
+     * @param _addr - address to check
+     * returns 170 if adress is set to "cold wallet" status
+     */
+    function isColdWallet(address _addr) external returns (uint256);
+
+    /**
+     * @dev Returns the Uniform Resource Identifier (URI) for `tokenId` token.
+     */
+    function tokenURI(uint256 tokenId) external returns (string memory URI);
 
     /*
      * @dev Mint new asset token
@@ -666,25 +749,6 @@ interface A_TKN_Interface {
     ) external;
 
     /**
-     * @dev Transfers the ownership of a given token ID to another address by a TRUSTED_AGENT.
-     * Usage of this method is discouraged, use {safeTransferFrom} whenever possible.
-     * Requires the _msgSender() to be the owner, approved, or operator.
-     * @param _from current owner of the token
-     * @param to address to receive the ownership of the given token ID
-     * @param tokenId uint256 ID of the token to be transferred
-     */
-    function trustedAgentTransferFrom(
-        address _from,
-        address to,
-        uint256 tokenId
-    ) external;
-
-    /**
-     * @dev Burns a token
-     */
-    function trustedAgentBurn(uint256 tokenId) external;
-
-    /**
      * @dev Safely transfers the ownership of a given token ID to another address
      * If the target address is a contract, it must implement {IERC721Receiver-onERC721Received},
      * which is called upon a safe transfer, and return the magic value
@@ -721,17 +785,50 @@ interface A_TKN_Interface {
     ) external;
 
     /**
+     * @dev Transfers the ownership of a given token ID to another address by a TRUSTED_AGENT.
+     * Usage of this method is discouraged, use {safeTransferFrom} whenever possible.
+     * Requires the _msgSender() to be the owner, approved, or operator.
+     * @param _from current owner of the token
+     * @param to address to receive the ownership of the given token ID
+     * @param tokenId uint256 ID of the token to be transferred
+     */
+    function trustedAgentTransferFrom(
+        address _from,
+        address to,
+        uint256 tokenId
+    ) external;
+
+    /**
+     * @dev Burns a token
+     */
+    function trustedAgentBurn(uint256 tokenId) external;
+
+    /**
      * @dev Safely burns a token and sets the corresponding RGT to zero in storage.
      */
     function discard(uint256 tokenId) external;
 
     /**
-     * @dev return an adresses "cold wallet" status
-     * WALLET ADDRESSES SET TO "Cold" DO NOT WORK WITH TRUSTED_AGENT FUNCTIONS
-     * @param _addr - address to check
-     * returns 170 if adress is set to "cold wallet" status
+     * @dev Pauses all token transfers.
+     *
+     * See {ERC721Pausable} and {Pausable-_pause}.
+     *
+     * Requirements:
+     *
+     * - the caller must have the `PAUSER_ROLE`.
      */
-    function isColdWallet(address _addr) external returns (uint256);
+    function pause() external;
+
+    /**
+     * @dev Unpauses all token transfers.
+     *
+     * See {ERC721Pausable} and {Pausable-_unpause}.
+     *
+     * Requirements:
+     *
+     * - the caller must have the `PAUSER_ROLE`.
+     */
+    function unpause() external;
 
     /**
      * @dev Returns the owner of the `tokenId` token.
@@ -760,11 +857,6 @@ interface A_TKN_Interface {
     function symbol() external returns (string memory tokenSymbol);
 
     /**
-     * @dev Returns the Uniform Resource Identifier (URI) for `tokenId` token.
-     */
-    function tokenURI(uint256 tokenId) external returns (string memory URI);
-
-    /**
      * @dev Returns the total amount of tokens stored by the contract.
      */
     function totalSupply() external returns (uint256);
@@ -784,7 +876,8 @@ interface A_TKN_Interface {
     function tokenByIndex(uint256 index) external returns (uint256);
 }
 
-//------------------------------------------------------------------------------------------------
+//=========================================================================================================================================================================================================
+
 /*
  * @dev Interface for MARKET_TKN
  * INHERITANCE:
@@ -793,16 +886,6 @@ interface A_TKN_Interface {
     import "./Imports/security/ReentrancyGuard.sol";
  */
 interface MARKET_TKN_Interface {
-    /*
-     * @dev Set storage contract to interface with
-     */
-    function OO_setStorageContract(address _storageAddress) external;
-
-    /*
-     * @dev Address Setters
-     */
-    function resolveContractAddresses() external;
-
     /*
      * @dev Mint new consignment Tag token, store consignment data
      */
@@ -839,11 +922,6 @@ interface MARKET_TKN_Interface {
     ) external;
 
     /**
-     * @dev Burns a token
-     */
-    function trustedAgentBurn(uint256 tokenId) external;
-
-    /**
      * @dev Safely transfers the ownership of a given token ID to another address
      * If the target address is a contract, it must implement {IERC721Receiver-onERC721Received},
      * which is called upon a safe transfer, and return the magic value
@@ -861,6 +939,33 @@ interface MARKET_TKN_Interface {
         uint256 tokenId,
         bytes calldata _data
     ) external;
+
+    /**
+     * @dev Burns a token
+     */
+    function trustedAgentBurn(uint256 tokenId) external;
+
+    /**
+     * @dev Pauses all token transfers.
+     *
+     * See {ERC721Pausable} and {Pausable-_pause}.
+     *
+     * Requirements:
+     *
+     * - the caller must have the `PAUSER_ROLE`.
+     */
+    function pause() external;
+
+    /**
+     * @dev Unpauses all token transfers.
+     *
+     * See {ERC721Pausable} and {Pausable-_unpause}.
+     *
+     * Requirements:
+     *
+     * - the caller must have the `PAUSER_ROLE`.
+     */
+    function unpause() external;
 
     /**
      * @dev Returns the owner of the `tokenId` token.
@@ -913,5 +1018,4 @@ interface MARKET_TKN_Interface {
     function tokenByIndex(uint256 index) external returns (uint256);
 }
 
-//------------------------------------------------------------------------------------------------
-
+//=========================================================================================================================================================================================================

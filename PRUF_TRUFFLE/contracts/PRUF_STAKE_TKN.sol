@@ -66,7 +66,6 @@ contract STAKE_TKN is
 
     string private _baseTokenURI;
 
-
     bytes32 public constant MINTER_ROLE = keccak256("MINTER_ROLE");
     bytes32 public constant PAUSER_ROLE = keccak256("PAUSER_ROLE");
 
@@ -77,7 +76,7 @@ contract STAKE_TKN is
         _setupRole(PAUSER_ROLE, _msgSender());
     }
 
-//----------------------Modifiers----------------------//
+    //----------------------Modifiers----------------------//
     /**
      * @dev Verify user credentials
      * Originating Address:
@@ -222,14 +221,6 @@ contract STAKE_TKN is
         //^^^^^^^interactions^^^^^^^^^
     }
 
-
-
-    
-
-    function _baseURI() internal view virtual override returns (string memory) {
-        return _baseTokenURI;
-    }
-
     /**
      * @dev See {IERC721Metadata-tokenURI}.
      */
@@ -258,6 +249,13 @@ contract STAKE_TKN is
         }
 
         return super.tokenURI(tokenId);
+    }
+
+    /**
+     * @dev RETURNS BASE URI
+     */
+    function _baseURI() internal view virtual override returns (string memory) {
+        return _baseTokenURI;
     }
 
     /**
