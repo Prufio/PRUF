@@ -148,78 +148,78 @@ contract STAKE_TKN is
 
     //---------------------- Public Functions ----------------------//
 
-    /**
-     * @dev Transfers the ownership of a given token ID to another address.
-     * Usage of this method is discouraged, use {safeTransferFrom} whenever possible.
-     * Requires the _msgSender() to be the owner, approved, or operator.
-     * @param _from current owner of the token
-     * @param _to address to receive the ownership of the given token ID
-     * @param _tokenId uint256 ID of the token to be transferred
-     */
-    function transferFrom(
-        address _from,
-        address _to,
-        uint256 _tokenId
-    ) public override nonReentrant whenNotPaused {
-        require(
-            _isApprovedOrOwner(_msgSender(), _tokenId),
-            "ST:TF: Caller !ApprovedOrOwner"
-        );
-        //^^^^^^^checks^^^^^^^^^
+    // /**
+    //  * @dev Transfers the ownership of a given token ID to another address.
+    //  * Usage of this method is discouraged, use {safeTransferFrom} whenever possible.
+    //  * Requires the _msgSender() to be the owner, approved, or operator.
+    //  * @param _from current owner of the token
+    //  * @param _to address to receive the ownership of the given token ID
+    //  * @param _tokenId uint256 ID of the token to be transferred
+    //  */
+    // function transferFrom(
+    //     address _from,
+    //     address _to,
+    //     uint256 _tokenId
+    // ) public override nonReentrant whenNotPaused {
+    //     require(
+    //         _isApprovedOrOwner(_msgSender(), _tokenId),
+    //         "ST:TF: Caller !ApprovedOrOwner"
+    //     );
+    //     //^^^^^^^checks^^^^^^^^^
 
-        _transfer(_from, _to, _tokenId);
-        //^^^^^^^interactions^^^^^^^^^
-    }
+    //     _transfer(_from, _to, _tokenId);
+    //     //^^^^^^^interactions^^^^^^^^^
+    // }
 
-    /**
-     * @dev Safely transfers the ownership of a given token ID to another address
-     * If the target address is a contract, it must implement {IERC721Receiver-onERC721Received},
-     * which is called upon a safe transfer, and return the magic value
-     * `bytes4(keccak256("onERC721Received(address,address,uint256,bytes)"))`; otherwise,
-     * the transfer is reverted.
-     * Requires the _msgSender() to be the owner, approved, or operator
-     * @param _from current owner of the token
-     * @param _to address to receive the ownership of the given token ID
-     * @param _tokenId uint256 ID of the token to be transferred
-     */
-    function safeTransferFrom(
-        address _from,
-        address _to,
-        uint256 _tokenId
-    ) public override whenNotPaused {
-        //^^^^^^^checks^^^^^^^^^
+    // /**
+    //  * @dev Safely transfers the ownership of a given token ID to another address
+    //  * If the target address is a contract, it must implement {IERC721Receiver-onERC721Received},
+    //  * which is called upon a safe transfer, and return the magic value
+    //  * `bytes4(keccak256("onERC721Received(address,address,uint256,bytes)"))`; otherwise,
+    //  * the transfer is reverted.
+    //  * Requires the _msgSender() to be the owner, approved, or operator
+    //  * @param _from current owner of the token
+    //  * @param _to address to receive the ownership of the given token ID
+    //  * @param _tokenId uint256 ID of the token to be transferred
+    //  */
+    // function safeTransferFrom(
+    //     address _from,
+    //     address _to,
+    //     uint256 _tokenId
+    // ) public override whenNotPaused {
+    //     //^^^^^^^checks^^^^^^^^^
 
-        safeTransferFrom(_from, _to, _tokenId, "");
-        //^^^^^^^interactions^^^^^^^^^
-    }
+    //     safeTransferFrom(_from, _to, _tokenId, "");
+    //     //^^^^^^^interactions^^^^^^^^^
+    // }
 
-    /**
-     * @dev Safely transfers the ownership of a given token ID to another address
-     * If the target address is a contract, it must implement {IERC721Receiver-onERC721Received},
-     * which is called upon a safe transfer, and return the magic value
-     * `bytes4(keccak256("onERC721Received(address,address,uint256,bytes)"))`; otherwise,
-     * the transfer is reverted.
-     * Requires the _msgSender() to be the owner, approved, or operator
-     * @param _from current owner of the token
-     * @param _to address to receive the ownership of the given token ID
-     * @param _tokenId uint256 ID of the token to be transferred
-     * @param _data bytes data to send along with a safe transfer check
-     */
-    function safeTransferFrom(
-        address _from,
-        address _to,
-        uint256 _tokenId,
-        bytes memory _data
-    ) public virtual override nonReentrant whenNotPaused {
-        require(
-            _isApprovedOrOwner(_msgSender(), _tokenId),
-            "ST:STF: Caller !ApprovedOrOwner"
-        );
-        //^^^^^^^checks^^^^^^^^^
+    // /**
+    //  * @dev Safely transfers the ownership of a given token ID to another address
+    //  * If the target address is a contract, it must implement {IERC721Receiver-onERC721Received},
+    //  * which is called upon a safe transfer, and return the magic value
+    //  * `bytes4(keccak256("onERC721Received(address,address,uint256,bytes)"))`; otherwise,
+    //  * the transfer is reverted.
+    //  * Requires the _msgSender() to be the owner, approved, or operator
+    //  * @param _from current owner of the token
+    //  * @param _to address to receive the ownership of the given token ID
+    //  * @param _tokenId uint256 ID of the token to be transferred
+    //  * @param _data bytes data to send along with a safe transfer check
+    //  */
+    // function safeTransferFrom(
+    //     address _from,
+    //     address _to,
+    //     uint256 _tokenId,
+    //     bytes memory _data
+    // ) public virtual override nonReentrant whenNotPaused {
+    //     require(
+    //         _isApprovedOrOwner(_msgSender(), _tokenId),
+    //         "ST:STF: Caller !ApprovedOrOwner"
+    //     );
+    //     //^^^^^^^checks^^^^^^^^^
 
-        _safeTransfer(_from, _to, _tokenId, _data);
-        //^^^^^^^interactions^^^^^^^^^
-    }
+    //     _safeTransfer(_from, _to, _tokenId, _data);
+    //     //^^^^^^^interactions^^^^^^^^^
+    // }
 
     /**
      * @dev See {IERC721Metadata-tokenURI}.
