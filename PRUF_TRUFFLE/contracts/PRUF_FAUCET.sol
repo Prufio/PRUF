@@ -18,26 +18,10 @@ _________\/// _____________\/// _______\/// __\///////// __\/// _____________
 // SPDX-License-Identifier: UNLICENSED
 pragma solidity ^0.8.6;
 
+import "./PRUF_CORE.sol";
 
-import "./RESOURCE_PRUF_STRUCTS.sol";
-import "./RESOURCE_PRUF_INTERFACES.sol";
-import "./RESOURCE_PRUF_TKN_INTERFACES.sol";
-import "./Imports/access/AccessControl.sol";
-import "./Imports/security/Pausable.sol";
-import "./Imports/security/ReentrancyGuard.sol";
 
-// import "./Imports/token/ERC721/IERC721.sol";
-
-contract FAUCET is ReentrancyGuard, AccessControl, Pausable {
-    bytes32 public constant CONTRACT_ADMIN_ROLE =
-        keccak256("CONTRACT_ADMIN_ROLE");
-    bytes32 public constant PAUSER_ROLE = keccak256("PAUSER_ROLE");
-
-    // address internal STAKE_TKN_Address;
-    // STAKE_TKN_Interface internal STAKE_TKN;
-
-    address internal UTIL_TKN_Address;
-    UTIL_TKN_Interface internal UTIL_TKN;
+contract FAUCET is CORE {
 
     address internal REWARDS_VAULT_Address;
     REWARDS_VAULT_Interface internal REWARDS_VAULT;
@@ -45,12 +29,6 @@ contract FAUCET is ReentrancyGuard, AccessControl, Pausable {
     uint256 constant seconds_in_a_day = 86400; //never set to less than 24 for tesing
 
     uint256 lastDrip; //last claim block.timestamp
-
-    constructor() {
-        _setupRole(DEFAULT_ADMIN_ROLE, _msgSender());
-        _setupRole(CONTRACT_ADMIN_ROLE, _msgSender());
-        _setupRole(PAUSER_ROLE, _msgSender());
-    }
 
     // --------------------------------------Modifiers--------------------------------------------//
 
@@ -66,54 +44,57 @@ contract FAUCET is ReentrancyGuard, AccessControl, Pausable {
     //     _;
     // }
 
-    /**
-     * @dev Verify user credentials
-     * Originating Address:
-     *      Has CONTRACT_ADMIN_ROLE
-     */
-    modifier isContractAdmin() {
-        require(
-            hasRole(CONTRACT_ADMIN_ROLE, _msgSender()),
-            "PES:MOD-ICA Caller !CONTRACT_ADMIN_ROLE"
-        );
-        _;
-    }
-
-    /**
-     * @dev Verify user credentials
-     * Originating Address:
-     *      Has PAUSER_ROLE
-     */
-    modifier isPauser() {
-        require(
-            hasRole(PAUSER_ROLE, _msgSender()),
-            "PES:MOD-IP:Calling address !pauser"
-        );
-        _;
-    }
 
     //--------------------------------------External functions--------------------------------------------//
 
+
     /**
-     * @dev Set address of contracts to interface with
-     * @param _utilAddress address of UTIL_TKN(PRUF)
-     * @param _rewardsVaultAddress address of REWARDS_VAULT
+     * @dev Resolve Contract Addresses from STOR
      */
-    function setTokenContracts(
-        address _utilAddress,
-        // address _stakeAddress,
-        address _rewardsVaultAddress
-    ) external isContractAdmin {
+    function resolveContractAddresses()
+        external
+        override
+        nonReentrant
+        isContractAdmin
+    {
         //^^^^^^^checks^^^^^^^^^
 
-        UTIL_TKN_Address = _utilAddress;
+    
+        REWARDS_VAULT_Address = STOR.resolveContractAddress("REWARDS_VAULT");
+        REWARDS_VAULT = REWARDS_VAULT_Interface(REWARDS_VAULT_Address);
+
+        UTIL_TKN_Address = STOR.resolveContractAddress("UTIL_TKN");
         UTIL_TKN = UTIL_TKN_Interface(UTIL_TKN_Address);
 
-        // STAKE_TKN_Address = _stakeAddress;
-        // STAKE_TKN = STAKE_TKN_Interface(STAKE_TKN_Address);
+        APP_NC_Address = STOR.resolveContractAddress("APP_NC");
+        APP_NC = APP_NC_Interface(APP_NC_Address);
 
-        REWARDS_VAULT_Address = _rewardsVaultAddress;
-        REWARDS_VAULT = REWARDS_VAULT_Interface(REWARDS_VAULT_Address);
+        ID_MGR_Address = STOR.resolveContractAddress("ID_MGR");
+        ID_MGR = ID_MGR_Interface(ID_MGR_Address);
+
+        // NODE_TKN_Address = STOR.resolveContractAddress("NODE_TKN");
+        // NODE_TKN = NODE_TKN_Interface(NODE_TKN_Address);
+
+        // NODE_MGR_Address = STOR.resolveContractAddress("NODE_MGR");
+        // NODE_MGR = NODE_MGR_Interface(NODE_MGR_Address);
+
+        // A_TKN_Address = STOR.resolveContractAddress("A_TKN");
+        // A_TKN = A_TKN_Interface(A_TKN_Address);
+
+        // ID_MGR_Address = STOR.resolveContractAddress("ID_MGR");
+        // ID_MGR = ID_MGR_Interface(ID_MGR_Address);
+
+        // ECR_MGR_Address = STOR.resolveContractAddress("ECR_MGR");
+        // ECR_MGR = ECR_MGR_Interface(ECR_MGR_Address);
+
+        // APP_Address = STOR.resolveContractAddress("APP");
+        // APP = APP_Interface(APP_Address);
+
+        // RCLR_Address = STOR.resolveContractAddress("RCLR");
+        // RCLR = RCLR_Interface(RCLR_Address);
+
+        // APP2_Address = STOR.resolveContractAddress("APP2");
+
         //^^^^^^^effects^^^^^^^^^
     }
 
@@ -145,50 +126,14 @@ contract FAUCET is ReentrancyGuard, AccessControl, Pausable {
         //^^^^^^^interactions^^^^^^^^^
     }
 
-    /**
-     * @dev Create a newRecord with permanent description
-     * @param _idxHash - hash of asset information created by frontend inputs
-     * @param _rgtHash - hash of rightsholder information created by frontend inputs
-     * @param _node - node the asset will be created in
-     * @param _countDownStart - decremental counter for an assets lifecycle
-     * @param _nonMutableStorage1 - field for permanent external asset data
-     * @param _nonMutableStorage2 - field for permanent external asset data
-     */
-    function newRecordWithNote(
-        bytes32 _idxHash,
-        bytes32 _rgtHash,
-        uint32 _node,
-        uint32 _countDownStart,
-        bytes32 _nonMutableStorage1,
-        bytes32 _nonMutableStorage2
-    ) external nonReentrant whenNotPaused {
-        //^^^^^^^Checks^^^^^^^^^
 
-        Record memory rec;
-        rec.nonMutableStorage1 = _nonMutableStorage1;
-        rec.nonMutableStorage2 = _nonMutableStorage2;
-        //^^^^^^^effects^^^^^^^^^
+    // bytes32 _idxHash,
+    // bytes32 _rgtHash,
+    // uint32 _node,
+    // uint32 _countDownStart,
+    // bytes32 _nonMutableStorage1,
+    // bytes32 _nonMutableStorage2
 
-        createRecord(_idxHash, _rgtHash, _node, _countDownStart);
-        writeNonMutableStorage(_idxHash, rec);
-        //^^^^^^^interactions^^^^^^^^^
-    }
+    //APP_NC.newRecordWithNote(_idxHash, _rgtHash, _node, _countDownStart, _nonMutableStorage1, _nonMutableStorage2);
 
-    /**
-     * @dev Pauses contract.
-     *
-     * See {ERC721Pausable} and {Pausable-_pause}.
-     */
-    function pause() external isPauser {
-        _pause();
-    }
-
-    /**
-     * @dev Unpauses contract.
-     *
-     * See {ERC721Pausable} and {Pausable-_unpause}.
-     */
-    function unpause() external isPauser {
-        _unpause();
-    }
 }
