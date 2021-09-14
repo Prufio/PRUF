@@ -22,6 +22,7 @@ pragma solidity ^0.8.6;
 import "./RESOURCE_PRUF_STRUCTS.sol";
 import "./Imports/access/AccessControl.sol";
 import "./Imports/security/Pausable.sol";
+
 //import "./Imports/security/ReentrancyGuard.sol";
 
 /**
@@ -51,7 +52,7 @@ import "./Imports/security/Pausable.sol";
 contract ID_MGR is Pausable, AccessControl {
     bytes32 public constant CONTRACT_ADMIN_ROLE =
         keccak256("CONTRACT_ADMIN_ROLE");
-    bytes32 public constant MINTER_ROLE = keccak256("MINTER_ROLE");
+    bytes32 public constant ID_MINTER_ROLE = keccak256("ID_MINTER_ROLE");
     bytes32 public constant PAUSER_ROLE = keccak256("PAUSER_ROLE");
     uint256 currentIdNumber;
 
@@ -65,18 +66,6 @@ contract ID_MGR is Pausable, AccessControl {
     }
 
     //----------------------Modifiers----------------------//
-    /**
-     * @dev Verify user credentials
-     * Originating Address:
-     *      has CONTRACT_ADMIN_ROLE
-     */
-    modifier isContractAdmin() {
-        require(
-            hasRole(CONTRACT_ADMIN_ROLE, _msgSender()),
-            "PIDT:MOD-IA: Calling address does not belong to an admin"
-        );
-        _;
-    }
 
     /**
      * @dev Verify user credentials
@@ -85,16 +74,14 @@ contract ID_MGR is Pausable, AccessControl {
      */
     modifier isMinter() {
         require(
-            hasRole(MINTER_ROLE, _msgSender()),
-            "PIDT:MOD-IM: Calling address does not belong to a minter"
+            hasRole(ID_MINTER_ROLE, _msgSender()),
+            "PIDT:MOD-IM: Calling address does not belong have ID_MINTER_ROLE"
         );
         _;
     }
 
     //----------------------EVENTS----------------------//
     event REPORT(string _msg);
-
-    //----------------------Admin functions / isContractAdmin----------------------//
 
     /**
      * @dev Mint an Asset token
@@ -107,11 +94,18 @@ contract ID_MGR is Pausable, AccessControl {
         uint256 _trustLevel,
         bytes32 _IdHash
     ) external isMinter whenNotPaused {
-        require(
-            addressOfIdHash[_IdHash] == address(0),"IM:MI: ID hash already exists. Burn old ID first."
+        require( //DPS:CHECK:NEW
+            (id[_msgSender()].trustLevel > _trustLevel) ||
+                (hasRole(CONTRACT_ADMIN_ROLE, _msgSender())),
+            "IM:MI: ID authority insufficient"
         );
         require(
-            id[_recipientAddress].IdHash == 0,"IM:MI: Adddress already has an ID. Burn old ID first."
+            addressOfIdHash[_IdHash] == address(0),
+            "IM:MI: ID hash already exists. Burn old ID first."
+        );
+        require(
+            id[_recipientAddress].IdHash == 0,
+            "IM:MI: Adddress already has an ID. Burn old ID first."
         );
         //^^^^^^^checks^^^^^^^^^
 
@@ -125,11 +119,12 @@ contract ID_MGR is Pausable, AccessControl {
      * @dev Burn PRUF_ID token
      * @param _addr - address to burn ID from
      */
-    function burnID(address _addr)
-        external
-        isMinter
-        whenNotPaused
-    {
+    function burnID(address _addr) external isMinter whenNotPaused {
+        require( //DPS:CHECK:NEW
+            (id[_msgSender()].trustLevel > id[_addr].trustLevel) ||
+                (hasRole(CONTRACT_ADMIN_ROLE, _msgSender())),
+            "IM:BI: ID authority insufficient"
+        );
         //^^^^^^^checks^^^^^^^^^
         //BURNID TODO
         delete addressOfIdHash[id[_addr].IdHash]; //remove record from IDHash registry
@@ -140,13 +135,18 @@ contract ID_MGR is Pausable, AccessControl {
     /**
      * @dev Set new ID data fields
      * @param _addr - address to set trust level
-     * @param _trustLevel - _trustLevel to set 
+     * @param _trustLevel - _trustLevel to set
      */
     function setTrustLevel(address _addr, uint256 _trustLevel)
         external
         isMinter
         whenNotPaused
     {
+        require( //DPS:TEST:NEW
+            (id[_msgSender()].trustLevel > _trustLevel) ||
+                (hasRole(CONTRACT_ADMIN_ROLE, _msgSender())),
+            "IM:STL: ID authority insufficient"
+        );
         //^^^^^^^checks^^^^^^^^^
 
         id[_addr].trustLevel = _trustLevel;
@@ -158,7 +158,11 @@ contract ID_MGR is Pausable, AccessControl {
      * @param _addr - address to check
      * returns PRUFID struct (see interfaces for struct definitions)
      */
-    function IdDataByAddress(address _addr) external view returns (PRUFID memory) {
+    function IdDataByAddress(address _addr)
+        external
+        view
+        returns (PRUFID memory)
+    {
         return id[_addr];
     }
 
@@ -167,7 +171,11 @@ contract ID_MGR is Pausable, AccessControl {
      * @param _IdHash - IdHash to check
      * returns IPRUFIDD struct (see interfaces for struct definitions)
      */
-    function IdDataByIdHash(bytes32 _IdHash) external view returns (PRUFID memory) {
+    function IdDataByIdHash(bytes32 _IdHash)
+        external
+        view
+        returns (PRUFID memory)
+    {
         return id[addressOfIdHash[_IdHash]];
     }
 
