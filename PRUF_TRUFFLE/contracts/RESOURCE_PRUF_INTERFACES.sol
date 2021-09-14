@@ -566,6 +566,15 @@ interface APP_Interface {
  */
 interface APP_NC_Interface {
     function transferAssetToken(address _to, bytes32 _idxHash) external;
+
+    function newRecordWithNote(
+        bytes32 _idxHash,
+        bytes32 _rgtHash,
+        uint32 _node,
+        uint32 _countDownStart,
+        bytes32 _nonMutableStorage1,
+        bytes32 _nonMutableStorage2
+    ) external;
 }
 
 /*
@@ -637,10 +646,8 @@ interface REWARDS_VAULT_Interface {
 // import "./Imports/security/Pausable.sol";
 */
 
-
 //------------------------------------------------------------------------------------------------
-interface ID_MGR_Interface{
-
+interface ID_MGR_Interface {
     /**
      * @dev Mint an Asset token
      * @param _recipientAddress - Address to mint token into
@@ -657,30 +664,34 @@ interface ID_MGR_Interface{
      * @dev Burn PRUF_ID token
      * @param _addr - address to burn ID from
      */
-    function burnID(address _addr)
-        external;
-      
+    function burnID(address _addr) external;
+
     /**
      * @dev Set new ID data fields
      * @param _addr - address to set trust level
-     * @param _trustLevel - _trustLevel to set 
+     * @param _trustLevel - _trustLevel to set
      */
-    function setTrustLevel(address _addr, uint256 _trustLevel)
-        external;
+    function setTrustLevel(address _addr, uint256 _trustLevel) external;
 
     /**
      * @dev get ID data given an address to look up
      * @param _addr - address to check
      * returns PRUFID struct (see interfaces for struct definitions)
      */
-    function IdDataByAddress(address _addr) external view returns (PRUFID memory);
+    function IdDataByAddress(address _addr)
+        external
+        view
+        returns (PRUFID memory);
 
     /**
      * @dev get ID data given an IdHash to look up
      * @param _IdHash - IdHash to check
      * returns IPRUFIDD struct (see interfaces for struct definitions)
      */
-    function IdDataByIdHash(bytes32 _IdHash) external view returns (PRUFID memory);
+    function IdDataByIdHash(bytes32 _IdHash)
+        external
+        view
+        returns (PRUFID memory);
 
     /**
      * @dev get ID trustLevel
@@ -688,7 +699,6 @@ interface ID_MGR_Interface{
      * returns trust level of token id
      */
     function trustLevel(address _addr) external view returns (uint256);
-
 }
 
 //------------------------------------------------------------------------------------------------
