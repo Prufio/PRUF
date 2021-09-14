@@ -18,6 +18,8 @@ _________\/// _____________\/// _______\/// __\///////// __\/// _____________
 // SPDX-License-Identifier: UNLICENSED
 pragma solidity ^0.8.6;
 
+
+import "./RESOURCE_PRUF_STRUCTS.sol";
 import "./RESOURCE_PRUF_INTERFACES.sol";
 import "./RESOURCE_PRUF_TKN_INTERFACES.sol";
 import "./Imports/access/AccessControl.sol";
@@ -26,7 +28,7 @@ import "./Imports/security/ReentrancyGuard.sol";
 
 // import "./Imports/token/ERC721/IERC721.sol";
 
-contract EO_STAKING is ReentrancyGuard, AccessControl, Pausable {
+contract FAUCET is ReentrancyGuard, AccessControl, Pausable {
     bytes32 public constant CONTRACT_ADMIN_ROLE =
         keccak256("CONTRACT_ADMIN_ROLE");
     bytes32 public constant PAUSER_ROLE = keccak256("PAUSER_ROLE");
@@ -140,6 +142,35 @@ contract EO_STAKING is ReentrancyGuard, AccessControl, Pausable {
             reward = rewardsVaultBalance / 2; //as the rewards vault becomes empty, enforce a semi-fair FCFS distruibution favoring small holders
         }
         REWARDS_VAULT.payRewards(_tokenId, reward);
+        //^^^^^^^interactions^^^^^^^^^
+    }
+
+    /**
+     * @dev Create a newRecord with permanent description
+     * @param _idxHash - hash of asset information created by frontend inputs
+     * @param _rgtHash - hash of rightsholder information created by frontend inputs
+     * @param _node - node the asset will be created in
+     * @param _countDownStart - decremental counter for an assets lifecycle
+     * @param _nonMutableStorage1 - field for permanent external asset data
+     * @param _nonMutableStorage2 - field for permanent external asset data
+     */
+    function newRecordWithNote(
+        bytes32 _idxHash,
+        bytes32 _rgtHash,
+        uint32 _node,
+        uint32 _countDownStart,
+        bytes32 _nonMutableStorage1,
+        bytes32 _nonMutableStorage2
+    ) external nonReentrant whenNotPaused {
+        //^^^^^^^Checks^^^^^^^^^
+
+        Record memory rec;
+        rec.nonMutableStorage1 = _nonMutableStorage1;
+        rec.nonMutableStorage2 = _nonMutableStorage2;
+        //^^^^^^^effects^^^^^^^^^
+
+        createRecord(_idxHash, _rgtHash, _node, _countDownStart);
+        writeNonMutableStorage(_idxHash, rec);
         //^^^^^^^interactions^^^^^^^^^
     }
 
