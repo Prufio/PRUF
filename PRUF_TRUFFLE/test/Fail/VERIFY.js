@@ -16,7 +16,7 @@ _________\/// _____________\/// _______\/// __\///////// __\/// _____________
         const PRUF_NODE_MGR = artifacts.require('NODE_MGR');
         const PRUF_NODE_TKN = artifacts.require('NODE_TKN');
         const PRUF_A_TKN = artifacts.require('A_TKN');
-        const PRUF_ID_TKN = artifacts.require('ID_TKN');
+        const PRUF_ID_MGR = artifacts.require('ID_MGR');
         const PRUF_ECR_MGR = artifacts.require('ECR_MGR');
         const PRUF_ECR = artifacts.require('ECR');
         const PRUF_ECR2 = artifacts.require('ECR2');
@@ -36,7 +36,7 @@ _________\/// _____________\/// _______\/// __\///////// __\/// _____________
         let NODE_MGR;
         let NODE_TKN;
         let A_TKN;
-        let ID_TKN;
+        let ID_MGR;
         let ECR_MGR;
         let ECR;
         let ECR2;
@@ -238,11 +238,11 @@ _________\/// _____________\/// _______\/// __\///////// __\/// _____________
             })
         
         
-            it('Should deploy PRUF_ID_TKN', async () => {
-                const PRUF_ID_TKN_TEST = await PRUF_ID_TKN.deployed({ from: account1 });
-                console.log(PRUF_ID_TKN_TEST.address);
-                assert(PRUF_ID_TKN_TEST.address !== '')
-                ID_TKN = PRUF_ID_TKN_TEST;
+            it('Should deploy PRUF_ID_MGR', async () => {
+                const PRUF_ID_MGR_TEST = await PRUF_ID_MGR.deployed({ from: account1 });
+                console.log(PRUF_ID_MGR_TEST.address);
+                assert(PRUF_ID_MGR_TEST.address !== '')
+                ID_MGR = PRUF_ID_MGR_TEST;
             })
         
         
@@ -611,8 +611,8 @@ _________\/// _____________\/// _______\/// __\///////// __\/// _____________
                     })
         
                     .then(() => {
-                        console.log("Adding ID_TKN to storage for use in Node 0")
-                        return STOR.OO_addContract("ID_TKN", ID_TKN.address, '0', '1', { from: account1 })
+                        console.log("Adding ID_MGR to storage for use in Node 0")
+                        return STOR.OO_addContract("ID_MGR", ID_MGR.address, '0', '1', { from: account1 })
                     })
         
                     .then(() => {
@@ -1968,7 +1968,7 @@ _________\/// _____________\/// _______\/// __\///////// __\/// _____________
 
     it('Should mint PRUF_ID token to account1', async () => {
 
-        return ID_TKN.mintIDtoken(
+        return ID_MGR.mintID(
             account1,
             '1',
             { from: account1 }
@@ -1977,7 +1977,7 @@ _________\/// _____________\/// _______\/// __\///////// __\/// _____________
 
 
     it('Should mint PRUF_ID token to account2', async () => {
-        return ID_TKN.mintIDtoken(
+        return ID_MGR.mintID(
             account2,
             '2',
             { from: account1 }

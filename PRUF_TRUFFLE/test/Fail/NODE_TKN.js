@@ -974,7 +974,7 @@ contract("NODE_TKN", (accounts) => {
     return RCLR.grantRole(discardRoleB32, A_TKN.address, { from: account1 });
   });
 
-  it("Should authorize all minter addresses for minting ID_TKN(s)", () => {
+  it("Should authorize all minter addresses for minting ID_MGR(s)", () => {
     console.log("Authorizing NODE_MGR");
     return ID_MGR.grantRole(minterRoleB32, account1, {
       from: account1,

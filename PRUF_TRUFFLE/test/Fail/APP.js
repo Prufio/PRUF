@@ -16,7 +16,7 @@ const PRUF_APP2 = artifacts.require("APP2");
 const PRUF_NODE_MGR = artifacts.require("NODE_MGR");
 const PRUF_NODE_TKN = artifacts.require("NODE_TKN");
 const PRUF_A_TKN = artifacts.require("A_TKN");
-const PRUF_ID_TKN = artifacts.require("ID_TKN");
+const PRUF_ID_MGR = artifacts.require("ID_MGR");
 const PRUF_ECR_MGR = artifacts.require("ECR_MGR");
 const PRUF_ECR = artifacts.require("ECR");
 const PRUF_ECR2 = artifacts.require("ECR2");
@@ -37,7 +37,7 @@ let APP2;
 let NODE_MGR;
 let NODE_TKN;
 let A_TKN;
-let ID_TKN;
+let ID_MGR;
 let ECR_MGR;
 let ECR;
 let ECR2;
@@ -107,6 +107,7 @@ let nakedAuthCode3;
 let nakedAuthCode7;
 
 let payableRoleB32;
+let IDminterRoleB32;
 let minterRoleB32;
 let trustedAgentRoleB32;
 let assetTransferRoleB32;
@@ -286,6 +287,8 @@ contract("APP", (accounts) => {
 
     minterRoleB32 = await Helper.getStringHash("MINTER_ROLE");
 
+    IDminterRoleB32 = await Helper.getStringHash("ID_MINTER_ROLE");
+
     trustedAgentRoleB32 = await Helper.getStringHash("TRUSTED_AGENT_ROLE");
 
     assetTransferRoleB32 = await Helper.getStringHash("ASSET_TXFR_ROLE");
@@ -377,11 +380,11 @@ contract("APP", (accounts) => {
     RCLR = PRUF_RCLR_TEST;
   });
 
-  it("Should deploy PRUF_ID_TKN", async () => {
-    const PRUF_ID_TKN_TEST = await PRUF_ID_TKN.deployed({ from: account1 });
-    console.log(PRUF_ID_TKN_TEST.address);
-    assert(PRUF_ID_TKN_TEST.address !== "");
-    ID_TKN = PRUF_ID_TKN_TEST;
+  it("Should deploy PRUF_ID_MGR", async () => {
+    const PRUF_ID_MGR_TEST = await PRUF_ID_MGR.deployed({ from: account1 });
+    console.log(PRUF_ID_MGR_TEST.address);
+    assert(PRUF_ID_MGR_TEST.address !== "");
+    ID_MGR = PRUF_ID_MGR_TEST;
   });
 
   it("Should deploy PRUF_ECR2", async () => {
@@ -519,8 +522,8 @@ contract("APP", (accounts) => {
       })
 
       .then(() => {
-        console.log("Adding ID_TKN to storage for use in Node 0");
-        return STOR.OO_addContract("ID_TKN", ID_TKN.address, "0", "1", {
+        console.log("Adding ID_MGR to storage for use in Node 0");
+        return STOR.OO_addContract("ID_MGR", ID_MGR.address, "0", "1", {
           from: account1,
         });
       })
@@ -963,6 +966,13 @@ contract("APP", (accounts) => {
       // });
   });
 
+  it("Should authorize all minter addresses for minting ID(s)", () => {
+    console.log("Authorizing NODE_MGR");
+    return ID_MGR.grantRole(IDminterRoleB32, account1, {
+      from: account1,
+    });
+  });
+
   it("Should authorize all minter contracts for minting NODE_TKN(s)", () => {
     console.log("Authorizing NODE_MGR");
     return NODE_TKN.grantRole(minterRoleB32, NODE_MGR.address, {
@@ -1217,13 +1227,13 @@ contract("APP", (accounts) => {
       })
 
       .then(() => {
-        console.log("Minting ID_TKN to account1");
-        return ID_TKN.mintIDtoken(account1, "1", "", { from: account1 });
+        console.log("Minting ID to account1");
+        return ID_MGR.mintID(account1, "1", asset1, { from: account1 });
       })
 
       .then(() => {
-        console.log("Minting ID_TKN to account10");
-        return ID_TKN.mintIDtoken(account10, "2", "", { from: account1 });
+        console.log("Minting ID to account10");
+        return ID_MGR.mintID(account10, "2", asset2, { from: account1 });
       })
 
       .then(() => {
@@ -1578,12 +1588,8 @@ contract("APP", (accounts) => {
       });
   });
 
-  it("Should mint ID_TKN(3) to account3", async () => {
-    return ID_TKN.mintIDtoken(account3, "3", { from: account1 });
-  });
-
-  it("Should reMint ID_TKN(1) to account4", async () => {
-    return ID_TKN.reMintIDtoken(account4, "3", { from: account1 });
+  it("Should mint ID(3) to account4", async () => {
+    return ID_MGR.mintID(account4, "3", asset3, { from: account1 });
   });
 
   it("Should mint 30000 tokens to account2", async () => {

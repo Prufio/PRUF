@@ -4,7 +4,7 @@ const PRUF_APP2 = artifacts.require('APP2');
 const PRUF_NODE_MGR = artifacts.require('NODE_MGR');
 const PRUF_NODE_TKN = artifacts.require('NODE_TKN');
 const PRUF_A_TKN = artifacts.require('A_TKN');
-const PRUF_ID_TKN = artifacts.require('ID_TKN');
+const PRUF_ID_MGR = artifacts.require('ID_MGR');
 const PRUF_ECR_MGR = artifacts.require('ECR_MGR');
 const PRUF_ECR = artifacts.require('ECR');
 const PRUF_ECR2 = artifacts.require('ECR2');
@@ -23,7 +23,7 @@ let APP2;
 let NODE_MGR;
 let NODE_TKN;
 let A_TKN;
-let ID_TKN;
+let ID_MGR;
 let ECR_MGR;
 let ECR;
 let ECR2;
@@ -85,6 +85,7 @@ let nakedAuthCode7;
 
 let payableRoleB32;
 let minterRoleB32;
+let IDminterRoleB32;
 
 contract('ECR_CORE', accounts => {
 
@@ -214,11 +215,11 @@ contract('ECR_CORE', accounts => {
     })
 
 
-    it('Should deploy PRUF_ID_TKN', async () => {
-        const PRUF_ID_TKN_TEST = await PRUF_ID_TKN.deployed({ from: account1 });
-        console.log(PRUF_ID_TKN_TEST.address);
-        assert(PRUF_ID_TKN_TEST.address !== '')
-        ID_TKN = PRUF_ID_TKN_TEST;
+    it('Should deploy PRUF_ID_MGR', async () => {
+        const PRUF_ID_MGR_TEST = await PRUF_ID_MGR.deployed({ from: account1 });
+        console.log(PRUF_ID_MGR_TEST.address);
+        assert(PRUF_ID_MGR_TEST.address !== '')
+        ID_MGR = PRUF_ID_MGR_TEST;
     })
 
 
@@ -511,6 +512,8 @@ contract('ECR_CORE', accounts => {
         minterRoleB32 = await Helper.getStringHash(
             'MINTER_ROLE'
         )
+
+        IDminterRoleB32 = await Helper.getStringHash("ID_MINTER_ROLE");
     })
 
 
@@ -540,8 +543,8 @@ contract('ECR_CORE', accounts => {
             })
 
             .then(() => {
-                console.log("Adding ID_TKN to storage for use in Node 0")
-                return STOR.OO_addContract("ID_TKN", ID_TKN.address, '0', '1', { from: account1 })
+                console.log("Adding ID_MGR to storage for use in Node 0")
+                return STOR.OO_addContract("ID_MGR", ID_MGR.address, '0', '1', { from: account1 })
             })
 
             .then(() => {
@@ -1135,6 +1138,13 @@ contract('ECR_CORE', accounts => {
                 return A_TKN.grantRole(minterRoleB32, PIP.address, { from: account1 })
             })
     })
+
+    it("Should authorize all minter addresses for minting ID(s)", () => {
+      console.log("Authorizing NODE_MGR");
+      return ID_MGR.grantRole(IDminterRoleB32, account1, {
+        from: account1,
+      });
+    });
 
 
     it("Should set costs in minted Node's", async () => {
