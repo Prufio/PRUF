@@ -107,6 +107,7 @@ let nakedAuthCode3;
 let nakedAuthCode7;
 
 let payableRoleB32;
+let IDminterRoleB32;
 let minterRoleB32;
 let trustedAgentRoleB32;
 let assetTransferRoleB32;
@@ -285,6 +286,8 @@ contract("A_TKN", (accounts) => {
     payableRoleB32 = await Helper.getStringHash("PAYABLE_ROLE");
 
     minterRoleB32 = await Helper.getStringHash("MINTER_ROLE");
+
+    IDminterRoleB32 = await Helper.getStringHash("ID_MINTER_ROLE");
 
     trustedAgentRoleB32 = await Helper.getStringHash("TRUSTED_AGENT_ROLE");
 
@@ -968,9 +971,9 @@ contract("A_TKN", (accounts) => {
     });
   });
 
-  it("Should authorize all minter addresses for minting ID_TKN(s)", () => {
+  it("Should authorize all minter addresses for minting ID_MGR(s)", () => {
     console.log("Authorizing NODE_MGR");
-    return ID_MGR.grantRole(minterRoleB32, account1, {
+    return ID_MGR.grantRole(IDminterRoleB32, account1, {
       from: account1,
     });
   });
@@ -1225,7 +1228,7 @@ contract("A_TKN", (accounts) => {
       })
 
       .then(() => {
-        console.log("Minting ID_TKN to account10");
+        console.log("Minting ID_MGR to account10");
         return ID_MGR.mintID(account10, "2", asset2, { from: account1 });
       })
 
@@ -1574,7 +1577,7 @@ contract("A_TKN", (accounts) => {
       });
   });
 
-  it("Should mint ID_TKN(3) to account4", async () => {
+  it("Should mint ID_MGR(3) to account4", async () => {
     return ID_MGR.mintID(account4, "3", asset3, { from: account1 });
   });
 

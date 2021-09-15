@@ -38,8 +38,8 @@ contract FAUCET is ReentrancyGuard, Pausable, AccessControl {
     address internal UTIL_TKN_Address;
     UTIL_TKN_Interface internal UTIL_TKN;
 
-    address internal ID_TKN_Address;
-    ID_TKN_Interface internal ID_TKN;
+    address internal ID_MGR_Address;
+    ID_MGR_Interface internal ID_MGR;
 
     address payable public payment_address;
 
@@ -130,7 +130,7 @@ contract FAUCET is ReentrancyGuard, Pausable, AccessControl {
     }
 
     /*
-     * @dev Set address of ID_TKN contract to interface with
+     * @dev Set address of ID_MGR contract to interface with
      * TESTING: ALL REQUIRES, ACCESS ROLE
      */
     function setIDtokenContract(address _address) external isContractAdmin {
@@ -140,8 +140,8 @@ contract FAUCET is ReentrancyGuard, Pausable, AccessControl {
         );
         //^^^^^^^checks^^^^^^^^^
 
-        ID_TKN_Address = _address;
-        ID_TKN = ID_TKN_Interface(ID_TKN_Address);
+        ID_MGR_Address = _address;
+        ID_MGR = ID_MGR_Interface(ID_MGR_Address);
         //^^^^^^^effects^^^^^^^^^
     }
 
@@ -248,12 +248,12 @@ contract FAUCET is ReentrancyGuard, Pausable, AccessControl {
         //^^^^^^^checks^^^^^^^^^
         //^^^^^^^effects^^^^^^^^
         require(
-            ID_TKN.balanceOf(_msgSender()) < 1, //_msgSender() is token holder
+            ID_MGR.balanceOf(_msgSender()) < 1, //_msgSender() is token holder
             "PP:GI: Caller is PRuF_ID holder"
         );
         tokenId++;
-        ID_TKN.mintIDtoken(_msgSender(), tokenId, "0");
-        ID_TKN.setTrustLevel(tokenId, 10);
+        ID_MGR.mintID(_msgSender(), tokenId, "0");
+        ID_MGR.setTrustLevel(tokenId, 10);
         //^^^^^^^Interactions^^^^^^^^^
     }
 

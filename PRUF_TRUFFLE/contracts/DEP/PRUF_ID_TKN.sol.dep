@@ -44,7 +44,7 @@ import "./Imports/utils/ReentrancyGuard.sol";
  * roles to other accounts.
  */
 
-contract ID_TKN is
+contract ID_MGR is
     ReentrancyGuard,
     Context,
     AccessControl,
@@ -110,7 +110,7 @@ contract ID_TKN is
      * @param _tokenURI - URI string to atatch to token
      * returns Token ID of minted token
      */
-    function mintIDtoken(
+    function mintID(
         address _recipientAddress,
         uint256 _tokenId,
         string calldata _tokenURI
@@ -147,7 +147,7 @@ contract ID_TKN is
      * @param _recipientAddress - new address for token
      * @param _tokenId - Token ID to teleport
      */
-    function reMintIDtoken(address _recipientAddress, uint256 _tokenId)
+    function remintID(address _recipientAddress, uint256 _tokenId)
         external
         isMinter
         nonReentrant

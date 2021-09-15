@@ -16,7 +16,7 @@ const PRUF_APP2 = artifacts.require("APP2");
 const PRUF_NODE_MGR = artifacts.require("NODE_MGR");
 const PRUF_NODE_TKN = artifacts.require("NODE_TKN");
 const PRUF_A_TKN = artifacts.require("A_TKN");
-const PRUF_ID_TKN = artifacts.require("ID_TKN");
+const PRUF_ID_MGR = artifacts.require("ID_MGR");
 const PRUF_ECR_MGR = artifacts.require("ECR_MGR");
 const PRUF_ECR = artifacts.require("ECR");
 const PRUF_ECR2 = artifacts.require("ECR2");
@@ -37,7 +37,7 @@ let APP2;
 let NODE_MGR;
 let NODE_TKN;
 let A_TKN;
-let ID_TKN;
+let ID_MGR;
 let ECR_MGR;
 let ECR;
 let ECR2;
@@ -108,11 +108,12 @@ let nakedAuthCode7;
 
 let payableRoleB32;
 let minterRoleB32;
+let IDminterRoleB32;
 let trustedAgentRoleB32;
 let assetTransferRoleB32;
 let discardRoleB32;
 
-contract("ID_TKN", (accounts) => {
+contract("ID_MGR", (accounts) => {
   console.log(
     "//**************************BEGIN BOOTSTRAP**************************//"
   );
@@ -286,6 +287,8 @@ contract("ID_TKN", (accounts) => {
 
     minterRoleB32 = await Helper.getStringHash("MINTER_ROLE");
 
+    IDminterRoleB32 = await Helper.getStringHash("ID_MINTER_ROLE");
+
     trustedAgentRoleB32 = await Helper.getStringHash("TRUSTED_AGENT_ROLE");
 
     assetTransferRoleB32 = await Helper.getStringHash("ASSET_TXFR_ROLE");
@@ -377,11 +380,11 @@ contract("ID_TKN", (accounts) => {
     RCLR = PRUF_RCLR_TEST;
   });
 
-  it("Should deploy PRUF_ID_TKN", async () => {
-    const PRUF_ID_TKN_TEST = await PRUF_ID_TKN.deployed({ from: account1 });
-    console.log(PRUF_ID_TKN_TEST.address);
-    assert(PRUF_ID_TKN_TEST.address !== "");
-    ID_TKN = PRUF_ID_TKN_TEST;
+  it("Should deploy PRUF_ID_MGR", async () => {
+    const PRUF_ID_MGR_TEST = await PRUF_ID_MGR.deployed({ from: account1 });
+    console.log(PRUF_ID_MGR_TEST.address);
+    assert(PRUF_ID_MGR_TEST.address !== "");
+    ID_MGR = PRUF_ID_MGR_TEST;
   });
 
   it("Should deploy PRUF_ECR2", async () => {
@@ -519,8 +522,8 @@ contract("ID_TKN", (accounts) => {
       })
 
       .then(() => {
-        console.log("Adding ID_TKN to storage for use in Node 0");
-        return STOR.OO_addContract("ID_TKN", ID_TKN.address, "0", "1", {
+        console.log("Adding ID_MGR to storage for use in Node 0");
+        return STOR.OO_addContract("ID_MGR", ID_MGR.address, "0", "1", {
           from: account1,
         });
       })
@@ -893,6 +896,13 @@ contract("ID_TKN", (accounts) => {
       // });
   });
 
+  it("Should authorize all minter addresses for minting ID(s)", () => {
+    console.log("Authorizing NODE_MGR");
+    return ID_MGR.grantRole(IDminterRoleB32, account1, {
+      from: account1,
+    });
+  });
+
   it("Should authorize all payable contracts for transactions", () => {
     console.log("Authorizing NODE_MGR");
     return UTIL_TKN.grantRole(payableRoleB32, NODE_MGR.address, {
@@ -1217,13 +1227,13 @@ contract("ID_TKN", (accounts) => {
       })
 
       .then(() => {
-        console.log("Minting ID_TKN to account1");
-        return ID_TKN.mintIDtoken(account1, "1", "", { from: account1 });
+        console.log("Minting ID to account1");
+        return ID_MGR.mintID(account1, "1", asset1, { from: account1 });
       })
 
       .then(() => {
-        console.log("Minting ID_TKN to account10");
-        return ID_TKN.mintIDtoken(account10, "2", "", { from: account1 });
+        console.log("Minting ID to account10");
+        return ID_MGR.mintID(account10, "2", asset2, { from: account1 });
       })
 
       .then(() => {
@@ -1571,34 +1581,34 @@ contract("ID_TKN", (accounts) => {
       });
   });
 
-  it("Should mint ID_TKN(3) to account3", async () => {
-    return ID_TKN.mintIDtoken(account3, "3", { from: account1 });
+  it("Should mint ID to account4", async () => {
+    return ID_MGR.mintID(account4, "3", asset3, { from: account1 });
   });
 
-  it("Should reMint ID_TKN(1) to account4", async () => {
-    return ID_TKN.reMintIDtoken(account4, "3", { from: account1 });
+  it("Should mint ID to account4", async () => {
+    return ID_MGR.mintID(account5, "1", asset4, { from: account1 });
   });
 
   it("Should mint 30000 tokens to account2", async () => {
     console.log(
-      "//**************************************BEGIN ID_TKN TEST**********************************************/"
+      "//**************************************BEGIN ID_MGR TEST**********************************************/"
     );
     console.log(
-      "//**************************************BEGIN ID_TKN SETUP**********************************************/"
+      "//**************************************BEGIN ID_MGR SETUP**********************************************/"
     );
     return UTIL_TKN.mint(account2, "30000000000000000000000", {
       from: account1,
     });
   });
 
-  it("Should mint ID(1) to account2", async () => {
-    return ID_TKN.mintIDtoken(account2, "5", { from: account1 });
+  it("Should mint ID to account2", async () => {
+    return ID_MGR.mintID(account2, "4", asset5, { from: account1 });
   });
 
   it("Should retrieve hasMinterRole true", async () => {
     var Record = "";
 
-    return await ID_TKN.hasRole(
+    return await ID_MGR.hasRole(
       minterRoleB32,
       account2,
       { from: account2 },
@@ -1612,300 +1622,215 @@ contract("ID_TKN", (accounts) => {
     );
   });
 
-  it("Should pause ID_TKN", async () => {
-    return ID_TKN.pause({
+  it("Should pause ID_MGR", async () => {
+    return ID_MGR.pause({
+      from: account1,
+    });
+  });
+
+  it("Should authorize all minter addresses for minting ID(s)", () => {
+    console.log("Authorizing account2");
+    return ID_MGR.grantRole(IDminterRoleB32, account2, {
       from: account1,
     });
   });
 
   //1
-  it("Should Fail because ID_TKN is paused", async () => {
+  it("Should Fail because ID_MGR is paused", async () => {
     console.log(
-      "//**************************************END ID_TKN SETUP**********************************************/"
+      "//**************************************END ID_MGR SETUP**********************************************/"
     );
     console.log(
-      "//**************************************BEGIN ID_TKN FAIL BATCH (22)**********************************************/"
+      "//**************************************BEGIN ID_MGR FAIL BATCH (22)**********************************************/"
     );
     console.log(
-      "//**************************************BEGIN mintIDtoken FAIL BATCH**********************************************/"
+      "//**************************************BEGIN mintID FAIL BATCH**********************************************/"
     );
-    return ID_TKN.mintIDtoken(account2, asset1, "1234", {
+    return ID_MGR.mintID(account2, "1", asset6, {
       from: account2,
     });
   });
 
-  it("Should unpause ID_TKN", async () => {
-    return ID_TKN.unpause({
+  it("Should unauthorize all minter addresses for minting ID(s)", () => {
+    console.log("Authorizing account2");
+    return ID_MGR.revokeRole(IDminterRoleB32, account2, {
+      from: account1,
+    });
+  });
+
+  it("Should unpause ID_MGR", async () => {
+    return ID_MGR.unpause({
       from: account1,
     });
   });
 
   //2
   it("Should Fail because caller is not Minter", async () => {
-    return ID_TKN.mintIDtoken(account2, asset1, "1234", {
+    return ID_MGR.mintID(account2, "1", asset1, {
       from: account2,
     });
   });
 
-  it("Should retrieve balanceOf 1 ID_TKN", async () => {
-    var Record = "";
-
-    return await ID_TKN.balanceOf(
-      account2,
-      { from: account2 },
-      function (_err, _result) {
-        if (_err) {
-        } else {
-          Record = _result;
-          console.log(Record);
-        }
-      }
-    );
-  });
-
-  it("Should pause ID_TKN", async () => {
-    return ID_TKN.pause({
+  it("Should authorize all minter addresses for minting ID(s)", () => {
+    console.log("Authorizing account2");
+    return ID_MGR.grantRole(IDminterRoleB32, account2, {
       from: account1,
     });
   });
 
   //3
-  it("Should Fail because ID_TKN is paused", async () => {
-    console.log(
-      "//**************************************END mintIDtoken FAIL BATCH**********************************************/"
-    );
-    console.log(
-      "//**************************************BEGIN burnID FAIL BATCH**********************************************/"
-    );
-    return ID_TKN.burnID(asset1, { from: account2 });
-  });
-
-  it("Should unpause ID_TKN", async () => {
-    return ID_TKN.unpause({
-      from: account1,
+  it("Should Fail because ID authorization is not sufficient.", async () => {
+    return ID_MGR.mintID(account2, "10", asset6, {
+      from: account2,
     });
   });
 
-  //2
-  it("Should Fail because caller is not Minter", async () => {
-    return ID_TKN.burnID(asset1, { from: account2 });
-  });
-
-  it("Should pause ID_TKN", async () => {
-    return ID_TKN.pause({
-      from: account1,
-    });
-  });
-
-  //3
-  it("Should Fail because ID_TKN is paused", async () => {
-    console.log(
-      "//**************************************END burnID FAIL BATCH**********************************************/"
-    );
-    console.log(
-      "//**************************************BEGIN reMintIDtoken FAIL BATCH**********************************************/"
-    );
-    return ID_TKN.reMintIDtoken(account2, asset1, { from: account2 });
-  });
-
-  it("Should unpause ID_TKN", async () => {
-    return ID_TKN.unpause({
+  it("Should unauthorize all minter addresses for minting ID(s)", () => {
+    console.log("Unauthorizing account2");
+    return ID_MGR.revokeRole(IDminterRoleB32, account2, {
       from: account1,
     });
   });
 
   //4
-  it("Should Fail because caller is not Minter", async () => {
-    return ID_TKN.reMintIDtoken(account2, asset1, { from: account2 });
+  it("Should Fail because IDhash already exists", async () => {
+    return ID_MGR.mintID(account5, "5", asset1, {
+      from: account1,
+    });
   });
 
   //5
-  it("Should Fail because you cannot reMint nonExistant token", async () => {
-    return ID_TKN.reMintIDtoken(account2, asset1, { from: account1 });
+  it("Should Fail because reciever already has ID", async () => {
+    return ID_MGR.mintID(account2, "5", asset7, {
+      from: account1,
+    });
   });
 
-  it("Should mint ID_TKN to account2", async () => {
-    console.log(
-      "//**************************************END reMintIDtoken FAIL BATCH**********************************************/"
-    );
-    console.log(
-      "//**************************************BEGIN setURI FAIL BATCH**********************************************/"
-    );
-    return ID_TKN.mintIDtoken(account2, asset1, { from: account1 });
+  it("Should pause ID_MGR", async () => {
+    return ID_MGR.pause({
+      from: account1,
+    });
+  });
+
+  it("Should authorize all minter addresses for minting ID(s)", () => {
+    console.log("Authorizing account2");
+    return ID_MGR.grantRole(IDminterRoleB32, account2, {
+      from: account1,
+    });
   });
 
   //6
-  it("Should Fail because caller is not Minter", async () => {
-    return ID_TKN.setURI(asset1, "Pruf.io", { from: account3 });
+  it("Should Fail because ID_MGR is paused", async () => {
+    console.log(
+      "//**************************************END mintID FAIL BATCH**********************************************/"
+    );
+    console.log(
+      "//**************************************BEGIN burnID FAIL BATCH**********************************************/"
+    );
+    return ID_MGR.burnID(account1, { from: account2 });
   });
 
-  it("Should pause ID_TKN", async () => {
-    return ID_TKN.pause({
+  it("Should unauthorize all minter addresses for minting ID(s)", () => {
+    console.log("Authorizing account2");
+    return ID_MGR.revokeRole(IDminterRoleB32, account2, {
+      from: account1,
+    });
+  });
+
+  it("Should unpause ID_MGR", async () => {
+    return ID_MGR.unpause({
       from: account1,
     });
   });
 
   //7
-  it("Should Fail because ID_TKN is paused", async () => {
-    console.log(
-      "//**************************************END reMintIDtoken FAIL BATCH**********************************************/"
-    );
-    console.log(
-      "//**************************************BEGIN setIdURI FAIL BATCH**********************************************/"
-    );
-    return ID_TKN.setIdURI('5', rgt1, { from: account1 });
+  it("Should Fail because caller is not Minter", async () => {
+    return ID_MGR.burnID(account1, { from: account2 });
   });
 
-  it("Should unpause ID_TKN", async () => {
-    return ID_TKN.unpause({
+  it("Should authorize all minter addresses for minting ID(s)", () => {
+    console.log("Authorizing account5");
+    return ID_MGR.grantRole(IDminterRoleB32, account5, {
       from: account1,
     });
   });
 
   //8
-  it("Should fail becasue caller !token holder", async () => {
-    return ID_TKN.setIdURI('5', rgt1, { from: account1 });
+  it("Should Fail because caller is not authorized at a high enough level to burn ID of lower tier", async () => {
+    return ID_MGR.burnID(account4, { from: account5 });
   });
 
-  it("Should pause ID_TKN", async () => {
-    return ID_TKN.pause({
+  it("Should unauthorize all minter addresses for minting ID(s)", () => {
+    console.log("unauthorizing account5");
+    return ID_MGR.grantRole(IDminterRoleB32, account5, {
+      from: account1,
+    });
+  });
+
+  it("Should pause ID_MGR", async () => {
+    return ID_MGR.pause({
+      from: account1,
+    });
+  });
+
+  it("Should authorize all minter addresses for minting ID(s)", () => {
+    console.log("Authorizing account2");
+    return ID_MGR.grantRole(IDminterRoleB32, account2, {
       from: account1,
     });
   });
 
   //9
-  it("Should Fail because ID_TKN is paused", async () => {
+  it("Should Fail because ID_MGR is paused", async () => {
     console.log(
-      "//**************************************END setIdURI FAIL BATCH**********************************************/"
+      "//**************************************END burnID FAIL BATCH**********************************************/"
     );
     console.log(
-      "//**************************************BEGIN setUserName FAIL BATCH**********************************************/"
+      "//**************************************BEGIN setTrustLevel FAIL BATCH**********************************************/"
     );
-    return ID_TKN.setUserName('5', "user", { from: account1 });
+    return ID_MGR.setTrustLevel(account1, '5', { from: account2 });
   });
 
-  it("Should unpause ID_TKN", async () => {
-    return ID_TKN.unpause({
+  it("Should unauthorize all minter addresses for minting ID(s)", () => {
+    console.log("unauthorizing account2");
+    return ID_MGR.revokeRole(IDminterRoleB32, account2, {
+      from: account1,
+    });
+  });
+
+  it("Should unpause ID_MGR", async () => {
+    return ID_MGR.unpause({
       from: account1,
     });
   });
 
   //10
-  it("Should fail becasue caller !token holder", async () => {
-    return ID_TKN.setUserName('5', "user", { from: account1 });
+  it("Should Fail because caller is not Minter", async () => {
+    return ID_MGR.setTrustLevel(account1, '5', { from: account2 });
   });
 
-  it("Should set username(user) to ID(1)", async () => {
-    return ID_TKN.setUserName('5', "user", { from: account2 });
+  it("Should authorize all minter addresses for minting ID(s)", () => {
+    console.log("Authorizing account5");
+    return ID_MGR.grantRole(IDminterRoleB32, account5, {
+      from: account1,
+    });
   });
 
   //11
-  it("Should fail because userName is already set", async () => {
-    return ID_TKN.setUserName('5', "user1", { from: account2 });
+  it("Should Fail because caller is not authorized at a high enough level to burn ID of lower tier", async () => {
+    return ID_MGR.setTrustLevel(account5, '5', { from: account5 });
   });
 
-  //12
-  it("Should fail because userName is already taken", async () => {
-    return ID_TKN.setUserName(asset1, "user", { from: account2 });
-  });
-
-  it("Should pause ID_TKN", async () => {
-    return ID_TKN.pause({
+  it("Should unauthorize all minter addresses for minting ID(s)", () => {
+    console.log("unauthorizing account5");
+    return ID_MGR.revokeRole(IDminterRoleB32, account5, {
       from: account1,
     });
   });
 
-  //13
-  it("Should Fail because ID_TKN is paused", async () => {
-    console.log(
-      "//**************************************END setUserName FAIL BATCH**********************************************/"
-    );
-    console.log(
-      "//**************************************BEGIN setTrustLevel FAIL BATCH**********************************************/"
-    );
-    return ID_TKN.setTrustLevel(asset1, '5', { from: account2 });
-  });
-
-  it("Should unpause ID_TKN", async () => {
-    return ID_TKN.unpause({
+  it("Should pause ID_MGR", async () => {
+    return ID_MGR.pause({
       from: account1,
-    });
-  });
-
-  //14
-  it("Should Fail because caller is not Minter", async () => {
-    return ID_TKN.setTrustLevel(asset1, '5', { from: account2 });
-  });
-
-  it("Should pause ID_TKN", async () => {
-    return ID_TKN.pause({
-      from: account1,
-    });
-  });
-
-  //15
-  it("Should Fail because ID_TKN is paused", async () => {
-    console.log(
-      "//**************************************END setTrustLevel FAIL BATCH**********************************************/"
-    );
-    console.log(
-      "//**************************************BEGIN transferFrom FAIL BATCH**********************************************/"
-    );
-    return ID_TKN.transferFrom(account2, account1, asset1, { from: account1 });
-  });
-
-  it("Should unpause ID_TKN", async () => {
-    return ID_TKN.unpause({
-      from: account1,
-    });
-  });
-
-  //16
-  it("Should fail because caller is not ownerOrApproved", async () => {
-    return ID_TKN.transferFrom(account2, account1, asset1, { from: account1 });
-  });
-
-  //17
-  it("Should fail because transfer is not to owner (CANNOT TRANSFER ACCORDING TO NORMAL ERC721 PROTOCALL)", async () => {
-    return ID_TKN.transferFrom(account2, account1, asset1, { from: account2 });
-  });
-
-  it("Should pause ID_TKN", async () => {
-    return ID_TKN.pause({
-      from: account1,
-    });
-  });
-
-  //18
-  it("Should Fail because ID_TKN is paused", async () => {
-    console.log(
-      "//**************************************END transferFrom FAIL BATCH**********************************************/"
-    );
-    console.log(
-      "//**************************************BEGIN safeTransferFrom FAIL BATCH**********************************************/"
-    );
-    return ID_TKN.safeTransferFrom(account2, account1, asset1, {
-      from: account1,
-    });
-  });
-
-  it("Should unpause ID_TKN", async () => {
-    return ID_TKN.unpause({
-      from: account1,
-    });
-  });
-
-  //19
-  it("Should fail because caller is not ownerOrApproved", async () => {
-    return ID_TKN.safeTransferFrom(account2, account1, asset1, {
-      from: account1,
-    });
-  });
-
-  //20
-  it("Should fail because transfer is not to owner (CANNOT TRANSFER ACCORDING TO NORMAL ERC721 PROTOCALL)", async () => {
-    return ID_TKN.safeTransferFrom(account2, account1, asset1, {
-      from: account2,
     });
   });
 
@@ -1914,10 +1839,10 @@ contract("ID_TKN", (accounts) => {
       "//**************************************END safeTransferFrom FAIL BATCH**********************************************/"
     );
     console.log(
-      "//**************************************END ID_TKN FAIL BATCH**********************************************/"
+      "//**************************************END ID_MGR FAIL BATCH**********************************************/"
     );
     console.log(
-      "//**************************************END ID_TKN TEST**********************************************/"
+      "//**************************************END ID_MGR TEST**********************************************/"
     );
     console.log(
       "//**************************************BEGIN THE WORKS CUSTODIAL**********************************************/"

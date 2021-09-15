@@ -33,7 +33,7 @@ pragma solidity ^0.6.7;
 
 /*----------------------------------------------------------------
  *TO DO :
-CTS:EXAMINE MOVE EXTRANEOUS STRUCTS OUT OF TOKEN CONTRACTS (A_TKN, ID_TKN)
+CTS:EXAMINE MOVE EXTRANEOUS STRUCTS OUT OF TOKEN CONTRACTS (A_TKN, ID_MGR)
 
 
 
