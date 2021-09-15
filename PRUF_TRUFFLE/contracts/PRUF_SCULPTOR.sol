@@ -11,8 +11,6 @@ _________\/// _____________\/// _______\/// __\///////// __\/// _____________
 *---------------------------------------------------------------------------*/
 
 /**-----------------------------------------------------------------
- * TODO: Implement security requiring the token and node to be held to write data, as well as reverting????? no?
- * if data already exists. Implement struct writing instead of strings. Alternative protocols are possible.
  *
  *
  * Rodin Protocol Specification V0.1
@@ -38,6 +36,8 @@ pragma solidity ^0.8.7;
 import "./PRUF_CORE.sol";
 
 contract SCULPTOR is CORE {
+    bytes32 public constant DAO_ROLE = keccak256("DAO_ROLE");
+
     mapping(bytes32 => mapping(bytes32 => string)) internal foundry; // idxHash=>location=>data
     mapping(bytes32 => mapping(bytes32 => Block)) internal quarry; // idxHash=>location=>data
 
@@ -67,19 +67,33 @@ contract SCULPTOR is CORE {
         _;
     }
 
-    /**
-     * Function to naively write data
-     * @dev Verify caller holds Nodetoken of passed node
-     * @param _idxHash - idxHash of asset to write data for
-     * @param _location - map key to write data to
-     * @param _data - data to be written
+    // /**
+    //  * Function to naively write data -god mode
+    //  * @dev Verify caller holds Nodetoken of passed node
+    //  * @param _idxHash - idxHash of asset to write data for
+    //  * @param _location - map key to write data to
+    //  * @param _data - data to be written
+    //  */
+    // function writeData(
+    //     bytes32 _idxHash,
+    //     bytes32 _location,
+    //     string calldata _data
+    // ) external isAssetHolder(_idxHash) isNodeHolderForAsset(_idxHash) {
+    //     foundry[_idxHash][_location] = _data;
+    // }
+
+    /** //!!!!!!!!!!!!!!!!!!!!!DO WE NEED THIS????!!!!!!!!!!!!!!!!!!
+     * @dev Delete blocks for an asset, making its data inaccessible
+     * @param _idxHash - idxHash of asset data to delete
+     * @param _location - location of data to delete
      */
-    function writeData(
-        bytes32 _idxHash,
-        bytes32 _location,
-        string calldata _data
-    ) external isAssetHolder(_idxHash) isNodeHolderForAsset(_idxHash) {
-        foundry[_idxHash][_location] = _data;
+    function DAOdelete(bytes32 _idxHash, bytes32 _location) external {
+        require(hasRole("DAO_ROLE", _msgSender()));
+        //^^^^^^^Checks^^^^^^^^^
+
+        delete foundry[_idxHash][_location];
+        delete quarry[_idxHash][_location];
+        //^^^^^^^effects^^^^^^^^^
     }
 
     /**
@@ -95,6 +109,8 @@ contract SCULPTOR is CORE {
         bytes32 _lastLocation,
         string calldata _data
     ) external isAssetHolder(_idxHash) isNodeHolderForAsset(_idxHash) {
+        //^^^^^^^Checks^^^^^^^^^
+
         bytes32 thisLocation;
         bytes32 hashedIdxHash = keccak256(abi.encodePacked(_idxHash)); //default starting location
 
@@ -104,8 +120,8 @@ contract SCULPTOR is CORE {
 
         if (hashedData == keccak256("")) {
             //if nothing is stored at the default location....
-            require(
-                _lastLocation == hashedIdxHash,
+            require( //do we want to omit this check?
+                _lastLocation == hashedIdxHash || _lastLocation == 0,
                 "S:WS:Invalid first write location"
             );
             thisLocation = hashedIdxHash; //use the default starting location
@@ -114,24 +130,46 @@ contract SCULPTOR is CORE {
             //get the new storage location derived from the stored data
         }
         foundry[_idxHash][thisLocation] = _data;
+        //^^^^^^^effects^^^^^^^^^
     }
 
+    /**
+     * @dev Read a string from the foundry
+     * @param _idxHash - idxHash of asset to read
+     * @param _location - location to read
+     */
     function readString(bytes32 _idxHash, bytes32 _location)
         external
         view
         returns (string memory)
     {
         return (foundry[_idxHash][_location]);
+        //^^^^^^^interactions^^^^^^^^^
     }
 
-    function deleteString(bytes32 _idxHash, bytes32 _location)
+    /**
+     * @dev Delete the keyblock for an asset, making its data inaccessible
+     * @param _idxHash - idxHash of asset data to delete
+     */
+    function deleteString(bytes32 _idxHash)
         external
         isAssetHolder(_idxHash)
         isNodeHolderForAsset(_idxHash)
     {
-        delete foundry[_idxHash][_location];
+        //^^^^^^^checks^^^^^^^^^
+
+        delete foundry[_idxHash][keccak256(abi.encodePacked(_idxHash))];
+        //^^^^^^^effects^^^^^^^^^
     }
 
+    /**
+     * Stack saver for _writeBlock
+     * @dev Verify caller holds Nodetoken of passed node
+     * @param _idxHash - idxHash of asset to write data for
+     * @param _lastLocation - last map location that data was written to. (write location will be computed from this)
+     *                      If this is the first chunk to write, set to k256(_idxHash)
+     * @param _block1 to 8 - data to be written
+     */
     function writeBlock(
         bytes32 _idxHash,
         bytes32 _lastLocation,
@@ -144,6 +182,8 @@ contract SCULPTOR is CORE {
         bytes32 _block7,
         bytes32 _block8
     ) external isAssetHolder(_idxHash) isNodeHolderForAsset(_idxHash) {
+        //^^^^^^^Checks^^^^^^^^^
+
         Block memory data;
         data.block1 = _block1;
         data.block2 = _block2;
@@ -153,8 +193,10 @@ contract SCULPTOR is CORE {
         data.block6 = _block6;
         data.block7 = _block7;
         data.block8 = _block8;
+        //^^^^^^^effects^^^^^^^^^
 
         _writeBlock(_idxHash, _lastLocation, data);
+        //^^^^^^^interactions^^^^^^^^^
     }
 
     /**
@@ -180,7 +222,7 @@ contract SCULPTOR is CORE {
         if (hashedData == keccak256("")) {
             //if nothing is stored at the default location....
             require(
-                _lastLocation == hashedIdxHash,
+                _lastLocation == hashedIdxHash || _lastLocation == 0,
                 "S:WB:Invalid first write location"
             );
             thisLocation = hashedIdxHash; //use the default starting location
@@ -191,21 +233,35 @@ contract SCULPTOR is CORE {
             //get the new storage location derived from the stored data
         }
         quarry[_idxHash][thisLocation] = _data;
+        //^^^^^^^effects^^^^^^^^^
     }
 
+    /**
+     * @dev Read a Block from the quarry
+     * @param _idxHash - idxHash of asset to read
+     * @param _location - location to read
+     */
     function readBlock(bytes32 _idxHash, bytes32 _location)
         external
         view
         returns (Block memory)
     {
         return (quarry[_idxHash][_location]);
+        //^^^^^^^interactions^^^^^^^^^
     }
 
-    function deleteLock(bytes32 _idxHash, bytes32 _location)
+    /**
+     * @dev Delete the keyblock for an asset, making its data inaccessible
+     * @param _idxHash - idxHash of asset data to delete
+     */
+    function deleteBlock(bytes32 _idxHash)
         external
         isAssetHolder(_idxHash)
         isNodeHolderForAsset(_idxHash)
     {
-        delete quarry[_idxHash][_location];
+        //^^^^^^^checks^^^^^^^^^
+
+        delete quarry[_idxHash][keccak256(abi.encodePacked(_idxHash))];
+        //^^^^^^^effects^^^^^^^^^
     }
 }
