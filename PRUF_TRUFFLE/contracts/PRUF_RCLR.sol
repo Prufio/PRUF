@@ -18,7 +18,7 @@ _________\/// _____________\/// _______\/// __\///////// __\/// _____________
 //RCLR allows discarded items to be re-onboarded to a new holder
 
 // SPDX-License-Identifier: UNLICENSED
-pragma solidity ^0.8.6;
+pragma solidity ^0.8.7;
 
 import "./PRUF_ECR_CORE.sol";
 import "./PRUF_CORE.sol";

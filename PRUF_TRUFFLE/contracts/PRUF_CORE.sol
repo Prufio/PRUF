@@ -19,7 +19,7 @@ __/\\\\\\\\\\\\\ _____/\\\\\\\\\ _______/\\__/\\ ___/\\\\\\\\\\\\\\\
  *---------------------------------------------------------------*/
 
 // SPDX-License-Identifier: UNLICENSED
-pragma solidity ^0.8.6;
+pragma solidity ^0.8.7;
 
 import "./Imports/security/ReentrancyGuard.sol";
 import "./PRUF_BASIC.sol";
