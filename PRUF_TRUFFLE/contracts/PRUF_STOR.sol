@@ -604,59 +604,6 @@ contract STOR is AccessControl, ReentrancyGuard, Pausable {
         //^^^^^^^effects^^^^^^^^^
     }
 
-    // /**
-    //  * @dev Modify record sale price and currency data
-    //  * @param  _idxHash - record asset ID
-    //  * @param  _price set selling price in:
-    //  * @param  _currency (see docs)
-    //  */
-    // function setPrice(
-    //     bytes32 _idxHash,
-    //     uint120 _price,
-    //     uint8 _currency
-    // )
-    //     external
-    //     nonReentrant
-    //     whenNotPaused
-    //     exists(_idxHash) //asset must exist in 'database'
-    //     isAuthorized(database[_idxHash].node) //calling contract must be authorized in relevant node
-    // {
-    //     Record memory rec = database[_idxHash];
-    //     require(isTransferred(rec.assetStatus) == 0, "S:SP: Txfrd asset");
-    //     //^^^^^^^checks^^^^^^^^^
-
-    //     rec.price = _price;
-    //     rec.currency = _currency;
-
-    //     database[_idxHash] = rec;
-    //     //^^^^^^^effects^^^^^^^^^
-    // }
-
-    // /**
-    //  * @dev set record sale price and currency data to zero
-    //  * @param _idxHash - record asset ID
-    //  */
-    // function clearPrice(bytes32 _idxHash)
-    //     external
-    //     nonReentrant
-    //     whenNotPaused
-    //     exists(_idxHash) //asset must exist in 'database'
-    //     isAuthorized(database[_idxHash].node) //calling contract must be authorized in relevant node
-    // {
-    //     Record memory rec = database[_idxHash];
-    //     require(isTransferred(rec.assetStatus) == 0, "S:CP: Txfrd asset");
-    //     //^^^^^^^checks^^^^^^^^^
-
-    //     rec.price = 0;
-    //     rec.currency = 0;
-
-    //     database[_idxHash] = rec;
-    //     //^^^^^^^effects^^^^^^^^^
-
-    //     //emit REPORT("Price mod", _idxHash);
-    //     //^^^^^^^interactions^^^^^^^^^
-    // }
-
     /**
      * @dev Modify record MutableStorage data
      * @param  _idxHash - record asset ID
