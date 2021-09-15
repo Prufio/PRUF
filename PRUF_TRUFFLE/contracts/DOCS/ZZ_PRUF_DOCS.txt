@@ -284,8 +284,12 @@ CTS:EXAMINE MOVE EXTRANEOUS STRUCTS OUT OF TOKEN CONTRACTS (A_TKN, ID_TKN)
 *-----------------------------------------------------------------
  * node Storage Providers: AC_data.storageProvider (AC_manager)
  * 0   -- Not Set
- * 1   -- Mutable 
+ * 1   -- IPFS
  * 2   -- ARweave 
+ * 3   -- Sculptor (internal) bytes32 struct
+ * 4   -- Sculptor (internal) strings
+ * 5   -- RAW data (internal)
+ * 6   -- RAW data (internal) => low Res Image
 - -----------------------------------------------------------------
 
 *-----------------------------------------------------------------
