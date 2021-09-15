@@ -31,7 +31,7 @@ contract APP is CORE {
         uint256 tokenId = uint256(_idxHash);
         require( //require that user is authorized and token is held by contract
             (A_TKN.ownerOf(tokenId) == address(this)),
-            "A:MOD-IA: APP contract !token holder"
+            "A:MOD-IA: Asset !token holder"
         );
         _;
     }
