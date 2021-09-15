@@ -157,3 +157,14 @@ struct ConsignmentTag {
     uint256 price;
     uint32 node;
 }
+
+struct Block {
+    bytes32 block1;
+    bytes32 block2;
+    bytes32 block3;
+    bytes32 block4;
+    bytes32 block5;
+    bytes32 block6;
+    bytes32 block7;
+    bytes32 block8;
+}
