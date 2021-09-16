@@ -174,34 +174,6 @@ abstract contract BASIC is
     }
 
     /**
-     * @dev send an ERC721 token from this contract
-     * @param _tokenContract Address of foreign token contract
-     * @param _to destination
-     * @param _tokenID Token ID
-     */
-    function ERC721Transfer(
-        address _tokenContract,
-        address _to,
-        uint256 _tokenID
-    ) external virtual isContractAssetAdmin nonReentrant {
-        IERC721(_tokenContract).safeTransferFrom(address(this), _to, _tokenID);
-    }
-
-    /**
-     * @dev send an ERC20 token from this contract
-     * @param _tokenContract Address of foreign token contract
-     * @param _to destination
-     * @param _amount amount to transfer
-     */
-    function ERC20Transfer(
-        address _tokenContract,
-        address _to,
-        uint256 _amount
-    ) external virtual isContractAssetAdmin nonReentrant {
-        IERC20(_tokenContract).transferFrom(address(this), _to, _amount);
-    }
-
-    /**
      * @dev Set address of STOR contract to interface with
      * @param _storageAddress address of PRUF_STOR
      */
@@ -246,6 +218,34 @@ abstract contract BASIC is
      */
     function unpause() external isPauser {
         _unpause();
+    }
+
+    /**
+     * @dev send an ERC721 token from this contract
+     * @param _tokenContract Address of foreign token contract
+     * @param _to destination
+     * @param _tokenID Token ID
+     */
+    function ERC721Transfer(
+        address _tokenContract,
+        address _to,
+        uint256 _tokenID
+    ) external virtual isContractAssetAdmin nonReentrant {
+        IERC721(_tokenContract).safeTransferFrom(address(this), _to, _tokenID);
+    }
+
+    /**
+     * @dev send an ERC20 token from this contract
+     * @param _tokenContract Address of foreign token contract
+     * @param _to destination
+     * @param _amount amount to transfer
+     */
+    function ERC20Transfer(
+        address _tokenContract,
+        address _to,
+        uint256 _amount
+    ) external virtual isContractAssetAdmin nonReentrant {
+        IERC20(_tokenContract).transferFrom(address(this), _to, _amount);
     }
 
     //--------------------------------------------------------------------------------------INTERNAL functions
@@ -326,38 +326,40 @@ abstract contract BASIC is
         //^^^^^^^effects/interactions^^^^^^^^^
     }
 
-    /**
-     * @dev Transfer any specified assetToken from contract
-     * @param _to - address to send to
-     * @param _idxHash - asset index
-     */
-    function transferAssetToken(address _to, bytes32 _idxHash)
-        external
-        virtual
-        nonReentrant
-        isContractAdmin
-    {
-        //^^^^^^^checks^^^^^^^^^
+    // /**
+    //  * @dev Transfer any specified assetToken from contract
+    //  * @param _to - address to send to
+    //  * @param _idxHash - asset index
+    //  */
+    // function transferAssetToken(address _to, bytes32 _idxHash)
+    //     external
+    //     virtual
+    //     nonReentrant
+    //     isContractAdmin
+    // {
+    //     //^^^^^^^checks^^^^^^^^^
 
-        uint256 tokenId = uint256(_idxHash);
+    //     uint256 tokenId = uint256(_idxHash);
 
-        A_TKN.safeTransferFrom(address(this), _to, tokenId);
-        //^^^^^^^interactions^^^^^^^^^
-    }
+    //     A_TKN.safeTransferFrom(address(this), _to, tokenId);
+    //     //^^^^^^^interactions^^^^^^^^^
+    // }
 
-    /**
-     * @dev Transfer any specified nodeToken from contract
-     * @param _to - address to send to
-     * @param _tokenID - node token ID
-     */
-    function transferNodeToken(address _to, uint256 _tokenID)
-        external
-        virtual
-        isContractAdmin
-        nonReentrant
-    {
-        //^^^^^^^checks^^^^^^^^^
-        NODE_TKN.safeTransferFrom(address(this), _to, _tokenID);
-        //^^^^^^^interactions^^^^^^^^^
-    }
+    // /**
+    //  * @dev Transfer any specified nodeToken from contract
+    //  * @param _to - address to send to
+    //  * @param _tokenID - node token ID
+    //  */
+    // function transferNodeToken(address _to, uint256 _tokenID)
+    //     external
+    //     virtual
+    //     isContractAdmin
+    //     nonReentrant
+    // {
+    //     //^^^^^^^checks^^^^^^^^^
+    //     NODE_TKN.safeTransferFrom(address(this), _to, _tokenID);
+    //     //^^^^^^^interactions^^^^^^^^^
+    // }
+
+    
 }
