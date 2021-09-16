@@ -1475,7 +1475,7 @@ contract("TheWorks", (accounts) => {
   });
 
   it("Should mint ID to account4", async () => {
-    return ID_MGR.mintID(account4, "3", { from: account1 });
+    return ID_MGR.mintID(account4, "3", asset3, { from: account1 });
   });
 
     it('Should mint 30000 tokens to account2', async () => {

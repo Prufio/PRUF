@@ -982,6 +982,13 @@ contract("NODE_TKN", (accounts) => {
 
   it("Should authorize all minter contracts for minting NODE_TKN(s)", () => {
     console.log("Authorizing NODE_MGR");
+    return NODE_TKN.grantRole(minterRoleB32, account1, {
+      from: account1,
+    });
+  });
+
+  it("Should authorize all minter contracts for minting NODE_TKN(s)", () => {
+    console.log("Authorizing NODE_MGR");
     return APP.grantRole(assetTransferRoleB32, APP2.address, {
       from: account1,
     });
