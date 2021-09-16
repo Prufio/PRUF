@@ -109,6 +109,7 @@ let nakedAuthCode7;
 let payableRoleB32;
 let minterRoleB32;
 let trustedAgentRoleB32;
+let IDminterRoleB32;
 let assetTransferRoleB32;
 let discardRoleB32;
 
@@ -287,6 +288,8 @@ contract("ECR", (accounts) => {
     minterRoleB32 = await Helper.getStringHash("MINTER_ROLE");
 
     trustedAgentRoleB32 = await Helper.getStringHash("TRUSTED_AGENT_ROLE");
+
+    IDminterRoleB32 = await Helper.getStringHash("ID_MINTER_ROLE");
 
     assetTransferRoleB32 = await Helper.getStringHash("ASSET_TXFR_ROLE");
 
@@ -893,6 +896,13 @@ contract("ECR", (accounts) => {
       // });
   });
 
+  it("Should authorize all minter addresses for minting ID(s)", () => {
+    console.log("Authorizing NODE_MGR");
+    return ID_MGR.grantRole(IDminterRoleB32, account1, {
+      from: account1,
+    });
+  });
+
   it("Should authorize all payable contracts for transactions", () => {
     console.log("Authorizing NODE_MGR");
     return UTIL_TKN.grantRole(payableRoleB32, NODE_MGR.address, {
@@ -1217,13 +1227,13 @@ contract("ECR", (accounts) => {
       })
 
       .then(() => {
-        console.log("Minting ID_MGR to account1");
-        return ID_MGR.mintID(account1, "1", "", { from: account1 });
+        console.log("Minting ID to account1");
+        return ID_MGR.mintID(account1, "1", asset1, { from: account1 });
       })
 
       .then(() => {
-        console.log("Minting ID_MGR to account10");
-        return ID_MGR.mintID(account10, "2", "", { from: account1 });
+        console.log("Minting ID to account10");
+        return ID_MGR.mintID(account10, "2", asset2, { from: account1 });
       })
 
       .then(() => {
@@ -1578,12 +1588,8 @@ contract("ECR", (accounts) => {
       });
   });
 
-  it("Should mint ID_MGR(3) to account3", async () => {
-    return ID_MGR.mintID(account3, "3", { from: account1 });
-  });
-
-  it("Should reMint ID_MGR(1) to account4", async () => {
-    return ID_MGR.remintID(account4, "3", { from: account1 });
+  it("Should mint ID to account4", async () => {
+    return ID_MGR.mintID(account4, "3", asset3, { from: account1 });
   });
 
   it("Should mint 30000 tokens to account2", async () => {
@@ -1601,8 +1607,8 @@ contract("ECR", (accounts) => {
     });
   });
 
-  it("Should write ID_MGR(1) to address4", async () => {
-    return ID_MGR.mintID(account2, "5", { from: account1 });
+  it("Should write ID to account2", async () => {
+    return ID_MGR.mintID(account2, "5", asset4, { from: account1 });
   });
 
   it("Should write asset1 in Node 1000002", async () => {

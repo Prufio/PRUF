@@ -108,6 +108,7 @@ let nakedAuthCode7;
 
 let payableRoleB32;
 let minterRoleB32;
+let IDminterRoleB32;
 let trustedAgentRoleB32;
 let assetTransferRoleB32;
 let discardRoleB32;
@@ -287,6 +288,8 @@ contract("NODE_TKN", (accounts) => {
     minterRoleB32 = await Helper.getStringHash("MINTER_ROLE");
 
     trustedAgentRoleB32 = await Helper.getStringHash("TRUSTED_AGENT_ROLE");
+
+    IDminterRoleB32 = await Helper.getStringHash("ID_MINTER_ROLE");
 
     assetTransferRoleB32 = await Helper.getStringHash("ASSET_TXFR_ROLE");
 
@@ -887,6 +890,13 @@ contract("NODE_TKN", (accounts) => {
       //     from: account1,
       //   });
       // });
+  });
+
+  it("Should authorize all minter addresses for minting ID(s)", () => {
+    console.log("Authorizing NODE_MGR");
+    return ID_MGR.grantRole(IDminterRoleB32, account1, {
+      from: account1,
+    });
   });
 
   it("Should authorize all payable contracts for transactions", () => {

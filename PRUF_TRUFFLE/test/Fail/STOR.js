@@ -107,6 +107,7 @@ let nakedAuthCode3;
 let nakedAuthCode7;
 
 let payableRoleB32;
+let IDminterRoleB32;
 let minterRoleB32;
 let trustedAgentRoleB32;
 let assetTransferRoleB32;
@@ -289,6 +290,8 @@ contract("STOR", (accounts) => {
     trustedAgentRoleB32 = await Helper.getStringHash("TRUSTED_AGENT_ROLE");
 
     assetTransferRoleB32 = await Helper.getStringHash("ASSET_TXFR_ROLE");
+
+    IDminterRoleB32 = await Helper.getStringHash("ID_MINTER_ROLE");
 
     discardRoleB32 = await Helper.getStringHash("DISCARD_ROLE");
   });
@@ -893,6 +896,13 @@ contract("STOR", (accounts) => {
       // });
   });
 
+  it("Should authorize all minter addresses for minting ID(s)", () => {
+    console.log("Authorizing NODE_MGR");
+    return ID_MGR.grantRole(IDminterRoleB32, account1, {
+      from: account1,
+    });
+  });
+
   it("Should authorize all payable contracts for transactions", () => {
     console.log("Authorizing NODE_MGR");
     return UTIL_TKN.grantRole(payableRoleB32, NODE_MGR.address, {
@@ -1224,13 +1234,13 @@ contract("STOR", (accounts) => {
       })
 
       .then(() => {
-        console.log("Minting ID_MGR to account1");
-        return ID_MGR.mintID(account1, "1", "", { from: account1 });
+        console.log("Minting ID to account1");
+        return ID_MGR.mintID(account1, "1", asset1, { from: account1 });
       })
 
       .then(() => {
-        console.log("Minting ID_MGR to account10");
-        return ID_MGR.mintID(account10, "2", "", { from: account1 });
+        console.log("Minting ID to account10");
+        return ID_MGR.mintID(account10, "2", asset2, { from: account1 });
       })
 
       .then(() => {
@@ -1578,12 +1588,8 @@ contract("STOR", (accounts) => {
       });
   });
 
-  it("Should mint ID_MGR(3) to account3", async () => {
-    return ID_MGR.mintID(account3, "3", { from: account1 });
-  });
-
-  it("Should reMint ID_MGR(1) to account4", async () => {
-    return ID_MGR.remintID(account4, "3", { from: account1 });
+  it("Should mint ID to account4", async () => {
+    return ID_MGR.mintID(account4, "3", asset3, { from: account1 });
   });
 
   it("Should set SharesAddress", async () => {
@@ -1608,8 +1614,8 @@ contract("STOR", (accounts) => {
     });
   });
 
-  it("Should write ID_MGR(2) to address2", async () => {
-    return ID_MGR.mintID(account2, "4", { from: account1 });
+  it("Should write ID to account2", async () => {
+    return ID_MGR.mintID(account2, "4", asset4, { from: account1 });
   });
 
   it("Should write asset1 in AC1000003", async () => {
@@ -1696,7 +1702,7 @@ contract("STOR", (accounts) => {
       "//**************************************END STOR SETUP**********************************************/"
     );
     console.log(
-      "//**************************************BEGIN STOR FAIL BATCH (55)**********************************************/"
+      "//**************************************BEGIN STOR FAIL BATCH (61)**********************************************/"
     );
     console.log(
       "//**************************************BEGIN pause FAIL BATCH**********************************************/"
@@ -2215,99 +2221,7 @@ contract("STOR", (accounts) => {
   //48
   it("Should fail because contract is paused", async () => {
     console.log(
-      "//**************************************END setEscrow FAIL BATCH**********************************************/"
-    );
-    console.log(
-      "//**************************************BEGIN setPrice FAIL BATCH**********************************************/"
-    );
-    return MAL_APP._setPrice(asset12, "10", "2", { from: account4 });
-  });
-
-  it("Should unpause STOR", async () => {
-    return STOR.unpause({ from: account1 });
-  });
-
-  //49
-  it("Should fail because asset doesnt exist", async () => {
-    return MAL_APP._setPrice(asset12, "10", "2", { from: account4 });
-  });
-
-  it("Should unauthorize MAL_APP in Node 1000003", async () => {
-    return STOR.enableContractForNode("MAL_APP", "1000003", "0", {
-      from: account1,
-    });
-  });
-
-  //50
-  it("Should fail because contract not auth in Node", async () => {
-    return MAL_APP._setPrice(asset11, "10", "2", { from: account4 });
-  });
-
-  it("Should authorize MAL_APP in Node 1000003", async () => {
-    return STOR.enableContractForNode("MAL_APP", "1000003", "1", {
-      from: account1,
-    });
-  });
-
-  //51
-  it("Should fail becasue asset in transfered stat", async () => {
-    return MAL_APP._setPrice(asset3, "10", "2", { from: account4 });
-  });
-
-  it("Should pause STOR", async () => {
-    return STOR.pause({ from: account1 });
-  });
-
-  //52
-  it("Should fail because contract is paused", async () => {
-    console.log(
-      "//**************************************END setPrice FAIL BATCH**********************************************/"
-    );
-    console.log(
-      "//**************************************BEGIN clearPrice FAIL BATCH**********************************************/"
-    );
-    return MAL_APP._clearPrice(asset12, { from: account4 });
-  });
-
-  it("Should unpause STOR", async () => {
-    return STOR.unpause({ from: account1 });
-  });
-
-  //53
-  it("Should fail because asset doesnt exist", async () => {
-    return MAL_APP._clearPrice(asset12, { from: account4 });
-  });
-
-  it("Should unauthorize MAL_APP in Node 1000003", async () => {
-    return STOR.enableContractForNode("MAL_APP", "1000003", "0", {
-      from: account1,
-    });
-  });
-
-  //54
-  it("Should fail because contract not auth in Node", async () => {
-    return MAL_APP._clearPrice(asset11, { from: account4 });
-  });
-
-  it("Should authorize MAL_APP in Node 1000003", async () => {
-    return STOR.enableContractForNode("MAL_APP", "1000003", "0", {
-      from: account1,
-    });
-  });
-
-  //55
-  it("Should fail becasue asset in transfered stat", async () => {
-    return MAL_APP._clearPrice(asset3, { from: account4 });
-  });
-
-  it("Should pause STOR", async () => {
-    return STOR.pause({ from: account1 });
-  });
-
-  //56
-  it("Should fail because contract is paused", async () => {
-    console.log(
-      "//**************************************END clearPrice FAIL BATCH**********************************************/"
+      "//**************************************END endEscrow FAIL BATCH**********************************************/"
     );
     console.log(
       "//**************************************BEGIN modifyMutable FAIL BATCH**********************************************/"
@@ -2331,14 +2245,14 @@ contract("STOR", (accounts) => {
     });
   });
 
-  //57
+  //49
   it("Should fail because record does not exist", async () => {
     return MAL_APP.modifyMutableStorage(asset10, rgt1, rgt000, {
       from: account2,
     });
   });
 
-  //58
+  //50
   it("Should fail because calling contract not auth in Node", async () => {
     return MAL_APP.modifyMutableStorage(asset8, asset8, rgt000, {
       from: account2,
@@ -2351,7 +2265,7 @@ contract("STOR", (accounts) => {
     });
   });
 
-  //59
+  //51
   it("Should fail because record in escrow stat", async () => {
     return MAL_APP.modifyMutableStorage(asset7, asset7, rgt000, {
       from: account2,
@@ -2364,14 +2278,14 @@ contract("STOR", (accounts) => {
     });
   });
 
-  //60
+  //52
   it("Should fail becasue asset in transfered stat", async () => {
     return MAL_APP.modifyMutableStorage(asset3, asset8, rgt000, {
       from: account2,
     });
   });
 
-  //61
+  //53
   it("Should fail because ips1 cannot match previous data", async () => {
     return MAL_APP.modifyMutableStorage(asset8, asset8, rgt000, {
       from: account2,
@@ -2382,7 +2296,7 @@ contract("STOR", (accounts) => {
     return STOR.pause({ from: account1 });
   });
 
-  //62
+  //54
   it("Should fail because contract is paused", async () => {
     console.log(
       "//**************************************END modifyMutable FAIL BATCH**********************************************/"
@@ -2397,7 +2311,7 @@ contract("STOR", (accounts) => {
     return STOR.unpause({ from: account1 });
   });
 
-  //63
+  //55
   it("Should fail because record does not exist", async () => {
     return MAL_APP.addNonMutableNote(asset10, rgt6, rgt000, { from: account2 });
   });
@@ -2408,7 +2322,7 @@ contract("STOR", (accounts) => {
     });
   });
 
-  //64
+  //56
   it("Should fail becasue contract not auth in Node", async () => {
     return MAL_APP.addNonMutableNote(asset2, rgt2, rgt000, { from: account2 });
   });
@@ -2419,17 +2333,17 @@ contract("STOR", (accounts) => {
     });
   });
 
-  //65
+  //57
   it("Should fail becasue asset in escrow stat", async () => {
     return MAL_APP.addNonMutableNote(asset7, rgt7, rgt000, { from: account2 });
   });
 
-  //66
+  //58
   it("Should fail becasue asset in L/S stat", async () => {
     return MAL_APP.addNonMutableNote(asset4, rgt4, rgt000, { from: account2 });
   });
 
-  //67
+  //59
   it("Should fail becasue asset in transfered stat", async () => {
     return MAL_APP.addNonMutableNote(asset3, rgt3, rgt000, { from: account2 });
   });
@@ -2440,7 +2354,7 @@ contract("STOR", (accounts) => {
     });
   });
 
-  //68
+  //60
   it("Should fail becasue attempting to modify NonMutable", async () => {
     return MAL_APP.addNonMutableNote(asset8, rgt8, rgt000, { from: account2 });
   });
@@ -2457,7 +2371,7 @@ contract("STOR", (accounts) => {
     });
   });
 
-  //69
+  //61
   it("Should fail because contract not registered in system", async () => {
     return MAL_APP.retrieveRecordStor(asset1, { from: account2 });
   });
