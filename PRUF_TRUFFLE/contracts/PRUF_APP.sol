@@ -31,7 +31,7 @@ contract APP is CORE {
         uint256 tokenId = uint256(_idxHash);
         require( //require that user is authorized and token is held by contract
             (A_TKN.ownerOf(tokenId) == address(this)),
-            "A:MOD-IA: Asset !token holder"
+            "A:MOD-IA: Custodial contract does not hold token"
         );
         _;
     }
@@ -236,7 +236,6 @@ contract APP is CORE {
      */
     function transferAssetToken(address _to, bytes32 _idxHash)
         external
-        override
         nonReentrant
     {
         require(
@@ -248,6 +247,213 @@ contract APP is CORE {
         uint256 tokenId = uint256(_idxHash);
 
         A_TKN.safeTransferFrom(address(this), _to, tokenId);
+        //^^^^^^^interactions^^^^^^^^^
+    }
+
+    /** DPS:TEST:MOVED FROM APP2
+     * @dev Modify **Record**.assetStatus with confirmation of matching rgthash required
+     * @param _idxHash asset to moidify
+     * @param _rgtHash rgthash to match in front end
+     * @param _newAssetStatus updated status
+     */
+    function modifyStatus(
+        bytes32 _idxHash,
+        bytes32 _rgtHash,
+        uint8 _newAssetStatus
+    ) external nonReentrant whenNotPaused isAuthorized(_idxHash) {
+        Record memory rec = getRecord(_idxHash);
+        uint8 userType = getCallingUserType(rec.node);
+
+        require(
+            (userType > 0) && (userType < 10),
+            "APP2:MS: User !auth in node"
+        );
+        require(
+            (_newAssetStatus != 7) &&
+                (_newAssetStatus != 57) &&
+                (_newAssetStatus != 58) &&
+                (_newAssetStatus < 100),
+            "APP2:MS: Stat Rsrvd"
+        );
+        require(
+            needsImport(_newAssetStatus) == 0,
+            "APP2:MS: Cannot place asset in unregistered, exported, or discarded status using modifyStatus"
+        );
+        require(
+            needsImport(rec.assetStatus) == 0,
+            "APP2:MS: Record in unregistered, exported, or discarded status"
+        );
+        require(
+            (rec.assetStatus > 49) || (userType < 5),
+            "APP2:MS: Only usertype < 5 can change status < 49"
+        );
+        require(
+            rec.rightsHolder == _rgtHash,
+            "APP2:MS: Rightsholder does not match supplied data"
+        );
+        //^^^^^^^checks^^^^^^^^^
+
+        rec.assetStatus = _newAssetStatus;
+        //^^^^^^^effects^^^^^^^^^
+
+        writeRecord(_idxHash, rec);
+        //^^^^^^^interactions^^^^^^^^^
+    }
+
+    /** DPS:TEST:MOVED FROM APP2
+     * @dev set **Record**.assetStatus to lost or stolen, with confirmation of matching rgthash required
+     * @param _idxHash asset to moidify
+     * @param _rgtHash rgthash to match in front end
+     * @param _newAssetStatus updated status
+     */
+    function setLostOrStolen(
+        bytes32 _idxHash,
+        bytes32 _rgtHash,
+        uint8 _newAssetStatus
+    ) external nonReentrant whenNotPaused isAuthorized(_idxHash) {
+        Record memory rec = getRecord(_idxHash);
+        uint8 userType = getCallingUserType(rec.node);
+        require(
+            (userType > 0) && (userType < 10),
+            "APP2:SLS: User !auth in node"
+        );
+        require(
+            (rec.assetStatus > 49) ||
+                ((_newAssetStatus < 50) && (userType < 5)),
+            "APP2:SLS: Only usertype <5 can change a <49 status asset to a >49 status"
+        );
+        require(
+            rec.rightsHolder == _rgtHash,
+            "APP2:SLS: Rightsholder does not match supplied data"
+        );
+        //^^^^^^^checks^^^^^^^^^
+
+        rec.assetStatus = _newAssetStatus;
+        //^^^^^^^effects^^^^^^^^^
+
+        STOR.setLostOrStolen(_idxHash, rec.assetStatus);
+        //^^^^^^^interactions^^^^^^^^^
+    }
+
+    /** DPS:TEST:MOVED FROM APP2
+     * @dev Decrement **Record**.countdown with confirmation of matching rgthash required
+     * @param _idxHash asset to moidify
+     * @param _rgtHash rgthash to match in front end
+     * @param _decAmount amount to decrement
+     */
+    function decrementCounter(
+        bytes32 _idxHash,
+        bytes32 _rgtHash,
+        uint32 _decAmount
+    ) external nonReentrant whenNotPaused isAuthorized(_idxHash) {
+        Record memory rec = getRecord(_idxHash);
+        uint8 userType = getCallingUserType(rec.node);
+
+        require(
+            (userType > 0) && (userType < 10),
+            "APP2:DC: User !auth in node"
+        );
+        require(
+            needsImport(rec.assetStatus) == 0,
+            "APP2:DC Record in unregistered, exported, or discarded status"
+        );
+        require(
+            rec.rightsHolder == _rgtHash,
+            "APP2:DC: Rightsholder does not match supplied data"
+        );
+        //^^^^^^^checks^^^^^^^^^
+
+        if (rec.countDown > _decAmount) {
+            rec.countDown = rec.countDown - _decAmount;
+        } else {
+            rec.countDown = 0;
+        }
+        //^^^^^^^effects^^^^^^^^^
+
+        writeRecord(_idxHash, rec);
+        deductServiceCosts(rec.node, 7);
+        //^^^^^^^interactions^^^^^^^^^
+    }
+
+    /** DPS:TEST:MOVED FROM APP2
+     * @dev Modify rec.MutableStorage field with rghHash confirmation
+     * @param _idxHash idx of asset to Modify
+     * @param _rgtHash rgthash to match in front end
+     * @param _mutableStorage1 content adressable storage adress part 1
+     * @param _mutableStorage2 content adressable storage adress part 2
+     */
+    function modifyMutableStorage(
+        bytes32 _idxHash,
+        bytes32 _rgtHash,
+        bytes32 _mutableStorage1,
+        bytes32 _mutableStorage2
+    ) external nonReentrant whenNotPaused isAuthorized(_idxHash) {
+        Record memory rec = getRecord(_idxHash);
+        uint8 userType = getCallingUserType(rec.node);
+        require(
+            (userType > 0) && (userType < 10),
+            "APP2:MMS: User !auth in node"
+        );
+        require(
+            needsImport(rec.assetStatus) == 0,
+            "APP2:MMS: Record in unregistered, exported, or discarded status"
+        );
+        require(
+            rec.rightsHolder == _rgtHash,
+            "APP2:MMS: Rightsholder does not match supplied data"
+        );
+        //^^^^^^^checks^^^^^^^^^
+
+        rec.mutableStorage1 = _mutableStorage1;
+        rec.mutableStorage2 = _mutableStorage2;
+        //^^^^^^^effects^^^^^^^^^
+
+        writeMutableStorage(_idxHash, rec);
+        deductServiceCosts(rec.node, 8);
+        //^^^^^^^interactions^^^^^^^^^
+    }
+
+    /** DPS:TEST:MOVED FROM APP2
+     * @dev Export FROM Custodial - sets asset to status 70 (importable) for export
+     * @dev exportTo - sets asset to status 70 (importable) and defines the node that the item can be imported into
+     * @param _idxHash idx of asset to Modify
+     * @param _exportTo node target for export
+     * @param _addr adress to send asset to
+     * @param _rgtHash rgthash to match in front end
+     */
+    function exportAssetTo(
+        bytes32 _idxHash,
+        uint32 _exportTo,
+        address _addr,
+        bytes32 _rgtHash
+    ) external nonReentrant whenNotPaused isAuthorized(_idxHash) {
+        Record memory rec = getRecord(_idxHash);
+        uint8 userType = getCallingUserType(rec.node);
+
+        require(
+            (userType > 0) && (userType < 10),
+            "APP2:EA: user not auth in node"
+        );
+        require( // require transferrable (51) status
+            (rec.assetStatus == 51) || (rec.assetStatus == 70),
+            "APP2:EA: Asset status must be 51 to export"
+        );
+        require(
+            NODE_MGR.isSameRootNode(_exportTo, rec.node) == 170,
+            "A:EA: Cannot export node to new root"
+        );
+        require(
+            rec.rightsHolder == _rgtHash,
+            "APP2:EA: Rightsholder does not match supplied data"
+        );
+        //^^^^^^^checks^^^^^^^^^
+
+        rec.assetStatus = 70; // Set status to 70 (exported)
+        rec.int32temp = _exportTo;
+        //^^^^^^^effects^^^^^^^^^
+
+        A_TKN.safeTransferFrom(address(this), _addr, uint256(_idxHash));
+        writeRecord(_idxHash, rec);
         //^^^^^^^interactions^^^^^^^^^
     }
 }
