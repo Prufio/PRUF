@@ -39,6 +39,7 @@ contract ECR_CORE is BASIC {
             _escrowOwnerAddressHash,
             _timelock
         );
+        //^^^^^^^interactions^^^^^^^^^
     }
 
     /**
@@ -76,10 +77,7 @@ contract ECR_CORE is BASIC {
         internal
         returns (escrowData memory)
     {
-        //^^^^^^^checks^^^^^^^^^
-
         escrowData memory escrow = ECR_MGR.retrieveEscrowData(_idxHash);
-
         return (escrow);
         //^^^^^^^interactions^^^^^^^^^
     }
@@ -94,11 +92,8 @@ contract ECR_CORE is BASIC {
         view
         returns (escrowDataExtLight memory)
     {
-        //^^^^^^^checks^^^^^^^^^
-
         escrowDataExtLight memory escrowDataLight = ECR_MGR
             .retrieveEscrowDataLight(_idxHash);
-
         return (escrowDataLight);
         //^^^^^^^interactions^^^^^^^^^
     }
@@ -113,11 +108,8 @@ contract ECR_CORE is BASIC {
         view
         returns (escrowDataExtHeavy memory)
     {
-        //^^^^^^^checks^^^^^^^^^
-
         escrowDataExtHeavy memory escrowDataHeavy = ECR_MGR
             .retrieveEscrowDataHeavy(_idxHash);
-
         return (escrowDataHeavy);
         //^^^^^^^interactions^^^^^^^^^
     }

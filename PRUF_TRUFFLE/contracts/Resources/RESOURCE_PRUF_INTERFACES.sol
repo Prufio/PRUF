@@ -382,19 +382,6 @@ interface STOR_Interface {
      */
     function retrieveRecord(bytes32 _idxHash) external returns (Record memory);
 
-    // function retrieveRecord(bytes32 _idxHash)
-    //     external
-    //     view
-    //     returns (
-    //         bytes32,
-    //         uint8,
-    //         uint32,
-    //         uint32,
-    //         uint32,
-    //         bytes32,
-    //         bytes32
-    //     );
-
     /*
      * @dev return a record from the database w/o rgt
      */

@@ -209,6 +209,7 @@ abstract contract BASIC is
      */
     function pause() external isPauser {
         _pause();
+        //^^^^^^^interactions^^^^^^^^^
     }
 
     /***
@@ -216,6 +217,7 @@ abstract contract BASIC is
      */
     function unpause() external isPauser {
         _unpause();
+        //^^^^^^^interactions^^^^^^^^^
     }
 
     /**
@@ -229,7 +231,10 @@ abstract contract BASIC is
         address _to,
         uint256 _tokenID
     ) external virtual isContractAssetAdmin nonReentrant {
+        //^^^^^^^checks^^^^^^^^^
+
         IERC721(_tokenContract).safeTransferFrom(address(this), _to, _tokenID);
+        //^^^^^^^interactions^^^^^^^^^
     }
 
     /**
@@ -243,7 +248,9 @@ abstract contract BASIC is
         address _to,
         uint256 _amount
     ) external virtual isContractAssetAdmin nonReentrant {
+        //^^^^^^^checks^^^^^^^^^
         IERC20(_tokenContract).transferFrom(address(this), _to, _amount);
+        //^^^^^^^interactions^^^^^^^^^
     }
 
     //--------------------------------------------------------------------------------------INTERNAL functions
@@ -273,18 +280,6 @@ abstract contract BASIC is
     function getNodeinfo(uint32 _node) internal virtual returns (Node memory) {
         //^^^^^^^checks^^^^^^^^^
 
-        // Node memory node_info;
-        // //^^^^^^^effects^^^^^^^^^
-
-        // (
-        //     node_info.nodeRoot,
-        //     node_info.custodyType,
-        //     node_info.managementType,
-        //     node_info.discount,
-        //     node_info.referenceAddress
-        // ) = NODE_MGR.getNodeData(_node);
-
-        // return node_info;
         return NODE_MGR.getExtendedNodeData(_node);
         //^^^^^^^interactions^^^^^^^^^
     }
@@ -323,39 +318,4 @@ abstract contract BASIC is
         return rec; // Returns Record struct rec
         //^^^^^^^effects/interactions^^^^^^^^^
     }
-
-    // /**
-    //  * @dev Transfer any specified assetToken from contract
-    //  * @param _to - address to send to
-    //  * @param _idxHash - asset index
-    //  */
-    // function transferAssetToken(address _to, bytes32 _idxHash)
-    //     external
-    //     virtual
-    //     nonReentrant
-    //     isContractAdmin
-    // {
-    //     //^^^^^^^checks^^^^^^^^^
-
-    //     uint256 tokenId = uint256(_idxHash);
-
-    //     A_TKN.safeTransferFrom(address(this), _to, tokenId);
-    //     //^^^^^^^interactions^^^^^^^^^
-    // }
-
-    // /**
-    //  * @dev Transfer any specified nodeToken from contract
-    //  * @param _to - address to send to
-    //  * @param _tokenID - node token ID
-    //  */
-    // function transferNodeToken(address _to, uint256 _tokenID)
-    //     external
-    //     virtual
-    //     isContractAdmin
-    //     nonReentrant
-    // {
-    //     //^^^^^^^checks^^^^^^^^^
-    //     NODE_TKN.safeTransferFrom(address(this), _to, _tokenID);
-    //     //^^^^^^^interactions^^^^^^^^^
-    // }
 }
