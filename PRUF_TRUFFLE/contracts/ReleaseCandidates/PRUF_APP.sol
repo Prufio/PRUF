@@ -250,7 +250,7 @@ contract APP is CORE {
         //^^^^^^^interactions^^^^^^^^^
     }
 
-    /** DPS:TEST:MOVED FROM APP
+    /**
      * @dev Modify **Record**.assetStatus with confirmation of matching rgthash required
      * @param _idxHash asset to moidify
      * @param _rgtHash rgthash to match in front end
@@ -300,7 +300,7 @@ contract APP is CORE {
         //^^^^^^^interactions^^^^^^^^^
     }
 
-    /** DPS:TEST:MOVED FROM APP
+    /**
      * @dev set **Record**.assetStatus to lost or stolen, with confirmation of matching rgthash required
      * @param _idxHash asset to moidify
      * @param _rgtHash rgthash to match in front end
@@ -335,7 +335,7 @@ contract APP is CORE {
         //^^^^^^^interactions^^^^^^^^^
     }
 
-    /** DPS:TEST:MOVED FROM APP
+    /**
      * @dev Decrement **Record**.countdown with confirmation of matching rgthash required
      * @param _idxHash asset to moidify
      * @param _rgtHash rgthash to match in front end
@@ -375,7 +375,7 @@ contract APP is CORE {
         //^^^^^^^interactions^^^^^^^^^
     }
 
-    /** DPS:TEST:MOVED FROM APP
+    /**
      * @dev Modify rec.MutableStorage field with rghHash confirmation
      * @param _idxHash idx of asset to Modify
      * @param _rgtHash rgthash to match in front end
@@ -413,7 +413,7 @@ contract APP is CORE {
         //^^^^^^^interactions^^^^^^^^^
     }
 
-    /** DPS:TEST:MOVED FROM APP
+    /**
      * @dev Export FROM Custodial - sets asset to status 70 (importable) for export
      * @dev exportTo - sets asset to status 70 (importable) and defines the node that the item can be imported into
      * @param _idxHash idx of asset to Modify

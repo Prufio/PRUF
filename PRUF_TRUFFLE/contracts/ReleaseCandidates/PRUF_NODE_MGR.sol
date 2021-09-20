@@ -313,7 +313,7 @@ contract NODE_MGR is BASIC {
         _newNode.CAS2 = _CAS2;
 
         _createNode(_newNode, _node, _recipientAddress);
-        //^^^^^^^effects^^^^^^^^^
+        //^^^^^^^interations^^^^^^^^^
     }
 
     //--------------------------------------------External Functions--------------------------
@@ -347,7 +347,17 @@ contract NODE_MGR is BASIC {
 
         address rootPaymentAddress = cost[_nodeRoot][1].paymentAddress; //payment for upgrade goes to root node payment address specified for service (1)
 
-        //mint an Node token to _msgSender(), at tokenID nodeTokenIndex, with URI = root Node #
+        //mint an Node token to _msgSender(), at tokenID nodeTokenIndex, with URI = root Node
+
+        Node memory ThisNode;
+        ThisNode.name = _name;
+        ThisNode.nodeRoot = _nodeRoot;
+        ThisNode.custodyType = _custodyType;
+        ThisNode.managementType = 255; //creates nodes at managementType 255 = not yet usable(disabled),
+        ThisNode.storageProvider = 0; //creates nodes at storageType 0 = not yet usable(disabled),
+        ThisNode.discount = startingDiscount;
+        ThisNode.CAS1 = _CAS1;
+        ThisNode.CAS2 = _CAS2;
 
         UTIL_TKN.trustedAgentBurn(_msgSender(), node_price / 2);
         UTIL_TKN.trustedAgentTransfer(
@@ -355,17 +365,8 @@ contract NODE_MGR is BASIC {
             rootPaymentAddress,
             node_price - (node_price / 2)
         ); //burning 50% so we have tokens to incentivise outreach performance
-        Node memory _node;
-        _node.name = _name;
-        _node.nodeRoot = _nodeRoot;
-        _node.custodyType = _custodyType;
-        _node.managementType = 255; //creates nodes at managementType 255 = not yet usable(disabled),
-        _node.storageProvider = 0; //creates nodes at storageType 0 = not yet usable(disabled),
-        _node.discount = startingDiscount;
-        _node.CAS1 = _CAS1;
-        _node.CAS2 = _CAS2;
 
-        _createNode(_node, uint32(nodeTokenIndex), _msgSender());
+        _createNode(ThisNode, uint32(nodeTokenIndex), _msgSender());
 
         //Set the default 11 authorized contracts
         if (_custodyType == 2) {
@@ -373,7 +374,7 @@ contract NODE_MGR is BASIC {
         }
 
         return nodeTokenIndex; //returns Node # of minted token
-        //^^^^^^^effects/interactions^^^^^^^^^
+        //^^^^^^^interactions^^^^^^^^^
     }
 
     /**
@@ -509,7 +510,7 @@ contract NODE_MGR is BASIC {
         //^^^^^^^effects^^^^^^^^^
     }
 
-    //-------------------------------------------Read-only functions ----------------------------------------------
+    //-------------------------------------------Read-only (view) functions ----------------------------------------------
 
     /**
      * @dev get bit from .switches at specified position
@@ -534,7 +535,7 @@ contract NODE_MGR is BASIC {
         } else {
             return 0;
         }
-        //^^^^^^^effects^^^^^^^^^
+        //^^^^^^^interactions^^^^^^^^^
     }
 
     /**
@@ -551,7 +552,7 @@ contract NODE_MGR is BASIC {
     {
         //^^^^^^^checks^^^^^^^^^
         return (registeredUsers[_userHash][_node]);
-        //^^^^^^^effects^^^^^^^^^
+        //^^^^^^^interactions^^^^^^^^^
     }
 
     /**
@@ -567,7 +568,7 @@ contract NODE_MGR is BASIC {
     {
         //^^^^^^^checks^^^^^^^^^
         return (validManagementTypes[_managementType]);
-        //^^^^^^^effects^^^^^^^^^
+        //^^^^^^^interactions^^^^^^^^^
     }
 
     /**
@@ -583,7 +584,7 @@ contract NODE_MGR is BASIC {
     {
         //^^^^^^^checks^^^^^^^^^
         return (validStorageProviders[_storageProvider]);
-        //^^^^^^^effects^^^^^^^^^
+        //^^^^^^^interactions^^^^^^^^^
     }
 
     /**
@@ -599,7 +600,7 @@ contract NODE_MGR is BASIC {
     {
         //^^^^^^^checks^^^^^^^^^
         return (validCustodyTypes[_custodyType]);
-        //^^^^^^^effects^^^^^^^^^
+        //^^^^^^^interactions^^^^^^^^^
     }
 
     /**
@@ -642,7 +643,7 @@ contract NODE_MGR is BASIC {
     {
         //^^^^^^^checks^^^^^^^^^
         return (nodeData[_node]);
-        //^^^^^^^effects^^^^^^^^^
+        //^^^^^^^interactions^^^^^^^^^
     }
 
     /**
@@ -663,7 +664,7 @@ contract NODE_MGR is BASIC {
         } else {
             return uint8(0);
         }
-        //^^^^^^^effects^^^^^^^^^
+        //^^^^^^^interactions^^^^^^^^^
     }
 
     /**
@@ -676,7 +677,7 @@ contract NODE_MGR is BASIC {
         //^^^^^^^checks^^^^^^^^^
 
         return (nodeData[node].name);
-        //^^^^^^^effects^^^^^^^^^
+        //^^^^^^^interactions^^^^^^^^^
     }
 
     /**
@@ -692,7 +693,7 @@ contract NODE_MGR is BASIC {
     {
         //^^^^^^^checks^^^^^^^^^
         return (nodeId[_forThisName]);
-        //^^^^^^^effects^^^^^^^^^
+        //^^^^^^^interactions^^^^^^^^^
     }
 
     /**
@@ -706,7 +707,7 @@ contract NODE_MGR is BASIC {
     function currentNodePricingInfo() external view returns (uint256, uint256) {
         //^^^^^^^checks^^^^^^^^^
         return (nodeTokenIndex, node_price);
-        //^^^^^^^effects^^^^^^^^^
+        //^^^^^^^interactions^^^^^^^^^
     }
 
     //-------------------------------------------functions for payment calculations----------------------------------------------
@@ -747,7 +748,7 @@ contract NODE_MGR is BASIC {
         invoice.node = _node;
 
         return invoice;
-        //^^^^^^^effects^^^^^^^^^
+        //^^^^^^^interactions^^^^^^^^^
     }
 
     /**

@@ -135,79 +135,6 @@ contract NODE_TKN is
         //^^^^^^^interactions^^^^^^^^^
     }
 
-    // /**
-    //  * @dev Transfers the ownership of a given token ID to another address.
-    //  * Usage of this method is discouraged, use {safeTransferFrom} whenever possible.
-    //  * Requires the _msgSender() to be the owner, approved, or operator.
-    //  * @param _from current owner of the token
-    //  * @param _to address to receive the ownership of the given token ID
-    //  * @param _tokenId uint256 ID of the token to be transferred
-    //  */
-    // function transferFrom(
-    //     address _from,
-    //     address _to,
-    //     uint256 _tokenId
-    // ) public override nonReentrant whenNotPaused {
-    //     require(
-    //         _isApprovedOrOwner(_msgSender(), _tokenId),
-    //         "ACT:TF: Caller !ApprovedOrOwner"
-    //     );
-    //     //^^^^^^^checks^^^^^^^^^
-
-    //     _transfer(_from, _to, _tokenId);
-    //     //^^^^^^^interactions^^^^^^^^^
-    // }
-
-    // /**
-    //  * @dev Safely transfers the ownership of a given token ID to another address
-    //  * If the target address is a contract, it must implement {IERC721Receiver-onERC721Received},
-    //  * which is called upon a safe transfer, and return the magic value
-    //  * `bytes4(keccak256("onERC721Received(address,address,uint256,bytes)"))`; otherwise,
-    //  * the transfer is reverted.
-    //  * Requires the _msgSender() to be the owner, approved, or operator
-    //  * @param _from current owner of the token
-    //  * @param _to address to receive the ownership of the given token ID
-    //  * @param _tokenId uint256 ID of the token to be transferred
-    //  */
-    // function safeTransferFrom(
-    //     address _from,
-    //     address _to,
-    //     uint256 _tokenId
-    // ) public override whenNotPaused {
-    //     //^^^^^^^checks^^^^^^^^^
-
-    //     safeTransferFrom(_from, _to, _tokenId, "");
-    //     //^^^^^^^interactions^^^^^^^^^
-    // }
-
-    // /**
-    //  * @dev Safely transfers the ownership of a given token ID to another address
-    //  * If the target address is a contract, it must implement {IERC721Receiver-onERC721Received},
-    //  * which is called upon a safe transfer, and return the magic value
-    //  * `bytes4(keccak256("onERC721Received(address,address,uint256,bytes)"))`; otherwise,
-    //  * the transfer is reverted.
-    //  * Requires the _msgSender() to be the owner, approved, or operator
-    //  * @param _from current owner of the token
-    //  * @param _to address to receive the ownership of the given token ID
-    //  * @param _tokenId uint256 ID of the token to be transferred
-    //  * @param _data bytes data to send along with a safe transfer check
-    //  */
-    // function safeTransferFrom(
-    //     address _from,
-    //     address _to,
-    //     uint256 _tokenId,
-    //     bytes memory _data
-    // ) public virtual override nonReentrant whenNotPaused {
-    //     require(
-    //         _isApprovedOrOwner(_msgSender(), _tokenId),
-    //         "ACT:STF: Caller !ApprovedOrOwner"
-    //     );
-    //     //^^^^^^^checks^^^^^^^^^
-
-    //     _safeTransfer(_from, _to, _tokenId, _data);
-    //     //^^^^^^^interactions^^^^^^^^^
-    // }
-
     /**
      * @dev See {IERC721Metadata-tokenURI}.
      */
@@ -222,6 +149,7 @@ contract NODE_TKN is
             _exists(tokenId),
             "ERC721URIStorage: URI query for nonexistent token"
         );
+        //^^^^^^^checks^^^^^^^^^
 
         string memory _tokenURI = _tokenURIs[tokenId];
         string memory base = _baseURI();
@@ -236,6 +164,7 @@ contract NODE_TKN is
         }
 
         return super.tokenURI(tokenId);
+        //^^^^^^^interactions^^^^^^^^^
     }
 
     /**
@@ -250,6 +179,7 @@ contract NODE_TKN is
         } else {
             return 0;
         }
+        //^^^^^^^interactions^^^^^^^^^
     }
 
     /**
@@ -295,6 +225,7 @@ contract NODE_TKN is
      */
     function _baseURI() internal view virtual override returns (string memory) {
         return _baseTokenURI;
+        //^^^^^^^interactions^^^^^^^^^
     }
 
     /**
@@ -309,6 +240,7 @@ contract NODE_TKN is
         uint256 tokenId
     ) internal virtual override(ERC721, ERC721Enumerable, ERC721Pausable) {
         super._beforeTokenTransfer(from, to, tokenId);
+        //^^^^^^^interactions^^^^^^^^^
     }
 
     /**
@@ -326,7 +258,10 @@ contract NODE_TKN is
             _exists(tokenId),
             "ERC721URIStorage: URI set of nonexistent token"
         );
+        //^^^^^^^checks^^^^^^^^^
+
         _tokenURIs[tokenId] = _tokenURI;
+        //^^^^^^^interactions^^^^^^^^^
     }
 
     /**
@@ -340,5 +275,6 @@ contract NODE_TKN is
         returns (bool)
     {
         return super.supportsInterface(interfaceId);
+        //^^^^^^^interactions^^^^^^^^^
     }
 }
