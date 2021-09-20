@@ -149,7 +149,7 @@ contract("APP_NC", (accounts) => {
 
     asset8 = await Helper.getIdxHash("hhh", "hhh", "hhh", "hhh");
 
-    asset9 = await Helper.getIdxHash("iii", "iii", "iii", "iii");
+    asset4 = await Helper.getIdxHash("iii", "iii", "iii", "iii");
 
     asset10 = await Helper.getIdxHash("jjj", "jjj", "jjj", "jjj");
 
@@ -1460,6 +1460,13 @@ contract("APP_NC", (accounts) => {
       })
 
       .then(() => {
+        console.log("Account4 => 1000005");
+        return NODE_MGR.addUser("1000005", account4Hash, "1", {
+          from: account10,
+        });
+      })
+
+      .then(() => {
         console.log("Account1 => 1000005");
         return NODE_MGR.addUser("1000005", account1Hash, "1", {
           from: account1,
@@ -1500,8 +1507,18 @@ contract("APP_NC", (accounts) => {
     return ID_MGR.mintID(account4, "3", asset3, { from: account1 });
   });
 
-  it("Should mint ID_MGR(4) to account2", async () => {
+  it("Should mint ID to account2", async () => {
     return ID_MGR.mintID(account2, "4", asset4, { from: account1 });
+  });
+
+  it("Should mint 30000 tokens to account5", async () => {
+    return UTIL_TKN.mint(account10, "30000000000000000000000", {
+      from: account1,
+    });
+  });
+
+  it("Should mint ID to account5", async () => {
+    return ID_MGR.mintID(account5, "5", asset5, { from: account1 });
   });
 
   it("Should mint asset1 in Node 1000004", async () => {
@@ -1533,8 +1550,46 @@ contract("APP_NC", (accounts) => {
   })
 
   it("Should mint asset5 in Node 1000004", async () => {
-    return APP_NC.newRecord(asset5, rgt5, "1000004", "5000", { from: account1 });
+    return APP_NC.newRecord(asset5, rgt5, "1000004", "5000", { from: account4 });
   })
+
+  it("Should put asset5 in to transferable status", async () => {
+    return APP_NC.modifyStatus(asset5, "51", { from: account4 });
+  });
+
+  it("Should transfer asset5 to put in unregistered status", async () => {
+    return A_TKN.safeTransferFrom(account4, account1, asset5, {
+      from: account4,
+    });
+  });
+
+  it("Should mint asset6 in 1000003", async () => {
+    return APP_NC.newRecord(asset6, rgt6, "1000003", "100", { from: account2 });
+  });
+
+  it("Should mint asset7 in 1000003", async () => {
+    return APP_NC.newRecord(asset7, rgt7, "1000003", "100", { from: account2 });
+  });
+
+  it("Should put asset6 in to stolen status", async () => {
+    return APP_NC.setLostOrStolen(asset6, "53", { from: account2 });
+  });
+
+  it("Should put asset7 in to lost status", async () => {
+    return APP_NC.setLostOrStolen(asset7, "54", { from: account2 });
+  });
+
+  it("Should mint asset8 in 1000004", async () => {
+    return APP_NC.newRecord(asset8, rgt2, "1000004", "100", { from: account5 });
+  });
+
+  it("Should put asset8 in to discardable status", async () => {
+    return APP_NC.modifyStatus(asset8, "59", { from: account5 });
+  });
+
+  it("Should discard asset8 to put in unregistered status", async () => {
+    return A_TKN.discard(asset8, { from: account5 });
+  });
 
   it("Should pause APP_NC", async () => {
     console.log(
@@ -1546,7 +1601,7 @@ contract("APP_NC", (accounts) => {
   //1
   it("Should fail because APP_NC is paused", async () => {
     console.log(
-      "//**************************************************BEGIN APP_NC FAIL BATCH***************************************************//"
+      "//**************************************************BEGIN APP_NC FAIL BATCH (46) ***************************************************//"
     );
     console.log(
       "//**************************************************BEGIN newRecordWithDescription FAIL BATCH***************************************************//"
@@ -1701,7 +1756,7 @@ contract("APP_NC", (accounts) => {
 
   //14
   it("Should fail because caller !have a trusted ID", async () => {
-    return APP_NC.importAsset(asset4, "1000007", { from: account2 });
+    return APP_NC.importAsset(asset5, "1000007", { from: account2 });
   });
 
   it("Should pause APP_NC", async () => {
@@ -1730,7 +1785,250 @@ contract("APP_NC", (accounts) => {
 
   //17
   it("Should fail because asset needsImport", async () => {
-    return APP_NC.addNonMutableNote(asset4, rgt1, rgt1, { from: account2 });
+    return APP_NC.addNonMutableNote(asset5, rgt1, rgt1, { from: account2 });
+  });
+
+  it("Should pause APP_NC", async () => {
+    console.log(
+      "//**************************************END addNonMutableNote FAIL BATCH**********************************************/"
+    );
+    console.log(
+      "//**************************************BEGIN _changeRGT FAIL BATCH**********************************************/"
+    );
+    return APP_NC.pause({ from: account1 });
+  });
+
+  //18
+  it("Should Fail because APP_NC is paused", async () => {
+    return APP_NC.changeRgt(asset1, rgt2, { from: account5 });
+  });
+
+  it("Should unpause APP_NC", async () => {
+    return APP_NC.unpause({ from: account1 });
+  });
+
+  //19
+  it("Should Fail because caller does not hold token", async () => {
+    return APP_NC.changeRgt(asset1, rgt2, { from: account5 });
+  });
+
+  //20
+  it("Should fail because record is in stolen status", async () => {
+    return APP_NC.changeRgt(asset6, rgt5, { from: account2 });
+  });
+
+  //21
+  it("Should fail because record is in lost status", async () => {
+    return APP_NC.changeRgt(asset7, rgt6, { from: account2 });
+  });
+
+  //22
+  it("Should fail because record needsImport", async () => {
+    return APP_NC.changeRgt(asset4, rgt6, { from: account4 });
+  });
+
+  it("Should pause APP_NC", async () => {
+    console.log(
+      "//**************************************END changeRgt FAIL BATCH**********************************************/"
+    );
+    console.log(
+      "//**************************************BEGIN exportAssetTo FAIL BATCH**********************************************/"
+    );
+    return APP_NC.pause({ from: account1 });
+  });
+
+  //23
+  it("Should fail because APP_NC is paused", async () => {
+    return APP_NC.exportAssetTo(asset1, "1000004", { from: account5 });
+  });
+
+  it("Should unpause APP_NC", async () => {
+    return APP_NC.unpause({ from: account1 });
+  });
+
+  //24
+  it("Should fail because caller does not hold token", async () => {
+    return APP_NC.exportAssetTo(asset1, "1000004", { from: account5 });
+  });
+
+  it("Should set asset1 stat to 52", async () => {
+    return APP_NC.modifyStatus(asset1, "52", { from: account4 });
+  });
+
+  //25
+  it("Should fail because record != status51", async () => {
+    return APP_NC.exportAssetTo(asset1, "1000004", { from: account4 });
+  });
+
+  it("Should set asset1 stat to 52", async () => {
+    return APP_NC.modifyStatus(asset1, "51", { from: account4 });
+  });
+
+  //26
+  it("Should fail because you cannot export to new root", async () => {
+    return APP_NC.exportAssetTo(asset1, "1000007", { from: account4 });
+  });
+
+  //27
+  it("Should fail because caller !NTH", async () => {
+    return APP_NC.exportAssetTo(asset8, "1000007", { from: account4 });
+  });
+
+  it("Should pause APP_NC", async () => {
+    console.log(
+      "//**************************************END exportAssetTo FAIL BATCH**********************************************/"
+    );
+    console.log(
+      "//**************************************BEGIN modifyStatus FAIL BATCH**********************************************/"
+    );
+    return APP_NC.pause({ from: account1 });
+  });
+
+  //28
+  it("Should Fail because APP_NC is paused", async () => {
+    return APP_NC.modifyStatus(asset1, "51", { from: account5 });
+  });
+
+  it("Should unpause APP_NC", async () => {
+    return APP_NC.unpause({ from: account1 });
+  });
+
+  //29
+  it("Should Fail because caller does not hold token", async () => {
+    return APP_NC.modifyStatus(asset1, "51", { from: account5 });
+  });
+
+  //30
+  it("Should Fail because being placed in status > 100", async () => {
+    return APP_NC.modifyStatus(asset1, "101", { from: account4 });
+  });
+
+  //31
+  it("Should Fail because being placed in status 7", async () => {
+    return APP_NC.modifyStatus(asset1, "7", { from: account4 });
+  });
+
+  //32
+  it("Should Fail because being placed in reserved status 57", async () => {
+    return APP_NC.modifyStatus(asset1, "57", { from: account4 });
+  });
+
+  //33
+  it("Should Fail because being placed in reserved status 58", async () => {
+    return APP_NC.modifyStatus(asset1, "58", { from: account4 });
+  });
+
+  //34
+  it("Should Fail because being placed in exported status", async () => {
+    return APP_NC.modifyStatus(asset1, "70", { from: account4 });
+  });
+
+  //35
+  it("Should Fail because being placed in status <50", async () => {
+    return APP_NC.modifyStatus(asset1, "1", { from: account4 });
+  });
+
+  //36
+  it("Should Fail because asset needsImport", async () => {
+    return APP_NC.modifyStatus(asset4, "51", { from: account4 });
+  });
+
+  it("Should pause APP_NC", async () => {
+    console.log(
+      "//**************************************END modifyStatus FAIL BATCH**********************************************/"
+    );
+    console.log(
+      "//**************************************BEGIN setLostOrStolen FAIL BATCH**********************************************/"
+    );
+    return APP_NC.pause({ from: account1 });
+  });
+
+  //37
+  it("Should Fail because APP_NC is paused", async () => {
+    return APP_NC.setLostOrStolen(asset1, "53", { from: account5 });
+  });
+
+  it("Should unpause APP_NC", async () => {
+    return APP_NC.unpause({ from: account1 });
+  });
+
+  //38
+  it("Should fail because caller does not hold token", async () => {
+    return APP_NC.setLostOrStolen(asset1, "53", { from: account5 });
+  });
+
+  //39
+  it("Should fail because assetStatus is < 50", async () => {
+    return APP_NC.setLostOrStolen(asset1, "3", { from: account4 });
+  });
+
+  //40
+  it("Should fail because asset needsImport", async () => {
+    return APP_NC.setLostOrStolen(asset4, "53", { from: account4 });
+  });
+
+  it("Should pause APP_NC", async () => {
+    console.log(
+      "//**************************************END setLostOrStolen FAIL BATCH**********************************************/"
+    );
+    console.log(
+      "//**************************************BEGIN decrementCounter FAIL BATCH**********************************************/"
+    );
+    return APP_NC.pause({ from: account1 });
+  });
+
+  //41
+  it("Should Fail because APP_NC is paused", async () => {
+    return APP_NC.decrementCounter(asset1, "15", { from: account5 });
+  });
+
+  it("Should unpause APP_NC", async () => {
+    return APP_NC.unpause({ from: account1 });
+  });
+
+  //42
+  it("Should fail becasue caller does not hold token", async () => {
+    return APP_NC.decrementCounter(asset1, "15", { from: account5 });
+  });
+
+  //43
+  it("Should fail becasue asset needsImport", async () => {
+    return APP_NC.decrementCounter(asset4, "15", { from: account4 });
+  });
+
+  it("Should pause APP_NC", async () => {
+    console.log(
+      "//**************************************END decrementCounter FAIL BATCH**********************************************/"
+    );
+    console.log(
+      "//**************************************BEGIN modifyMutableStorage FAIL BATCH**********************************************/"
+    );
+    return APP_NC.pause({ from: account1 });
+  });
+
+  //44
+  it("Should Fail because APP_NC is paused", async () => {
+    return APP_NC.modifyMutableStorage(asset1, rgt1, rgt000, {
+      from: account5,
+    });
+  });
+
+  it("Should unpause APP_NC", async () => {
+    return APP_NC.unpause({ from: account1 });
+  });
+
+  //45
+  it("Should fail because caller does not hold token", async () => {
+    return APP_NC.modifyMutableStorage(asset1, rgt1, rgt000, {
+      from: account5,
+    });
+  });
+
+  //46
+  it("Should fail because asset needsImport", async () => {
+    return APP_NC.modifyMutableStorage(asset4, rgt1, rgt000, {
+      from: account4,
+    });
   });
 
   it("Should set SharesAddress", async () => {

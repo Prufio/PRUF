@@ -902,20 +902,6 @@ contract("TheWorks", (accounts) => {
           from: account1,
         });
       })
-
-      // .then(() => {
-      //   console.log("Authorizing PURCHASE");
-      //   return UTIL_TKN.grantRole(payableRoleB32, PURCHASE.address, {
-      //     from: account1,
-      //   });
-      // })
-
-      // .then(() => {
-      //   console.log("Authorizing PURCHASE");
-      //   return UTIL_TKN.grantRole(trustedAgentRoleB32, PURCHASE.address, {
-      //     from: account1,
-      //   });
-      // });
   });
 
   it("Should authorize all minter contracts for minting NODE_TKN(s)", () => {

@@ -1575,7 +1575,7 @@ contract("A_TKN", (accounts) => {
       "//**************************************END A_TKN TEST SETUP**********************************************/"
     );
     console.log(
-      "//**************************************BEGIN A_TKN FAIL BATCH (24)**********************************************/"
+      "//**************************************BEGIN A_TKN FAIL BATCH (25)**********************************************/"
     );
     console.log(
       "//**************************************BEGIN killTrustedAgent FAIL BATCH**********************************************/"
@@ -1611,9 +1611,20 @@ contract("A_TKN", (accounts) => {
   });
 
   //5
-  it("Should fail because caller is not minter", async () => {
+  it("Should fail because token does not exist", async () => {
     console.log(
       "//**************************************END resolveContractAddresses FAIL BATCH**********************************************/"
+    );
+    console.log(
+      "//**************************************BEGIN tokenURI FAIL BATCH**********************************************/"
+    );
+    return A_TKN.tokenURI("100", { from: account2 });
+  });
+
+  //6
+  it("Should fail because caller is not minter", async () => {
+    console.log(
+      "//**************************************END tokenURI FAIL BATCH**********************************************/"
     );
     console.log(
       "//**************************************BEGIN mintAssetToken FAIL BATCH**********************************************/"
@@ -1623,10 +1634,10 @@ contract("A_TKN", (accounts) => {
     });
   });
 
-  //6
+  //7
   it("Should fail because caller != approved || owner", async () => {
     console.log(
-      "//**************************************END resolveContractAddresses FAIL BATCH**********************************************/"
+      "//**************************************END mintAssetToken FAIL BATCH**********************************************/"
     );
     console.log(
       "//**************************************BEGIN setURI FAIL BATCH**********************************************/"
@@ -1634,7 +1645,7 @@ contract("A_TKN", (accounts) => {
     return A_TKN.setURI(asset1, "FAIL", { from: account5 });
   });
 
-  //7
+  //8
   it("Should fail because caller !NTH", async () => {
     return A_TKN.setURI(asset3, "FAIL", { from: account4 });
   });
@@ -1649,12 +1660,12 @@ contract("A_TKN", (accounts) => {
     return A_TKN.setURI(asset3, "FAIL", { from: account4 });
   });
 
-  //8
+  //9
   it("Should fail because URI already set", async () => {
     return A_TKN.setURI(asset3, "FAIL2", { from: account4 });
   });
 
-  //9
+  //10
   it("Should fail because caller is not owner or approved", async () => {
     console.log(
       "//**************************************END setURI FAIL BATCH**********************************************/"
@@ -1674,12 +1685,12 @@ contract("A_TKN", (accounts) => {
     return APP_NC.modifyStatus(asset2, "52", { from: account4 });
   });
 
-  //10
+  //11
   it("Should fail because asset not in transferable status", async () => {
     return A_TKN.transferFrom(account4, account5, asset2, { from: account4 });
   });
 
-  //11
+  //12
   it("Should fail because caller not owner or approved", async () => {
     console.log(
       "//**************************************END transferFrom FAIL BATCH**********************************************/"
@@ -1700,7 +1711,7 @@ contract("A_TKN", (accounts) => {
     return APP_NC.exportAssetTo(asset2, "1000003", { from: account4 });
   });
 
-  //12
+  //13
   it("Should fail because asset2 is in status 70, and not being sent to an authorized addr(contract)", async () => {
     return A_TKN.safeTransferFrom(account4, account6, asset2, {
       from: account4,
@@ -1715,7 +1726,7 @@ contract("A_TKN", (accounts) => {
     return APP_NC.modifyStatus(asset2, "52", { from: account4 });
   });
 
-  //13
+  //14
   it("Should fail because asset2 is not in a transferable status", async () => {
     return A_TKN.safeTransferFrom(account4, account6, asset2, {
       from: account4,
@@ -1726,14 +1737,14 @@ contract("A_TKN", (accounts) => {
     return APP_NC.modifyStatus(asset2, "51", { from: account4 });
   });
 
-  //14
+  //15
   it("Should fail because you cannot transfer to 0 addr", async () => {
     return A_TKN.safeTransferFrom(account4, account000, asset2, {
       from: account4,
     });
   });
 
-  //15
+  //16
   it("Should fail because caller not trusted agent", async () => {
     console.log(
       "//**************************************END safeTransferFrom FAIL BATCH**********************************************/"
@@ -1754,7 +1765,7 @@ contract("A_TKN", (accounts) => {
     return APP_NC.modifyStatus(asset1, "52", { from: account4 });
   });
 
-  //16
+  //17
   it("Should fail because asset !transferrable stat", async () => {
     return A_TKN.trustedAgentTransferFrom(account4, account6, asset1, {
       from: account4,
@@ -1769,7 +1780,7 @@ contract("A_TKN", (accounts) => {
     return A_TKN.setColdWallet({ from: account4 });
   });
 
-  //17
+  //18
   it("Should fail because wallet is cold wallet", async () => {
     return A_TKN.trustedAgentTransferFrom(account4, account6, asset1, {
       from: account4,
@@ -1790,7 +1801,7 @@ contract("A_TKN", (accounts) => {
     return A_TKN.pause({ from: account1 });
   });
 
-  //18
+  //19
   it("Should fail because A_TKN is paused", async () => {
     return A_TKN.trustedAgentBurn(asset1, { from: account4 });
   });
@@ -1799,7 +1810,7 @@ contract("A_TKN", (accounts) => {
     return A_TKN.unpause({ from: account1 });
   });
 
-  //19
+  //20
   it("Should fail because caller not trusted agent", async () => {
     return A_TKN.trustedAgentBurn(asset1, { from: account4 });
   });
@@ -1812,7 +1823,7 @@ contract("A_TKN", (accounts) => {
     return A_TKN.setColdWallet({ from: account4 });
   });
 
-  //20
+  //21
   it("Should fail because account4 is cold wallet", async () => {
     return A_TKN.trustedAgentBurn(asset1, { from: account4 });
   });
@@ -1835,7 +1846,7 @@ contract("A_TKN", (accounts) => {
     return A_TKN.pause({ from: account1 });
   });
 
-  //21
+  //22
   it("Should fail because A_TKN is paused", async () => {
     return A_TKN.discard(asset2, { from: account4 });
   });
@@ -1844,12 +1855,12 @@ contract("A_TKN", (accounts) => {
     return A_TKN.unpause({ from: account1 });
   });
 
-  //22
+  //23
   it("Should fail because caller not owner or approved", async () => {
     return A_TKN.discard(asset1, { from: account5 });
   });
 
-  //23
+  //24
   it("Should fail because caller is not pauser", async () => {
     console.log(
       "//*********************************END discard FAIL BATCH*****************************************/"
@@ -1860,7 +1871,7 @@ contract("A_TKN", (accounts) => {
     return A_TKN.pause({ from: account2 });
   });
 
-  //24
+  //25
   it("Should fail because caller is not pauser", async () => {
     console.log(
       "//*********************************END pause FAIL BATCH*****************************************/"

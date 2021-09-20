@@ -12,7 +12,7 @@ __/\\\\\\\\\\\\\ _____/\\\\\\\\\ _______/\\__/\\ ___/\\\\\\\\\\\\\\\
 
 /**-----------------------------------------------------------------
  *  TO DO
- * Check and see if A_TKN can be permitted in all nodes to prevent safeTransferFrom->writeRecord conflict due to it not being a default authorized contract for node s
+ * Check and see if A_TKN can be permitted in all nodes to prevent safeTransferFrom->writeRecord conflict due to it not being a default authorized contract for nodes
  *-----------------------------------------------------------------
  * PRUF ASSET NFT CONTRACT
  *---------------------------------------------------------------*/
@@ -29,7 +29,6 @@ import "../Imports/access/AccessControlEnumerable.sol";
 import "../Imports/utils/Context.sol";
 import "../Imports/utils/Counters.sol";
 import "../Imports/security/ReentrancyGuard.sol";
-
 import "../Resources/RESOURCE_PRUF_INTERFACES.sol";
 import "../Resources/RESOURCE_PRUF_TKN_INTERFACES.sol";
 
@@ -221,13 +220,12 @@ contract A_TKN is
         return coldWallet[_addr];
     }
 
-   
 
     /**
      * @dev See {IERC721Metadata-tokenURI}.
      */
     function tokenURI(uint256 tokenId) public view virtual override returns (string memory) {
-        require(_exists(tokenId), "ERC721URIStorage: URI query for nonexistent token");
+        require(_exists(tokenId), "AT:TU: URI query for nonexistent token");
 
         string memory _tokenURI = _tokenURIs[tokenId];
         string memory base = _baseURI();
@@ -244,7 +242,6 @@ contract A_TKN is
         return super.tokenURI(tokenId);
     }
 
-   
 
      /**
      * @dev Mint an Asset token
@@ -550,7 +547,7 @@ contract A_TKN is
     function pause() external virtual {
         require(
             hasRole(PAUSER_ROLE, _msgSender()),
-            "A:P: Caller !have pauser role"
+            "AT:P: Caller !have pauser role"
         );
         //^^^^^^^checks^^^^^^^^^
 
@@ -570,7 +567,7 @@ contract A_TKN is
     function unpause() external virtual {
         require(
             hasRole(PAUSER_ROLE, _msgSender()),
-            "A:UP: Caller !have pauser role"
+            "AT:UP: Caller !have pauser role"
         );
         //^^^^^^^checks^^^^^^^^^
 
@@ -618,7 +615,7 @@ contract A_TKN is
      * - `tokenId` must exist.
      */
     function _setTokenURI(uint256 tokenId, string memory _tokenURI) internal virtual {
-        require(_exists(tokenId), "ERC721URIStorage: URI set of nonexistent token");
+        require(_exists(tokenId), "AT:STU: URI set of nonexistent token");
         _tokenURIs[tokenId] = _tokenURI;
     }
 
@@ -628,8 +625,6 @@ contract A_TKN is
      function _baseURI() internal view virtual override returns (string memory) {
         return _baseTokenURI;
     }
-
-
 
     /**
      * @dev See {IERC165-supportsInterface}.
