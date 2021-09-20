@@ -126,7 +126,6 @@ contract ID_MGR is Pausable, AccessControl {
             "IM:BI: ID authority insufficient"
         );
         //^^^^^^^checks^^^^^^^^^
-        //BURNID TODO
         delete addressOfIdHash[id[_addr].IdHash]; //remove record from IDHash registry
         delete id[_addr]; //remove record from address registry
         //^^^^^^^effects^^^^^^^^^
