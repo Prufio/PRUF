@@ -18,7 +18,6 @@ _________\/// _____________\/// _______\/// __\///////// __\/// _____________
 pragma solidity ^0.8.7;
 
 import "../Resources/PRUF_BASIC.sol";
-import "../Imports/security/ReentrancyGuard.sol";
 
 contract ECR_CORE is BASIC {
     /**
