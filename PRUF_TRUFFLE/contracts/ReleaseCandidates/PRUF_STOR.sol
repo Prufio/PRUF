@@ -155,6 +155,7 @@ contract STOR is AccessControl, ReentrancyGuard, Pausable {
         } else {
             return 170;
         }
+        //^^^^^^^Interactions^^^^^^^^^
     }
 
     /**
@@ -168,6 +169,7 @@ contract STOR is AccessControl, ReentrancyGuard, Pausable {
         } else {
             return 170;
         }
+        //^^^^^^^Interactions^^^^^^^^^
     }
 
     /**
@@ -186,6 +188,7 @@ contract STOR is AccessControl, ReentrancyGuard, Pausable {
         } else {
             return 170;
         }
+        //^^^^^^^Interactions^^^^^^^^^
     }
 
     //-----------------------------------------------Events------------------------------------------------//
@@ -198,14 +201,20 @@ contract STOR is AccessControl, ReentrancyGuard, Pausable {
      * @dev Triggers stopped state. (pausable)
      */
     function pause() external isPauser {
+        //^^^^^^^checks^^^^^^^^^
+
         _pause();
+        //^^^^^^^Interactions^^^^^^^^^
     }
 
     /**
      * @dev Returns to normal state. (pausable)
      */
     function unpause() external isPauser {
+        //^^^^^^^checks^^^^^^^^^
+
         _unpause();
+        //^^^^^^^Interactions^^^^^^^^^
     }
 
     /**
@@ -474,9 +483,6 @@ contract STOR is AccessControl, ReentrancyGuard, Pausable {
 
         database[idxHash] = rec;
         //^^^^^^^effects^^^^^^^^^
-
-        //emit REPORT("REC MOD", _idxHash);
-        //^^^^^^^interactions^^^^^^^^^
     }
 
     /**
@@ -506,9 +512,6 @@ contract STOR is AccessControl, ReentrancyGuard, Pausable {
         rec.node = _newNode;
         database[_idxHash] = rec;
         //^^^^^^^effects^^^^^^^^^
-
-        //emit REPORT("UPD node", _idxHash);
-        //^^^^^^^interactions^^^^^^^^^
     }
 
     /**
@@ -569,7 +572,6 @@ contract STOR is AccessControl, ReentrancyGuard, Pausable {
         rec.assetStatus = _newAssetStatus;
         database[_idxHash] = rec;
         //^^^^^^^effects^^^^^^^^^
-        //^^^^^^^interactions^^^^^^^^^
     }
 
     /**
@@ -637,8 +639,6 @@ contract STOR is AccessControl, ReentrancyGuard, Pausable {
 
         database[_idxHash] = rec;
         //^^^^^^^effects^^^^^^^^^
-        //emit REPORT("I1 mod", _idxHash);
-        //^^^^^^^interactions^^^^^^^^^
     }
 
     /**
@@ -675,9 +675,6 @@ contract STOR is AccessControl, ReentrancyGuard, Pausable {
 
         database[_idxHash] = rec;
         //^^^^^^^effects^^^^^^^^^
-
-        //emit REPORT("I2 mod", _idxHash);
-        //^^^^^^^interactions^^^^^^^^^
     }
 
     //--------------------------------External READ ONLY contract functions / authuser---------------------------------//
@@ -742,21 +739,6 @@ contract STOR is AccessControl, ReentrancyGuard, Pausable {
         //^^^^^^^interactions^^^^^^^^^
     }
 
-    // /**
-    //  * @dev return the pricing and currency data from a record
-    //  * @param _idxHash - record asset ID
-    //  * returns rec.price,
-    //             rec.currency
-    //  */
-    // function getPriceData(bytes32 _idxHash)
-    //     external
-    //     view
-    //     returns (uint120, uint8)
-    // {
-    //     return (database[_idxHash].price, database[_idxHash].currency);
-    //     //^^^^^^^interactions^^^^^^^^^
-    // }
-
     /**
      * @dev Compare record.rightsholder with supplied bytes32 rightsholder
      * @param _idxHash - record asset ID
@@ -793,7 +775,7 @@ contract STOR is AccessControl, ReentrancyGuard, Pausable {
             emit REPORT("Does not match", _idxHash);
             return 0;
         }
-        //^^^^^^^checks/interactions^^^^^^^^^
+        //^^^^^^^interactions^^^^^^^^^
     }
 
     /**

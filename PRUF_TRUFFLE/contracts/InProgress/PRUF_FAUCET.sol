@@ -111,29 +111,6 @@ contract FAUCET is CORE {
         ID_MGR_Address = STOR.resolveContractAddress("ID_MGR");
         ID_MGR = ID_MGR_Interface(ID_MGR_Address);
 
-        // NODE_TKN_Address = STOR.resolveContractAddress("NODE_TKN");
-        // NODE_TKN = NODE_TKN_Interface(NODE_TKN_Address);
-
-        // NODE_MGR_Address = STOR.resolveContractAddress("NODE_MGR");
-        // NODE_MGR = NODE_MGR_Interface(NODE_MGR_Address);
-
-        // A_TKN_Address = STOR.resolveContractAddress("A_TKN");
-        // A_TKN = A_TKN_Interface(A_TKN_Address);
-
-        // ID_MGR_Address = STOR.resolveContractAddress("ID_MGR");
-        // ID_MGR = ID_MGR_Interface(ID_MGR_Address);
-
-        // ECR_MGR_Address = STOR.resolveContractAddress("ECR_MGR");
-        // ECR_MGR = ECR_MGR_Interface(ECR_MGR_Address);
-
-        // APP_Address = STOR.resolveContractAddress("APP");
-        // APP = APP_Interface(APP_Address);
-
-        // RCLR_Address = STOR.resolveContractAddress("RCLR");
-        // RCLR = RCLR_Interface(RCLR_Address);
-
-        // APP_Address = STOR.resolveContractAddress("APP");
-
         //^^^^^^^effects^^^^^^^^^
     }
 
@@ -142,7 +119,8 @@ contract FAUCET is CORE {
      * @param _seed token id to claim rewards on
      */
 
-     //CTS:EXAMINE--ERRORS IN COMPILING, COMMENTED OUT FOR TESTING
+    //CTS:EXAMINE--WARNING IN COMPILING, FUNCTION COMMENTED OUT FOR TESTING
+
     // function drip(bytes32 _seed) external whenNotPaused nonReentrant {
     //     if (block.timestamp - lastStream > interval) {
     //         tokensThisInterval = 0;

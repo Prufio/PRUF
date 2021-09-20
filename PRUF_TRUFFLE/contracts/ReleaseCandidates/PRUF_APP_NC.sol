@@ -130,6 +130,49 @@ contract APP_NC is CORE {
     }
 
     /**
+     * @dev exportTo - sets asset to status 70 (importable) and defines the node that the item can be imported into
+     * @param _idxHash idx of asset to Modify
+     * @param _exportTo node target for export
+     */
+    function exportAssetTo(bytes32 _idxHash, uint32 _exportTo)
+        external
+        whenNotPaused
+        isAuthorized(_idxHash)
+    {
+        Record memory rec = getRecord(_idxHash);
+        Node memory node_info = getNodeinfo(rec.node);
+
+        require(
+            (rec.assetStatus == 51) || (rec.assetStatus == 70),
+            "APP_NC:EXT: Must be in transferrable status (51)"
+        );
+        require(
+            NODE_MGR.isSameRootNode(_exportTo, rec.node) == 170,
+            "APP_NC:EXT: Cannot change node to new root"
+        );
+        require(
+            (node_info.managementType < 6),
+            "APP_NC:EXT: Contract does not support management types > 5 or node is locked"
+        );
+        if (
+            (node_info.managementType == 1) || (node_info.managementType == 5)
+        ) {
+            require(
+                (NODE_TKN.ownerOf(rec.node) == _msgSender()),
+                "APP_NC:EXT: Restricted from exporting assets from this node - does not hold ACtoken"
+            );
+        }
+        //^^^^^^^checks^^^^^^^^^
+
+        rec.assetStatus = 70; // Set status to 70 (exported)
+        rec.int32temp = _exportTo; //set permitted node for import
+        //^^^^^^^effects^^^^^^^^^
+
+        writeRecord(_idxHash, rec);
+        //^^^^^^^interactions^^^^^^^^^
+    }
+
+    /**
      * @dev Import a record into a new node
      * @param _idxHash - hash of asset information created by frontend inputs
      * @param _newNode - node the asset will be imported into
@@ -245,49 +288,6 @@ contract APP_NC is CORE {
 
         writeRecord(_idxHash, rec);
         deductServiceCosts(rec.node, 6);
-        //^^^^^^^interactions^^^^^^^^^
-    }
-
-    /**
-     * @dev exportTo - sets asset to status 70 (importable) and defines the node that the item can be imported into
-     * @param _idxHash idx of asset to Modify
-     * @param _exportTo node target for export
-     */
-    function exportAssetTo(bytes32 _idxHash, uint32 _exportTo)
-        external
-        whenNotPaused
-        isAuthorized(_idxHash)
-    {
-        Record memory rec = getRecord(_idxHash);
-        Node memory node_info = getNodeinfo(rec.node);
-
-        require(
-            (rec.assetStatus == 51) || (rec.assetStatus == 70),
-            "APP_NC:EXT: Must be in transferrable status (51)"
-        );
-        require(
-            NODE_MGR.isSameRootNode(_exportTo, rec.node) == 170,
-            "APP_NC:EXT: Cannot change node to new root"
-        );
-        require(
-            (node_info.managementType < 6),
-            "APP_NC:EXT: Contract does not support management types > 5 or node is locked"
-        );
-        if (
-            (node_info.managementType == 1) || (node_info.managementType == 5)
-        ) {
-            require(
-                (NODE_TKN.ownerOf(rec.node) == _msgSender()),
-                "APP_NC:EXT: Restricted from exporting assets from this node - does not hold ACtoken"
-            );
-        }
-        //^^^^^^^checks^^^^^^^^^
-
-        rec.assetStatus = 70; // Set status to 70 (exported)
-        rec.int32temp = _exportTo; //set permitted node for import
-        //^^^^^^^effects^^^^^^^^^
-
-        writeRecord(_idxHash, rec);
         //^^^^^^^interactions^^^^^^^^^
     }
 

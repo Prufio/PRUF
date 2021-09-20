@@ -112,7 +112,7 @@ contract ID_MGR is Pausable, AccessControl {
         id[_recipientAddress].trustLevel = _trustLevel;
         id[_recipientAddress].IdHash = _IdHash;
         addressOfIdHash[_IdHash] = _recipientAddress;
-        //^^^^^^^interactions^^^^^^^^^
+        //^^^^^^^effects^^^^^^^^^
     }
 
     /**
@@ -129,7 +129,7 @@ contract ID_MGR is Pausable, AccessControl {
         //BURNID TODO
         delete addressOfIdHash[id[_addr].IdHash]; //remove record from IDHash registry
         delete id[_addr]; //remove record from address registry
-        //^^^^^^^interactions^^^^^^^^^
+        //^^^^^^^effects^^^^^^^^^
     }
 
     /**
@@ -150,7 +150,7 @@ contract ID_MGR is Pausable, AccessControl {
         //^^^^^^^checks^^^^^^^^^
 
         id[_addr].trustLevel = _trustLevel;
-        //^^^^^^^interactions^^^^^^^^^
+        //^^^^^^^effects^^^^^^^^^
     }
 
     /**
@@ -164,6 +164,7 @@ contract ID_MGR is Pausable, AccessControl {
         returns (PRUFID memory)
     {
         return id[_addr];
+        //^^^^^^^interactions^^^^^^^^^
     }
 
     /**
@@ -177,6 +178,7 @@ contract ID_MGR is Pausable, AccessControl {
         returns (PRUFID memory)
     {
         return id[addressOfIdHash[_IdHash]];
+        //^^^^^^^interactions^^^^^^^^^
     }
 
     /**
@@ -186,6 +188,7 @@ contract ID_MGR is Pausable, AccessControl {
      */
     function trustLevel(address _addr) external view returns (uint256) {
         return id[_addr].trustLevel;
+        //^^^^^^^interactions^^^^^^^^^
     }
 
     /**

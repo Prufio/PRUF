@@ -18,7 +18,7 @@ __/\\\\\\\\\\\\\ _____/\\\\\\\\\ _______/\\__/\\ ___/\\\\\\\\\\\\\\\
  *---------------------------------------------------------------*/
 
 // SPDX-License-Identifier: UNLICENSED
-pragma solidity ^0.8.0;
+pragma solidity ^0.8.7;
 
 import "../Imports/token/ERC721/ERC721.sol";
 import "../Imports/token/ERC721/extensions/ERC721Enumerable.sol";
@@ -199,6 +199,7 @@ contract A_TKN is
      */
     function setColdWallet() external {
         coldWallet[_msgSender()] = 170;
+        //^^^^^^^effects^^^^^^^^^
     }
 
     /**
@@ -208,6 +209,7 @@ contract A_TKN is
      */
     function unSetColdWallet() external {
         coldWallet[_msgSender()] = 0;
+        //^^^^^^^effects^^^^^^^^^
     }
 
     /**
@@ -218,6 +220,7 @@ contract A_TKN is
      */
     function isColdWallet(address _addr) public view returns (uint256) {
         return coldWallet[_addr];
+        //^^^^^^^interactions^^^^^^^^^
     }
 
 
@@ -225,7 +228,8 @@ contract A_TKN is
      * @dev See {IERC721Metadata-tokenURI}.
      */
     function tokenURI(uint256 tokenId) public view virtual override returns (string memory) {
-        require(_exists(tokenId), "AT:TU: URI query for nonexistent token");
+        require(_exists(tokenId), "ERC721URIStorage: URI query for nonexistent token");
+        //^^^^^^^checks^^^^^^^^^
 
         string memory _tokenURI = _tokenURIs[tokenId];
         string memory base = _baseURI();
@@ -240,6 +244,7 @@ contract A_TKN is
         }
 
         return super.tokenURI(tokenId);
+        //^^^^^^^interactions^^^^^^^^^
     }
 
 
@@ -313,7 +318,7 @@ contract A_TKN is
             return 170;
         } else {
             return 0;
-        }
+        }//^^^^^^^interactions^^^^^^^^^
     }
 
     /**
@@ -492,7 +497,7 @@ contract A_TKN is
 
         RCLR.discard(_idxHash, _msgSender());
         _burn(tokenId);
-        //^^^^^^^interactions^^^^^^^^^
+        //^^^^^^^interactions / effects^^^^^^^^^ (out of order here, but verified and necescary)
     }
 
     /**
@@ -515,8 +520,6 @@ contract A_TKN is
             _rec.modCount,
             _rec.numberOfTransfers
         ); // Send data and writehash to storage
-
-        //STOR.clearPrice(_idxHash); //sets price and currency of a record to zero
         //^^^^^^^interactions^^^^^^^^^
     }
 
@@ -605,6 +608,7 @@ contract A_TKN is
         if (bytes(_tokenURIs[tokenId]).length != 0) {
             delete _tokenURIs[tokenId];
         }
+        //^^^^^^^effects^^^^^^^^^
     }
 
      /**
@@ -615,8 +619,11 @@ contract A_TKN is
      * - `tokenId` must exist.
      */
     function _setTokenURI(uint256 tokenId, string memory _tokenURI) internal virtual {
-        require(_exists(tokenId), "AT:STU: URI set of nonexistent token");
+        require(_exists(tokenId), "ERC721URIStorage: URI set of nonexistent token");
+        //^^^^^^^checks^^^^^^^^^
+
         _tokenURIs[tokenId] = _tokenURI;
+        //^^^^^^^effects^^^^^^^^^
     }
 
      /**
@@ -624,6 +631,7 @@ contract A_TKN is
      */
      function _baseURI() internal view virtual override returns (string memory) {
         return _baseTokenURI;
+        //^^^^^^^interactions^^^^^^^^^
     }
 
     /**
@@ -637,5 +645,6 @@ contract A_TKN is
         returns (bool)
     {
         return super.supportsInterface(interfaceId);
+        //^^^^^^^interactions^^^^^^^^^
     }
 }

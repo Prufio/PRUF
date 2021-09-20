@@ -90,9 +90,7 @@ contract CORE is BASIC {
 
         if (node_info.custodyType == 1) {
             A_TKN.mintAssetToken(address(this), tokenId, "");
-        }
-
-        if ((node_info.custodyType == 2) || (node_info.custodyType == 4)) {
+        } else {
             A_TKN.mintAssetToken(_msgSender(), tokenId, "");
         }
 
@@ -285,6 +283,7 @@ contract CORE is BASIC {
         } else {
             return 170;
         }
+        //^^^^^^^interactions^^^^^^^^^
     }
 
     /**
@@ -300,6 +299,7 @@ contract CORE is BASIC {
         } else {
             return 170;
         }
+        //^^^^^^^interactions^^^^^^^^^
     }
 
     /**
@@ -318,5 +318,6 @@ contract CORE is BASIC {
         } else {
             return 170;
         }
+        //^^^^^^^interactions^^^^^^^^^
     }
 }
