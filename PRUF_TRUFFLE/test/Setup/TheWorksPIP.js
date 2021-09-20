@@ -12,7 +12,7 @@ _________\/// _____________\/// _______\/// __\///////// __\/// _____________
 
         const PRUF_STOR = artifacts.require('STOR');
         const PRUF_APP = artifacts.require('APP');
-        const PRUF_APP2 = artifacts.require('APP2');
+        const PRUF_APP = artifacts.require('APP');
         const PRUF_NODE_MGR = artifacts.require('NODE_MGR');
         const PRUF_NODE_TKN = artifacts.require('NODE_TKN');
         const PRUF_A_TKN = artifacts.require('A_TKN');
@@ -21,7 +21,7 @@ _________\/// _____________\/// _______\/// __\///////// __\/// _____________
         const PRUF_ECR = artifacts.require('ECR');
         const PRUF_ECR2 = artifacts.require('ECR2');
         const PRUF_APP_NC = artifacts.require('APP_NC');
-        const PRUF_APP2_NC = artifacts.require('APP2_NC');
+        const PRUF_APP_NC = artifacts.require('APP_NC');
         const PRUF_ECR_NC = artifacts.require('ECR_NC');
         const PRUF_RCLR = artifacts.require('RCLR');
         const PRUF_PIP = artifacts.require('PIP');
@@ -31,7 +31,7 @@ _________\/// _____________\/// _______\/// __\///////// __\/// _____________
         
         let STOR;
         let APP;
-        let APP2;
+        let APP;
         let NODE_MGR;
         let NODE_TKN;
         let A_TKN;
@@ -41,7 +41,7 @@ _________\/// _____________\/// _______\/// __\///////// __\/// _____________
         let ECR2;
         let ECR_NC;
         let APP_NC;
-        let APP2_NC;
+        let APP_NC;
         let RCLR;
         let Helper;
         let MAL_APP;
@@ -141,11 +141,11 @@ _________\/// _____________\/// _______\/// __\///////// __\/// _____________
             })
         
         
-            it('Should deploy PRUF_APP2', async () => {
-                const PRUF_APP2_TEST = await PRUF_APP2.deployed({ from: account1 });
-                console.log(PRUF_APP2_TEST.address);
-                assert(PRUF_APP2_TEST.address !== '');
-                APP2 = PRUF_APP2_TEST;
+            it('Should deploy PRUF_APP', async () => {
+                const PRUF_APP_TEST = await PRUF_APP.deployed({ from: account1 });
+                console.log(PRUF_APP_TEST.address);
+                assert(PRUF_APP_TEST.address !== '');
+                APP = PRUF_APP_TEST;
             })
         
         
@@ -197,11 +197,11 @@ _________\/// _____________\/// _______\/// __\///////// __\/// _____________
             })
         
         
-            it('Should deploy PRUF_APP2_NC', async () => {
-                const PRUF_APP2_NC_TEST = await PRUF_APP2_NC.deployed({ from: account1 });
-                console.log(PRUF_APP2_NC_TEST.address);
-                assert(PRUF_APP2_NC_TEST.address !== '')
-                APP2_NC = PRUF_APP2_NC_TEST;
+            it('Should deploy PRUF_APP_NC', async () => {
+                const PRUF_APP_NC_TEST = await PRUF_APP_NC.deployed({ from: account1 });
+                console.log(PRUF_APP_NC_TEST.address);
+                assert(PRUF_APP_NC_TEST.address !== '')
+                APP_NC = PRUF_APP_NC_TEST;
             })
         
         
@@ -582,8 +582,8 @@ _________\/// _____________\/// _______\/// __\///////// __\/// _____________
                 return STOR.OO_addContract("APP", APP.address, '0', '1', { from: account1 })
         
                     .then(() => {
-                        console.log("Adding APP2 to storage for use in Node 0")
-                        return STOR.OO_addContract("APP2", APP2.address, '0', '1', { from: account1 })
+                        console.log("Adding APP to storage for use in Node 0")
+                        return STOR.OO_addContract("APP", APP.address, '0', '1', { from: account1 })
                     })
         
                     .then(() => {
@@ -627,8 +627,8 @@ _________\/// _____________\/// _______\/// __\///////// __\/// _____________
                     })
         
                     .then(() => {
-                        console.log("Adding APP2_NC to storage for use in Node 0")
-                        return STOR.OO_addContract("APP2_NC", APP2_NC.address, '0', '2', { from: account1 })
+                        console.log("Adding APP_NC to storage for use in Node 0")
+                        return STOR.OO_addContract("APP_NC", APP_NC.address, '0', '2', { from: account1 })
                     })
         
                     .then(() => {
@@ -664,8 +664,8 @@ _________\/// _____________\/// _______\/// __\///////// __\/// _____________
                 return APP.OO_setStorageContract(STOR.address, { from: account1 })
         
                     .then(() => {
-                        console.log("Adding in APP2")
-                        return APP2.OO_setStorageContract(STOR.address, { from: account1 })
+                        console.log("Adding in APP")
+                        return APP.OO_setStorageContract(STOR.address, { from: account1 })
                     })
         
                     .then(() => {
@@ -709,8 +709,8 @@ _________\/// _____________\/// _______\/// __\///////// __\/// _____________
                     })
         
                     .then(() => {
-                        console.log("Adding in APP2_NC")
-                        return APP2_NC.OO_setStorageContract(STOR.address, { from: account1 })
+                        console.log("Adding in APP_NC")
+                        return APP_NC.OO_setStorageContract(STOR.address, { from: account1 })
                     })
         
                     .then(() => {
@@ -741,8 +741,8 @@ _________\/// _____________\/// _______\/// __\///////// __\/// _____________
                 return APP.OO_resolveContractAddresses({ from: account1 })
         
                     .then(() => {
-                        console.log("Resolving in APP2")
-                        return APP2.OO_resolveContractAddresses({ from: account1 })
+                        console.log("Resolving in APP")
+                        return APP.OO_resolveContractAddresses({ from: account1 })
                     })
         
                     .then(() => {
@@ -786,8 +786,8 @@ _________\/// _____________\/// _______\/// __\///////// __\/// _____________
                     })
         
                     .then(() => {
-                        console.log("Resolving in APP2_NC")
-                        return APP2_NC.OO_resolveContractAddresses({ from: account1 })
+                        console.log("Resolving in APP_NC")
+                        return APP_NC.OO_resolveContractAddresses({ from: account1 })
                     })
         
                     .then(() => {
@@ -813,8 +813,8 @@ _________\/// _____________\/// _______\/// __\///////// __\/// _____________
         
             it('Should authorize all minter contracts for minting A_TKN(s)', async () => {
         
-                console.log("Authorizing APP2")
-                return A_TKN.grantRole(minterRoleB32, APP2.address, { from: account1 })
+                console.log("Authorizing APP")
+                return A_TKN.grantRole(minterRoleB32, APP.address, { from: account1 })
         
                     .then(() => {
                         console.log("Authorizing APP_NC")
@@ -868,13 +868,13 @@ _________\/// _____________\/// _______\/// __\///////// __\/// _____________
                     })
 
                     .then(() => {
-                        console.log("Authorizing APP2")
-                        return UTIL_TKN.grantRole(payableRoleB32, APP2.address, { from: account1 })
+                        console.log("Authorizing APP")
+                        return UTIL_TKN.grantRole(payableRoleB32, APP.address, { from: account1 })
                     })
         
                     .then(() => {
-                        console.log("Authorizing APP2_NC")
-                        return UTIL_TKN.grantRole(payableRoleB32, APP2_NC.address, { from: account1 })
+                        console.log("Authorizing APP_NC")
+                        return UTIL_TKN.grantRole(payableRoleB32, APP_NC.address, { from: account1 })
                     })
             })
         
@@ -887,7 +887,7 @@ _________\/// _____________\/// _______\/// __\///////// __\/// _____________
         
             it('Should authorize all minter contracts for minting NODE_TKN(s)', async () => {
                 console.log("Authorizing NODE_MGR")
-                return APP.grantRole(assetTransferRoleB32, APP2.address, { from: account1 })
+                return APP.grantRole(assetTransferRoleB32, APP.address, { from: account1 })
             })
         
         
@@ -1001,17 +1001,17 @@ _________\/// _____________\/// _______\/// __\///////// __\/// _____________
             })
         
         
-            it('Should authorize APP2 in all relevant nodes', async () => {
+            it('Should authorize APP in all relevant nodes', async () => {
         
-                console.log("Authorizing APP2")
-                return STOR.enableContractForNode('APP2', '10', '1', { from: account1 })
+                console.log("Authorizing APP")
+                return STOR.enableContractForNode('APP', '10', '1', { from: account1 })
         
                     .then(() => {
-                        return STOR.enableContractForNode('APP2', '11', '1', { from: account1 })
+                        return STOR.enableContractForNode('APP', '11', '1', { from: account1 })
                     })
         
                     .then(() => {
-                        return STOR.enableContractForNode('APP2', '13', '1', { from: account1 })
+                        return STOR.enableContractForNode('APP', '13', '1', { from: account1 })
                     })
             })
         
@@ -1027,21 +1027,21 @@ _________\/// _____________\/// _______\/// __\///////// __\/// _____________
             })
         
         
-            it('Should authorize APP2_NC in all relevant nodes', async () => {
+            it('Should authorize APP_NC in all relevant nodes', async () => {
         
-                console.log("Authorizing APP2_NC")
-                return STOR.enableContractForNode('APP2_NC', '12', '2', { from: account1 })
+                console.log("Authorizing APP_NC")
+                return STOR.enableContractForNode('APP_NC', '12', '2', { from: account1 })
         
                     .then(() => {
-                        return STOR.enableContractForNode('APP2_NC', '13', '2', { from: account1 })
+                        return STOR.enableContractForNode('APP_NC', '13', '2', { from: account1 })
                     })
         
                     .then(() => {
-                        return STOR.enableContractForNode('APP2_NC', '14', '2', { from: account1 })
+                        return STOR.enableContractForNode('APP_NC', '14', '2', { from: account1 })
                     })
         
                     .then(() => {
-                        return STOR.enableContractForNode('APP2_NC', '16', '2', { from: account10 })
+                        return STOR.enableContractForNode('APP_NC', '16', '2', { from: account10 })
                     })
             })
         
@@ -2081,7 +2081,7 @@ _________\/// _____________\/// _______\/// __\///////// __\/// _____________
 
 
     it('Should decrement asset14 amount from (100) to (85)', async () => {
-        return APP2_NC.decrementCounter(
+        return APP_NC.decrementCounter(
         asset14, 
         '15',
         {from: account4}
@@ -2101,7 +2101,7 @@ _________\/// _____________\/// _______\/// __\///////// __\/// _____________
 
 
     it('Should modify Mutable note @asset14 to (asset14)', async () => {
-        return APP2_NC.modifyMutableStorage(
+        return APP_NC.modifyMutableStorage(
         asset14, 
         asset14,
         rgt000,
@@ -2143,7 +2143,7 @@ _________\/// _____________\/// _______\/// __\///////// __\/// _____________
 
 
     it('Should force modify asset14 to RGT(14)', async () => {
-        return APP2_NC.changeRgt(
+        return APP_NC.changeRgt(
         asset14, 
         rgt14,
         {from: account4}
@@ -2187,7 +2187,7 @@ _________\/// _____________\/// _______\/// __\///////// __\/// _____________
 
 
     it('Should set asset14 to stolen(53) status', async () => {
-        return APP2_NC.setLostOrStolen(
+        return APP_NC.setLostOrStolen(
         asset14,
         '53',
         {from: account4}
@@ -2207,7 +2207,7 @@ _________\/// _____________\/// _______\/// __\///////// __\/// _____________
 
 
     it('Should change status of new asset12 to status(51)', async () => {
-        return APP2_NC.modifyStatus(
+        return APP_NC.modifyStatus(
         asset14, 
         '51',
         {from: account4}
@@ -2268,7 +2268,7 @@ _________\/// _____________\/// _______\/// __\///////// __\/// _____________
 
 
     it('Should change status of new asset12 to status(51)', async () => {
-        return APP2_NC.modifyStatus(
+        return APP_NC.modifyStatus(
         asset14, 
         '51',
         {from: account4}
@@ -2288,7 +2288,7 @@ _________\/// _____________\/// _______\/// __\///////// __\/// _____________
 
 
     it('Should export asset14 to account4', async () => {
-        return APP2_NC._exportNC(
+        return APP_NC._exportNC(
         asset14,
         {from: account4}
         )
@@ -2349,7 +2349,7 @@ _________\/// _____________\/// _______\/// __\///////// __\/// _____________
 
 
     it('Should change status of asset14 to status(1)', async () => {
-        return APP2.modifyStatus(
+        return APP.modifyStatus(
         asset14,
         rgt14, 
         '1',
@@ -2411,7 +2411,7 @@ _________\/// _____________\/// _______\/// __\///////// __\/// _____________
 
 
     it('Should change decrement amount @asset14 from (85) to (70)', async () => {
-        return APP2.decrementCounter(
+        return APP.decrementCounter(
         asset14,
         rgt14, 
         '15',
@@ -2432,7 +2432,7 @@ _________\/// _____________\/// _______\/// __\///////// __\/// _____________
 
 
     it('Should modify Mutable @asset14 to RGT(12)', async () => {
-        return APP2.modifyMutableStorage(
+        return APP.modifyMutableStorage(
         asset14,
         rgt14, 
         rgt14,
@@ -2454,7 +2454,7 @@ _________\/// _____________\/// _______\/// __\///////// __\/// _____________
 
 
     it('Should set asset14 to stolen(3) status', async () => {
-        return APP2.setLostOrStolen(
+        return APP.setLostOrStolen(
         asset14,
         rgt14,
         '3',
@@ -2475,7 +2475,7 @@ _________\/// _____________\/// _______\/// __\///////// __\/// _____________
 
 
     it('Should change status of asset14 to status(1)', async () => {
-        return APP2.modifyStatus(
+        return APP.modifyStatus(
         asset14,
         rgt14, 
         '1',
@@ -2537,7 +2537,7 @@ _________\/// _____________\/// _______\/// __\///////// __\/// _____________
 
 
     it('Should change asset14 status to (51)', async () => {
-        return APP2.modifyStatus(
+        return APP.modifyStatus(
         asset14, 
         rgt14,
         '51',
@@ -2558,7 +2558,7 @@ _________\/// _____________\/// _______\/// __\///////// __\/// _____________
 
 
     it('Should export asset14(status70)', async () => {
-        return APP2.exportAsset(
+        return APP.exportAsset(
         asset14,
         account4, 
         {from: account4}
@@ -2598,7 +2598,7 @@ _________\/// _____________\/// _______\/// __\///////// __\/// _____________
 
 
     it('Should change status of asset14 to status(51)', async () => {
-        return APP2_NC.modifyStatus(
+        return APP_NC.modifyStatus(
         asset14, 
         '51',
         {from: account4}
@@ -2618,7 +2618,7 @@ _________\/// _____________\/// _______\/// __\///////// __\/// _____________
 
 
     it('Should change status of asset14 to status(59)', async () => {
-        return APP2_NC.modifyStatus(
+        return APP_NC.modifyStatus(
         asset14, 
         '59',
         {from: account4}

@@ -132,7 +132,7 @@ contract FAUCET is CORE {
         // RCLR_Address = STOR.resolveContractAddress("RCLR");
         // RCLR = RCLR_Interface(RCLR_Address);
 
-        // APP2_Address = STOR.resolveContractAddress("APP2");
+        // APP_Address = STOR.resolveContractAddress("APP");
 
         //^^^^^^^effects^^^^^^^^^
     }
@@ -141,30 +141,32 @@ contract FAUCET is CORE {
      * @dev Transfers eligible rewards to staker, resets last payment time
      * @param _seed token id to claim rewards on
      */
-    function drip(bytes32 _seed) external whenNotPaused nonReentrant {
-        if (block.timestamp - lastStream > interval) {
-            tokensThisInterval = 0;
-            lastStream = block.timestamp;
-        }
-        require(
-            tokensThisInterval < maxPerInterval,
-            "PES:CB: Stream Depleted. Wait until next interval"
-        );
 
-        uint256 faucetBalance = UTIL_TKN.balanceOf(address(this));
+     //CTS:EXAMINE--ERRORS IN COMPILING, COMMENTED OUT FOR TESTING
+    // function drip(bytes32 _seed) external whenNotPaused nonReentrant {
+    //     if (block.timestamp - lastStream > interval) {
+    //         tokensThisInterval = 0;
+    //         lastStream = block.timestamp;
+    //     }
+    //     require(
+    //         tokensThisInterval < maxPerInterval,
+    //         "PES:CB: Stream Depleted. Wait until next interval"
+    //     );
 
-        //^^^^^^^checks^^^^^^^^^
+    //     uint256 faucetBalance = UTIL_TKN.balanceOf(address(this));
 
-        if (droplet > faucetBalance) {
-            droplet = faucetBalance / 2; //as the faucet becomes empty, enforce a tapering distribution
-        }
+    //     //^^^^^^^checks^^^^^^^^^
 
-        //^^^^^^^effects^^^^^^^^^
+    //     if (droplet > faucetBalance) {
+    //         droplet = faucetBalance / 2; //as the faucet becomes empty, enforce a tapering distribution
+    //     }
 
-        UTIL_TKN.transfer(_msgSender(), droplet); //deliver the goods
-        tokensThisInterval = tokensThisInterval + droplet;
-        //^^^^^^^interactions^^^^^^^^^
-    }
+    //     //^^^^^^^effects^^^^^^^^^
+
+    //     UTIL_TKN.transfer(_msgSender(), droplet); //deliver the goods
+    //     tokensThisInterval = tokensThisInterval + droplet;
+    //     //^^^^^^^interactions^^^^^^^^^
+    // }
 
     // bytes32 _idxHash,
     // bytes32 _rgtHash,

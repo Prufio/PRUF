@@ -32,7 +32,7 @@ contract MAL_APP is CORE_MAL {
     //     uint256 tokenId = uint256(_idxHash);
     //     require(
     //         (A_TKN.ownerOf(tokenId) == APP_Address),
-    //         "APP2_NC:MOD-IA: Custodial contract does not hold token"
+    //         "APP_NC:MOD-IA: Custodial contract does not hold token"
     //     );
     //     _;
     // }
@@ -104,47 +104,47 @@ contract MAL_APP is CORE_MAL {
 
         // require(
         //     contractInfo.contractType > 0,
-        //     "APP2_NC:MS: This contract not authorized for specified node"
+        //     "APP_NC:MS: This contract not authorized for specified node"
         // );
         // require(
         //     (userType > 0) && (userType < 10),
-        //     "APP2_NC:MS: User not authorized to modify records in specified node"
+        //     "APP_NC:MS: User not authorized to modify records in specified node"
         // );
 
         // require(
         //     isLostOrStolen(_newAssetStatus) == 0,
-        //     "APP2_NC:MS: Cannot place asset in lost or stolen status using modifyStatus"
+        //     "APP_NC:MS: Cannot place asset in lost or stolen status using modifyStatus"
         // );
         // require(
         //     isEscrow(_newAssetStatus) == 0,
-        //     "APP2_NC:MS: Cannot place asset in Escrow using modifyStatus"
+        //     "APP_NC:MS: Cannot place asset in Escrow using modifyStatus"
         // );
         // require(
         //     needsImport(_newAssetStatus) == 0,
-        //     "APP2_NC:MS: Cannot place asset in unregistered, exported, or discarded status using modifyStatus"
+        //     "APP_NC:MS: Cannot place asset in unregistered, exported, or discarded status using modifyStatus"
         // );
         // require(
         //     (_newAssetStatus < 100) &&
         //         (_newAssetStatus != 7) &&
         //         (_newAssetStatus != 57) &&
         //         (_newAssetStatus != 58),
-        //     "APP2_NC:MS: Specified Status is reserved."
+        //     "APP_NC:MS: Specified Status is reserved."
         // );
         // require(
         //     isEscrow(rec.assetStatus) == 0,
-        //     "APP2_NC:MS: Cannot change status of asset in Escrow until escrow is expired"
+        //     "APP_NC:MS: Cannot change status of asset in Escrow until escrow is expired"
         // );
         // require(
         //     needsImport(rec.assetStatus) == 0,
-        //     "APP2_NC:MS: Record in unregistered, exported, or discarded status"
+        //     "APP_NC:MS: Record in unregistered, exported, or discarded status"
         // );
         // require(
         //     (rec.assetStatus > 49) || (userType < 5),
-        //     "APP2_NC:MS: Only usertype < 5 can change status < 49"
+        //     "APP_NC:MS: Only usertype < 5 can change status < 49"
         // );
         // require(
         //     rec.rightsHolder == _rgtHash,
-        //     "APP2_NC:MS: Rightsholder does not match supplied data"
+        //     "APP_NC:MS: Rightsholder does not match supplied data"
         // );
         //^^^^^^^checks^^^^^^^^^
 
@@ -180,36 +180,36 @@ contract MAL_APP is CORE_MAL {
 
         // require(
         //     contractInfo.contractType > 0,
-        //     "APP2_NC:SLS: This contract not authorized for specified node"
+        //     "APP_NC:SLS: This contract not authorized for specified node"
         // );
         // require(
         //     (rec.rightsHolder != 0),
-        //     "APP2_NC:SLS: Record unclaimed: import required. "
+        //     "APP_NC:SLS: Record unclaimed: import required. "
         // );
         // require(
         //     (userType > 0) && (userType < 10),
-        //     "APP2_NC:SLS: User not authorized to modify records in specified node"
+        //     "APP_NC:SLS: User not authorized to modify records in specified node"
         // );
         // require(
         //     isLostOrStolen(_newAssetStatus) == 170,
-        //     "APP2_NC:SLS: Must set to a lost or stolen status"
+        //     "APP_NC:SLS: Must set to a lost or stolen status"
         // );
         // require(
         //     (rec.assetStatus > 49) ||
         //         ((_newAssetStatus < 50) && (userType < 5)),
-        //     "APP2_NC:SLS: Only usertype <5 can change a <49 status asset to a >49 status"
+        //     "APP_NC:SLS: Only usertype <5 can change a <49 status asset to a >49 status"
         // );
         // require(
         //     (rec.assetStatus != 5) && (rec.assetStatus != 55),
-        //     "APP2_NC:SLS: Transferred asset cannot be set to lost or stolen after transfer."
+        //     "APP_NC:SLS: Transferred asset cannot be set to lost or stolen after transfer."
         // );
         // require(
         //     (rec.assetStatus != 50),
-        //     "APP2_NC:SLS: Asset in locked escrow cannot be set to lost or stolen"
+        //     "APP_NC:SLS: Asset in locked escrow cannot be set to lost or stolen"
         // );
         // require(
         //     rec.rightsHolder == _rgtHash,
-        //     "APP2_NC:SLS: Rightsholder does not match supplied data"
+        //     "APP_NC:SLS: Rightsholder does not match supplied data"
         // );
         //^^^^^^^checks^^^^^^^^^
 
@@ -245,30 +245,30 @@ contract MAL_APP is CORE_MAL {
 
         // require(
         //     contractInfo.contractType > 0,
-        //     "APP2_NC:DC: This contract not authorized for specified node"
+        //     "APP_NC:DC: This contract not authorized for specified node"
         // );
 
         // require(
         //     (rec.rightsHolder != 0),
-        //     "APP2_NC:DC: Record unclaimed: import required. "
+        //     "APP_NC:DC: Record unclaimed: import required. "
         // );
         // require(
         //     (userType > 0) && (userType < 10),
-        //     "APP2_NC:DC: User not authorized to modify records in specified node"
+        //     "APP_NC:DC: User not authorized to modify records in specified node"
         // );
         // require(
         //     isEscrow(rec.assetStatus) == 0,
-        //     "APP2_NC:DC: Cannot modify asset in Escrow"
+        //     "APP_NC:DC: Cannot modify asset in Escrow"
         // );
-        // require(_decAmount > 0, "APP2_NC:DC: cannot decrement by negative number");
+        // require(_decAmount > 0, "APP_NC:DC: cannot decrement by negative number");
 
         // require(
         //     needsImport(rec.assetStatus) == 0,
-        //     "APP2_NC:DC Record in unregistered, exported, or discarded status"
+        //     "APP_NC:DC Record in unregistered, exported, or discarded status"
         // );
         // require(
         //     rec.rightsHolder == _rgtHash,
-        //     "APP2_NC:DC: Rightsholder does not match supplied data"
+        //     "APP_NC:DC: Rightsholder does not match supplied data"
         // );
         //^^^^^^^checks^^^^^^^^^
 
@@ -311,30 +311,30 @@ contract MAL_APP is CORE_MAL {
 
     //     // require(
     //     //     contractInfo.contractType > 0,
-    //     //     "APP2_NC:DC: This contract not authorized for specified node"
+    //     //     "APP_NC:DC: This contract not authorized for specified node"
     //     // );
 
     //     // require(
     //     //     (rec.rightsHolder != 0),
-    //     //     "APP2_NC:DC: Record unclaimed: import required. "
+    //     //     "APP_NC:DC: Record unclaimed: import required. "
     //     // );
     //     // require(
     //     //     (userType > 0) && (userType < 10),
-    //     //     "APP2_NC:DC: User not authorized to modify records in specified node"
+    //     //     "APP_NC:DC: User not authorized to modify records in specified node"
     //     // );
     //     // require(
     //     //     isEscrow(rec.assetStatus) == 0,
-    //     //     "APP2_NC:DC: Cannot modify asset in Escrow"
+    //     //     "APP_NC:DC: Cannot modify asset in Escrow"
     //     // );
-    //     // require(_decAmount > 0, "APP2_NC:DC: cannot decrement by negative number");
+    //     // require(_decAmount > 0, "APP_NC:DC: cannot decrement by negative number");
 
     //     // require(
     //     //     needsImport(rec.assetStatus) == 0,
-    //     //     "APP2_NC:DC Record in unregistered, exported, or discarded status"
+    //     //     "APP_NC:DC Record in unregistered, exported, or discarded status"
     //     // );
     //     require(
     //         rec.rightsHolder == _rgtHash,
-    //         "APP2_NC:DC: Rightsholder does not match supplied data"
+    //         "APP_NC:DC: Rightsholder does not match supplied data"
     //     );
     //     //^^^^^^^checks^^^^^^^^^
 
@@ -370,30 +370,30 @@ contract MAL_APP is CORE_MAL {
 
     //     // require(
     //     //     contractInfo.contractType > 0,
-    //     //     "APP2_NC:DC: This contract not authorized for specified node"
+    //     //     "APP_NC:DC: This contract not authorized for specified node"
     //     // );
 
     //     // require(
     //     //     (rec.rightsHolder != 0),
-    //     //     "APP2_NC:DC: Record unclaimed: import required. "
+    //     //     "APP_NC:DC: Record unclaimed: import required. "
     //     // );
     //     // require(
     //     //     (userType > 0) && (userType < 10),
-    //     //     "APP2_NC:DC: User not authorized to modify records in specified node"
+    //     //     "APP_NC:DC: User not authorized to modify records in specified node"
     //     // );
     //     // require(
     //     //     isEscrow(rec.assetStatus) == 0,
-    //     //     "APP2_NC:DC: Cannot modify asset in Escrow"
+    //     //     "APP_NC:DC: Cannot modify asset in Escrow"
     //     // );
-    //     // require(_decAmount > 0, "APP2_NC:DC: cannot decrement by negative number");
+    //     // require(_decAmount > 0, "APP_NC:DC: cannot decrement by negative number");
 
     //     // require(
     //     //     needsImport(rec.assetStatus) == 0,
-    //     //     "APP2_NC:DC Record in unregistered, exported, or discarded status"
+    //     //     "APP_NC:DC Record in unregistered, exported, or discarded status"
     //     // );
     //     require(
     //         rec.rightsHolder == _rgtHash,
-    //         "APP2_NC:DC: Rightsholder does not match supplied data"
+    //         "APP_NC:DC: Rightsholder does not match supplied data"
     //     );
     //     //^^^^^^^checks^^^^^^^^^
 
@@ -431,29 +431,29 @@ contract MAL_APP is CORE_MAL {
 
         // require(
         //     contractInfo.contractType > 0,
-        //     "APP2_NC:MI1: This contract not authorized for specified node"
+        //     "APP_NC:MI1: This contract not authorized for specified node"
         // );
         // require(
         //     (rec.rightsHolder != 0),
-        //     "APP2_NC:MI1: Record unclaimed: import required."
+        //     "APP_NC:MI1: Record unclaimed: import required."
         // );
         // require(
         //     (userType > 0) && (userType < 10),
-        //     "APP2_NC:MI1: User not authorized to modify records in specified node"
+        //     "APP_NC:MI1: User not authorized to modify records in specified node"
         // );
-        // require(rec.mutableStorage1 != _content adressable storageHash, "APP2_NC:MI1: New data same as old");
+        // require(rec.mutableStorage1 != _content adressable storageHash, "APP_NC:MI1: New data same as old");
 
         // require(
         //     isEscrow(rec.assetStatus) == 0,
-        //    "APP2_NC:MI1: Cannot modify asset in Escrow"
+        //    "APP_NC:MI1: Cannot modify asset in Escrow"
         // );
         // require(
         //     needsImport(rec.assetStatus) == 0,
-        //     "APP2_NC:MI1: Record in unregistered, exported, or discarded status"
+        //     "APP_NC:MI1: Record in unregistered, exported, or discarded status"
         // );
         // require(
         //     rec.rightsHolder == _rgtHash,
-        //     "APP2_NC:MI1: Rightsholder does not match supplied data"
+        //     "APP_NC:MI1: Rightsholder does not match supplied data"
         // );
         //^^^^^^^checks^^^^^^^^^
 

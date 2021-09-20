@@ -227,9 +227,9 @@ CTS:EXAMINE MOVE EXTRANEOUS STRUCTS OUT OF TOKEN CONTRACTS (A_TKN, ID_MGR)
  *  STAT201 - 1
  *
  *  APP - 1
- *  APP2 - 1
+ *  APP - 1
  *  APP_NC - 2
- *  APP2_NC - 2
+ *  APP_NC - 2
  *
  *  ECR - 3
  *  ECR_NC - 3

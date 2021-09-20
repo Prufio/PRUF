@@ -232,11 +232,11 @@ contract APP_NC is CORE {
         Record memory rec = getRecord(_idxHash);
         require(
             isLostOrStolen(rec.assetStatus) == 0,
-            "APP2_NC:CR: Cannot modify asset in lost or stolen status"
+            "APP_NC:CR: Cannot modify asset in lost or stolen status"
         );
         require(
             needsImport(rec.assetStatus) == 0,
-            "APP2_NC:CR: Cannot modify asset in unregistered, exported, or discarded status"
+            "APP_NC:CR: Cannot modify asset in unregistered, exported, or discarded status"
         );
         //^^^^^^^checks^^^^^^^^^
 
@@ -263,22 +263,22 @@ contract APP_NC is CORE {
 
         require(
             (rec.assetStatus == 51) || (rec.assetStatus == 70),
-            "APP2_NC:EXT: Must be in transferrable status (51)"
+            "APP_NC:EXT: Must be in transferrable status (51)"
         );
         require(
             NODE_MGR.isSameRootNode(_exportTo, rec.node) == 170,
-            "APP2_NC:EXT: Cannot change node to new root"
+            "APP_NC:EXT: Cannot change node to new root"
         );
         require(
             (node_info.managementType < 6),
-            "APP2_NC:EXT: Contract does not support management types > 5 or node is locked"
+            "APP_NC:EXT: Contract does not support management types > 5 or node is locked"
         );
         if (
             (node_info.managementType == 1) || (node_info.managementType == 5)
         ) {
             require(
                 (NODE_TKN.ownerOf(rec.node) == _msgSender()),
-                "APP2_NC:EXT: Restricted from exporting assets from this node - does not hold ACtoken"
+                "APP_NC:EXT: Restricted from exporting assets from this node - does not hold ACtoken"
             );
         }
         //^^^^^^^checks^^^^^^^^^
@@ -306,21 +306,21 @@ contract APP_NC is CORE {
 
         require(
             (_newAssetStatus > 49) && (rec.assetStatus > 49),
-            "APP2_NC:SLS: Only custodial usertype can set or change status < 50"
+            "APP_NC:SLS: Only custodial usertype can set or change status < 50"
         );
         require(
             (_newAssetStatus != 57) &&
                 (_newAssetStatus != 58) &&
                 (_newAssetStatus < 100),
-            "APP2_NC:MS: Stat Rsrvd"
+            "APP_NC:MS: Stat Rsrvd"
         );
         require(
             needsImport(_newAssetStatus) == 0,
-            "APP2_NC:MS: Cannot place asset in unregistered, exported, or discarded status using modifyStatus"
+            "APP_NC:MS: Cannot place asset in unregistered, exported, or discarded status using modifyStatus"
         );
         require(
             needsImport(rec.assetStatus) == 0,
-            "APP2_NC:MS: Asset is in an unregistered, exported, or discarded status."
+            "APP_NC:MS: Asset is in an unregistered, exported, or discarded status."
         );
         //^^^^^^^checks^^^^^^^^^
 
@@ -346,11 +346,11 @@ contract APP_NC is CORE {
 
         require(
             (_newAssetStatus > 49) && (rec.assetStatus > 49),
-            "APP2_NC:SLS: Only custodial usertype can set or change status < 50"
+            "APP_NC:SLS: Only custodial usertype can set or change status < 50"
         );
         require(
             needsImport(rec.assetStatus) == 0,
-            "APP2_NC:SLS: Transferred,exported,or discarded asset cannot be set to lost or stolen"
+            "APP_NC:SLS: Transferred,exported,or discarded asset cannot be set to lost or stolen"
         );
         //^^^^^^^checks^^^^^^^^^
 
@@ -376,7 +376,7 @@ contract APP_NC is CORE {
 
         require(
             needsImport(rec.assetStatus) == 0,
-            "APP2_NC:DC: Record in unregistered, exported, or discarded status"
+            "APP_NC:DC: Record in unregistered, exported, or discarded status"
         );
         //^^^^^^^checks^^^^^^^^^
 
@@ -407,7 +407,7 @@ contract APP_NC is CORE {
 
         require(
             needsImport(rec.assetStatus) == 0,
-            "APP2_NC:MI1: Record in unregistered, exported, or discarded status"
+            "APP_NC:MI1: Record in unregistered, exported, or discarded status"
         );
         //^^^^^^^checks^^^^^^^^^
 

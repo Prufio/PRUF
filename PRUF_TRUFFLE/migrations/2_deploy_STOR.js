@@ -1,4 +1,4 @@
-const PRUF_STOR = artifacts.require('STOR');
+const PRUF_STOR = artifacts.require('../ReleaseCandidates/STOR');
 
 module.exports = function(deployer){
     deployer.deploy(PRUF_STOR);
