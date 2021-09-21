@@ -1,4 +1,4 @@
-/*--------------------------------------------------------PRüF0.8.7
+/*--------------------------------------------------------PRüF0.8.8
 __/\\\\\\\\\\\\\ _____/\\\\\\\\\ _______/\\__/\\ ___/\\\\\\\\\\\\\\\        
 __\/\\\/////////\\\ _/\\\///////\\\ ____\//__\//____\/\\\///////////__       
 ___\/\\\_______\/\\\_\/\\\_____\/\\\ ________________\/\\\ ____________      
@@ -20,6 +20,9 @@ pragma solidity ^0.8.7;
 import "../Resources/PRUF_CORE.sol";
 
 contract APP_NC is CORE {
+
+    //---------------------------------------Modifiers-------------------------------
+
     /**
      * @dev Verify user credentials
      * @param _idxHash - ID of asset token to be verified
@@ -63,12 +66,11 @@ contract APP_NC is CORE {
         Record memory rec;
         rec.mutableStorage1 = _mutableStorage1;
         rec.mutableStorage2 = _mutableStorage2;
-        //^^^^^^^effects^^^^^^^^^
 
         createRecord(_idxHash, _rgtHash, _node, _countDownStart);
         writeMutableStorage(_idxHash, rec);
         deductServiceCosts(_node, 1);
-        //^^^^^^^interactions^^^^^^^^^
+        //^^^^^^^effects^^^^^^^^^
     }
 
     /**
@@ -97,12 +99,10 @@ contract APP_NC is CORE {
         Record memory rec;
         rec.nonMutableStorage1 = _nonMutableStorage1;
         rec.nonMutableStorage2 = _nonMutableStorage2;
-        //^^^^^^^effects^^^^^^^^^
 
         createRecord(_idxHash, _rgtHash, _node, _countDownStart);
         writeNonMutableStorage(_idxHash, rec);
         deductServiceCosts(_node, 1);
-        //^^^^^^^interactions^^^^^^^^^
     }
 
     /**
@@ -126,7 +126,7 @@ contract APP_NC is CORE {
 
         createRecord(_idxHash, _rgtHash, _node, _countDownStart);
         deductServiceCosts(_node, 1);
-        //^^^^^^^interactions^^^^^^^^^
+        //^^^^^^^effects^^^^^^^^^
     }
 
     /**
@@ -166,10 +166,9 @@ contract APP_NC is CORE {
 
         rec.assetStatus = 70; // Set status to 70 (exported)
         rec.int32temp = _exportTo; //set permitted node for import
-        //^^^^^^^effects^^^^^^^^^
 
         writeRecord(_idxHash, rec);
-        //^^^^^^^interactions^^^^^^^^^
+        //^^^^^^^effects^^^^^^^^^
     }
 
     /**
@@ -191,11 +190,11 @@ contract APP_NC is CORE {
             _newNode == rec.int32temp,
             "ANC:IA: Cannot change node except to specified node"
         );
-        require( //redundant:preferred, tested and secure by commenting out req in STOR.changeNode
+        require(
             NODE_MGR.isSameRootNode(_newNode, rec.node) == 170,
             "ANC:IA: Cannot change node to new root"
         );
-        require( //redundant:preferred, tested and secure by commenting out req in NP_NC exportAssetTo
+        require(
             (node_info.managementType < 6),
             "ANC:IA: Contract does not support management types > 5 or node is locked"
         );
@@ -225,12 +224,11 @@ contract APP_NC is CORE {
         //^^^^^^^checks^^^^^^^^^
 
         rec.assetStatus = 51; //transferrable status
-        //^^^^^^^effects^^^^^^^^^
-
         STOR.changeNode(_idxHash, _newNode);
+
         writeRecord(_idxHash, rec);
         deductServiceCosts(_newNode, 1);
-        //^^^^^^^interactions^^^^^^^^^^^^
+        //^^^^^^^effects/interactions^^^^^^^^^^^^
     }
 
     /**
@@ -239,32 +237,30 @@ contract APP_NC is CORE {
      * @param _nonMutableStorage1 - field for permanent external asset data
      * @param _nonMutableStorage2 - field for permanent external asset data
      */
-    function addNonMutableNote(
+    function addNonMutableNote( //CTS:EXAMINE shold be changed to addNonMutableStorage ??
         bytes32 _idxHash,
         bytes32 _nonMutableStorage1,
         bytes32 _nonMutableStorage2
     ) external nonReentrant whenNotPaused isAuthorized(_idxHash) {
         Record memory rec = getRecord(_idxHash);
-        require( //STATE UNREACHABLE
+        require(
             needsImport(rec.assetStatus) == 0,
-            "ANC:I2: Record In Transferred, exported, or discarded status"
+            "ANC:ANMN: Record In Transferred, exported, or discarded status"
         );
         //^^^^^^^checks^^^^^^^^^
 
         rec.nonMutableStorage1 = _nonMutableStorage1;
         rec.nonMutableStorage2 = _nonMutableStorage2;
-        //^^^^^^^effects^^^^^^^^^
 
         writeNonMutableStorage(_idxHash, rec);
         deductServiceCosts(rec.node, 3);
-        //^^^^^^^interactions^^^^^^^^^
+        //^^^^^^^effects^^^^^^^^^
     }
 
     /**
      * @dev Modify rgtHash (like forceModify)
      * @param _idxHash idx of asset to Modify
      * @param _newRgtHash rew rgtHash to apply
-     *
      */
     function changeRgt(bytes32 _idxHash, bytes32 _newRgtHash)
         external
@@ -275,20 +271,19 @@ contract APP_NC is CORE {
         Record memory rec = getRecord(_idxHash);
         require(
             isLostOrStolen(rec.assetStatus) == 0,
-            "APP_NC:CR: Cannot modify asset in lost or stolen status"
+            "ANC:CR: Cannot modify asset in lost or stolen status"
         );
         require(
             needsImport(rec.assetStatus) == 0,
-            "APP_NC:CR: Cannot modify asset in unregistered, exported, or discarded status"
+            "ANC:CR: Cannot modify asset in unregistered, exported, or discarded status"
         );
         //^^^^^^^checks^^^^^^^^^
 
         rec.rightsHolder = _newRgtHash;
-        //^^^^^^^effects^^^^^^^^^
 
         writeRecord(_idxHash, rec);
         deductServiceCosts(rec.node, 6);
-        //^^^^^^^interactions^^^^^^^^^
+        //^^^^^^^effects^^^^^^^^^
     }
 
     /**
@@ -306,29 +301,29 @@ contract APP_NC is CORE {
 
         require(
             (_newAssetStatus > 49) && (rec.assetStatus > 49),
-            "APP_NC:SLS: Only custodial usertype can set or change status < 50"
+            "ANC:MS: Only custodial usertype can set or change status < 50"
         );
         require(
             (_newAssetStatus != 57) &&
                 (_newAssetStatus != 58) &&
                 (_newAssetStatus < 100),
-            "APP_NC:MS: Stat Rsrvd"
+            "ANC:MS: Status Reserved"
         );
         require(
             needsImport(_newAssetStatus) == 0,
-            "APP_NC:MS: Cannot place asset in unregistered, exported, or discarded status using modifyStatus"
+            "ANC:MS: Cannot place asset in unregistered, exported, or discarded status using modifyStatus"
         );
         require(
             needsImport(rec.assetStatus) == 0,
-            "APP_NC:MS: Asset is in an unregistered, exported, or discarded status."
+            "ANC:MS: Asset is in an unregistered, exported, or discarded status."
         );
         //^^^^^^^checks^^^^^^^^^
 
         rec.assetStatus = _newAssetStatus;
-        //^^^^^^^effects^^^^^^^^^
+
         deductServiceCosts(rec.node, 5);
         writeRecord(_idxHash, rec);
-        //^^^^^^^interactions^^^^^^^^^
+        //^^^^^^^effects^^^^^^^^^
     }
 
     /**
@@ -346,11 +341,11 @@ contract APP_NC is CORE {
 
         require(
             (_newAssetStatus > 49) && (rec.assetStatus > 49),
-            "APP_NC:SLS: Only custodial usertype can set or change status < 50"
+            "ANC:SLS: Only custodial usertype can set or change status < 50"
         );
         require(
             needsImport(rec.assetStatus) == 0,
-            "APP_NC:SLS: Transferred,exported,or discarded asset cannot be set to lost or stolen"
+            "ANC:SLS: Transferred,exported,or discarded asset cannot be set to lost or stolen"
         );
         //^^^^^^^checks^^^^^^^^^
 
@@ -362,8 +357,8 @@ contract APP_NC is CORE {
     }
 
     /**
-     * @dev Decrement **Record**.countdown with confirmation of matching rgthash required.
-     * @param _idxHash idx of asset to Modify
+     * @dev Decrement **Record**.countdown.
+     * @param _idxHash index hash of asset to modify
      * @param _decAmount Amount to decrement
      */
     function decrementCounter(bytes32 _idxHash, uint32 _decAmount)
@@ -376,7 +371,7 @@ contract APP_NC is CORE {
 
         require(
             needsImport(rec.assetStatus) == 0,
-            "APP_NC:DC: Record in unregistered, exported, or discarded status"
+            "ANC:DC: Record in unregistered, exported, or discarded status"
         );
         //^^^^^^^checks^^^^^^^^^
 
@@ -385,11 +380,10 @@ contract APP_NC is CORE {
         } else {
             rec.countDown = 0;
         }
-        //^^^^^^^effects^^^^^^^^^
 
         writeRecord(_idxHash, rec);
         deductServiceCosts(rec.node, 7);
-        //^^^^^^^interactions^^^^^^^^^
+        //^^^^^^^effects^^^^^^^^^
     }
 
     /**
@@ -407,16 +401,15 @@ contract APP_NC is CORE {
 
         require(
             needsImport(rec.assetStatus) == 0,
-            "APP_NC:MI1: Record in unregistered, exported, or discarded status"
+            "ANC:MMS: Record in unregistered, exported, or discarded status"
         );
         //^^^^^^^checks^^^^^^^^^
 
         rec.mutableStorage1 = _mutableStorage1;
         rec.mutableStorage2 = _mutableStorage2;
-        //^^^^^^^effects^^^^^^^^^
 
         writeMutableStorage(_idxHash, rec);
         deductServiceCosts(rec.node, 8);
-        //^^^^^^^interactions^^^^^^^^^
+        //^^^^^^^effects^^^^^^^^^
     }
 }

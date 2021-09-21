@@ -11,8 +11,6 @@ __/\\\\\\\\\\\\\ _____/\\\\\\\\\ _______/\\../\\ ___/\\\\\\\\\\\\\\\
          *-------------------------------------------------------------------*/
 
 /**-----------------------------------------------------------------
- *  TO DO
- *-----------------------------------------------------------------
  * PRUF USER ID CONTRACT
  *---------------------------------------------------------------*/
 
@@ -22,8 +20,6 @@ pragma solidity ^0.8.7;
 import "../Resources/RESOURCE_PRUF_STRUCTS.sol";
 import "../Imports/access/AccessControl.sol";
 import "../Imports/security/Pausable.sol";
-
-//import "../Imports/security/ReentrancyGuard.sol";
 
 /**
  * @dev {ERC721} token, including:
@@ -39,14 +35,11 @@ import "../Imports/security/Pausable.sol";
  * The account that deploys the contract will be granted the minter, pauser, and contract admin
  * roles, as well as the default admin role, which will let it grant minter, pauser, and admin
  * roles to other accounts.
-
  struct ID {
     uint256 trustLevel; //admin only
     bytes32 URI; //caller address match
     string userName; //admin only///caller address match can set
 }
-
-
  */
 
 contract ID_MGR is Pausable, AccessControl {
@@ -75,13 +68,13 @@ contract ID_MGR is Pausable, AccessControl {
     modifier isMinter() {
         require(
             hasRole(ID_MINTER_ROLE, _msgSender()),
-            "PIDT:MOD-IM: Calling address does not belong have ID_MINTER_ROLE"
+            "IDM:MOD-IM: Calling address does not belong have ID_MINTER_ROLE"
         );
         _;
     }
 
     //----------------------EVENTS----------------------//
-    event REPORT(string _msg);
+    event REPORT(string _msg); //CTS:EXAMINE unused
 
     /**
      * @dev Mint an Asset token
@@ -97,15 +90,15 @@ contract ID_MGR is Pausable, AccessControl {
         require(
             (id[_msgSender()].trustLevel > _trustLevel) ||
                 (hasRole(CONTRACT_ADMIN_ROLE, _msgSender())),
-            "IM:MI: ID authority insufficient"
+            "IDM:MI: ID authority insufficient"
         );
         require(
             addressOfIdHash[_IdHash] == address(0),
-            "IM:MI: ID hash already exists. Burn old ID first."
+            "IDM:MI: ID hash already exists. Burn old ID first."
         );
         require(
             id[_recipientAddress].IdHash == 0,
-            "IM:MI: Adddress already has an ID. Burn old ID first."
+            "IDM:MI: Adddress already has an ID. Burn old ID first."
         );
         //^^^^^^^checks^^^^^^^^^
 
@@ -123,9 +116,10 @@ contract ID_MGR is Pausable, AccessControl {
         require(
             (id[_msgSender()].trustLevel > id[_addr].trustLevel) ||
                 (hasRole(CONTRACT_ADMIN_ROLE, _msgSender())),
-            "IM:BI: ID authority insufficient"
+            "IDM:BI: ID authority insufficient"
         );
         //^^^^^^^checks^^^^^^^^^
+
         delete addressOfIdHash[id[_addr].IdHash]; //remove record from IDHash registry
         delete id[_addr]; //remove record from address registry
         //^^^^^^^effects^^^^^^^^^
@@ -144,7 +138,7 @@ contract ID_MGR is Pausable, AccessControl {
         require(
             (id[_msgSender()].trustLevel > _trustLevel) ||
                 (hasRole(CONTRACT_ADMIN_ROLE, _msgSender())),
-            "IM:STL: ID authority insufficient"
+            "IDM:STL: ID authority insufficient"
         );
         //^^^^^^^checks^^^^^^^^^
 
@@ -155,7 +149,7 @@ contract ID_MGR is Pausable, AccessControl {
     /**
      * @dev get ID data given an address to look up
      * @param _addr - address to check
-     * returns PRUFID struct (see interfaces for struct definitions)
+     * @return ID struct (see interfaces for struct definitions)
      */
     function IdDataByAddress(address _addr)
         external
@@ -169,7 +163,7 @@ contract ID_MGR is Pausable, AccessControl {
     /**
      * @dev get ID data given an IdHash to look up
      * @param _IdHash - IdHash to check
-     * returns IPRUFIDD struct (see interfaces for struct definitions)
+     * @return ID struct (see interfaces for struct definitions)
      */
     function IdDataByIdHash(bytes32 _IdHash)
         external
@@ -183,9 +177,11 @@ contract ID_MGR is Pausable, AccessControl {
     /**
      * @dev get ID trustLevel
      * @param _addr - address to check
-     * returns trust level of token id
+     * @return trust level of token id
      */
     function trustLevel(address _addr) external view returns (uint256) {
+        //^^^^^^^checks^^^^^^^^
+
         return id[_addr].trustLevel;
         //^^^^^^^interactions^^^^^^^^^
     }
@@ -202,11 +198,12 @@ contract ID_MGR is Pausable, AccessControl {
     function pause() external virtual {
         require(
             hasRole(PAUSER_ROLE, _msgSender()),
-            "PIDT:P: ERC721PresetMinterPauserAutoId: must have pauser role to pause"
+            "IDM:P: ERC721PresetMinterPauserAutoId: must have pauser role to pause"
         );
         //^^^^^^^checks^^^^^^^^
+
         _pause();
-        //^^^^^^^interactions^^^^^^^^^
+        //^^^^^^^effects^^^^^^^^^
     }
 
     /**
@@ -221,10 +218,10 @@ contract ID_MGR is Pausable, AccessControl {
     function unpause() external virtual {
         require(
             hasRole(PAUSER_ROLE, _msgSender()),
-            "PIDT:UP: ERC721PresetMinterPauserAutoId: must have pauser role to unpause"
+            "IDM:UP: ERC721PresetMinterPauserAutoId: must have pauser role to unpause"
         );
         //^^^^^^^checks^^^^^^^^
         _unpause();
-        //^^^^^^^interactions^^^^^^^^^
+        //^^^^^^^effects^^^^^^^^^
     }
 }
