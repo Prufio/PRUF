@@ -2143,7 +2143,7 @@ contract("STOR", (accounts) => {
       "//**************************************END endEscrow FAIL BATCH**********************************************/"
     );
     console.log(
-      "//**************************************BEGIN modifyMutable FAIL BATCH**********************************************/"
+      "//**************************************BEGIN modifyMutableStorage FAIL BATCH**********************************************/"
     );
     return MAL_APP.modifyMutableStorage(asset10, rgt1, rgt000, {
       from: account2,
@@ -2221,7 +2221,7 @@ contract("STOR", (accounts) => {
       "//**************************************END modifyMutable FAIL BATCH**********************************************/"
     );
     console.log(
-      "//**************************************BEGIN modifyNonMutable FAIL BATCH**********************************************/"
+      "//**************************************BEGIN modifyNonMutableStorage FAIL BATCH**********************************************/"
     );
     return MAL_APP.addNonMutableNote(asset10, rgt6, rgt000, { from: account2 });
   });

@@ -147,7 +147,7 @@ contract NODE_TKN is
     {
         require(
             _exists(tokenId),
-            "ERC721URIStorage: URI query for nonexistent token"
+            "NT:TU: URI query for nonexistent token"
         );
         //^^^^^^^checks^^^^^^^^^
 
@@ -256,7 +256,7 @@ contract NODE_TKN is
     {
         require(
             _exists(tokenId),
-            "ERC721URIStorage: URI set of nonexistent token"
+            "NT:STU: URI set of nonexistent token"
         );
         //^^^^^^^checks^^^^^^^^^
 

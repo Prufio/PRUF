@@ -1577,6 +1577,14 @@ contract("ID_MGR", (accounts) => {
     );
   });
 
+  it("Should pause ID_MGR", async () => {
+    return ID_MGR.pause({ from: account1 });
+  });
+
+  it("Should unpause ID_MGR", async () => {
+    return ID_MGR.unpause({ from: account1 });
+  });
+
   it("Should set SharesAddress", async () => {
     console.log(
       "//**************************************END ID_MGR TEST**********************************************/"

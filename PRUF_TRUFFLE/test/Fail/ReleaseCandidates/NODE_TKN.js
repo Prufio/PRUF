@@ -1464,142 +1464,27 @@ contract("NODE_TKN", (accounts) => {
         )
     })
 
-    // //2
-    // it('Should fail because is not minter', async () => {
-
-    //     console.log("//*********************************END mintNodeToken FAIL BATCH*****************************************/")
-    //     console.log("//********************************BEGIN teleportACToken FAIL BATCH****************************************/")
-    //     return NODE_TKN.teleportACToken(
-    //         account1,
-    //         '10',
-    //         'Pruf.io',
-    //         { from: account2 }
-    //     )
-    // })
-    
-
-    // it('Should authorize account1 as a minter', async () => {
-    //     return NODE_TKN.grantRole(
-    //         minterRoleB32,
-    //         account2,
-    //         { from: account1 }
-    //     )
-    // })
-
-    // //3
-    // it('Should fail because token doesnt exist', async () => {
-    //     return NODE_TKN.teleportACToken(
-    //         account1,
-    //         '30',
-    //         'Pruf.io',
-    //         { from: account2 }
-    //     )
-    // })
-
-    // //4
-    // it('Should fail URI doesnt match', async () => {
-    //     return NODE_TKN.teleportACToken(
-    //         account1,
-    //         '1000001',
-    //         'Pruf',
-    //         { from: account1 }
-    //     )
-    // })
-    
-
-    // it('Should unauthorize account1 as a minter', async () => {
-    //     return NODE_TKN.revokeRole(
-    //         minterRoleB32,
-    //         account2,
-    //         { from: account1 }
-    //     )
-    // })
-
-    
-    it('Should pause NODE_TKN', async () => {
-
+    //2
+    it('Should fail because token !exist', async () => {
         console.log("//*********************************END mintNodeToken FAIL BATCH*****************************************/")
-        console.log("//********************************BEGIN transferFrom FAIL BATCH****************************************/")
-        return NODE_TKN.pause(
+        console.log("//********************************BEGIN tokenURI FAIL BATCH****************************************/")
+        return NODE_TKN.tokenURI(
+          "50",
             { from: account1 }
         )
     })
 
-    //5
-    it('Should fail because NODE_TKN is paused', async () => {
-        return NODE_TKN.transferFrom(
-            account1,
-            account4,
-            '11',
-            { from: account2 }
-        )
-    })
-
-    
-    it('Should unpause NODE_TKN', async () => {
-        return NODE_TKN.unpause(
-            { from: account1 }
-        )
-    })
-
-    //6
-    it('Should fail because caller is not owner of token or approved', async () => {
-        return NODE_TKN.transferFrom(
-            account1,
-            account4,
-            '1000002',
-            { from: account2 }
-        )
-    })
-
-    
-    it('Should pause NODE_TKN', async () => {
-
-        console.log("//*********************************END transferFrom FAIL BATCH*****************************************/")
-        console.log("//********************************BEGIN safeTransferFrom(Private) FAIL BATCH****************************************/")
-        return NODE_TKN.pause(
-            { from: account1 }
-        )
-    })
-
-    //7
-    it('Should fail because NODE_TKN is paused', async () => {
-        return NODE_TKN.safeTransferFrom(
-            account1,
-            account4,
-            '11',
-            { from: account2 }
-        )
-    })
-
-    
-    it('Should unpause NODE_TKN', async () => {
-        return NODE_TKN.unpause(
-            { from: account1 }
-        )
-    })
-
-    //8
-    it('Should fail because caller is not owner of token or approved', async () => {
-        return NODE_TKN.safeTransferFrom(
-            account1,
-            account4,
-            '1000002',
-            { from: account2 }
-        )
-    })
-
-    //9
+    //3
     it('Should fail because caller is not pauser', async () => {
 
-        console.log("//*********************************END safeTransferFrom FAIL BATCH*****************************************/")
+        console.log("//*********************************END tokenURI FAIL BATCH*****************************************/")
         console.log("//********************************BEGIN pause FAIL BATCH****************************************/")
         return NODE_TKN.pause(
             { from: account2 }
         )
     })
 
-    //10
+    //4
     it('Should fail because caller is not pauser', async () => {
 
         console.log("//*********************************END pause FAIL BATCH*****************************************/")

@@ -1616,6 +1616,116 @@ contract("APP_NC", (accounts) => {
     );
   });
 
+
+it('Should change rgt of asset 1 to rgt2', async () => {
+    return APP_NC.changeRgt(
+        asset1,
+        rgt2,
+        { from: account1 }
+    )
+})
+
+it("Should retrieve asset1", async () => {
+    var Record = [];
+
+    return await STOR.retrieveShortRecord(asset1, { from: account2 }, function (_err, _result) {
+        if (_err) { }
+        else {
+            Record = Object.values(_result)
+            console.log(Record)
+        }
+    })
+})
+
+
+it('Should set asset1 to stolen', async () => {
+    return APP_NC.setLostOrStolen(
+        asset1,
+        '53',
+        { from: account1 }
+    )
+})
+
+
+it("Should retrieve asset1", async () => {
+    var Record = [];
+
+    return await STOR.retrieveShortRecord(asset1, { from: account2 }, function (_err, _result) {
+        if (_err) { }
+        else {
+            Record = Object.values(_result)
+            console.log(Record)
+        }
+    })
+})
+
+
+it('Should set asset1 stat to 51', async () => {
+    return APP_NC.modifyStatus(
+        asset1,
+        '51',
+        { from: account1 }
+    )
+})
+
+
+it("Should retrieve asset1", async () => {
+    var Record = [];
+
+    return await STOR.retrieveShortRecord(asset1, { from: account2 }, function (_err, _result) {
+        if (_err) { }
+        else {
+            Record = Object.values(_result)
+            console.log(Record)
+        }
+    })
+})
+
+
+it('Should decrement 15 off of asset1', async () => {
+    return APP_NC.decrementCounter(
+        asset1,
+        '15',
+        { from: account1 }
+    )
+})
+
+
+it("Should retrieve asset1", async () => {
+    var Record = [];
+
+    return await STOR.retrieveShortRecord(asset1, { from: account2 }, function (_err, _result) {
+        if (_err) { }
+        else {
+            Record = Object.values(_result)
+            console.log(Record)
+        }
+    })
+})
+
+
+it('Should set mutable to rgt1 rgt2', async () => {
+    return APP_NC.modifyMutableStorage(
+        asset1,
+        rgt1,
+        rgt2,
+        { from: account1 }
+    )
+})
+
+
+it("Should retrieve asset1", async () => {
+    var Record = [];
+
+    return await STOR.retrieveShortRecord(asset1, { from: account2 }, function (_err, _result) {
+        if (_err) { }
+        else {
+            Record = Object.values(_result)
+            console.log(Record)
+        }
+    })
+})
+
   
 
   it("Should set SharesAddress", async () => {

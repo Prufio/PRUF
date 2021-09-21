@@ -93,7 +93,7 @@ contract ID_MGR is Pausable, AccessControl {
         address _recipientAddress,
         uint256 _trustLevel,
         bytes32 _IdHash
-    ) external isMinter whenNotPaused {
+    ) external whenNotPaused isMinter {
         require(
             (id[_msgSender()].trustLevel > _trustLevel) ||
                 (hasRole(CONTRACT_ADMIN_ROLE, _msgSender())),
@@ -119,7 +119,7 @@ contract ID_MGR is Pausable, AccessControl {
      * @dev Burn PRUF_ID token
      * @param _addr - address to burn ID from
      */
-    function burnID(address _addr) external isMinter whenNotPaused {
+    function burnID(address _addr) external whenNotPaused isMinter {
         require(
             (id[_msgSender()].trustLevel > id[_addr].trustLevel) ||
                 (hasRole(CONTRACT_ADMIN_ROLE, _msgSender())),
@@ -138,10 +138,10 @@ contract ID_MGR is Pausable, AccessControl {
      */
     function setTrustLevel(address _addr, uint256 _trustLevel)
         external
-        isMinter
         whenNotPaused
+        isMinter
     {
-        require( //DPS:TEST:NEW
+        require(
             (id[_msgSender()].trustLevel > _trustLevel) ||
                 (hasRole(CONTRACT_ADMIN_ROLE, _msgSender())),
             "IM:STL: ID authority insufficient"

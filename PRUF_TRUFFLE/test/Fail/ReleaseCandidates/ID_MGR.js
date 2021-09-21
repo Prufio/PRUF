@@ -1560,7 +1560,7 @@ contract("ID_MGR", (accounts) => {
       "//**************************************END ID_MGR SETUP**********************************************/"
     );
     console.log(
-      "//**************************************BEGIN ID_MGR FAIL BATCH (22)**********************************************/"
+      "//**************************************BEGIN ID_MGR FAIL BATCH (13)**********************************************/"
     );
     console.log(
       "//**************************************BEGIN mintID FAIL BATCH**********************************************/"
@@ -1747,15 +1747,31 @@ contract("ID_MGR", (accounts) => {
     });
   });
 
-  it("Should pause ID_MGR", async () => {
-    return ID_MGR.pause({
-      from: account1,
-    });
+  //12
+  it("Should Fail because caller is not pauser", async () => {
+    console.log(
+      "//**************************************END setTrustLevel FAIL BATCH**********************************************/"
+    );
+    console.log(
+      "//**************************************BEGIN pause FAIL BATCH**********************************************/"
+    );
+    return ID_MGR.pause({ from: account2 });
+  });
+
+  //13
+  it("Should Fail because caller is not pauser", async () => {
+    console.log(
+      "//**************************************END pause FAIL BATCH**********************************************/"
+    );
+    console.log(
+      "//**************************************BEGIN unpause FAIL BATCH**********************************************/"
+    );
+    return ID_MGR.unpause({ from: account2 });
   });
 
   it("Should set SharesAddress", async () => {
     console.log(
-      "//**************************************END safeTransferFrom FAIL BATCH**********************************************/"
+      "//**************************************END unpause FAIL BATCH**********************************************/"
     );
     console.log(
       "//**************************************END ID_MGR FAIL BATCH**********************************************/"

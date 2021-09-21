@@ -1620,7 +1620,7 @@ contract("APP_NC", (accounts) => {
   });
 
   //2
-  it("Should fail because call !ID_MGR holder", async () => {
+  it("Should fail because call !ID holder", async () => {
     return APP_NC.newRecordWithDescription(asset1, rgt1, "1000004", "5000", rgt000, rgt000, { from: account6 });
   });
 
@@ -1644,7 +1644,7 @@ contract("APP_NC", (accounts) => {
   });
 
   //4
-  it("Should fail because call !ID_MGR holder", async () => {
+  it("Should fail because call !ID holder", async () => {
     return APP_NC.newRecordWithNote(asset1, rgt1, "1000004", "5000", rgt000, rgt000, { from: account9 });
   });
 
@@ -1668,7 +1668,7 @@ contract("APP_NC", (accounts) => {
   });
 
   //6
-  it("Should fail because call !ID_MGR holder", async () => {
+  it("Should fail because call !ID holder", async () => {
     return APP_NC.newRecord(asset1, rgt1, "1000004", "5000", { from: account9 });
   });
 
@@ -1765,7 +1765,7 @@ contract("APP_NC", (accounts) => {
       "//**************************************************END importAsset FAIL BATCH***************************************************//"
     );
     console.log(
-      "//**************************************************BEGIN impaddNonMutableNoteortAsset FAIL BATCH***************************************************//"
+      "//**************************************************BEGIN addNonMutableNote FAIL BATCH***************************************************//"
     );
     return APP_NC.addNonMutableNote(asset5, rgt1, rgt1, { from: account1 });
   });
