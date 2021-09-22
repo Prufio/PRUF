@@ -1508,6 +1508,23 @@ contract("TheWorks", (accounts) => {
     );
   });
 
+  it("Should retrieve getServicePaymentData", async () => {
+    var Record = [];
+
+    return await NODE_MGR.getServicePaymentData(
+      "1000001",
+      "1",
+      { from: account1 },
+      function (_err, _result) {
+        if (_err) {
+        } else {
+          Record = Object.values(_result);
+          console.log(Record);
+        }
+      }
+    );
+  });
+
   it("Should retrieve storage provider status 6 (0)", async () => {
     var Record = [];
 
