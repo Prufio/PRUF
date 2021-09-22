@@ -297,7 +297,7 @@ abstract contract BASIC is
      * @return ContractDataHash struct, containing the authorization level and hashed name of a given contract X in node Y
      */
     function getContractInfo(address _addr, uint32 _node)
-        internal
+        internal view
         returns (ContractDataHash memory)
     {
         //^^^^^^^checks^^^^^^^^^
@@ -315,7 +315,7 @@ abstract contract BASIC is
      * @param _idxHash - asset index
      * @return entire record struct form PRUF_STOR (see interfaces for struct definitions)
      */
-    function getRecord(bytes32 _idxHash) internal returns (Record memory) {
+    function getRecord(bytes32 _idxHash) internal view returns (Record memory) {
         //^^^^^^^checks^^^^^^^^^
 
         Record memory rec = STOR.retrieveRecord(_idxHash);

@@ -558,7 +558,7 @@ contract A_TKN is
      * @param _idxHash - Asset Index
      * @return Record Struct (see interfaces for struct definitions)
      */
-    function getRecord(bytes32 _idxHash) internal returns (Record memory) {
+    function getRecord(bytes32 _idxHash) internal view returns (Record memory) {
         //^^^^^^^checks^^^^^^^^^
 
         Record memory rec = STOR.retrieveRecord(_idxHash);

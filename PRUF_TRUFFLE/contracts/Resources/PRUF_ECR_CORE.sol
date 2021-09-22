@@ -74,7 +74,7 @@ contract ECR_CORE is BASIC {
      * @return escrowData struct (see interfaces for struct definitions)
      */
     function getEscrowData(bytes32 _idxHash)
-        internal
+        internal view
         returns (escrowData memory)
     {
         escrowData memory escrow = ECR_MGR.retrieveEscrowData(_idxHash);
@@ -88,7 +88,7 @@ contract ECR_CORE is BASIC {
      * @return escrowDataExtLight struct (see interfaces for struct definitions)
      */
     function getEscrowDataLight(bytes32 _idxHash)
-        internal
+        internal view
         returns (escrowDataExtLight memory)
     {
         escrowDataExtLight memory escrowDataLight = ECR_MGR
@@ -103,7 +103,7 @@ contract ECR_CORE is BASIC {
      * @return escrowDataExtHeavy struct (see interfaces for struct definitions)
      */
     function getEscrowDataHeavy(bytes32 _idxHash)
-        internal
+        internal view
         returns (escrowDataExtHeavy memory)
     {
         escrowDataExtHeavy memory escrowDataHeavy = ECR_MGR

@@ -47,7 +47,7 @@ interface UTIL_TKN_Interface {
     /*
      * @dev return an adresses "cold wallet" status
      */
-    function isColdWallet(address _addr) external returns (uint256);
+    function isColdWallet(address _addr) external view returns (uint256);
 
     /*
      * @dev Set adress of payment contract

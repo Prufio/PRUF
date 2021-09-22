@@ -346,7 +346,7 @@ contract Market is BASIC {
      * @param _node node to get Market fees for
      */
     function getNodeMarketFees(uint32 _node)
-        private
+        private view
         returns (MarketFees memory)
     {
         //^^^^^^^checks^^^^^^^^^

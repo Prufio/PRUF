@@ -112,7 +112,7 @@ contract ECR2 is ECR_CORE {
      * @dev A standard function for all escrow contracts which returns all relevant data about an escrow
      * in this case only the relevant escrowData struct DPS:TEST
      */
-    function getEscrowParameters (bytes32 _idxHash) external returns (escrowData memory){
+    function getEscrowParameters (bytes32 _idxHash) external view returns (escrowData memory){
         return(getEscrowData(_idxHash));
     }
 

@@ -90,6 +90,7 @@ interface STOR_Interface {
      */
     function getDefaultContract(uint256 _contractNumber)
         external
+        view
         returns (DefaultContract memory);
 
     /**
@@ -189,7 +190,10 @@ interface STOR_Interface {
      * @param  _idxHash - record asset ID
      * returns a complete Record struct (see interfaces for struct definitions)
      */
-    function retrieveRecord(bytes32 _idxHash) external returns (Record memory);
+    function retrieveRecord(bytes32 _idxHash)
+        external
+        view
+        returns (Record memory);
 
     /**
      * @dev return a record from the database w/o rgt
@@ -206,6 +210,7 @@ interface STOR_Interface {
      */
     function retrieveShortRecord(bytes32 _idxHash)
         external
+        view
         returns (
             uint8,
             uint8,
@@ -227,6 +232,7 @@ interface STOR_Interface {
      */
     function _verifyRightsHolder(bytes32 _idxHash, bytes32 _rgtHash)
         external
+        view
         returns (uint256);
 
     /**
@@ -247,6 +253,7 @@ interface STOR_Interface {
      */
     function resolveContractAddress(string calldata _name)
         external
+        view
         returns (address);
 
     /**
@@ -257,6 +264,7 @@ interface STOR_Interface {
      */
     function ContractInfoHash(address _addr, uint32 _node)
         external
+        view
         returns (uint8, bytes32);
 }
 
@@ -277,6 +285,7 @@ interface NODE_MGR_Interface {
      */
     function getSwitchAt(uint32 _node, uint8 _position)
         external
+        view
         returns (uint256);
 
     //--------------------------------------------External Functions--------------------------
@@ -481,6 +490,7 @@ interface NODE_MGR_Interface {
      */
     function getUserType(bytes32 _userHash, uint32 _node)
         external
+        view
         returns (uint8);
 
     /**
@@ -490,6 +500,7 @@ interface NODE_MGR_Interface {
      */
     function getManagementTypeStatus(uint8 _managementType)
         external
+        view
         returns (uint8);
 
     /**
@@ -499,6 +510,7 @@ interface NODE_MGR_Interface {
      */
     function getStorageProviderStatus(uint8 _storageProvider)
         external
+        view
         returns (uint8);
 
     /**
@@ -506,14 +518,20 @@ interface NODE_MGR_Interface {
      * @param _custodyType - custody type associated with query (see docs)
      * @return 1 or 0 (enabled or disabled)
      */
-    function getCustodyTypeStatus(uint8 _custodyType) external returns (uint8);
+    function getCustodyTypeStatus(uint8 _custodyType)
+        external
+        view
+        returns (uint8);
 
     /**
      * @dev Retrieve extended nodeData @ _node
      * @param _node - node associated with query
      * @return nodeData (see docs)
      */
-    function getExtendedNodeData(uint32 _node) external returns (Node memory);
+    function getExtendedNodeData(uint32 _node)
+        external
+        view
+        returns (Node memory);
 
     /**
      * @dev verify the root of two Nodees are equal
@@ -523,6 +541,7 @@ interface NODE_MGR_Interface {
      */
     function isSameRootNode(uint32 _node1, uint32 _node2)
         external
+        view
         returns (uint8);
 
     /**
@@ -530,7 +549,7 @@ interface NODE_MGR_Interface {
      * @param node - tokenId associated with query
      * @return name of token @ _tokenID
      */
-    function getNodeName(uint32 node) external returns (string memory);
+    function getNodeName(uint32 node) external view returns (string memory);
 
     /**
      * @dev Retrieve node @ Node_name
@@ -539,6 +558,7 @@ interface NODE_MGR_Interface {
      */
     function resolveNode(string calldata _forThisName)
         external
+        view
         returns (uint32);
 
     /**
@@ -548,7 +568,7 @@ interface NODE_MGR_Interface {
          Node_price: current price per node
      }
      */
-    function currentNodePricingInfo() external returns (uint256, uint256);
+    function currentNodePricingInfo() external view returns (uint256, uint256);
 
     /**
      * @dev Retrieve function costs per Node, per service type in PRUF(18 decimals)
@@ -564,6 +584,7 @@ interface NODE_MGR_Interface {
      */
     function getInvoice(uint32 _node, uint16 _service)
         external
+        view
         returns (Invoice memory);
 
     /** DPS:CHECK
@@ -574,6 +595,7 @@ interface NODE_MGR_Interface {
      */
     function getServicePaymentData(uint32 _node, uint16 _service)
         external
+        view
         returns (Costs memory);
 
     /**
@@ -581,7 +603,7 @@ interface NODE_MGR_Interface {
      * @param _node - node associated with query
      * @return percentage of rewards distribution @ _node
      */
-    function getNodeDiscount(uint32 _node) external returns (uint32);
+    function getNodeDiscount(uint32 _node) external view returns (uint32);
 }
 
 //---------------------------------------------------------------------------------------------------------------
@@ -645,7 +667,10 @@ interface ECR_MGR_Interface {
      *
      * @return hash of escrow owner
      */
-    function retrieveEscrowOwner(bytes32 _idxHash) external returns (bytes32);
+    function retrieveEscrowOwner(bytes32 _idxHash)
+        external
+        view
+        returns (bytes32);
 
     /**
      * @dev return escrow data associated with an asset
@@ -655,6 +680,7 @@ interface ECR_MGR_Interface {
      */
     function retrieveEscrowData(bytes32 _idxHash)
         external
+        view
         returns (escrowData memory);
 
     /**
@@ -665,6 +691,7 @@ interface ECR_MGR_Interface {
      */
     function retrieveEscrowDataLight(bytes32 _idxHash)
         external
+        view
         returns (escrowDataExtLight memory);
 
     /**
@@ -675,6 +702,7 @@ interface ECR_MGR_Interface {
      */
     function retrieveEscrowDataHeavy(bytes32 _idxHash)
         external
+        view
         returns (escrowDataExtHeavy memory);
 }
 
@@ -718,14 +746,20 @@ interface ID_MGR_Interface {
      * @param _addr - address to check
      * @return ID struct (see interfaces for struct definitions)
      */
-    function IdDataByAddress(address _addr) external returns (PRUFID memory);
+    function IdDataByAddress(address _addr)
+        external
+        view
+        returns (PRUFID memory);
 
     /**
      * @dev get ID data given an IdHash to look up
      * @param _IdHash - IdHash to check
      * @return ID struct (see interfaces for struct definitions)
      */
-    function IdDataByIdHash(bytes32 _IdHash) external returns (PRUFID memory);
+    function IdDataByIdHash(bytes32 _IdHash)
+        external
+        view
+        returns (PRUFID memory);
 
     /**
      * @dev get ID trustLevel
@@ -1150,6 +1184,7 @@ interface EO_STAKING_Interface {
      */
     function checkEligibleRewards(uint256 _tokenId)
         external
+        view
         returns (uint256, uint256);
 
     /**
@@ -1159,6 +1194,7 @@ interface EO_STAKING_Interface {
      */
     function stakeInfo(uint256 _tokenId)
         external
+        view
         returns (
             uint256,
             uint256,
@@ -1175,6 +1211,7 @@ interface EO_STAKING_Interface {
      */
     function getStakeLevel(uint256 _stakeTier)
         external
+        view
         returns (
             uint256,
             uint256,
@@ -1225,7 +1262,7 @@ interface STAKE_VAULT_Interface {
      * @param _tokenId token to check
      * @return Stake of _tokenId
      */
-    function stakeOfToken(uint256 _tokenId) external returns (uint256);
+    function stakeOfToken(uint256 _tokenId) external view returns (uint256);
 
     /**
      * @dev Pauses contract.

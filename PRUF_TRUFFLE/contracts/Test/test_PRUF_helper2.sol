@@ -255,7 +255,7 @@ contract Helper2 is Ownable, BASIC {
      * @dev Retrieve node_data @ _node
      */
     function helper_getExtendedNodeData(uint32 _node)
-        external
+        external view
         returns (Node memory)
     {
         //^^^^^^^checks^^^^^^^^^
@@ -267,7 +267,7 @@ contract Helper2 is Ownable, BASIC {
      * @dev Retrieve node_data @ _node
      */
     function helper_getExtendedNodeData_nostruct(uint32 _node)
-        external
+        external view
         returns (
             uint8,
             address,
