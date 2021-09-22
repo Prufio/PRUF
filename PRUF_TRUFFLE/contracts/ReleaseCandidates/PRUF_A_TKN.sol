@@ -11,8 +11,7 @@ __/\\\\\\\\\\\\\ _____/\\\\\\\\\ _______/\\__/\\ ___/\\\\\\\\\\\\\\\
          *-------------------------------------------------------------------*/
 
 /**-----------------------------------------------------------------
- *  TO DO
- * Check and see if A_TKN can be permitted in all nodes to prevent safeTransferFrom->writeRecord conflict due to it not being a default authorized contract for nodes CTS:EXAMINE
+ *  TO DO 
  *-----------------------------------------------------------------
  * PRUF ASSET NFT CONTRACT
  *---------------------------------------------------------------*/
@@ -139,8 +138,6 @@ contract A_TKN is
         );
         _;
     }
-
-    event REPORT(string _msg); //CTS:EXAMINE not used
 
     //---------------------------------------Public Functions-------------------------------
 

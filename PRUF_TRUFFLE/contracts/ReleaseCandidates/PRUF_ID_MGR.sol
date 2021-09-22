@@ -73,9 +73,6 @@ contract ID_MGR is Pausable, AccessControl {
         _;
     }
 
-    //----------------------EVENTS----------------------//
-    event REPORT(string _msg); //CTS:EXAMINE unused
-
     /**
      * @dev Mint an Asset token
      * @param _recipientAddress - Address to mint token into

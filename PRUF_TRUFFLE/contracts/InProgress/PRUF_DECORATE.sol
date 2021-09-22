@@ -283,7 +283,7 @@ contract DECORATE is CORE {
      * @param _nonMutableStorage1 - field for permanent external asset data
      * @param _nonMutableStorage2 - field for permanent external asset data
      */
-    function addNonMutableNote(
+    function addNonMutableStorage(
         uint256 _tokenID,
         address _tokenContract,
         bytes32 _nonMutableStorage1,

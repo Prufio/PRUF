@@ -298,7 +298,6 @@ abstract contract BASIC is
      */
     function getContractInfo(address _addr, uint32 _node)
         internal
-        view
         returns (ContractDataHash memory)
     {
         //^^^^^^^checks^^^^^^^^^

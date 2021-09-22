@@ -12,7 +12,6 @@ __/\\\\\\\\\\\\\ _____/\\\\\\\\\ _______/\\__/\\ ___/\\\\\\\\\\\\\\\
 
 /**-----------------------------------------------------------------
  *  TO DO
- * //CTS:EXAMINE Run through interfaces, make sure is up to date.
  *---------------------------------------------------------------*/
 
 /**-----------------------------------------------------------------
@@ -52,10 +51,7 @@ contract STOR is AccessControl, ReentrancyGuard, Pausable {
     mapping(uint256 => DefaultContract) private defaultContracts; //default contracts for node creation
     mapping(bytes32 => Record) private database; // Main Data Storage
 
-    //address private NODE_TKN_Address; CTS:EXAMINE
     NODE_TKN_Interface private NODE_TKN; //erc721_token prototype initialization
-
-    //address internal NODE_MGR_Address; CTS:EXAMINE
     NODE_MGR_Interface internal NODE_MGR; // Set up external contract interface for NODE_MGR
 
     constructor() {
@@ -200,8 +196,8 @@ contract STOR is AccessControl, ReentrancyGuard, Pausable {
 
     //-----------------------------------------------Events------------------------------------------------//
     // Emits a report using string,b32
-    event REPORT(string _msg, bytes32 b32); //CTS:EXAMINE, did we decide we still wanted this?
-
+    event REPORT(string _msg, bytes32 b32); //Needed
+    
     //--------------------------------Public Functions---------------------------------//
 
     /**
@@ -413,7 +409,7 @@ contract STOR is AccessControl, ReentrancyGuard, Pausable {
         Record memory rec;
 
         if (
-            contractInfo[contractAddressToName[_msgSender()]][_node] == 1 //CTS:EXAMINE, what do management types do to how we handle "custodial" status' ?? change this??? (big)
+            contractInfo[contractAddressToName[_msgSender()]][_node] == 1 //CTS proly not. What do management types do to how we handle "custodial" status' ?? change this??? (big)
         ) {
             rec.assetStatus = 0;
         } else {
