@@ -84,7 +84,7 @@ abstract contract BASIC is
 
     // --------------------------------------Events--------------------------------------------//
 
-    event REPORT(string _msg);
+    event REPORT(string _msg); //not used
 
     // --------------------------------------Modifiers--------------------------------------------//
     /**
@@ -131,7 +131,8 @@ abstract contract BASIC is
         _;
     }
 
-    //----------------------External Admin functions / isContractAdmin----------------------//
+    //----------------------External functions----------------------//
+
     /**
      * @dev Resolve Contract Addresses from STOR
      */
@@ -142,6 +143,7 @@ abstract contract BASIC is
         isContractAdmin
     {
         //^^^^^^^checks^^^^^^^^^
+
         NODE_TKN_Address = STOR.resolveContractAddress("NODE_TKN");
         NODE_TKN = NODE_TKN_Interface(NODE_TKN_Address);
 
@@ -187,7 +189,6 @@ abstract contract BASIC is
         //^^^^^^^effects^^^^^^^^^
     }
 
-    //--------------------------------------External functions--------------------------------------------//
     /**
      * @dev Compliance for erc721 reciever
      * See OZ documentation
@@ -199,25 +200,29 @@ abstract contract BASIC is
         bytes calldata
     ) external virtual override returns (bytes4) {
         //^^^^^^^checks^^^^^^^^^
+
         return this.onERC721Received.selector;
         //^^^^^^^interactions^^^^^^^^^
     }
 
     /***
      * @dev Triggers stopped state. (pausable)
-     *
      */
     function pause() external isPauser {
+        //^^^^^^^checks^^^^^^^^^
+
         _pause();
-        //^^^^^^^interactions^^^^^^^^^
+        //^^^^^^^effects^^^^^^^^^
     }
 
     /***
      * @dev Returns to normal state. (pausable)
      */
     function unpause() external isPauser {
+        //^^^^^^^checks^^^^^^^^^
+
         _unpause();
-        //^^^^^^^interactions^^^^^^^^^
+        //^^^^^^^effects^^^^^^^^^
     }
 
     /**
@@ -249,11 +254,12 @@ abstract contract BASIC is
         uint256 _amount
     ) external virtual isContractAssetAdmin nonReentrant {
         //^^^^^^^checks^^^^^^^^^
+        
         IERC20(_tokenContract).transferFrom(address(this), _to, _amount);
         //^^^^^^^interactions^^^^^^^^^
     }
 
-    //--------------------------------------------------------------------------------------INTERNAL functions
+    //-----------------------------------------Internal functions---------------------------------------------
 
     /**
      * @dev Get a User type Record from Node Manager for _msgSender(), by node
@@ -316,6 +322,6 @@ abstract contract BASIC is
         Record memory rec = STOR.retrieveRecord(_idxHash);
 
         return rec; // Returns Record struct rec
-        //^^^^^^^effects/interactions^^^^^^^^^
+        //^^^^^^^interactions^^^^^^^^^
     }
 }

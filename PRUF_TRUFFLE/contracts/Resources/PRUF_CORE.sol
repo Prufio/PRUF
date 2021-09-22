@@ -1,4 +1,4 @@
-/**--------------------------------------------------------PRüF0.8.7
+/**--------------------------------------------------------PRüF0.8.8
 __/\\\\\\\\\\\\\ _____/\\\\\\\\\ _______/\\__/\\ ___/\\\\\\\\\\\\\\\        
  _\/\\\/////////\\\ _/\\\///////\\\ ____\//__\//____\/\\\///////////__       
   _\/\\\_______\/\\\_\/\\\_____\/\\\ ________________\/\\\ ____________      
@@ -11,10 +11,6 @@ __/\\\\\\\\\\\\\ _____/\\\\\\\\\ _______/\\__/\\ ___/\\\\\\\\\\\\\\\
          *-------------------------------------------------------------------*/
 
 /**-----------------------------------------------------------------
- *  TO DO
- *-----------------------------------------------------------------
- * IMPORTANT!!! NO EXTERNAL OR PUBLIC FUNCTIONS ALLOWED IN THIS CONTRACT!!!!!!!!
- *-----------------------------------------------------------------
  * PRUF core provides switches core functionality covering cost getters, payment processing, withdrawls, common test conditionals, and setters for data in storage
  *---------------------------------------------------------------*/
 
@@ -25,7 +21,8 @@ import "../Imports/security/ReentrancyGuard.sol";
 import "../Resources/PRUF_BASIC.sol";
 
 contract CORE is BASIC {
-    //--------------------------------------------------------------------------------------Storage Writing internal functions
+
+    //--------------------------------------Internal functions------------------------------------------------
 
     /**
      * @dev create a Record in Storage @ idxHash (SETTER)
@@ -174,8 +171,6 @@ contract CORE is BASIC {
         //^^^^^^^interactions^^^^^^^^^
     }
 
-    //--------------------------------------------------------------------------------------Payment internal functions
-
     /**
      * @dev Send payment to appropriate adresseses for payable function
      * @param _node - selected node for payment
@@ -201,10 +196,9 @@ contract CORE is BASIC {
 
         pricing.NTHprice = _NTHprice;
         pricing.rootPrice = pricing.rootPrice + prufShare;
-        //^^^^^^^effects^^^^^^^^^
 
         deductPayment(pricing);
-        //^^^^^^^interactions^^^^^^^^^
+        //^^^^^^^effects^^^^^^^^^
     }
 
     /**
@@ -228,10 +222,9 @@ contract CORE is BASIC {
         half = pricing.NTHprice / 2;
         pricing.rootPrice = pricing.rootPrice + half;
         pricing.NTHprice = pricing.NTHprice - half;
-        //^^^^^^^effects^^^^^^^^^
 
         deductPayment(pricing);
-        //^^^^^^^interactions^^^^^^^^^
+        //^^^^^^^effects^^^^^^^^^
     }
 
     /**
@@ -253,8 +246,6 @@ contract CORE is BASIC {
         }
         //^^^^^^^checks^^^^^^^^^
 
-        //UTIL_TKN.payForService(_msgSender(), _pricing); //-- NON LEGACY TOKEN CONTRACT
-
         UTIL_TKN.payForService( //LEGACY TOKEN CONTRACT
             _msgSender(),
             _pricing.rootAddress,
@@ -265,14 +256,14 @@ contract CORE is BASIC {
         //^^^^^^^interactions^^^^^^^^^
     }
 
-    //----------------------------------------------------------------------STATUS CHECKS
-
     /**
      * @dev Check to see if record is lost or stolen
      * @param _assetStatus - status to check
-     * returns 170 if true, otherise 0
+     * @return 170 if true, otherise 0
      */
     function isLostOrStolen(uint8 _assetStatus) internal pure returns (uint8) {
+        //^^^^^^^checks^^^^^^^^^
+
         if (
             (_assetStatus != 3) &&
             (_assetStatus != 4) &&
@@ -289,9 +280,11 @@ contract CORE is BASIC {
     /**
      * @dev Check to see if record is in escrow status
      * @param _assetStatus - status to check
-     * returns 170 if true, otherise 0
+     * @return 170 if true, otherise 0
      */
     function isEscrow(uint8 _assetStatus) internal pure returns (uint8) {
+        //^^^^^^^checks^^^^^^^^^
+
         if (
             (_assetStatus != 6) && (_assetStatus != 50) && (_assetStatus != 56)
         ) {
@@ -305,9 +298,11 @@ contract CORE is BASIC {
     /**
      * @dev Check to see if record needs imported
      * @param _assetStatus - status to check
-     * returns 170 if true, otherise 0
+     * @return 170 if true, otherise 0
      */
     function needsImport(uint8 _assetStatus) internal pure returns (uint8) {
+        //^^^^^^^checks^^^^^^^^^
+
         if (
             (_assetStatus != 5) &&
             (_assetStatus != 55) &&
