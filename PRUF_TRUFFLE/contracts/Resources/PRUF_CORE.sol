@@ -22,8 +22,6 @@ import "../Resources/PRUF_BASIC.sol";
 
 contract CORE is BASIC {
 
-    //--------------------------------------Internal functions------------------------------------------------
-
     /**
      * @dev create a Record in Storage @ idxHash (SETTER)
      * @param _idxHash - Asset Index
