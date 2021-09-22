@@ -141,17 +141,7 @@ contract A_TKN is
 
     //---------------------------------------Public Functions-------------------------------
 
-    /**
-     * @dev return an adresses "cold wallet" status
-     * WALLET ADDRESSES SET TO "Cold" DO NOT WORK WITH TRUSTED_AGENT FUNCTIONS
-     * @param _addr - address to check
-     * @return 170 if adress is set to "cold wallet" status
-     */
-    function isColdWallet(address _addr) public view returns (uint256) {
-        return coldWallet[_addr];
-        //^^^^^^^interactions^^^^^^^^^
-    }
-
+    
     /**
      * @dev See {IERC721Metadata-tokenURI}.
      * @param tokenId - token to have URI checked
@@ -336,6 +326,18 @@ contract A_TKN is
     }
 
     /**
+     * @dev return an adresses "cold wallet" status
+     * WALLET ADDRESSES SET TO "Cold" DO NOT WORK WITH TRUSTED_AGENT FUNCTIONS
+     * @param _addr - address to check
+     * @return 170 if adress is set to "cold wallet" status
+     */
+    function isColdWallet(address _addr) public view returns (uint256) {
+        return coldWallet[_addr];
+        //^^^^^^^interactions^^^^^^^^^
+    }
+
+
+    /**
      * @dev Set calling wallet to a "cold Wallet" that cannot be manipulated by TRUSTED_AGENT or PAYABLE permissioned functions
      * WALLET ADDRESSES SET TO "Cold" DO NOT WORK WITH TRUSTED_AGENT FUNCTIONS and must be unset from cold before it can interact with
      * contract functions.
@@ -382,20 +384,20 @@ contract A_TKN is
     
     /**
      * @dev Set new token URI String
-     * @param tokenId - Token ID to set URI
+     * @param _tokenId - Token ID to set URI
      * @param _tokenURI - URI string to atatch to token
      * @return tokenId
      */
-    function setURI(uint256 tokenId, string calldata _tokenURI)
+    function setURI(uint256 _tokenId, string calldata _tokenURI)
         external
         returns (uint256)
     {
-        bytes32 _idxHash = bytes32(tokenId);
+        bytes32 _idxHash = bytes32(_tokenId);
         Record memory rec = getRecord(_idxHash);
 
         if (NODE_MGR.getSwitchAt(rec.node, 1) == 1) {
             //if switch at bit 1 (0) is set
-            string memory oldTokenURI = tokenURI(tokenId);
+            string memory oldTokenURI = tokenURI(_tokenId);
 
             require(
                 bytes(oldTokenURI).length == 0,
@@ -409,13 +411,13 @@ contract A_TKN is
         }
 
         require(
-            _isApprovedOrOwner(_msgSender(), tokenId),
+            _isApprovedOrOwner(_msgSender(), _tokenId),
             "AT:SU:Caller !owner nor approved"
         );
         //^^^^^^^checks^^^^^^^^^
 
-        _setTokenURI(tokenId, _tokenURI);
-        return tokenId;
+        _setTokenURI(_tokenId, _tokenURI);
+        return _tokenId;
         //^^^^^^^effects^^^^^^^^^
     }
 
@@ -492,14 +494,14 @@ contract A_TKN is
 
     /**
      * @dev Safely burns a token and sets the corresponding RGT to zero in storage.
-     * @param tokenId - Token ID to discard
+     * @param _tokenId - Token ID to discard
      */
-    function discard(uint256 tokenId) external nonReentrant whenNotPaused {
-        bytes32 _idxHash = bytes32(tokenId);
+    function discard(uint256 _tokenId) external nonReentrant whenNotPaused {
+        bytes32 _idxHash = bytes32(_tokenId);
         //Record memory rec = getRecord(_idxHash);
 
         require(
-            _isApprovedOrOwner(_msgSender(), tokenId),
+            _isApprovedOrOwner(_msgSender(), _tokenId),
             "AT:D:Transfer caller !owner nor approved"
         );
         //^^^^^^^checks^^^^^^^^^
@@ -507,7 +509,7 @@ contract A_TKN is
         RCLR.discard(_idxHash, _msgSender());
         //^^^^^^^interactions^^^^^^^^^
 
-        _burn(tokenId);
+        _burn(_tokenId);
         //^^^^^^^effects^^^^^^^^^ (out of order here, but verified and necescary)
     }
 

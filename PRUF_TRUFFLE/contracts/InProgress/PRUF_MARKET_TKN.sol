@@ -154,109 +154,37 @@ contract MARKET_TKN is
 
     /**
      * @dev Set new token URI String
-     * @param tokenId - Token ID to set URI
+     * @param _tokenId - Token ID to set URI
      * @param _tokenURI - URI string to atatch to token
      * returns Token ID
      */
-    function setURI(uint256 tokenId, string calldata _tokenURI)
+    function setURI(uint256 _tokenId, string calldata _tokenURI)
         external
         returns (uint256)
     {
         require(
-            _isApprovedOrOwner(_msgSender(), tokenId),
+            _isApprovedOrOwner(_msgSender(), _tokenId),
             "AT:SURI:Caller !owner nor approved"
         );
         //^^^^^^^checks^^^^^^^^^
 
-        _setTokenURI(tokenId, _tokenURI);
-        return tokenId;
+        _setTokenURI(_tokenId, _tokenURI);
+        return _tokenId;
         //^^^^^^^interactions^^^^^^^^^
     }
 
     /**
      * @dev See if consignment token exists
-     * @param tokenId - Token ID to set URI
+     * @param _tokenId - Token ID to set URI
      * returns 170 if token exists, otherwise 0
      */
-    function tokenExists(uint256 tokenId) external view returns (uint256) {
-        if (_exists(tokenId)) {
+    function tokenExists(uint256 _tokenId) external view returns (uint256) {
+        if (_exists(_tokenId)) {
             return 170;
         } else {
             return 0;
         }
     }
-
-    // /**
-    //  * @dev Transfers the ownership of a given token ID to another address.
-    //  * Usage of this method is discouraged, use {safeTransferFrom} whenever possible.
-    //  * Requires the _msgSender() to be the owner, approved, or operator.
-    //  * @param _from current owner of the token
-    //  * @param _to address to receive the ownership of the given token ID
-    //  * @param _tokenId uint256 ID of the token to be transferred
-    //  */
-    // function transferFrom(
-    //     address _from,
-    //     address _to,
-    //     uint256 _tokenId
-    // ) public override nonReentrant {
-    //     require(
-    //         _isApprovedOrOwner(_msgSender(), _tokenId),
-    //         "AT:TF:Transfer caller is not owner nor approved"
-    //     );
-
-    //     //^^^^^^^checks^^^^^^^^
-    //     _transfer(_from, _to, _tokenId);
-    //     //^^^^^^^effects^^^^^^^^^
-    // }
-
-    // /**
-    //  * @dev Safely transfers the ownership of a given token ID to another address
-    //  * If the target address is a contract, it must implement {IERC721Receiver-onERC721Received},
-    //  * which is called upon a safe transfer, and return the magic value
-    //  * `bytes4(keccak256("onERC721Received(address,address,uint256,bytes)"))`; otherwise,
-    //  * the transfer is reverted.
-    //  * Requires the _msgSender() to be the owner, approved, or operator
-    //  * @param _from current owner of the token
-    //  * @param _to address to receive the ownership of the given token ID
-    //  * @param _tokenId uint256 ID of the token to be transferred
-    //  */
-    // function safeTransferFrom(
-    //     address _from,
-    //     address _to,
-    //     uint256 _tokenId
-    // ) public override {
-    //     safeTransferFrom(_from, _to, _tokenId, "");
-    //     //^^^^^^^interactions^^^^^^^^^
-    // }
-
-    // /**
-    //  * @dev Safely transfers the ownership of a given token ID to another address
-    //  * If the target address is a contract, it must implement {IERC721Receiver-onERC721Received},
-    //  * which is called upon a safe transfer, and return the magic value
-    //  * `bytes4(keccak256("onERC721Received(address,address,uint256,bytes)"))`; otherwise,
-    //  * the transfer is reverted.
-    //  * Requires the _msgSender() to be the owner, approved, or operator
-    //  * @param _from current owner of the token
-    //  * @param _to address to receive the ownership of the given token ID
-    //  * @param _tokenId uint256 ID of the token to be transferred
-    //  * @param _data bytes data to send along with a safe transfer check
-    //  */
-    // function safeTransferFrom(
-    //     address _from,
-    //     address _to,
-    //     uint256 _tokenId,
-    //     bytes memory _data
-    // ) public virtual override nonReentrant {
-    //     require(
-    //         _isApprovedOrOwner(_msgSender(), _tokenId),
-    //         "AT:STF:Transfer caller !owner nor approved"
-    //     );
-    //     //^^^^^^^checks^^^^^^^^^
-
-    //     //^^^^^^^effects^^^^^^^^^
-    //     _safeTransfer(_from, _to, _tokenId, _data);
-    //     //^^^^^^^interactions^^^^^^^^^
-    // }
 
     /**
      * @dev Safely burns an consignment token, consignment data
@@ -279,7 +207,7 @@ contract MARKET_TKN is
     /**
      * @dev See {IERC721Metadata-tokenURI}.
      */
-    function tokenURI(uint256 tokenId)
+    function tokenURI(uint256 _tokenId)
         public
         view
         virtual
@@ -287,11 +215,11 @@ contract MARKET_TKN is
         returns (string memory)
     {
         require(
-            _exists(tokenId),
+            _exists(_tokenId),
             "ERC721URIStorage: URI query for nonexistent token"
         );
 
-        string memory _tokenURI = _tokenURIs[tokenId];
+        string memory _tokenURI = _tokenURIs[_tokenId];
         string memory base = _baseURI();
 
         // If there is no base URI, return the token URI.
@@ -303,7 +231,7 @@ contract MARKET_TKN is
             return string(abi.encodePacked(base, _tokenURI));
         }
 
-        return super.tokenURI(tokenId);
+        return super.tokenURI(_tokenId);
     }
 
     /**
@@ -395,11 +323,11 @@ contract MARKET_TKN is
      *
      * Emits a {Transfer} event.
      */
-    function _burn(uint256 tokenId) internal virtual override {
-        super._burn(tokenId);
+    function _burn(uint256 _tokenId) internal virtual override {
+        super._burn(_tokenId);
 
-        if (bytes(_tokenURIs[tokenId]).length != 0) {
-            delete _tokenURIs[tokenId];
+        if (bytes(_tokenURIs[_tokenId]).length != 0) {
+            delete _tokenURIs[_tokenId];
         }
     }
 
