@@ -683,7 +683,7 @@ contract NODE_MGR is BASIC {
          node: Node index
      }
      */
-    function getServiceCosts(uint32 _node, uint16 _service)
+    function getInvoice(uint32 _node, uint16 _service)
         external
         view
         returns (Invoice memory)

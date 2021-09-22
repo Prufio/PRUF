@@ -143,7 +143,7 @@ contract CORE_MAL is BASIC {
         //^^^^^^^checks^^^^^^^^^
         Invoice memory pricing;
         //^^^^^^^effects^^^^^^^^^
-        pricing = NODE_MGR.getServiceCosts(_node, _service);
+        pricing = NODE_MGR.getInvoice(_node, _service);
         deductPayment(pricing);
         //^^^^^^^interactions^^^^^^^^^
     }

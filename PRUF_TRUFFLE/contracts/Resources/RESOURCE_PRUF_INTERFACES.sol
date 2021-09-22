@@ -237,7 +237,7 @@ interface NODE_MGR_Interface {
     /*
      * @dev Retrieve function costs per node, per service type, in Wei
      */
-    function getServiceCosts(uint32 _node, uint16 _service)
+    function getInvoice(uint32 _node, uint16 _service)
         external
         view
         returns (Invoice memory);

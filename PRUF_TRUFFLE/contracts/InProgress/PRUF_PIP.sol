@@ -134,7 +134,7 @@ contract PIP is CORE {
     function deductImportRecordCosts(uint32 _node) internal whenNotPaused {
         //^^^^^^^checks^^^^^^^^^
 
-        Invoice memory pricing = NODE_MGR.getServiceCosts(_node, 1);
+        Invoice memory pricing = NODE_MGR.getInvoice(_node, 1);
 
         pricing.rootPrice = pricing.rootPrice / importDiscount;
         pricing.NTHprice = pricing.NTHprice / importDiscount;

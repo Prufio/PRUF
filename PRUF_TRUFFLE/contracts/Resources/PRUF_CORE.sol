@@ -193,7 +193,7 @@ contract CORE is BASIC {
             "C:DSC:invalid discount value for price calculation"
         );
         //^^^^^^^checks^^^^^^^^^
-        Invoice memory pricing = NODE_MGR.getServiceCosts(_node, _service);
+        Invoice memory pricing = NODE_MGR.getInvoice(_node, _service);
 
         uint256 percent = pricing.NTHprice / uint256(100); //calculate 1% of listed NTH price
         uint256 _NTHprice = nodeNetPercent * percent; //calculate the share proprotrion% * 1%
@@ -222,7 +222,7 @@ contract CORE is BASIC {
         Invoice memory pricing;
         uint256 half;
 
-        pricing = NODE_MGR.getServiceCosts(_node, 1);
+        pricing = NODE_MGR.getInvoice(_node, 1);
         pricing.rootAddress = _prevOwner;
 
         half = pricing.NTHprice / 2;
