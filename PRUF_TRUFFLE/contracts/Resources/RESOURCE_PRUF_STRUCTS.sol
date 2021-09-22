@@ -113,7 +113,7 @@ struct Costs {
 
 struct Invoice {
     //invoice struct to facilitate payment messaging in-contract
-    uint32 node;
+    //uint32 node;
     address rootAddress;
     address NTHaddress;
     uint256 rootPrice;
