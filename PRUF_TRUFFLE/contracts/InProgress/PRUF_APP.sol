@@ -11,7 +11,7 @@ _________\/// _____________\/// _______\/// __\///////// __\/// _____________
 *---------------------------------------------------------------------------*/
 
 /*-----------------------------------------------------------------
- * CTS:EXAMINE description of contract
+ * Custodial Application for PRuF Asset management
  *----------------------------------------------------------------*/
 
 // SPDX-License-Identifier: UNLICENSED
@@ -196,7 +196,7 @@ contract APP is CORE {
      * @param _nonMutableStorage1 - field for permanent external asset data
      * @param _nonMutableStorage2 - field for permanent external asset data
      */
-    function addNonMutableNote(
+    function addNonMutableStorage(
         bytes32 _idxHash,
         bytes32 _rgtHash,
         bytes32 _nonMutableStorage1,

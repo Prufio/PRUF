@@ -237,7 +237,7 @@ contract APP_NC is CORE {
      * @param _nonMutableStorage1 - field for permanent external asset data
      * @param _nonMutableStorage2 - field for permanent external asset data
      */
-    function addNonMutableNote( //CTS:EXAMINE shold be changed to addNonMutableStorage ??
+    function addNonMutableStorage(
         bytes32 _idxHash,
         bytes32 _nonMutableStorage1,
         bytes32 _nonMutableStorage2
