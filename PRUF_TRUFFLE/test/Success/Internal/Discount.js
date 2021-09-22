@@ -1689,7 +1689,7 @@ contract("Discount", (accounts) => {
   it("Should retrieve asset12", async () => {
     var Record = "";
 
-    return await NODE_MGR.getServiceCosts(
+    return await NODE_MGR.getInvoice(
       "1",
       "1",
       { from: account2 },

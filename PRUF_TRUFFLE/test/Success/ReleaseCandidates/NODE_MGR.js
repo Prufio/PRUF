@@ -1823,7 +1823,7 @@ contract("TheWorks", (accounts) => {
   it("Should return serviceCost 1 @ Node 1000001", async () => {
     var Record = [];
 
-    return await NODE_MGR.getServiceCosts(
+    return await NODE_MGR.getInvoice(
       "1000001",
       "1",
       { from: account1 },

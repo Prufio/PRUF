@@ -18,9 +18,8 @@ __/\\\\\\\\\\\\\ _____/\\\\\\\\\ _______/\\__/\\ ___/\\\\\\\\\\\\\\\
 /**-----------------------------------------------------------------
  *  PRUF STOR  is the primary data repository for the PRUF protocol. No direct user writes are permitted in STOR, all data must come from explicitly approved contracts.
  *  PRUF STOR  stores records in a map of Records, foreward and reverse name resolution for approved contracts, as well as contract authorization data.
- *---------------------------------------------------------------*/
-
-/**-----------------------------------------------------------------
+ *
+ *
  * IMPORTANT NOTE : DO NOT REMOVE FROM CODE:
  *      Verification of rgtHash in curated, certain management types are not secure beyond the honorable intentions
  * of authorized recorders. All blockchain info is readable, so a bad actor could trivially obtain a copy of the
@@ -53,10 +52,10 @@ contract STOR is AccessControl, ReentrancyGuard, Pausable {
     mapping(uint256 => DefaultContract) private defaultContracts; //default contracts for node creation
     mapping(bytes32 => Record) private database; // Main Data Storage
 
-    //address private NODE_TKN_Address;
+    //address private NODE_TKN_Address; CTS:EXAMINE
     NODE_TKN_Interface private NODE_TKN; //erc721_token prototype initialization
 
-    //address internal NODE_MGR_Address;
+    //address internal NODE_MGR_Address; CTS:EXAMINE
     NODE_MGR_Interface internal NODE_MGR; // Set up external contract interface for NODE_MGR
 
     constructor() {
@@ -139,12 +138,16 @@ contract STOR is AccessControl, ReentrancyGuard, Pausable {
         _;
     }
 
+    //--------------------------------Private Status-check Functions---------------------------------//
+
     /**
      * @dev Check to see if a status matches lost or stolen status
      * @param _assetStatus status to check against list
-     * returns 0 if supplied status is not a lost or stolen stat, 170 if it is
+     * @return 0 if supplied status is not a lost or stolen stat, 170 if it is
      */
     function isLostOrStolen(uint8 _assetStatus) private pure returns (uint8) {
+        //^^^^^^^checks^^^^^^^^^
+
         if (
             (_assetStatus != 3) &&
             (_assetStatus != 4) &&
@@ -161,9 +164,11 @@ contract STOR is AccessControl, ReentrancyGuard, Pausable {
     /**
      * @dev Check to see if a status matches transferred status
      * @param _assetStatus status to check against list
-     * returns 0 if supplied status is not a transferred stat, 170 if it is
+     * @return 0 if supplied status is not a transferred stat, 170 if it is
      */
     function isTransferred(uint8 _assetStatus) private pure returns (uint8) {
+        //^^^^^^^checks^^^^^^^^^
+
         if ((_assetStatus != 5) && (_assetStatus != 55)) {
             return 0;
         } else {
@@ -175,9 +180,11 @@ contract STOR is AccessControl, ReentrancyGuard, Pausable {
     /**
      * @dev Check to see if a status matches transferred status
      * @param _assetStatus status to check against list
-     * returns 0 if supplied status is not an escrow stat, 170 if it is
+     * @return 0 if supplied status is not an escrow stat, 170 if it is
      */
     function isEscrow(uint8 _assetStatus) private pure returns (uint8) {
+        //^^^^^^^checks^^^^^^^^^
+
         if (
             (_assetStatus != 6) &&
             (_assetStatus != 50) &&
@@ -193,9 +200,38 @@ contract STOR is AccessControl, ReentrancyGuard, Pausable {
 
     //-----------------------------------------------Events------------------------------------------------//
     // Emits a report using string,b32
-    event REPORT(string _msg, bytes32 b32);
+    event REPORT(string _msg, bytes32 b32); //CTS:EXAMINE, did we decide we still wanted this?
 
-    //--------------------------------Internal Admin functions / isContractAdmin---------------------------------//
+    //--------------------------------Public Functions---------------------------------//
+
+    /**
+     * @dev Authorize / Deauthorize contract NAMES permitted to make record modifications, per node
+     * allows ACtokenHolder to Authorize / Deauthorize specific contracts to work within their node
+     * @param   _name -  Name of contract being authed
+     * @param   _node - affected node
+     * @param   _contractAuthLevel - auth level to set for thae contract, in that node
+     */
+    function enableContractForNode(
+        string memory _name,
+        uint32 _node,
+        uint8 _contractAuthLevel
+    ) public {
+        require(
+            (NODE_TKN.ownerOf(_node) == _msgSender()) ||
+                (_msgSender() == contractNameToAddress["NODE_MGR"]),
+            "S:ECFAC: Caller not ACtokenHolder or NODE_MGR"
+        );
+
+        //^^^^^^^checks^^^^^^^^^
+
+        contractInfo[_name][_node] = _contractAuthLevel; //does not pose an partial record overwrite risk
+        //^^^^^^^effects^^^^^^^^^
+
+        emit REPORT("ACDA", bytes32(uint256(_contractAuthLevel))); //report access to the internal user database
+        //^^^^^^^interactions^^^^^^^^^
+    }
+
+    //--------------------------------External Functions---------------------------------//
 
     /**
      * @dev Triggers stopped state. (pausable)
@@ -204,7 +240,7 @@ contract STOR is AccessControl, ReentrancyGuard, Pausable {
         //^^^^^^^checks^^^^^^^^^
 
         _pause();
-        //^^^^^^^Interactions^^^^^^^^^
+        //^^^^^^^effects^^^^^^^^^
     }
 
     /**
@@ -214,7 +250,7 @@ contract STOR is AccessControl, ReentrancyGuard, Pausable {
         //^^^^^^^checks^^^^^^^^^
 
         _unpause();
-        //^^^^^^^Interactions^^^^^^^^^
+        //^^^^^^^effects^^^^^^^^^
     }
 
     /**
@@ -238,8 +274,8 @@ contract STOR is AccessControl, ReentrancyGuard, Pausable {
         contractNameToAddress[_contractName] = _contractAddr;
         contractAddressToName[_contractAddr] = _contractName;
 
-        NODE_TKN = NODE_TKN_Interface(contractNameToAddress["NODE_TKN"]); // cheaper than keking to check
-        NODE_MGR = NODE_MGR_Interface(contractNameToAddress["NODE_MGR"]); // cheaper than keking to check
+        NODE_TKN = NODE_TKN_Interface(contractNameToAddress["NODE_TKN"]);
+        NODE_MGR = NODE_MGR_Interface(contractNameToAddress["NODE_MGR"]);
         //^^^^^^^effects^^^^^^^^^
 
         emit REPORT("ACDA", bytes32(uint256(_contractAuthLevel))); //report access to the internal user database
@@ -247,8 +283,7 @@ contract STOR is AccessControl, ReentrancyGuard, Pausable {
     }
 
     /**
-     * @dev set the default list of 11 contracts (zero index) to be applied to Nodees
-     * APP_NC, NODE_MGR, NODE_TKN, A_TKN, ECR_MGR, RCLR, PIP, PURCHASE, DECORATE, WRAP, etc.
+     * @dev set the default list of 11 contracts (zero index) to be applied to Noees
      * @param _contractNumber - 0-10
      * @param _name - name
      * @param _contractAuthLevel - authLevel
@@ -258,8 +293,9 @@ contract STOR is AccessControl, ReentrancyGuard, Pausable {
         string calldata _name,
         uint8 _contractAuthLevel
     ) external isContractAdmin {
-        //^^^^^^^checks^^^^^^^^^
         require(_contractNumber <= 10, "S:ADC: Contract number > 10");
+        //^^^^^^^checks^^^^^^^^^
+
         defaultContracts[_contractNumber].name = _name;
         defaultContracts[_contractNumber].contractType = _contractAuthLevel;
         //^^^^^^^effects^^^^^^^^^
@@ -268,7 +304,7 @@ contract STOR is AccessControl, ReentrancyGuard, Pausable {
     /**
      * @dev retrieve a record from the default list of 11 contracts to be applied to Nodees
      * @param _contractNumber to look up (0-10)
-     * returns the name and auth level
+     * @return the name and auth level of indexed contract
      */
     function getDefaultContract(uint256 _contractNumber)
         external
@@ -277,6 +313,7 @@ contract STOR is AccessControl, ReentrancyGuard, Pausable {
         returns (DefaultContract memory)
     {
         //^^^^^^^checks^^^^^^^^^
+
         return (defaultContracts[_contractNumber]);
         //^^^^^^^interactions^^^^^^^^^
     }
@@ -351,41 +388,12 @@ contract STOR is AccessControl, ReentrancyGuard, Pausable {
     }
 
     /**
-     * @dev Authorize / Deauthorize contract NAMES permitted to make record modifications, per node
-     * allows ACtokenHolder to Authorize / Deauthorize specific contracts to work within their node
-     * @param   _name -  Name of contract being authed
-     * @param   _node - affected node
-     * @param   _contractAuthLevel - auth level to set for thae contract, in that node
-     */
-    function enableContractForNode(
-        string memory _name,
-        uint32 _node,
-        uint8 _contractAuthLevel
-    ) public {
-        require(
-            (NODE_TKN.ownerOf(_node) == _msgSender()) ||
-                (_msgSender() == contractNameToAddress["NODE_MGR"]),
-            "S:ECFAC: Caller not ACtokenHolder or NODE_MGR"
-        );
-
-        //^^^^^^^checks^^^^^^^^^
-
-        contractInfo[_name][_node] = _contractAuthLevel; //does not pose an partial record overwrite risk
-        //^^^^^^^effects^^^^^^^^^
-
-        emit REPORT("ACDA", bytes32(uint256(_contractAuthLevel))); //report access to the internal user database
-        //^^^^^^^interactions^^^^^^^^^
-    }
-
-    //--------------------------------External "write" contract functions / authuser---------------------------------//
-
-    /**
      * @dev Make a new record, writing to the 'database' mapping with basic initial asset data
+     * calling contract must be authorized in relevant node
      * @param   _idxHash - asset ID
      * @param   _rgtHash - rightsholder id hash
      * @param   _node - node in which to create the asset
      * @param   _countDownStart - initial value for decrement-only value
-     * calling contract must be authorized in relevant node
      */
     function newRecord(
         bytes32 _idxHash,
@@ -405,7 +413,7 @@ contract STOR is AccessControl, ReentrancyGuard, Pausable {
         Record memory rec;
 
         if (
-            contractInfo[contractAddressToName[_msgSender()]][_node] == 1 //EXAMINE, what do management types do to how we handle "custodial" status' ?? change this??? (big)
+            contractInfo[contractAddressToName[_msgSender()]][_node] == 1 //CTS:EXAMINE, what do management types do to how we handle "custodial" status' ?? change this??? (big)
         ) {
             rec.assetStatus = 0;
         } else {
@@ -418,8 +426,6 @@ contract STOR is AccessControl, ReentrancyGuard, Pausable {
 
         database[_idxHash] = rec;
         //^^^^^^^effects^^^^^^^^^
-
-        //^^^^^^^interactions^^^^^^^^^
     }
 
     /**
@@ -500,13 +506,13 @@ contract STOR is AccessControl, ReentrancyGuard, Pausable {
     {
         Record memory rec = database[_idxHash];
 
-        require(_newNode != 0, "S:CAC: Cannot set node=0");
+        require(_newNode != 0, "S:CN: Node = 0");
         require( //require new node is in the same root as old node
             NODE_MGR.isSameRootNode(_newNode, rec.node) == 170,
-            "S:CAC: Cannot mod node to new root"
+            "S:CN: Cannot mod node to new root"
         );
-        require(isLostOrStolen(rec.assetStatus) == 0, "S:CAC: L/S asset"); //asset cannot be in lost or stolen status
-        require(isTransferred(rec.assetStatus) == 0, "S:CAC: Txfrd asset"); //asset cannot be in transferred status
+        require(isLostOrStolen(rec.assetStatus) == 0, "S:CN: L/S asset"); //asset cannot be in lost or stolen status
+        require(isTransferred(rec.assetStatus) == 0, "S:CN: Txfrd asset"); //asset cannot be in transferred status
         //^^^^^^^checks^^^^^^^^^
 
         rec.node = _newNode;
@@ -530,13 +536,13 @@ contract STOR is AccessControl, ReentrancyGuard, Pausable {
 
         require(
             isLostOrStolen(_newAssetStatus) == 170, //proposed new status must be L/S status
-            "S:SSL: Must set to L/S"
+            "S:SLS: Must set to L/S"
         );
         require( //asset cannot be set L/S if in transferred or locked escrow status
             (rec.assetStatus != 5) &&
                 (rec.assetStatus != 50) &&
                 (rec.assetStatus != 55),
-            "S:SSL: Txfr or ecr-locked asset"
+            "S:SLS: Txfr or ecr-locked asset"
         );
         //^^^^^^^checks^^^^^^^^^
 
@@ -625,12 +631,12 @@ contract STOR is AccessControl, ReentrancyGuard, Pausable {
         notEscrow(_idxHash) // asset must not be held in escrow status
     {
         Record memory rec = database[_idxHash];
-        require(isTransferred(rec.assetStatus) == 0, "S:MI1: Txfrd asset"); //STAT UNREACHABLE
+        require(isTransferred(rec.assetStatus) == 0, "S:MMS: Txfrd asset");
 
         require(
             (rec.mutableStorage1 != _mutableStorage1) ||
                 (rec.mutableStorage2 != _mutableStorage2),
-            "S:MI1: New value = old"
+            "S:MMS: New value = old"
         );
         //^^^^^^^checks^^^^^^^^^
 
@@ -677,7 +683,6 @@ contract STOR is AccessControl, ReentrancyGuard, Pausable {
         //^^^^^^^effects^^^^^^^^^
     }
 
-    //--------------------------------External READ ONLY contract functions / authuser---------------------------------//
     /**
      * @dev return a record from the database
      * @param  _idxHash - record asset ID
@@ -689,6 +694,8 @@ contract STOR is AccessControl, ReentrancyGuard, Pausable {
         isAuthorized(0)
         returns (Record memory)
     {
+        //^^^^^^^checks^^^^^^^^^
+        
         return database[_idxHash];
         //^^^^^^^interactions^^^^^^^^^
     }
@@ -696,7 +703,7 @@ contract STOR is AccessControl, ReentrancyGuard, Pausable {
     /**
      * @dev return a record from the database w/o rgt
      * @param _idxHash - record asset ID
-     * returns rec.assetStatus,
+     * @return rec.assetStatus,
                 rec.modCount,
                 rec.node,
                 rec.countDown,
@@ -722,6 +729,7 @@ contract STOR is AccessControl, ReentrancyGuard, Pausable {
             uint16
         )
     {
+        //^^^^^^^checks^^^^^^^^^
         Record memory rec = database[_idxHash];
 
         return (
@@ -743,31 +751,33 @@ contract STOR is AccessControl, ReentrancyGuard, Pausable {
      * @dev Compare record.rightsholder with supplied bytes32 rightsholder
      * @param _idxHash - record asset ID
      * @param _rgtHash - record owner ID hash
-     * returns 170 if matches, 0 if not
+     * @return 170 if matches, 0 if not
      */
     function _verifyRightsHolder(bytes32 _idxHash, bytes32 _rgtHash)
         external
         view
         returns (uint256)
     {
+        //^^^^^^^checks^^^^^^^^^
         if (_rgtHash == database[_idxHash].rightsHolder) {
             return 170;
         } else {
             return 0;
         }
-        //^^^^^^^checks/interactions^^^^^^^^^
+        //^^^^^^^interactions^^^^^^^^^
     }
 
     /**
      * @dev Compare record.rightsholder with supplied bytes32 rightsholder (writes an emit in blockchain for independant verification)
      * @param _idxHash - record asset ID
      * @param _rgtHash - record owner ID hash
-     * returns 170 if matches, 0 if not
+     * @return 170 if matches, 0 if not
      */
     function blockchainVerifyRightsHolder(bytes32 _idxHash, bytes32 _rgtHash)
         external
         returns (uint256)
     {
+        //^^^^^^^checks^^^^^^^^^
         if (_rgtHash == database[_idxHash].rightsHolder) {
             emit REPORT("Match confirmed", _idxHash);
             return 170;
@@ -779,31 +789,34 @@ contract STOR is AccessControl, ReentrancyGuard, Pausable {
     }
 
     /**
-     * @dev //returns the address of a contract with name _name. This is for web3 implementations to find the right contract to interact with
+     * @dev returns the address of a contract with name _name. This is for web3 implementations to find the right contract to interact with
      * example :  Frontend = ****** so web 3 first asks storage where to find frontend, then calls for frontend functions.
      * @param _name - contract name
-     * returns address contract address
+     * @return contract address
      */
     function resolveContractAddress(string calldata _name)
         external
         view
         returns (address)
     {
+        //^^^^^^^checks^^^^^^^^^
         return contractNameToAddress[_name];
         //^^^^^^^interactions^^^^^^^^^
     }
 
     /**
-     * @dev //returns the contract type of a contract with address _addr.
+     * @dev returns the contract type of a contract with address _addr.
      * @param _addr - contract address
      * @param _node - node to look up contract type-in-class
-     * returns address contract address
+     * @return contractType of given contract
      */
     function ContractInfoHash(address _addr, uint32 _node)
         external
         view
         returns (uint8, bytes32)
     {
+        //^^^^^^^checks^^^^^^^^^
+        
         return (
             contractInfo[contractAddressToName[_addr]][_node],
             keccak256(abi.encodePacked(contractAddressToName[_addr]))

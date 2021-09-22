@@ -14,7 +14,7 @@ __/\\\\\\\\\\\\\ _____/\\\\\\\\\ _______/\\__/\\ ___/\\\\\\\\\\\\\\\
  *  TO DO
  * Check and see if A_TKN can be permitted in all nodes to prevent safeTransferFrom->writeRecord conflict due to it not being a default authorized contract for nodes CTS:EXAMINE ?? 
  *-----------------------------------------------------------------
- * PRUF ASSET NFT CONTRACT
+ * PRUF ASSET NFT CONTRNT
  *---------------------------------------------------------------*/
 
 // SPDX-License-Identifier: UNLICENSED
@@ -65,8 +65,8 @@ contract NODE_TKN is
 
     string private _baseTokenURI;
 
-    bytes32 public constant CONTRACT_ADMIN_ROLE =
-        keccak256("CONTRACT_ADMIN_ROLE");
+    bytes32 public constant CONTRNT_ADMIN_ROLE =
+        keccak256("CONTRNT_ADMIN_ROLE");
     bytes32 public constant MINTER_ROLE = keccak256("MINTER_ROLE");
     bytes32 public constant PAUSER_ROLE = keccak256("PAUSER_ROLE");
 
@@ -77,7 +77,7 @@ contract NODE_TKN is
 
     constructor() ERC721("PRUF Node Token", "PRFN") {
         _setupRole(DEFAULT_ADMIN_ROLE, _msgSender());
-        _setupRole(CONTRACT_ADMIN_ROLE, _msgSender());
+        _setupRole(CONTRNT_ADMIN_ROLE, _msgSender());
         _setupRole(PAUSER_ROLE, _msgSender());
     }
 
@@ -86,11 +86,11 @@ contract NODE_TKN is
     /**
      * @dev Verify user credentials
      * Originating Address:
-     *      has CONTRACT_ADMIN_ROLE
+     *      has CONTRNT_ADMIN_ROLE
      */
     modifier isContractAdmin() {
         require(
-            hasRole(CONTRACT_ADMIN_ROLE, _msgSender()),
+            hasRole(CONTRNT_ADMIN_ROLE, _msgSender()),
             "AT:MOD-ICA: Calling address !contract admin"
         );
         _;
@@ -113,29 +113,7 @@ contract NODE_TKN is
 
     event REPORT(string _msg); //CTS:EXAMINE not used
 
-    //----------------------External Functions----------------------//
-
-    /**
-     * @dev Mint a Node token
-     * @param _recipientAddress - Address to mint token into
-     * @param _tokenId - Token ID to mint
-     * @param _tokenURI - URI string to atatch to token
-     * @return Token ID of minted token
-     */
-    function mintNodeToken(
-        address _recipientAddress,
-        uint256 _tokenId,
-        string calldata _tokenURI
-    ) external isMinter nonReentrant returns (uint256) {
-        //^^^^^^^checks^^^^^^^^^
-
-        _safeMint(_recipientAddress, _tokenId);
-        _setTokenURI(_tokenId, _tokenURI);
-        //^^^^^^^effects^^^^^^^^^
-
-        return _tokenId;
-        //^^^^^^^interactions^^^^^^^^^
-    }
+    //----------------------Public Functions----------------------//
 
     /**
      * @dev See {IERC721Metadata-tokenURI}.
@@ -170,6 +148,45 @@ contract NODE_TKN is
     }
 
     /**
+     * @dev See {IERC165-supportsInterface}.
+     * @param interfaceId - ID of interface
+     */
+    function supportsInterface(bytes4 interfaceId)
+        public
+        view
+        virtual
+        override(AccessControlEnumerable, ERC721, ERC721Enumerable)
+        returns (bool)
+    {
+        return super.supportsInterface(interfaceId);
+        //^^^^^^^interactions^^^^^^^^^
+    }
+
+    //----------------------External Functions----------------------//
+
+    /**
+     * @dev Mint a Node token
+     * @param _recipientAddress - Address to mint token into
+     * @param _tokenId - Token ID to mint
+     * @param _tokenURI - URI string to atatch to token
+     * @return Token ID of minted token
+     */
+    function mintNodeToken(
+        address _recipientAddress,
+        uint256 _tokenId,
+        string calldata _tokenURI
+    ) external isMinter nonReentrant returns (uint256) {
+        //^^^^^^^checks^^^^^^^^^
+
+        _safeMint(_recipientAddress, _tokenId);
+        _setTokenURI(_tokenId, _tokenURI);
+        //^^^^^^^effects^^^^^^^^^
+
+        return _tokenId;
+        //^^^^^^^interactions^^^^^^^^^
+    }
+
+    /**
      * @dev See if node token exists
      * @param tokenId - Token ID to set URI
      * @return 170 or 0 (true or false)
@@ -195,11 +212,12 @@ contract NODE_TKN is
     function pause() external virtual {
         require(
             hasRole(PAUSER_ROLE, _msgSender()),
-            "ACT:P: Caller !have pauser role"
+            "NT:P: Caller !have pauser role"
         );
         //^^^^^^^checks^^^^^^^^^
+
         _pause();
-        //^^^^^^^interactions^^^^^^^^^
+        //^^^^^^^effects^^^^^^^^^
     }
 
     /**
@@ -214,17 +232,23 @@ contract NODE_TKN is
     function unpause() external virtual {
         require(
             hasRole(PAUSER_ROLE, _msgSender()),
-            "ACT:UP: Caller !have pauser role"
+            "NT:UP: Caller !have pauser role"
         );
         //^^^^^^^checks^^^^^^^^^
+
         _unpause();
-        //^^^^^^^interactions^^^^^^^^^
+        //^^^^^^^effects^^^^^^^^^
     }
 
+    //----------------------Internal Functions----------------------//
+
     /**
-     * @dev returns base URI
+     * @dev returns base URI of NODE_TKN(s)
+     * @return default URI of NODE_TKN(s)
      */
     function _baseURI() internal view virtual override returns (string memory) {
+        //^^^^^^^checks^^^^^^^^^
+
         return _baseTokenURI;
         //^^^^^^^interactions^^^^^^^^^
     }
@@ -240,8 +264,10 @@ contract NODE_TKN is
         address to,
         uint256 tokenId
     ) internal virtual override(ERC721, ERC721Enumerable, ERC721Pausable) {
+        //^^^^^^^checks^^^^^^^^^
+
         super._beforeTokenTransfer(from, to, tokenId);
-        //^^^^^^^interactions^^^^^^^^^
+        //^^^^^^^effects^^^^^^^^^
     }
 
     /**
@@ -262,20 +288,6 @@ contract NODE_TKN is
         //^^^^^^^checks^^^^^^^^^
 
         _tokenURIs[tokenId] = _tokenURI;
-        //^^^^^^^interactions^^^^^^^^^
-    }
-
-    /**
-     * @dev See {IERC165-supportsInterface}.
-     */
-    function supportsInterface(bytes4 interfaceId)
-        public
-        view
-        virtual
-        override(AccessControlEnumerable, ERC721, ERC721Enumerable)
-        returns (bool)
-    {
-        return super.supportsInterface(interfaceId);
-        //^^^^^^^interactions^^^^^^^^^
+        //^^^^^^^effects^^^^^^^^^
     }
 }

@@ -2035,20 +2035,20 @@ contract("NODE_MGR", (accounts) => {
       "//**************************************END getSwitchAt FAIL BATCH**********************************************/"
     );
     console.log(
-      "//**************************************BEGIN getServiceCosts FAIL BATCH**********************************************/"
+      "//**************************************BEGIN getInvoice FAIL BATCH**********************************************/"
     );
-    return NODE_MGR.getServiceCosts("100", "1", { from: account2 });
+    return NODE_MGR.getInvoice("100", "1", { from: account2 });
   });
 
   //40
   it("Should fail because service 0 is not valid", async () => {
-    return NODE_MGR.getServiceCosts("1000001", "0", { from: account2 });
+    return NODE_MGR.getInvoice("1000001", "0", { from: account2 });
   });
 
   //41
   it("Should fail because Node = 0", async () => {
     console.log(
-      "//**************************************END getServiceCosts FAIL BATCH**********************************************/"
+      "//**************************************END getInvoice FAIL BATCH**********************************************/"
     );
     console.log(
       "//**************************************BEGIN _createNode(Private) FAIL BATCH**********************************************/"
@@ -2242,7 +2242,7 @@ contract("NODE_MGR", (accounts) => {
 
   it("Should set SharesAddress", async () => {
     console.log(
-      "//**************************************END getServiceCosts FAIL BATCH**********************************************/"
+      "//**************************************END getInvoice FAIL BATCH**********************************************/"
     );
     console.log(
       "//**************************************END NODE_MGR FAIL BATCH**********************************************/"
