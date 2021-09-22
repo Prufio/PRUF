@@ -19,8 +19,7 @@ _________\/// _____________\/// _______\/// __\///////// __\/// _____________
 pragma solidity ^0.8.7;
 import "./RESOURCE_PRUF_STRUCTS.sol";
 
-
-//------------------------------------------------------------------------------------------------
+//---------------------------------------------------------------------------------------------------------------
 /*
  * @dev Interface for STOR
  * INHERITANCE:
@@ -261,30 +260,92 @@ interface STOR_Interface {
         returns (uint8, bytes32);
 }
 
-
-//------------------------------------------------------------------------------------------------
+//---------------------------------------------------------------------------------------------------------------
 /*
  * @dev Interface for NODE_MGR
  * INHERITANCE:
     import "../Resources/PRUF_BASIC.sol";
  */
 interface NODE_MGR_Interface {
-    /*
-     * @dev Transfers a name from one node to another
-     * !! -------- to be used with great caution and only as a result of community governance action -----------
-     * Designed to remedy brand infringement issues. This breaks decentralization and must eventually be given
-     * over to some kind of governance contract.
-     * Destination node must have content adressable storage Set to 0xFFF.....
+    //--------------------------------------------Public Functions--------------------------
+
+    /**
+     * @dev get bit from .switches at specified position
+     * @param _node - node associated with query
+     * @param _position - bit position associated with query
+     * @return 1 or 0 (enabled or disabled)
+     */
+    function getSwitchAt(uint32 _node, uint8 _position)
+        external
+        returns (uint256);
+
+    //--------------------------------------------External Functions--------------------------
+
+    /**
+     * @dev Set pricing for Nodes
+     * @param newNodePrice - cost per node (18 decimals)
+     */
+    function setNodePricing(uint256 newNodePrice) external;
+
+    /**
+     * !! to be used with great caution !!
+     * This potentially breaks decentralization and must eventually be given over to some kind of governance contract.
+     * @dev Increases (but cannot decrease) price share for a given node
+     * @param _node - node in which cost share is being modified
+     * @param _newDiscount - discount(1% == 100, 10000 == max)
+     */
+    function increaseShare(uint32 _node, uint32 _newDiscount) external;
+
+    /**
      *
+     * @dev Sets the valid storage type providers.
+     * @param _storageProvider - uint position for storage provider
+     * @param _status - uint position for custody type status
+     */
+    function setStorageProviders(uint8 _storageProvider, uint8 _status)
+        external;
+
+    /**
+     * @dev Sets the valid management types.
+     * @param _managementType - uint position for management type
+     * @param _status - uint position for custody type status
+     */
+    function setManagementTypes(uint8 _managementType, uint8 _status) external;
+
+    /**
+     * @dev Sets the valid custody types.
+     * @param _custodyType - uint position for custody type
+     * @param _status - uint position for custody type status
+     */
+    function setCustodyTypes(uint8 _custodyType, uint8 _status) external;
+
+    /**
+     * !! -------- to be used with great caution and only as a result of community governance action -----------
+     * @dev Transfers a name from one node to another
+     *   -Designed to remedy brand infringement issues. This breaks decentralization and must eventually be given
+     *   -over to some kind of governance contract.
+     * @param _fromNode - source node
+     * @param _toNode - destination node
+     * @param _thisName - name to be transferred
      */
     function transferName(
         uint32 _fromNode,
         uint32 _toNode,
-        string calldata _name
+        string calldata _thisName
     ) external;
 
-    /*
-     * @dev Modifies an node with minimal controls
+    /**
+     * !! -------- to be used with great caution -----------
+     * @dev Modifies an Node with minimal controls
+     * @param _node - node to be modified
+     * @param _nodeRoot - root of node
+     * @param _custodyType - custodyType of node (see docs)
+     * @param _managementType - managementType of node (see docs)
+     * @param _storageProvider - storageProvider of node (see docs)
+     * @param _discount - discount of node (100 == 1%, 10000 == max)
+     * @param _refAddress - referance address associated with an node
+     * @param _CAS1 - any external data attatched to node 1/2
+     * @param _CAS2 - any external data attatched to node 2/2
      */
     function modifyNode(
         uint32 _node,
@@ -294,7 +355,6 @@ interface NODE_MGR_Interface {
         uint8 _storageProvider,
         uint32 _discount,
         address _refAddress,
-        uint8 _switches,
         bytes32 _CAS1,
         bytes32 _CAS2
     ) external;
@@ -311,13 +371,18 @@ interface NODE_MGR_Interface {
         uint8 _bit
     ) external;
 
-    /*
-     * @dev Mints node token and creates an node. Mints to @address
-     * Requires that:
-     *  name is unuiqe
-     *  node is not provisioned with a root (proxy for not yet registered)
-     *  that ACtoken does not exist
-     *  _discount 10000 = 100 percent price share , cannot exceed
+    /**
+     * @dev Mints Node token and creates an node.
+     * @param _node - node to be created (unique)
+     * @param _name - name to be configured to node (unique)
+     * @param _nodeRoot - root of node
+     * @param _custodyType - custodyType of new node (see docs)
+     * @param _managementType - managementType of new node (see docs)
+     * @param _storageProvider - storageProvider of new node (see docs)
+     * @param _discount - discount of node (100 == 1%, 10000 == max)
+     * @param _CAS1 - any external data attatched to node 1/2
+     * @param _CAS2 - any external data attatched to node 2/2
+     * @param _recipientAddress - address to recieve node
      */
     function createNode(
         uint32 _node,
@@ -333,10 +398,12 @@ interface NODE_MGR_Interface {
     ) external;
 
     /**
-     * @dev Burns (amount) tokens and mints a new node token to the caller address
-     *
-     * Requirements:
-     * - the caller must have a balance of at least `amount`.
+     * @dev Burns (amount) tokens and mints a new Node token to the calling address
+     * @param _name - chosen name of node
+     * @param _nodeRoot - chosen root of node
+     * @param _custodyType - chosen custodyType of node (see docs)
+     * @param _CAS1 - any external data attatched to node 1/2
+     * @param _CAS2 - any external data attatched to node 2/2
      */
     function purchaseNode(
         string calldata _name,
@@ -346,8 +413,12 @@ interface NODE_MGR_Interface {
         bytes32 _CAS2
     ) external returns (uint256);
 
-    /*
-     * @dev Authorize / Deauthorize / Authorize users for an address be permitted to make record modifications
+    /**
+     * @dev Authorize / Deauthorize users for an address be permitted to make record modifications
+     * @dev only useful for custody types that designate user adresses (type1...)
+     * @param _node - node that user is being authorized in
+     * @param _addrHash - hash of address belonging to user being authorized
+     * @param _userType - authority level for user (see docs)
      */
     function addUser(
         uint32 _node,
@@ -355,20 +426,18 @@ interface NODE_MGR_Interface {
         uint8 _userType
     ) external;
 
-    /*
-     * @dev Modifies an node
-     * Sets a new node name. Nodees cannot be moved to a new root or custody type.
-     * Requires that:
-     *  caller holds ACtoken
-     *  name is unuiqe or same as old name
+    /**
+     * @dev Modifies an node Node name for its exclusive namespace
+     * @param _node - node being modified
+     * @param _newName - updated name associated with node (unique)
      */
-    function updateNodeName(uint32 _node, string calldata _name) external;
+    function updateNodeName(uint32 _node, string calldata _newName) external;
 
-    /*
-     * @dev Modifies an node
-     * Sets a new node content adressable storage Address. Nodees cannot be moved to a new root or custody type.
-     * Requires that:
-     *  caller holds ACtoken
+    /**
+     * @dev Modifies an node Node content adressable storage data pointer
+     * @param _node - node being modified
+     * @param _CAS1 - any external data attatched to node 1/2
+     * @param _CAS2 - any external data attatched to node 2/2
      */
     function updateNodeCAS(
         uint32 _node,
@@ -376,8 +445,12 @@ interface NODE_MGR_Interface {
         bytes32 _CAS2
     ) external;
 
-    /*
-     * @dev Set function costs and payment address per node, in Wei
+    /**
+     * @dev Set function costs and payment address per Node, in PRUF(18 decimals)
+     * @param _node - node to set service costs
+     * @param _service - service type being modified (see service types in ZZ_PRUF_DOCS)
+     * @param _serviceCost - 18 decimal fee in PRUF associated with specified service
+     * @param _paymentAddress - address to have _serviceCost paid to
      */
     function setOperationCosts(
         uint32 _node,
@@ -386,102 +459,111 @@ interface NODE_MGR_Interface {
         address _paymentAddress
     ) external;
 
-    /*
-     * @dev Modifies an node
-     * Sets the immutable data on an node
-     * Requires that:
-     * caller holds ACtoken
-     * node is managementType 255 (unconfigured)
+    /**
+     * @dev Configure the immutable data in an Node one time
+     * @param _node - node being modified
+     * @param _managementType - managementType of node (see docs)
+     * @param _storageProvider - storageProvider of node (see docs)
+     * @param _refAddress - address permanently tied to node
      */
-    function updateACImmutable(
+    function setNonMutableData(
         uint32 _node,
         uint8 _managementType,
         uint8 _storageProvider,
         address _refAddress
     ) external;
 
-    //-------------------------------------------Read-only functions ----------------------------------------------
-
     /**
-     * @dev get bit from .switches at specified position
-     * @param _node - node associated with query
-     * @param _position - bit position associated with query
-     *
-     * @return 1 or 0 (enabled or disabled)
-     */
-    function getSwitchAt(uint32 _node, uint8 _position)
-        external
-        returns (uint256);
-
-    /*
-     * @dev get a User Record
+     * @dev get an node Node User type for a specified address
+     * @param _userHash - hash of selected user
+     * @param _node - node of query
+     * @return type of user @ _node (see docs)
      */
     function getUserType(bytes32 _userHash, uint32 _node)
         external
-        view
         returns (uint8);
 
-    /*
-     * @dev get the authorization status of a management type 0 = not allowed
+    /**
+     * @dev get the status of a specific management type
+     * @param _managementType - management type associated with query (see docs)
+     * @return 1 or 0 (enabled or disabled)
      */
     function getManagementTypeStatus(uint8 _managementType)
         external
-        view
         returns (uint8);
 
-    /*
-     * @dev get the authorization status of a storage type 0 = not allowed
+    /**
+     * @dev get the status of a specific storage provider
+     * @param _storageProvider - storage provider associated with query (see docs)
+     * @return 1 or 0 (enabled or disabled)
      */
     function getStorageProviderStatus(uint8 _storageProvider)
         external
-        view
         returns (uint8);
 
-    /*
-     * @dev get the authorization status of a custody type 0 = not allowed
+    /**
+     * @dev get the status of a specific custody type
+     * @param _custodyType - custody type associated with query (see docs)
+     * @return 1 or 0 (enabled or disabled)
      */
-    function getCustodyTypeStatus(uint8 _custodyType)
-        external
-        view
-        returns (uint8);
+    function getCustodyTypeStatus(uint8 _custodyType) external returns (uint8);
 
-    /* CAN'T RETURN A STRUCT WITH A STRING WITHOUT WIERDNESS-0.8.1
-     * @dev Retrieve node_data @ _node
+    /**
+     * @dev Retrieve extended nodeData @ _node
+     * @param _node - node associated with query
+     * @return nodeData (see docs)
      */
-    function getExtendedNodeData(uint32 _node)
-        external
-        view
-        returns (Node memory);
+    function getExtendedNodeData(uint32 _node) external returns (Node memory);
 
-    /*
-     * @dev compare the root of two Nodees
+    /**
+     * @dev verify the root of two Nodees are equal
+     * @param _node1 - first node associated with query
+     * @param _node2 - second node associated with query
+     * @return 170 or 0 (true or false)
      */
     function isSameRootNode(uint32 _node1, uint32 _node2)
         external
-        view
         returns (uint8);
 
-    /*
-     * @dev Retrieve Node_name @ _tokenId
+    /**
+     * @dev Retrieve Node_name @ _tokenId or node
+     * @param node - tokenId associated with query
+     * @return name of token @ _tokenID
      */
-    function getNodeName(uint32 _tokenId) external view returns (string memory);
+    function getNodeName(uint32 node) external returns (string memory);
 
-    /*
-     * @dev Retrieve node_index @ Node_name
+    /**
+     * @dev Retrieve node @ Node_name
+     * @param _forThisName - name of node for nodeNumber query
+     * @return node number @ _name
      */
-    function resolveNode(string calldata _name) external view returns (uint32);
+    function resolveNode(string calldata _forThisName)
+        external
+        returns (uint32);
 
-    /*
-     * @dev return current node token index pointer
+    /**
+     * @dev return current node token index and price
+     * @return {
+         nodeTokenIndex: current token number
+         Node_price: current price per node
+     }
      */
-    function currentNodePricingInfo() external view returns (uint256, uint256);
+    function currentNodePricingInfo() external returns (uint256, uint256);
 
-    /*
-     * @dev Retrieve function costs per node, per service type, in Wei
+    /**
+     * @dev Retrieve function costs per Node, per service type in PRUF(18 decimals)
+     * @param _node - node associated with query
+     * @param _service - service number associated with query (see service types in ZZ_PRUF_DOCS)
+     * @return invoice{
+         rootAddress: @ _node root payment address @ _service
+         rootPrice: @ _node root service cost @ _service
+         NTHaddress: @ _node payment address tied @ _service
+         NTHprice: @ _node service cost @ _service
+         node: Node index
+     }
      */
     function getInvoice(uint32 _node, uint16 _service)
         external
-        view
         returns (Invoice memory);
 
     /** DPS:CHECK
@@ -490,24 +572,20 @@ interface NODE_MGR_Interface {
      * @param _service - service associated with query
      * @return Costs Struct for_node
      */
-    function getServicePaymentData(uint32 _node, uint16 _service) 
+    function getServicePaymentData(uint32 _node, uint16 _service)
         external
         returns (Costs memory);
 
-    /*
-     * @dev Retrieve Node_discount @ _node, in percent NTH share, * 100 (9000 = 90%)
-     */
-    function getNodeDiscount(uint32 _node) external view returns (uint32);
-
     /**
-     * @dev get comission to charge for sales in marketplace for listing under the node's ID
-     * @param _node - node to get comission
-     * @return uint8 the divisor for comission charges
+     * @dev Retrieve Node_discount @ _node
+     * @param _node - node associated with query
+     * @return percentage of rewards distribution @ _node
      */
-    function getNodeComission(uint32 _node) external view returns (uint8);
+    function getNodeDiscount(uint32 _node) external returns (uint32);
 }
 
-//------------------------------------------------------------------------------------------------
+//---------------------------------------------------------------------------------------------------------------
+
 /*
  * @dev Interface for ECR_MGR
  * INHERITANCE:
@@ -515,8 +593,12 @@ interface NODE_MGR_Interface {
      
  */
 interface ECR_MGR_Interface {
-    /*
+    /**
      * @dev Set an asset to escrow status (6/50/56). Sets timelock for unix timestamp of escrow end.
+     * @param _idxHash - hash of asset information created by frontend inputs
+     * @param _newAssetStatus - new escrow status of asset (see docs)
+     * @param _escrowOwnerAddressHash - hash of escrow controller address
+     * @param _timelock - timelock parameter for time controlled escrows
      */
     function setEscrow(
         bytes32 _idxHash,
@@ -525,169 +607,78 @@ interface ECR_MGR_Interface {
         uint256 _timelock
     ) external;
 
-    /*
-     * @dev remove an asset from escrow status
+    /**
+     * @dev remove asset from escrow
+     * @param _idxHash - hash of asset information created by frontend inputs
      */
     function endEscrow(bytes32 _idxHash) external;
 
-    /*
-     * @dev Set data in EDL mapping
-     * Must be setter contract
-     * Must be in  escrow
+    /**
+     * @dev Sets data in the Escrow Data Light mapping
+     * @param _idxHash - hash of asset information created by frontend inputs
+     * @param _escrowDataLight - struct of data associated with light load escrows
      */
     function setEscrowDataLight(
         bytes32 _idxHash,
         escrowDataExtLight calldata _escrowDataLight
     ) external;
 
-    /*
-     * @dev Set data in EDL mapping
-     * Must be setter contract
-     * Must be in  escrow
+    /**
+     * @dev Sets data in the Escrow Data Heavy mapping
+     * @param _idxHash - hash of asset information created by frontend inputs
+     * @param escrowDataHeavy - struct of data associated with heavy load escrows
      */
     function setEscrowDataHeavy(
         bytes32 _idxHash,
         escrowDataExtHeavy calldata escrowDataHeavy
     ) external;
 
-    /*
-     * @dev Permissive removal of asset from escrow status after time-out
+    /**
+     * @dev Permissive removal of asset from escrow status after time-out (no special qualifiers to end expired escrow)
+     * @param _idxHash - hash of asset information created by frontend inputs
      */
     function permissiveEndEscrow(bytes32 _idxHash) external;
 
-    /*
-     * @dev return escrow OwnerHash
+    /**
+     * @dev return escrow owner hash
+     * @param _idxHash - hash of asset information created by frontend inputs
+     *
+     * @return hash of escrow owner
      */
-    function retrieveEscrowOwner(bytes32 _idxHash)
-        external
-        returns (bytes32 hashOfEscrowOwnerAdress);
+    function retrieveEscrowOwner(bytes32 _idxHash) external returns (bytes32);
 
-    /*
-     * @dev return escrow data @ IDX
+    /**
+     * @dev return escrow data associated with an asset
+     * @param _idxHash - hash of asset information created by frontend inputs
+     *
+     * @return all escrow data  @ _idxHash
      */
     function retrieveEscrowData(bytes32 _idxHash)
         external
         returns (escrowData memory);
 
-    /*
-     * @dev return EscrowDataLight @ IDX
+    /**
+     * @dev return EscrowDataLight
+     * @param _idxHash - hash of asset information created by frontend inputs
+     *
+     * @return EscrowDataLight struct @ _idxHash
      */
     function retrieveEscrowDataLight(bytes32 _idxHash)
         external
-        view
         returns (escrowDataExtLight memory);
 
-    /*
-     * @dev return EscrowDataHeavy @ IDX
+    /**
+     * @dev return EscrowDataHeavy
+     * @param _idxHash - hash of asset information created by frontend inputs
+     *
+     * @return EscrowDataHeavy struct @ _idxHash
      */
     function retrieveEscrowDataHeavy(bytes32 _idxHash)
         external
-        view
         returns (escrowDataExtHeavy memory);
 }
 
-//------------------------------------------------------------------------------------------------
-/*
- * @dev Interface for RCLR
- * INHERITANCE:
-    import "../Resources/PRUF_ECR_CORE.sol";
-    import "../Resources/PRUF_CORE.sol";
- */
-interface RCLR_Interface {
-    function discard(bytes32 _idxHash, address _sender) external;
-
-    function recycle(bytes32 _idxHash) external;
-}
-
-//------------------------------------------------------------------------------------------------
-/*
- * @dev Interface for APP
- * INHERITANCE:
-    import "../Resources/PRUF_CORE.sol";
- */
-interface APP_Interface {
-    function transferAssetToken(address _to, bytes32 _idxHash) external;
-}
-
-//------------------------------------------------------------------------------------------------
-/*
- * @dev Interface for APP_NC
- * INHERITANCE:
-    import "../Resources/PRUF_CORE.sol";
- */
-interface APP_NC_Interface {
-    function transferAssetToken(address _to, bytes32 _idxHash) external;
-
-    function newRecordWithNote(
-        bytes32 _idxHash,
-        bytes32 _rgtHash,
-        uint32 _node,
-        uint32 _countDownStart,
-        bytes32 _nonMutableStorage1,
-        bytes32 _nonMutableStorage2
-    ) external;
-}
-
-/*
- * @dev Interface for EO_STAKING
- * INHERITANCE:
-    import "./Imports/access/AccessControl.sol";
-    import "./Imports/security/Pausable.sol";
-    import "./Imports/security/ReentrancyGuard.sol";
-    import "./Imports/token/ERC721/IERC721.sol";
-    import "./Imports/token/ERC721/IERC721Receiver.sol";
- */
-interface EO_STAKING_Interface {
-    function claimBonus(uint256 _tokenId) external;
-
-    function breakStake(uint256 _tokenId) external;
-
-    function eligibleRewards(uint256 _tokenId)
-        external
-        returns (uint256 rewards);
-
-    function stakeInfo(uint256 _tokenId)
-        external
-        returns (
-            uint256 stakedAmount,
-            uint256 mintTime,
-            uint256 startTime,
-            uint256 interval,
-            uint256 bonusPercentage,
-            uint256 maximum
-        );
-}
-
-/*
- * @dev Interface for STAKE_VAULT
- * INHERITANCE:
-    import "./Imports/access/AccessControl.sol";
-    import "./Imports/security/Pausable.sol";
-    import "./Imports/security/ReentrancyGuard.sol";
-    import "./Imports/token/ERC721/IERC721.sol";
-    import "./Imports/token/ERC721/IERC721Receiver.sol";
- */
-interface STAKE_VAULT_Interface {
-    function takeStake(uint256 _tokenID, uint256 _amount) external;
-
-    //function releaseStake(address _addr, uint256 _tokenID) external;
-    function releaseStake(uint256 _tokenID) external;
-
-    function stakeOfToken(uint256 _tokenID) external returns (uint256 stake);
-}
-
-/*
- * @dev Interface for REWARDS_VAULT
- * INHERITANCE:
-    import "./Imports/access/AccessControl.sol";
-    import "./Imports/security/Pausable.sol";
-    import "./Imports/security/ReentrancyGuard.sol";
-    import "./Imports/token/ERC721/IERC721.sol";
-    import "./Imports/token/ERC721/IERC721Receiver.sol";
- */
-interface REWARDS_VAULT_Interface {
-    function payRewards(uint256 _tokenId, uint256 _amount) external;
-}
+//---------------------------------------------------------------------------------------------------------------
 
 /**
  * @dev Interface for ID_MGR
@@ -696,8 +687,6 @@ interface REWARDS_VAULT_Interface {
 // import "./Imports/access/AccessControl.sol";
 // import "./Imports/security/Pausable.sol";
 */
-
-//------------------------------------------------------------------------------------------------
 interface ID_MGR_Interface {
     /**
      * @dev Mint an Asset token
@@ -727,29 +716,572 @@ interface ID_MGR_Interface {
     /**
      * @dev get ID data given an address to look up
      * @param _addr - address to check
-     * returns PRUFID struct (see interfaces for struct definitions)
+     * @return ID struct (see interfaces for struct definitions)
      */
-    function IdDataByAddress(address _addr)
-        external
-        view
-        returns (PRUFID memory);
+    function IdDataByAddress(address _addr) external returns (PRUFID memory);
 
     /**
      * @dev get ID data given an IdHash to look up
      * @param _IdHash - IdHash to check
-     * returns IPRUFIDD struct (see interfaces for struct definitions)
+     * @return ID struct (see interfaces for struct definitions)
      */
-    function IdDataByIdHash(bytes32 _IdHash)
-        external
-        view
-        returns (PRUFID memory);
+    function IdDataByIdHash(bytes32 _IdHash) external returns (PRUFID memory);
 
     /**
      * @dev get ID trustLevel
      * @param _addr - address to check
-     * returns trust level of token id
+     * @return trust level of token id
      */
     function trustLevel(address _addr) external view returns (uint256);
+
+    /**
+     * @dev Pauses all token transfers.
+     *
+     * See {ERC721Pausable} and {Pausable-_pause}.
+     *
+     * Requirements:
+     *
+     * - the caller must have the `PAUSER_ROLE`.
+     */
+    function pause() external;
+
+    /**
+     * @dev Unpauses all token transfers.
+     *
+     * See {ERC721Pausable} and {Pausable-_unpause}.
+     *
+     * Requirements:
+     *
+     * - the caller must have the `PAUSER_ROLE`.
+     */
+    function unpause() external;
 }
 
-//------------------------------------------------------------------------------------------------
+//---------------------------------------------------------------------------------------------------------------
+
+/*
+ * @dev Interface for RCLR
+ * INHERITANCE:
+    import "../Resources/PRUF_ECR_CORE.sol";
+    import "../Resources/PRUF_CORE.sol";
+ */
+interface RCLR_Interface {
+    /**
+     * @dev discards item -- caller is assetToken contract
+     * @param _idxHash asset ID
+     * @param _sender discarder
+     * Caller Must have DISCARD_ROLE
+     */
+    function discard(bytes32 _idxHash, address _sender) external;
+
+    /**
+     * @dev reutilize a recycled asset
+     * maybe describe the reqs in this one, back us up on the security
+     * @param _idxHash asset ID
+     * @param _rgtHash rights holder hash to set
+     */
+    function recycle(bytes32 _idxHash, bytes32 _rgtHash) external;
+}
+
+//---------------------------------------------------------------------------------------------------------------
+
+/*
+ * @dev Interface for APP
+ * INHERITANCE:
+    import "../Resources/PRUF_CORE.sol";
+ */
+interface APP_Interface {
+    //--------------------------------------------External Functions--------------------------
+
+    /**
+     * @dev Creates a new record  DPS:CHECK no longer sets rec.countDownStart
+     * @param _idxHash - hash of asset information created by frontend inputs
+     * @param _rgtHash - hash of rightsholder information created by frontend inputs
+     * @param _node - node the asset will be created in
+     * @param _countDownStart - decremental counter for an assets lifecycle
+     */
+    function newRecord(
+        bytes32 _idxHash,
+        bytes32 _rgtHash,
+        uint32 _node,
+        uint32 _countDownStart
+    ) external;
+
+    /**
+     * @dev import Rercord, must match export node
+     * posessor is considered to be owner. sets rec.assetStatus to 0.
+     * @param _idxHash - hash of asset information created by frontend inputs
+     * @param _newNode - node the asset will be imported into
+     */
+    function importAsset(bytes32 _idxHash, uint32 _newNode) external;
+
+    /**
+     * @dev Modify rec.rightsHolder
+     * @param _idxHash - hash of asset information created by frontend inputs
+     * @param _rgtHash - hash of new rightsholder information created by frontend inputs
+     */
+    function forceModifyRecord(bytes32 _idxHash, bytes32 _rgtHash) external;
+
+    /**
+     * @dev Transfer rights to new rightsHolder with confirmation of matching rgthash
+     * @param _idxHash - hash of asset information created by frontend inputs
+     * @param _rgtHash - hash of rightsholder information created by frontend inputs
+     * @param _newrgtHash - hash of targeted reciever information created by frontend inputs
+     */
+    function transferAsset(
+        bytes32 _idxHash,
+        bytes32 _rgtHash,
+        bytes32 _newrgtHash
+    ) external;
+
+    /**
+     * @dev Modify **Record** NonMutableStorage with confirmation of matching rgthash
+     * @param _idxHash - hash of asset information created by frontend inputs
+     * @param _rgtHash - hash of rightsholder information created by frontend inputs
+     * @param _nonMutableStorage1 - field for permanent external asset data
+     * @param _nonMutableStorage2 - field for permanent external asset data
+     */
+    function addNonMutableStorage(
+        bytes32 _idxHash,
+        bytes32 _rgtHash,
+        bytes32 _nonMutableStorage1,
+        bytes32 _nonMutableStorage2
+    ) external;
+
+    /**
+     * @dev Transfer any specified assetToken from contract
+     * @param _to - address to send to
+     * @param _idxHash - asset index
+     */
+    function transferAssetToken(address _to, bytes32 _idxHash) external;
+
+    /**
+     * @dev Modify **Record**.assetStatus with confirmation of matching rgthash required
+     * @param _idxHash asset to moidify
+     * @param _rgtHash rgthash to match in front end
+     * @param _newAssetStatus updated status
+     */
+    function modifyStatus(
+        bytes32 _idxHash,
+        bytes32 _rgtHash,
+        uint8 _newAssetStatus
+    ) external;
+
+    /**
+     * @dev set **Record**.assetStatus to lost or stolen, with confirmation of matching rgthash required
+     * @param _idxHash asset to moidify
+     * @param _rgtHash rgthash to match in front end
+     * @param _newAssetStatus updated status
+     */
+    function setLostOrStolen(
+        bytes32 _idxHash,
+        bytes32 _rgtHash,
+        uint8 _newAssetStatus
+    ) external;
+
+    /**
+     * @dev Decrement **Record**.countdown with confirmation of matching rgthash required
+     * @param _idxHash asset to moidify
+     * @param _rgtHash rgthash to match in front end
+     * @param _decAmount amount to decrement
+     */
+    function decrementCounter(
+        bytes32 _idxHash,
+        bytes32 _rgtHash,
+        uint32 _decAmount
+    ) external;
+
+    /**
+     * @dev Modify rec.MutableStorage field with rghHash confirmation
+     * @param _idxHash idx of asset to Modify
+     * @param _rgtHash rgthash to match in front end
+     * @param _mutableStorage1 content adressable storage adress part 1
+     * @param _mutableStorage2 content adressable storage adress part 2
+     */
+    function modifyMutableStorage(
+        bytes32 _idxHash,
+        bytes32 _rgtHash,
+        bytes32 _mutableStorage1,
+        bytes32 _mutableStorage2
+    ) external;
+
+    /**
+     * @dev Export FROM Custodial - sets asset to status 70 (importable) for export
+     * @dev exportTo - sets asset to status 70 (importable) and defines the node that the item can be imported into
+     * @param _idxHash idx of asset to Modify
+     * @param _exportTo node target for export
+     * @param _addr adress to send asset to
+     * @param _rgtHash rgthash to match in front end
+     */
+    function exportAssetTo(
+        bytes32 _idxHash,
+        uint32 _exportTo,
+        address _addr,
+        bytes32 _rgtHash
+    ) external;
+}
+
+//---------------------------------------------------------------------------------------------------------------
+
+/*
+ * @dev Interface for APP_NC
+ * INHERITANCE:
+    import "../Resources/PRUF_CORE.sol";
+ */
+interface APP_NC_Interface {
+    //---------------------------------------External Functions-------------------------------
+
+    /**
+     * @dev Create a newRecord with description
+     * @param _idxHash - hash of asset information created by frontend inputs
+     * @param _rgtHash - hash of rightsholder information created by frontend inputs
+     * @param _node - node the asset will be created in
+     * @param _countDownStart - decremental counter for an assets lifecycle
+     * @param _mutableStorage1 - field for external asset data
+     * @param _mutableStorage2 - field for external asset data
+     */
+    function newRecordWithDescription(
+        bytes32 _idxHash,
+        bytes32 _rgtHash,
+        uint32 _node,
+        uint32 _countDownStart,
+        bytes32 _mutableStorage1,
+        bytes32 _mutableStorage2
+    ) external;
+
+    /**
+     * @dev Create a newRecord with permanent description
+     * @param _idxHash - hash of asset information created by frontend inputs
+     * @param _rgtHash - hash of rightsholder information created by frontend inputs
+     * @param _node - node the asset will be created in
+     * @param _countDownStart - decremental counter for an assets lifecycle
+     * @param _nonMutableStorage1 - field for permanent external asset data
+     * @param _nonMutableStorage2 - field for permanent external asset data
+     */
+    function newRecordWithNote(
+        bytes32 _idxHash,
+        bytes32 _rgtHash,
+        uint32 _node,
+        uint32 _countDownStart,
+        bytes32 _nonMutableStorage1,
+        bytes32 _nonMutableStorage2
+    ) external;
+
+    /**
+     * @dev Create a newRecord
+     * @param _idxHash - hash of asset information created by frontend inputs
+     * @param _rgtHash - hash of rightsholder information created by frontend inputs
+     * @param _node - node the asset will be created in
+     * @param _countDownStart - decremental counter for an assets lifecycle
+     */
+    function newRecord(
+        bytes32 _idxHash,
+        bytes32 _rgtHash,
+        uint32 _node,
+        uint32 _countDownStart
+    ) external;
+
+    /**
+     * @dev exportTo - sets asset to status 70 (importable) and defines the node that the item can be imported into
+     * @param _idxHash idx of asset to Modify
+     * @param _exportTo node target for export
+     */
+    function exportAssetTo(bytes32 _idxHash, uint32 _exportTo) external;
+
+    /**
+     * @dev Import a record into a new node
+     * @param _idxHash - hash of asset information created by frontend inputs
+     * @param _newNode - node the asset will be imported into
+     */
+    function importAsset(bytes32 _idxHash, uint32 _newNode) external;
+
+    /**
+     * @dev record NonMutableStorage data
+     * @param _idxHash - hash of asset information created by frontend inputs
+     * @param _nonMutableStorage1 - field for permanent external asset data
+     * @param _nonMutableStorage2 - field for permanent external asset data
+     */
+    function addNonMutableStorage(
+        bytes32 _idxHash,
+        bytes32 _nonMutableStorage1,
+        bytes32 _nonMutableStorage2
+    ) external;
+
+    /**
+     * @dev Modify rgtHash (like forceModify)
+     * @param _idxHash idx of asset to Modify
+     * @param _newRgtHash rew rgtHash to apply
+     */
+    function changeRgt(bytes32 _idxHash, bytes32 _newRgtHash) external;
+
+    /**
+     * @dev Modify **Record**.assetStatus with confirmation required
+     * @param _idxHash idx of asset to Modify
+     * @param _newAssetStatus Updated status
+     */
+    function modifyStatus(bytes32 _idxHash, uint8 _newAssetStatus) external;
+
+    /**
+     * @dev set **Record**.assetStatus to lost or stolen, with confirmation of matching rgthash required.
+     * @param _idxHash idx of asset to Modify
+     * @param _newAssetStatus Updated status
+     */
+    function setLostOrStolen(bytes32 _idxHash, uint8 _newAssetStatus) external;
+
+    /**
+     * @dev Decrement **Record**.countdown.
+     * @param _idxHash index hash of asset to modify
+     * @param _decAmount Amount to decrement
+     */
+    function decrementCounter(bytes32 _idxHash, uint32 _decAmount) external;
+
+    /**
+     * @dev Modify **Record**.mutableStorage1 with confirmation of matching rgthash required.
+     * @param _idxHash idx of asset to Modify
+     * @param _mutableStorage1 content addressable storage address part 1
+     * @param _mutableStorage2 content addressable storage address part 2
+     */
+    function modifyMutableStorage(
+        bytes32 _idxHash,
+        bytes32 _mutableStorage1,
+        bytes32 _mutableStorage2
+    ) external;
+}
+
+//---------------------------------------------------------------------------------------------------------------
+
+/*
+ * @dev Interface for EO_STAKING
+ * INHERITANCE:
+    import "./Imports/access/AccessControl.sol";
+    import "./Imports/security/Pausable.sol";
+    import "./Imports/security/ReentrancyGuard.sol";
+    import "./Imports/token/ERC721/IERC721.sol";
+    import "./Imports/token/ERC721/IERC721Receiver.sol";
+ */
+interface EO_STAKING_Interface {
+    //--------------------------------------External functions--------------------------------------------//
+
+    /**
+     * @dev Setter for setting fractions of a day for minimum interval
+     * @param _minUpgradeInterval in seconds
+     */
+    function setMinimumPeriod(uint256 _minUpgradeInterval) external;
+
+    /**
+     * @dev Kill switch for staking reward earning
+     * @param _delay delay in seconds to end stake earning
+     */
+    function endStaking(uint256 _delay) external;
+
+    /**
+     * @dev Set address of contracts to interface with
+     * @param _utilAddress address of UTIL_TKN(PRUF)
+     * @param _stakeAddress address of STAKE_TKN
+     * @param _stakeVaultAddress address of STAKE_VAULT
+     * @param _rewardsVaultAddress address of REWARDS_VAULT
+     */
+    function setTokenContracts(
+        address _utilAddress,
+        address _stakeAddress,
+        address _stakeVaultAddress,
+        address _rewardsVaultAddress
+    ) external;
+
+    /**
+     * @dev Set stake tier parameters
+     * @param _stakeTier Staking level to set
+     * @param _min Minumum stake
+     * @param _max Maximum stake
+     * @param _interval staking interval, in dayUnits - set to the number of days that the stake and reward interval will be based on.
+     * @param _bonusPercentage bonusPercentage in tenths of a percent: 15 = 1.5% or 15/1000 per interval. Calculated to a fixed amount of tokens in the actual stake
+     */
+    function setStakeLevels(
+        uint256 _stakeTier,
+        uint256 _min,
+        uint256 _max,
+        uint256 _interval,
+        uint256 _bonusPercentage
+    ) external;
+
+    /**
+     * @dev Create a new stake
+     * @param _amount amount of tokens to stake
+     * @param _stakeTier staking tier
+     */
+    function stakeMyTokens(uint256 _amount, uint256 _stakeTier) external;
+
+    /**
+     * @dev Transfers eligible rewards to staker, resets last payment time, adds _amount tokens to holders stake
+     * @param _tokenId token id to modify stake
+     */
+    function increaseMyStake(uint256 _tokenId, uint256 _amount) external;
+
+    /**
+     * @dev Transfers eligible rewards to staker, resets last payment time
+     * @param _tokenId token id to claim rewards on
+     */
+    function claimBonus(uint256 _tokenId) external;
+
+    /**
+     * @dev Burns stake, transfers eligible rewards and staked tokens to staker
+     * @param _tokenId stake key token id
+     */
+    function breakStake(uint256 _tokenId) external;
+
+    /**
+     * @dev Pauses contract.
+     *
+     * See {ERC721Pausable} and {Pausable-_pause}.
+     */
+    function pause() external;
+
+    /**
+     * @dev Unpauses contract.
+     *
+     * See {ERC721Pausable} and {Pausable-_unpause}.
+     */
+    function unpause() external;
+
+    /**
+     * @dev Check eligible rewards amount for a stake, for verification
+     * @param _tokenId token id to check
+     * @return reward and microIntervals
+     */
+    function checkEligibleRewards(uint256 _tokenId)
+        external
+        returns (uint256, uint256);
+
+    /**
+     * @dev Returns info of given stake key tokenId
+     * @param _tokenId Stake ID to return
+     * @return Stake struct, see Interfaces.sol
+     */
+    function stakeInfo(uint256 _tokenId)
+        external
+        returns (
+            uint256,
+            uint256,
+            uint256,
+            uint256,
+            uint256,
+            uint256
+        );
+
+    /**
+     * @dev Return specific stakeTier specification
+     * @param _stakeTier stake level to inspect
+     * @return StakingTier @ given index, see declaration in beginning of contract
+     */
+    function getStakeLevel(uint256 _stakeTier)
+        external
+        returns (
+            uint256,
+            uint256,
+            uint256,
+            uint256
+        );
+}
+
+//---------------------------------------------------------------------------------------------------------------
+
+/*
+ * @dev Interface for STAKE_VAULT
+ * INHERITANCE:
+    import "./Imports/access/AccessControl.sol";
+    import "./Imports/security/Pausable.sol";
+    import "./Imports/security/ReentrancyGuard.sol";
+    import "./Imports/token/ERC721/IERC721.sol";
+    import "./Imports/token/ERC721/IERC721Receiver.sol";
+ */
+interface STAKE_VAULT_Interface {
+    //-----------External Admin functions / isContractAdmin-----------//
+
+    /**
+     * @dev Set address of contracts to interface with
+     * @param _utilAddress address of UTIL_TKN contract
+     * @param _stakeAddress address of STAKE_TKN contract
+     */
+    function setTokenContracts(address _utilAddress, address _stakeAddress)
+        external;
+
+    //-------------------------External functions-----------------------//
+
+    /**
+     * @dev moves tokens(amount) from holder(tokenID) into itself using trustedAgentTransfer, records the amount in stake map
+     * @param _tokenId stake token to take stake for
+     * @param _amount amount of stake to pull
+     */
+    function takeStake(uint256 _tokenId, uint256 _amount) external;
+
+    /**
+     * @dev sends stakedAmount[tokenId] tokens to ownerOf(tokenId), updates the stake map.
+     * @param _tokenId stake token to release stake for
+     */
+    function releaseStake(uint256 _tokenId) external;
+
+    /**
+     * @dev Returns the amount of tokens staked on (tokenId)
+     * @param _tokenId token to check
+     * @return Stake of _tokenId
+     */
+    function stakeOfToken(uint256 _tokenId) external returns (uint256);
+
+    /**
+     * @dev Pauses contract.
+     *
+     * See {ERC721Pausable} and {Pausable-_pause}.
+     */
+    function pause() external;
+
+    /**
+     * @dev Unpauses contract.
+     *
+     * See {ERC721Pausable} and {Pausable-_unpause}.
+     */
+    function unpause() external;
+}
+
+//---------------------------------------------------------------------------------------------------------------
+
+/*
+ * @dev Interface for REWARDS_VAULT
+ * INHERITANCE:
+    import "./Imports/access/AccessControl.sol";
+    import "./Imports/security/Pausable.sol";
+    import "./Imports/security/ReentrancyGuard.sol";
+    import "./Imports/token/ERC721/IERC721.sol";
+    import "./Imports/token/ERC721/IERC721Receiver.sol";
+ */
+interface REWARDS_VAULT_Interface {
+    //--------------------------------------External functions--------------------------------------------//
+
+    /**
+     * @dev Set address of contracts to interface with
+     * @param _utilAddress address of UTIL_TKN
+     * @param _stakeAddress address of STAKE_TKN
+     */
+    function setTokenContracts(address _utilAddress, address _stakeAddress)
+        external;
+
+    /**
+     * @dev Sends (amount) pruf to ownerOf(tokenId)
+     * @param _tokenId - stake key token ID
+     * @param _amount - amount to pay to owner of (tokenId)
+     */
+    function payRewards(uint256 _tokenId, uint256 _amount) external;
+
+    /**
+     * @dev Pauses contract.
+     *
+     * See {ERC721Pausable} and {Pausable-_pause}.
+     */
+    function pause() external;
+
+    /**
+     * @dev Unpauses contract.
+     *
+     * See {ERC721Pausable} and {Pausable-_unpause}.
+     */
+    function unpause() external;
+}

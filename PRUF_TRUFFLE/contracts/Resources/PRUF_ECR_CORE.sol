@@ -89,7 +89,6 @@ contract ECR_CORE is BASIC {
      */
     function getEscrowDataLight(bytes32 _idxHash)
         internal
-        view
         returns (escrowDataExtLight memory)
     {
         escrowDataExtLight memory escrowDataLight = ECR_MGR
@@ -105,7 +104,6 @@ contract ECR_CORE is BASIC {
      */
     function getEscrowDataHeavy(bytes32 _idxHash)
         internal
-        view
         returns (escrowDataExtHeavy memory)
     {
         escrowDataExtHeavy memory escrowDataHeavy = ECR_MGR

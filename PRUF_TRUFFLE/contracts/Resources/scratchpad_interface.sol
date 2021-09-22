@@ -2,234 +2,320 @@
 pragma solidity ^0.8.7;
 import "./RESOURCE_PRUF_STRUCTS.sol";
 
-interface STOR_Interface {
-    //--------------------------------Public Functions---------------------------------//
+interface NODE_MGR {
+    //--------------------------------------------Public Functions--------------------------
 
     /**
-     * @dev Authorize / Deauthorize contract NAMES permitted to make record modifications, per node
-     * allows ACtokenHolder to Authorize / Deauthorize specific contracts to work within their node
-     * @param   _name -  Name of contract being authed
-     * @param   _node - affected node
-     * @param   _contractAuthLevel - auth level to set for thae contract, in that node
+     * @dev get bit from .switches at specified position
+     * @param _node - node associated with query
+     * @param _position - bit position associated with query
+     * @return 1 or 0 (enabled or disabled)
      */
-    function enableContractForNode(
-        string memory _name,
-        uint32 _node,
-        uint8 _contractAuthLevel
+    function getSwitchAt(uint32 _node, uint8 _position)
+        external
+        returns (uint256);
+
+    //--------------------------------------------External Functions--------------------------
+
+    /**
+     * @dev Set pricing for Nodes
+     * @param newNodePrice - cost per node (18 decimals)
+     */
+    function setNodePricing(uint256 newNodePrice) external;
+
+    /**
+     * !! to be used with great caution !!
+     * This potentially breaks decentralization and must eventually be given over to some kind of governance contract.
+     * @dev Increases (but cannot decrease) price share for a given node
+     * @param _node - node in which cost share is being modified
+     * @param _newDiscount - discount(1% == 100, 10000 == max)
+     */
+    function increaseShare(uint32 _node, uint32 _newDiscount) external;
+
+    /**
+     *
+     * @dev Sets the valid storage type providers.
+     * @param _storageProvider - uint position for storage provider
+     * @param _status - uint position for custody type status
+     */
+    function setStorageProviders(uint8 _storageProvider, uint8 _status)
+        external;
+
+    /**
+     * @dev Sets the valid management types.
+     * @param _managementType - uint position for management type
+     * @param _status - uint position for custody type status
+     */
+    function setManagementTypes(uint8 _managementType, uint8 _status) external;
+
+    /**
+     * @dev Sets the valid custody types.
+     * @param _custodyType - uint position for custody type
+     * @param _status - uint position for custody type status
+     */
+    function setCustodyTypes(uint8 _custodyType, uint8 _status) external;
+
+    /**
+     * !! -------- to be used with great caution and only as a result of community governance action -----------
+     * @dev Transfers a name from one node to another
+     *   -Designed to remedy brand infringement issues. This breaks decentralization and must eventually be given
+     *   -over to some kind of governance contract.
+     * @param _fromNode - source node
+     * @param _toNode - destination node
+     * @param _thisName - name to be transferred
+     */
+    function transferName(
+        uint32 _fromNode,
+        uint32 _toNode,
+        string calldata _thisName
     ) external;
 
-    //--------------------------------External Functions---------------------------------//
-
     /**
-     * @dev Triggers stopped state. (pausable)
+     * !! -------- to be used with great caution -----------
+     * @dev Modifies an Node with minimal controls
+     * @param _node - node to be modified
+     * @param _nodeRoot - root of node
+     * @param _custodyType - custodyType of node (see docs)
+     * @param _managementType - managementType of node (see docs)
+     * @param _storageProvider - storageProvider of node (see docs)
+     * @param _discount - discount of node (100 == 1%, 10000 == max)
+     * @param _refAddress - referance address associated with an node
+     * @param _CAS1 - any external data attatched to node 1/2
+     * @param _CAS2 - any external data attatched to node 2/2
      */
-    function pause() external;
-
-    /**
-     * @dev Returns to normal state. (pausable)
-     */
-    function unpause() external;
-
-    /**
-     * @dev Authorize / Deauthorize ADRESSES permitted to make record modifications, per node
-     * populates contract name resolution and data mappings
-     * @param _contractName - String name of contract
-     * @param _contractAddr - address of contract
-     * @param _node - node to authorize in
-     * @param _contractAuthLevel - auth level to assign
-     */
-    function OO_addContract(
-        string calldata _contractName,
-        address _contractAddr,
+    function modifyNode(
         uint32 _node,
-        uint8 _contractAuthLevel
+        uint32 _nodeRoot,
+        uint8 _custodyType,
+        uint8 _managementType,
+        uint8 _storageProvider,
+        uint32 _discount,
+        address _refAddress,
+        bytes32 _CAS1,
+        bytes32 _CAS2
     ) external;
 
     /**
-     * @dev set the default list of 11 contracts (zero index) to be applied to Noees
-     * @param _contractNumber - 0-10
-     * @param _name - name
-     * @param _contractAuthLevel - authLevel
+     * @dev Modifies node.switches bitwise (see NODE option switches in ZZ_PRUF_DOCS)
+     * @param _node - node to be modified
+     * @param _position - uint position of bit to be modified
+     * @param _bit - switch - 1 or 0 (true or false)
      */
-    function addDefaultContracts(
-        uint256 _contractNumber,
+    function modifyNodeSwitches(
+        uint32 _node,
+        uint8 _position,
+        uint8 _bit
+    ) external;
+
+    /**
+     * @dev Mints Node token and creates an node.
+     * @param _node - node to be created (unique)
+     * @param _name - name to be configured to node (unique)
+     * @param _nodeRoot - root of node
+     * @param _custodyType - custodyType of new node (see docs)
+     * @param _managementType - managementType of new node (see docs)
+     * @param _storageProvider - storageProvider of new node (see docs)
+     * @param _discount - discount of node (100 == 1%, 10000 == max)
+     * @param _CAS1 - any external data attatched to node 1/2
+     * @param _CAS2 - any external data attatched to node 2/2
+     * @param _recipientAddress - address to recieve node
+     */
+    function createNode(
+        uint32 _node,
         string calldata _name,
-        uint8 _contractAuthLevel
+        uint32 _nodeRoot,
+        uint8 _custodyType,
+        uint8 _managementType,
+        uint8 _storageProvider,
+        uint32 _discount,
+        bytes32 _CAS1,
+        bytes32 _CAS2,
+        address _recipientAddress
     ) external;
 
     /**
-     * @dev retrieve a record from the default list of 11 contracts to be applied to Nodees
-     * @param _contractNumber to look up (0-10)
-     * @return the name and auth level of indexed contract
+     * @dev Burns (amount) tokens and mints a new Node token to the calling address
+     * @param _name - chosen name of node
+     * @param _nodeRoot - chosen root of node
+     * @param _custodyType - chosen custodyType of node (see docs)
+     * @param _CAS1 - any external data attatched to node 1/2
+     * @param _CAS2 - any external data attatched to node 2/2
      */
-    function getDefaultContract(uint256 _contractNumber)
-        external
-        returns (DefaultContract memory);
+    function purchaseNode(
+        string calldata _name,
+        uint32 _nodeRoot,
+        uint8 _custodyType,
+        bytes32 _CAS1,
+        bytes32 _CAS2
+    ) external returns (uint256);
 
     /**
-     * @dev Set the default 11 authorized contracts
-     * @param _node the Node which will be enabled for the default contracts
+     * @dev Authorize / Deauthorize users for an address be permitted to make record modifications
+     * @dev only useful for custody types that designate user adresses (type1...)
+     * @param _node - node that user is being authorized in
+     * @param _addrHash - hash of address belonging to user being authorized
+     * @param _userType - authority level for user (see docs)
      */
-    function enableDefaultContractsForNode(uint32 _node) external;
-
-    /**
-     * @dev Make a new record, writing to the 'database' mapping with basic initial asset data
-     * calling contract must be authorized in relevant node
-     * @param   _idxHash - asset ID
-     * @param   _rgtHash - rightsholder id hash
-     * @param   _node - node in which to create the asset
-     * @param   _countDownStart - initial value for decrement-only value
-     */
-    function newRecord(
-        bytes32 _idxHash,
-        bytes32 _rgtHash,
+    function addUser(
         uint32 _node,
-        uint32 _countDownStart
+        bytes32 _addrHash,
+        uint8 _userType
     ) external;
 
     /**
-     * @dev Modify a record, writing to the 'database' mapping with updates to multiple fields
-     * @param _idxHash - record asset ID
-     * @param _rgtHash - record owner ID hash
-     * @param _newAssetStatus - New Status to set
-     * @param _countDown - New countdown value (must be <= old value)
-     * @param _int32temp - temp value
-     * @param _incrementModCount - 0 = no 170 = yes
-     * @param _incrementNumberOfTransfers - 0 = no 170 = yes
+     * @dev Modifies an node Node name for its exclusive namespace
+     * @param _node - node being modified
+     * @param _newName - updated name associated with node (unique)
      */
-    function modifyRecord(
-        bytes32 _idxHash,
-        bytes32 _rgtHash,
-        uint8 _newAssetStatus,
-        uint32 _countDown,
-        uint32 _int32temp,
-        uint256 _incrementModCount,
-        uint256 _incrementNumberOfTransfers
+    function updateNodeName(uint32 _node, string calldata _newName) external;
+
+    /**
+     * @dev Modifies an node Node content adressable storage data pointer
+     * @param _node - node being modified
+     * @param _CAS1 - any external data attatched to node 1/2
+     * @param _CAS2 - any external data attatched to node 2/2
+     */
+    function updateNodeCAS(
+        uint32 _node,
+        bytes32 _CAS1,
+        bytes32 _CAS2
     ) external;
 
     /**
-     * @dev Change node of an asset - writes to node in the 'Record' struct of the 'database' at _idxHash
-     * @param _idxHash - record asset ID
-     * @param _newNode - Aseet Class to change to
+     * @dev Set function costs and payment address per Node, in PRUF(18 decimals)
+     * @param _node - node to set service costs
+     * @param _service - service type being modified (see service types in ZZ_PRUF_DOCS)
+     * @param _serviceCost - 18 decimal fee in PRUF associated with specified service
+     * @param _paymentAddress - address to have _serviceCost paid to
      */
-    function changeNode(bytes32 _idxHash, uint32 _newNode) external;
-
-    /**
-     * @dev Set an asset to Lost Or Stolen. Allows narrow modification of status 6/12 assets, normally locked
-     * @param _idxHash - record asset ID
-     * @param _newAssetStatus - Status to change to
-     */
-    function setLostOrStolen(bytes32 _idxHash, uint8 _newAssetStatus) external;
-
-    /**
-     * @dev Set an asset to escrow locked status (6/50/56).
-     * @param _idxHash - record asset ID
-     * @param _newAssetStatus - New Status to set
-     */
-    function setEscrow(bytes32 _idxHash, uint8 _newAssetStatus) external;
-
-    /**
-     * @dev remove an asset from escrow status. Implicitly trusts escrowManager ECR_MGR contract
-     * @param _idxHash - record asset ID
-     */
-    function endEscrow(bytes32 _idxHash) external;
-
-    /**
-     * @dev Modify record MutableStorage data
-     * @param  _idxHash - record asset ID
-     * @param  _mutableStorage1 - first half of content adressable storage location
-     * @param  _mutableStorage2 - second half of content adressable storage location
-     */
-    function modifyMutableStorage(
-        bytes32 _idxHash,
-        bytes32 _mutableStorage1,
-        bytes32 _mutableStorage2
+    function setOperationCosts(
+        uint32 _node,
+        uint16 _service,
+        uint256 _serviceCost,
+        address _paymentAddress
     ) external;
 
     /**
-     * @dev Modify NonMutableStorage data
-     * @param _idxHash - record asset ID
-     * @param _nonMutableStorage1 - first half of content adressable storage location
-     * @param _nonMutableStorage2 - second half of content adressable storage location
+     * @dev Configure the immutable data in an Node one time
+     * @param _node - node being modified
+     * @param _managementType - managementType of node (see docs)
+     * @param _storageProvider - storageProvider of node (see docs)
+     * @param _refAddress - address permanently tied to node
      */
-    function modifyNonMutableStorage(
-        bytes32 _idxHash,
-        bytes32 _nonMutableStorage1,
-        bytes32 _nonMutableStorage2
+    function setNonMutableData(
+        uint32 _node,
+        uint8 _managementType,
+        uint8 _storageProvider,
+        address _refAddress
     ) external;
 
     /**
-     * @dev return a record from the database
-     * @param  _idxHash - record asset ID
-     * returns a complete Record struct (see interfaces for struct definitions)
+     * @dev get an node Node User type for a specified address
+     * @param _userHash - hash of selected user
+     * @param _node - node of query
+     * @return type of user @ _node (see docs)
      */
-    function retrieveRecord(bytes32 _idxHash) external returns (Record memory);
+    function getUserType(bytes32 _userHash, uint32 _node)
+        external
+        returns (uint8);
 
     /**
-     * @dev return a record from the database w/o rgt
-     * @param _idxHash - record asset ID
-     * @return rec.assetStatus,
-                rec.modCount,
-                rec.node,
-                rec.countDown,
-                rec.countDownStart,
-                rec.mutableStorage1,
-                rec.mutableStorage2,
-                rec.nonMutableStorage1,
-                rec.nonMutableStorage2,
+     * @dev get the status of a specific management type
+     * @param _managementType - management type associated with query (see docs)
+     * @return 1 or 0 (enabled or disabled)
      */
-    function retrieveShortRecord(bytes32 _idxHash)
+    function getManagementTypeStatus(uint8 _managementType)
         external
-        returns (
-            uint8,
-            uint8,
-            uint32,
-            uint32,
-            uint32,
-            bytes32,
-            bytes32,
-            bytes32,
-            bytes32,
-            uint16
-        );
+        returns (uint8);
 
     /**
-     * @dev Compare record.rightsholder with supplied bytes32 rightsholder
-     * @param _idxHash - record asset ID
-     * @param _rgtHash - record owner ID hash
-     * @return 170 if matches, 0 if not
+     * @dev get the status of a specific storage provider
+     * @param _storageProvider - storage provider associated with query (see docs)
+     * @return 1 or 0 (enabled or disabled)
      */
-    function _verifyRightsHolder(bytes32 _idxHash, bytes32 _rgtHash)
+    function getStorageProviderStatus(uint8 _storageProvider)
         external
-        returns (uint256);
+        returns (uint8);
 
     /**
-     * @dev Compare record.rightsholder with supplied bytes32 rightsholder (writes an emit in blockchain for independant verification)
-     * @param _idxHash - record asset ID
-     * @param _rgtHash - record owner ID hash
-     * @return 170 if matches, 0 if not
+     * @dev get the status of a specific custody type
+     * @param _custodyType - custody type associated with query (see docs)
+     * @return 1 or 0 (enabled or disabled)
      */
-    function blockchainVerifyRightsHolder(bytes32 _idxHash, bytes32 _rgtHash)
-        external
-        returns (uint256);
+    function getCustodyTypeStatus(uint8 _custodyType) external returns (uint8);
 
     /**
-     * @dev returns the address of a contract with name _name. This is for web3 implementations to find the right contract to interact with
-     * example :  Frontend = ****** so web 3 first asks storage where to find frontend, then calls for frontend functions.
-     * @param _name - contract name
-     * @return contract address
+     * @dev Retrieve extended nodeData @ _node
+     * @param _node - node associated with query
+     * @return nodeData (see docs)
      */
-    function resolveContractAddress(string calldata _name)
-        external
-        returns (address);
+    function getExtendedNodeData(uint32 _node) external returns (Node memory);
 
     /**
-     * @dev returns the contract type of a contract with address _addr.
-     * @param _addr - contract address
-     * @param _node - node to look up contract type-in-class
-     * @return contractType of given contract
+     * @dev verify the root of two Nodees are equal
+     * @param _node1 - first node associated with query
+     * @param _node2 - second node associated with query
+     * @return 170 or 0 (true or false)
      */
-    function ContractInfoHash(address _addr, uint32 _node)
+    function isSameRootNode(uint32 _node1, uint32 _node2)
         external
-        returns (uint8, bytes32);
+        returns (uint8);
+
+    /**
+     * @dev Retrieve Node_name @ _tokenId or node
+     * @param node - tokenId associated with query
+     * @return name of token @ _tokenID
+     */
+    function getNodeName(uint32 node) external returns (string memory);
+
+    /**
+     * @dev Retrieve node @ Node_name
+     * @param _forThisName - name of node for nodeNumber query
+     * @return node number @ _name
+     */
+    function resolveNode(string calldata _forThisName)
+        external
+        returns (uint32);
+
+    /**
+     * @dev return current node token index and price
+     * @return {
+         nodeTokenIndex: current token number
+         Node_price: current price per node
+     }
+     */
+    function currentNodePricingInfo() external returns (uint256, uint256);
+
+    /**
+     * @dev Retrieve function costs per Node, per service type in PRUF(18 decimals)
+     * @param _node - node associated with query
+     * @param _service - service number associated with query (see service types in ZZ_PRUF_DOCS)
+     * @return invoice{
+         rootAddress: @ _node root payment address @ _service
+         rootPrice: @ _node root service cost @ _service
+         NTHaddress: @ _node payment address tied @ _service
+         NTHprice: @ _node service cost @ _service
+         node: Node index
+     }
+     */
+    function getInvoice(uint32 _node, uint16 _service)
+        external
+        returns (Invoice memory);
+
+    /** DPS:CHECK
+     * @dev Retrieve service costs for _node._service
+     * @param _node - node associated with query
+     * @param _service - service associated with query
+     * @return Costs Struct for_node
+     */
+    function getServicePaymentData(uint32 _node, uint16 _service)
+        external
+        returns (Costs memory);
+
+    /**
+     * @dev Retrieve Node_discount @ _node
+     * @param _node - node associated with query
+     * @return percentage of rewards distribution @ _node
+     */
+    function getNodeDiscount(uint32 _node) external returns (uint32);
 }
