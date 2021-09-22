@@ -242,16 +242,15 @@ interface NODE_MGR_Interface {
         view
         returns (Invoice memory);
 
-    /**
-     * @dev Retrieve PRUF_MARKET Commisiions and feed for _node
+    /** DPS:CHECK
+     * @dev Retrieve service costs for _node._service
      * @param _node - node associated with query
-     *
-     * @return marketFees Struct for_node
+     * @param _service - service associated with query
+     * @return Costs Struct for_node
      */
-    function getNodeMarketFees(uint32 _node)
+    function getServicePaymentData(uint32 _node, uint16 _service) 
         external
-        view
-        returns (MarketFees memory);
+        returns (Costs memory);
 
     /*
      * @dev Retrieve Node_discount @ _node, in percent NTH share, * 100 (9000 = 90%)

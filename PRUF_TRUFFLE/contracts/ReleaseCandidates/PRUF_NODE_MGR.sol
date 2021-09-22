@@ -20,7 +20,6 @@ __/\\\\\\\\\\\\\ _____/\\\\\\\\\ _______/\\__/\\ ___/\\\\\\\\\\\\\\\
  * there is no response to notification, the user agrees that the name record may be changed without their permission or cooperation.
  * Use of this software constitutes consent to the terms above.
  -----------------------------------------------------------------*/
- 
 
 // SPDX-License-Identifier: UNLICENSED
 pragma solidity ^0.8.7;
@@ -527,7 +526,6 @@ contract NODE_MGR is BASIC {
         //^^^^^^^effects^^^^^^^^^
     }
 
-
     /**
      * @dev get an node Node User type for a specified address
      * @param _userHash - hash of selected user
@@ -708,6 +706,29 @@ contract NODE_MGR is BASIC {
         //^^^^^^^interactions^^^^^^^^^
     }
 
+    /** DPS:CHECK
+     * @dev Retrieve service costs for _node._service
+     * @param _node - node associated with query
+     * @param _service - service associated with query
+     * @return Costs Struct for_node
+     */
+    function getServicePaymentData(uint32 _node, uint16 _service)
+        external
+        view
+        returns (Costs memory)
+    {
+        //^^^^^^^checks^^^^^^^^^
+        Costs memory ServicePaymentData;
+
+        ServicePaymentData.paymentAddress = cost[_node][_service]
+            .paymentAddress;
+        ServicePaymentData.serviceCost = cost[_node][_service].serviceCost;
+        //^^^^^^^effects^^^^^^^^^
+
+        return ServicePaymentData;
+        //^^^^^^^interactions^^^^^^^^^
+    }
+
     /**
      * @dev Retrieve Node_discount @ _node
      * @param _node - node associated with query
@@ -717,29 +738,6 @@ contract NODE_MGR is BASIC {
         //^^^^^^^checks^^^^^^^^^
 
         return (nodeData[_node].discount);
-        //^^^^^^^interactions^^^^^^^^^
-    }
-
-    /**
-     * @dev Retrieve PRUF_MARKET Commisiions and feed for _node
-     * @param _node - node associated with query
-     * @return marketFees Struct for_node
-     */
-    function getNodeMarketFees(uint32 _node)
-        external
-        view
-        returns (MarketFees memory)
-    {
-        //^^^^^^^checks^^^^^^^^^
-        MarketFees memory fees;
-
-        fees.listingFeePaymentAddress = cost[_node][1000].paymentAddress;
-        fees.saleCommissionPaymentAddress = cost[_node][1001].paymentAddress;
-        fees.listingFee = cost[_node][1000].serviceCost;
-        fees.saleCommission = cost[_node][1001].serviceCost;
-        //^^^^^^^effects^^^^^^^^^
-
-        return fees;
         //^^^^^^^interactions^^^^^^^^^
     }
 
