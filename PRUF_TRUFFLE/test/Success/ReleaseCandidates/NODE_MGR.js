@@ -1448,7 +1448,7 @@ contract("TheWorks", (accounts) => {
   });
 
   it("Should getExtendedNodeData for 1000001", async () => {
-    var Record = [];
+    var Record = {};
 
     return await NODE_MGR.getExtendedNodeData(
       "1000001",
@@ -1456,7 +1456,7 @@ contract("TheWorks", (accounts) => {
       function (_err, _result) {
         if (_err) {
         } else {
-          Record = Object.values(_result);
+          Record = _result;
           console.log(Record);
         }
       }

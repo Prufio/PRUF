@@ -12,7 +12,7 @@ __/\\\\\\\\\\\\\ _____/\\\\\\\\\ _______/\\__/\\ ___/\\\\\\\\\\\\\\\
 
 /**-----------------------------------------------------------------
  *  TO DO
- * Check and see if A_TKN can be permitted in all nodes to prevent safeTransferFrom->writeRecord conflict due to it not being a default authorized contract for node s
+ * Check and see if A_TKN can be permitted in all nodes to prevent safeTransferFrom->writeRecord conflict due to it not being a default authorized contract for nodes CTS:EXAMINE ?? 
  *-----------------------------------------------------------------
  * PRUF ASSET NFT CONTRACT
  *---------------------------------------------------------------*/
@@ -29,7 +29,6 @@ import "../Imports/access/AccessControlEnumerable.sol";
 import "../Imports/utils/Context.sol";
 import "../Imports/utils/Counters.sol";
 import "../Imports/security/ReentrancyGuard.sol";
-
 import "../Resources/RESOURCE_PRUF_INTERFACES.sol";
 import "../Resources/RESOURCE_PRUF_TKN_INTERFACES.sol";
 
@@ -92,7 +91,7 @@ contract NODE_TKN is
     modifier isContractAdmin() {
         require(
             hasRole(CONTRACT_ADMIN_ROLE, _msgSender()),
-            "AT:MOD-IA: Calling address !contract admin"
+            "AT:MOD-ICA: Calling address !contract admin"
         );
         _;
     }
@@ -110,16 +109,17 @@ contract NODE_TKN is
         _;
     }
 
-    event REPORT(string _msg);
+    //----------------------Events----------------------//
 
-    //----------------------Admin functions - isContractAdmin or isMinter----------------------//
+    event REPORT(string _msg); //CTS:EXAMINE not used
+
+    //----------------------External Functions----------------------//
 
     /**
      * @dev Mint a Node token
      * @param _recipientAddress - Address to mint token into
      * @param _tokenId - Token ID to mint
      * @param _tokenURI - URI string to atatch to token
-     *
      * @return Token ID of minted token
      */
     function mintNodeToken(
@@ -131,6 +131,8 @@ contract NODE_TKN is
 
         _safeMint(_recipientAddress, _tokenId);
         _setTokenURI(_tokenId, _tokenURI);
+        //^^^^^^^effects^^^^^^^^^
+
         return _tokenId;
         //^^^^^^^interactions^^^^^^^^^
     }
@@ -170,7 +172,6 @@ contract NODE_TKN is
     /**
      * @dev See if node token exists
      * @param tokenId - Token ID to set URI
-     *
      * @return 170 or 0 (true or false)
      */
     function tokenExists(uint256 tokenId) external view returns (uint256) {

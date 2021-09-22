@@ -19,13 +19,8 @@ __/\\\\\\\\\\\\\ _____/\\\\\\\\\ _______/\\__/\\ ___/\\\\\\\\\\\\\\\
  * infringing from any record that the user controls, within 30 days of notification. If notification is not possible or
  * there is no response to notification, the user agrees that the name record may be changed without their permission or cooperation.
  * Use of this software constitutes consent to the terms above.
- *-----------------------------------------------------------------
- */
-
-/**-----------------------------------------------------------------
- *  TO DO
- *-----------------------------------------------------------------
- */
+ -----------------------------------------------------------------*/
+ 
 
 // SPDX-License-Identifier: UNLICENSED
 pragma solidity ^0.8.7;
@@ -40,19 +35,21 @@ contract NODE_MGR is BASIC {
 
     uint256 private nodeTokenIndex = 1000000; //Starting index for purchased node tokens
     uint256 public node_price = 200000 ether;
-    uint32 private constant startingDiscount = 9500; // Purchased nodes start with 95% profit share
-    mapping(uint32 => mapping(uint16 => Costs)) private cost; // Cost per function by Node => Costs struct (see RESOURCE_PRUF_INTERFACES for struct definitions)
-    mapping(uint32 => Node) private nodeData; // node info database Node to node struct (see RESOURCE_PRUF_INTERFACES for struct definitions)
+    uint32 private constant startingDiscount = 9500; //Purchased nodes start with 95% profit share
+    mapping(uint32 => mapping(uint16 => Costs)) private cost; //Cost per function by Node => Costs struct (see RESOURCE_PRUF_INTERFACES for struct definitions)
+    mapping(uint32 => Node) private nodeData; //node info database Node to node struct (see RESOURCE_PRUF_INTERFACES for struct definitions)
     mapping(string => uint32) private nodeId; //name to Node resolution map
-    mapping(bytes32 => mapping(uint32 => uint8)) private registeredUsers; // Authorized recorder database by Node, by address hash
+    mapping(bytes32 => mapping(uint32 => uint8)) private registeredUsers; //Authorized recorder database by Node, by address hash
     mapping(uint8 => uint8) private validStorageProviders; //storageProvider -> status (enabled or disabled)
     mapping(uint8 => uint8) private validManagementTypes; //managementTypes -> status (enabled or disabled)
-    mapping(uint8 => uint8) private validCustodyTypes; //managementTypes -> status (enabled or disabled)
+    mapping(uint8 => uint8) private validCustodyTypes; //custodyTypes -> status (enabled or disabled)
 
     constructor() {
         _setupRole(NODE_MINTER_ROLE, _msgSender());
         nodeId[""] = 4294967295; //points the blank string name to node 4294967295 to make "" owned
     }
+
+    //--------------------------------------------Modifiers--------------------------
 
     /**
      * @dev Verify user credentials
@@ -74,12 +71,39 @@ contract NODE_MGR is BASIC {
     modifier isNodeHolder(uint32 _node) {
         require(
             (NODE_TKN.ownerOf(_node) == _msgSender()),
-            "NM:MOD-INTHoC: _msgSender() not authorized in Node"
+            "NM:MOD-INH: _msgSender() not authorized in Node"
         );
         _;
     }
 
-    //--------------------------------------------ADMIN only Functions--------------------------
+    //--------------------------------------------Public Functions--------------------------
+
+    /**
+     * @dev get bit from .switches at specified position
+     * @param _node - node associated with query
+     * @param _position - bit position associated with query
+     * @return 1 or 0 (enabled or disabled)
+     */
+    function getSwitchAt(uint32 _node, uint8 _position)
+        public
+        view
+        returns (uint256)
+    {
+        require(
+            (_position > 0) && (_position < 9),
+            "NM:GSA: bit position must be between 1 and 8"
+        );
+        //^^^^^^^checks^^^^^^^^^
+
+        if ((nodeData[_node].switches & (1 << (_position - 1))) > 0) {
+            return 1;
+        } else {
+            return 0;
+        }
+        //^^^^^^^interactions^^^^^^^^^
+    }
+
+    //--------------------------------------------External Functions--------------------------
 
     /**
      * @dev Set pricing for Nodes
@@ -91,7 +115,7 @@ contract NODE_MGR is BASIC {
         node_price = newNodePrice;
         //^^^^^^^effects^^^^^^^^^
 
-        emit REPORT("node pricing Changed!"); //report access to internal parameter (KEEP THIS)
+        emit REPORT("node pricing Changed!"); //report access to internal parameter
         //^^^^^^^interactions^^^^^^^^^
     }
 
@@ -106,12 +130,12 @@ contract NODE_MGR is BASIC {
         external
         isContractAdmin
     {
-        require((nodeData[_node].nodeRoot != 0), "NM:AIS: node !exist");
+        require((nodeData[_node].nodeRoot != 0), "NM:IS: node !exist");
         require(
             _newDiscount >= nodeData[_node].discount,
-            "NM:AIS: New share < old share"
+            "NM:IS: New share < old share"
         );
-        require(_newDiscount <= 10000, "NM:AIS: Discount > 100% (10000)");
+        require(_newDiscount <= 10000, "NM:IS: Discount > 100% (10000)");
         //^^^^^^^checks^^^^^^^^^
 
         nodeData[_node].discount = _newDiscount;
@@ -253,9 +277,9 @@ contract NODE_MGR is BASIC {
     ) external isContractAdmin nonReentrant {
         require(
             (_position > 0) && (_position < 9),
-            "NM:AMACS: Bit position !>0||<9"
+            "NM:MNS: Bit position !>0||<9"
         );
-        require(_bit < 2, "NM:AMACS: Bit != 1 or 0");
+        require(_bit < 2, "NM:MNS: Bit != 1 or 0");
 
         //^^^^^^^checks^^^^^^^^^
 
@@ -272,8 +296,6 @@ contract NODE_MGR is BASIC {
         nodeData[_node].switches = uint8(switches);
         //^^^^^^^effects^^^^^^^^^
     }
-
-    //--------------------------------------------NODEMINTER only Functions--------------------------
 
     /**
      * @dev Mints Node token and creates an node.
@@ -313,10 +335,8 @@ contract NODE_MGR is BASIC {
         _newNode.CAS2 = _CAS2;
 
         _createNode(_newNode, _node, _recipientAddress);
-        //^^^^^^^interations^^^^^^^^^
+        //^^^^^^^effects^^^^^^^^^
     }
-
-    //--------------------------------------------External Functions--------------------------
 
     /**
      * @dev Burns (amount) tokens and mints a new Node token to the calling address
@@ -335,11 +355,11 @@ contract NODE_MGR is BASIC {
     ) external nonReentrant returns (uint256) {
         require(
             nodeTokenIndex < 4294000000,
-            "NM:PACN: Only 4294000000 node tokens allowed"
+            "NM:PN: Only 4294000000 node tokens allowed"
         );
         require(
             (ID_MGR.trustLevel(_msgSender()) > 0),
-            "NM:PACN: Caller !valid PRuF_ID holder"
+            "NM:PN: Caller !valid PRuF_ID holder"
         );
         //^^^^^^^checks^^^^^^^^^
 
@@ -358,6 +378,7 @@ contract NODE_MGR is BASIC {
         ThisNode.discount = startingDiscount;
         ThisNode.CAS1 = _CAS1;
         ThisNode.CAS2 = _CAS2;
+        //^^^^^^^effects^^^^^^^^^
 
         UTIL_TKN.trustedAgentBurn(_msgSender(), node_price / 2);
         UTIL_TKN.trustedAgentTransfer(
@@ -400,9 +421,7 @@ contract NODE_MGR is BASIC {
         if ((_userType == 0) && (registeredUsers[_addrHash][0] > 0)) {
             registeredUsers[_addrHash][0]--;
         }
-
         //^^^^^^^effects^^^^^^^^^
-        //^^^^^^^interactions^^^^^^^^^
     }
 
     /**
@@ -419,7 +438,7 @@ contract NODE_MGR is BASIC {
             (nodeId[_newName] == 0) || //name is unassigned
                 (keccak256(abi.encodePacked(_newName)) == //name is same as old name
                     (keccak256(abi.encodePacked(nodeData[_node].name)))),
-            "NM:UACN: Name already in use or is same as the previous"
+            "NM:UNN: Name already in use or is same as the previous"
         );
         //^^^^^^^checks^^^^^^^^^
 
@@ -471,8 +490,6 @@ contract NODE_MGR is BASIC {
         //^^^^^^^effects^^^^^^^^^
     }
 
-    //-------------------------------------------Functions dealing with immutable data ---------------------------------------------
-
     /**
      * @dev Configure the immutable data in an Node one time
      * @param _node - node being modified
@@ -488,19 +505,19 @@ contract NODE_MGR is BASIC {
     ) external whenNotPaused isNodeHolder(_node) {
         require(
             nodeData[_node].managementType == 255,
-            "NM:UACI: Immutable node data already set"
+            "NM:SNMD: Immutable node data already set"
         );
         require(
             _managementType != 255,
-            "NM:UACI: managementType = 255(Unconfigured)"
+            "NM:SNMD: managementType = 255(Unconfigured)"
         );
         require( //_managementType is a valid type
             (validManagementTypes[_managementType] > 0),
-            "NM:UACI: managementType is invalid (0)"
+            "NM:SNMD: managementType is invalid (0)"
         );
         require( //_storageProvider is a valid type
             (validStorageProviders[_storageProvider] > 0),
-            "NM:UACI: storageProvider is invalid (0)"
+            "NM:SNMD: storageProvider is invalid (0)"
         );
         //^^^^^^^checks^^^^^^^^^
 
@@ -510,39 +527,11 @@ contract NODE_MGR is BASIC {
         //^^^^^^^effects^^^^^^^^^
     }
 
-    //-------------------------------------------Read-only (view) functions ----------------------------------------------
-
-    /**
-     * @dev get bit from .switches at specified position
-     * @param _node - node associated with query
-     * @param _position - bit position associated with query
-     *
-     * @return 1 or 0 (enabled or disabled)
-     */
-    function getSwitchAt(uint32 _node, uint8 _position)
-        public
-        view
-        returns (uint256)
-    {
-        require(
-            (_position > 0) && (_position < 9),
-            "AM:GSA: bit position must be between 1 and 8"
-        );
-        //^^^^^^^checks^^^^^^^^^
-
-        if ((nodeData[_node].switches & (1 << (_position - 1))) > 0) {
-            return 1;
-        } else {
-            return 0;
-        }
-        //^^^^^^^interactions^^^^^^^^^
-    }
 
     /**
      * @dev get an node Node User type for a specified address
      * @param _userHash - hash of selected user
      * @param _node - node of query
-     *
      * @return type of user @ _node (see docs)
      */
     function getUserType(bytes32 _userHash, uint32 _node)
@@ -551,6 +540,7 @@ contract NODE_MGR is BASIC {
         returns (uint8)
     {
         //^^^^^^^checks^^^^^^^^^
+
         return (registeredUsers[_userHash][_node]);
         //^^^^^^^interactions^^^^^^^^^
     }
@@ -558,7 +548,6 @@ contract NODE_MGR is BASIC {
     /**
      * @dev get the status of a specific management type
      * @param _managementType - management type associated with query (see docs)
-     *
      * @return 1 or 0 (enabled or disabled)
      */
     function getManagementTypeStatus(uint8 _managementType)
@@ -567,6 +556,7 @@ contract NODE_MGR is BASIC {
         returns (uint8)
     {
         //^^^^^^^checks^^^^^^^^^
+
         return (validManagementTypes[_managementType]);
         //^^^^^^^interactions^^^^^^^^^
     }
@@ -574,7 +564,6 @@ contract NODE_MGR is BASIC {
     /**
      * @dev get the status of a specific storage provider
      * @param _storageProvider - storage provider associated with query (see docs)
-     *
      * @return 1 or 0 (enabled or disabled)
      */
     function getStorageProviderStatus(uint8 _storageProvider)
@@ -583,6 +572,7 @@ contract NODE_MGR is BASIC {
         returns (uint8)
     {
         //^^^^^^^checks^^^^^^^^^
+
         return (validStorageProviders[_storageProvider]);
         //^^^^^^^interactions^^^^^^^^^
     }
@@ -590,7 +580,6 @@ contract NODE_MGR is BASIC {
     /**
      * @dev get the status of a specific custody type
      * @param _custodyType - custody type associated with query (see docs)
-     *
      * @return 1 or 0 (enabled or disabled)
      */
     function getCustodyTypeStatus(uint8 _custodyType)
@@ -599,41 +588,14 @@ contract NODE_MGR is BASIC {
         returns (uint8)
     {
         //^^^^^^^checks^^^^^^^^^
-        return (validCustodyTypes[_custodyType]);
-        //^^^^^^^interactions^^^^^^^^^
-    }
 
-    /**
-     * @dev Retrieve nodeData @ _node
-     * @param _node - node associated with query
-     * DPS:THIS FUNCTION REMAINS FOR EXTERNAL TESTING ACCESS. try using getExtAcData, it should be depricated prior to production.
-     */
-    function getNodeData(uint32 _node)
-        external
-        view
-        returns (
-            uint32,
-            uint8,
-            uint8,
-            uint32,
-            address
-        )
-    {
-        //^^^^^^^checks^^^^^^^^^
-        return (
-            nodeData[_node].nodeRoot,
-            nodeData[_node].custodyType,
-            nodeData[_node].managementType,
-            nodeData[_node].discount,
-            nodeData[_node].referenceAddress
-        );
+        return (validCustodyTypes[_custodyType]);
         //^^^^^^^interactions^^^^^^^^^
     }
 
     /**
      * @dev Retrieve extended nodeData @ _node
      * @param _node - node associated with query
-     *
      * @return nodeData (see docs)
      */
     function getExtendedNodeData(uint32 _node)
@@ -642,6 +604,7 @@ contract NODE_MGR is BASIC {
         returns (Node memory)
     {
         //^^^^^^^checks^^^^^^^^^
+
         return (nodeData[_node]);
         //^^^^^^^interactions^^^^^^^^^
     }
@@ -650,7 +613,6 @@ contract NODE_MGR is BASIC {
      * @dev verify the root of two Nodees are equal
      * @param _node1 - first node associated with query
      * @param _node2 - second node associated with query
-     *
      * @return 170 or 0 (true or false)
      */
     function isSameRootNode(uint32 _node1, uint32 _node2)
@@ -670,7 +632,6 @@ contract NODE_MGR is BASIC {
     /**
      * @dev Retrieve Node_name @ _tokenId or node
      * @param node - tokenId associated with query
-     *
      * @return name of token @ _tokenID
      */
     function getNodeName(uint32 node) external view returns (string memory) {
@@ -683,7 +644,6 @@ contract NODE_MGR is BASIC {
     /**
      * @dev Retrieve node @ Node_name
      * @param _forThisName - name of node for nodeNumber query
-     *
      * @return node number @ _name
      */
     function resolveNode(string calldata _forThisName)
@@ -692,13 +652,13 @@ contract NODE_MGR is BASIC {
         returns (uint32)
     {
         //^^^^^^^checks^^^^^^^^^
+
         return (nodeId[_forThisName]);
         //^^^^^^^interactions^^^^^^^^^
     }
 
     /**
      * @dev return current node token index and price
-     *
      * @return {
          nodeTokenIndex: current token number
          Node_price: current price per node
@@ -706,17 +666,15 @@ contract NODE_MGR is BASIC {
      */
     function currentNodePricingInfo() external view returns (uint256, uint256) {
         //^^^^^^^checks^^^^^^^^^
+
         return (nodeTokenIndex, node_price);
         //^^^^^^^interactions^^^^^^^^^
     }
-
-    //-------------------------------------------functions for payment calculations----------------------------------------------
 
     /**
      * @dev Retrieve function costs per Node, per service type in PRUF(18 decimals)
      * @param _node - node associated with query
      * @param _service - service number associated with query (see service types in ZZ_PRUF_DOCS)
-     *
      * @return invoice{
          rootAddress: @ _node root payment address @ _service
          rootPrice: @ _node root service cost @ _service
@@ -746,6 +704,7 @@ contract NODE_MGR is BASIC {
         invoice.NTHaddress = costs.paymentAddress;
         invoice.NTHprice = costs.serviceCost;
         invoice.node = _node;
+        //^^^^^^^effects^^^^^^^^^
 
         return invoice;
         //^^^^^^^interactions^^^^^^^^^
@@ -754,19 +713,18 @@ contract NODE_MGR is BASIC {
     /**
      * @dev Retrieve Node_discount @ _node
      * @param _node - node associated with query
-     *
      * @return percentage of rewards distribution @ _node
      */
     function getNodeDiscount(uint32 _node) external view returns (uint32) {
         //^^^^^^^checks^^^^^^^^^
+
         return (nodeData[_node].discount);
         //^^^^^^^interactions^^^^^^^^^
     }
 
-    /** //DPS:TEST:NEW
+    /**
      * @dev Retrieve PRUF_MARKET Commisiions and feed for _node
      * @param _node - node associated with query
-     *
      * @return marketFees Struct for_node
      */
     function getNodeMarketFees(uint32 _node)
@@ -781,12 +739,13 @@ contract NODE_MGR is BASIC {
         fees.saleCommissionPaymentAddress = cost[_node][1001].paymentAddress;
         fees.listingFee = cost[_node][1000].serviceCost;
         fees.saleCommission = cost[_node][1001].serviceCost;
+        //^^^^^^^effects^^^^^^^^^
 
         return fees;
         //^^^^^^^interactions^^^^^^^^^
     }
 
-    //-------------------------------------------INTERNAL / PRIVATE functions ----------------------------------------------
+    //-------------------------------------------Private functions ----------------------------------------------
 
     /**
      * @dev creates an node and its corresponding namespace and data fields
