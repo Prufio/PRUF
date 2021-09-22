@@ -126,7 +126,7 @@ contract Market is BASIC {
         thisTag.price = _price;
 
         tag[newTokenId] = thisTag;
-        tagFees[newTokenId] = NODE_MGR.getNodeMarketFees(_node);
+        tagFees[newTokenId] = getNodeMarketFees(_node);
         //^^^^^^^effects^^^^^^^^^
 
         A_TKN.trustedAgentTransferFrom(_msgSender(), address(this), _tokenId); //move token to this contract using TRUSTED_AGENT_ROLE
@@ -170,7 +170,7 @@ contract Market is BASIC {
 
         uint256 newTokenId = uint256(consignmentTag);
 
-        MarketFees memory fees = NODE_MGR.getNodeMarketFees(_node);
+        MarketFees memory fees = getNodeMarketFees(_node);
 
         thisTag.tokenId = _tokenId;
         thisTag.tokenContract = _ERC721TokenContract;
@@ -338,6 +338,31 @@ contract Market is BASIC {
             _msgSender(), //to the purchase caller
             thisTag.tokenId //send this (native) tokenId
         );
+        //^^^^^^^interactions^^^^^^^^^
+    }
+
+    /** DPS:CHECK
+     * @dev Get Market fees struct
+     * @param _node node to get Market fees for
+     */
+    function getNodeMarketFees(uint32 _node)
+        private
+        returns (MarketFees memory)
+    {
+        //^^^^^^^checks^^^^^^^^^
+
+        MarketFees memory fees;
+
+        Costs memory listingFee = NODE_MGR.getServicePaymentData(_node, 1000);
+        Costs memory comission = NODE_MGR.getServicePaymentData(_node, 1001);
+
+        fees.listingFeePaymentAddress = listingFee.paymentAddress;
+        fees.listingFee = listingFee.serviceCost;
+        fees.saleCommissionPaymentAddress = comission.paymentAddress;
+        fees.saleCommission = comission.serviceCost;
+        //^^^^^^^effects^^^^^^^^^
+
+        return fees;
         //^^^^^^^interactions^^^^^^^^^
     }
 
