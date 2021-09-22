@@ -291,7 +291,7 @@ contract Helper2 is Ownable, BASIC {
     }
 
     function helper_payForService(
-        uint32 _node,
+        //uint32 _node,
         //address _senderAddress,
         address _rootAddress,
         uint256 _rootPrice,
@@ -304,7 +304,7 @@ contract Helper2 is Ownable, BASIC {
         invoice.rootPrice = _rootPrice;
         invoice.NTHaddress = _NTHaddress;
         invoice.NTHprice = _NTHprice;
-        invoice.node = _node;
+        //invoice.node = _node;
 
         //UTIL_TKN.payForService(_msgSender(), invoice); //-- NON LEGACY TOKEN CONTRACT
 

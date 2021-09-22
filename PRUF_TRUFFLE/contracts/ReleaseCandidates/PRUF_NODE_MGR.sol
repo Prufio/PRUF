@@ -703,8 +703,6 @@ contract NODE_MGR is BASIC {
         invoice.rootPrice = rootCosts.serviceCost;
         invoice.NTHaddress = costs.paymentAddress;
         invoice.NTHprice = costs.serviceCost;
-        invoice.node = _node;
-        //^^^^^^^effects^^^^^^^^^
 
         return invoice;
         //^^^^^^^interactions^^^^^^^^^
