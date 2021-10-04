@@ -296,7 +296,7 @@ CTS:EXAMINE MOVE EXTRANEOUS STRUCTS OUT OF TOKEN CONTRACTS (A_TKN, ID_MGR)
  * node option switches, 1 or 0 : AC_data.switches (AC_manager)
  *             Switches will be duplicated from root 
  * bit1  -- If set, cannot change URI or CAS data after initial setting
- * bit2  --
+ * bit2  -- If set, node allows minting to authorized third parties in management types that support address delegation
  * bit3  --
  * bit4  --
  * bit5  --
