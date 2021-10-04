@@ -29,7 +29,6 @@ import "../Imports/security/ReentrancyGuard.sol";
 import "../Resources/RESOURCE_PRUF_INTERFACES.sol";
 import "../Resources/RESOURCE_PRUF_TKN_INTERFACES.sol";
 
-
 /**
  * @dev {ERC721} token, including:
  *
@@ -63,7 +62,7 @@ contract A_TKN is
 
     string private _baseTokenURI;
 
-        bytes32 public constant CONTRACT_ADMIN_ROLE =
+    bytes32 public constant CONTRACT_ADMIN_ROLE =
         keccak256("CONTRACT_ADMIN_ROLE");
     bytes32 public constant MINTER_ROLE = keccak256("MINTER_ROLE");
     bytes32 public constant PAUSER_ROLE = keccak256("PAUSER_ROLE");
@@ -139,13 +138,18 @@ contract A_TKN is
 
     //---------------------------------------Public Functions-------------------------------
 
-    
     /**
      * @dev See {IERC721Metadata-tokenURI}.
      * @param tokenId - token to have URI checked
      * @return URI of token
      */
-    function tokenURI(uint256 tokenId) public view virtual override returns (string memory) {
+    function tokenURI(uint256 tokenId)
+        public
+        view
+        virtual
+        override
+        returns (string memory)
+    {
         require(_exists(tokenId), "AT:TU: URI query for nonexistent token");
         //^^^^^^^checks^^^^^^^^^
 
@@ -334,7 +338,6 @@ contract A_TKN is
         //^^^^^^^interactions^^^^^^^^^
     }
 
-
     /**
      * @dev Set calling wallet to a "cold Wallet" that cannot be manipulated by TRUSTED_AGENT or PAYABLE permissioned functions
      * WALLET ADDRESSES SET TO "Cold" DO NOT WORK WITH TRUSTED_AGENT FUNCTIONS and must be unset from cold before it can interact with
@@ -354,40 +357,43 @@ contract A_TKN is
         //^^^^^^^checks^^^^^^^^^
 
         coldWallet[_msgSender()] = 0;
-        //^^^^^^^effects^^^^^^^^^ 
+        //^^^^^^^effects^^^^^^^^^
     }
 
-     /** DPS:TEST now mints to the nodeholder if bit 2 is not set, otherwise mints to msg.sender (Called from core)
+    /** DPS:TEST now mints to the nodeholder if bit 2 is not set, otherwise mints to msg.sender (Called from core)
      * @dev Mint an Asset token (may mint only to node holder depending on flags)
      * @param _recipientAddress - Address to mint token into
      * @param _tokenId - Token ID to mint
      * @return Token ID of minted token
      */
-    function mintAssetToken(
-        address _recipientAddress,
-        uint256 _tokenId
-    ) external isMinter nonReentrant returns (uint256, address) {
+    function mintAssetToken(address _recipientAddress, uint256 _tokenId)
+        external
+        isMinter
+        nonReentrant
+        returns (uint256, address)
+    {
         //^^^^^^^checks^^^^^^^^^
 
-        address recipient = _recipientAddress;
+        address recipient;
 
         bytes32 _idxHash = bytes32(_tokenId);
         Record memory rec = getRecord(_idxHash);
 
         if (NODE_MGR.getSwitchAt(rec.node, 2) == 0) {
-            //if switch at bit 2 is not set, mint directly to the node holder
+            //if switch at bit 2 is not set, set the mint to address to the node holder
             recipient = NODE_TKN.ownerOf(rec.node);
+        } else {
+            //otherwise trust the address that was passed by the minter.
+            recipient = _recipientAddress;
         } //DPS:TEST all this is new up to checks
 
         _safeMint(recipient, _tokenId);
-        //_setTokenURI(_tokenId, "");
         //^^^^^^^effects^^^^^^^^^
 
         return (_tokenId, recipient);
         //^^^^^^^interactions^^^^^^^^^
     }
 
-    
     /**
      * @dev Set new token URI String
      * @param _tokenId - Token ID to set URI
@@ -585,13 +591,13 @@ contract A_TKN is
         address _from,
         address _to,
         uint256 _tokenId
-    ) internal virtual override (ERC721, ERC721Enumerable, ERC721Pausable) {
+    ) internal virtual override(ERC721, ERC721Enumerable, ERC721Pausable) {
         super._beforeTokenTransfer(_from, _to, _tokenId);
     }
 
     /**
      * @dev Destroys `tokenId`.
-     * @param tokenId - token to be burned 
+     * @param tokenId - token to be burned
      * The approval is cleared when the token is burned.
      *
      * Requirements:
@@ -609,7 +615,7 @@ contract A_TKN is
         //^^^^^^^effects^^^^^^^^^
     }
 
-     /**
+    /**
      * @dev Sets `_tokenURI` as the tokenURI of `tokenId`.
      * @param tokenId - token URI will be added to
      * @param _tokenURI - URI of token
@@ -618,7 +624,10 @@ contract A_TKN is
      *
      * - `tokenId` must exist.
      */
-    function _setTokenURI(uint256 tokenId, string memory _tokenURI) internal virtual {
+    function _setTokenURI(uint256 tokenId, string memory _tokenURI)
+        internal
+        virtual
+    {
         require(_exists(tokenId), "AT:STU: URI set of nonexistent token");
         //^^^^^^^checks^^^^^^^^^
 
@@ -626,11 +635,11 @@ contract A_TKN is
         //^^^^^^^effects^^^^^^^^^
     }
 
-     /**
+    /**
      * @dev returns set base URI of asset tokens
      * @return base URI
      */
-     function _baseURI() internal view virtual override returns (string memory) {
+    function _baseURI() internal view virtual override returns (string memory) {
         return _baseTokenURI;
         //^^^^^^^interactions^^^^^^^^^
     }
