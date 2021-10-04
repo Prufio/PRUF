@@ -9,9 +9,11 @@ __/\\\\\\\\\\\\\ _____/\\\\\\\\\ _______/\\__/\\ ___/\\\\\\\\\\\\\\\
        _\/\\\ ____________\/\\\ _____\//\\\_\//\\\\\\\\\ _\/\\\ ____________ 
         _\/// _____________\/// _______\/// __\///////// __\/// _____________
          *-------------------------------------------------------------------*/
-
+6718789   
 /**-----------------------------------------------------------------
  * PRUF core provides switches core functionality covering cost getters, payment processing, withdrawls, common test conditionals, and setters for data in storage
+ * TODO: Make new records minted to node holder by default , allow delegated adresses with flags.
+ *       Make limited edition nodes - only can mint X assets in their class.
  *---------------------------------------------------------------*/
 
 // SPDX-License-Identifier: UNLICENSED
