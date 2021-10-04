@@ -1,4 +1,4 @@
-/*--------------------------------------------------------PRüF0.8.7
+/*--------------------------------------------------------PRüF0.8.8
 __/\\\\\\\\\\\\\ _____/\\\\\\\\\ _______/\\__/\\ ___/\\\\\\\\\\\\\\\        
 __\/\\\/////////\\\ _/\\\///////\\\ ____\//__\//____\/\\\///////////__       
 ___\/\\\_______\/\\\_\/\\\_____\/\\\ ________________\/\\\ ____________      
@@ -11,14 +11,9 @@ _________\/// _____________\/// _______\/// __\///////// __\/// _____________
 *---------------------------------------------------------------------------*/
 
 /**-----------------------------------------------------------------
- *  TO DO
- *
- * IMPORTANT!!! EXTERNAL OR PUBLIC FUNCTIONS WITHOUTSTRICT PERMISSIONING NEED
- * TO BE CLOSELY EXAMINED IN THIS CONTRACT AS THEY WILL BE INHERITED NEARLY GLOBALLY
- *-----------------------------------------------------------------
- *-----------------------------------------------------------------
- *PRUF basic provides core data structures and functionality to PRUF contracts.
- *Features include contract name resolution, and getters for records, users, and node information.
+ * PRUF BASIC
+ * Provides core data structures and functionality to PRUF contracts.
+ * Features include contract name resolution, and getters for records, users, and node information.
  *---------------------------------------------------------------*/
 
 // SPDX-License-Identifier: UNLICENSED
