@@ -129,7 +129,7 @@ abstract contract BASIC is
     //----------------------External functions----------------------//
 
     /**
-     * @dev Resolve Contract Addresses from STOR
+     * @dev Resolve contract addresses from STOR
      */
     function resolveContractAddresses()
         external
@@ -165,7 +165,7 @@ abstract contract BASIC is
 
         APP_NC_Address = STOR.resolveContractAddress("APP_NC");
 
-        //^^^^^^^effects^^^^^^^^^
+        //^^^^^^^effects/interactions^^^^^^^^^
     }
 
     /**

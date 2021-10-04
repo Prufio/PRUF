@@ -41,7 +41,7 @@ contract NODE_MGR is BASIC {
     mapping(uint32 => Node) private nodeData; //node info database Node to node struct (see RESOURCE_PRUF_INTERFACES for struct definitions)
     mapping(string => uint32) private nodeId; //name to Node resolution map
     mapping(bytes32 => mapping(uint32 => uint8)) private registeredUsers; //Authorized recorder database by Node, by address hash
-    mapping(uint8 => uint8) private validStorageProviders; //storageProvider -> status (enabled or disabled)
+    mapping(uint8 => uint8) private validStorageProviders; //storageProviders -> status (enabled or disabled)
     mapping(uint8 => uint8) private validManagementTypes; //managementTypes -> status (enabled or disabled)
     mapping(uint8 => uint8) private validCustodyTypes; //custodyTypes -> status (enabled or disabled)
 

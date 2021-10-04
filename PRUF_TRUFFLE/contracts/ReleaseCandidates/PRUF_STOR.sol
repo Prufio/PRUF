@@ -407,7 +407,7 @@ contract STOR is AccessControl, ReentrancyGuard, Pausable {
         Record memory rec;
 
         if (
-            contractInfo[contractAddressToName[_msgSender()]][_node] == 1 //CTS proly not. What do management types do to how we handle "custodial" status' ?? change this??? (big)
+            contractInfo[contractAddressToName[_msgSender()]][_node] == 1
         ) {
             rec.assetStatus = 0;
         } else {
@@ -644,8 +644,8 @@ contract STOR is AccessControl, ReentrancyGuard, Pausable {
     /**
      * @dev Modify NonMutableStorage data
      * @param _idxHash - record asset ID
-     * @param _nonMutableStorage1 - first half of content adressable storage location
-     * @param _nonMutableStorage2 - second half of content adressable storage location
+     * @param _nonMutableStorage1 - first half of content addressable storage location
+     * @param _nonMutableStorage2 - second half of content addressable storage location
      */
     function modifyNonMutableStorage(
         bytes32 _idxHash,
