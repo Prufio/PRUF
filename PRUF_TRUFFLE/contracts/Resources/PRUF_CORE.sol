@@ -11,8 +11,9 @@ _________\/// _____________\/// _______\/// __\///////// __\/// _____________
 *---------------------------------------------------------------------------*/
 
 /**-----------------------------------------------------------------
- * PRUF_CORE 
- * Provides switches core functionality covering cost getters, payment processing, withdrawls, common test conditionals, and setters for data in storage
+ * PRUF core provides switches core functionality covering cost getters, payment processing, withdrawls, common test conditionals, and setters for data in storage
+ * TODO: Make new records minted to node holder by default , allow delegated adresses with flags.
+ *       Make limited edition nodes - only can mint X assets in their class.
  *---------------------------------------------------------------*/
 
 // SPDX-License-Identifier: UNLICENSED

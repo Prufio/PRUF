@@ -12,7 +12,10 @@ _________\/// _____________\/// _______\/// __\///////// __\/// _____________
 
 /*-----------------------------------------------------------------
  * PRUF ID_MGR
-  //CTS:EXAMINE explain contract
+ * Manages identity on an address basis. Stores a trustlevel and IDhash for each address
+ struct PRUFID //ID struct for ID info
+    uint256 trustLevel; 
+    bytes32 IdHash;
  *---------------------------------------------------------------*/
 
 // SPDX-License-Identifier: UNLICENSED
@@ -22,26 +25,6 @@ import "../Resources/RESOURCE_PRUF_STRUCTS.sol";
 import "../Imports/access/AccessControl.sol";
 import "../Imports/security/Pausable.sol";
 
-/**
- * @dev {ERC721} token, including:
- *
- *  - ability for holders to burn (destroy) their tokens
- *  - a minter role that allows for token minting (creation)
- *  - a pauser role that allows to stop all token transfers
- *  - token ID and URI autogeneration
- *
- * This contract uses {AccessControl} to lock permissioned functions using the
- * different roles - head to its documentation for details.
- *
- * The account that deploys the contract will be granted the minter, pauser, and contract admin
- * roles, as well as the default admin role, which will let it grant minter, pauser, and admin
- * roles to other accounts.
- struct ID {
-    uint256 trustLevel; //admin only
-    bytes32 URI; //caller address match
-    string userName; //admin only///caller address match can set
-}
- */
 
 contract ID_MGR is Pausable, AccessControl {
     bytes32 public constant CONTRACT_ADMIN_ROLE =
