@@ -354,28 +354,36 @@ contract A_TKN is
         //^^^^^^^checks^^^^^^^^^
 
         coldWallet[_msgSender()] = 0;
-        //^^^^^^^effects^^^^^^^^^
+        //^^^^^^^effects^^^^^^^^^ 
     }
 
-     /**
-     * @dev Mint an Asset token
+     /** DPS:TEST now mints to the nodeholder if bit 2 is not set, otherwise mints to msg.sender (Called from core)
+     * @dev Mint an Asset token (may mint only to node holder depending on flags)
      * @param _recipientAddress - Address to mint token into
      * @param _tokenId - Token ID to mint
-     * @param _tokenURI - URI string to atatch to token
      * @return Token ID of minted token
      */
     function mintAssetToken(
         address _recipientAddress,
-        uint256 _tokenId,
-        string calldata _tokenURI
-    ) external isMinter nonReentrant returns (uint256) {
+        uint256 _tokenId
+    ) external isMinter nonReentrant returns (uint256, address) {
         //^^^^^^^checks^^^^^^^^^
 
-        _safeMint(_recipientAddress, _tokenId);
-        _setTokenURI(_tokenId, _tokenURI);
+        address recipient = _recipientAddress;
+
+        bytes32 _idxHash = bytes32(_tokenId);
+        Record memory rec = getRecord(_idxHash);
+
+        if (NODE_MGR.getSwitchAt(rec.node, 2) == 0) {
+            //if switch at bit 2 is not set, mint directly to the node holder
+            recipient = NODE_TKN.ownerOf(rec.node);
+        } //DPS:TEST all this is new up to checks
+
+        _safeMint(recipient, _tokenId);
+        //_setTokenURI(_tokenId, "");
         //^^^^^^^effects^^^^^^^^^
 
-        return _tokenId;
+        return (_tokenId, recipient);
         //^^^^^^^interactions^^^^^^^^^
     }
 
