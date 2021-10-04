@@ -65,22 +65,23 @@ contract RCLR is ECR_CORE, CORE {
         //^^^^^^^interactions^^^^^^^^^
     }
 
-    /** 
+    /**
      * @dev reutilize a recycled asset
      * maybe describe the reqs in this one, back us up on the security
      * @param _idxHash asset ID
      * @param _rgtHash rights holder hash to set
      */
-    function recycle(
-        bytes32 _idxHash,
-        bytes32 _rgtHash
-    ) external nonReentrant whenNotPaused {
+    function recycle(bytes32 _idxHash, bytes32 _rgtHash)
+        external
+        nonReentrant
+        whenNotPaused
+    {
         uint256 tokenId = uint256(_idxHash);
         escrowDataExtLight memory escrowDataLight = getEscrowDataLight(
             _idxHash
         );
         Record memory rec = getRecord(_idxHash);
-        //Node memory node_info = getNodeinfo(_node);
+
         require(_rgtHash != 0, "R:R: New rights holder = zero");
         require(rec.assetStatus == 60, "R:R: Asset not discarded");
 
@@ -89,8 +90,9 @@ contract RCLR is ECR_CORE, CORE {
         rec.rightsHolder = _rgtHash;
         rec.numberOfTransfers = 170;
         //^^^^^^^effects^^^^^^^^^^^^
-
-        A_TKN.mintAssetToken(_msgSender(), tokenId, "pruf.io/asset"); //FIX TO MAKE REAL ASSET URL DPS / CTS
+        
+        A_TKN.mintAssetToken(_msgSender(), tokenId); 
+    
         ECR_MGR.endEscrow(_idxHash);
         deductRecycleCosts(rec.node, escrowDataLight.addr_1);
         rec.assetStatus = 58;

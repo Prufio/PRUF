@@ -12,8 +12,6 @@ _________\/// _____________\/// _______\/// __\///////// __\/// _____________
 
 /**-----------------------------------------------------------------
  * PRUF core provides switches core functionality covering cost getters, payment processing, withdrawls, common test conditionals, and setters for data in storage
- * TODO: Make new records minted to node holder by default , allow delegated adresses with flags.
- *       Make limited edition nodes - only can mint X assets in their class.
  *---------------------------------------------------------------*/
 
 // SPDX-License-Identifier: UNLICENSED
@@ -25,7 +23,7 @@ import "../Resources/PRUF_BASIC.sol";
 contract CORE is BASIC {
 
     /**
-     * @dev create a Record in Storage @ idxHash (SETTER)
+     * @dev create a Record in Storage @ idxHash (SETTER) and mint an asset token (may mint to node holder depending on flags)
      * @param _idxHash - Asset Index
      * @param _rgtHash - Owner ID Hash
      * @param _node - node to create asset in
@@ -86,9 +84,9 @@ contract CORE is BASIC {
         //^^^^^^^Checks^^^^^^^^
 
         if (node_info.custodyType == 1) {
-            A_TKN.mintAssetToken(address(this), tokenId, "");
+            A_TKN.mintAssetToken(address(this), tokenId);
         } else {
-            A_TKN.mintAssetToken(_msgSender(), tokenId, "");
+            A_TKN.mintAssetToken(_msgSender(), tokenId);
         }
 
         STOR.newRecord(_idxHash, _rgtHash, _node, _countDownStart);

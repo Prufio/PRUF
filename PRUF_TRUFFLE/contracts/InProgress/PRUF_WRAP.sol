@@ -140,7 +140,7 @@ contract WRAP is CORE {
             createRecord(idxHash, _rgtHash, _node, _countDownStart);
         } else {
             //just mint the token, record already exists
-            A_TKN.mintAssetToken(_msgSender(), newTokenId, "pruf.io/asset");
+            A_TKN.mintAssetToken(_msgSender(), newTokenId);
         }
         deductServiceCosts(_node, 1);
         //^^^^^^^interactions^^^^^^^^^
@@ -258,7 +258,7 @@ contract WRAP is CORE {
         }
         //^^^^^^^checks^^^^^^^^^
 
-        A_TKN.mintAssetToken(_msgSender(), tokenId, "pruf.io/wrapped");
+        A_TKN.mintAssetToken(_msgSender(), tokenId);
         STOR.newRecord(_idxHash, _rgtHash, _node, _countDownStart);
         //^^^^^^^interactions^^^^^^^^^
     }

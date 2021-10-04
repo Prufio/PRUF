@@ -311,7 +311,8 @@ interface UTIL_TKN_Interface {
      *
      * WARNING: When using {getRoleMember} and {getRoleMemberCount}, make sure
      * you perform all queries on the same block. See the following
-     * https://forum.openzeppelin.com/t/iterating-over-elements-on-enumerableset-in-openzeppelin-contracts/2296[forum post]
+     * https://forum.openzeppelin.com/t/iterating-over-elements
+     *       -on-enumerableset-in-openzeppelin-contracts/2296[forum post]
      * for more information.
      */
     function getRoleMember(bytes32 role, uint256 index)
@@ -538,7 +539,8 @@ interface NODE_TKN_Interface {
      *
      * WARNING: When using {getRoleMember} and {getRoleMemberCount}, make sure
      * you perform all queries on the same block. See the following
-     * https://forum.openzeppelin.com/t/iterating-over-elements-on-enumerableset-in-openzeppelin-contracts/2296[forum post]
+     * https://forum.openzeppelin.com/t/iterating-over-elements
+     *       -on-enumerableset-in-openzeppelin-contracts/2296[forum post]
      * for more information.
      */
     function getRoleMember(bytes32 role, uint256 index)
@@ -769,7 +771,8 @@ interface STAKE_TKN_Interface {
      *
      * WARNING: When using {getRoleMember} and {getRoleMemberCount}, make sure
      * you perform all queries on the same block. See the following
-     * https://forum.openzeppelin.com/t/iterating-over-elements-on-enumerableset-in-openzeppelin-contracts/2296[forum post]
+     * https://forum.openzeppelin.com/t/iterating-over-elements
+     *       -on-enumerableset-in-openzeppelin-contracts/2296[forum post]
      * for more information.
      */
     function getRoleMember(bytes32 role, uint256 index)
@@ -938,16 +941,14 @@ interface A_TKN_Interface {
 
     /**
      * @dev Mint an Asset token
-     * @param _recipientAddress - Address to mint token into
+     * @param _recipientAddress - Address to mint token into (may mint to node holder depending on flags)
      * @param _tokenId - Token ID to mint
-     * @param _tokenURI - URI string to atatch to token
      * @return Token ID of minted token
      */
     function mintAssetToken(
         address _recipientAddress,
-        uint256 _tokenId,
-        string calldata _tokenURI
-    ) external returns (uint256);
+        uint256 _tokenId
+    ) external returns (uint256, address);
 
     /**
      * @dev Set new token URI String
@@ -1088,7 +1089,8 @@ interface A_TKN_Interface {
      *
      * WARNING: When using {getRoleMember} and {getRoleMemberCount}, make sure
      * you perform all queries on the same block. See the following
-     * https://forum.openzeppelin.com/t/iterating-over-elements-on-enumerableset-in-openzeppelin-contracts/2296[forum post]
+     * https://forum.openzeppelin.com/t/iterating-over-elements
+     *       -on-enumerableset-in-openzeppelin-contracts/2296[forum post]
      * for more information.
      */
     function getRoleMember(bytes32 role, uint256 index)
@@ -1314,7 +1316,8 @@ interface MARKET_TKN_Interface {
      *
      * WARNING: When using {getRoleMember} and {getRoleMemberCount}, make sure
      * you perform all queries on the same block. See the following
-     * https://forum.openzeppelin.com/t/iterating-over-elements-on-enumerableset-in-openzeppelin-contracts/2296[forum post]
+     * https://forum.openzeppelin.com/t/iterating-over-elements
+     *       -on-enumerableset-in-openzeppelin-contracts/2296[forum post]
      * for more information.
      */
     function getRoleMember(bytes32 role, uint256 index)
