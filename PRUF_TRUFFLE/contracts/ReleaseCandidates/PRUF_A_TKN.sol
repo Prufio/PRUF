@@ -381,7 +381,7 @@ contract A_TKN is
 
         if (NODE_MGR.getSwitchAt(rec.node, 2) == 0) {
             //if switch at bit 2 is not set, set the mint to address to the node holder
-            recipient = NODE_TKN.ownerOf(rec.node);
+            recipient = NODE_TKN.ownerOf(rec.node); //CTS:EXAMINE errors here, asset !exist yet
         } else {
             //otherwise trust the address that was passed by the minter.
             recipient = _recipientAddress;
