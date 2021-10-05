@@ -68,11 +68,11 @@ contract CORE_MAL is BASIC {
         );
 
         if (node_info.custodyType == 1) {
-            A_TKN.mintAssetToken(address(this), tokenId, "pruf.io");
+            A_TKN.mintAssetToken(address(this), tokenId);
         }
 
         if ((node_info.custodyType == 2) || (node_info.custodyType == 4)) {
-            A_TKN.mintAssetToken(_msgSender(), tokenId, "pruf.io/asset");
+            A_TKN.mintAssetToken(_msgSender(), tokenId);
         }
 
         STOR.newRecord(_idxHash, _rgtHash, _node, _countDownStart);
