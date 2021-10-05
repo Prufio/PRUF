@@ -708,7 +708,7 @@ contract NODE_MGR is BASIC {
         //^^^^^^^interactions^^^^^^^^^
     }
 
-    /** DPS:CHECK
+    /**
      * @dev Retrieve service costs for _node._service
      * @param _node - node associated with query
      * @param _service - service associated with query

@@ -1241,6 +1241,42 @@ contract("TheWorks", (accounts) => {
         return NODE_MGR.modifyNodeSwitches("1000006", "3", "1", {
           from: account1,
         });
+      })
+
+      .then(() => {
+        return NODE_MGR.modifyNodeSwitches("1000001", "2", "1", {
+          from: account1,
+        });
+      })
+
+      .then(() => {
+        return NODE_MGR.modifyNodeSwitches("1000002", "2", "1", {
+          from: account1,
+        });
+      })
+
+      .then(() => {
+        return NODE_MGR.modifyNodeSwitches("1000003", "2", "1", {
+          from: account1,
+        });
+      })
+
+      .then(() => {
+        return NODE_MGR.modifyNodeSwitches("1000004", "2", "1", {
+          from: account1,
+        });
+      })
+
+      .then(() => {
+        return NODE_MGR.modifyNodeSwitches("1000005", "2", "1", {
+          from: account1,
+        });
+      })
+
+      .then(() => {
+        return NODE_MGR.modifyNodeSwitches("1000006", "2", "1", {
+          from: account1,
+        });
       });
   });
 
@@ -1530,6 +1566,55 @@ contract("TheWorks", (accounts) => {
         "59",
         {from: account2}
         )
+    })
+
+
+    it('Should set node switch 2 to 0 in Node 1000003', async () => {
+      return NODE_MGR.modifyNodeSwitches("1000003", "2", "0", {
+        from: account1,
+      });
+    })
+
+    it("Should retrieve balance of (x) @ account1", async () => {
+        var Record = "";
+
+        return await A_TKN.balanceOf(account1, { from: account1 }, function (_err, _result) {
+            if (_err) { }
+            else {
+                Record = _result
+                console.log(Record)
+            }
+        })
+    })
+
+
+    it('Should mint asset4 to account1', async () => {
+        return APP_NC.newRecord(
+        asset3, 
+        rgt3,
+        '1000003',
+        '100',
+        {from: account3}
+        )
+    })
+
+    it("Should retrieve balance of (x+1) @ account1", async () => {
+        var Record = "";
+
+        return await A_TKN.balanceOf(account1, { from: account1 }, function (_err, _result) {
+            if (_err) { }
+            else {
+                Record = _result
+                console.log(Record)
+            }
+        })
+    })
+
+
+    it('Should set node switch 2 to 1 in Node 1000003', async () => {
+      return NODE_MGR.modifyNodeSwitches("1000003", "2", "1", {
+        from: account1,
+      });
     })
 
 it('Should authorize all minter contracts for minting A_TKN(s)', async () => {
