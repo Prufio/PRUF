@@ -360,7 +360,7 @@ contract A_TKN is
         //^^^^^^^effects^^^^^^^^^
     }
 
-    /** DPS:TEST now mints to the nodeholder if bit 2 is not set, otherwise mints to msg.sender (Called from core)
+    /** 
      * @dev Mint an Asset token (may mint only to node holder depending on flags)
      * @param _recipientAddress - Address to mint token into
      * @param _tokenId - Token ID to mint
@@ -385,7 +385,7 @@ contract A_TKN is
         } else {
             //otherwise trust the address that was passed by the minter.
             recipient = _recipientAddress;
-        } //DPS:TEST all this is new up to checks
+        }
 
         _safeMint(recipient, _tokenId);
         //^^^^^^^effects^^^^^^^^^

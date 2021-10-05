@@ -1250,6 +1250,42 @@ contract("TheWorks", (accounts) => {
         return NODE_MGR.modifyNodeSwitches("1000006", "3", "1", {
           from: account1,
         });
+      })
+
+      .then(() => {
+        return NODE_MGR.modifyNodeSwitches("1000001", "2", "1", {
+          from: account1,
+        });
+      })
+
+      .then(() => {
+        return NODE_MGR.modifyNodeSwitches("1000002", "2", "1", {
+          from: account1,
+        });
+      })
+
+      .then(() => {
+        return NODE_MGR.modifyNodeSwitches("1000003", "2", "1", {
+          from: account1,
+        });
+      })
+
+      .then(() => {
+        return NODE_MGR.modifyNodeSwitches("1000004", "2", "1", {
+          from: account1,
+        });
+      })
+
+      .then(() => {
+        return NODE_MGR.modifyNodeSwitches("1000005", "2", "1", {
+          from: account1,
+        });
+      })
+
+      .then(() => {
+        return NODE_MGR.modifyNodeSwitches("1000006", "2", "1", {
+          from: account1,
+        });
       });
   });
 
@@ -1837,10 +1873,27 @@ contract("TheWorks", (accounts) => {
     );
   });
 
-  it("Should return serviceCost 1 @ Node 1000001", async () => {
+  it("Should return invoice for service1 @ Node 1000001", async () => {
     var Record = [];
 
     return await NODE_MGR.getInvoice(
+      "1000001",
+      "1",
+      { from: account1 },
+      function (_err, _result) {
+        if (_err) {
+        } else {
+          Record = Object.values(_result);
+          console.log(Record);
+        }
+      }
+    );
+  });
+
+  it("Should return ServicePaymentData for service1 @ Node 1000001", async () => {
+    var Record = [];
+
+    return await NODE_MGR.getServicePaymentData(
       "1000001",
       "1",
       { from: account1 },

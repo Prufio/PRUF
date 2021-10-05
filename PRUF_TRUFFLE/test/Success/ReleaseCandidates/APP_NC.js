@@ -1250,6 +1250,42 @@ contract("APP_NC", (accounts) => {
         return NODE_MGR.modifyNodeSwitches("1000006", "3", "1", {
           from: account1,
         });
+      })
+
+      .then(() => {
+        return NODE_MGR.modifyNodeSwitches("1000001", "2", "1", {
+          from: account1,
+        });
+      })
+
+      .then(() => {
+        return NODE_MGR.modifyNodeSwitches("1000002", "2", "1", {
+          from: account1,
+        });
+      })
+
+      .then(() => {
+        return NODE_MGR.modifyNodeSwitches("1000003", "2", "1", {
+          from: account1,
+        });
+      })
+
+      .then(() => {
+        return NODE_MGR.modifyNodeSwitches("1000004", "2", "1", {
+          from: account1,
+        });
+      })
+
+      .then(() => {
+        return NODE_MGR.modifyNodeSwitches("1000005", "2", "1", {
+          from: account1,
+        });
+      })
+
+      .then(() => {
+        return NODE_MGR.modifyNodeSwitches("1000006", "2", "1", {
+          from: account1,
+        });
       });
   });
 
@@ -1564,6 +1600,12 @@ contract("APP_NC", (accounts) => {
     );
   });
 
+  it("Should burn node 1000003 tokens to account2", async () => {
+    return NODE_TKN.burn("1000003", {
+      from: account1,
+    });
+  });
+
   it("Should change status of asset1 to 51", async () => {
     return APP_NC.modifyStatus(asset1, "51", { from: account1 });
   });
@@ -1726,7 +1768,6 @@ it("Should retrieve asset1", async () => {
     })
 })
 
-  
 
   it("Should set SharesAddress", async () => {
     console.log(
