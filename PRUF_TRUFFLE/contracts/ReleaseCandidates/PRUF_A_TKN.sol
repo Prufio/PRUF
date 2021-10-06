@@ -374,24 +374,7 @@ contract A_TKN is
     {
         //^^^^^^^checks^^^^^^^^^
 
-<<<<<<< HEAD
         _safeMint(_recipientAddress, _tokenId);
-=======
-        address recipient;
-
-        bytes32 _idxHash = bytes32(_tokenId);
-        Record memory rec = getRecord(_idxHash);
-
-        if (NODE_MGR.getSwitchAt(rec.node, 2) == 0) {
-            //if switch at bit 2 is not set, set the mint to address to the node holder
-            recipient = NODE_TKN.ownerOf(rec.node); //CTS:EXAMINE errors here, asset !exist yet. would require node to be param
-        } else {
-            //otherwise trust the address that was passed by the minter.
-            recipient = _recipientAddress;
-        }
-
-        _safeMint(recipient, _tokenId);
->>>>>>> RC1
         //^^^^^^^effects^^^^^^^^^
 
         return (_tokenId);
