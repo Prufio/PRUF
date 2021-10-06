@@ -2161,7 +2161,7 @@ _________\/// _____________\/// _______\/// __\///////// __\/// _____________
 
 
     it('Should set NonMutable note to (asset12)', async () => {
-        return APP.addNonMutableNote(
+        return APP.addNonMutableStorage(
         asset12,
         rgt12,
         asset12,

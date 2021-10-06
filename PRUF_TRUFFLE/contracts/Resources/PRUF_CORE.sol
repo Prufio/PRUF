@@ -82,7 +82,6 @@ contract CORE is BASIC {
         );
         //^^^^^^^Checks^^^^^^^^
 
-        //DPS:TEST
         address recipient;
         if (NODE_MGR.getSwitchAt(_node, 2) == 0) {
             //if switch at bit 2 is not set, set the mint to address to the node holder
@@ -93,7 +92,7 @@ contract CORE is BASIC {
         } else {
             //if switch at bit 2 is set, and and the custody type is not 1, send the token to the caller.
             recipient = _msgSender();
-        } //DPS:TEST end
+        }
 
         A_TKN.mintAssetToken(recipient, tokenId);
 

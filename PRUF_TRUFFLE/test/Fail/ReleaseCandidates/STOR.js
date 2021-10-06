@@ -1339,6 +1339,42 @@ contract("STOR", (accounts) => {
         return NODE_MGR.modifyNodeSwitches("1000006", "3", "1", {
           from: account1,
         });
+      })
+
+      .then(() => {
+        return NODE_MGR.modifyNodeSwitches("1000001", "2", "1", {
+          from: account1,
+        });
+      })
+
+      .then(() => {
+        return NODE_MGR.modifyNodeSwitches("1000002", "2", "1", {
+          from: account1,
+        });
+      })
+
+      .then(() => {
+        return NODE_MGR.modifyNodeSwitches("1000003", "2", "1", {
+          from: account1,
+        });
+      })
+
+      .then(() => {
+        return NODE_MGR.modifyNodeSwitches("1000004", "2", "1", {
+          from: account1,
+        });
+      })
+
+      .then(() => {
+        return NODE_MGR.modifyNodeSwitches("1000005", "2", "1", {
+          from: account1,
+        });
+      })
+
+      .then(() => {
+        return NODE_MGR.modifyNodeSwitches("1000006", "2", "1", {
+          from: account1,
+        });
       });
   });
 
@@ -2223,7 +2259,7 @@ contract("STOR", (accounts) => {
     console.log(
       "//**************************************BEGIN modifyNonMutableStorage FAIL BATCH**********************************************/"
     );
-    return MAL_APP.addNonMutableNote(asset10, rgt6, rgt000, { from: account2 });
+    return MAL_APP.addNonMutableStorage(asset10, rgt6, rgt000, { from: account2 });
   });
 
   it("Should unpause STOR", async () => {
@@ -2232,7 +2268,7 @@ contract("STOR", (accounts) => {
 
   //55
   it("Should fail because record does not exist", async () => {
-    return MAL_APP.addNonMutableNote(asset10, rgt6, rgt000, { from: account2 });
+    return MAL_APP.addNonMutableStorage(asset10, rgt6, rgt000, { from: account2 });
   });
 
   it("Should unauthorize MAL_APP in AC10", async () => {
@@ -2243,7 +2279,7 @@ contract("STOR", (accounts) => {
 
   //56
   it("Should fail becasue contract not auth in Node", async () => {
-    return MAL_APP.addNonMutableNote(asset2, rgt2, rgt000, { from: account2 });
+    return MAL_APP.addNonMutableStorage(asset2, rgt2, rgt000, { from: account2 });
   });
 
   it("Should authorize MAL_APP in AC10", async () => {
@@ -2254,28 +2290,28 @@ contract("STOR", (accounts) => {
 
   //57
   it("Should fail becasue asset in escrow stat", async () => {
-    return MAL_APP.addNonMutableNote(asset7, rgt7, rgt000, { from: account2 });
+    return MAL_APP.addNonMutableStorage(asset7, rgt7, rgt000, { from: account2 });
   });
 
   //58
   it("Should fail becasue asset in L/S stat", async () => {
-    return MAL_APP.addNonMutableNote(asset4, rgt4, rgt000, { from: account2 });
+    return MAL_APP.addNonMutableStorage(asset4, rgt4, rgt000, { from: account2 });
   });
 
   //59
   it("Should fail becasue asset in transfered stat", async () => {
-    return MAL_APP.addNonMutableNote(asset3, rgt3, rgt000, { from: account2 });
+    return MAL_APP.addNonMutableStorage(asset3, rgt3, rgt000, { from: account2 });
   });
 
   it("Should set asset8 ipfs2 to asset8", async () => {
-    return MAL_APP.addNonMutableNote(asset8, asset8, rgt000, {
+    return MAL_APP.addNonMutableStorage(asset8, asset8, rgt000, {
       from: account2,
     });
   });
 
   //60
   it("Should fail becasue attempting to modify NonMutable", async () => {
-    return MAL_APP.addNonMutableNote(asset8, rgt8, rgt000, { from: account2 });
+    return MAL_APP.addNonMutableStorage(asset8, rgt8, rgt000, { from: account2 });
   });
 
   it("Should unauthorize MAL_APP in system", async () => {
@@ -2472,7 +2508,7 @@ contract("STOR", (accounts) => {
   });
 
   it("Should set NonMutable note to (asset12)", async () => {
-    return APP.addNonMutableNote(asset12, rgt12, asset12, rgt000, {
+    return APP.addNonMutableStorage(asset12, rgt12, asset12, rgt000, {
       from: account2,
     });
   });
@@ -2950,7 +2986,7 @@ contract("STOR", (accounts) => {
   });
 
   it("Should set NonMutable note to (asset13)", async () => {
-    return APP_NC.addNonMutableNote(asset13, asset13, rgt000, {
+    return APP_NC.addNonMutableStorage(asset13, asset13, rgt000, {
       from: account4,
     });
   });

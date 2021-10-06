@@ -1331,6 +1331,42 @@ contract("BASIC", (accounts) => {
         return NODE_MGR.modifyNodeSwitches("1000006", "3", "1", {
           from: account1,
         });
+      })
+
+      .then(() => {
+        return NODE_MGR.modifyNodeSwitches("1000001", "2", "1", {
+          from: account1,
+        });
+      })
+
+      .then(() => {
+        return NODE_MGR.modifyNodeSwitches("1000002", "2", "1", {
+          from: account1,
+        });
+      })
+
+      .then(() => {
+        return NODE_MGR.modifyNodeSwitches("1000003", "2", "1", {
+          from: account1,
+        });
+      })
+
+      .then(() => {
+        return NODE_MGR.modifyNodeSwitches("1000004", "2", "1", {
+          from: account1,
+        });
+      })
+
+      .then(() => {
+        return NODE_MGR.modifyNodeSwitches("1000005", "2", "1", {
+          from: account1,
+        });
+      })
+
+      .then(() => {
+        return NODE_MGR.modifyNodeSwitches("1000006", "2", "1", {
+          from: account1,
+        });
       });
   });
 
@@ -1529,7 +1565,7 @@ contract("BASIC", (accounts) => {
       "//**************************************END BASIC SETUP**********************************************/"
     );
     console.log(
-      "//**************************************BEGIN BASIC FAIL BATCH (7)**********************************************/"
+      "//**************************************BEGIN BASIC FAIL BATCH (8)**********************************************/"
     );
     console.log(
       "//**************************************BEGIN resolveContractAddresses FAIL BATCH**********************************************/"
@@ -1549,20 +1585,9 @@ contract("BASIC", (accounts) => {
   });
 
   //3
-  it("Should fail becasue caller != admin", async () => {
-    console.log(
-      "//**************************************END transferAssetToken SETUP**********************************************/"
-    );
-    console.log(
-      "//**************************************BEGIN transferNodeToken FAIL BATCH**********************************************/"
-    );
-    return APP.transferNodeToken(account1, asset1, { from: account2 });
-  });
-
-  //4
   it("Should fail because caller is not admin", async () => {
     console.log(
-      "//**************************************END transferNodeToken FAIL BATCH**********************************************/"
+      "//**************************************END transferAssetToken FAIL BATCH**********************************************/"
     );
     console.log(
       "//**************************************BEGIN setStorageContract FAIL BATCH**********************************************/"
@@ -1570,12 +1595,12 @@ contract("BASIC", (accounts) => {
     return APP.setStorageContract(STOR.address, { from: account2 });
   });
 
-  //5
+  //4
   it("Should fail because storageAddress != 0", async () => {
     return APP.setStorageContract(account000, { from: account1 });
   });
 
-  //6
+  //5
   it("Should fail because caller is not pauser", async () => {
     console.log(
       "//**************************************END setStorageContract FAIL BATCH**********************************************/"
@@ -1586,7 +1611,7 @@ contract("BASIC", (accounts) => {
     return APP.pause({ from: account2 });
   });
 
-  //7
+  //6
   it("Should fail because caller is not pauser", async () => {
     console.log(
       "//**************************************END pause FAIL BATCH**********************************************/"
@@ -1597,9 +1622,31 @@ contract("BASIC", (accounts) => {
     return APP.unpause({ from: account2 });
   });
 
-  it("Should set SharesAddress", async () => {
+  //7
+  it("Should fail because caller is not asset admin", async () => {
     console.log(
       "//**************************************END unpause FAIL BATCH**********************************************/"
+    );
+    console.log(
+      "//**************************************BEGIN ERC721Transfer FAIL BATCH**********************************************/"
+    );
+    return APP.ERC721Transfer(A_TKN.address, account2, "1", { from: account2 });
+  });
+
+  //8
+  it("Should fail because caller is not asset admin", async () => {
+    console.log(
+      "//**************************************END ERC721Transfer FAIL BATCH**********************************************/"
+    );
+    console.log(
+      "//**************************************BEGIN ERC20Transfer FAIL BATCH**********************************************/"
+    );
+    return APP.ERC721Transfer(A_TKN.address, account2, "1", { from: account2 });
+  });
+
+  it("Should set SharesAddress", async () => {
+    console.log(
+      "//**************************************END ERC20Transfer FAIL BATCH**********************************************/"
     );
     console.log(
       "//**************************************END BASIC FAIL BATCH**********************************************/"
@@ -1768,7 +1815,7 @@ contract("BASIC", (accounts) => {
   });
 
   it("Should set NonMutable note to (asset12)", async () => {
-    return APP.addNonMutableNote(asset12, rgt12, asset12, rgt000, {
+    return APP.addNonMutableStorage(asset12, rgt12, asset12, rgt000, {
       from: account2,
     });
   });
@@ -2246,7 +2293,7 @@ contract("BASIC", (accounts) => {
   });
 
   it("Should set NonMutable note to (asset13)", async () => {
-    return APP_NC.addNonMutableNote(asset13, asset13, rgt000, {
+    return APP_NC.addNonMutableStorage(asset13, asset13, rgt000, {
       from: account4,
     });
   });

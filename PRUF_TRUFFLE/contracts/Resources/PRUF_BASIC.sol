@@ -110,7 +110,7 @@ abstract contract BASIC is
      * Originating Address:
      *      has CONTRACT_ADMIN_ROLE
      */
-    modifier isContractAssetAdmin() {
+    modifier isAssetAdmin() {
         require(
             hasRole(ASSET_TXFR_ROLE, _msgSender()),
             "B:MOD:-IADM Caller !ASSET_TXFR_ROLE"
@@ -230,7 +230,7 @@ abstract contract BASIC is
         address _tokenContract,
         address _to,
         uint256 _tokenID
-    ) external virtual isContractAssetAdmin nonReentrant {
+    ) external virtual isAssetAdmin nonReentrant {
         //^^^^^^^checks^^^^^^^^^
 
         IERC721(_tokenContract).safeTransferFrom(address(this), _to, _tokenID);
@@ -247,7 +247,7 @@ abstract contract BASIC is
         address _tokenContract,
         address _to,
         uint256 _amount
-    ) external virtual isContractAssetAdmin nonReentrant {
+    ) external virtual isAssetAdmin nonReentrant {
         //^^^^^^^checks^^^^^^^^^
         
         IERC20(_tokenContract).transferFrom(address(this), _to, _amount);

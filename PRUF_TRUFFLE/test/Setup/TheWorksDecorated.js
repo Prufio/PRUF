@@ -2668,8 +2668,8 @@ contract('WRAP', accounts => {
         })
     })
 
-    it('Should addNonMutableNote to rgt1', async () => {
-        return DECORATE.addNonMutableNote(
+    it('Should addNonMutableStorage to rgt1', async () => {
+        return DECORATE.addNonMutableStorage(
             "0",
             Foreign721.address,
             rgt1,
@@ -2927,7 +2927,7 @@ contract('WRAP', accounts => {
 
 
     it('Should set NonMutable note to IDX(1)', async () => {
-        return APP_NC.addNonMutableNote(
+        return APP_NC.addNonMutableStorage(
             asset12,
             asset12,
             rgt000,

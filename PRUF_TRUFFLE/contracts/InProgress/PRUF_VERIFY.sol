@@ -80,7 +80,7 @@ contract VERIFY is CORE {
      * @dev:authorize an asset token _idxHash as a wallet token in verify
      *      the caller must posess node token for given Node (reverts)
      *      node must be VERIFY custody type (4) (reverts)
-     *      node of Asset token to be approved must be of the same node as the held ACtoken (reverts)
+     *      node of Asset token to be approved must be of the same node as the held NodeToken (reverts)
      */
     function authorizeTokenForVerify(
         bytes32 _idxHash,

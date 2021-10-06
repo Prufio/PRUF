@@ -21,7 +21,7 @@ import "./RESOURCE_PRUF_STRUCTS.sol";
 
 //------------------------------------------------------------------------------------------------
 
-interface ECR_MGR{
+interface temp {
     
     /**
      * @dev Set an asset to escrow status (6/50/56). Sets timelock for unix timestamp of escrow end.

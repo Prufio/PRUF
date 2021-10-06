@@ -160,7 +160,7 @@ contract APP_NC is CORE {
         ) {
             require(
                 (NODE_TKN.ownerOf(rec.node) == _msgSender()),
-                "APP_NC:EXT: Restricted from exporting assets from this node - does not hold ACtoken"
+                "APP_NC:EXT: Restricted from exporting assets from this node - does not hold NodeToken"
             );
         }
         //^^^^^^^checks^^^^^^^^^

@@ -1618,7 +1618,7 @@ contract("APP_NC", (accounts) => {
     return APP_NC.exportAssetTo(asset2, "1000004", { from: account1 });
   });
 
-  it("Should import asset2 into AC13", async () => {
+  it("Should import asset2 into 1000004", async () => {
     return APP_NC.importAsset(asset2, "1000004", { from: account1 });
   });
 
@@ -1639,7 +1639,7 @@ contract("APP_NC", (accounts) => {
   });
 
   it("Should put ipfs2 onto asset1", async () => {
-    return APP_NC.addNonMutableNote(asset1, rgt1, rgt000, { from: account1 });
+    return APP_NC.addNonMutableStorage(asset1, rgt1, rgt000, { from: account1 });
   });
 
   it("Should retrieve asset1", async () => {
@@ -1929,7 +1929,7 @@ it("Should retrieve asset1", async () => {
   });
 
   it("Should set NonMutable note to (asset12)", async () => {
-    return APP.addNonMutableNote(asset12, rgt12, asset12, rgt000, {
+    return APP.addNonMutableStorage(asset12, rgt12, asset12, rgt000, {
       from: account2,
     });
   });
@@ -2403,7 +2403,7 @@ it("Should retrieve asset1", async () => {
   });
 
   it("Should set NonMutable note to (asset13)", async () => {
-    return APP_NC.addNonMutableNote(asset13, asset13, rgt000, { from: account4 });
+    return APP_NC.addNonMutableStorage(asset13, asset13, rgt000, { from: account4 });
   });
 
   it("Should retrieve asset13 with newNonMutable(asset13)", async () => {

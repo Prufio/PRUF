@@ -30,7 +30,7 @@ contract Helper2 is Ownable, BASIC {
     erc721_tokenInterface2 erc721_tokenContract; //erc721_token prototype initialization
 
     uint256 private nodeTokenIndex = 10000;
-    uint256 private currentACtokenPrice = 5000;
+    uint256 private currentNodeTokenPrice = 5000;
 
     function setErc721_tokenAddress(address contractAddress) public onlyOwner {
         require(contractAddress != address(0), "Invalid contract address");

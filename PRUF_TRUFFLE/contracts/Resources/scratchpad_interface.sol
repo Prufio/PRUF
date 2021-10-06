@@ -2,7 +2,7 @@
 pragma solidity ^0.8.7;
 import "./RESOURCE_PRUF_STRUCTS.sol";
 
-interface NODE_MGR {
+interface Scratchpad {
     //--------------------------------------------Public Functions--------------------------
 
     /**

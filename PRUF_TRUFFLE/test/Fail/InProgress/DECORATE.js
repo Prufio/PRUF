@@ -1938,22 +1938,22 @@ contract("DECORATE", (accounts) => {
       "//**************************************END modifyMutableStorage FAIL BATCH**********************************************/"
     );
     console.log(
-      "//**************************************BEGIN addNonMutableNote BATCH**********************************************/"
+      "//**************************************BEGIN addNonMutableStorage BATCH**********************************************/"
     );
-    return DECORATE.addNonMutableNote("0", Foreign721.address, rgt1, rgt000, {
+    return DECORATE.addNonMutableStorage("0", Foreign721.address, rgt1, rgt000, {
       from: account2,
     });
   });
   //20
   it("Should fail because record Node cust type !== 5", async () => {
-    return DECORATE.addNonMutableNote("0", Foreign721.address, rgt1, rgt000, {
+    return DECORATE.addNonMutableStorage("0", Foreign721.address, rgt1, rgt000, {
       from: account1,
     });
   });
 
   // //27
   // it('Should fail because assetStatus = exported', async () => {
-  //     return DECORATE.addNonMutableNote(
+  //     return DECORATE.addNonMutableStorage(
   //         "3",
   //         Foreign721.address,
   //         rgt1,
@@ -1964,7 +1964,7 @@ contract("DECORATE", (accounts) => {
   //21
   it("Should fail because caller is not token holder", async () => {
     console.log(
-      "//**************************************END addNonMutableNote FAIL BATCH**********************************************/"
+      "//**************************************END addNonMutableStorage FAIL BATCH**********************************************/"
     );
     console.log(
       "//**************************************BEGIN exportAssetTo BATCH**********************************************/"
@@ -2242,7 +2242,7 @@ contract("DECORATE", (accounts) => {
   });
 
   it("Should set NonMutable note to (asset12)", async () => {
-    return APP.addNonMutableNote(asset12, rgt12, asset12, rgt000, {
+    return APP.addNonMutableStorage(asset12, rgt12, asset12, rgt000, {
       from: account2,
     });
   });
@@ -2720,7 +2720,7 @@ contract("DECORATE", (accounts) => {
   });
 
   it("Should set NonMutable note to (asset13)", async () => {
-    return APP_NC.addNonMutableNote(asset13, asset13, rgt000, {
+    return APP_NC.addNonMutableStorage(asset13, asset13, rgt000, {
       from: account4,
     });
   });
