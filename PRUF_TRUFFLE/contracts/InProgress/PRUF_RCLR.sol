@@ -90,9 +90,9 @@ contract RCLR is ECR_CORE, CORE {
         rec.rightsHolder = _rgtHash;
         rec.numberOfTransfers = 170;
         //^^^^^^^effects^^^^^^^^^^^^
-        
-        A_TKN.mintAssetToken(_msgSender(), tokenId); 
-    
+
+        A_TKN.mintAssetToken(_msgSender(), tokenId); //only sends to caller. Noneed to mint to node, custodial does not recycle
+
         ECR_MGR.endEscrow(_idxHash);
         deductRecycleCosts(rec.node, escrowDataLight.addr_1);
         rec.assetStatus = 58;

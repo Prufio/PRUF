@@ -21,7 +21,6 @@ import "../Imports/security/ReentrancyGuard.sol";
 import "../Resources/PRUF_BASIC.sol";
 
 contract CORE is BASIC {
-
     /**
      * @dev create a Record in Storage @ idxHash (SETTER) and mint an asset token (may mint to node holder depending on flags)
      * @param _idxHash - Asset Index
@@ -83,11 +82,20 @@ contract CORE is BASIC {
         );
         //^^^^^^^Checks^^^^^^^^
 
-        if (node_info.custodyType == 1) {
-            A_TKN.mintAssetToken(address(this), tokenId);
+        //DPS:TEST
+        address recipient;
+        if (NODE_MGR.getSwitchAt(_node, 2) == 0) {
+            //if switch at bit 2 is not set, set the mint to address to the node holder
+            recipient = NODE_TKN.ownerOf(_node);
+        } else if (node_info.custodyType == 1) {
+            //if switch at bit 2 is set, and and the custody type is 1, send the token to this cointract.
+            recipient = address(this);
         } else {
-            A_TKN.mintAssetToken(_msgSender(), tokenId);
-        }
+            //if switch at bit 2 is set, and and the custody type is not 1, send the token to the caller.
+            recipient = _msgSender();
+        } //DPS:TEST end
+
+        A_TKN.mintAssetToken(recipient, tokenId);
 
         STOR.newRecord(_idxHash, _rgtHash, _node, _countDownStart);
         //^^^^^^^interactions^^^^^^^^^

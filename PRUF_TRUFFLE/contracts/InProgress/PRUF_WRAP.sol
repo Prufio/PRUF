@@ -139,9 +139,18 @@ contract WRAP is CORE {
             //record does not exist
             createRecord(idxHash, _rgtHash, _node, _countDownStart);
         } else {
+            //DPS:TEST
             //just mint the token, record already exists
-            A_TKN.mintAssetToken(_msgSender(), newTokenId);
-        }
+            if (NODE_MGR.getSwitchAt(_node, 2) == 0) {
+                //if switch at bit 2 is not set, set the mint to address to the node holder
+                A_TKN.mintAssetToken(NODE_TKN.ownerOf(_node), newTokenId);
+            } else {
+                //if switch at bit 2 is set, send the token to the caller.
+                //caller might be a custodial contract, or it might be an individual.
+                A_TKN.mintAssetToken(_msgSender(), newTokenId);
+            }
+        } //DPS:TEST end
+
         deductServiceCosts(_node, 1);
         //^^^^^^^interactions^^^^^^^^^
     }
@@ -258,7 +267,16 @@ contract WRAP is CORE {
         }
         //^^^^^^^checks^^^^^^^^^
 
-        A_TKN.mintAssetToken(_msgSender(), tokenId);
+        if (NODE_MGR.getSwitchAt(_node, 2) == 0) {
+            //DPS:TEST
+            //if switch at bit 2 is not set, set the mint to address to the node holder
+            A_TKN.mintAssetToken(NODE_TKN.ownerOf(_node), tokenId);
+        } else {
+            //if switch at bit 2 is set, send the token to the caller.
+            //caller might be a custodial contract, or it might be an individual.
+            A_TKN.mintAssetToken(_msgSender(), tokenId);
+        } //DPS:TEST end
+
         STOR.newRecord(_idxHash, _rgtHash, _node, _countDownStart);
         //^^^^^^^interactions^^^^^^^^^
     }

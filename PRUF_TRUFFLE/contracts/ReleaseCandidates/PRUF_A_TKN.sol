@@ -360,7 +360,7 @@ contract A_TKN is
         //^^^^^^^effects^^^^^^^^^
     }
 
-    /** 
+    /**
      * @dev Mint an Asset token (may mint only to node holder depending on flags)
      * @param _recipientAddress - Address to mint token into
      * @param _tokenId - Token ID to mint
@@ -370,27 +370,14 @@ contract A_TKN is
         external
         isMinter
         nonReentrant
-        returns (uint256, address)
+        returns (uint256)
     {
         //^^^^^^^checks^^^^^^^^^
 
-        address recipient;
-
-        bytes32 _idxHash = bytes32(_tokenId);
-        Record memory rec = getRecord(_idxHash);
-
-        if (NODE_MGR.getSwitchAt(rec.node, 2) == 0) {
-            //if switch at bit 2 is not set, set the mint to address to the node holder
-            recipient = NODE_TKN.ownerOf(rec.node);
-        } else {
-            //otherwise trust the address that was passed by the minter.
-            recipient = _recipientAddress;
-        }
-
-        _safeMint(recipient, _tokenId);
+        _safeMint(_recipientAddress, _tokenId);
         //^^^^^^^effects^^^^^^^^^
 
-        return (_tokenId, recipient);
+        return (_tokenId);
         //^^^^^^^interactions^^^^^^^^^
     }
 

@@ -70,7 +70,7 @@ contract PIP is CORE {
         tokenURI = uint256toString(uint256(b32URI));
         //^^^^^^^effects^^^^^^^^^^^^
 
-        A_TKN.mintAssetToken(address(this), tokenId); //mint a PIP token
+        A_TKN.mintAssetToken(address(this), tokenId); //mint a PIP token...this needs to send it to the right address, its dumb right now
         A_TKN.setURI(tokenId, tokenURI); 
     }
 
