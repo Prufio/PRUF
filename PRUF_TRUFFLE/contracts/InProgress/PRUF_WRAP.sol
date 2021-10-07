@@ -214,7 +214,7 @@ contract WRAP is CORE {
 
     /**
      * @dev create a Record in Storage @ idxHash (SETTER)
-     * @param _idxHash Asset ID
+     * @param _idxRaw Asset ID
      * @param _rgtHash Hash or user data
      * @param _node Node ID
      * @param _countDownStart Initial counter value
@@ -222,12 +222,13 @@ contract WRAP is CORE {
      * depending on custody type/management type, caller ID token or address myst be authorized
      */
     function createRecord(
-        bytes32 _idxHash,
+        bytes32 _idxRaw,
         bytes32 _rgtHash,
         uint32 _node,
         uint32 _countDownStart
     ) internal override {
-        uint256 tokenId = uint256(_idxHash);
+        bytes32 idxHash = keccak256(abi.encodePacked(_idxRaw, _node)); //hash idxRaw with node to get idxHash DPS:TEST
+        uint256 tokenId = uint256(idxHash);
         Node memory node_info = getNodeinfo(_node);
 
         require(
@@ -277,7 +278,7 @@ contract WRAP is CORE {
             A_TKN.mintAssetToken(_msgSender(), tokenId);
         } //DPS:TEST end
 
-        STOR.newRecord(_idxHash, _rgtHash, _node, _countDownStart);
+        STOR.newRecord(idxHash, _rgtHash, _node, _countDownStart);
         //^^^^^^^interactions^^^^^^^^^
     }
 }
