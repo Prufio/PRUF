@@ -121,12 +121,14 @@ contract Helper is Ownable, BASIC {
         string memory _idx_type,
         string memory _idx_mfg,
         string memory _idx_mod,
-        string memory _idx_ser
+        string memory _idx_ser,
+        uint32 _node
     ) external pure returns (bytes32) {
         bytes32 idxHash;
         idxHash = keccak256(
             abi.encodePacked(_idx_type, _idx_mfg, _idx_mod, _idx_ser)
-        );
+        ); //get idxRaw
+        idxHash = keccak256(abi.encodePacked(idxHash, _node)); //get idxHash
         return (idxHash);
     }
 
@@ -203,20 +205,19 @@ contract Helper is Ownable, BASIC {
         returns (string memory)
     {
         bytes32 _hashedAuthCode = keccak256(abi.encodePacked(_authCode));
-        bytes32 b32URI =
-            keccak256(abi.encodePacked(_hashedAuthCode, _node));
+        bytes32 b32URI = keccak256(abi.encodePacked(_hashedAuthCode, _node));
         string memory authString = uint256toString(uint256(b32URI));
 
         return authString;
     }
 
-    function getURIb32fromAuthcode(
-        uint32 _node,
-        string calldata _authCode
-    ) external pure returns (bytes32) {
+    function getURIb32fromAuthcode(uint32 _node, string calldata _authCode)
+        external
+        pure
+        returns (bytes32)
+    {
         bytes32 _hashedAuthCode = keccak256(abi.encodePacked(_authCode));
-        bytes32 b32URI =
-            keccak256(abi.encodePacked(_hashedAuthCode, _node));
+        bytes32 b32URI = keccak256(abi.encodePacked(_hashedAuthCode, _node));
 
         return b32URI;
     }
@@ -255,7 +256,8 @@ contract Helper is Ownable, BASIC {
      * @dev Retrieve node_data @ _node
      */
     function helper_getExtendedNodeData(uint32 _node)
-        external view 
+        external
+        view
         returns (Node memory)
     {
         //^^^^^^^checks^^^^^^^^^
@@ -263,11 +265,12 @@ contract Helper is Ownable, BASIC {
         //^^^^^^^interactions^^^^^^^^^
     }
 
-/*
+    /*
      * @dev Retrieve node_data @ _node
      */
     function helper_getExtendedNodeData_nostruct(uint32 _node)
-        external view
+        external
+        view
         returns (
             uint8,
             address,
