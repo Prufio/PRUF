@@ -21,7 +21,6 @@ pragma solidity ^0.8.7;
 import "../Resources/PRUF_CORE.sol";
 
 contract APP_NC is CORE {
-
     //---------------------------------------Modifiers-------------------------------
 
     /**
@@ -128,108 +127,6 @@ contract APP_NC is CORE {
         createRecord(_idxHash, _rgtHash, _node, _countDownStart);
         deductServiceCosts(_node, 1);
         //^^^^^^^effects^^^^^^^^^
-    }
-
-    /**
-     * @dev exportTo - sets asset to status 70 (importable) and defines the node that the item can be imported into
-     * @param _idxHash idx of asset to Modify
-     * @param _exportTo node target for export
-     */
-    function exportAssetTo(bytes32 _idxHash, uint32 _exportTo)
-        external
-        whenNotPaused
-        isAuthorized(_idxHash)
-    {
-        Record memory rec = getRecord(_idxHash);
-        Node memory node_info = getNodeinfo(rec.node);
-
-        require(
-            (rec.assetStatus == 51) || (rec.assetStatus == 70),
-            "APP_NC:EXT: Must be in transferrable status (51)"
-        );
-        require(
-            NODE_MGR.isSameRootNode(_exportTo, rec.node) == 170,
-            "APP_NC:EXT: Cannot change node to new root"
-        );
-        require(
-            (node_info.managementType < 6),
-            "APP_NC:EXT: Contract does not support management types > 5 or node is locked"
-        );
-        if (
-            (node_info.managementType == 1) || (node_info.managementType == 5)
-        ) {
-            require(
-                (NODE_TKN.ownerOf(rec.node) == _msgSender()),
-                "APP_NC:EXT: Restricted from exporting assets from this node - does not hold NodeToken"
-            );
-        }
-        //^^^^^^^checks^^^^^^^^^
-
-        rec.assetStatus = 70; // Set status to 70 (exported)
-        rec.int32temp = _exportTo; //set permitted node for import
-
-        writeRecord(_idxHash, rec);
-        //^^^^^^^effects^^^^^^^^^
-    }
-
-    /**
-     * @dev Import a record into a new node
-     * @param _idxHash - hash of asset information created by frontend inputs
-     * @param _newNode - node the asset will be imported into
-     */
-    function importAsset(bytes32 _idxHash, uint32 _newNode)
-        external
-        nonReentrant
-        whenNotPaused
-        isAuthorized(_idxHash)
-    {
-        Record memory rec = getRecord(_idxHash);
-        Node memory node_info = getNodeinfo(_newNode);
-
-        require(rec.assetStatus == 70, "ANC:IA: Asset !exported");
-        require(
-            _newNode == rec.int32temp,
-            "ANC:IA: Cannot change node except to specified node"
-        );
-        require(
-            NODE_MGR.isSameRootNode(_newNode, rec.node) == 170,
-            "ANC:IA: Cannot change node to new root"
-        );
-        require(
-            (node_info.managementType < 6),
-            "ANC:IA: Contract does not support management types > 5 or node is locked"
-        );
-        if (
-            (node_info.managementType == 1) ||
-            (node_info.managementType == 2) ||
-            (node_info.managementType == 5)
-        ) {
-            require(
-                (NODE_TKN.ownerOf(_newNode) == _msgSender()),
-                "ANC:IA: Cannot import asset in node mgmt type 1||2||5 - caller does not hold node token"
-            );
-        } else if (node_info.managementType == 3) {
-            require(
-                NODE_MGR.getUserType(
-                    keccak256(abi.encodePacked(_msgSender())),
-                    _newNode
-                ) == 1,
-                "ANC:IA: Cannot create asset - caller address !authorized"
-            );
-        } else if (node_info.managementType == 4) {
-            require(
-                ID_MGR.trustLevel(_msgSender()) > 10,
-                "ANC:IA: Caller !trusted ID holder"
-            );
-        }
-        //^^^^^^^checks^^^^^^^^^
-
-        rec.assetStatus = 51; //transferrable status
-        STOR.changeNode(_idxHash, _newNode);
-
-        writeRecord(_idxHash, rec);
-        deductServiceCosts(_newNode, 1);
-        //^^^^^^^effects/interactions^^^^^^^^^^^^
     }
 
     /**
@@ -413,4 +310,106 @@ contract APP_NC is CORE {
         deductServiceCosts(rec.node, 8);
         //^^^^^^^effects^^^^^^^^^
     }
+
+    // /**
+    //  * @dev exportTo - sets asset to status 70 (importable) and defines the node that the item can be imported into
+    //  * @param _idxHash idx of asset to Modify
+    //  * @param _exportTo node target for export
+    //  */
+    // function exportAssetTo(bytes32 _idxHash, uint32 _exportTo)
+    //     external
+    //     whenNotPaused
+    //     isAuthorized(_idxHash)
+    // {
+    //     Record memory rec = getRecord(_idxHash);
+    //     Node memory node_info = getNodeinfo(rec.node);
+
+    //     require(
+    //         (rec.assetStatus == 51) || (rec.assetStatus == 70),
+    //         "APP_NC:EXT: Must be in transferrable status (51)"
+    //     );
+    //     require(
+    //         NODE_MGR.isSameRootNode(_exportTo, rec.node) == 170,
+    //         "APP_NC:EXT: Cannot change node to new root"
+    //     );
+    //     require(
+    //         (node_info.managementType < 6),
+    //         "APP_NC:EXT: Contract does not support management types > 5 or node is locked"
+    //     );
+    //     if (
+    //         (node_info.managementType == 1) || (node_info.managementType == 5)
+    //     ) {
+    //         require(
+    //             (NODE_TKN.ownerOf(rec.node) == _msgSender()),
+    //             "APP_NC:EXT: Restricted from exporting assets from this node - does not hold NodeToken"
+    //         );
+    //     }
+    //     //^^^^^^^checks^^^^^^^^^
+
+    //     rec.assetStatus = 70; // Set status to 70 (exported)
+    //     rec.int32temp = _exportTo; //set permitted node for import
+
+    //     writeRecord(_idxHash, rec);
+    //     //^^^^^^^effects^^^^^^^^^
+    // }
+
+    // /**
+    //  * @dev Import a record into a new node
+    //  * @param _idxHash - hash of asset information created by frontend inputs
+    //  * @param _newNode - node the asset will be imported into
+    //  */
+    // function importAsset(bytes32 _idxHash, uint32 _newNode)
+    //     external
+    //     nonReentrant
+    //     whenNotPaused
+    //     isAuthorized(_idxHash)
+    // {
+    //     Record memory rec = getRecord(_idxHash);
+    //     Node memory node_info = getNodeinfo(_newNode);
+
+    //     require(rec.assetStatus == 70, "ANC:IA: Asset !exported");
+    //     require(
+    //         _newNode == rec.int32temp,
+    //         "ANC:IA: Cannot change node except to specified node"
+    //     );
+    //     require(
+    //         NODE_MGR.isSameRootNode(_newNode, rec.node) == 170,
+    //         "ANC:IA: Cannot change node to new root"
+    //     );
+    //     require(
+    //         (node_info.managementType < 6),
+    //         "ANC:IA: Contract does not support management types > 5 or node is locked"
+    //     );
+    //     if (
+    //         (node_info.managementType == 1) ||
+    //         (node_info.managementType == 2) ||
+    //         (node_info.managementType == 5)
+    //     ) {
+    //         require(
+    //             (NODE_TKN.ownerOf(_newNode) == _msgSender()),
+    //             "ANC:IA: Cannot import asset in node mgmt type 1||2||5 - caller does not hold node token"
+    //         );
+    //     } else if (node_info.managementType == 3) {
+    //         require(
+    //             NODE_MGR.getUserType(
+    //                 keccak256(abi.encodePacked(_msgSender())),
+    //                 _newNode
+    //             ) == 1,
+    //             "ANC:IA: Cannot create asset - caller address !authorized"
+    //         );
+    //     } else if (node_info.managementType == 4) {
+    //         require(
+    //             ID_MGR.trustLevel(_msgSender()) > 10,
+    //             "ANC:IA: Caller !trusted ID holder"
+    //         );
+    //     }
+    //     //^^^^^^^checks^^^^^^^^^
+
+    //     rec.assetStatus = 51; //transferrable status
+    //     STOR.changeNode(_idxHash, _newNode);
+
+    //     writeRecord(_idxHash, rec);
+    //     deductServiceCosts(_newNode, 1);
+    //     //^^^^^^^effects/interactions^^^^^^^^^^^^
+    // }
 }
