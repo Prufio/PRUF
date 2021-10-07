@@ -384,22 +384,23 @@ contract STOR is AccessControl, ReentrancyGuard, Pausable {
     /**
      * @dev Make a new record, writing to the 'database' mapping with basic initial asset data
      * calling contract must be authorized in relevant node
-     * @param   _idxHash - asset ID
+     * @param   _idxRaw - asset ID befor node hashing
      * @param   _rgtHash - rightsholder id hash
      * @param   _node - node in which to create the asset
      * @param   _countDownStart - initial value for decrement-only value
      */
     function newRecord(
-        bytes32 _idxHash,
+        bytes32 _idxRaw,
         bytes32 _rgtHash,
         uint32 _node,
         uint32 _countDownStart
     ) external nonReentrant whenNotPaused isAuthorized(_node) {
+        bytes32 idxHash = keccak256(abi.encodePacked(_idxRaw, _node)); //hash idxRaw with node to get idxHash DPS:TEST
         require(
-            database[_idxHash].assetStatus != 60,
+            database[idxHash].assetStatus != 60,
             "S:NR: Asset discarded use APP_NC rcycl"
         );
-        require(database[_idxHash].node == 0, "S:NR: Rec already exists");
+        require(database[idxHash].node == 0, "S:NR: Rec already exists");
         require(_rgtHash != 0, "S:NR: RGT = 0");
         require(_node != 0, "S:NR: node = 0");
         //^^^^^^^checks^^^^^^^^^
@@ -417,8 +418,9 @@ contract STOR is AccessControl, ReentrancyGuard, Pausable {
         rec.node = _node;
         rec.countDown = _countDownStart;
         rec.rightsHolder = _rgtHash;
+        
 
-        database[_idxHash] = rec;
+        database[idxHash] = rec; 
         //^^^^^^^effects^^^^^^^^^
     }
 
