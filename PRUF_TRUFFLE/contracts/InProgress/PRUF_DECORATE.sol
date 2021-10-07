@@ -323,138 +323,138 @@ contract DECORATE is CORE {
         //^^^^^^^interactions^^^^^^^^^
     }
 
-    /**
-     * @dev Export - sets asset to status 70 (importable)
-     * @param _tokenID - tokenID of assets token @_tokenContract
-     * @param _tokenContract - token contract of _tokenID
-     * @param _exportTo - destination node of decorated token
-     * DPS:TEST added destination node parameter
-     */
-    function exportAssetTo(uint256 _tokenID, address _tokenContract, uint32 _exportTo)
-        external
-        whenNotPaused
-        isTokenHolder(_tokenID, _tokenContract)
-    {   
-        bytes32 idxHash = keccak256(abi.encodePacked(_tokenID, _tokenContract));
-        Record memory rec = getRecord(idxHash);
-        Node memory node_info =getNodeinfo(rec.node);
+    // /** //import & export have been slated for reevaluation
+    //  * @dev Export - sets asset to status 70 (importable)
+    //  * @param _tokenID - tokenID of assets token @_tokenContract
+    //  * @param _tokenContract - token contract of _tokenID
+    //  * @param _exportTo - destination node of decorated token
+    //  * DPS:TEST added destination node parameter
+    //  */
+    // function exportAssetTo(uint256 _tokenID, address _tokenContract, uint32 _exportTo)
+    //     external
+    //     whenNotPaused
+    //     isTokenHolder(_tokenID, _tokenContract)
+    // {   
+    //     bytes32 idxHash = keccak256(abi.encodePacked(_tokenID, _tokenContract));
+    //     Record memory rec = getRecord(idxHash);
+    //     Node memory node_info =getNodeinfo(rec.node);
 
-        require(
-            node_info.custodyType == 5,
-            "D:E:Node.custodyType != 5 & record must exist"
-        );
-        require(
-            (node_info.managementType < 6),
-            "C:CR:Contract does not support management types > 5 or node is locked"
-        );
-        if ((node_info.managementType == 1) || (node_info.managementType == 5)) {
-            require(
-                (NODE_TKN.ownerOf(rec.node) == _msgSender()),
-                "D:E: Restricted from exporting assets from this node - does not hold NodeToken"
-            );
-        }
-        require(
-            (node_info.referenceAddress == _tokenContract) ||
-                (node_info.referenceAddress == address(0)),
-            "D:E:Node extended data must be '0' or ERC721 contract address"
-        );
+    //     require(
+    //         node_info.custodyType == 5,
+    //         "D:E:Node.custodyType != 5 & record must exist"
+    //     );
+    //     require(
+    //         (node_info.managementType < 6),
+    //         "C:CR:Contract does not support management types > 5 or node is locked"
+    //     );
+    //     if ((node_info.managementType == 1) || (node_info.managementType == 5)) {
+    //         require(
+    //             (NODE_TKN.ownerOf(rec.node) == _msgSender()),
+    //             "D:E: Restricted from exporting assets from this node - does not hold NodeToken"
+    //         );
+    //     }
+    //     require(
+    //         (node_info.referenceAddress == _tokenContract) ||
+    //             (node_info.referenceAddress == address(0)),
+    //         "D:E:Node extended data must be '0' or ERC721 contract address"
+    //     );
 
-        require(
-            (rec.assetStatus == 51) || (rec.assetStatus == 70), //DPS:check
-            "D:E: Must be in transferrable status (51/70)"
-        );
-        require(
-            NODE_MGR.isSameRootNode(_exportTo, rec.node) == 170,
-            "D:E: Cannot change node to new root"
-        );
-        //^^^^^^^checks^^^^^^^^^
+    //     require(
+    //         (rec.assetStatus == 51) || (rec.assetStatus == 70), //DPS:check
+    //         "D:E: Must be in transferrable status (51/70)"
+    //     );
+    //     require(
+    //         NODE_MGR.isSameRootNode(_exportTo, rec.node) == 170,
+    //         "D:E: Cannot change node to new root"
+    //     );
+    //     //^^^^^^^checks^^^^^^^^^
 
-        rec.assetStatus = 70; // Set status to 70 (exported)
-        rec.int32temp = _exportTo; //set permitted node for import
-        //^^^^^^^effects^^^^^^^^^
+    //     rec.assetStatus = 70; // Set status to 70 (exported)
+    //     rec.int32temp = _exportTo; //set permitted node for import
+    //     //^^^^^^^effects^^^^^^^^^
 
-        writeRecord(idxHash, rec);
-        //^^^^^^^interactions^^^^^^^^^
-    }
+    //     writeRecord(idxHash, rec);
+    //     //^^^^^^^interactions^^^^^^^^^
+    // }
 
-    /**
-     * @dev import a decoration into a new node. posessor is considered to be owner. sets rec.assetStatus to 51.
-     * @param _tokenID - tokenID of assets token @_tokenContract
-     * @param _tokenContract - token contract of _tokenID
-     * @param _newNode - new node of decorated token
-     */
-    function importAsset(
-        uint256 _tokenID,
-        address _tokenContract,
-        uint32 _newNode
-    )
-        external
-        nonReentrant
-        whenNotPaused
-        isTokenHolder(_tokenID, _tokenContract)
-    {
-        bytes32 idxHash = keccak256(abi.encodePacked(_tokenID, _tokenContract));
-        Record memory rec = getRecord(idxHash);
-        Node memory node_info =getNodeinfo(rec.node);
-        Node memory newNodeInfo =getNodeinfo(_newNode);
+    // /** //import & export have been slated for reevaluation
+    //  * @dev import a decoration into a new node. posessor is considered to be owner. sets rec.assetStatus to 51.
+    //  * @param _tokenID - tokenID of assets token @_tokenContract
+    //  * @param _tokenContract - token contract of _tokenID
+    //  * @param _newNode - new node of decorated token
+    //  */
+    // function importAsset(
+    //     uint256 _tokenID,
+    //     address _tokenContract,
+    //     uint32 _newNode
+    // )
+    //     external
+    //     nonReentrant
+    //     whenNotPaused
+    //     isTokenHolder(_tokenID, _tokenContract)
+    // {
+    //     bytes32 idxHash = keccak256(abi.encodePacked(_tokenID, _tokenContract));
+    //     Record memory rec = getRecord(idxHash);
+    //     Node memory node_info =getNodeinfo(rec.node);
+    //     Node memory newNodeInfo =getNodeinfo(_newNode);
 
-        require(
-            (node_info.custodyType == 5) && (newNodeInfo.custodyType == 5), //only allow import of other wrappers
-            "D:I:Node.custodyType != 5 & record must exist"
-        );
-        require(
-            ((node_info.referenceAddress == _tokenContract) ||
-                (node_info.referenceAddress == address(0))) &&
-                ((newNodeInfo.referenceAddress == _tokenContract) ||
-                    (newNodeInfo.referenceAddress == address(0))),
-            "D:I:Node extended data must be '0' or ERC721 contract address" //if node has a contract erc721address specified, it must match
-        );
-        require(rec.assetStatus == 70, "D:I: Asset not exported");
-        require(
-            NODE_MGR.isSameRootNode(_newNode, rec.node) == 170,
-            "D:I:Cannot change node to new root"
-        );
-        require( //DPS:TEST NEW
-            _newNode == rec.int32temp,
-            "ANC:IA: Cannot change node except to specified node"
-        );
-        require( //DPS:TEST NEW
-            (newNodeInfo.managementType < 6),
-            "D:I: Contract does not support management types > 5 or node is locked"
-        );
-        if (
-            (newNodeInfo.managementType == 1) ||
-            (newNodeInfo.managementType == 2) ||
-            (newNodeInfo.managementType == 5)
-        ) {
-            require( //DPS:TEST NEW
-                (NODE_TKN.ownerOf(_newNode) == _msgSender()),
-                "D:I: Cannot create asset in node mgmt type 1||2||5 - caller does not hold node token"
-            );
-        } else if (newNodeInfo.managementType == 3) {
-            require( //DPS:TEST NEW
-                NODE_MGR.getUserType(
-                    keccak256(abi.encodePacked(_msgSender())),
-                    _newNode
-                ) == 1,
-                "D:I: Cannot create asset - caller address !authorized"
-            );
-        } else if (newNodeInfo.managementType == 4) {
-            require( //DPS:TEST NEW
-                ID_MGR.trustLevel(_msgSender()) > 10,
-                "D:I: Caller !trusted ID holder"
-            );
-        }
-        //^^^^^^^checks^^^^^^^^^
+    //     require(
+    //         (node_info.custodyType == 5) && (newNodeInfo.custodyType == 5), //only allow import of other wrappers
+    //         "D:I:Node.custodyType != 5 & record must exist"
+    //     );
+    //     require(
+    //         ((node_info.referenceAddress == _tokenContract) ||
+    //             (node_info.referenceAddress == address(0))) &&
+    //             ((newNodeInfo.referenceAddress == _tokenContract) ||
+    //                 (newNodeInfo.referenceAddress == address(0))),
+    //         "D:I:Node extended data must be '0' or ERC721 contract address" //if node has a contract erc721address specified, it must match
+    //     );
+    //     require(rec.assetStatus == 70, "D:I: Asset not exported");
+    //     require(
+    //         NODE_MGR.isSameRootNode(_newNode, rec.node) == 170,
+    //         "D:I:Cannot change node to new root"
+    //     );
+    //     require( //DPS:TEST NEW
+    //         _newNode == rec.int32temp,
+    //         "ANC:IA: Cannot change node except to specified node"
+    //     );
+    //     require( //DPS:TEST NEW
+    //         (newNodeInfo.managementType < 6),
+    //         "D:I: Contract does not support management types > 5 or node is locked"
+    //     );
+    //     if (
+    //         (newNodeInfo.managementType == 1) ||
+    //         (newNodeInfo.managementType == 2) ||
+    //         (newNodeInfo.managementType == 5)
+    //     ) {
+    //         require( //DPS:TEST NEW
+    //             (NODE_TKN.ownerOf(_newNode) == _msgSender()),
+    //             "D:I: Cannot create asset in node mgmt type 1||2||5 - caller does not hold node token"
+    //         );
+    //     } else if (newNodeInfo.managementType == 3) {
+    //         require( //DPS:TEST NEW
+    //             NODE_MGR.getUserType(
+    //                 keccak256(abi.encodePacked(_msgSender())),
+    //                 _newNode
+    //             ) == 1,
+    //             "D:I: Cannot create asset - caller address !authorized"
+    //         );
+    //     } else if (newNodeInfo.managementType == 4) {
+    //         require( //DPS:TEST NEW
+    //             ID_MGR.trustLevel(_msgSender()) > 10,
+    //             "D:I: Caller !trusted ID holder"
+    //         );
+    //     }
+    //     //^^^^^^^checks^^^^^^^^^
 
-        rec.assetStatus = 51;
-        //^^^^^^^effects^^^^^^^^^
+    //     rec.assetStatus = 51;
+    //     //^^^^^^^effects^^^^^^^^^
 
-        STOR.changeNode(idxHash, _newNode);
-        writeRecord(idxHash, rec);
-        deductServiceCosts(_newNode, 1);
-        //^^^^^^^interactions^^^^^^^^^
-    }
+    //     STOR.changeNode(idxHash, _newNode);
+    //     writeRecord(idxHash, rec);
+    //     deductServiceCosts(_newNode, 1);
+    //     //^^^^^^^interactions^^^^^^^^^
+    // }
 
     //--------------------------------------------External Functions--------------------------
 
