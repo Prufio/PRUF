@@ -221,7 +221,7 @@ contract STOR is AccessControl, ReentrancyGuard, Pausable {
         contractInfo[_name][_node] = _contractAuthLevel; //does not pose an partial record overwrite risk
         //^^^^^^^effects^^^^^^^^^
 
-        emit REPORT("ACDA", bytes32(uint256(_contractAuthLevel))); //report access to the internal user database
+        emit REPORT("ACDA", bytes32(uint256(_contractAuthLevel))); //report access to the node internal user database
         //^^^^^^^interactions^^^^^^^^^
     }
 
@@ -396,10 +396,6 @@ contract STOR is AccessControl, ReentrancyGuard, Pausable {
         uint32 _countDownStart
     ) external nonReentrant whenNotPaused isAuthorized(_node) {
         bytes32 idxHash = keccak256(abi.encodePacked(_idxRaw, _node)); //hash idxRaw with node to get idxHash DPS:TEST
-        require(
-            database[idxHash].assetStatus != 60,
-            "S:NR: Asset discarded use RCLR"
-        );
         require(database[idxHash].node == 0, "S:NR: Rec already exists");
         require(_rgtHash != 0, "S:NR: RGT = 0");
         require(_node != 0, "S:NR: node = 0");
@@ -585,7 +581,7 @@ contract STOR is AccessControl, ReentrancyGuard, Pausable {
         nonReentrant
         whenNotPaused
         isEscrowManager //calling contract must be ECR_MGR
-        exists(_idxHash) //asset must exist in 'database' REDUNDANT THROWS IN ECR_MGR WITH "Asset not in escrow status"
+        exists(_idxHash) //asset must exist in 'database' 
     {
         Record memory rec = database[_idxHash];
         require(isEscrow(rec.assetStatus) == 170, "S:EE: STAT !ECR"); //asset must be in an escrow status
@@ -628,12 +624,6 @@ contract STOR is AccessControl, ReentrancyGuard, Pausable {
     {
         Record memory rec = database[_idxHash];
         require(isTransferred(rec.assetStatus) == 0, "S:MMS: Txfrd asset");
-
-        require(
-            (rec.mutableStorage1 != _mutableStorage1) ||
-                (rec.mutableStorage2 != _mutableStorage2),
-            "S:MMS: New value = old"
-        );
         //^^^^^^^checks^^^^^^^^^
 
         rec.mutableStorage1 = _mutableStorage1;
