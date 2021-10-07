@@ -396,8 +396,8 @@ contract STOR is AccessControl, ReentrancyGuard, Pausable {
         uint32 _countDownStart
     ) external nonReentrant whenNotPaused isAuthorized(_node) {
         
-        //bytes32 idxHash = keccak256(abi.encodePacked(_idxRaw, _node)); //hash idxRaw with node to get idxHash DPS:TEST
-        require(database[_idxRaw].node == 0, "S:NR: Rec already exists"); //idxhash
+        bytes32 idxHash = keccak256(abi.encodePacked(_idxRaw, _node)); //hash idxRaw with node to get idxHash DPS:TEST
+        require(database[idxHash].node == 0, "S:NR: Rec already exists"); //idxHash
         require(_rgtHash != 0, "S:NR: RGT = 0");
         require(_node != 0, "S:NR: node = 0");
         //^^^^^^^checks^^^^^^^^^
@@ -417,7 +417,7 @@ contract STOR is AccessControl, ReentrancyGuard, Pausable {
         rec.rightsHolder = _rgtHash;
         
 
-        database[_idxRaw] = rec; //idxhash
+        database[idxHash] = rec; //idxhash
         //^^^^^^^effects^^^^^^^^^
     }
 
