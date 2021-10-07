@@ -63,49 +63,6 @@ contract APP is CORE {
     }
 
     /**
-     * @dev import Rercord, must match export node
-     * posessor is considered to be owner. sets rec.assetStatus to 0.
-     * @param _idxHash - hash of asset information created by frontend inputs
-     * @param _newNode - node the asset will be imported into
-     */
-    function importAsset(bytes32 _idxHash, uint32 _newNode)
-        external
-        nonReentrant
-        whenNotPaused
-        isAuthorized(_idxHash) ///contract holds token (user sent to contract)
-    {
-        Record memory rec = getRecord(_idxHash);
-        uint8 userType = getCallingUserType(_newNode);
-
-        require(userType < 3, "A:IA: User !authorized to import assets");
-        require((userType > 0) && (userType < 10), "A:IA: User !auth in node");
-        require(
-            (rec.assetStatus == 5) ||
-                (rec.assetStatus == 55) ||
-                (rec.assetStatus == 70),
-            "A:IA: Only Transferred or exported assets can be imported"
-        );
-        require(
-            _newNode == rec.int32temp,
-            "A:IA: new node must match node authorized for import"
-        );
-        require(
-            NODE_MGR.isSameRootNode(_newNode, rec.node) == 170,
-            "ANC:IA: Cannot change node to new root"
-        );
-        //^^^^^^^checks^^^^^^^^^
-
-        rec.modCount = 170;
-        rec.assetStatus = 0;
-        //^^^^^^^effects^^^^^^^^^
-
-        STOR.changeNode(_idxHash, _newNode);
-        writeRecord(_idxHash, rec);
-        deductServiceCosts(_newNode, 1);
-        //^^^^^^^interactions^^^^^^^^^
-    }
-
-    /**
      * @dev Modify rec.rightsHolder
      * @param _idxHash - hash of asset information created by frontend inputs
      * @param _rgtHash - hash of new rightsholder information created by frontend inputs
@@ -413,47 +370,90 @@ contract APP is CORE {
         //^^^^^^^interactions^^^^^^^^^
     }
 
-    /**
-     * @dev Export FROM Custodial - sets asset to status 70 (importable) for export
-     * @dev exportTo - sets asset to status 70 (importable) and defines the node that the item can be imported into
-     * @param _idxHash idx of asset to Modify
-     * @param _exportTo node target for export
-     * @param _addr adress to send asset to
-     * @param _rgtHash rgthash to match in front end
-     */
-    function exportAssetTo(
-        bytes32 _idxHash,
-        uint32 _exportTo,
-        address _addr,
-        bytes32 _rgtHash
-    ) external nonReentrant whenNotPaused isAuthorized(_idxHash) {
-        Record memory rec = getRecord(_idxHash);
-        uint8 userType = getCallingUserType(rec.node);
+    // /** //import & export have been slated for reevaluation
+    //  * @dev import Rercord, must match export node
+    //  * posessor is considered to be owner. sets rec.assetStatus to 0.
+    //  * @param _idxHash - hash of asset information created by frontend inputs
+    //  * @param _newNode - node the asset will be imported into
+    //  */
+    // function importAsset(bytes32 _idxHash, uint32 _newNode)
+    //     external
+    //     nonReentrant
+    //     whenNotPaused
+    //     isAuthorized(_idxHash) ///contract holds token (user sent to contract)
+    // {
+    //     Record memory rec = getRecord(_idxHash);
+    //     uint8 userType = getCallingUserType(_newNode);
 
-        require(
-            (userType > 0) && (userType < 10),
-            "APP:EA: user not auth in node"
-        );
-        require( // require transferrable (51) status
-            (rec.assetStatus == 51) || (rec.assetStatus == 70),
-            "APP:EA: Asset status must be 51 to export"
-        );
-        require(
-            NODE_MGR.isSameRootNode(_exportTo, rec.node) == 170,
-            "A:EA: Cannot export node to new root"
-        );
-        require(
-            rec.rightsHolder == _rgtHash,
-            "APP:EA: Rightsholder does not match supplied data"
-        );
-        //^^^^^^^checks^^^^^^^^^
+    //     require(userType < 3, "A:IA: User !authorized to import assets");
+    //     require((userType > 0) && (userType < 10), "A:IA: User !auth in node");
+    //     require(
+    //         (rec.assetStatus == 5) ||
+    //             (rec.assetStatus == 55) ||
+    //             (rec.assetStatus == 70),
+    //         "A:IA: Only Transferred or exported assets can be imported"
+    //     );
+    //     require(
+    //         _newNode == rec.int32temp,
+    //         "A:IA: new node must match node authorized for import"
+    //     );
+    //     require(
+    //         NODE_MGR.isSameRootNode(_newNode, rec.node) == 170,
+    //         "ANC:IA: Cannot change node to new root"
+    //     );
+    //     //^^^^^^^checks^^^^^^^^^
 
-        rec.assetStatus = 70; // Set status to 70 (exported)
-        rec.int32temp = _exportTo;
-        //^^^^^^^effects^^^^^^^^^
+    //     rec.modCount = 170;
+    //     rec.assetStatus = 0;
+    //     //^^^^^^^effects^^^^^^^^^
 
-        A_TKN.safeTransferFrom(address(this), _addr, uint256(_idxHash));
-        writeRecord(_idxHash, rec);
-        //^^^^^^^interactions^^^^^^^^^
-    }
+    //     STOR.changeNode(_idxHash, _newNode);
+    //     writeRecord(_idxHash, rec);
+    //     deductServiceCosts(_newNode, 1);
+    //     //^^^^^^^interactions^^^^^^^^^
+    // }
+
+    // /** //import & export have been slated for reevaluation
+    //  * @dev Export FROM Custodial - sets asset to status 70 (importable) for export
+    //  * @dev exportTo - sets asset to status 70 (importable) and defines the node that the item can be imported into
+    //  * @param _idxHash idx of asset to Modify
+    //  * @param _exportTo node target for export
+    //  * @param _addr adress to send asset to
+    //  * @param _rgtHash rgthash to match in front end
+    //  */
+    // function exportAssetTo(
+    //     bytes32 _idxHash,
+    //     uint32 _exportTo,
+    //     address _addr,
+    //     bytes32 _rgtHash
+    // ) external nonReentrant whenNotPaused isAuthorized(_idxHash) {
+    //     Record memory rec = getRecord(_idxHash);
+    //     uint8 userType = getCallingUserType(rec.node);
+
+    //     require(
+    //         (userType > 0) && (userType < 10),
+    //         "APP:EA: user not auth in node"
+    //     );
+    //     require( // require transferrable (51) status
+    //         (rec.assetStatus == 51) || (rec.assetStatus == 70),
+    //         "APP:EA: Asset status must be 51 to export"
+    //     );
+    //     require(
+    //         NODE_MGR.isSameRootNode(_exportTo, rec.node) == 170,
+    //         "A:EA: Cannot export node to new root"
+    //     );
+    //     require(
+    //         rec.rightsHolder == _rgtHash,
+    //         "APP:EA: Rightsholder does not match supplied data"
+    //     );
+    //     //^^^^^^^checks^^^^^^^^^
+
+    //     rec.assetStatus = 70; // Set status to 70 (exported)
+    //     rec.int32temp = _exportTo;
+    //     //^^^^^^^effects^^^^^^^^^
+
+    //     A_TKN.safeTransferFrom(address(this), _addr, uint256(_idxHash));
+    //     writeRecord(_idxHash, rec);
+    //     //^^^^^^^interactions^^^^^^^^^
+    // }
 }

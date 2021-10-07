@@ -311,7 +311,7 @@ contract APP_NC is CORE {
         //^^^^^^^effects^^^^^^^^^
     }
 
-    // /**
+    // /** //import & export have been slated for reevaluation
     //  * @dev exportTo - sets asset to status 70 (importable) and defines the node that the item can be imported into
     //  * @param _idxHash idx of asset to Modify
     //  * @param _exportTo node target for export
@@ -353,7 +353,7 @@ contract APP_NC is CORE {
     //     //^^^^^^^effects^^^^^^^^^
     // }
 
-    // /**
+    // /** //import & export have been slated for reevaluation
     //  * @dev Import a record into a new node
     //  * @param _idxHash - hash of asset information created by frontend inputs
     //  * @param _newNode - node the asset will be imported into

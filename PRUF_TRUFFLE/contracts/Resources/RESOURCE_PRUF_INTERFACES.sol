@@ -841,13 +841,13 @@ interface APP_Interface {
         uint32 _countDownStart
     ) external;
 
-    /**
-     * @dev import Rercord, must match export node
-     * posessor is considered to be owner. sets rec.assetStatus to 0.
-     * @param _idxHash - hash of asset information created by frontend inputs
-     * @param _newNode - node the asset will be imported into
-     */
-    function importAsset(bytes32 _idxHash, uint32 _newNode) external;
+    // /** //import & export have been slated for reevaluation
+    //  * @dev import Rercord, must match export node
+    //  * posessor is considered to be owner. sets rec.assetStatus to 0.
+    //  * @param _idxHash - hash of asset information created by frontend inputs
+    //  * @param _newNode - node the asset will be imported into
+    //  */
+    // function importAsset(bytes32 _idxHash, uint32 _newNode) external;
 
     /**
      * @dev Modify rec.rightsHolder
@@ -939,20 +939,20 @@ interface APP_Interface {
         bytes32 _mutableStorage2
     ) external;
 
-    /**
-     * @dev Export FROM Custodial - sets asset to status 70 (importable) for export
-     * @dev exportTo - sets asset to status 70 (importable) and defines the node that the item can be imported into
-     * @param _idxHash idx of asset to Modify
-     * @param _exportTo node target for export
-     * @param _addr adress to send asset to
-     * @param _rgtHash rgthash to match in front end
-     */
-    function exportAssetTo(
-        bytes32 _idxHash,
-        uint32 _exportTo,
-        address _addr,
-        bytes32 _rgtHash
-    ) external;
+    //     /** //import & export have been slated for reevaluation
+    //      * @dev Export FROM Custodial - sets asset to status 70 (importable) for export
+    //      * @dev exportTo - sets asset to status 70 (importable) and defines the node that the item can be imported into
+    //      * @param _idxHash idx of asset to Modify
+    //      * @param _exportTo node target for export
+    //      * @param _addr adress to send asset to
+    //      * @param _rgtHash rgthash to match in front end
+    //      */
+    //     function exportAssetTo(
+    //         bytes32 _idxHash,
+    //         uint32 _exportTo,
+    //         address _addr,
+    //         bytes32 _rgtHash
+    //     ) external;
 }
 
 //---------------------------------------------------------------------------------------------------------------
@@ -1015,19 +1015,19 @@ interface APP_NC_Interface {
         uint32 _countDownStart
     ) external;
 
-    /**
-     * @dev exportTo - sets asset to status 70 (importable) and defines the node that the item can be imported into
-     * @param _idxHash idx of asset to Modify
-     * @param _exportTo node target for export
-     */
-    function exportAssetTo(bytes32 _idxHash, uint32 _exportTo) external;
+    // /** //import & export have been slated for reevaluation
+    //  * @dev exportTo - sets asset to status 70 (importable) and defines the node that the item can be imported into
+    //  * @param _idxHash idx of asset to Modify
+    //  * @param _exportTo node target for export
+    //  */
+    // function exportAssetTo(bytes32 _idxHash, uint32 _exportTo) external;
 
-    /**
-     * @dev Import a record into a new node
-     * @param _idxHash - hash of asset information created by frontend inputs
-     * @param _newNode - node the asset will be imported into
-     */
-    function importAsset(bytes32 _idxHash, uint32 _newNode) external;
+    // /** //import & export have been slated for reevaluation
+    //  * @dev Import a record into a new node
+    //  * @param _idxHash - hash of asset information created by frontend inputs
+    //  * @param _newNode - node the asset will be imported into
+    //  */
+    // function importAsset(bytes32 _idxHash, uint32 _newNode) external;
 
     /**
      * @dev record NonMutableStorage data
