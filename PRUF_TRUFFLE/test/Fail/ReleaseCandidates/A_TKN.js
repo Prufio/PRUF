@@ -190,7 +190,7 @@ contract("A_TKN", (accounts) => {
     asset14 = await Helper.getIdxHash(asset14raw, '1000001');
 
     rgt1 = await Helper.getJustRgtHash(
-      asset1,
+      asset1raw,
       "aaa",
       "aaa",
       "aaa",
@@ -199,7 +199,7 @@ contract("A_TKN", (accounts) => {
     );
 
     rgt2 = await Helper.getJustRgtHash(
-      asset2,
+      asset2raw,
       "bbb",
       "bbb",
       "bbb",
@@ -208,7 +208,7 @@ contract("A_TKN", (accounts) => {
     );
 
     rgt3 = await Helper.getJustRgtHash(
-      asset3,
+      asset3raw,
       "ccc",
       "ccc",
       "ccc",
@@ -217,7 +217,7 @@ contract("A_TKN", (accounts) => {
     );
 
     rgt4 = await Helper.getJustRgtHash(
-      asset4,
+      asset4raw,
       "ddd",
       "ddd",
       "ddd",
@@ -226,7 +226,7 @@ contract("A_TKN", (accounts) => {
     );
 
     rgt5 = await Helper.getJustRgtHash(
-      asset5,
+      asset5raw,
       "eee",
       "eee",
       "eee",
@@ -235,7 +235,7 @@ contract("A_TKN", (accounts) => {
     );
 
     rgt6 = await Helper.getJustRgtHash(
-      asset6,
+      asset6raw,
       "fff",
       "fff",
       "fff",
@@ -244,7 +244,7 @@ contract("A_TKN", (accounts) => {
     );
 
     rgt7 = await Helper.getJustRgtHash(
-      asset7,
+      asset7raw,
       "ggg",
       "ggg",
       "ggg",
@@ -253,7 +253,7 @@ contract("A_TKN", (accounts) => {
     );
 
     rgt8 = await Helper.getJustRgtHash(
-      asset7,
+      asset8raw,
       "hhh",
       "hhh",
       "hhh",
@@ -261,11 +261,11 @@ contract("A_TKN", (accounts) => {
       "hhh"
     );
 
-    rgt12 = await Helper.getJustRgtHash(asset12, "a", "a", "a", "a", "a");
+    rgt12 = await Helper.getJustRgtHash(asset12raw, "a", "a", "a", "a", "a");
 
-    rgt13 = await Helper.getJustRgtHash(asset13, "a", "a", "a", "a", "a");
+    rgt13 = await Helper.getJustRgtHash(asset13raw, "a", "a", "a", "a", "a");
 
-    rgt14 = await Helper.getJustRgtHash(asset14, "a", "a", "a", "a", "a");
+    rgt14 = await Helper.getJustRgtHash(asset14raw, "a", "a", "a", "a", "a");
 
     account1Hash = await Helper.getAddrHash(account1);
 
@@ -1612,15 +1612,15 @@ contract("A_TKN", (accounts) => {
   });
 
   it("Should mint asset1 to account4", async () => {
-    return APP_NC.newRecord(asset1, rgt1, "1000003", "100", { from: account4 });
+    return APP_NC.newRecord(asset1raw, rgt1, "1000003", "100", { from: account4 });
   });
   
   it("Should mint asset2 to account4", async () => {
-    return APP_NC.newRecord(asset2, rgt2, "1000003", "100", { from: account4 });
+    return APP_NC.newRecord(asset2raw, rgt2, "1000003", "100", { from: account4 });
   });
 
   it("Should mint asset3 to account4", async () => {
-    return APP_NC.newRecord(asset3, rgt3, "1000004", "100", { from: account4 });
+    return APP_NC.newRecord(asset3raw, rgt3, "1000004", "100", { from: account4 });
   });
 
   it("Should set assetClass 13 switch to 1:1", async () => {
@@ -1956,7 +1956,7 @@ contract("A_TKN", (accounts) => {
   });
 
   it("Should write asset12 in Node 1000001", async () => {
-    return APP.newRecord(asset12, rgt12, "1000001", "100", { from: account2 });
+    return APP.newRecord(asset12raw, rgt12, "1000001", "100", { from: account2 });
   });
 
   it("Should retrieve show clean asset 12", async () => {
@@ -2245,7 +2245,7 @@ contract("A_TKN", (accounts) => {
     console.log(
       "//**************************************BEGIN THE WORKS NON CUSTODIAL**********************************************/"
     );
-    return APP_NC.newRecord(asset13, rgt13, "1000003", "100", {
+    return APP_NC.newRecord(asset13raw, rgt13, "1000003", "100", {
       from: account4,
     });
   });
