@@ -109,7 +109,7 @@ contract('PRESALE', accounts => {
 
             .then(() => {
                 console.log("Adding UTIL_TKN to storage for use in Node 0")
-                return STOR.OO_addContract("UTIL_TKN", UTIL_TKN.address, '0', '1', { from: A })
+                return STOR.authorizeContract("UTIL_TKN", UTIL_TKN.address, '0', '1', { from: A })
             })
 
             .then(() => {

@@ -96,17 +96,17 @@ contract('UTIL_TKN', accounts => {
 
             .then(() => {
                 console.log("Adding UTIL_TKN to storage for use in Node 0")
-                return STOR.OO_addContract("UTIL_TKN", UTIL_TKN.address, '0', '1', { from: MAIN })
+                return STOR.authorizeContract("UTIL_TKN", UTIL_TKN.address, '0', '1', { from: MAIN })
             })
 
             .then(() => {
                 console.log("Adding NODE_MGR to storage for use in Node 0")
-                return STOR.OO_addContract("NODE_MGR", NODE_MGR.address, '0', '1', { from: MAIN })
+                return STOR.authorizeContract("NODE_MGR", NODE_MGR.address, '0', '1', { from: MAIN })
             })
 
             .then(() => {
                 console.log("Adding NODE_TKN to storage for use in Node 0")
-                return STOR.OO_addContract("NODE_TKN", NODE_TKN.address, '0', '1', { from: MAIN })
+                return STOR.authorizeContract("NODE_TKN", NODE_TKN.address, '0', '1', { from: MAIN })
             })
 
             .then(() => {
