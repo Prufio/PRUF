@@ -195,7 +195,7 @@ contract STOR is AccessControl, ReentrancyGuard, Pausable {
     //-----------------------------------------------Events------------------------------------------------//
     // Emits a report using string,b32
     event REPORT(string _msg, bytes32 b32); //Needed
-    
+
     //--------------------------------Public Functions---------------------------------//
 
     /**
@@ -384,29 +384,25 @@ contract STOR is AccessControl, ReentrancyGuard, Pausable {
     /**
      * @dev Make a new record, writing to the 'database' mapping with basic initial asset data
      * calling contract must be authorized in relevant node
-     * @param   _idxRaw - asset ID befor node hashing
+     * @param   _idxHash - asset ID befor node hashing
      * @param   _rgtHash - rightsholder id hash
      * @param   _node - node in which to create the asset
      * @param   _countDownStart - initial value for decrement-only value
      */
     function newRecord(
-        bytes32 _idxRaw,
+        bytes32 _idxHash,
         bytes32 _rgtHash,
         uint32 _node,
         uint32 _countDownStart
     ) external nonReentrant whenNotPaused isAuthorized(_node) {
-        
-        bytes32 idxHash = keccak256(abi.encodePacked(_idxRaw, _node)); //hash idxRaw with node to get idxHash
-        require(database[idxHash].node == 0, "S:NR: Rec already exists"); //idxHash
+        require(database[_idxHash].node == 0, "S:NR: Rec already exists"); //idxHash
         require(_rgtHash != 0, "S:NR: RGT = 0");
         require(_node != 0, "S:NR: node = 0");
         //^^^^^^^checks^^^^^^^^^
 
         Record memory rec;
 
-        if (
-            contractInfo[contractAddressToName[_msgSender()]][_node] == 1
-        ) {
+        if (contractInfo[contractAddressToName[_msgSender()]][_node] == 1) {
             rec.assetStatus = 0;
         } else {
             rec.assetStatus = 51;
@@ -415,9 +411,8 @@ contract STOR is AccessControl, ReentrancyGuard, Pausable {
         rec.node = _node;
         rec.countDown = _countDownStart;
         rec.rightsHolder = _rgtHash;
-        
 
-        database[idxHash] = rec; //idxhash
+        database[_idxHash] = rec; //idxhash
         //^^^^^^^effects^^^^^^^^^
     }
 
@@ -582,7 +577,7 @@ contract STOR is AccessControl, ReentrancyGuard, Pausable {
         nonReentrant
         whenNotPaused
         isEscrowManager //calling contract must be ECR_MGR
-        exists(_idxHash) //asset must exist in 'database' 
+        exists(_idxHash) //asset must exist in 'database'
     {
         Record memory rec = database[_idxHash];
         require(isEscrow(rec.assetStatus) == 170, "S:EE: STAT !ECR"); //asset must be in an escrow status
@@ -682,7 +677,7 @@ contract STOR is AccessControl, ReentrancyGuard, Pausable {
         returns (Record memory)
     {
         //^^^^^^^checks^^^^^^^^^
-        
+
         return database[_idxHash];
         //^^^^^^^interactions^^^^^^^^^
     }
@@ -803,7 +798,7 @@ contract STOR is AccessControl, ReentrancyGuard, Pausable {
         returns (uint8, bytes32)
     {
         //^^^^^^^checks^^^^^^^^^
-        
+
         return (
             contractInfo[contractAddressToName[_addr]][_node],
             keccak256(abi.encodePacked(contractAddressToName[_addr]))

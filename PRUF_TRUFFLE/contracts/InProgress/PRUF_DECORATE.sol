@@ -460,18 +460,19 @@ contract DECORATE is CORE {
 
     /**
      * @dev create a Record in Storage @ idxHash (SETTER)
-     * @param _idxHash - hash of asset information created by frontend inputs
+     * @param _idxRaw - hash of asset information created by frontend inputs
      * @param _rgtHash - hash of rightsholder information created by frontend inputs
      * @param _node - node the asset will be created in
      * @param _countDownStart - decremental counter for an assets lifecycle
      */
     function createRecordOnly(
-        bytes32 _idxHash,
+        bytes32 _idxRaw,
         bytes32 _rgtHash,
         uint32 _node,
         uint32 _countDownStart
     ) internal {
-        uint256 tokenId = uint256(_idxHash);
+        bytes32 idxHash = keccak256(abi.encodePacked(_idxRaw, _node)); //hash idxRaw with node to get idxHash DPS:TEST
+        uint256 tokenId = uint256(idxHash);
         Node memory node_info =getNodeinfo(_node);
 
         require(
@@ -511,7 +512,7 @@ contract DECORATE is CORE {
         }
         //^^^^^^^checks^^^^^^^^^
 
-        STOR.newRecord(_idxHash, _rgtHash, _node, _countDownStart);
+        STOR.newRecord(idxHash, _rgtHash, _node, _countDownStart);
         //^^^^^^^interactions^^^^^^^^^
     }
 }
