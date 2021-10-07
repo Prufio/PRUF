@@ -21,6 +21,7 @@ import "../Imports/security/ReentrancyGuard.sol";
 import "../Resources/PRUF_BASIC.sol";
 
 contract CORE is BASIC {
+    
     /**
      * @dev create a Record in Storage @ idxHash (SETTER) and mint an asset token (may mint to node holder depending on flags)
      * @param _idxHash - Asset Index
