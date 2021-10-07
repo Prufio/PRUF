@@ -11,8 +11,8 @@ _________\/// _____________\/// _______\/// __\///////// __\/// _____________
 *---------------------------------------------------------------------------*/
 
 /**-----------------------------------------------------------------
- * PRUF NODE_TKN 
- * NFT Contract //CTS:EXAMINE explain contract
+ * PRUF NODE_TKN
+ * Node token contract. PRüF Node tokens grant permissions for node management and asset minting.
  *---------------------------------------------------------------*/
 
 // SPDX-License-Identifier: UNLICENSED
@@ -61,7 +61,7 @@ contract NODE_TKN is
     Counters.Counter private _tokenIdTracker;
 
     string private _baseTokenURI;
-    
+
     bytes32 public constant MINTER_ROLE = keccak256("MINTER_ROLE");
     bytes32 public constant PAUSER_ROLE = keccak256("PAUSER_ROLE");
 
@@ -87,7 +87,6 @@ contract NODE_TKN is
         _;
     }
 
-
     //----------------------Public Functions----------------------//
 
     /**
@@ -100,10 +99,7 @@ contract NODE_TKN is
         override
         returns (string memory)
     {
-        require(
-            _exists(tokenId),
-            "NT:TU: URI query for nonexistent token"
-        );
+        require(_exists(tokenId), "NT:TU: URI query for nonexistent token");
         //^^^^^^^checks^^^^^^^^^
 
         string memory _tokenURI = _tokenURIs[tokenId];
@@ -256,10 +252,7 @@ contract NODE_TKN is
         internal
         virtual
     {
-        require(
-            _exists(tokenId),
-            "NT:STU: URI set of nonexistent token"
-        );
+        require(_exists(tokenId), "NT:STU: URI set of nonexistent token");
         //^^^^^^^checks^^^^^^^^^
 
         _tokenURIs[tokenId] = _tokenURI;

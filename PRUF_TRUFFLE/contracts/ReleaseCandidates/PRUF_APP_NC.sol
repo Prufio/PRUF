@@ -12,7 +12,7 @@ _________\/// _____________\/// _______\/// __\///////// __\/// _____________
 
 /**-----------------------------------------------------------------
  * PRUF APP_NC 
-  //CTS:EXAMINE explain contract
+ * Application layer contract for noncustodial asset management.
  *---------------------------------------------------------------*/
 
 // SPDX-License-Identifier: UNLICENSED
