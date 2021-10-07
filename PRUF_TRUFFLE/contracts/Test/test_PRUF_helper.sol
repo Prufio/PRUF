@@ -117,18 +117,25 @@ contract Helper is Ownable, BASIC {
         return bytes32(u256);
     }
 
-    function getIdxHash(
+    function getIdxHashRaw(
         string memory _idx_type,
         string memory _idx_mfg,
         string memory _idx_mod,
-        string memory _idx_ser,
-        uint32 _node
+        string memory _idx_ser
     ) external pure returns (bytes32) {
         bytes32 idxHash;
         idxHash = keccak256(
             abi.encodePacked(_idx_type, _idx_mfg, _idx_mod, _idx_ser)
         ); //get idxRaw
-        idxHash = keccak256(abi.encodePacked(idxHash, _node)); //get idxHash
+        return (idxHash);
+    }
+
+    function getIdxHash(
+        bytes32 _idxhash,
+        uint32 _node
+    ) external pure returns (bytes32) {
+        bytes32 idxHash;
+        idxHash = keccak256(abi.encodePacked(_idxhash, _node)); //get idxHash
         return (idxHash);
     }
 
