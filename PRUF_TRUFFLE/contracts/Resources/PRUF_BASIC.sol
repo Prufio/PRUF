@@ -306,7 +306,6 @@ abstract contract BASIC is
 
     /**
      * @dev Get a Record from Storage @ idxHash and return a Record Struct
-    function getRecord(bytes32 _idxHash) internal returns (Record memory) {
      * @param _idxHash - asset index
      * @return entire record struct form PRUF_STOR (see interfaces for struct definitions)
      */
