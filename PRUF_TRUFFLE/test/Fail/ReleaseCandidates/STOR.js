@@ -466,109 +466,109 @@ contract("STOR", (accounts) => {
 
   it("Should add contract addresses to storage", () => {
     console.log("Adding APP to storage for use in Node 0");
-    return STOR.OO_addContract("APP", APP.address, "0", "1", { from: account1 })
+    return STOR.authorizeContract("APP", APP.address, "0", "1", { from: account1 })
 
       .then(() => {
         console.log("Adding NODE_MGR to storage for use in Node 0");
-        return STOR.OO_addContract("NODE_MGR", NODE_MGR.address, "0", "1", {
+        return STOR.authorizeContract("NODE_MGR", NODE_MGR.address, "0", "1", {
           from: account1,
         });
       })
 
       .then(() => {
         console.log("Adding NODE_TKN to storage for use in Node 0");
-        return STOR.OO_addContract("NODE_TKN", NODE_TKN.address, "0", "1", {
+        return STOR.authorizeContract("NODE_TKN", NODE_TKN.address, "0", "1", {
           from: account1,
         });
       })
 
       .then(() => {
         console.log("Adding A_TKN to storage for use in Node 0");
-        return STOR.OO_addContract("A_TKN", A_TKN.address, "0", "1", {
+        return STOR.authorizeContract("A_TKN", A_TKN.address, "0", "1", {
           from: account1,
         });
       })
 
       .then(() => {
         console.log("Adding ID_MGR to storage for use in Node 0");
-        return STOR.OO_addContract("ID_MGR", ID_MGR.address, "0", "1", {
+        return STOR.authorizeContract("ID_MGR", ID_MGR.address, "0", "1", {
           from: account1,
         });
       })
 
       .then(() => {
         console.log("Adding ECR_MGR to storage for use in Node 0");
-        return STOR.OO_addContract("ECR_MGR", ECR_MGR.address, "0", "1", {
+        return STOR.authorizeContract("ECR_MGR", ECR_MGR.address, "0", "1", {
           from: account1,
         });
       })
 
       .then(() => {
         console.log("Adding ECR to storage for use in Node 0");
-        return STOR.OO_addContract("ECR", ECR.address, "0", "3", {
+        return STOR.authorizeContract("ECR", ECR.address, "0", "3", {
           from: account1,
         });
       })
 
       .then(() => {
         console.log("Adding ECR2 to storage for use in Node 0");
-        return STOR.OO_addContract("ECR2", ECR2.address, "0", "3", {
+        return STOR.authorizeContract("ECR2", ECR2.address, "0", "3", {
           from: account1,
         });
       })
 
       .then(() => {
         console.log("Adding APP_NC to storage for use in Node 0");
-        return STOR.OO_addContract("APP_NC", APP_NC.address, "0", "2", {
+        return STOR.authorizeContract("APP_NC", APP_NC.address, "0", "2", {
           from: account1,
         });
       })
 
       .then(() => {
         console.log("Adding ECR_NC to storage for use in Node 0");
-        return STOR.OO_addContract("ECR_NC", ECR_NC.address, "0", "3", {
+        return STOR.authorizeContract("ECR_NC", ECR_NC.address, "0", "3", {
           from: account1,
         });
       })
 
       .then(() => {
         console.log("Adding RCLR to storage for use in Node 0");
-        return STOR.OO_addContract("RCLR", RCLR.address, "0", "3", {
+        return STOR.authorizeContract("RCLR", RCLR.address, "0", "3", {
           from: account1,
         });
       })
 
       .then(() => {
         console.log("Adding MAL_APP to storage for use in Node 0");
-        return STOR.OO_addContract("MAL_APP", MAL_APP.address, "0", "1", {
+        return STOR.authorizeContract("MAL_APP", MAL_APP.address, "0", "1", {
           from: account1,
         });
       })
 
       .then(() => {
         console.log("Adding UTIL_TKN to storage for use in Node 0");
-        return STOR.OO_addContract("UTIL_TKN", UTIL_TKN.address, "0", "1", {
+        return STOR.authorizeContract("UTIL_TKN", UTIL_TKN.address, "0", "1", {
           from: account1,
         });
       })
 
       // .then(() => {
       //   console.log("Adding PURCHASE to storage for use in Node 0");
-      //   return STOR.OO_addContract("PURCHASE", PURCHASE.address, "0", "2", {
+      //   return STOR.authorizeContract("PURCHASE", PURCHASE.address, "0", "2", {
       //     from: account1,
       //   });
       // })
 
       .then(() => {
         console.log("Adding DECORATE to storage for use in Node 0");
-        return STOR.OO_addContract("DECORATE", DECORATE.address, "0", "2", {
+        return STOR.authorizeContract("DECORATE", DECORATE.address, "0", "2", {
           from: account1,
         });
       })
 
       .then(() => {
         console.log("Adding WRAP to storage for use in Node 0");
-        return STOR.OO_addContract("WRAP", WRAP.address, "0", "2", {
+        return STOR.authorizeContract("WRAP", WRAP.address, "0", "2", {
           from: account1,
         });
       });
@@ -1682,16 +1682,16 @@ contract("STOR", (accounts) => {
       "//**************************************END unpause FAIL BATCH**********************************************/"
     );
     console.log(
-      "//**************************************BEGIN OO_addContract FAIL BATCH**********************************************/"
+      "//**************************************BEGIN authorizeContract FAIL BATCH**********************************************/"
     );
-    return STOR.OO_addContract("ECR2", ECR2.address, "1", "3", {
+    return STOR.authorizeContract("ECR2", ECR2.address, "1", "3", {
       from: account2,
     });
   });
 
   //4
   it("Should fail because Node != 0", async () => {
-    return STOR.OO_addContract("ECR2", ECR2.address, "1", "3", {
+    return STOR.authorizeContract("ECR2", ECR2.address, "1", "3", {
       from: account1,
     });
   });
@@ -1699,7 +1699,7 @@ contract("STOR", (accounts) => {
   //5
   it("Should fail because caller !admin", async () => {
     console.log(
-      "//**************************************END OO_addContract FAIL BATCH**********************************************/"
+      "//**************************************END authorizeContract FAIL BATCH**********************************************/"
     );
     console.log(
       "//**************************************BEGIN addDefaultContracts FAIL BATCH**********************************************/"
@@ -1828,7 +1828,7 @@ contract("STOR", (accounts) => {
   });
 
   it("Should authorize MAL_APP as an escrow contract", async () => {
-    return STOR.OO_addContract("MAL_APP", MAL_APP.address, "0", "3", {
+    return STOR.authorizeContract("MAL_APP", MAL_APP.address, "0", "3", {
       from: account1,
     });
   });
@@ -1861,7 +1861,7 @@ contract("STOR", (accounts) => {
   });
 
   it("Should authorize MAL_APP as a normal contract", async () => {
-    return STOR.OO_addContract("MAL_APP", MAL_APP.address, "0", "1", {
+    return STOR.authorizeContract("MAL_APP", MAL_APP.address, "0", "1", {
       from: account1,
     });
   });
@@ -1924,7 +1924,7 @@ contract("STOR", (accounts) => {
   });
 
   it("Should authorize MAL_APP as an escrow contract", async () => {
-    return STOR.OO_addContract("MAL_APP", MAL_APP.address, "0", "3", {
+    return STOR.authorizeContract("MAL_APP", MAL_APP.address, "0", "3", {
       from: account1,
     });
   });
@@ -1957,7 +1957,7 @@ contract("STOR", (accounts) => {
   });
 
   it("Should authorize MAL_APP as a normal contract", async () => {
-    return STOR.OO_addContract("MAL_APP", MAL_APP.address, "0", "1", {
+    return STOR.authorizeContract("MAL_APP", MAL_APP.address, "0", "1", {
       from: account1,
     });
   });
@@ -1967,7 +1967,7 @@ contract("STOR", (accounts) => {
   });
 
   it("Should unauthorize MAL_APP as a contract", async () => {
-    return STOR.OO_addContract("MAL_APP", MAL_APP.address, "0", "0", {
+    return STOR.authorizeContract("MAL_APP", MAL_APP.address, "0", "0", {
       from: account1,
     });
   });
@@ -1978,7 +1978,7 @@ contract("STOR", (accounts) => {
   });
 
   it("Should authorize MAL_APP as a contract", async () => {
-    return STOR.OO_addContract("MAL_APP", MAL_APP.address, "0", "1", {
+    return STOR.authorizeContract("MAL_APP", MAL_APP.address, "0", "1", {
       from: account1,
     });
   });
@@ -2064,7 +2064,7 @@ contract("STOR", (accounts) => {
   });
 
   it("Should authorize MAL_APP as an escrow contract", async () => {
-    return STOR.OO_addContract("MAL_APP", MAL_APP.address, "0", "3", {
+    return STOR.authorizeContract("MAL_APP", MAL_APP.address, "0", "3", {
       from: account1,
     }).then(() => {
       return STOR.enableContractForNode("MAL_APP", "1000001", "3", {
@@ -2191,7 +2191,7 @@ contract("STOR", (accounts) => {
   });
 
   it("Should authorize MAL_APP as a normal contract", async () => {
-    return STOR.OO_addContract("MAL_APP", MAL_APP.address, "0", "1", {
+    return STOR.authorizeContract("MAL_APP", MAL_APP.address, "0", "1", {
       from: account1,
     }).then(() => {
       return STOR.enableContractForNode("MAL_APP", "1000001", "0", {
@@ -2321,7 +2321,7 @@ contract("STOR", (accounts) => {
     console.log(
       "//**************************************BEGIN retrieveRecord FAIL BATCH**********************************************/"
     );
-    return STOR.OO_addContract("MAL_APP", MAL_APP.address, "0", "0", {
+    return STOR.authorizeContract("MAL_APP", MAL_APP.address, "0", "0", {
       from: account1,
     });
   });
@@ -2332,7 +2332,7 @@ contract("STOR", (accounts) => {
   });
 
   it("Should authorize MAL_APP in system", async () => {
-    return STOR.OO_addContract("MAL_APP", MAL_APP.address, "0", "1", {
+    return STOR.authorizeContract("MAL_APP", MAL_APP.address, "0", "1", {
       from: account1,
     });
   });

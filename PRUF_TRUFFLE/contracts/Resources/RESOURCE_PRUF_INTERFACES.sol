@@ -64,7 +64,7 @@ interface STOR_Interface {
      * @param _node - node to authorize in
      * @param _contractAuthLevel - auth level to assign
      */
-    function OO_addContract(
+    function authorizeContract(
         string calldata _contractName,
         address _contractAddr,
         uint32 _node,

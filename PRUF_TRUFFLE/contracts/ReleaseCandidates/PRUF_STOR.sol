@@ -213,7 +213,7 @@ contract STOR is AccessControl, ReentrancyGuard, Pausable {
         require(
             (NODE_TKN.ownerOf(_node) == _msgSender()) ||
                 (_msgSender() == contractNameToAddress["NODE_MGR"]),
-            "S:ECFAC: Caller not NodeTokenHolder or NODE_MGR"
+            "S:ECFN: Caller not NodeTokenHolder or NODE_MGR"
         );
 
         //^^^^^^^checks^^^^^^^^^
@@ -221,7 +221,7 @@ contract STOR is AccessControl, ReentrancyGuard, Pausable {
         contractInfo[_name][_node] = _contractAuthLevel; //does not pose an partial record overwrite risk
         //^^^^^^^effects^^^^^^^^^
 
-        emit REPORT("ACDA", bytes32(uint256(_contractAuthLevel))); //report access to the internal user database
+        emit REPORT("NDA", bytes32(uint256(_contractAuthLevel))); //report access to the internal user database
         //^^^^^^^interactions^^^^^^^^^
     }
 
@@ -255,13 +255,13 @@ contract STOR is AccessControl, ReentrancyGuard, Pausable {
      * @param _node - node to authorize in
      * @param _contractAuthLevel - auth level to assign
      */
-    function OO_addContract(
+    function authorizeContract(
         string calldata _contractName,
         address _contractAddr,
         uint32 _node,
         uint8 _contractAuthLevel
     ) external isContractAdmin {
-        require(_node == 0, "S:node: node !=0");
+        require(_node == 0, "S:AC: node !=0");
         //^^^^^^^checks^^^^^^^^^
 
         contractInfo[_contractName][_node] = _contractAuthLevel; //does not pose a partial record overwrite risk
@@ -272,7 +272,7 @@ contract STOR is AccessControl, ReentrancyGuard, Pausable {
         NODE_MGR = NODE_MGR_Interface(contractNameToAddress["NODE_MGR"]);
         //^^^^^^^effects^^^^^^^^^
 
-        emit REPORT("ACDA", bytes32(uint256(_contractAuthLevel))); //report access to the internal user database
+        emit REPORT("NDA", bytes32(uint256(_contractAuthLevel))); //report access to the internal user database
         //^^^^^^^interactions^^^^^^^^^
     }
 
@@ -320,7 +320,7 @@ contract STOR is AccessControl, ReentrancyGuard, Pausable {
         require(
             (NODE_TKN.ownerOf(_node) == _msgSender()) ||
                 (_msgSender() == contractNameToAddress["NODE_MGR"]),
-            "S:EDCFAC: Caller not NodeTokenHolder or NODE_MGR"
+            "S:EDCFAC: Caller not NTH or NODE_MGR"
         );
         //^^^^^^^checks^^^^^^^^^
         enableContractForNode(
@@ -395,7 +395,7 @@ contract STOR is AccessControl, ReentrancyGuard, Pausable {
         uint32 _node,
         uint32 _countDownStart
     ) external nonReentrant whenNotPaused isAuthorized(_node) {
-        bytes32 idxHash = keccak256(abi.encodePacked(_idxRaw, _node)); //hash idxRaw with node to get idxHash DPS:TEST
+        bytes32 idxHash = keccak256(abi.encodePacked(_idxRaw, _node));
         require(
             database[idxHash].assetStatus != 60,
             "S:NR: Asset discarded use RCLR"
