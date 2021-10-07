@@ -398,7 +398,7 @@ contract STOR is AccessControl, ReentrancyGuard, Pausable {
         bytes32 idxHash = keccak256(abi.encodePacked(_idxRaw, _node)); //hash idxRaw with node to get idxHash DPS:TEST
         require(
             database[idxHash].assetStatus != 60,
-            "S:NR: Asset discarded use APP_NC rcycl"
+            "S:NR: Asset discarded use RCLR"
         );
         require(database[idxHash].node == 0, "S:NR: Rec already exists");
         require(_rgtHash != 0, "S:NR: RGT = 0");
