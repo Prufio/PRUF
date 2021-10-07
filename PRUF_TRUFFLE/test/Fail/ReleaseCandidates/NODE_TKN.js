@@ -1257,6 +1257,42 @@ contract("NODE_TKN", (accounts) => {
         return NODE_MGR.modifyNodeSwitches("1000006", "3", "1", {
           from: account1,
         });
+      })
+
+      .then(() => {
+        return NODE_MGR.modifyNodeSwitches("1000001", "2", "1", {
+          from: account1,
+        });
+      })
+
+      .then(() => {
+        return NODE_MGR.modifyNodeSwitches("1000002", "2", "1", {
+          from: account1,
+        });
+      })
+
+      .then(() => {
+        return NODE_MGR.modifyNodeSwitches("1000003", "2", "1", {
+          from: account1,
+        });
+      })
+
+      .then(() => {
+        return NODE_MGR.modifyNodeSwitches("1000004", "2", "1", {
+          from: account1,
+        });
+      })
+
+      .then(() => {
+        return NODE_MGR.modifyNodeSwitches("1000005", "2", "1", {
+          from: account1,
+        });
+      })
+
+      .then(() => {
+        return NODE_MGR.modifyNodeSwitches("1000006", "2", "1", {
+          from: account1,
+        });
       });
   });
 
@@ -1454,7 +1490,7 @@ contract("NODE_TKN", (accounts) => {
     it('Should fail because is not minter', async () => {
 
         console.log("//**************************************END NODE_TKN SETUP**********************************************/")
-        console.log("//**************************************BEGIN NODE_TKN FAIL BATCH(10)**********************************************/")
+        console.log("//**************************************BEGIN NODE_TKN FAIL BATCH(4)**********************************************/")
         console.log("//********************************BEGIN mintNodeToken FAIL BATCH****************************************/")
         return NODE_TKN.mintNodeToken(
             account1,
@@ -1493,7 +1529,6 @@ contract("NODE_TKN", (accounts) => {
             { from: account2 }
         )
     })
-
 
     it("Should set SharesAddress", async () => {
         console.log("//*********************************END unpause FAIL BATCH*****************************************/")
@@ -1658,7 +1693,7 @@ contract("NODE_TKN", (accounts) => {
         });
       
         it("Should set NonMutable note to (asset12)", async () => {
-          return APP.addNonMutableNote(asset12, rgt12, asset12, rgt000, {
+          return APP.addNonMutableStorage(asset12, rgt12, asset12, rgt000, {
             from: account2,
           });
         });
@@ -2132,7 +2167,7 @@ contract("NODE_TKN", (accounts) => {
         });
       
         it("Should set NonMutable note to (asset13)", async () => {
-          return APP_NC.addNonMutableNote(asset13, asset13, rgt000, { from: account4 });
+          return APP_NC.addNonMutableStorage(asset13, asset13, rgt000, { from: account4 });
         });
       
         it("Should retrieve asset13 with newNonMutable(asset13)", async () => {

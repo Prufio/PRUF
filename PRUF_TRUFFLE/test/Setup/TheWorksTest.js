@@ -2137,7 +2137,7 @@ _________\/// _____________\/// _______\/// __\///////// __\/// _____________
 
 
     it('Should set NonMutable note to (asset13)', async () => {
-        return APP_NC.addNonMutableNote(
+        return APP_NC.addNonMutableStorage(
             asset13,
             asset13,
             rgt000,

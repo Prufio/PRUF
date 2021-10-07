@@ -1821,7 +1821,7 @@ contract("ECR", (accounts) => {
   });
 
   it("Should set NonMutable note to (asset12)", async () => {
-    return APP.addNonMutableNote(asset12, rgt12, asset12, rgt000, {
+    return APP.addNonMutableStorage(asset12, rgt12, asset12, rgt000, {
       from: account2,
     });
   });
@@ -2299,7 +2299,7 @@ contract("ECR", (accounts) => {
   });
 
   it("Should set NonMutable note to (asset13)", async () => {
-    return APP_NC.addNonMutableNote(asset13, asset13, rgt000, {
+    return APP_NC.addNonMutableStorage(asset13, asset13, rgt000, {
       from: account4,
     });
   });

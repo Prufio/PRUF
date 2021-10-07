@@ -200,7 +200,7 @@ contract STOR is AccessControl, ReentrancyGuard, Pausable {
 
     /**
      * @dev Authorize / Deauthorize contract NAMES permitted to make record modifications, per node
-     * allows ACtokenHolder to Authorize / Deauthorize specific contracts to work within their node
+     * allows NodeTokenHolder to Authorize / Deauthorize specific contracts to work within their node
      * @param   _name -  Name of contract being authed
      * @param   _node - affected node
      * @param   _contractAuthLevel - auth level to set for thae contract, in that node
@@ -213,7 +213,7 @@ contract STOR is AccessControl, ReentrancyGuard, Pausable {
         require(
             (NODE_TKN.ownerOf(_node) == _msgSender()) ||
                 (_msgSender() == contractNameToAddress["NODE_MGR"]),
-            "S:ECFAC: Caller not ACtokenHolder or NODE_MGR"
+            "S:ECFAC: Caller not NodeTokenHolder or NODE_MGR"
         );
 
         //^^^^^^^checks^^^^^^^^^
@@ -320,7 +320,7 @@ contract STOR is AccessControl, ReentrancyGuard, Pausable {
         require(
             (NODE_TKN.ownerOf(_node) == _msgSender()) ||
                 (_msgSender() == contractNameToAddress["NODE_MGR"]),
-            "S:EDCFAC: Caller not ACtokenHolder or NODE_MGR"
+            "S:EDCFAC: Caller not NodeTokenHolder or NODE_MGR"
         );
         //^^^^^^^checks^^^^^^^^^
         enableContractForNode(

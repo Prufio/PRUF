@@ -350,7 +350,7 @@ contract DECORATE is CORE {
         if ((node_info.managementType == 1) || (node_info.managementType == 5)) {
             require(
                 (NODE_TKN.ownerOf(rec.node) == _msgSender()),
-                "D:E: Restricted from exporting assets from this node - does not hold ACtoken"
+                "D:E: Restricted from exporting assets from this node - does not hold NodeToken"
             );
         }
         require(

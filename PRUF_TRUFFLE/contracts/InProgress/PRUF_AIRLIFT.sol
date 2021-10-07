@@ -25,7 +25,7 @@ import "../Imports/security/Pausable.sol";
 import "../Imports/security/ReentrancyGuard.sol";
 import "../Imports/token/ERC721/IERC721.sol";
 
-contract EO_STAKING is ReentrancyGuard, AccessControl, Pausable {
+contract AIRLIFT is ReentrancyGuard, AccessControl, Pausable {
     bytes32 public constant CONTRACT_ADMIN_ROLE =
         keccak256("CONTRACT_ADMIN_ROLE");
     bytes32 public constant PAUSER_ROLE = keccak256("PAUSER_ROLE");

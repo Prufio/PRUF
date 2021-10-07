@@ -33,7 +33,7 @@ interface STOR_Interface {
 
     /**
      * @dev Authorize / Deauthorize contract NAMES permitted to make record modifications, per node
-     * allows ACtokenHolder to Authorize / Deauthorize specific contracts to work within their node
+     * allows NodeTokenHolder to Authorize / Deauthorize specific contracts to work within their node
      * @param   _name -  Name of contract being authed
      * @param   _node - affected node
      * @param   _contractAuthLevel - auth level to set for thae contract, in that node
@@ -587,7 +587,7 @@ interface NODE_MGR_Interface {
         view
         returns (Invoice memory);
 
-    /** DPS:CHECK
+    /**
      * @dev Retrieve service costs for _node._service
      * @param _node - node associated with query
      * @param _service - service associated with query

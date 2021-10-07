@@ -1276,6 +1276,42 @@ contract("APP_NC", (accounts) => {
         return NODE_MGR.modifyNodeSwitches("1000006", "3", "1", {
           from: account1,
         });
+      })
+
+      .then(() => {
+        return NODE_MGR.modifyNodeSwitches("1000001", "2", "1", {
+          from: account1,
+        });
+      })
+
+      .then(() => {
+        return NODE_MGR.modifyNodeSwitches("1000002", "2", "1", {
+          from: account1,
+        });
+      })
+
+      .then(() => {
+        return NODE_MGR.modifyNodeSwitches("1000003", "2", "1", {
+          from: account1,
+        });
+      })
+
+      .then(() => {
+        return NODE_MGR.modifyNodeSwitches("1000004", "2", "1", {
+          from: account1,
+        });
+      })
+
+      .then(() => {
+        return NODE_MGR.modifyNodeSwitches("1000005", "2", "1", {
+          from: account1,
+        });
+      })
+
+      .then(() => {
+        return NODE_MGR.modifyNodeSwitches("1000006", "2", "1", {
+          from: account1,
+        });
       });
   });
 
@@ -1765,9 +1801,9 @@ contract("APP_NC", (accounts) => {
       "//**************************************************END importAsset FAIL BATCH***************************************************//"
     );
     console.log(
-      "//**************************************************BEGIN addNonMutableNote FAIL BATCH***************************************************//"
+      "//**************************************************BEGIN addNonMutableStorage FAIL BATCH***************************************************//"
     );
-    return APP_NC.addNonMutableNote(asset5, rgt1, rgt1, { from: account1 });
+    return APP_NC.addNonMutableStorage(asset5, rgt1, rgt1, { from: account1 });
   });
 
   it("Should unpause APP_NC", async () => {
@@ -1776,17 +1812,17 @@ contract("APP_NC", (accounts) => {
 
   //15
   it("Should fail because caller !token holder", async () => {
-    return APP_NC.addNonMutableNote(asset5, rgt1, rgt1, { from: account2 });
+    return APP_NC.addNonMutableStorage(asset5, rgt1, rgt1, { from: account2 });
   });
 
   //16
   it("Should fail because asset needsImport", async () => {
-    return APP_NC.addNonMutableNote(asset4, rgt1, rgt1, { from: account2 });
+    return APP_NC.addNonMutableStorage(asset4, rgt1, rgt1, { from: account2 });
   });
 
   it("Should pause APP_NC", async () => {
     console.log(
-      "//**************************************END addNonMutableNote FAIL BATCH**********************************************/"
+      "//**************************************END addNonMutableStorage FAIL BATCH**********************************************/"
     );
     console.log(
       "//**************************************BEGIN _changeRGT FAIL BATCH**********************************************/"
@@ -2027,7 +2063,7 @@ contract("APP_NC", (accounts) => {
 
   it("Should set SharesAddress", async () => {
     console.log(
-      "//**************************************************END addNonMutableNote FAIL BATCH***************************************************//"
+      "//**************************************************END addNonMutableStorage FAIL BATCH***************************************************//"
     );
     console.log(
       "//**************************************************END APP_NC FAIL BATCH***************************************************//"
@@ -2197,7 +2233,7 @@ contract("APP_NC", (accounts) => {
   });
 
   it("Should set NonMutable note to (asset12)", async () => {
-    return APP.addNonMutableNote(asset12, rgt12, asset12, rgt000, {
+    return APP.addNonMutableStorage(asset12, rgt12, asset12, rgt000, {
       from: account2,
     });
   });
@@ -2676,7 +2712,7 @@ contract("APP_NC", (accounts) => {
   });
 
   it("Should set NonMutable note to (asset13)", async () => {
-    return APP_NC.addNonMutableNote(asset13, asset13, rgt000, {
+    return APP_NC.addNonMutableStorage(asset13, asset13, rgt000, {
       from: account4,
     });
   });

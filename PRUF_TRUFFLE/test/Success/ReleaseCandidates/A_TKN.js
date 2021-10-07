@@ -1521,7 +1521,6 @@ contract("TheWorks", (accounts) => {
         return A_TKN.mintAssetToken(
             account4,
             asset5,
-            '5',
             { from: account1 }
         )
     })
@@ -1590,8 +1589,8 @@ contract("TheWorks", (accounts) => {
 
     it('Should mint asset4 to account1', async () => {
         return APP_NC.newRecord(
-        asset3, 
-        rgt3,
+        asset4, 
+        rgt4,
         '1000003',
         '100',
         {from: account3}
@@ -2162,7 +2161,7 @@ it('Should authorize all minter contracts for minting A_TKN(s)', async () => {
     });
   
     it("Should set NonMutable note to (asset12)", async () => {
-      return APP.addNonMutableNote(asset12, rgt12, asset12, rgt000, {
+      return APP.addNonMutableStorage(asset12, rgt12, asset12, rgt000, {
         from: account2,
       });
     });
@@ -2637,7 +2636,7 @@ it('Should authorize all minter contracts for minting A_TKN(s)', async () => {
     });
   
     it("Should set NonMutable note to (asset13)", async () => {
-      return APP_NC.addNonMutableNote(asset13, asset13, rgt000, { from: account4 });
+      return APP_NC.addNonMutableStorage(asset13, asset13, rgt000, { from: account4 });
     });
   
     it("Should retrieve asset13 with newNonMutable(asset13)", async () => {

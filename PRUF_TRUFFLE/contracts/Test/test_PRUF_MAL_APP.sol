@@ -468,7 +468,7 @@ contract MAL_APP is CORE_MAL {
     /*
      * @dev Modify **Record**.NonMutableStorage with confirmation
      */
-    function addNonMutableNote(
+    function addNonMutableStorage(
         bytes32 _idxHash,
         bytes32 _nonMutableStorage1,
         bytes32 _nonMutableStorage2
