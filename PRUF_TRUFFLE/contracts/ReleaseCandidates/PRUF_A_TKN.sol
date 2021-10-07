@@ -12,8 +12,7 @@ _________\/// _____________\/// _______\/// __\///////// __\/// _____________
 
 /**-----------------------------------------------------------------
  * PRUF A_TKN
- ASSET NFT CONTRACT
-  //CTS:EXAMINE explain contract
+ * ASSET NFT CONTRACT - PRüF Asset tokens. Supports trusted agent role.
  *---------------------------------------------------------------*/
 
 // SPDX-License-Identifier: UNLICENSED
