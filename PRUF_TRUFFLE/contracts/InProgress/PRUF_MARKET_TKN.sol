@@ -75,9 +75,6 @@ contract MARKET_TKN is
 
     uint256 trustedAgentEnabled = 1;
 
-    bytes32 public constant B320xF_ =
-        0xFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFF;
-
     constructor() ERC721("PRUF Consignment Token", "PRCT") {
         _setupRole(DEFAULT_ADMIN_ROLE, _msgSender());
         _setupRole(CONTRACT_ADMIN_ROLE, _msgSender());
@@ -272,7 +269,7 @@ contract MARKET_TKN is
         _unpause();
         //^^^^^^^interactions^^^^^^^^^
     }
-    
+
     /**
      * @dev all paused functions are blocked here (inside ERC720Pausable.sol)
      * @param from - from address
