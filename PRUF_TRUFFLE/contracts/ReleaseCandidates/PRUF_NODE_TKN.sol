@@ -61,37 +61,18 @@ contract NODE_TKN is
     Counters.Counter private _tokenIdTracker;
 
     string private _baseTokenURI;
-
-    bytes32 public constant CONTRNT_ADMIN_ROLE =
-        keccak256("CONTRNT_ADMIN_ROLE");
+    
     bytes32 public constant MINTER_ROLE = keccak256("MINTER_ROLE");
     bytes32 public constant PAUSER_ROLE = keccak256("PAUSER_ROLE");
 
     uint256 trustedAgentEnabled = 1;
 
-    bytes32 public constant B320xF_ =
-        0xFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFF;
-
     constructor() ERC721("PRUF Node Token", "PRFN") {
         _setupRole(DEFAULT_ADMIN_ROLE, _msgSender());
-        _setupRole(CONTRNT_ADMIN_ROLE, _msgSender());
         _setupRole(PAUSER_ROLE, _msgSender());
     }
 
     //----------------------Modifiers----------------------//
-
-    /**
-     * @dev Verify user credentials
-     * Originating Address:
-     *      has CONTRNT_ADMIN_ROLE
-     */
-    modifier isContractAdmin() {
-        require(
-            hasRole(CONTRNT_ADMIN_ROLE, _msgSender()),
-            "AT:MOD-ICA: Calling address !contract admin"
-        );
-        _;
-    }
 
     /**
      * @dev Verify user credentials
