@@ -433,13 +433,13 @@ contract NODE_MGR is BASIC {
     function updateNodeName(uint32 _node, string calldata _newName)
         external
         whenNotPaused
-        isNodeHolder(_node)
+        isContractAdmin //DPS:CHECK -- we can't have nodeholders changing nodes.
     {
         require( //should pass if name is same as old name or name is unassigned. Should fail if name is assigned to other node
             (nodeId[_newName] == 0) || //name is unassigned
                 (keccak256(abi.encodePacked(_newName)) == //name is same as old name
                     (keccak256(abi.encodePacked(nodeData[_node].name)))),
-            "NM:UNN: Name already in use or is same as the previous"
+            "NM:UNN: Name already in use"
         );
         //^^^^^^^checks^^^^^^^^^
 
