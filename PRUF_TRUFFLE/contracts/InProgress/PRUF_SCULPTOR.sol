@@ -11,7 +11,7 @@ _________\/// _____________\/// _______\/// __\///////// __\/// _____________
 *---------------------------------------------------------------------------*/
 
 /**-----------------------------------------------------------------
- *
+ * TODO make sure entry point address is truly content-adressible for the entire file by chain-hashing chunks
  *
  * Rodin Protocol Specification V0.1
  *
