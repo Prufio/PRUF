@@ -598,7 +598,7 @@ contract NODE_MGR is BASIC {
      * @param _node - node associated with query
      * @return nodeData (see docs)
      */
-    function getExtendedNodeData(uint32 _node)
+    function getNodeData(uint32 _node)
         external
         view
         returns (Node memory)

@@ -523,6 +523,7 @@ interface NODE_MGR_Interface {
         view
         returns (uint8);
 
+
     /**
      * @dev Retrieve extended nodeData @ _node
      * @param _node - node associated with query

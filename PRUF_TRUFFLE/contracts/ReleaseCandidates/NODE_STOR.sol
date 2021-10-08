@@ -12,7 +12,7 @@ _________\/// _____________\/// _______\/// __\///////// __\/// _____________
 
 /**-----------------------------------------------------------------
  * PRUF NODE_STOR
- *
+ * NODE_MGR must be given NODE_ADMIN_ROLE  DPS:CHECK
  * Contract for storing Node information
  *
  * STATEMENT OF TERMS OF SERVICE (TOS):
