@@ -133,33 +133,61 @@ contract("APP_NC", (accounts) => {
   });
 
   it("Should build variables", async () => {
-    asset1 = await Helper.getIdxHash("aaa", "aaa", "aaa", "aaa");
+    asset1raw = await Helper.getIdxHashRaw("aaa", "aaa", "aaa", "aaa");
 
-    asset2 = await Helper.getIdxHash("bbb", "bbb", "bbb", "bbb");
+    asset2raw = await Helper.getIdxHashRaw("bbb", "bbb", "bbb", "bbb");
 
-    asset3 = await Helper.getIdxHash("ccc", "ccc", "ccc", "ccc");
+    asset3raw = await Helper.getIdxHashRaw("ccc", "ccc", "ccc", "ccc");
 
-    asset4 = await Helper.getIdxHash("ddd", "ddd", "ddd", "ddd");
+    asset4raw = await Helper.getIdxHashRaw("ddd", "ddd", "ddd", "ddd");
 
-    asset5 = await Helper.getIdxHash("eee", "eee", "eee", "eee");
+    asset5raw = await Helper.getIdxHashRaw("eee", "eee", "eee", "eee");
 
-    asset6 = await Helper.getIdxHash("fff", "fff", "fff", "fff");
+    asset6raw = await Helper.getIdxHashRaw("fff", "fff", "fff", "fff");
 
-    asset7 = await Helper.getIdxHash("ggg", "ggg", "ggg", "ggg");
+    asset7raw = await Helper.getIdxHashRaw("ggg", "ggg", "ggg", "ggg");
 
-    asset8 = await Helper.getIdxHash("hhh", "hhh", "hhh", "hhh");
+    asset8raw = await Helper.getIdxHashRaw("hhh", "hhh", "hhh", "hhh");
 
-    asset4 = await Helper.getIdxHash("iii", "iii", "iii", "iii");
+    asset9raw = await Helper.getIdxHashRaw("iii", "iii", "iii", "iii");
 
-    asset10 = await Helper.getIdxHash("jjj", "jjj", "jjj", "jjj");
+    asset10raw = await Helper.getIdxHashRaw("jjj", "jjj", "jjj", "jjj");
 
-    asset11 = await Helper.getIdxHash("kkk", "kkk", "kkk", "kkk");
+    asset11raw = await Helper.getIdxHashRaw("kkk", "kkk", "kkk", "kkk");
 
-    asset12 = await Helper.getIdxHash("lll", "lll", "lll", "lll");
+    asset12raw = await Helper.getIdxHashRaw("lll", "lll", "lll", "lll");
 
-    asset13 = await Helper.getIdxHash("mmm", "mmm", "mmm", "mmm");
+    asset13raw = await Helper.getIdxHashRaw("mmm", "mmm", "mmm", "mmm");
 
-    asset14 = await Helper.getIdxHash("nnn", "nnn", "nnn", "nnn");
+    asset14raw = await Helper.getIdxHashRaw("nnn", "nnn", "nnn", "nnn");
+
+    asset1 = await Helper.getIdxHash(asset1raw, '1000004');
+
+    asset2 = await Helper.getIdxHash(asset2raw, '1000004');
+
+    asset3 = await Helper.getIdxHash(asset3raw, '1000004');
+
+    asset4 = await Helper.getIdxHash(asset4raw, '1000004');
+
+    asset5 = await Helper.getIdxHash(asset5raw, '1000006');
+
+    asset6 = await Helper.getIdxHash(asset6raw, '1000003');
+
+    asset7 = await Helper.getIdxHash(asset7raw, '1000003');
+
+    asset8 = await Helper.getIdxHash(asset8raw, '1000004');
+
+    asset9 = await Helper.getIdxHash(asset9raw, '1000001');
+
+    asset10 = await Helper.getIdxHash(asset10raw, '1000001');
+
+    asset11 = await Helper.getIdxHash(asset11raw, '1000001');
+
+    asset12 = await Helper.getIdxHash(asset12raw, '1000001');
+
+    asset13 = await Helper.getIdxHash(asset13raw, '1000003');
+
+    asset14 = await Helper.getIdxHash(asset14raw, '1000001');
 
     rgt1 = await Helper.getJustRgtHash(
       asset1,
@@ -1564,35 +1592,23 @@ contract("APP_NC", (accounts) => {
   });
 
   it("Should mint asset1 in Node 1000004", async () => {
-    return APP_NC.newRecord(asset1, rgt1, "1000004", "5000", { from: account1 });
+    return APP_NC.newRecord(asset1raw, rgt1, "1000004", "5000", { from: account1 });
   })
 
   it("Should mint asset2 in Node 1000004", async () => {
-    return APP_NC.newRecord(asset2, rgt2, "1000004", "5000", { from: account2 });
-  })
-
-  it("Should export asset2 to 1000003", async () => {
-    return APP_NC.exportAssetTo(asset2, "1000003", { from: account2 });
+    return APP_NC.newRecord(asset2raw, rgt2, "1000004", "5000", { from: account2 });
   })
 
   it("Should mint asset3 in Node 1000004", async () => {
-    return APP_NC.newRecord(asset3, rgt3, "1000004", "5000", { from: account2 });
-  })
-
-  it("Should export asset3 to 1000005", async () => {
-    return APP_NC.exportAssetTo(asset3, "1000005", { from: account2 });
+    return APP_NC.newRecord(asset3raw, rgt3, "1000004", "5000", { from: account2 });
   })
 
   it("Should mint asset4 in Node 1000004", async () => {
-    return APP_NC.newRecord(asset4, rgt4, "1000004", "5000", { from: account2 });
-  })
-
-  it("Should export asset4 to 1000007", async () => {
-    return APP_NC.exportAssetTo(asset4, "1000007", { from: account2 });
+    return APP_NC.newRecord(asset4raw, rgt4, "1000004", "5000", { from: account2 });
   })
 
   it("Should mint asset5 in Node 1000004", async () => {
-    return APP_NC.newRecord(asset5, rgt5, "1000006", "5000", { from: account10 });
+    return APP_NC.newRecord(asset5raw, rgt5, "1000006", "5000", { from: account10 });
   })
 
   it("Should put asset5 in to transferable status", async () => {
@@ -1606,11 +1622,11 @@ contract("APP_NC", (accounts) => {
   });
 
   it("Should mint asset6 in 1000003", async () => {
-    return APP_NC.newRecord(asset6, rgt6, "1000003", "100", { from: account1 });
+    return APP_NC.newRecord(asset6raw, rgt6, "1000003", "100", { from: account1 });
   });
 
   it("Should mint asset7 in 1000003", async () => {
-    return APP_NC.newRecord(asset7, rgt7, "1000003", "100", { from: account1 });
+    return APP_NC.newRecord(asset7raw, rgt7, "1000003", "100", { from: account1 });
   });
 
   it("Should put asset6 in to stolen status", async () => {
@@ -1622,7 +1638,7 @@ contract("APP_NC", (accounts) => {
   });
 
   it("Should mint asset8 in 1000004", async () => {
-    return APP_NC.newRecord(asset8, rgt2, "1000004", "100", { from: account5 });
+    return APP_NC.newRecord(asset8raw, rgt2, "1000004", "100", { from: account5 });
   });
 
   it("Should put asset8 in to discardable status", async () => {
@@ -1648,7 +1664,7 @@ contract("APP_NC", (accounts) => {
     console.log(
       "//**************************************************BEGIN newRecordWithDescription FAIL BATCH***************************************************//"
     );
-    return APP_NC.newRecordWithDescription(asset1, rgt1, "1000004", "5000", rgt000, rgt000, { from: account1 });
+    return APP_NC.newRecordWithDescription(asset1raw, rgt1, "1000004", "5000", rgt000, rgt000, { from: account1 });
   });
 
   it("Should unpause APP_NC", async () => {
@@ -1657,7 +1673,7 @@ contract("APP_NC", (accounts) => {
 
   //2
   it("Should fail because call !ID holder", async () => {
-    return APP_NC.newRecordWithDescription(asset1, rgt1, "1000004", "5000", rgt000, rgt000, { from: account6 });
+    return APP_NC.newRecordWithDescription(asset1raw, rgt1, "1000004", "5000", rgt000, rgt000, { from: account6 });
   });
 
   it("Should pause APP_NC", async () => {
@@ -1672,7 +1688,7 @@ contract("APP_NC", (accounts) => {
     console.log(
       "//**************************************************BEGIN newRecordWithNote FAIL BATCH***************************************************//"
     );
-    return APP_NC.newRecordWithNote(asset1, rgt1, "1000004", "5000", rgt000, rgt000, { from: account1 });
+    return APP_NC.newRecordWithNote(asset1raw, rgt1, "1000004", "5000", rgt000, rgt000, { from: account1 });
   });
 
   it("Should unpause APP_NC", async () => {
@@ -1681,7 +1697,7 @@ contract("APP_NC", (accounts) => {
 
   //4
   it("Should fail because call !ID holder", async () => {
-    return APP_NC.newRecordWithNote(asset1, rgt1, "1000004", "5000", rgt000, rgt000, { from: account9 });
+    return APP_NC.newRecordWithNote(asset1raw, rgt1, "1000004", "5000", rgt000, rgt000, { from: account9 });
   });
 
   it("Should pause APP_NC", async () => {
@@ -1696,7 +1712,7 @@ contract("APP_NC", (accounts) => {
     console.log(
       "//**************************************************BEGIN newRecord FAIL BATCH***************************************************//"
     );
-    return APP_NC.newRecord(asset1, rgt1, "1000004", "5000", { from: account1 });
+    return APP_NC.newRecord(asset1raw, rgt1, "1000004", "5000", { from: account1 });
   });
 
   it("Should unpause APP_NC", async () => {
@@ -1705,7 +1721,7 @@ contract("APP_NC", (accounts) => {
 
   //6
   it("Should fail because call !ID holder", async () => {
-    return APP_NC.newRecord(asset1, rgt1, "1000004", "5000", { from: account9 });
+    return APP_NC.newRecord(asset1raw, rgt1, "1000004", "5000", { from: account9 });
   });
 
   it("Should pause APP_NC", async () => {
@@ -1718,89 +1734,6 @@ contract("APP_NC", (accounts) => {
       "//**************************************************END newRecord FAIL BATCH***************************************************//"
     );
     console.log(
-      "//**************************************************BEGIN importAsset FAIL BATCH***************************************************//"
-    );
-    return APP_NC.importAsset(asset1, "1000005", { from: account1 });
-  });
-
-  it("Should unpause APP_NC", async () => {
-    return APP_NC.unpause({ from: account1 });
-  });
-
-  //8
-  it("Should fail because caller !token holder", async () => {
-    return APP_NC.importAsset(asset1, "1000005", { from: account2 });
-  });
-
-  //9
-  it("Should fail because asset status !exported", async () => {
-    return APP_NC.importAsset(asset1, "1000005", { from: account1 });
-  });
-
-  it("Should export asset1 to Node 1000005", async () => {
-    return APP_NC.exportAssetTo(asset1, "1000005", { from: account1 });
-  })
-
-  //10
-  it("Should fail because cannot change node except to specified node", async () => {
-    return APP_NC.importAsset(asset1, "1000006", { from: account1 });
-  });
-
-  it("Should import asset1 into node 1000005", async () => {
-    return APP_NC.importAsset(asset1, "1000005", { from: account1 });
-  });
-
-  it("Should modify status of asset1 to 51", async () => {
-    return APP_NC.modifyStatus(asset1, "51", { from: account1 });
-  });
-
-  //11
-  it("Should fail because caller !NTH", async () => {
-    return APP_NC.importAsset(asset2, "1000003", { from: account2 });
-  });
-
-  //12
-  it("Should fail because caller !authorized in Node", async () => {
-    return APP_NC.importAsset(asset3, "1000005", { from: account2 });
-  });
-
-  it("Should export asset1 to Node 1000007", async () => {
-    return APP_NC.exportAssetTo(asset1, "1000007", { from: account1 });
-  })
-
-  it("Should burn ID", async () => {
-    console.log("burning ID from account1");
-    return ID_MGR.burnID(account1, { from: account1 });
-  })
-
-  //13
-  it("Should fail because caller !have a trusted ID", async () => {
-    return APP_NC.importAsset(asset1, "1000007", { from: account1 });
-  });
-
-  it("Should remint ID to account1", async () => {
-    console.log("Minting ID to account1");
-    return ID_MGR.mintID(account1, "11", asset1, { from: account1 });
-  })
-
-  it("Should import asset1 into node 1000005", async () => {
-    return APP_NC.importAsset(asset1, "1000007", { from: account1 });
-  });
-
-  it("Should modify status of asset1 to 51", async () => {
-    return APP_NC.modifyStatus(asset1, "51", { from: account1 });
-  });
-
-  it("Should pause APP_NC", async () => {
-    return APP_NC.pause({ from: account1 });
-  });
-
-  //14
-  it("Should fail because APP_NC is paused", async () => {
-    console.log(
-      "//**************************************************END importAsset FAIL BATCH***************************************************//"
-    );
-    console.log(
       "//**************************************************BEGIN addNonMutableStorage FAIL BATCH***************************************************//"
     );
     return APP_NC.addNonMutableStorage(asset5, rgt1, rgt1, { from: account1 });
@@ -1810,14 +1743,9 @@ contract("APP_NC", (accounts) => {
     return APP_NC.unpause({ from: account1 });
   });
 
-  //15
+  //8
   it("Should fail because caller !token holder", async () => {
     return APP_NC.addNonMutableStorage(asset5, rgt1, rgt1, { from: account2 });
-  });
-
-  //16
-  it("Should fail because asset needsImport", async () => {
-    return APP_NC.addNonMutableStorage(asset4, rgt1, rgt1, { from: account2 });
   });
 
   it("Should pause APP_NC", async () => {
@@ -1830,7 +1758,7 @@ contract("APP_NC", (accounts) => {
     return APP_NC.pause({ from: account1 });
   });
 
-  //17
+  //9
   it("Should Fail because APP_NC is paused", async () => {
     return APP_NC.changeRgt(asset1, rgt2, { from: account5 });
   });
@@ -1839,74 +1767,25 @@ contract("APP_NC", (accounts) => {
     return APP_NC.unpause({ from: account1 });
   });
 
-  //18
+  //10
   it("Should Fail because caller does not hold token", async () => {
     return APP_NC.changeRgt(asset1, rgt2, { from: account5 });
   });
 
-  //19
+  //11
   it("Should fail because record is in stolen status", async () => {
     return APP_NC.changeRgt(asset6, rgt5, { from: account1 });
   });
 
-  //20
+  //12
   it("Should fail because record is in lost status", async () => {
     return APP_NC.changeRgt(asset7, rgt6, { from: account1 });
   });
 
-  //21
-  it("Should fail because record needsImport", async () => {
-    return APP_NC.changeRgt(asset4, rgt6, { from: account2 });
-  });
 
   it("Should pause APP_NC", async () => {
     console.log(
       "//**************************************END changeRgt FAIL BATCH**********************************************/"
-    );
-    console.log(
-      "//**************************************BEGIN exportAssetTo FAIL BATCH**********************************************/"
-    );
-    return APP_NC.pause({ from: account1 });
-  });
-
-  //22
-  it("Should fail because APP_NC is paused", async () => {
-    return APP_NC.exportAssetTo(asset1, "1000004", { from: account5 });
-  });
-
-  it("Should unpause APP_NC", async () => {
-    return APP_NC.unpause({ from: account1 });
-  });
-
-  //23
-  it("Should fail because caller does not hold token", async () => {
-    return APP_NC.exportAssetTo(asset1, "1000004", { from: account5 });
-  });
-
-  it("Should set asset1 stat to 52", async () => {
-    return APP_NC.modifyStatus(asset1, "52", { from: account1 });
-  });
-
-  //24
-  it("Should fail because record != status51", async () => {
-    return APP_NC.exportAssetTo(asset1, "1000004", { from: account1 });
-  });
-
-  it("Should set asset1 stat to 52", async () => {
-    return APP_NC.modifyStatus(asset1, "51", { from: account1 });
-  });
-
-  //25
-  it("Should fail because you cannot export to new root", async () => {
-    return APP_NC.exportAssetTo(asset1, "1000001", { from: account1 });
-  });
-  //26
-  it("Should fail because caller !NTH", async () => {
-    return APP_NC.exportAssetTo(asset5, "1000006", { from: account4 });
-  });
-  it("Should pause APP_NC", async () => {
-    console.log(
-      "//**************************************END exportAssetTo FAIL BATCH**********************************************/"
     );
     console.log(
       "//**************************************BEGIN modifyStatus FAIL BATCH**********************************************/"
@@ -1914,7 +1793,7 @@ contract("APP_NC", (accounts) => {
     return APP_NC.pause({ from: account1 });
   });
 
-  //28
+  //13
   it("Should Fail because APP_NC is paused", async () => {
     return APP_NC.modifyStatus(asset1, "51", { from: account5 });
   });
@@ -1923,44 +1802,34 @@ contract("APP_NC", (accounts) => {
     return APP_NC.unpause({ from: account1 });
   });
 
-  //29
+  //14
   it("Should Fail because caller does not hold token", async () => {
     return APP_NC.modifyStatus(asset1, "51", { from: account5 });
   });
 
-  //30
+  //15
   it("Should Fail because being placed in status > 100", async () => {
     return APP_NC.modifyStatus(asset1, "101", { from: account1 });
   });
 
-  //31
+  //16
   it("Should Fail because being placed in status 7", async () => {
     return APP_NC.modifyStatus(asset1, "7", { from: account1 });
   });
 
-  //32
+  //17
   it("Should Fail because being placed in reserved status 57", async () => {
     return APP_NC.modifyStatus(asset1, "57", { from: account1 });
   });
 
-  //33
+  //18
   it("Should Fail because being placed in reserved status 58", async () => {
     return APP_NC.modifyStatus(asset1, "58", { from: account1 });
   });
 
-  //34
-  it("Should Fail because being placed in exported status", async () => {
-    return APP_NC.modifyStatus(asset1, "70", { from: account1 });
-  });
-
-  //35
+  //19
   it("Should Fail because being placed in status <50", async () => {
     return APP_NC.modifyStatus(asset1, "1", { from: account1 });
-  });
-
-  //36
-  it("Should Fail because asset needsImport", async () => {
-    return APP_NC.modifyStatus(asset4, "51", { from: account2 });
   });
 
   it("Should pause APP_NC", async () => {
@@ -1973,7 +1842,7 @@ contract("APP_NC", (accounts) => {
     return APP_NC.pause({ from: account1 });
   });
 
-  //37
+  //20
   it("Should Fail because APP_NC is paused", async () => {
     return APP_NC.setLostOrStolen(asset1, "53", { from: account5 });
   });
@@ -1982,19 +1851,14 @@ contract("APP_NC", (accounts) => {
     return APP_NC.unpause({ from: account1 });
   });
 
-  //38
+  //21
   it("Should fail because caller does not hold token", async () => {
     return APP_NC.setLostOrStolen(asset1, "53", { from: account5 });
   });
 
-  //39
+  //22
   it("Should fail because assetStatus is < 50", async () => {
     return APP_NC.setLostOrStolen(asset1, "3", { from: account1 });
-  });
-
-  //40
-  it("Should fail because asset needsImport", async () => {
-    return APP_NC.setLostOrStolen(asset4, "53", { from: account2 });
   });
 
   it("Should pause APP_NC", async () => {
@@ -2007,23 +1871,13 @@ contract("APP_NC", (accounts) => {
     return APP_NC.pause({ from: account1 });
   });
 
-  //41
-  it("Should Fail because APP_NC is paused", async () => {
-    return APP_NC.decrementCounter(asset1, "15", { from: account1 });
-  });
-
   it("Should unpause APP_NC", async () => {
     return APP_NC.unpause({ from: account1 });
   });
 
-  //42
+  //23
   it("Should fail becasue caller does not hold token", async () => {
     return APP_NC.decrementCounter(asset1, "15", { from: account5 });
-  });
-
-  //43
-  it("Should fail becasue asset needsImport", async () => {
-    return APP_NC.decrementCounter(asset4, "15", { from: account2 });
   });
 
   it("Should pause APP_NC", async () => {
@@ -2036,7 +1890,7 @@ contract("APP_NC", (accounts) => {
     return APP_NC.pause({ from: account1 });
   });
 
-  //44
+  //24
   it("Should Fail because APP_NC is paused", async () => {
     return APP_NC.modifyMutableStorage(asset1, rgt1, rgt000, {
       from: account5,
@@ -2047,17 +1901,10 @@ contract("APP_NC", (accounts) => {
     return APP_NC.unpause({ from: account1 });
   });
 
-  //45
+  //25
   it("Should fail because caller does not hold token", async () => {
     return APP_NC.modifyMutableStorage(asset1, rgt1, rgt000, {
       from: account5,
-    });
-  });
-
-  //46
-  it("Should fail because asset needsImport", async () => {
-    return APP_NC.modifyMutableStorage(asset4, rgt1, rgt000, {
-      from: account2,
     });
   });
 
@@ -2071,7 +1918,6 @@ contract("APP_NC", (accounts) => {
     console.log(
       "//**************************************************END APP_NC TEST***************************************************//"
     );
-
     console.log(
       "//**************************************BEGIN THE WORKS CUSTODIAL**********************************************/"
     );
@@ -2091,7 +1937,7 @@ contract("APP_NC", (accounts) => {
   });
 
   it("Should write asset12 in Node 1000001", async () => {
-    return APP.newRecord(asset12, rgt12, "1000001", "100", { from: account2 });
+    return APP.newRecord(asset12raw, rgt12, "1000001", "100", { from: account2 });
   });
 
   it("Should retrieve show clean asset 12", async () => {
@@ -2254,276 +2100,8 @@ contract("APP_NC", (accounts) => {
     );
   });
 
-  it("Should export asset12 to account2", async () => {
-    return APP.exportAssetTo(asset12, "1000002", account2, rgt12, {
-      from: account2,
-    });
-  });
-
-  it("Should retrieve asset12 @newStatus(70(exported)) && +1 N.O.T", async () => {
-    var Record = [];
-
-    return await STOR.retrieveShortRecord(
-      asset12,
-      { from: account2 },
-      function (_err, _result) {
-        if (_err) {
-        } else {
-          Record = Object.values(_result);
-          console.log(Record);
-        }
-      }
-    );
-  });
-
-  it("Should import asset12 to Node(12)(NC)", async () => {
-    return APP_NC.importAsset(asset12, "1000002", { from: account2 });
-  });
-
-  it("Should retrieve asset12 @newAC(1000002) && newStatus(52)", async () => {
-    var Record = [];
-
-    return await STOR.retrieveShortRecord(
-      asset12,
-      { from: account2 },
-      function (_err, _result) {
-        if (_err) {
-        } else {
-          Record = Object.values(_result);
-          console.log(Record);
-        }
-      }
-    );
-  });
-
-  it("Should change status of asset12 to status(51)", async () => {
-    return APP_NC.modifyStatus(asset12, "51", { from: account2 });
-  });
-
-  it("Should retrieve asset12 @newStatus(51)", async () => {
-    var Record = [];
-
-    return await STOR.retrieveShortRecord(
-      asset12,
-      { from: account2 },
-      function (_err, _result) {
-        if (_err) {
-        } else {
-          Record = Object.values(_result);
-          console.log(Record);
-        }
-      }
-    );
-  });
-
-  it("Should set asset12 into escrow for 3 minutes", async () => {
-    return ECR_NC.setEscrow(asset12, account2Hash, "180", "56", {
-      from: account2,
-    });
-  });
-
-  it("Should retrieve asset12 @newStatus((56)(ECR))", async () => {
-    var Record = [];
-
-    return await STOR.retrieveShortRecord(
-      asset12,
-      { from: account2 },
-      function (_err, _result) {
-        if (_err) {
-        } else {
-          Record = Object.values(_result);
-          console.log(Record);
-        }
-      }
-    );
-  });
-
-  it("Should take asset12 out of escrow", async () => {
-    return ECR_NC.endEscrow(asset12, { from: account2 });
-  });
-
-  it("Should retrieve asset12  @newStatus(57)", async () => {
-    var Record = [];
-
-    return await STOR.retrieveShortRecord(
-      asset12,
-      { from: account2 },
-      function (_err, _result) {
-        if (_err) {
-        } else {
-          Record = Object.values(_result);
-          console.log(Record);
-        }
-      }
-    );
-  });
-
-  it("Should change decrement amount @asset12 from (85) to (70)", async () => {
-    return APP_NC.decrementCounter(asset12, "15", { from: account2 });
-  });
-
-  it("Should retrieve asset12 @newDecAmount(70)", async () => {
-    var Record = [];
-
-    return await STOR.retrieveShortRecord(
-      asset12,
-      { from: account2 },
-      function (_err, _result) {
-        if (_err) {
-        } else {
-          Record = Object.values(_result);
-          console.log(Record);
-        }
-      }
-    );
-  });
-
-  it("Should force modify asset12 RGT12 to RGT(2)", async () => {
-    return APP_NC.changeRgt(asset12, rgt2, { from: account2 });
-  });
-
-  it("Should retrieve asset12 @newRgt(2)", async () => {
-    var Record = [];
-
-    return await STOR.retrieveShortRecord(
-      asset12,
-      { from: account2 },
-      function (_err, _result) {
-        if (_err) {
-        } else {
-          Record = Object.values(_result);
-          console.log(Record);
-        }
-      }
-    );
-  });
-
-  it("Should modify Mutable @asset12 to RGT(12)", async () => {
-    return APP_NC.modifyMutableStorage(asset12, rgt12, rgt000, {
-      from: account2,
-    });
-  });
-
-  it("Should retrieve asset12 @newMutable(rgt12)", async () => {
-    var Record = [];
-
-    return await STOR.retrieveShortRecord(
-      asset12,
-      { from: account2 },
-      function (_err, _result) {
-        if (_err) {
-        } else {
-          Record = Object.values(_result);
-          console.log(Record);
-        }
-      }
-    );
-  });
-
-  it("Should set asset12 to stolen(53) status", async () => {
-    return APP_NC.setLostOrStolen(asset12, "53", { from: account2 });
-  });
-
-  it("Should retrieve asset12 @newStatus(53)", async () => {
-    var Record = [];
-
-    return await STOR.retrieveShortRecord(
-      asset12,
-      { from: account2 },
-      function (_err, _result) {
-        if (_err) {
-        } else {
-          Record = Object.values(_result);
-          console.log(Record);
-        }
-      }
-    );
-  });
-
-  it("Should change status of asset12 to status(51)", async () => {
-    return APP_NC.modifyStatus(asset12, "51", { from: account2 });
-  });
-
-  it("Should retrieve asset12 @newStatus(51)", async () => {
-    var Record = [];
-
-    return await STOR.retrieveShortRecord(
-      asset12,
-      { from: account2 },
-      function (_err, _result) {
-        if (_err) {
-        } else {
-          Record = Object.values(_result);
-          console.log(Record);
-        }
-      }
-    );
-  });
-
-  it("Should export asset12(status70)", async () => {
-    return APP_NC.exportAssetTo(asset12, "1000001", { from: account2 });
-  });
-
-  it("Should retrieve asset12 @newAC (root(1)) && @newStatus(exported(70))", async () => {
-    var Record = [];
-
-    return await STOR.retrieveShortRecord(
-      asset12,
-      { from: account2 },
-      function (_err, _result) {
-        if (_err) {
-        } else {
-          Record = Object.values(_result);
-          console.log(Record);
-        }
-      }
-    );
-  });
-
-  it("Should transfer asset12 token to PRUF_APP contract", async () => {
-    return A_TKN.safeTransferFrom(account2, APP.address, asset12, {
-      from: account2,
-    });
-  });
-
-  it("Should retrieve asset12 @+1 N.O.T", async () => {
-    var Record = [];
-
-    return await STOR.retrieveShortRecord(
-      asset12,
-      { from: account2 },
-      function (_err, _result) {
-        if (_err) {
-        } else {
-          Record = Object.values(_result);
-          console.log(Record);
-        }
-      }
-    );
-  });
-
-  it("Should import asset12 to Node(10)", async () => {
-    return APP.importAsset(asset12, "1000001", { from: account2 });
-  });
-
-  it("Should retrieve asset12 @newAC(1000001) && +1 FMRcount", async () => {
-    var Record = [];
-
-    return await STOR.retrieveShortRecord(
-      asset12,
-      { from: account2 },
-      function (_err, _result) {
-        if (_err) {
-        } else {
-          Record = Object.values(_result);
-          console.log(Record);
-        }
-      }
-    );
-  });
-
   it("Should change status of asset12 to status(1)", async () => {
-    return APP.modifyStatus(asset12, rgtFFF, "1", { from: account2 });
+    return APP.modifyStatus(asset12, rgt12, "1", { from: account2 });
   });
 
   it("Should retrieve asset12 @newStatus(1)", async () => {
@@ -2585,7 +2163,7 @@ contract("APP_NC", (accounts) => {
   });
 
   it("Should change status of asset12 to status(1)", async () => {
-    return APP.modifyStatus(asset12, rgtFFF, "1", { from: account2 });
+    return APP.modifyStatus(asset12, rgt12, "1", { from: account2 });
   });
 
   it("Should retrieve asset12 @newStatus(1)", async () => {
@@ -2605,7 +2183,7 @@ contract("APP_NC", (accounts) => {
   });
 
   it("Should set asset12 to stolen(3) status", async () => {
-    return APP.setLostOrStolen(asset12, rgtFFF, "3", { from: account2 });
+    return APP.setLostOrStolen(asset12, rgt12, "3", { from: account2 });
   });
 
   it("Should retrieve asset12 @newStatus(3)", async () => {
@@ -2625,7 +2203,7 @@ contract("APP_NC", (accounts) => {
   });
 
   it("Should change status of asset12 to status(51)", async () => {
-    return APP.modifyStatus(asset12, rgtFFF, "51", { from: account2 });
+    return APP.modifyStatus(asset12, rgt12, "51", { from: account2 });
   });
 
   it("Should retrieve asset12 @newStaus(51)", async () => {
@@ -2644,12 +2222,12 @@ contract("APP_NC", (accounts) => {
     );
   });
 
-  it("Should write asset13 in Node 1000002", async () => {
+  it("Should write asset13 in Node 1000003", async () => {
     console.log(
       "//**************************************BEGIN THE WORKS NON CUSTODIAL**********************************************/"
     );
-    return APP_NC.newRecord(asset13, rgt13, "1000002", "100", {
-      from: account4,
+    return APP_NC.newRecord(asset13raw, rgt13, "1000003", "100", {
+      from: account1,
     });
   });
 
@@ -2670,7 +2248,7 @@ contract("APP_NC", (accounts) => {
   });
 
   it("Should decrement asset13 amount from (100) to (85)", async () => {
-    return APP_NC.decrementCounter(asset13, "15", { from: account4 });
+    return APP_NC.decrementCounter(asset13, "15", { from: account1 });
   });
 
   it("Should retrieve asset13 @newDecCount(85)", async () => {
@@ -2691,7 +2269,7 @@ contract("APP_NC", (accounts) => {
 
   it("Should modify Mutable note @asset13 to (asset13)", async () => {
     return APP_NC.modifyMutableStorage(asset13, asset13, rgt000, {
-      from: account4,
+      from: account1,
     });
   });
 
@@ -2713,7 +2291,7 @@ contract("APP_NC", (accounts) => {
 
   it("Should set NonMutable note to (asset13)", async () => {
     return APP_NC.addNonMutableStorage(asset13, asset13, rgt000, {
-      from: account4,
+      from: account1,
     });
   });
 
@@ -2722,7 +2300,7 @@ contract("APP_NC", (accounts) => {
 
     return await STOR.retrieveShortRecord(
       asset13,
-      { from: account4 },
+      { from: account1 },
       function (_err, _result) {
         if (_err) {
         } else {
@@ -2734,7 +2312,7 @@ contract("APP_NC", (accounts) => {
   });
 
   it("Should force modify asset13 rgt13 to RGT(2)", async () => {
-    return APP_NC.changeRgt(asset13, rgt2, { from: account4 });
+    return APP_NC.changeRgt(asset13, rgt2, { from: account1 });
   });
 
   it("Should retrieve asset13 @newRgt(2)", async () => {
@@ -2754,7 +2332,7 @@ contract("APP_NC", (accounts) => {
   });
 
   it("Should set asset13 to stolen(53) status", async () => {
-    return APP_NC.setLostOrStolen(asset13, "53", { from: account4 });
+    return APP_NC.setLostOrStolen(asset13, "53", { from: account1 });
   });
 
   it("Should retrieve asset13 @newStatus(53)", async () => {
@@ -2774,7 +2352,7 @@ contract("APP_NC", (accounts) => {
   });
 
   it("Should change status of new asset12 to status(51)", async () => {
-    return APP_NC.modifyStatus(asset13, "51", { from: account4 });
+    return APP_NC.modifyStatus(asset13, "51", { from: account1 });
   });
 
   it("Should retrieve asset13 @stat(51)", async () => {
@@ -2794,8 +2372,8 @@ contract("APP_NC", (accounts) => {
   });
 
   it("Should set asset12 into escrow for 3 minutes", async () => {
-    return ECR_NC.setEscrow(asset13, account4Hash, "180", "56", {
-      from: account4,
+    return ECR_NC.setEscrow(asset13, account1Hash, "180", "56", {
+      from: account1,
     });
   });
 
@@ -2816,7 +2394,7 @@ contract("APP_NC", (accounts) => {
   });
 
   it("Should take asset12 out of escrow", async () => {
-    return ECR_NC.endEscrow(asset13, { from: account4 });
+    return ECR_NC.endEscrow(asset13, { from: account1 });
   });
 
   it("Should retrieve asset13  @newStatus(57)", async () => {
@@ -2835,355 +2413,8 @@ contract("APP_NC", (accounts) => {
     );
   });
 
-  it("Should change status of new asset12 to status(51)", async () => {
-    return APP_NC.modifyStatus(asset13, "51", { from: account4 });
-  });
-
-  it("Should retrieve asset13 @stat(51)", async () => {
-    var Record = [];
-
-    return await STOR.retrieveShortRecord(
-      asset13,
-      { from: account4 },
-      function (_err, _result) {
-        if (_err) {
-        } else {
-          Record = Object.values(_result);
-          console.log(Record);
-        }
-      }
-    );
-  });
-
-  it("Should export asset13 to account4", async () => {
-    return APP_NC.exportAssetTo(asset13, "1000001", { from: account4 });
-  });
-
-  it("Should retrieve asset13 @newStatus(70(exported))", async () => {
-    var Record = [];
-
-    return await STOR.retrieveShortRecord(
-      asset13,
-      { from: account4 },
-      function (_err, _result) {
-        if (_err) {
-        } else {
-          Record = Object.values(_result);
-          console.log(Record);
-        }
-      }
-    );
-  });
-
-  it("Should transfer asset13 token to PRUF_APP contract", async () => {
-    return A_TKN.safeTransferFrom(account4, APP.address, asset13, {
-      from: account4,
-    });
-  });
-
-  it("Should retrieve asset13 @ +1 N.O.T", async () => {
-    var Record = [];
-
-    return await STOR.retrieveShortRecord(
-      asset13,
-      { from: account4 },
-      function (_err, _result) {
-        if (_err) {
-        } else {
-          Record = Object.values(_result);
-          console.log(Record);
-        }
-      }
-    );
-  });
-
-  it("Should import asset13 to Node(10)", async () => {
-    return APP.importAsset(asset13, "1000001", { from: account4 });
-  });
-
-  it("Should retrieve asset13 @newAC(1000001) && newStatus(0)", async () => {
-    var Record = [];
-
-    return await STOR.retrieveShortRecord(
-      asset13,
-      { from: account4 },
-      function (_err, _result) {
-        if (_err) {
-        } else {
-          Record = Object.values(_result);
-          console.log(Record);
-        }
-      }
-    );
-  });
-
-  it("Should change status of asset13 to status(1)", async () => {
-    return APP.modifyStatus(asset13, rgtFFF, "1", { from: account4 });
-  });
-
-  it("Should retrieve asset13 @newStatus(1)", async () => {
-    var Record = [];
-
-    return await STOR.retrieveShortRecord(
-      asset13,
-      { from: account4 },
-      function (_err, _result) {
-        if (_err) {
-        } else {
-          Record = Object.values(_result);
-          console.log(Record);
-        }
-      }
-    );
-  });
-
-  it("Should set asset13 into escrow for 3 minutes", async () => {
-    return ECR.setEscrow(asset13, account4Hash, "180", "6", { from: account4 });
-  });
-
-  it("Should retrieve asset13 @newStatus((6)(ECR))", async () => {
-    var Record = [];
-
-    return await STOR.retrieveShortRecord(
-      asset13,
-      { from: account4 },
-      function (_err, _result) {
-        if (_err) {
-        } else {
-          Record = Object.values(_result);
-          console.log(Record);
-        }
-      }
-    );
-  });
-
-  it("Should take asset13 out of escrow", async () => {
-    return ECR.endEscrow(asset13, { from: account4 });
-  });
-
-  it("Should retrieve asset13  @newStatus(7)", async () => {
-    var Record = [];
-
-    return await STOR.retrieveShortRecord(
-      asset13,
-      { from: account4 },
-      function (_err, _result) {
-        if (_err) {
-        } else {
-          Record = Object.values(_result);
-          console.log(Record);
-        }
-      }
-    );
-  });
-
-  it("Should change decrement amount @asset13 from (85) to (70)", async () => {
-    return APP.decrementCounter(asset13, rgtFFF, "15", { from: account4 });
-  });
-
-  it("Should retrieve asset13 @newDecAmount(70)", async () => {
-    var Record = [];
-
-    return await STOR.retrieveShortRecord(
-      asset13,
-      { from: account4 },
-      function (_err, _result) {
-        if (_err) {
-        } else {
-          Record = Object.values(_result);
-          console.log(Record);
-        }
-      }
-    );
-  });
-
-  it("Should modify Mutable @asset13 to RGT(12)", async () => {
-    return APP.modifyMutableStorage(asset13, rgtFFF, rgt13, rgt000, {
-      from: account4,
-    });
-  });
-
-  it("Should retrieve asset13 @newMutable(rgt13)", async () => {
-    var Record = [];
-
-    return await STOR.retrieveShortRecord(
-      asset13,
-      { from: account4 },
-      function (_err, _result) {
-        if (_err) {
-        } else {
-          Record = Object.values(_result);
-          console.log(Record);
-        }
-      }
-    );
-  });
-
-  it("Should set asset13 to stolen(3) status", async () => {
-    return APP.setLostOrStolen(asset13, rgtFFF, "3", { from: account4 });
-  });
-
-  it("Should retrieve asset13 @newStatus(3)", async () => {
-    var Record = [];
-
-    return await STOR.retrieveShortRecord(
-      asset13,
-      { from: account4 },
-      function (_err, _result) {
-        if (_err) {
-        } else {
-          Record = Object.values(_result);
-          console.log(Record);
-        }
-      }
-    );
-  });
-
-  it("Should change status of asset13 to status(1)", async () => {
-    return APP.modifyStatus(asset13, rgtFFF, "1", { from: account4 });
-  });
-
-  it("Should retrieve asset13 @newStatus(1)", async () => {
-    var Record = [];
-
-    return await STOR.retrieveShortRecord(
-      asset13,
-      { from: account4 },
-      function (_err, _result) {
-        if (_err) {
-        } else {
-          Record = Object.values(_result);
-          console.log(Record);
-        }
-      }
-    );
-  });
-
-  it("Should Transfer asset13 RGT(13) to RGT(2)", async () => {
-    return APP.transferAsset(asset13, rgtFFF, rgt2, { from: account4 });
-  });
-
-  it("Should retrieve asset13 @newRgt(rgt2) && +1 N.O.T", async () => {
-    var Record = [];
-
-    return await STOR.retrieveShortRecord(
-      asset13,
-      { from: account4 },
-      function (_err, _result) {
-        if (_err) {
-        } else {
-          Record = Object.values(_result);
-          console.log(Record);
-        }
-      }
-    );
-  });
-
-  it("Should force modify asset13 RGT(2) to RGT(13)", async () => {
-    return APP.forceModifyRecord(asset13, rgt13, { from: account4 });
-  });
-
-  it("Should retrieve asset12 @newStat(0) && @newRgt(rgt12) && +1 FMR count && +1 N.O.T", async () => {
-    var Record = [];
-
-    return await STOR.retrieveShortRecord(
-      asset13,
-      { from: account4 },
-      function (_err, _result) {
-        if (_err) {
-        } else {
-          Record = Object.values(_result);
-          console.log(Record);
-        }
-      }
-    );
-  });
-
-  it("Should change asset13 status to (51)", async () => {
-    return APP.modifyStatus(asset13, rgt13, "51", { from: account4 });
-  });
-
-  it("Should retrieve asset12 @newStat(51)", async () => {
-    var Record = [];
-
-    return await STOR.retrieveShortRecord(
-      asset13,
-      { from: account4 },
-      function (_err, _result) {
-        if (_err) {
-        } else {
-          Record = Object.values(_result);
-          console.log(Record);
-        }
-      }
-    );
-  });
-
-  it("Should export asset13(status70)", async () => {
-    return APP.exportAssetTo(asset13, "1000002", account4, rgt13, {
-      from: account4,
-    });
-  });
-  ///
-
-  it("Should retrieve asset13&& @newStatus(exported(70)) && + 1 N.O.T", async () => {
-    var Record = [];
-
-    return await STOR.retrieveShortRecord(
-      asset13,
-      { from: account4 },
-      function (_err, _result) {
-        if (_err) {
-        } else {
-          Record = Object.values(_result);
-          console.log(Record);
-        }
-      }
-    );
-  });
-
-  it("Should import asset13 to Node(12)", async () => {
-    return APP_NC.importAsset(asset13, "1000002", { from: account4 });
-  });
-
-  it("Should retrieve asset13 @newAC(1000002) && newStatus(52)", async () => {
-    var Record = [];
-
-    return await STOR.retrieveShortRecord(
-      asset13,
-      { from: account4 },
-      function (_err, _result) {
-        if (_err) {
-        } else {
-          Record = Object.values(_result);
-          console.log(Record);
-        }
-      }
-    );
-  });
-
-  it("Should change status of asset13 to status(51)", async () => {
-    return APP_NC.modifyStatus(asset13, "51", { from: account4 });
-  });
-
-  it("Should retrieve asset13 @newStatus(51)", async () => {
-    var Record = [];
-
-    return await STOR.retrieveShortRecord(
-      asset13,
-      { from: account4 },
-      function (_err, _result) {
-        if (_err) {
-        } else {
-          Record = Object.values(_result);
-          console.log(Record);
-        }
-      }
-    );
-  });
-
   it("Should change status of asset13 to status(59)", async () => {
-    return APP_NC.modifyStatus(asset13, "59", { from: account4 });
+    return APP_NC.modifyStatus(asset13, "59", { from: account1 });
   });
 
   it("Should retrieve asset13 @newStaus(59)", async () => {
@@ -3203,7 +2434,7 @@ contract("APP_NC", (accounts) => {
   });
 
   it("Should discard asset13", async () => {
-    return A_TKN.discard(asset13, { from: account4 });
+    return A_TKN.discard(asset13, { from: account1 });
   });
 
   it("Should retrieve asset13 @newStaus((60)discarded)", async () => {
@@ -3223,10 +2454,10 @@ contract("APP_NC", (accounts) => {
   });
 
   it("Should recycle asset13", async () => {
-    return RCLR.recycle(asset13, rgt13, { from: account4 });
+    return RCLR.recycle(asset13, rgt13, { from: account1 });
   });
 
-  it("Should retrieve asset13  @newRgt(13) && @newAC(1000002) && +1 N.O.T && @newStatus(58)", async () => {
+  it("Should retrieve asset13  @newRgt(13) && @newAC(1000003) && +1 N.O.T && @newStatus(58)", async () => {
     var Record = [];
 
     return await STOR.retrieveShortRecord(
@@ -3243,7 +2474,7 @@ contract("APP_NC", (accounts) => {
   });
 
   it("Should change status of asset12 to status(51)", async () => {
-    return APP_NC.modifyStatus(asset13, "51", { from: account4 });
+    return APP_NC.modifyStatus(asset13, "51", { from: account1 });
   });
 
   it("Should retrieve asset12 @newStaus(51)", async () => {
@@ -3261,110 +2492,4 @@ contract("APP_NC", (accounts) => {
       }
     );
   });
-
-  // it("Should set asset12 for sale for 10 pruf", async () => {
-  //   return PURCHASE._setPrice(asset13, "10000000000000000000", "2", "0", {
-  //     from: account4,
-  //   });
-  // });
-
-  // it("Should retrieve asset12 @newStaus(51)", async () => {
-  //   var Record = [];
-
-  //   return await STOR.retrieveShortRecord(
-  //     asset13,
-  //     { from: account2 },
-  //     function (_err, _result) {
-  //       if (_err) {
-  //       } else {
-  //         Record = Object.values(_result);
-  //         console.log(Record);
-  //       }
-  //     }
-  //   );
-  // });
-
-  // it("Should retrieve asset12 PriceData", async () => {
-  //   var Record = [];
-
-  //   return await STOR.getPriceData(
-  //     asset13,
-  //     { from: account2 },
-  //     function (_err, _result) {
-  //       if (_err) {
-  //       } else {
-  //         Record = Object.values(_result);
-  //         console.log(Record);
-  //       }
-  //     }
-  //   );
-  // });
-
-  // it("Should retrieve account2 ü bal", async () => {
-  //   var Record = [];
-
-  //   return await UTIL_TKN.balanceOf(
-  //     account4,
-  //     { from: account2 },
-  //     function (_err, _result) {
-  //       if (_err) {
-  //       } else {
-  //         Record = _result;
-  //         console.log(Record);
-  //       }
-  //     }
-  //   );
-  // });
-
-  // it("account2 should purchase asset12 for 10 pruf", async () => {
-  //   return PURCHASE.purchaseWithPRUF(asset13, { from: account4 });
-  // });
-
-  // it("Should retrieve asset12 @newStaus(51)", async () => {
-  //   var Record = [];
-
-  //   return await STOR.retrieveShortRecord(
-  //     asset13,
-  //     { from: account2 },
-  //     function (_err, _result) {
-  //       if (_err) {
-  //       } else {
-  //         Record = Object.values(_result);
-  //         console.log(Record);
-  //       }
-  //     }
-  //   );
-  // });
-
-  // it("Should retrieve asset12 PriceData", async () => {
-  //   var Record = [];
-
-  //   return await STOR.getPriceData(
-  //     asset13,
-  //     { from: account2 },
-  //     function (_err, _result) {
-  //       if (_err) {
-  //       } else {
-  //         Record = Object.values(_result);
-  //         console.log(Record);
-  //       }
-  //     }
-  //   );
-  // });
-
-  // it("Should retrieve account2 ü bal", async () => {
-  //   var Record = [];
-
-  //   return await UTIL_TKN.balanceOf(
-  //     account4,
-  //     { from: account2 },
-  //     function (_err, _result) {
-  //       if (_err) {
-  //       } else {
-  //         Record = _result;
-  //         console.log(Record);
-  //       }
-  //     }
-  //   );
-  // });
 });
