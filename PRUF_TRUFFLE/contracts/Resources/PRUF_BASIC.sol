@@ -45,6 +45,9 @@ abstract contract BASIC is
     address internal NODE_MGR_Address;
     NODE_MGR_Interface internal NODE_MGR;
 
+    address internal NODE_STOR_Address;
+    NODE_STOR_Interface internal NODE_STOR;
+
     address internal UTIL_TKN_Address;
     UTIL_TKN_Interface internal UTIL_TKN;
 
@@ -144,6 +147,9 @@ abstract contract BASIC is
 
         NODE_MGR_Address = STOR.resolveContractAddress("NODE_MGR");
         NODE_MGR = NODE_MGR_Interface(NODE_MGR_Address);
+
+        NODE_STOR_Address = STOR.resolveContractAddress("NODE_STOR");
+        NODE_STOR = NODE_STOR_Interface(NODE_STOR_Address);
 
         UTIL_TKN_Address = STOR.resolveContractAddress("UTIL_TKN");
         UTIL_TKN = UTIL_TKN_Interface(UTIL_TKN_Address);
@@ -249,7 +255,7 @@ abstract contract BASIC is
         uint256 _amount
     ) external virtual isAssetAdmin nonReentrant {
         //^^^^^^^checks^^^^^^^^^
-        
+
         IERC20(_tokenContract).transferFrom(address(this), _to, _amount);
         //^^^^^^^interactions^^^^^^^^^
     }
@@ -281,7 +287,8 @@ abstract contract BASIC is
     function getNodeinfo(uint32 _node) internal virtual returns (Node memory) {
         //^^^^^^^checks^^^^^^^^^
 
-        return NODE_MGR.getExtendedNodeData(_node);
+        //return NODE_STOR.getNodeData(_node); //for new NODE_STOR
+        return NODE_MGR.getNodeData(_node); //legacy NODE_MGR
         //^^^^^^^interactions^^^^^^^^^
     }
 
@@ -292,7 +299,8 @@ abstract contract BASIC is
      * @return ContractDataHash struct, containing the authorization level and hashed name of a given contract X in node Y
      */
     function getContractInfo(address _addr, uint32 _node)
-        internal view
+        internal
+        view
         returns (ContractDataHash memory)
     {
         //^^^^^^^checks^^^^^^^^^
