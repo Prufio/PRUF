@@ -35,7 +35,6 @@ contract CORE is BASIC {
         uint32 _node,
         uint32 _countDownStart
     ) internal virtual {
-        
 
         bytes32 idxHash = keccak256(abi.encodePacked(_idxRaw, _node)); //hash idxRaw with node to get idxHash DPS:TEST
         uint256 tokenId = uint256(idxHash);

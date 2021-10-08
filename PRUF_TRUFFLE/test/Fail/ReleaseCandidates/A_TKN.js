@@ -190,7 +190,7 @@ contract("A_TKN", (accounts) => {
     asset14 = await Helper.getIdxHash(asset14raw, '1000001');
 
     rgt1 = await Helper.getJustRgtHash(
-      asset1raw,
+      asset1,
       "aaa",
       "aaa",
       "aaa",
@@ -199,7 +199,7 @@ contract("A_TKN", (accounts) => {
     );
 
     rgt2 = await Helper.getJustRgtHash(
-      asset2raw,
+      asset2,
       "bbb",
       "bbb",
       "bbb",
@@ -217,7 +217,7 @@ contract("A_TKN", (accounts) => {
     );
 
     rgt4 = await Helper.getJustRgtHash(
-      asset4raw,
+      asset4,
       "ddd",
       "ddd",
       "ddd",
@@ -226,7 +226,7 @@ contract("A_TKN", (accounts) => {
     );
 
     rgt5 = await Helper.getJustRgtHash(
-      asset5raw,
+      asset5,
       "eee",
       "eee",
       "eee",
@@ -235,7 +235,7 @@ contract("A_TKN", (accounts) => {
     );
 
     rgt6 = await Helper.getJustRgtHash(
-      asset6raw,
+      asset6,
       "fff",
       "fff",
       "fff",
@@ -244,7 +244,7 @@ contract("A_TKN", (accounts) => {
     );
 
     rgt7 = await Helper.getJustRgtHash(
-      asset7raw,
+      asset7,
       "ggg",
       "ggg",
       "ggg",
@@ -253,7 +253,7 @@ contract("A_TKN", (accounts) => {
     );
 
     rgt8 = await Helper.getJustRgtHash(
-      asset8raw,
+      asset8,
       "hhh",
       "hhh",
       "hhh",
@@ -261,11 +261,11 @@ contract("A_TKN", (accounts) => {
       "hhh"
     );
 
-    rgt12 = await Helper.getJustRgtHash(asset12raw, "a", "a", "a", "a", "a");
+    rgt12 = await Helper.getJustRgtHash(asset12, "a", "a", "a", "a", "a");
 
-    rgt13 = await Helper.getJustRgtHash(asset13raw, "a", "a", "a", "a", "a");
+    rgt13 = await Helper.getJustRgtHash(asset13, "a", "a", "a", "a", "a");
 
-    rgt14 = await Helper.getJustRgtHash(asset14raw, "a", "a", "a", "a", "a");
+    rgt14 = await Helper.getJustRgtHash(asset14, "a", "a", "a", "a", "a");
 
     account1Hash = await Helper.getAddrHash(account1);
 
@@ -1753,6 +1753,10 @@ contract("A_TKN", (accounts) => {
 
   });
 
+  it("Should put asset2 into status51", async () => {
+    return APP_NC.modifyStatus(asset2, "52", { from: account4 });
+  });
+
   //11
   it("Should fail because asset not in transferable status", async () => {
     return A_TKN.transferFrom(account4, account5, asset2, { from: account4 });
@@ -1771,7 +1775,7 @@ contract("A_TKN", (accounts) => {
       });
   });
 
-  //14
+  //13
   it("Should fail because asset2 is not in a transferable status", async () => {
     return A_TKN.safeTransferFrom(account4, account6, asset2, {
       from: account4,
@@ -1779,17 +1783,17 @@ contract("A_TKN", (accounts) => {
   });
 
   it("Should put asset2 into status51", async () => {
-    return APP.modifyStatus(asset2, "51", { from: account4 });
+    return APP_NC.modifyStatus(asset2, "51", { from: account4 });
   });
 
-  //15
+  //14
   it("Should fail because you cannot transfer to 0 addr", async () => {
     return A_TKN.safeTransferFrom(account4, account000, asset2, {
       from: account4,
     });
   });
 
-  //16
+  //15
   it("Should fail because caller not trusted agent", async () => {
     console.log(
       "//**************************************END safeTransferFrom FAIL BATCH**********************************************/"
@@ -1810,7 +1814,7 @@ contract("A_TKN", (accounts) => {
     return APP_NC.modifyStatus(asset1, "52", { from: account4 });
   });
 
-  //17
+  //16
   it("Should fail because asset !transferrable stat", async () => {
     return A_TKN.trustedAgentTransferFrom(account4, account6, asset1, {
       from: account4,
@@ -1825,7 +1829,7 @@ contract("A_TKN", (accounts) => {
     return A_TKN.setColdWallet({ from: account4 });
   });
 
-  //18
+  //17
   it("Should fail because wallet is cold wallet", async () => {
     return A_TKN.trustedAgentTransferFrom(account4, account6, asset1, {
       from: account4,
@@ -1846,7 +1850,7 @@ contract("A_TKN", (accounts) => {
     return A_TKN.pause({ from: account1 });
   });
 
-  //19
+  //18
   it("Should fail because A_TKN is paused", async () => {
     return A_TKN.trustedAgentBurn(asset1, { from: account4 });
   });
@@ -1855,7 +1859,7 @@ contract("A_TKN", (accounts) => {
     return A_TKN.unpause({ from: account1 });
   });
 
-  //20
+  //19
   it("Should fail because caller not trusted agent", async () => {
     return A_TKN.trustedAgentBurn(asset1, { from: account4 });
   });
@@ -1868,7 +1872,7 @@ contract("A_TKN", (accounts) => {
     return A_TKN.setColdWallet({ from: account4 });
   });
 
-  //21
+  //20
   it("Should fail because account4 is cold wallet", async () => {
     return A_TKN.trustedAgentBurn(asset1, { from: account4 });
   });
@@ -1891,7 +1895,7 @@ contract("A_TKN", (accounts) => {
     return A_TKN.pause({ from: account1 });
   });
 
-  //22
+  //21
   it("Should fail because A_TKN is paused", async () => {
     return A_TKN.discard(asset2, { from: account4 });
   });
@@ -1900,12 +1904,12 @@ contract("A_TKN", (accounts) => {
     return A_TKN.unpause({ from: account1 });
   });
 
-  //23
+  //22
   it("Should fail because caller not owner or approved", async () => {
     return A_TKN.discard(asset1, { from: account5 });
   });
 
-  //24
+  //23
   it("Should fail because caller is not pauser", async () => {
     console.log(
       "//*********************************END discard FAIL BATCH*****************************************/"
@@ -1916,7 +1920,7 @@ contract("A_TKN", (accounts) => {
     return A_TKN.pause({ from: account2 });
   });
 
-  //25
+  //24
   it("Should fail because caller is not pauser", async () => {
     console.log(
       "//*********************************END pause FAIL BATCH*****************************************/"
@@ -2120,7 +2124,7 @@ contract("A_TKN", (accounts) => {
   });
 
   it("Should change status of asset12 to status(1)", async () => {
-    return APP.modifyStatus(asset12, rgtFFF, "1", { from: account2 });
+    return APP.modifyStatus(asset12, rgt12, "1", { from: account2 });
   });
 
   it("Should retrieve asset12 @newStatus(1)", async () => {
@@ -2182,7 +2186,7 @@ contract("A_TKN", (accounts) => {
   });
 
   it("Should change status of asset12 to status(1)", async () => {
-    return APP.modifyStatus(asset12, rgtFFF, "1", { from: account2 });
+    return APP.modifyStatus(asset12, rgt12, "1", { from: account2 });
   });
 
   it("Should retrieve asset12 @newStatus(1)", async () => {
@@ -2202,7 +2206,7 @@ contract("A_TKN", (accounts) => {
   });
 
   it("Should set asset12 to stolen(3) status", async () => {
-    return APP.setLostOrStolen(asset12, rgtFFF, "3", { from: account2 });
+    return APP.setLostOrStolen(asset12, rgt12, "3", { from: account2 });
   });
 
   it("Should retrieve asset12 @newStatus(3)", async () => {
@@ -2222,7 +2226,7 @@ contract("A_TKN", (accounts) => {
   });
 
   it("Should change status of asset12 to status(51)", async () => {
-    return APP.modifyStatus(asset12, rgtFFF, "51", { from: account2 });
+    return APP.modifyStatus(asset12, rgt12, "51", { from: account2 });
   });
 
   it("Should retrieve asset12 @newStaus(51)", async () => {
