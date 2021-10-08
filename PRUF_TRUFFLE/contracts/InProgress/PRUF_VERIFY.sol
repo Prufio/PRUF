@@ -39,11 +39,10 @@ _________\/// _____________\/// _______\/// __\///////// __\/// _____________
 pragma solidity ^0.8.7;
 
 import "../Resources/PRUF_CORE.sol";
+
 //import "../Resources/RESOURCE_PRUF_INTERFACES.sol";
 
 contract VERIFY is CORE {
-    
-
     struct ItemData {
         uint8 status; //Item status (suspect, counterfeit, stolen, lost, etc) type 3+ user
         uint32 value; //denomination, if applicable
@@ -87,7 +86,7 @@ contract VERIFY is CORE {
         uint8 _verified, //0 for not verify authorized, 1 for admin level auth, 2 for priveledged level auth and 3 = basic verify authorization
         uint32 _node
     ) external {
-        Node memory ACdata =getNodeinfo(_node);
+        Node memory ACdata = getNodeinfo(_node);
         Record memory rec = getRecord(_idxHash);
 
         require(
@@ -111,7 +110,7 @@ contract VERIFY is CORE {
      *      item cannot already be registered as "in" the callers wallet (reverts)
      *      itemData.status must be 0 (clean) (returns status)
      *      Item collisions cannot exceed maxCollisions (returns 100)
-     *      If item is marked as held in another wallet, collisions++ return 0     
+     *      If item is marked as held in another wallet, collisions++ return 0
      *      If item is not marked as held, it will be listed as held "in" the callers wallet (return 170)
      */
     function safePutIn(
@@ -198,7 +197,10 @@ contract VERIFY is CORE {
         isAuthorized(_idxHash)
         returns (uint256)
     {
-        require(items[_itemHash] == _idxHash, "VFY:TO: Item not held by caller"); //check to see if held by _idxHash
+        require(
+            items[_itemHash] == _idxHash,
+            "VFY:TO: Item not held by caller"
+        ); //check to see if held by _idxHash
         require(
             (itemData[_itemHash].status != 3) &&
                 (itemData[_itemHash].status != 4),
@@ -231,7 +233,7 @@ contract VERIFY is CORE {
 
         require(items[_itemHash] == _idxHash, "VFY:T: Item not held by caller"); //check to see if held by _idxHash
         require( //must move to same node root
-            NODE_MGR.isSameRootNode(rec.node, newRec.node) == 170,
+            NODE_STOR.isSameRootNode(rec.node, newRec.node) == 170,
             "VFY:T: Wallet is not in the same node root"
         );
         require(
@@ -256,10 +258,11 @@ contract VERIFY is CORE {
      * @dev:Mark an item conterfeit . Admin function, user marks conterfeit regardless of who holds it
      *      the caller must posess Asset token authorized at userlevel 3
      */
-    function markCounterfeit(
-        bytes32 _idxHash,
-        bytes32 _itemHash
-    ) external isAuthorized(_idxHash) returns (uint256) {
+    function markCounterfeit(bytes32 _idxHash, bytes32 _itemHash)
+        external
+        isAuthorized(_idxHash)
+        returns (uint256)
+    {
         require(
             idxAuthInVerify[_idxHash] == 3, //token is auth amdmin
             "VFY:AMC: Caller not authorized as a admin user (type3) in node"
@@ -285,12 +288,15 @@ contract VERIFY is CORE {
         uint8 _status,
         uint32 _value
     ) external isAuthorized(_idxHash) returns (uint256) {
-        require(                                                             
+        require(
             idxAuthInVerify[_idxHash] > 2, //token is auth privelidged+
             "VFY:MI: Caller not authorized as a verified user (>= 3)"
         );
 
-        require(items[_itemHash] == _idxHash, "VFY:MI: Item not held by caller"); //check to see if held by _idxHash
+        require(
+            items[_itemHash] == _idxHash,
+            "VFY:MI: Item not held by caller"
+        ); //check to see if held by _idxHash
         //^^^^^^^checks^^^^^^^^^
 
         itemData[_itemHash].status = _status;

@@ -75,10 +75,12 @@ contract A_TKN is
     address internal STOR_Address;
     address internal RCLR_Address;
     address internal NODE_MGR_Address;
+    address internal NODE_STOR_Address;
     address internal NODE_TKN_Address;
     STOR_Interface internal STOR;
     RCLR_Interface internal RCLR;
     NODE_MGR_Interface internal NODE_MGR;
+    NODE_STOR_Interface internal NODE_STOR;
     NODE_TKN_Interface internal NODE_TKN;
 
     bytes32 public constant B320xF_ =
@@ -393,7 +395,7 @@ contract A_TKN is
         bytes32 _idxHash = bytes32(_tokenId);
         Record memory rec = getRecord(_idxHash);
 
-        if (NODE_MGR.getSwitchAt(rec.node, 1) == 1) {
+        if (NODE_STOR.getSwitchAt(rec.node, 1) == 1) {
             //if switch at bit 1 (0) is set
             string memory oldTokenURI = tokenURI(_tokenId);
 

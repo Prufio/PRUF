@@ -270,7 +270,7 @@ abstract contract BASIC is
     function getCallingUserType(uint32 _node) internal virtual returns (uint8) {
         //^^^^^^^checks^^^^^^^^^
 
-        uint8 userTypeInNode = NODE_MGR.getUserType(
+        uint8 userTypeInNode = NODE_STOR.getUserType(
             keccak256(abi.encodePacked(_msgSender())),
             _node
         );
@@ -287,8 +287,8 @@ abstract contract BASIC is
     function getNodeinfo(uint32 _node) internal virtual returns (Node memory) {
         //^^^^^^^checks^^^^^^^^^
 
-        //return NODE_STOR.getNodeData(_node); //for new NODE_STOR
-        return NODE_MGR.getNodeData(_node); //legacy NODE_MGR
+        return NODE_STOR.getNodeData(_node); //for new NODE_STOR
+        //return NODE_STOR.getNodeData(_node); //legacy NODE_MGR
         //^^^^^^^interactions^^^^^^^^^
     }
 

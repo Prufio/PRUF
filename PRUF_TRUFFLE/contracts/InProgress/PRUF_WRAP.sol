@@ -110,7 +110,7 @@ contract WRAP is CORE {
             );
         } else if (node_info.managementType == 3) {
             require( //DPS:TEST NEW
-                NODE_MGR.getUserType(
+                NODE_STOR.getUserType(
                     keccak256(abi.encodePacked(_msgSender())),
                     _node
                 ) == 1,
@@ -141,7 +141,7 @@ contract WRAP is CORE {
         } else {
             //DPS:TEST
             //just mint the token, record already exists
-            if (NODE_MGR.getSwitchAt(_node, 2) == 0) {
+            if (NODE_STOR.getSwitchAt(_node, 2) == 0) {
                 //if switch at bit 2 is not set, set the mint to address to the node holder
                 A_TKN.mintAssetToken(NODE_TKN.ownerOf(_node), newTokenId);
             } else {
@@ -254,7 +254,7 @@ contract WRAP is CORE {
             );
         } else if (node_info.managementType == 3) {
             require(
-                NODE_MGR.getUserType(
+                NODE_STOR.getUserType(
                     keccak256(abi.encodePacked(_msgSender())),
                     _node
                 ) == 1,
@@ -268,7 +268,7 @@ contract WRAP is CORE {
         }
         //^^^^^^^checks^^^^^^^^^
 
-        if (NODE_MGR.getSwitchAt(_node, 2) == 0) {
+        if (NODE_STOR.getSwitchAt(_node, 2) == 0) {
             //DPS:TEST
             //if switch at bit 2 is not set, set the mint to address to the node holder
             A_TKN.mintAssetToken(NODE_TKN.ownerOf(_node), tokenId);

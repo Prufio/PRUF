@@ -268,7 +268,7 @@ contract Helper is Ownable, BASIC {
         returns (Node memory)
     {
         //^^^^^^^checks^^^^^^^^^
-        return NODE_MGR.getNodeData(_node);
+        return NODE_STOR.getNodeData(_node);
         //^^^^^^^interactions^^^^^^^^^
     }
 
@@ -286,7 +286,7 @@ contract Helper is Ownable, BASIC {
             bytes32
         )
     {
-        Node memory nodeData = NODE_MGR.getNodeData(_node);
+        Node memory nodeData = NODE_STOR.getNodeData(_node);
 
         return (
             nodeData.storageProvider,

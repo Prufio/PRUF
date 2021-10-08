@@ -36,7 +36,7 @@ contract STAT201 is CORE {
     {
         Record memory rec = getRecord(_idxHash);
         Node memory node_info =getNodeinfo(rec.node);
-        uint256 storageProviderStatus = NODE_MGR.getStorageProviderStatus(node_info.storageProvider);
+        uint256 storageProviderStatus = NODE_STOR.getStorageProviderStatus(node_info.storageProvider);
 
         require
             (storageProviderStatus == 0,

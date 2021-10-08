@@ -93,7 +93,7 @@ contract DECORATE is CORE {
             );
         } else if (node_info.managementType == 3) {
             require(    //DPS:TEST NEW
-                NODE_MGR.getUserType(
+                NODE_STOR.getUserType(
                     keccak256(abi.encodePacked(_msgSender())),
                     _node
                 ) == 1,
@@ -364,7 +364,7 @@ contract DECORATE is CORE {
     //         "D:E: Must be in transferrable status (51/70)"
     //     );
     //     require(
-    //         NODE_MGR.isSameRootNode(_exportTo, rec.node) == 170,
+    //         NODE_STOR.isSameRootNode(_exportTo, rec.node) == 170,
     //         "D:E: Cannot change node to new root"
     //     );
     //     //^^^^^^^checks^^^^^^^^^
@@ -411,7 +411,7 @@ contract DECORATE is CORE {
     //     );
     //     require(rec.assetStatus == 70, "D:I: Asset not exported");
     //     require(
-    //         NODE_MGR.isSameRootNode(_newNode, rec.node) == 170,
+    //         NODE_STOR.isSameRootNode(_newNode, rec.node) == 170,
     //         "D:I:Cannot change node to new root"
     //     );
     //     require( //DPS:TEST NEW
@@ -433,7 +433,7 @@ contract DECORATE is CORE {
     //         );
     //     } else if (newNodeInfo.managementType == 3) {
     //         require( //DPS:TEST NEW
-    //             NODE_MGR.getUserType(
+    //             NODE_STOR.getUserType(
     //                 keccak256(abi.encodePacked(_msgSender())),
     //                 _newNode
     //             ) == 1,
@@ -498,7 +498,7 @@ contract DECORATE is CORE {
             );
         } else if (node_info.managementType == 3) {
             require(
-                NODE_MGR.getUserType(
+                NODE_STOR.getUserType(
                     keccak256(abi.encodePacked(_msgSender())),
                     _node
                 ) == 1,

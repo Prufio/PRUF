@@ -51,6 +51,7 @@ contract STOR is AccessControl, ReentrancyGuard, Pausable {
 
     NODE_TKN_Interface private NODE_TKN; //erc721_token prototype initialization
     NODE_MGR_Interface internal NODE_MGR; // Set up external contract interface for NODE_MGR
+    NODE_STOR_Interface internal NODE_STOR; // Set up external contract interface for NODE_MGR
 
     constructor() {
         _setupRole(DEFAULT_ADMIN_ROLE, _msgSender());
@@ -496,7 +497,7 @@ contract STOR is AccessControl, ReentrancyGuard, Pausable {
 
         require(_newNode != 0, "S:CN: Node = 0");
         require( //require new node is in the same root as old node
-            NODE_MGR.isSameRootNode(_newNode, rec.node) == 170,
+            NODE_STOR.isSameRootNode(_newNode, rec.node) == 170,
             "S:CN: Cannot mod node to new root"
         );
         require(isLostOrStolen(rec.assetStatus) == 0, "S:CN: L/S asset"); //asset cannot be in lost or stolen status

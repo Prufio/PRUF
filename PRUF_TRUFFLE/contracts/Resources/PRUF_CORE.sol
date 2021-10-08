@@ -21,7 +21,6 @@ import "../Imports/security/ReentrancyGuard.sol";
 import "../Resources/PRUF_BASIC.sol";
 
 contract CORE is BASIC {
-    
     /**
      * @dev create a Record in Storage @ idxHash (SETTER) and mint an asset token (may mint to node holder depending on flags)
      * @param _idxRaw - Asset Index
@@ -35,7 +34,6 @@ contract CORE is BASIC {
         uint32 _node,
         uint32 _countDownStart
     ) internal virtual {
-
         bytes32 idxHash = keccak256(abi.encodePacked(_idxRaw, _node)); //hash idxRaw with node to get idxHash DPS:TEST
         uint256 tokenId = uint256(idxHash);
         Node memory node_info = getNodeinfo(_node);
@@ -64,7 +62,7 @@ contract CORE is BASIC {
                 );
             } else if (node_info.managementType == 3) {
                 require(
-                    NODE_MGR.getUserType(
+                    NODE_STOR.getUserType(
                         keccak256(abi.encodePacked(_msgSender())),
                         _node
                     ) == 1,
@@ -86,7 +84,7 @@ contract CORE is BASIC {
         //^^^^^^^Checks^^^^^^^^
 
         address recipient;
-        if (NODE_MGR.getSwitchAt(_node, 2) == 0) {
+        if (NODE_STOR.getSwitchAt(_node, 2) == 0) {
             //if switch at bit 2 is not set, set the mint to address to the node holder
             recipient = NODE_TKN.ownerOf(_node);
         } else if (node_info.custodyType == 1) {
@@ -189,14 +187,14 @@ contract CORE is BASIC {
         virtual
         whenNotPaused
     {
-        uint256 nodeNetPercent = uint256(NODE_MGR.getNodeDiscount(_node)) /
+        uint256 nodeNetPercent = uint256(NODE_STOR.getNodeDiscount(_node)) /
             uint256(100);
         require( //IMPOSSIBLE TO REACH unless stuff is really broken, still ensures sanity
             (nodeNetPercent >= 0) && (nodeNetPercent <= 100),
             "C:DSC:invalid discount value for price calculation"
         );
         //^^^^^^^checks^^^^^^^^^
-        Invoice memory pricing = NODE_MGR.getInvoice(_node, _service);
+        Invoice memory pricing = NODE_STOR.getInvoice(_node, _service);
 
         uint256 percent = pricing.NTHprice / uint256(100); //calculate 1% of listed NTH price
         uint256 _NTHprice = nodeNetPercent * percent; //calculate the share proprotrion% * 1%
@@ -224,7 +222,7 @@ contract CORE is BASIC {
         Invoice memory pricing;
         uint256 half;
 
-        pricing = NODE_MGR.getInvoice(_node, 1);
+        pricing = NODE_STOR.getInvoice(_node, 1);
         pricing.rootAddress = _prevOwner;
 
         half = pricing.NTHprice / 2;

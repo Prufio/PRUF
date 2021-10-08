@@ -118,7 +118,7 @@ contract RCLR is ECR_CORE, CORE {
     //         "APP_NC:EXT: Must be in transferrable status (51)"
     //     );
     //     require(
-    //         NODE_MGR.isSameRootNode(_exportTo, rec.node) == 170,
+    //         NODE_STOR.isSameRootNode(_exportTo, rec.node) == 170,
     //         "APP_NC:EXT: Cannot change node to new root"
     //     );
     //     require(
@@ -162,7 +162,7 @@ contract RCLR is ECR_CORE, CORE {
     //         "ANC:IA: Cannot change node except to specified node"
     //     );
     //     require(
-    //         NODE_MGR.isSameRootNode(_newNode, rec.node) == 170,
+    //         NODE_STOR.isSameRootNode(_newNode, rec.node) == 170,
     //         "ANC:IA: Cannot change node to new root"
     //     );
     //     require(
@@ -180,7 +180,7 @@ contract RCLR is ECR_CORE, CORE {
     //         );
     //     } else if (node_info.managementType == 3) {
     //         require(
-    //             NODE_MGR.getUserType(
+    //             NODE_STOR.getUserType(
     //                 keccak256(abi.encodePacked(_msgSender())),
     //                 _newNode
     //             ) == 1,
