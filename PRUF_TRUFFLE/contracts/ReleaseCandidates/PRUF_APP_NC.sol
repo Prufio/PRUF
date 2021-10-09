@@ -57,6 +57,7 @@ contract APP_NC is CORE {
         bytes32 _mutableStorage1,
         bytes32 _mutableStorage2
     ) external nonReentrant whenNotPaused {
+        bytes32 idxHash = keccak256(abi.encodePacked(_idxHash, _node)); //hash idxRaw with node to get idxHash//CTS:EXAMINE added hashing to front layer
         require(
             (ID_MGR.trustLevel(_msgSender()) > 0), //_msgSender() is ID token holder
             "ANC:NRWD: Caller !PRuF_ID holder"
@@ -67,8 +68,8 @@ contract APP_NC is CORE {
         rec.mutableStorage1 = _mutableStorage1;
         rec.mutableStorage2 = _mutableStorage2;
 
-        createRecord(_idxHash, _rgtHash, _node, _countDownStart);
-        writeMutableStorage(_idxHash, rec);
+        createRecord(idxHash, _rgtHash, _node, _countDownStart);
+        writeMutableStorage(idxHash, rec);
         deductServiceCosts(_node, 1);
         //^^^^^^^effects^^^^^^^^^
     }
@@ -90,6 +91,7 @@ contract APP_NC is CORE {
         bytes32 _nonMutableStorage1,
         bytes32 _nonMutableStorage2
     ) external nonReentrant whenNotPaused {
+        bytes32 idxHash = keccak256(abi.encodePacked(_idxHash, _node)); //hash idxRaw with node to get idxHash //CTS:EXAMINE added hashing to front layer
         require(
             (ID_MGR.trustLevel(_msgSender()) > 0), //_msgSender() is ID token holder
             "ANC:NRWD: Caller !PRuF_ID holder"
@@ -100,8 +102,8 @@ contract APP_NC is CORE {
         rec.nonMutableStorage1 = _nonMutableStorage1;
         rec.nonMutableStorage2 = _nonMutableStorage2;
 
-        createRecord(_idxHash, _rgtHash, _node, _countDownStart);
-        writeNonMutableStorage(_idxHash, rec);
+        createRecord(idxHash, _rgtHash, _node, _countDownStart);
+        writeNonMutableStorage(idxHash, rec);
         deductServiceCosts(_node, 1);
     }
 
@@ -118,13 +120,14 @@ contract APP_NC is CORE {
         uint32 _node,
         uint32 _countDownStart
     ) external nonReentrant whenNotPaused {
+        bytes32 idxHash = keccak256(abi.encodePacked(_idxHash, _node)); //hash idxRaw with node to get idxHash//CTS:EXAMINE added hashing to front layer
         require(
             (ID_MGR.trustLevel(_msgSender()) > 0), //_msgSender() is ID token holder
             "ANC:NR: Caller !PRuF_ID holder"
         );
         //^^^^^^^Checks^^^^^^^^^
 
-        createRecord(_idxHash, _rgtHash, _node, _countDownStart);
+        createRecord(idxHash, _rgtHash, _node, _countDownStart);
         deductServiceCosts(_node, 1);
         //^^^^^^^effects^^^^^^^^^
     }

@@ -51,13 +51,14 @@ contract APP is CORE {
         uint32 _node,
         uint32 _countDownStart
     ) external nonReentrant whenNotPaused {
+        bytes32 idxHash = keccak256(abi.encodePacked(_idxHash, _node)); //hash idxRaw with node to get idxHash //CTS:EXAMINE added hashing to front layer
         uint8 userType = getCallingUserType(_node);
 
         require((userType > 0) && (userType < 10), "A:NR: User !auth in node");
         require(userType < 5, "A:NR: User !authorized to create records");
         //^^^^^^^checks^^^^^^^^^
 
-        createRecord(_idxHash, _rgtHash, _node, _countDownStart);
+        createRecord(idxHash, _rgtHash, _node, _countDownStart);
         deductServiceCosts(_node, 1);
         //^^^^^^^interactions^^^^^^^^^
     }

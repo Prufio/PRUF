@@ -323,6 +323,9 @@ contract A_TKN is
         NODE_MGR_Address = STOR.resolveContractAddress("NODE_MGR");
         NODE_MGR = NODE_MGR_Interface(NODE_MGR_Address);
 
+        NODE_STOR_Address = STOR.resolveContractAddress("NODE_STOR"); //CTS:EXAMINE added
+        NODE_STOR = NODE_STOR_Interface(NODE_STOR_Address); //CTS:EXAMINE added
+
         NODE_TKN_Address = STOR.resolveContractAddress("NODE_TKN");
         NODE_TKN = NODE_TKN_Interface(NODE_TKN_Address);
         //^^^^^^^effects/interactions^^^^^^^^^

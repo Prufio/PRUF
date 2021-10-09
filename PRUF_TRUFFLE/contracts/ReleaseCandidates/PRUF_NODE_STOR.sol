@@ -12,8 +12,9 @@ _________\/// _____________\/// _______\/// __\///////// __\/// _____________
 
 /**-----------------------------------------------------------------
  * PRUF NODE_STOR
- * NODE_MGR must be given NODE_ADMIN_ROLE  DPS:CHECK
+ * NODE_MGR must be given NODE_ADMIN_ROLE
  * Contract for storing Node information
+ * CTS:EXAMINE where is getStorageProviderStatus/getManagementTypeStatus/getCustodyTypeStatus
  *
  * STATEMENT OF TERMS OF SERVICE (TOS):
  * User agrees not to intentionally claim any namespace that is a recognized or registered brand name, trade mark,
@@ -33,7 +34,7 @@ contract NODE_STOR is BASIC {
     bytes32 public constant NODE_ADMIN_ROLE = keccak256("NODE_ADMIN_ROLE");
     bytes32 public constant B320xF_ =
         0xFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFF;
-        
+
     mapping(uint32 => mapping(uint16 => Costs)) private cost; //Cost per function by Node => Costs struct (see RESOURCE_PRUF_INTERFACES for struct definitions)
     mapping(uint32 => Node) private nodeData; //node info database Node to node struct (see RESOURCE_PRUF_INTERFACES for struct definitions)
     mapping(string => uint32) private nodeId; //name to Node resolution map
@@ -48,7 +49,6 @@ contract NODE_STOR is BASIC {
 
     //--------------------------------------------Modifiers--------------------------
 
-
     /**
      * @dev Verify user credentials
      * Originating Address:
@@ -62,11 +62,9 @@ contract NODE_STOR is BASIC {
         _;
     }
 
-
     //--------------------------------------------Administrative Setters--------------------------
 
     /**
-     *
      * @dev Sets the valid storage type providers.
      * @param _storageProvider - uint position for storage provider
      * @param _status - uint position for custody type status
@@ -108,10 +106,9 @@ contract NODE_STOR is BASIC {
         //^^^^^^^effects^^^^^^^^^
     }
 
-
-        /**
+    /**
      * !! to be used with great caution !!
-     * This potentially breaks decentralization and must eventually be given over to some kind of governance contract.
+     * This potentially breaks decentralization and must eventually be given over to DAO.
      * @dev Increases (but cannot decrease) price share for a given node
      * @param _node - node in which cost share is being modified
      * @param _newDiscount - discount(1% == 100, 10000 == max)
@@ -136,7 +133,7 @@ contract NODE_STOR is BASIC {
      * !! -------- to be used with great caution and only as a result of community governance action -----------
      * @dev Transfers a name from one node to another
      *   -Designed to remedy brand infringement issues. This breaks decentralization and must eventually be given
-     *   -over to some kind of governance contract.
+     *   -over to DAO.
      * @param _fromNode - source node
      * @param _toNode - destination node
      * @param _thisName - name to be transferred
@@ -163,7 +160,7 @@ contract NODE_STOR is BASIC {
         //^^^^^^^effects^^^^^^^^^
     }
 
-        /**
+    /**
      * @dev Modifies an node Node name for its exclusive namespace
      * @param _node - node being modified
      * @param _newName - updated name associated with node (unique)
@@ -350,7 +347,7 @@ contract NODE_STOR is BASIC {
         //^^^^^^^effects^^^^^^^^^
     }
 
-        /**
+    /**
      * @dev Configure the immutable data in an Node one time
      * @param _node - node being modified
      * @param _managementType - managementType of node (see docs)
@@ -505,7 +502,7 @@ contract NODE_STOR is BASIC {
      * @param _service - service associated with query
      * @return Costs Struct for_node
      */
-    function getpaymentData(uint32 _node, uint16 _service)
+    function getPaymentData(uint32 _node, uint16 _service) //CTS:EXAMINE getpaymentData -> getPaymentData
         external
         view
         returns (Costs memory)
@@ -618,7 +615,5 @@ contract NODE_STOR is BASIC {
         nodeData[_newNode].CAS1 = _newNodeData.CAS1;
         nodeData[_newNode].CAS2 = _newNodeData.CAS2;
         //^^^^^^^effects^^^^^^^^^
-
-        //^^^^^^^interactions^^^^^^^^^
     }
 }

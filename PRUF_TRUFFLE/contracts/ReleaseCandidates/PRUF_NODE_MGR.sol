@@ -66,7 +66,8 @@ contract NODE_MGR is BASIC {
         _;
     }
 
-    //--------------------------------------------Admin Related Functions--------------------------
+    //--------------------------------------------External Functions--------------------------
+
     /**
      * @dev Set pricing for Nodes
      * @param newNodePrice - cost per node (18 decimals)
@@ -94,8 +95,6 @@ contract NODE_MGR is BASIC {
         return (nodeTokenIndex, node_price);
         //^^^^^^^interactions^^^^^^^^^
     }
-
-    //--------------------------------------------External Functions--------------------------
 
     /**
      * @dev Mints Node token and creates an node.
@@ -164,7 +163,7 @@ contract NODE_MGR is BASIC {
         //^^^^^^^checks^^^^^^^^^
 
         nodeTokenIndex++;
-        Costs memory paymentData = NODE_STOR.getServicePaymentData(
+        Costs memory paymentData = NODE_STOR.getPaymentData( //CTS:EXAMINE changed from getServicePaymentData to getPaymentData
             _nodeRoot,
             1
         );

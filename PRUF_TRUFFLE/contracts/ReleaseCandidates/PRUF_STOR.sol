@@ -51,7 +51,7 @@ contract STOR is AccessControl, ReentrancyGuard, Pausable {
 
     NODE_TKN_Interface private NODE_TKN; //erc721_token prototype initialization
     NODE_MGR_Interface internal NODE_MGR; // Set up external contract interface for NODE_MGR
-    NODE_STOR_Interface internal NODE_STOR; // Set up external contract interface for NODE_MGR
+    NODE_STOR_Interface internal NODE_STOR; // Set up external contract interface for NODE_STOR
 
     constructor() {
         _setupRole(DEFAULT_ADMIN_ROLE, _msgSender());
@@ -96,7 +96,7 @@ contract STOR is AccessControl, ReentrancyGuard, Pausable {
         uint8 auth = contractInfo[contractAddressToName[msg.sender]][_node];
         require(
             ((auth > 0) && (auth < 5)) || (auth == 10),
-            "S:MOD-IAUT: Contract not authorized"
+            "S:MOD-IA: Contract not authorized"
         );
         _;
     }
@@ -271,6 +271,7 @@ contract STOR is AccessControl, ReentrancyGuard, Pausable {
 
         NODE_TKN = NODE_TKN_Interface(contractNameToAddress["NODE_TKN"]);
         NODE_MGR = NODE_MGR_Interface(contractNameToAddress["NODE_MGR"]);
+        NODE_STOR = NODE_STOR_Interface(contractNameToAddress["NODE_STOR"]);//CTS:EXAMINE added
         //^^^^^^^effects^^^^^^^^^
 
         emit REPORT("NDA", bytes32(uint256(_contractAuthLevel))); //report access to the internal user database
@@ -483,7 +484,7 @@ contract STOR is AccessControl, ReentrancyGuard, Pausable {
     /**
      * @dev Change node of an asset - writes to node in the 'Record' struct of the 'database' at _idxHash
      * @param _idxHash - record asset ID
-     * @param _newNode - Aseet Class to change to
+     * @param _newNode - Node to change to
      */
     function changeNode(bytes32 _idxHash, uint32 _newNode)
         external

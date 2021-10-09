@@ -353,8 +353,8 @@ contract Market is BASIC {
 
         MarketFees memory fees;
 
-        Costs memory listingFee = NODE_STOR.getServicePaymentData(_node, 1000);
-        Costs memory comission = NODE_STOR.getServicePaymentData(_node, 1001);
+        Costs memory listingFee = NODE_STOR.getPaymentData(_node, 1000);//CTS:EXAMINE getServicePaymentData -> getPaymentData
+        Costs memory comission = NODE_STOR.getPaymentData(_node, 1001);//CTS:EXAMINE getServicePaymentData -> getPaymentData
 
         fees.listingFeePaymentAddress = listingFee.paymentAddress;
         fees.listingFee = listingFee.serviceCost;

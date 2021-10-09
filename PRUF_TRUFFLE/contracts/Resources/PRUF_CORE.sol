@@ -23,19 +23,18 @@ import "../Resources/PRUF_BASIC.sol";
 contract CORE is BASIC {
     /**
      * @dev create a Record in Storage @ idxHash (SETTER) and mint an asset token (may mint to node holder depending on flags)
-     * @param _idxRaw - Asset Index
+     * @param _idxHash - Asset Index
      * @param _rgtHash - Owner ID Hash
      * @param _node - node to create asset in
      * @param _countDownStart - initial value for decrement only register
      */
     function createRecord(
-        bytes32 _idxRaw,
+        bytes32 _idxHash,//CTS:EXAMINE back to receiving full idx, hashing done in front layer
         bytes32 _rgtHash,
         uint32 _node,
         uint32 _countDownStart
     ) internal virtual {
-        bytes32 idxHash = keccak256(abi.encodePacked(_idxRaw, _node)); //hash idxRaw with node to get idxHash DPS:TEST
-        uint256 tokenId = uint256(idxHash);
+        uint256 tokenId = uint256(_idxHash);
         Node memory node_info = getNodeinfo(_node);
 
         require(
@@ -97,7 +96,7 @@ contract CORE is BASIC {
 
         A_TKN.mintAssetToken(recipient, tokenId);
 
-        STOR.newRecord(idxHash, _rgtHash, _node, _countDownStart);
+        STOR.newRecord(_idxHash, _rgtHash, _node, _countDownStart);
         //^^^^^^^interactions^^^^^^^^^
     }
 

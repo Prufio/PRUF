@@ -18,7 +18,7 @@ _________\/// _____________\/// _______\/// __\///////// __\/// _____________
 // SPDX-License-Identifier: UNLICENSED
 pragma solidity ^0.8.7;
 
-//import "../Resources/RESOURCE_PRUF_INTERFACES.sol";
+// import "../Resources/RESOURCE_PRUF_INTERFACES.sol";
 //import "../Imports/payment/PullPayment.sol";
 import "../Imports/security/ReentrancyGuard.sol";
 import "../Resources/PRUF_BASIC.sol";

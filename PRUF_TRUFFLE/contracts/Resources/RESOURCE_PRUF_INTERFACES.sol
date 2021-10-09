@@ -995,7 +995,7 @@ interface NODE_STOR_Interface {
      * @param _service - service associated with query
      * @return Costs Struct for_node
      */
-    function getServicePaymentData(uint32 _node, uint16 _service)
+    function getPaymentData(uint32 _node, uint16 _service)
         external
         view
         returns (Costs memory);

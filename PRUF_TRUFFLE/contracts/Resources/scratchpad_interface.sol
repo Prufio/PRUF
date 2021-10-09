@@ -249,7 +249,7 @@ interface Scratchpad {
      * @param _node - node associated with query
      * @return nodeData (see docs)
      */
-    function getExtendedNodeData(uint32 _node) external returns (Node memory);
+    function getNodeData(uint32 _node) external returns (Node memory);
 
     /**
      * @dev verify the root of two Nodees are equal

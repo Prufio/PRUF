@@ -20,9 +20,7 @@ pragma solidity ^0.8.7;
 
 import "./test_PRUF_CORE_MAL.sol";
  
-
 contract MAL_APP is CORE_MAL {
-    
     
     /*
      * @dev Verify user credentials
@@ -45,8 +43,8 @@ contract MAL_APP is CORE_MAL {
         uint32 _node,
         uint32 _countDownStart
     ) external 
-    // nonReentrant whenNotPaused 
     {
+        bytes32 idxHash = keccak256(abi.encodePacked(_idxHash, _node)); //hash idxRaw with node to get idxHash
         // Record memory rec = getRecord(_idxHash);
         // uint8 userType = getCallingUserType(_node);
         // Node memory node_info =getNodeinfo(_node);
@@ -74,7 +72,7 @@ contract MAL_APP is CORE_MAL {
         // if (node_info.nodeRoot == oldNode_info.nodeRoot) {
             // createRecord(_idxHash, _rgtHash, _node, rec.countDownStart);
         // } else {
-            createRecord(_idxHash, _rgtHash, _node, _countDownStart);
+            createRecord(idxHash, _rgtHash, _node, _countDownStart);
         // }
         deductServiceCosts(_node, 1);
 
@@ -531,48 +529,11 @@ contract MAL_APP is CORE_MAL {
     }
 
     /*
-     *     @dev Export FROM Custodial:
+     * @dev Export FROM Custodial:
      */
-    function changeNode(bytes32 _idxHash, uint32 newNode)
-        external
-        // nonReentrant
-        // whenNotPaused
-        // isAuthorized(_idxHash)
-        returns (uint8)
+    function changeNode(bytes32 _idxHash, uint32 newNode) external
     {
-        Record memory rec = getRecord(_idxHash);
-        // uint8 userType = getCallingUserType(rec.node);
-        // ContractDataHash memory contractInfo = getContractInfo(
-        //     address(this),
-        //     rec.node
-        // );
-        // Node memory node_info =getNodeinfo(rec.node);
-
-        // require(
-        //     contractInfo.contractType > 0,
-        //     "A:MS: This contract not authorized for specified node"
-        // );
-        // require(
-        //     (userType > 0) && (userType < 10),
-        //     "A:EA: User not authorized to modify records in specified node"
-        // );
-        // require( // require transferrable (51) status
-        //     rec.assetStatus == 51,
-        //     "A:EA: Asset status must be 51 to export"
-        // );
-        // //^^^^^^^checks^^^^^^^^^
-
-        // if (rec.numberOfTransfers < 65335) {
-        //     rec.numberOfTransfers++;
-        // }
-        // rec.assetStatus = 70; // Set status to 70 (exported)
-        //^^^^^^^effects^^^^^^^^^
-
-        // APP.transferAssetToken(_addr, _idxHash);
-        // writeRecord(_idxHash, rec);
         STOR.changeNode(_idxHash, newNode);
-
-        return rec.assetStatus;
         //^^^^^^^interactions^^^^^^^^^
     }
 
@@ -582,7 +543,6 @@ contract MAL_APP is CORE_MAL {
         uint256 _escrowTime,
         uint8 _escrowStatus
     ) external 
-    // nonReentrant whenNotPaused 
     {
         // Record memory rec = getRecord(_idxHash);
         // uint8 userType = getCallingUserType(rec.node);

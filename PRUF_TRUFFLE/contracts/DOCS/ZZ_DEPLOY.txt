@@ -170,7 +170,7 @@ __/\\\\\\\\\\\\\ _____/\\\\\\\\\ _______/\\__/\\ ___/\\\\\\\\\\\\\\\
 *
 * 14 - WRAP|0|
 * 
-* ----------------- SET PERMITTED STORAGE PROVIDERS (NODE_MGR.setStorageProviders)-----------------|0|
+* ----------------- SET PERMITTED STORAGE PROVIDERS (NODE_STOR.setStorageProviders)-----------------|0|
 * 1 - Unconfigured ('0', '1')   |0|
 *
 * 1 - Mutable ('1', '1')   |0|
@@ -192,7 +192,7 @@ __/\\\\\\\\\\\\\ _____/\\\\\\\\\ _______/\\__/\\ ___/\\\\\\\\\\\\\\\
 *
 * 7 - Unconfigured ('255', '1')   |0|
 * 
-* ----------------- SET PERMITTED CUSTODY TYPES (NODE_MGR.setCustodyTypes)-----------------|0|
+* ----------------- SET PERMITTED CUSTODY TYPES (NODE_STOR.setCustodyTypes)-----------------|0|
 * 1 - NONE ('0', '1')   |0|
 *
 * 2 - Custodial ('1', '1')   |0|
