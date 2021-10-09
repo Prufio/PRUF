@@ -14,7 +14,6 @@ _________\/// _____________\/// _______\/// __\///////// __\/// _____________
  * PRUF NODE_STOR
  * NODE_MGR must be given NODE_ADMIN_ROLE
  * Contract for storing Node information
- * CTS:EXAMINE where is getStorageProviderStatus/getManagementTypeStatus/getCustodyTypeStatus
  *
  * STATEMENT OF TERMS OF SERVICE (TOS):
  * User agrees not to intentionally claim any namespace that is a recognized or registered brand name, trade mark,
