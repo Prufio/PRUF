@@ -137,33 +137,61 @@ contract("DECORATE", (accounts) => {
   });
 
   it("Should build variables", async () => {
-    asset1 = await Helper.getIdxHash("aaa", "aaa", "aaa", "aaa");
+    asset1raw = await Helper.getIdxHashRaw("aaa", "aaa", "aaa", "aaa");
 
-    asset2 = await Helper.getIdxHash("bbb", "bbb", "bbb", "bbb");
+    asset2raw = await Helper.getIdxHashRaw("bbb", "bbb", "bbb", "bbb");
 
-    asset3 = await Helper.getIdxHash("ccc", "ccc", "ccc", "ccc");
+    asset3raw = await Helper.getIdxHashRaw("ccc", "ccc", "ccc", "ccc");
 
-    asset4 = await Helper.getIdxHash("ddd", "ddd", "ddd", "ddd");
+    asset4raw = await Helper.getIdxHashRaw("ddd", "ddd", "ddd", "ddd");
 
-    asset5 = await Helper.getIdxHash("eee", "eee", "eee", "eee");
+    asset5raw = await Helper.getIdxHashRaw("eee", "eee", "eee", "eee");
 
-    asset6 = await Helper.getIdxHash("fff", "fff", "fff", "fff");
+    asset6raw = await Helper.getIdxHashRaw("fff", "fff", "fff", "fff");
 
-    asset7 = await Helper.getIdxHash("ggg", "ggg", "ggg", "ggg");
+    asset7raw = await Helper.getIdxHashRaw("ggg", "ggg", "ggg", "ggg");
 
-    asset8 = await Helper.getIdxHash("hhh", "hhh", "hhh", "hhh");
+    asset8raw = await Helper.getIdxHashRaw("hhh", "hhh", "hhh", "hhh");
 
-    asset9 = await Helper.getIdxHash("iii", "iii", "iii", "iii");
+    asset9raw = await Helper.getIdxHashRaw("iii", "iii", "iii", "iii");
 
-    asset10 = await Helper.getIdxHash("jjj", "jjj", "jjj", "jjj");
+    asset10raw = await Helper.getIdxHashRaw("jjj", "jjj", "jjj", "jjj");
 
-    asset11 = await Helper.getIdxHash("kkk", "kkk", "kkk", "kkk");
+    asset11raw = await Helper.getIdxHashRaw("kkk", "kkk", "kkk", "kkk");
 
-    asset12 = await Helper.getIdxHash("lll", "lll", "lll", "lll");
+    asset12raw = await Helper.getIdxHashRaw("lll", "lll", "lll", "lll");
 
-    asset13 = await Helper.getIdxHash("mmm", "mmm", "mmm", "mmm");
+    asset13raw = await Helper.getIdxHashRaw("mmm", "mmm", "mmm", "mmm");
 
-    asset14 = await Helper.getIdxHash("nnn", "nnn", "nnn", "nnn");
+    asset14raw = await Helper.getIdxHashRaw("nnn", "nnn", "nnn", "nnn");
+
+    asset1 = await Helper.getIdxHash(asset1raw, '1000003');
+
+    asset2 = await Helper.getIdxHash(asset2raw, '1000001');
+
+    asset3 = await Helper.getIdxHash(asset3raw, '1000001');
+
+    asset4 = await Helper.getIdxHash(asset4raw, '1000001');
+
+    asset5 = await Helper.getIdxHash(asset5raw, '1000001');
+
+    asset6 = await Helper.getIdxHash(asset6raw, '1000003');
+
+    asset7 = await Helper.getIdxHash(asset7raw, '1000001');
+
+    asset8 = await Helper.getIdxHash(asset8raw, '1000001');
+
+    asset9 = await Helper.getIdxHash(asset9raw, '1000001');
+
+    asset10 = await Helper.getIdxHash(asset10raw, '1000001');
+
+    asset11 = await Helper.getIdxHash(asset11raw, '1000003');
+
+    asset12 = await Helper.getIdxHash(asset12raw, '1000001');
+
+    asset13 = await Helper.getIdxHash(asset13raw, '1000003');
+
+    asset14 = await Helper.getIdxHash(asset14raw, '1000001');
 
     rgt1 = await Helper.getJustRgtHash(
       asset1,
@@ -294,6 +322,8 @@ contract("DECORATE", (accounts) => {
     assetTransferRoleB32 = await Helper.getStringHash("ASSET_TXFR_ROLE");
 
     discardRoleB32 = await Helper.getStringHash("DISCARD_ROLE");
+
+    nodeAdminRoleB32 = await Helper.getStringHash("NODE_ADMIN_ROLE");
 
     nodeMinterRoleB32 = await Helper.getStringHash("NODE_MINTER_ROLE");
   });
@@ -739,91 +769,91 @@ contract("DECORATE", (accounts) => {
 
   it("Should set all permitted storage providers", () => {
     console.log("Authorizing UNCONFIGURED");
-    return NODE_MGR.setStorageProviders("0", "1", { from: account1 })
+    return NODE_STOR.setStorageProviders("0", "1", { from: account1 })
 
       .then(() => {
         console.log("Authorizing Mutable");
-        return NODE_MGR.setStorageProviders("1", "1", { from: account1 });
+        return NODE_STOR.setStorageProviders("1", "1", { from: account1 });
       })
 
       .then(() => {
         console.log("Authorizing ARWEAVE");
-        return NODE_MGR.setStorageProviders("2", "1", { from: account1 });
+        return NODE_STOR.setStorageProviders("2", "1", { from: account1 });
       });
   });
 
   it("Should set all permitted management types", () => {
     console.log("Authorizing Unrestricted");
-    return NODE_MGR.setManagementTypes("0", "1", { from: account1 })
+    return NODE_STOR.setManagementTypes("0", "1", { from: account1 })
 
       .then(() => {
         console.log("Authorizing Restricted");
-        return NODE_MGR.setManagementTypes("1", "1", { from: account1 });
+        return NODE_STOR.setManagementTypes("1", "1", { from: account1 });
       })
 
       .then(() => {
         console.log("Authorizing Less Restricted");
-        return NODE_MGR.setManagementTypes("2", "1", { from: account1 });
+        return NODE_STOR.setManagementTypes("2", "1", { from: account1 });
       })
 
       .then(() => {
         console.log("Authorizing Authorized");
-        return NODE_MGR.setManagementTypes("3", "1", { from: account1 });
+        return NODE_STOR.setManagementTypes("3", "1", { from: account1 });
       })
 
       .then(() => {
         console.log("Authorizing Trusted");
-        return NODE_MGR.setManagementTypes("4", "1", { from: account1 });
+        return NODE_STOR.setManagementTypes("4", "1", { from: account1 });
       })
 
       .then(() => {
         console.log("Authorizing Remotely Managed");
-        return NODE_MGR.setManagementTypes("5", "1", { from: account1 });
+        return NODE_STOR.setManagementTypes("5", "1", { from: account1 });
       })
 
       .then(() => {
         console.log("Authorizing Unconfigured");
-        return NODE_MGR.setManagementTypes("255", "1", { from: account1 });
+        return NODE_STOR.setManagementTypes("255", "1", { from: account1 });
       });
   });
 
   it("Should set all permitted custody types", () => {
     console.log("Authorizing NONE");
-    return NODE_MGR.setCustodyTypes("0", "1", { from: account1 })
+    return NODE_STOR.setCustodyTypes("0", "1", { from: account1 })
 
       .then(() => {
         console.log("Authorizing Custodial");
-        return NODE_MGR.setCustodyTypes("1", "1", { from: account1 });
+        return NODE_STOR.setCustodyTypes("1", "1", { from: account1 });
       })
 
       .then(() => {
         console.log("Authorizing Non-Custodial");
-        return NODE_MGR.setCustodyTypes("2", "1", { from: account1 });
+        return NODE_STOR.setCustodyTypes("2", "1", { from: account1 });
       })
 
       .then(() => {
         console.log("Authorizing ROOT");
-        return NODE_MGR.setCustodyTypes("3", "1", { from: account1 });
+        return NODE_STOR.setCustodyTypes("3", "1", { from: account1 });
       })
 
       .then(() => {
         console.log("Authorizing Verify-Non-Custodial");
-        return NODE_MGR.setCustodyTypes("4", "1", { from: account1 });
+        return NODE_STOR.setCustodyTypes("4", "1", { from: account1 });
       })
 
       .then(() => {
         console.log("Authorizing Wrapped or decorated ERC721");
-        return NODE_MGR.setCustodyTypes("5", "1", { from: account1 });
+        return NODE_STOR.setCustodyTypes("5", "1", { from: account1 });
       })
 
       .then(() => {
         console.log("Authorizing Free Custodial");
-        return NODE_MGR.setCustodyTypes("11", "1", { from: account1 });
+        return NODE_STOR.setCustodyTypes("11", "1", { from: account1 });
       })
 
       .then(() => {
         console.log("Authorizing Free Non-Custodial");
-        return NODE_MGR.setCustodyTypes("12", "1", { from: account1 });
+        return NODE_STOR.setCustodyTypes("12", "1", { from: account1 });
       });
   });
 
@@ -1319,36 +1349,36 @@ contract("DECORATE", (accounts) => {
 
   it("Should finalize all ACs", () => {
     console.log("Authorizing Node Switch 1");
-    return NODE_MGR.modifyNodeSwitches("1000001", "1", "1", {
+    return NODE_STOR.modifyNodeSwitches("1000001", "1", "1", {
       from: account1,
     })
 
       .then(() => {
-        return NODE_MGR.modifyNodeSwitches("1000002", "3", "1", {
+        return NODE_STOR.modifyNodeSwitches("1000002", "3", "1", {
           from: account1,
         });
       })
 
       .then(() => {
-        return NODE_MGR.modifyNodeSwitches("1000003", "3", "1", {
+        return NODE_STOR.modifyNodeSwitches("1000003", "3", "1", {
           from: account1,
         });
       })
 
       .then(() => {
-        return NODE_MGR.modifyNodeSwitches("1000004", "3", "1", {
+        return NODE_STOR.modifyNodeSwitches("1000004", "3", "1", {
           from: account1,
         });
       })
 
       .then(() => {
-        return NODE_MGR.modifyNodeSwitches("1000005", "3", "1", {
+        return NODE_STOR.modifyNodeSwitches("1000005", "3", "1", {
           from: account1,
         });
       })
 
       .then(() => {
-        return NODE_MGR.modifyNodeSwitches("1000006", "3", "1", {
+        return NODE_STOR.modifyNodeSwitches("1000006", "3", "1", {
           from: account1,
         });
       });

@@ -8,6 +8,7 @@ let UTIL_TKN;
 let Helper;
 let STOR;
 let NODE_MGR;
+let NODE_STOR;
 let NODE_TKN;
 
 contract('UTIL_TKN', accounts => {

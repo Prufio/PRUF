@@ -145,6 +145,8 @@ contract("EO_STAKING", (accounts) => {
 
     discardRoleB32 = await Helper.getStringHash("DISCARD_ROLE");
 
+    nodeAdminRoleB32 = await Helper.getStringHash("NODE_ADMIN_ROLE");
+
     stakeRoleB32 = await Helper.getStringHash("STAKE_ROLE");
 
     stakeAdminRoleB32 = await Helper.getStringHash("STAKE_ADMIN_ROLE");

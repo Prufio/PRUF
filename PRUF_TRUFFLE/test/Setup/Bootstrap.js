@@ -893,93 +893,93 @@ _________\/// _____________\/// _______\/// __\///////// __\/// _____________
         
             it('Should set all permitted storage providers', () => {
                 console.log("Authorizing UNCONFIGURED")
-                return NODE_MGR.setStorageProviders('0', '1', { from: account1 })
+                return NODE_STOR.setStorageProviders('0', '1', { from: account1 })
         
                     .then(() => {
                         console.log("Authorizing Mutable")
-                        return NODE_MGR.setStorageProviders('1', '1', { from: account1 })
+                        return NODE_STOR.setStorageProviders('1', '1', { from: account1 })
                     })
         
                     .then(() => {
                         console.log("Authorizing ARWEAVE")
-                        return NODE_MGR.setStorageProviders('2', '1', { from: account1 })
+                        return NODE_STOR.setStorageProviders('2', '1', { from: account1 })
                     })
             })
         
         
             it('Should set all permitted management types', () => {
                 console.log("Authorizing Unrestricted")
-                return NODE_MGR.setManagementTypes('0', '1', { from: account1 })
+                return NODE_STOR.setManagementTypes('0', '1', { from: account1 })
         
                     .then(() => {
                         console.log("Authorizing Restricted")
-                        return NODE_MGR.setManagementTypes('1', '1', { from: account1 })
+                        return NODE_STOR.setManagementTypes('1', '1', { from: account1 })
                     })
         
                     .then(() => {
                         console.log("Authorizing Less Restricted")
-                        return NODE_MGR.setManagementTypes('2', '1', { from: account1 })
+                        return NODE_STOR.setManagementTypes('2', '1', { from: account1 })
                     })
         
                     .then(() => {
                         console.log("Authorizing Authorized")
-                        return NODE_MGR.setManagementTypes('3', '1', { from: account1 })
+                        return NODE_STOR.setManagementTypes('3', '1', { from: account1 })
                     })
         
                     .then(() => {
                         console.log("Authorizing Trusted")
-                        return NODE_MGR.setManagementTypes('4', '1', { from: account1 })
+                        return NODE_STOR.setManagementTypes('4', '1', { from: account1 })
                     })
         
                     .then(() => {
                         console.log("Authorizing Remotely Managed")
-                        return NODE_MGR.setManagementTypes('5', '1', { from: account1 })
+                        return NODE_STOR.setManagementTypes('5', '1', { from: account1 })
                     })
         
                     .then(() => {
                         console.log("Authorizing Unconfigured")
-                        return NODE_MGR.setManagementTypes('255', '1', { from: account1 })
+                        return NODE_STOR.setManagementTypes('255', '1', { from: account1 })
                     })
             })
         
         
             it('Should set all permitted custody types', () => {
                 console.log("Authorizing NONE")
-                return NODE_MGR.setCustodyTypes('0', '1', { from: account1 })
+                return NODE_STOR.setCustodyTypes('0', '1', { from: account1 })
         
                     .then(() => {
                         console.log("Authorizing Custodial")
-                        return NODE_MGR.setCustodyTypes('1', '1', { from: account1 })
+                        return NODE_STOR.setCustodyTypes('1', '1', { from: account1 })
                     })
         
                     .then(() => {
                         console.log("Authorizing Non-Custodial")
-                        return NODE_MGR.setCustodyTypes('2', '1', { from: account1 })
+                        return NODE_STOR.setCustodyTypes('2', '1', { from: account1 })
                     })
         
                     .then(() => {
                         console.log("Authorizing ROOT")
-                        return NODE_MGR.setCustodyTypes('3', '1', { from: account1 })
+                        return NODE_STOR.setCustodyTypes('3', '1', { from: account1 })
                     })
         
                     .then(() => {
                         console.log("Authorizing Verify-Non-Custodial")
-                        return NODE_MGR.setCustodyTypes('4', '1', { from: account1 })
+                        return NODE_STOR.setCustodyTypes('4', '1', { from: account1 })
                     })
         
                     .then(() => {
                         console.log("Authorizing Wrapped or decorated ERC721")
-                        return NODE_MGR.setCustodyTypes('5', '1', { from: account1 })
+                        return NODE_STOR.setCustodyTypes('5', '1', { from: account1 })
                     })
         
                     .then(() => {
                         console.log("Authorizing Free Custodial")
-                        return NODE_MGR.setCustodyTypes('11', '1', { from: account1 })
+                        return NODE_STOR.setCustodyTypes('11', '1', { from: account1 })
                     })
         
                     .then(() => {
                         console.log("Authorizing Free Non-Custodial")
-                        return NODE_MGR.setCustodyTypes('12', '1', { from: account1 })
+                        return NODE_STOR.setCustodyTypes('12', '1', { from: account1 })
                     })
             })
         

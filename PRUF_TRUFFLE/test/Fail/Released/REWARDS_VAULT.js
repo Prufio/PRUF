@@ -141,6 +141,8 @@ contract("REWARDS_VAULT", (accounts) => {
     assetTransferRoleB32 = await Helper.getStringHash("ASSET_TXFR_ROLE");
 
     discardRoleB32 = await Helper.getStringHash("DISCARD_ROLE");
+
+    nodeAdminRoleB32 = await Helper.getStringHash("NODE_ADMIN_ROLE");
   });
 
   //1

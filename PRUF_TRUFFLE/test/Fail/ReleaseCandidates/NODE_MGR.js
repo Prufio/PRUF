@@ -13,6 +13,7 @@ _________\/// _____________\/// _______\/// __\///////// __\/// _____________
 const PRUF_STOR = artifacts.require("STOR");
 const PRUF_APP = artifacts.require("APP");
 const PRUF_NODE_MGR = artifacts.require("NODE_MGR");
+const PRUF_NODE_STOR = artifacts.require("NODE_STOR");
 const PRUF_NODE_TKN = artifacts.require("NODE_TKN");
 const PRUF_A_TKN = artifacts.require("A_TKN");
 const PRUF_ID_MGR = artifacts.require("ID_MGR");
@@ -25,13 +26,13 @@ const PRUF_RCLR = artifacts.require("RCLR");
 const PRUF_HELPER = artifacts.require("Helper");
 const PRUF_MAL_APP = artifacts.require("MAL_APP");
 const PRUF_UTIL_TKN = artifacts.require("UTIL_TKN");
-// const PRUF_PURCHASE = artifacts.require("PURCHASE");
 const PRUF_DECORATE = artifacts.require("DECORATE");
 const PRUF_WRAP = artifacts.require("WRAP");
 
 let STOR;
 let APP;
 let NODE_MGR;
+let NODE_STOR;
 let NODE_TKN;
 let A_TKN;
 let ID_MGR;
@@ -318,6 +319,8 @@ contract("NODE_MGR", (accounts) => {
 
     discardRoleB32 = await Helper.getStringHash("DISCARD_ROLE");
 
+    nodeAdminRoleB32 = await Helper.getStringHash("NODE_ADMIN_ROLE");
+
     IDminterRoleB32 = await Helper.getStringHash("ID_MINTER_ROLE");
 
     nodeMinterRoleB32 = await Helper.getStringHash("NODE_MINTER_ROLE");
@@ -342,6 +345,13 @@ contract("NODE_MGR", (accounts) => {
     console.log(PRUF_NODE_MGR_TEST.address);
     assert(PRUF_NODE_MGR_TEST.address !== "");
     NODE_MGR = PRUF_NODE_MGR_TEST;
+  });
+
+  it("Should deploy PRUF_NODE_STOR", async () => {
+    const PRUF_NODE_STOR_TEST = await PRUF_NODE_STOR.deployed({ from: account1 });
+    console.log(PRUF_NODE_STOR_TEST.address);
+    assert(PRUF_NODE_STOR_TEST.address !== "");
+    NODE_STOR = PRUF_NODE_STOR_TEST;
   });
 
   it("Should deploy PRUF_NODE_TKN", async () => {
@@ -475,12 +485,12 @@ contract("NODE_MGR", (accounts) => {
         return STOR.addDefaultContracts("6", "RCLR", "3", { from: account1 });
       })
 
-      // .then(() => {
-      //   console.log("Adding PURCHASE to default contract list");
-      //   return STOR.addDefaultContracts("8", "PURCHASE", "2", {
-      //     from: account1,
-      //   });
-      // })
+      .then(() => {
+        console.log("Adding NODE_STOR to default contract list");
+        return STOR.addDefaultContracts("8", "NODE_STOR", "1", {
+          from: account1,
+        });
+      })
 
       .then(() => {
         console.log("Adding DECORATE to default contract list");
@@ -502,6 +512,13 @@ contract("NODE_MGR", (accounts) => {
       .then(() => {
         console.log("Adding NODE_MGR to storage for use in Node 0");
         return STOR.authorizeContract("NODE_MGR", NODE_MGR.address, "0", "1", {
+          from: account1,
+        });
+      })
+
+      .then(() => {
+        console.log("Adding NODE_STOR to storage for use in Node 0");
+        return STOR.authorizeContract("NODE_STOR", NODE_STOR.address, "0", "1", {
           from: account1,
         });
       })
@@ -624,6 +641,13 @@ contract("NODE_MGR", (accounts) => {
       })
 
       .then(() => {
+        console.log("Adding in NODE_STOR");
+        return NODE_STOR.setStorageContract(STOR.address, {
+          from: account1,
+        });
+      })
+
+      .then(() => {
         console.log("Adding in A_TKN");
         return A_TKN.setStorageContract(STOR.address, { from: account1 });
       })
@@ -699,6 +723,11 @@ contract("NODE_MGR", (accounts) => {
       })
 
       .then(() => {
+        console.log("Resolving in NODE_STOR");
+        return NODE_STOR.resolveContractAddresses({ from: account1 });
+      })
+
+      .then(() => {
         console.log("Resolving in A_TKN");
         return A_TKN.resolveContractAddresses({ from: account1 });
       })
@@ -751,91 +780,91 @@ contract("NODE_MGR", (accounts) => {
 
   it("Should set all permitted storage providers", () => {
     console.log("Authorizing UNCONFIGURED");
-    return NODE_MGR.setStorageProviders("0", "1", { from: account1 })
+    return NODE_STOR.setStorageProviders("0", "1", { from: account1 })
 
       .then(() => {
         console.log("Authorizing Mutable");
-        return NODE_MGR.setStorageProviders("1", "1", { from: account1 });
+        return NODE_STOR.setStorageProviders("1", "1", { from: account1 });
       })
 
       .then(() => {
         console.log("Authorizing ARWEAVE");
-        return NODE_MGR.setStorageProviders("2", "1", { from: account1 });
+        return NODE_STOR.setStorageProviders("2", "1", { from: account1 });
       });
   });
 
   it("Should set all permitted management types", () => {
     console.log("Authorizing Unrestricted");
-    return NODE_MGR.setManagementTypes("0", "1", { from: account1 })
+    return NODE_STOR.setManagementTypes("0", "1", { from: account1 })
 
       .then(() => {
         console.log("Authorizing Restricted");
-        return NODE_MGR.setManagementTypes("1", "1", { from: account1 });
+        return NODE_STOR.setManagementTypes("1", "1", { from: account1 });
       })
 
       .then(() => {
         console.log("Authorizing Less Restricted");
-        return NODE_MGR.setManagementTypes("2", "1", { from: account1 });
+        return NODE_STOR.setManagementTypes("2", "1", { from: account1 });
       })
 
       .then(() => {
         console.log("Authorizing Authorized");
-        return NODE_MGR.setManagementTypes("3", "1", { from: account1 });
+        return NODE_STOR.setManagementTypes("3", "1", { from: account1 });
       })
 
       .then(() => {
         console.log("Authorizing Trusted");
-        return NODE_MGR.setManagementTypes("4", "1", { from: account1 });
+        return NODE_STOR.setManagementTypes("4", "1", { from: account1 });
       })
 
       .then(() => {
         console.log("Authorizing Remotely Managed");
-        return NODE_MGR.setManagementTypes("5", "1", { from: account1 });
+        return NODE_STOR.setManagementTypes("5", "1", { from: account1 });
       })
 
       .then(() => {
         console.log("Authorizing Unconfigured");
-        return NODE_MGR.setManagementTypes("255", "1", { from: account1 });
+        return NODE_STOR.setManagementTypes("255", "1", { from: account1 });
       });
   });
 
   it("Should set all permitted custody types", () => {
     console.log("Authorizing NONE");
-    return NODE_MGR.setCustodyTypes("0", "1", { from: account1 })
+    return NODE_STOR.setCustodyTypes("0", "1", { from: account1 })
 
       .then(() => {
         console.log("Authorizing Custodial");
-        return NODE_MGR.setCustodyTypes("1", "1", { from: account1 });
+        return NODE_STOR.setCustodyTypes("1", "1", { from: account1 });
       })
 
       .then(() => {
         console.log("Authorizing Non-Custodial");
-        return NODE_MGR.setCustodyTypes("2", "1", { from: account1 });
+        return NODE_STOR.setCustodyTypes("2", "1", { from: account1 });
       })
 
       .then(() => {
         console.log("Authorizing ROOT");
-        return NODE_MGR.setCustodyTypes("3", "1", { from: account1 });
+        return NODE_STOR.setCustodyTypes("3", "1", { from: account1 });
       })
 
       .then(() => {
         console.log("Authorizing Verify-Non-Custodial");
-        return NODE_MGR.setCustodyTypes("4", "1", { from: account1 });
+        return NODE_STOR.setCustodyTypes("4", "1", { from: account1 });
       })
 
       .then(() => {
         console.log("Authorizing Wrapped or decorated ERC721");
-        return NODE_MGR.setCustodyTypes("5", "1", { from: account1 });
+        return NODE_STOR.setCustodyTypes("5", "1", { from: account1 });
       })
 
       .then(() => {
         console.log("Authorizing Free Custodial");
-        return NODE_MGR.setCustodyTypes("11", "1", { from: account1 });
+        return NODE_STOR.setCustodyTypes("11", "1", { from: account1 });
       })
 
       .then(() => {
         console.log("Authorizing Free Non-Custodial");
-        return NODE_MGR.setCustodyTypes("12", "1", { from: account1 });
+        return NODE_STOR.setCustodyTypes("12", "1", { from: account1 });
       });
   });
 
@@ -948,10 +977,22 @@ contract("NODE_MGR", (accounts) => {
     });
   });
 
-  it("Should authorize all minter contracts for minting NODE_TKN(s)", () => {
-    console.log("Authorizing NODE_MGR");
+  it("Should authorize A_TKN to discard", () => {
+    console.log("Authorizing A_TKN");
     return RCLR.grantRole(discardRoleB32, A_TKN.address, { from: account1 });
   });
+
+  it("Should authorize NODE_MGR for NODE_STOR", () => {
+    console.log("Authorizing NODE_MGR");
+    return NODE_STOR.grantRole(nodeAdminRoleB32, NODE_MGR.address, { from: account1 });
+  });
+
+  it("Should authorize NODE_MGR for NODE_STOR", () => {
+    console.log("Authorizing NODE_MGR");
+    return NODE_STOR.grantRole(nodeAdminRoleB32, account1, { from: account1 });
+  });
+
+
 
   it("Should mint a couple of asset root tokens", () => {
     console.log("Minting root token 1 -C");
@@ -1331,78 +1372,78 @@ contract("NODE_MGR", (accounts) => {
 
   it("Should finalize all ACs", () => {
     console.log("Authorizing Node Switch 1");
-    return NODE_MGR.modifyNodeSwitches("1000001", "1", "0", {
+    return NODE_STOR.modifyNodeSwitches("1000001", "1", "0", {
       from: account1,
     })
 
     .then(() => {
-      return NODE_MGR.modifyNodeSwitches("1", "1", "1", {
+      return NODE_STOR.modifyNodeSwitches("1", "1", "1", {
         from: account1,
       });
     })
 
       .then(() => {
-        return NODE_MGR.modifyNodeSwitches("1000002", "3", "1", {
+        return NODE_STOR.modifyNodeSwitches("1000002", "3", "1", {
           from: account1,
         });
       })
 
       .then(() => {
-        return NODE_MGR.modifyNodeSwitches("1000003", "3", "1", {
+        return NODE_STOR.modifyNodeSwitches("1000003", "3", "1", {
           from: account1,
         });
       })
 
       .then(() => {
-        return NODE_MGR.modifyNodeSwitches("1000004", "3", "1", {
+        return NODE_STOR.modifyNodeSwitches("1000004", "3", "1", {
           from: account1,
         });
       })
 
       .then(() => {
-        return NODE_MGR.modifyNodeSwitches("1000005", "3", "1", {
+        return NODE_STOR.modifyNodeSwitches("1000005", "3", "1", {
           from: account1,
         });
       })
 
       .then(() => {
-        return NODE_MGR.modifyNodeSwitches("1000006", "3", "1", {
+        return NODE_STOR.modifyNodeSwitches("1000006", "3", "1", {
           from: account1,
         });
       })
 
       .then(() => {
-        return NODE_MGR.modifyNodeSwitches("1000001", "2", "1", {
+        return NODE_STOR.modifyNodeSwitches("1000001", "2", "1", {
           from: account1,
         });
       })
 
       .then(() => {
-        return NODE_MGR.modifyNodeSwitches("1000002", "2", "1", {
+        return NODE_STOR.modifyNodeSwitches("1000002", "2", "1", {
           from: account1,
         });
       })
 
       .then(() => {
-        return NODE_MGR.modifyNodeSwitches("1000003", "2", "1", {
+        return NODE_STOR.modifyNodeSwitches("1000003", "2", "1", {
           from: account1,
         });
       })
 
       .then(() => {
-        return NODE_MGR.modifyNodeSwitches("1000004", "2", "1", {
+        return NODE_STOR.modifyNodeSwitches("1000004", "2", "1", {
           from: account1,
         });
       })
 
       .then(() => {
-        return NODE_MGR.modifyNodeSwitches("1000005", "2", "1", {
+        return NODE_STOR.modifyNodeSwitches("1000005", "2", "1", {
           from: account1,
         });
       })
 
       .then(() => {
-        return NODE_MGR.modifyNodeSwitches("1000006", "2", "1", {
+        return NODE_STOR.modifyNodeSwitches("1000006", "2", "1", {
           from: account1,
         });
       });
@@ -1616,10 +1657,10 @@ contract("NODE_MGR", (accounts) => {
     return NODE_MGR.updateNodeCAS("1000001", rgt1, rgt1, { from: account1 });
   });
 
-  it("Should getExtendedNodeData for ac10", async () => {
+  it("Should getNodeData for ac10", async () => {
     var Record = [];
 
-    return await NODE_MGR.getExtendedNodeData(
+    return await NODE_STOR.getNodeData(
       "10",
       { from: account2 },
       function (_err, _result) {
@@ -1633,7 +1674,7 @@ contract("NODE_MGR", (accounts) => {
   });
 
   it("Should set assetClass 13 switch to 1:1", async () => {
-    return NODE_MGR.modifyNodeSwitches("1000004", "1", "1", {
+    return NODE_STOR.modifyNodeSwitches("1000004", "1", "1", {
       from: account1,
     });
   });
@@ -1644,7 +1685,7 @@ contract("NODE_MGR", (accounts) => {
       "//**************************************END NODE_MGR SETUP**********************************************/"
     );
     console.log(
-      "//**************************************BEGIN NODE_MGR FAIL BATCH (49)**********************************************/"
+      "//**************************************BEGIN NODE_MGR FAIL BATCH (14)**********************************************/"
     );
     console.log(
       "//**************************************BEGIN setNodePricing FAIL BATCH**********************************************/"
@@ -1653,212 +1694,9 @@ contract("NODE_MGR", (accounts) => {
   });
 
   //2
-  it("Should fail because caller is not admin", async () => {
-    console.log(
-      "//**************************************END setNodePricing FAIL BATCH**********************************************/"
-    );
-    console.log(
-      "//**************************************BEGIN setStorageProviders FAIL BATCH**********************************************/"
-    );
-    return NODE_MGR.setStorageProviders("6", "1", { from: account2 });
-  });
-
-  //3
-  it("Should fail because caller is not admin", async () => {
-    console.log(
-      "//**************************************END setStorageProviders FAIL BATCH**********************************************/"
-    );
-    console.log(
-      "//**************************************BEGIN setManagementTypes FAIL BATCH**********************************************/"
-    );
-    return NODE_MGR.setManagementTypes("6", "1", { from: account2 });
-  });
-
-  //4
-  it("Should fail because caller is not admin", async () => {
-    console.log(
-      "//**************************************END setManagementTypes FAIL BATCH**********************************************/"
-    );
-    console.log(
-      "//**************************************BEGIN setCustodyTypes FAIL BATCH**********************************************/"
-    );
-    return NODE_MGR.setCustodyTypes("6", "1", { from: account2 });
-  });
-
-  //5
-  it("Should fail because caller is not admin", async () => {
-    console.log(
-      "//**************************************END setStorageProviders FAIL BATCH**********************************************/"
-    );
-    console.log(
-      "//**************************************BEGIN increaseShare FAIL BATCH**********************************************/"
-    );
-    return NODE_MGR.increaseShare("1000001", "5100", { from: account2 });
-  });
-
-  //6
-  it("Should fail because Node !exist", async () => {
-    return NODE_MGR.increaseShare("50", "5100", { from: account1 });
-  });
-
-  it("Should increase share of Node 10", async () => {
-    return NODE_MGR.increaseShare("1000001", "9900", { from: account1 });
-  });
-
-  //7
-  it("Should fail because cannot decrease share", async () => {
-    return NODE_MGR.increaseShare("1000001", "5000", { from: account1 });
-  });
-
-  //8
-  it("Should fail because increase share of Node 10 > 10000", async () => {
-    return NODE_MGR.increaseShare("1000001", "10001", { from: account1 });
-  });
-
-  //9
-  it("Should fail because caller !admin", async () => {
-    console.log(
-      "//**************************************END increaseShare FAIL BATCH**********************************************/"
-    );
-    console.log(
-      "//**************************************BEGIN transferName FAIL BATCH**********************************************/"
-    );
-    return NODE_MGR.transferName("1", "2", "CUSTODIAL_AC10", {
-      from: account2,
-    });
-  });
-
-  //10
-  it("Should fail because name not in source Node", async () => {
-    return NODE_MGR.transferName("2", "1", "CUSTODIAL_AC10", {
-      from: account1,
-    });
-  });
-
-  //11
-  it("Should fail because Dest Node not ready for name transfer (0xFFFFF...)", async () => {
-    return NODE_MGR.transferName("1000001", "1000002", "Custodial_AC1", {
-      from: account1,
-    });
-  });
-
-  //12
-  it("Should fail because caller !admin", async () => {
-    console.log(
-      "//**************************************END transferName FAIL BATCH**********************************************/"
-    );
-    console.log(
-      "//**************************************BEGIN modifyNode FAIL BATCH**********************************************/"
-    );
-    return NODE_MGR.modifyNode(
-      "1000001",
-      "1",
-      "2",
-      "1",
-      "1",
-      "5100",
-      account2,
-      rgt000,
-      rgt000,
-      { from: account2 }
-    );
-  });
-
-  //13
-  it("Should fail because Node = 0", async () => {
-    return NODE_MGR.modifyNode(
-      "0",
-      "1",
-      "2",
-      "1",
-      "1",
-      "5100",
-      account2,
-      rgt000,
-      rgt000,
-      { from: account1 }
-    );
-  });
-
-  //14
-  it("Should fail because discount > 10000", async () => {
-    return NODE_MGR.modifyNode(
-      "1000001",
-      "1",
-      "2",
-      "1",
-      "1",
-      "10001",
-      account2,
-      rgt000,
-      rgt000,
-      { from: account1 }
-    );
-  });
-
-  //15
-  it("Should fail because root Node !exist", async () => {
-    return NODE_MGR.modifyNode(
-      "3",
-      "15",
-      "2",
-      "1",
-      "1",
-      "5100",
-      account2,
-      rgt000,
-      rgt000,
-      { from: account1 }
-    );
-  });
-
-  //16
-  it("Should fail because Node !exist", async () => {
-    return NODE_MGR.modifyNode(
-      "20",
-      "1",
-      "2",
-      "1",
-      "1",
-      "5100",
-      account2,
-      rgt000,
-      rgt000,
-      { from: account1 }
-    );
-  });
-
-  //17
-  it("Should fail because caller !admin", async () => {
-    console.log(
-      "//**************************************END modifyNode FAIL BATCH**********************************************/"
-    );
-    console.log(
-      "//**************************************BEGIN modifyNodeSwitches FAIL BATCH**********************************************/"
-    );
-    return NODE_MGR.modifyNodeSwitches("1000003", "1", "1", {
-      from: account2,
-    });
-  });
-
-  //18
-  it("Should fail bit pos !>0||<9", async () => {
-    return NODE_MGR.modifyNodeSwitches("1000003", "10", "1", {
-      from: account1,
-    });
-  });
-
-  //19
-  it("Should fail bit !1||0", async () => {
-    return NODE_MGR.modifyNodeSwitches("1000003", "1", "4", {
-      from: account1,
-    });
-  });
-
-  //20
   it("Should fail because caller is not node minter", async () => {
     console.log(
-      "//**************************************END modifyNodeSwitches FAIL BATCH**********************************************/"
+      "//**************************************END setNodePricing FAIL BATCH**********************************************/"
     );
     console.log(
       "//**************************************BEGIN createNode FAIL BATCH**********************************************/"
@@ -1878,7 +1716,7 @@ contract("NODE_MGR", (accounts) => {
     );
   });
 
-  //21
+  //3
   it("Should fail because caller is not holder of an ID Token", async () => {
     console.log(
       "//**************************************END createNode FAIL BATCH**********************************************/"
@@ -1899,7 +1737,7 @@ contract("NODE_MGR", (accounts) => {
     return NODE_MGR.pause({ from: account1 });
   });
 
-  //22
+  //4
   it("Should fail because NODE_MGR is paused", async () => {
     return NODE_MGR.addUser("1000001", account2Hash, "10", { from: account2 });
   });
@@ -1908,7 +1746,7 @@ contract("NODE_MGR", (accounts) => {
     return NODE_MGR.unpause({ from: account1 });
   });
 
-  //23
+  //5
   it("Should fail because caller does not hold Node token", async () => {
     return NODE_MGR.addUser("1000001", account2Hash, "10", { from: account2 });
   });
@@ -1918,56 +1756,27 @@ contract("NODE_MGR", (accounts) => {
       "//**************************************END addUser FAIL BATCH**********************************************/"
     );
     console.log(
-      "//**************************************BEGIN updateNodeName FAIL BATCH**********************************************/"
-    );
-    return NODE_MGR.pause({ from: account1 });
-  });
-
-  //24
-  it("Should fail because NODE_MGR is paused", async () => {
-    return NODE_MGR.updateNodeName("1", "CUSTODIAL_AC10+", { from: account2 });
-  });
-
-  it("Should unpause NODE_MGR", async () => {
-    return NODE_MGR.unpause({ from: account1 });
-  });
-
-  //25
-  it("Should fail because caller does not hold Node token", async () => {
-    return NODE_MGR.updateNodeName("1", "CUSTODIAL_AC10+", { from: account2 });
-  });
-
-  //26
-  it("Should fail because used name being signed to different Node", async () => {
-    return NODE_MGR.updateNodeName("2", "Custodial_AC1", { from: account1 });
-  });
-
-  it("Should pause NODE_MGR", async () => {
-    console.log(
-      "//**************************************END updateNodeName FAIL BATCH**********************************************/"
-    );
-    console.log(
       "//**************************************BEGIN updateNodeCAS FAIL BATCH**********************************************/"
     );
     return NODE_MGR.pause({ from: account1 });
   });
 
-  //27
+  //6
   it("Should fail because NODE_MGR is paused", async () => {
-    return NODE_MGR.updateNodeCAS("1", rgt000, rgt000, { from: account2 });
+    return NODE_MGR.updateNodeCAS("1", rgt000, rgt000, { from: account1 });
   });
 
   it("Should unpause NODE_MGR", async () => {
     return NODE_MGR.unpause({ from: account1 });
   });
 
-  //28
+  //7
   it("Should fail because caller is not NTH", async () => {
     return NODE_MGR.updateNodeCAS("1", rgt000, rgt000,{ from: account2 });
   });
 
-  //29
-  it("Should fail because CAS fot node is locked", async () => {
+  //8
+  it("Should fail because CAS for node is locked", async () => {
     return NODE_MGR.updateNodeCAS("1", rgt000, rgt000,{ from: account1 });
   });
 
@@ -1981,7 +1790,7 @@ contract("NODE_MGR", (accounts) => {
     return NODE_MGR.pause({ from: account1 });
   });
 
-  //30
+  //9
   it("Should fail because NODE_MGR is paused", async () => {
     return NODE_MGR.setOperationCosts(
       "1000001",
@@ -1998,7 +1807,7 @@ contract("NODE_MGR", (accounts) => {
     return NODE_MGR.unpause({ from: account1 });
   });
 
-  //31
+  //10
   it("Should fail because caller is not NTH", async () => {
     return NODE_MGR.setOperationCosts(
       "1000001",
@@ -2021,7 +1830,7 @@ contract("NODE_MGR", (accounts) => {
     return NODE_MGR.pause({ from: account1 });
   });
 
-  //32
+  //11
   it("Should fail because NODE_MGR is paused", async () => {
     return NODE_MGR.setNonMutableData("1000001", "1", "0", account2, {
       from: account2,
@@ -2032,7 +1841,7 @@ contract("NODE_MGR", (accounts) => {
     return NODE_MGR.unpause({ from: account1 });
   });
 
-  //33
+  //12
   it("Should fail because caller is not NTH", async () => {
     return NODE_MGR.setNonMutableData("1000001", "1", "0", account2, {
       from: account2,
@@ -2055,23 +1864,9 @@ contract("NODE_MGR", (accounts) => {
     );
   });
 
-  //34
+  //13
   it("Should fail because immutable data = 255", async () => {
     return NODE_MGR.setNonMutableData("50", "255", "0", account1, {
-      from: account1,
-    });
-  });
-
-  //35
-  it("Should fail because managementType is invalid", async () => {
-    return NODE_MGR.setNonMutableData("50", "10", "0", account1, {
-      from: account1,
-    });
-  });
-
-  //36
-  it("Should fail because storageProvider is invalid", async () => {
-    return NODE_MGR.setNonMutableData("50", "1", "10", account1, {
       from: account1,
     });
   });
@@ -2082,238 +1877,16 @@ contract("NODE_MGR", (accounts) => {
     });
   });
 
-  //37
+  //14
   it("Should fail because immutable data has already been set", async () => {
     return NODE_MGR.setNonMutableData("50", "1", "0", account1, {
       from: account1,
     });
   });
 
-  //38
-  it("Should fail because bit pos !<0||>9", async () => {
-    console.log(
-      "//**************************************END setNonMutableData FAIL BATCH**********************************************/"
-    );
-    console.log(
-      "//**************************************BEGIN getSwitchAt FAIL BATCH**********************************************/"
-    );
-    return NODE_MGR.getSwitchAt("1000001", "10", { from: account2 });
-  });
-
-  //39
-  it("Should fail because Node not yet populated", async () => {
-    console.log(
-      "//**************************************END getSwitchAt FAIL BATCH**********************************************/"
-    );
-    console.log(
-      "//**************************************BEGIN getInvoice FAIL BATCH**********************************************/"
-    );
-    return NODE_MGR.getInvoice("100", "1", { from: account2 });
-  });
-
-  //40
-  it("Should fail because service 0 is not valid", async () => {
-    return NODE_MGR.getInvoice("1000001", "0", { from: account2 });
-  });
-
-  //41
-  it("Should fail because Node = 0", async () => {
-    console.log(
-      "//**************************************END getInvoice FAIL BATCH**********************************************/"
-    );
-    console.log(
-      "//**************************************BEGIN _createNode(Private) FAIL BATCH**********************************************/"
-    );
-    return NODE_MGR.createNode(
-      "0",
-      "20",
-      "1",
-      "1",
-      "0",
-      "0",
-      "5100",
-      rgt000,
-      rgt000,
-      account2,
-      { from: account1 }
-    );
-  });
-
-  //42
-  it("Should fail because discount > 10000", async () => {
-    return NODE_MGR.createNode(
-      "20",
-      "20",
-      "1",
-      "1",
-      "0",
-      "0",
-      "10001",
-      rgt000,
-      rgt000,
-      account2,
-      { from: account1 }
-    );
-  });
-
-  //43
-  it("Should fail because custodyType is invalid", async () => {
-    return NODE_MGR.createNode(
-      "20",
-      "20",
-      "1",
-      "10",
-      "0",
-      "0",
-      "9500",
-      rgt000,
-      rgt000,
-      account2,
-      { from: account1 }
-    );
-  });
-
-  //44
-  it("Should fail because managementType is invalid", async () => {
-    return NODE_MGR.createNode(
-      "20",
-      "20",
-      "1",
-      "0",
-      "10",
-      "0",
-      "9500",
-      rgt000,
-      rgt000,
-      account2,
-      { from: account1 }
-    );
-  });
-
-  //45
-  it("Should fail because storageProvider is invalid", async () => {
-    return NODE_MGR.createNode(
-      "20",
-      "20",
-      "1",
-      "0",
-      "0",
-      "10",
-      "9500",
-      rgt000,
-      rgt000,
-      account2,
-      { from: account1 }
-    );
-  });
-
-  //46
-  it("Should fail because root !exist", async () => {
-    return NODE_MGR.createNode(
-      "20",
-      "10",
-      "10",
-      "1",
-      "0",
-      "0",
-      "5100",
-      rgt000,
-      rgt000,
-      account2,
-      { from: account1 }
-    );
-  });
-
-  it("Should mint ROOT 3", async () => {
-    return NODE_MGR.createNode(
-      "3",
-      "TEST2",
-      "3",
-      "3",
-      "1",
-      "1",
-      "5100",
-      rgt000,
-      rgt000,
-      account1,
-      { from: account1 }
-    );
-  });
-
-  it("Should retrieve show clean asset 12", async () => {
-    var Record = [];
-
-    return await NODE_MGR.resolveNode(
-      "TEST2",
-      { from: account2 },
-      function (_err, _result) {
-        if (_err) {
-        } else {
-          Record = Object.values(_result);
-          console.log(Record);
-        }
-      }
-    );
-  });
-
-  it("Should grant account2 with nodeMinterRole", async () => {
-    return NODE_MGR.grantRole(nodeMinterRoleB32, account2, { from: account1 });
-  });
-
-  //47
-  it("Should fail because root is disabled && !NTH", async () => {
-    return NODE_MGR.createNode(
-      "20",
-      "20",
-      "3",
-      "1",
-      "0",
-      "0",
-      "5100",
-      rgt000,
-      rgt000,
-      account2,
-      { from: account2 }
-    );
-  });
-
-  //48
-  it("Should fail because name already exists", async () => {
-    return NODE_MGR.createNode(
-      "20",
-      "Custodial_AC1",
-      "2",
-      "1",
-      "0",
-      "0",
-      "5100",
-      rgt000,
-      rgt000,
-      account2,
-      { from: account1 }
-    );
-  });
-
-  //49
-  it("Should fail because Node already exists", async () => {
-    return NODE_MGR.createNode(
-      "1",
-      "1",
-      "1",
-      "1",
-      "0",
-      "0",
-      "5100",
-      rgt000,
-      rgt000,
-      account2,
-      { from: account1 }
-    );
-  });
-
   it("Should set SharesAddress", async () => {
     console.log(
-      "//**************************************END getInvoice FAIL BATCH**********************************************/"
+      "//**************************************END setNonMutableData FAIL BATCH**********************************************/"
     );
     console.log(
       "//**************************************END NODE_MGR FAIL BATCH**********************************************/"

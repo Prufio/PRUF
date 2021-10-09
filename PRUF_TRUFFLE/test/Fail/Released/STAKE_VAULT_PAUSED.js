@@ -145,6 +145,8 @@ contract("STAKE_VAULT", (accounts) => {
 
     discardRoleB32 = await Helper.getStringHash("DISCARD_ROLE");
 
+    nodeAdminRoleB32 = await Helper.getStringHash("NODE_ADMIN_ROLE");
+
     stakeRoleB32 = await Helper.getStringHash("STAKE_ROLE");
 
     stakePayerRoleB32 = await Helper.getStringHash("STAKE_PAYER_ROLE");

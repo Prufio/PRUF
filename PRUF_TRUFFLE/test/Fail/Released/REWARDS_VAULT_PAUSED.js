@@ -143,6 +143,8 @@ contract("REWARDS_VAULT", (accounts) => {
 
     discardRoleB32 = await Helper.getStringHash("DISCARD_ROLE");
 
+    nodeAdminRoleB32 = await Helper.getStringHash("NODE_ADMIN_ROLE");
+
     pauserRoleB32 = await Helper.getStringHash("PAUSER_ROLE");
   });
 

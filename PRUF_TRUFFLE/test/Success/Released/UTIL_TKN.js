@@ -1807,7 +1807,7 @@ _________\/// _____________\/// _______\/// __\///////// __\/// _____________
 
 
     // it('Should increaseShare to 3/97 split @AC13', async () => {
-    //     return NODE_MGR.increaseShare(
+    //     return NODE_STOR.increaseShare(
     //         '13',
     //         '3000000000000000000000',
     //         { from: account1 }

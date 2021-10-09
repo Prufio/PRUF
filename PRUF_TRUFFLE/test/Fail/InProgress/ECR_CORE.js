@@ -20,6 +20,7 @@ const PRUF_UTIL_TKN = artifacts.require('UTIL_TKN');
 let STOR;
 let APP;
 let NODE_MGR;
+let NODE_STOR;
 let NODE_TKN;
 let A_TKN;
 let ID_MGR;

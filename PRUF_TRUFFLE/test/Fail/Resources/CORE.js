@@ -13,6 +13,7 @@ _________\/// _____________\/// _______\/// __\///////// __\/// _____________
 const PRUF_STOR = artifacts.require("STOR");
 const PRUF_APP = artifacts.require("APP");
 const PRUF_NODE_MGR = artifacts.require("NODE_MGR");
+const PRUF_NODE_STOR = artifacts.require("NODE_STOR");
 const PRUF_NODE_TKN = artifacts.require("NODE_TKN");
 const PRUF_A_TKN = artifacts.require("A_TKN");
 const PRUF_ID_MGR = artifacts.require("ID_MGR");
@@ -32,6 +33,7 @@ const PRUF_WRAP = artifacts.require("WRAP");
 let STOR;
 let APP;
 let NODE_MGR;
+let NODE_STOR;
 let NODE_TKN;
 let A_TKN;
 let ID_MGR;
@@ -319,6 +321,8 @@ contract("CORE", (accounts) => {
 
     discardRoleB32 = await Helper.getStringHash("DISCARD_ROLE");
 
+    nodeAdminRoleB32 = await Helper.getStringHash("NODE_ADMIN_ROLE");
+
     nodeMinterRoleB32 = await Helper.getStringHash("NODE_MINTER_ROLE");
   });
 
@@ -341,6 +345,13 @@ contract("CORE", (accounts) => {
     console.log(PRUF_NODE_MGR_TEST.address);
     assert(PRUF_NODE_MGR_TEST.address !== "");
     NODE_MGR = PRUF_NODE_MGR_TEST;
+  });
+
+  it("Should deploy PRUF_NODE_STOR", async () => {
+    const PRUF_NODE_STOR_TEST = await PRUF_NODE_STOR.deployed({ from: account1 });
+    console.log(PRUF_NODE_STOR_TEST.address);
+    assert(PRUF_NODE_STOR_TEST.address !== "");
+    NODE_STOR = PRUF_NODE_STOR_TEST;
   });
 
   it("Should deploy PRUF_NODE_TKN", async () => {
@@ -477,12 +488,12 @@ contract("CORE", (accounts) => {
         return STOR.addDefaultContracts("6", "RCLR", "3", { from: account1 });
       })
 
-      // .then(() => {
-      //   console.log("Adding PURCHASE to default contract list");
-      //   return STOR.addDefaultContracts("8", "PURCHASE", "2", {
-      //     from: account1,
-      //   });
-      // })
+      .then(() => {
+        console.log("Adding NODE_STOR to default contract list");
+        return STOR.addDefaultContracts("8", "NODE_STOR", "1", {
+          from: account1,
+        });
+      })
 
       .then(() => {
         console.log("Adding DECORATE to default contract list");
@@ -504,6 +515,13 @@ contract("CORE", (accounts) => {
       .then(() => {
         console.log("Adding NODE_MGR to storage for use in Node 0");
         return STOR.authorizeContract("NODE_MGR", NODE_MGR.address, "0", "1", {
+          from: account1,
+        });
+      })
+
+      .then(() => {
+        console.log("Adding NODE_STOR to storage for use in Node 0");
+        return STOR.authorizeContract("NODE_STOR", NODE_STOR.address, "0", "1", {
           from: account1,
         });
       })
@@ -626,6 +644,13 @@ contract("CORE", (accounts) => {
       })
 
       .then(() => {
+        console.log("Adding in NODE_STOR");
+        return NODE_STOR.setStorageContract(STOR.address, {
+          from: account1,
+        });
+      })
+
+      .then(() => {
         console.log("Adding in A_TKN");
         return A_TKN.setStorageContract(STOR.address, { from: account1 });
       })
@@ -701,6 +726,11 @@ contract("CORE", (accounts) => {
       })
 
       .then(() => {
+        console.log("Resolving in NODE_STOR");
+        return NODE_STOR.resolveContractAddresses({ from: account1 });
+      })
+
+      .then(() => {
         console.log("Resolving in A_TKN");
         return A_TKN.resolveContractAddresses({ from: account1 });
       })
@@ -753,96 +783,96 @@ contract("CORE", (accounts) => {
 
   it("Should set all permitted storage providers", () => {
     console.log("Authorizing UNCONFIGURED");
-    return NODE_MGR.setStorageProviders("0", "1", { from: account1 })
+    return NODE_STOR.setStorageProviders("0", "1", { from: account1 })
 
       .then(() => {
         console.log("Authorizing Mutable");
-        return NODE_MGR.setStorageProviders("1", "1", { from: account1 });
+        return NODE_STOR.setStorageProviders("1", "1", { from: account1 });
       })
 
       .then(() => {
         console.log("Authorizing ARWEAVE");
-        return NODE_MGR.setStorageProviders("2", "1", { from: account1 });
+        return NODE_STOR.setStorageProviders("2", "1", { from: account1 });
       });
   });
 
   it("Should set all permitted management types", () => {
     console.log("Authorizing Unrestricted");
-    return NODE_MGR.setManagementTypes("0", "1", { from: account1 })
+    return NODE_STOR.setManagementTypes("0", "1", { from: account1 })
 
       .then(() => {
         console.log("Authorizing Restricted");
-        return NODE_MGR.setManagementTypes("1", "1", { from: account1 });
+        return NODE_STOR.setManagementTypes("1", "1", { from: account1 });
       })
 
       .then(() => {
         console.log("Authorizing Less Restricted");
-        return NODE_MGR.setManagementTypes("2", "1", { from: account1 });
+        return NODE_STOR.setManagementTypes("2", "1", { from: account1 });
       })
 
       .then(() => {
         console.log("Authorizing Authorized");
-        return NODE_MGR.setManagementTypes("3", "1", { from: account1 });
+        return NODE_STOR.setManagementTypes("3", "1", { from: account1 });
       })
 
       .then(() => {
         console.log("Authorizing Trusted");
-        return NODE_MGR.setManagementTypes("4", "1", { from: account1 });
+        return NODE_STOR.setManagementTypes("4", "1", { from: account1 });
       })
 
       .then(() => {
         console.log("Authorizing Remotely Managed");
-        return NODE_MGR.setManagementTypes("5", "1", { from: account1 });
+        return NODE_STOR.setManagementTypes("5", "1", { from: account1 });
       })
 
       .then(() => {
         console.log("Authorizing Remotely Managed");
-        return NODE_MGR.setManagementTypes("6", "1", { from: account1 });
+        return NODE_STOR.setManagementTypes("6", "1", { from: account1 });
       })
 
       .then(() => {
         console.log("Authorizing Unconfigured");
-        return NODE_MGR.setManagementTypes("255", "1", { from: account1 });
+        return NODE_STOR.setManagementTypes("255", "1", { from: account1 });
       });
   });
 
   it("Should set all permitted custody types", () => {
     console.log("Authorizing NONE");
-    return NODE_MGR.setCustodyTypes("0", "1", { from: account1 })
+    return NODE_STOR.setCustodyTypes("0", "1", { from: account1 })
 
       .then(() => {
         console.log("Authorizing Custodial");
-        return NODE_MGR.setCustodyTypes("1", "1", { from: account1 });
+        return NODE_STOR.setCustodyTypes("1", "1", { from: account1 });
       })
 
       .then(() => {
         console.log("Authorizing Non-Custodial");
-        return NODE_MGR.setCustodyTypes("2", "1", { from: account1 });
+        return NODE_STOR.setCustodyTypes("2", "1", { from: account1 });
       })
 
       .then(() => {
         console.log("Authorizing ROOT");
-        return NODE_MGR.setCustodyTypes("3", "1", { from: account1 });
+        return NODE_STOR.setCustodyTypes("3", "1", { from: account1 });
       })
 
       .then(() => {
         console.log("Authorizing Verify-Non-Custodial");
-        return NODE_MGR.setCustodyTypes("4", "1", { from: account1 });
+        return NODE_STOR.setCustodyTypes("4", "1", { from: account1 });
       })
 
       .then(() => {
         console.log("Authorizing Wrapped or decorated ERC721");
-        return NODE_MGR.setCustodyTypes("5", "1", { from: account1 });
+        return NODE_STOR.setCustodyTypes("5", "1", { from: account1 });
       })
 
       .then(() => {
         console.log("Authorizing Free Custodial");
-        return NODE_MGR.setCustodyTypes("11", "1", { from: account1 });
+        return NODE_STOR.setCustodyTypes("11", "1", { from: account1 });
       })
 
       .then(() => {
         console.log("Authorizing Free Non-Custodial");
-        return NODE_MGR.setCustodyTypes("12", "1", { from: account1 });
+        return NODE_STOR.setCustodyTypes("12", "1", { from: account1 });
       });
   });
 
@@ -965,10 +995,22 @@ contract("CORE", (accounts) => {
     return APP.grantRole(assetTransferRoleB32, APP.address, { from: account1 });
   });
 
-  it("Should authorize all minter contracts for minting NODE_TKN(s)", () => {
-    console.log("Authorizing NODE_MGR");
+  it("Should authorize A_TKN to discard", () => {
+    console.log("Authorizing A_TKN");
     return RCLR.grantRole(discardRoleB32, A_TKN.address, { from: account1 });
   });
+
+  it("Should authorize NODE_MGR for NODE_STOR", () => {
+    console.log("Authorizing NODE_MGR");
+    return NODE_STOR.grantRole(nodeAdminRoleB32, NODE_MGR.address, { from: account1 });
+  });
+
+  it("Should authorize NODE_MGR for NODE_STOR", () => {
+    console.log("Authorizing NODE_MGR");
+    return NODE_STOR.grantRole(nodeAdminRoleB32, account1, { from: account1 });
+  });
+
+
 
   it("Should mint a couple of asset root tokens", () => {
     console.log("Minting root token 1 -C");
@@ -1296,108 +1338,108 @@ contract("CORE", (accounts) => {
 
   it("Should finalize all ACs", () => {
     console.log("Authorizing Node Switch 1");
-    return NODE_MGR.modifyNodeSwitches("1000001", "1", "1", {
+    return NODE_STOR.modifyNodeSwitches("1000001", "1", "1", {
       from: account1,
     })
 
       .then(() => {
-        return NODE_MGR.modifyNodeSwitches("1000002", "3", "1", {
+        return NODE_STOR.modifyNodeSwitches("1000002", "3", "1", {
           from: account1,
         });
       })
 
       .then(() => {
-        return NODE_MGR.modifyNodeSwitches("1000003", "3", "1", {
+        return NODE_STOR.modifyNodeSwitches("1000003", "3", "1", {
           from: account1,
         });
       })
 
       .then(() => {
-        return NODE_MGR.modifyNodeSwitches("1000004", "3", "1", {
+        return NODE_STOR.modifyNodeSwitches("1000004", "3", "1", {
           from: account1,
         });
       })
 
       .then(() => {
-        return NODE_MGR.modifyNodeSwitches("1000005", "3", "1", {
+        return NODE_STOR.modifyNodeSwitches("1000005", "3", "1", {
           from: account1,
         });
       })
 
       .then(() => {
-        return NODE_MGR.modifyNodeSwitches("1000006", "3", "1", {
+        return NODE_STOR.modifyNodeSwitches("1000006", "3", "1", {
           from: account1,
         });
       })
 
       .then(() => {
-        return NODE_MGR.modifyNodeSwitches("1000007", "3", "1", {
+        return NODE_STOR.modifyNodeSwitches("1000007", "3", "1", {
           from: account1,
         });
       })
 
       .then(() => {
-        return NODE_MGR.modifyNodeSwitches("1000008", "3", "1", {
+        return NODE_STOR.modifyNodeSwitches("1000008", "3", "1", {
           from: account1,
         });
       })
 
       .then(() => {
-        return NODE_MGR.modifyNodeSwitches("1000009", "3", "1", {
+        return NODE_STOR.modifyNodeSwitches("1000009", "3", "1", {
           from: account1,
         });
       })
 
       .then(() => {
-        return NODE_MGR.modifyNodeSwitches("1000001", "2", "1", {
+        return NODE_STOR.modifyNodeSwitches("1000001", "2", "1", {
           from: account1,
         });
       })
 
       .then(() => {
-        return NODE_MGR.modifyNodeSwitches("1000002", "2", "1", {
+        return NODE_STOR.modifyNodeSwitches("1000002", "2", "1", {
           from: account1,
         });
       })
 
       .then(() => {
-        return NODE_MGR.modifyNodeSwitches("1000003", "2", "1", {
+        return NODE_STOR.modifyNodeSwitches("1000003", "2", "1", {
           from: account1,
         });
       })
 
       .then(() => {
-        return NODE_MGR.modifyNodeSwitches("1000004", "2", "1", {
+        return NODE_STOR.modifyNodeSwitches("1000004", "2", "1", {
           from: account1,
         });
       })
 
       .then(() => {
-        return NODE_MGR.modifyNodeSwitches("1000005", "2", "1", {
+        return NODE_STOR.modifyNodeSwitches("1000005", "2", "1", {
           from: account1,
         });
       })
 
       .then(() => {
-        return NODE_MGR.modifyNodeSwitches("1000006", "2", "1", {
+        return NODE_STOR.modifyNodeSwitches("1000006", "2", "1", {
           from: account1,
         });
       })
 
       .then(() => {
-        return NODE_MGR.modifyNodeSwitches("1000007", "2", "1", {
+        return NODE_STOR.modifyNodeSwitches("1000007", "2", "1", {
           from: account1,
         });
       })
 
       .then(() => {
-        return NODE_MGR.modifyNodeSwitches("1000008", "2", "1", {
+        return NODE_STOR.modifyNodeSwitches("1000008", "2", "1", {
           from: account1,
         });
       })
 
       .then(() => {
-        return NODE_MGR.modifyNodeSwitches("1000009", "2", "1", {
+        return NODE_STOR.modifyNodeSwitches("1000009", "2", "1", {
           from: account1,
         });
       });
@@ -1679,7 +1721,6 @@ contract("CORE", (accounts) => {
       from: account1,
     });
   });
-
 
   it('Should write asset1 in Node 10', async () => {
       return APP_NC.newRecord(
