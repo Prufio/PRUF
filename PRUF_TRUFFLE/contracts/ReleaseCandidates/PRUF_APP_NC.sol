@@ -57,7 +57,7 @@ contract APP_NC is CORE {
         bytes32 _mutableStorage1,
         bytes32 _mutableStorage2
     ) external nonReentrant whenNotPaused {
-        bytes32 idxHash = keccak256(abi.encodePacked(_idxHash, _node)); //hash idxRaw with node to get idxHash//CTS:EXAMINE added hashing to front layer
+        bytes32 idxHash = keccak256(abi.encodePacked(_idxHash, _node)); //hash idxRaw with node to get idxHash/
         require(
             (ID_MGR.trustLevel(_msgSender()) > 0), //_msgSender() is ID token holder
             "ANC:NRWD: Caller !PRuF_ID holder"
@@ -91,7 +91,7 @@ contract APP_NC is CORE {
         bytes32 _nonMutableStorage1,
         bytes32 _nonMutableStorage2
     ) external nonReentrant whenNotPaused {
-        bytes32 idxHash = keccak256(abi.encodePacked(_idxHash, _node)); //hash idxRaw with node to get idxHash //CTS:EXAMINE added hashing to front layer
+        bytes32 idxHash = keccak256(abi.encodePacked(_idxHash, _node)); //hash idxRaw with node to get idxHash 
         require(
             (ID_MGR.trustLevel(_msgSender()) > 0), //_msgSender() is ID token holder
             "ANC:NRWD: Caller !PRuF_ID holder"
@@ -120,7 +120,7 @@ contract APP_NC is CORE {
         uint32 _node,
         uint32 _countDownStart
     ) external nonReentrant whenNotPaused {
-        bytes32 idxHash = keccak256(abi.encodePacked(_idxHash, _node)); //hash idxRaw with node to get idxHash//CTS:EXAMINE added hashing to front layer
+        bytes32 idxHash = keccak256(abi.encodePacked(_idxHash, _node)); //hash idxRaw with node to get idxHash
         require(
             (ID_MGR.trustLevel(_msgSender()) > 0), //_msgSender() is ID token holder
             "ANC:NR: Caller !PRuF_ID holder"

@@ -271,7 +271,7 @@ contract STOR is AccessControl, ReentrancyGuard, Pausable {
 
         NODE_TKN = NODE_TKN_Interface(contractNameToAddress["NODE_TKN"]);
         NODE_MGR = NODE_MGR_Interface(contractNameToAddress["NODE_MGR"]);
-        NODE_STOR = NODE_STOR_Interface(contractNameToAddress["NODE_STOR"]);//CTS:EXAMINE added
+        NODE_STOR = NODE_STOR_Interface(contractNameToAddress["NODE_STOR"]);
         //^^^^^^^effects^^^^^^^^^
 
         emit REPORT("NDA", bytes32(uint256(_contractAuthLevel))); //report access to the internal user database

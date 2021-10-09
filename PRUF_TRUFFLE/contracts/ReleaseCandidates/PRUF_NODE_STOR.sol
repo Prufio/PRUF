@@ -502,7 +502,7 @@ contract NODE_STOR is BASIC {
      * @param _service - service associated with query
      * @return Costs Struct for_node
      */
-    function getPaymentData(uint32 _node, uint16 _service) //CTS:EXAMINE getpaymentData -> getPaymentData
+    function getPaymentData(uint32 _node, uint16 _service) 
         external
         view
         returns (Costs memory)

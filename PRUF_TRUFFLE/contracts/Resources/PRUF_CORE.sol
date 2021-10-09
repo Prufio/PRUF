@@ -29,7 +29,7 @@ contract CORE is BASIC {
      * @param _countDownStart - initial value for decrement only register
      */
     function createRecord(
-        bytes32 _idxHash,//CTS:EXAMINE back to receiving full idx, hashing done in front layer
+        bytes32 _idxHash,
         bytes32 _rgtHash,
         uint32 _node,
         uint32 _countDownStart

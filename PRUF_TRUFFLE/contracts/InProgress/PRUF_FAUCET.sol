@@ -119,7 +119,7 @@ contract FAUCET is CORE {
      * @param _seed token id to claim rewards on
      */
 
-    //CTS:EXAMINE--WARNING IN COMPILING, FUNCTION COMMENTED OUT FOR TESTING
+    //--WARNING IN COMPILING, FUNCTION COMMENTED OUT FOR TESTING
 
     // function drip(bytes32 _seed) external whenNotPaused nonReentrant {
     //     if (block.timestamp - lastStream > interval) {
