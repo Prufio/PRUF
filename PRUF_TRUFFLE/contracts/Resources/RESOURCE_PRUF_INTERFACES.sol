@@ -1252,7 +1252,7 @@ interface APP_Interface {
     //--------------------------------------------External Functions--------------------------
 
     /**
-     * @dev Creates a new record  DPS:CHECK no longer sets rec.countDownStart
+     * @dev Creates a new record
      * @param _idxHash - hash of asset information created by frontend inputs
      * @param _rgtHash - hash of rightsholder information created by frontend inputs
      * @param _node - node the asset will be created in

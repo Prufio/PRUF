@@ -444,7 +444,7 @@ contract NODE_STOR is BASIC {
      * @return nodeData (see docs)
      */
     function getNodeData(
-        uint32 _node //DPS:CHECK Name change
+        uint32 _node 
     ) external view returns (Node memory) {
         //^^^^^^^checks^^^^^^^^^
 
