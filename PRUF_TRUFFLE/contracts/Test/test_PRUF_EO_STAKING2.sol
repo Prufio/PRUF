@@ -448,7 +448,7 @@ contract EO_STAKING2 is ReentrancyGuard, AccessControl, Pausable {
             thisStakeTier.interval >= 2, // 2 days in seconds unreachable? throws in setStakeLevels
             "PES:NS: Interval <= 2"
         );
-        require( //CTS:EXAMINE redundant, setStakeLevels handles it
+        require( 
             _amount > 99999999999999999999, //100 pruf
             "PES:NS: Staked amount < 100"
         );

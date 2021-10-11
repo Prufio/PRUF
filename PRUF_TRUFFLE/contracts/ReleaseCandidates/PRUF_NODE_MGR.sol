@@ -163,7 +163,7 @@ contract NODE_MGR is BASIC {
         //^^^^^^^checks^^^^^^^^^
 
         nodeTokenIndex++;
-        Costs memory paymentData = NODE_STOR.getPaymentData( //CTS:EXAMINE changed from getServicePaymentData to getPaymentData
+        Costs memory paymentData = NODE_STOR.getPaymentData(
             _nodeRoot,
             1
         );

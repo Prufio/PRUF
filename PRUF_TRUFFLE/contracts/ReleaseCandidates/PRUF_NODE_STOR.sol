@@ -14,7 +14,6 @@ _________\/// _____________\/// _______\/// __\///////// __\/// _____________
  * PRUF NODE_STOR
  * NODE_MGR must be given NODE_ADMIN_ROLE
  * Contract for storing Node information
- * CTS:EXAMINE where is getStorageProviderStatus/getManagementTypeStatus/getCustodyTypeStatus
  *
  * STATEMENT OF TERMS OF SERVICE (TOS):
  * User agrees not to intentionally claim any namespace that is a recognized or registered brand name, trade mark,
@@ -185,7 +184,6 @@ contract NODE_STOR is BASIC {
         //^^^^^^^effects^^^^^^^^^
     }
 
-
     function setNodeId(uint32 _node, string memory _name) external isNodeAdmin {
         delete nodeId[_name];
         if (
@@ -254,7 +252,7 @@ contract NODE_STOR is BASIC {
         uint32 _node,
         bytes32 _CAS1,
         bytes32 _CAS2
-    ) external whenNotPaused isNodeAdmin{
+    ) external whenNotPaused isNodeAdmin {
         require(
             (nodeData[_node].switches & (1 << (0))) == 0, //getSwitchAt(_node, 1) == 0
             "NS:UNC: CAS for node is locked and cannot be written"
@@ -266,7 +264,6 @@ contract NODE_STOR is BASIC {
 
         //^^^^^^^effects^^^^^^^^^
     }
-
 
     /**
      * @dev Modifies node.switches bitwise (see NODE option switches in ZZ_PRUF_DOCS)
@@ -394,15 +391,61 @@ contract NODE_STOR is BASIC {
     }
 
     /**
+     * @dev get the status of a specific management type
+     * @param _managementType - management type associated with query (see docs)
+     * @return 1 or 0 (enabled or disabled)
+     */
+    function getManagementTypeStatus(uint8 _managementType)
+        external
+        view
+        returns (uint8)
+    {
+        //^^^^^^^checks^^^^^^^^^
+
+        return (validManagementTypes[_managementType]);
+        //^^^^^^^interactions^^^^^^^^^
+    }
+
+    /**
+     * @dev get the status of a specific storage provider
+     * @param _storageProvider - storage provider associated with query (see docs)
+     * @return 1 or 0 (enabled or disabled)
+     */
+    function getStorageProviderStatus(uint8 _storageProvider)
+        external
+        view
+        returns (uint8)
+    {
+        //^^^^^^^checks^^^^^^^^^
+
+        return (validStorageProviders[_storageProvider]);
+        //^^^^^^^interactions^^^^^^^^^
+    }
+
+    /**
+     * @dev get the status of a specific custody type
+     * @param _custodyType - custody type associated with query (see docs)
+     * @return 1 or 0 (enabled or disabled)
+     */
+    function getCustodyTypeStatus(uint8 _custodyType)
+        external
+        view
+        returns (uint8)
+    {
+        //^^^^^^^checks^^^^^^^^^
+
+        return (validCustodyTypes[_custodyType]);
+        //^^^^^^^interactions^^^^^^^^^
+    }
+
+    /**
      * @dev Retrieve extended nodeData @ _node
      * @param _node - node associated with query
      * @return nodeData (see docs)
      */
-    function getNodeData(uint32 _node) //DPS:CHECK Name change
-        external
-        view
-        returns (Node memory)
-    {
+    function getNodeData(
+        uint32 _node //DPS:CHECK Name change
+    ) external view returns (Node memory) {
         //^^^^^^^checks^^^^^^^^^
 
         return (nodeData[_node]);
@@ -457,8 +500,6 @@ contract NODE_STOR is BASIC {
         //^^^^^^^interactions^^^^^^^^^
     }
 
-    
-
     /**
      * @dev Retrieve function costs per Node, per service type in PRUF(18 decimals)
      * @param _node - node associated with query
@@ -502,7 +543,7 @@ contract NODE_STOR is BASIC {
      * @param _service - service associated with query
      * @return Costs Struct for_node
      */
-    function getPaymentData(uint32 _node, uint16 _service) //CTS:EXAMINE getpaymentData -> getPaymentData
+    function getPaymentData(uint32 _node, uint16 _service)
         external
         view
         returns (Costs memory)
