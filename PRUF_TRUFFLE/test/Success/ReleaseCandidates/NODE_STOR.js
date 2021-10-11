@@ -1617,113 +1617,113 @@ contract("NODE_STOR", (accounts) => {
     );
   });
 
-  // it("Should retrieve storage provider status 6 (0)", async () => {
-  //   var Record = [];
+  it("Should retrieve storage provider status 6 (0)", async () => {
+    var Record = [];
 
-  //   return await NODE_MGR.getStorageProviderStatus(
-  //     "6",
-  //     { from: account1 },
-  //     function (_err, _result) {
-  //       if (_err) {
-  //       } else {
-  //         Record = Object.values(_result);
-  //         console.log(Record);
-  //       }
-  //     }
-  //   );
-  // });
+    return await NODE_STOR.getStorageProviderStatus(
+      "6",
+      { from: account1 },
+      function (_err, _result) {
+        if (_err) {
+        } else {
+          Record = Object.values(_result);
+          console.log(Record);
+        }
+      }
+    );
+  });
 
   it("Should enable storageProvider 6", async () => {
     return NODE_STOR.setStorageProviders("6", "1", { from: account1 });
   });
 
-  // it("Should retrieve storage provider status 6 (1)", async () => {
-  //   var Record = [];
+  it("Should retrieve storage provider status 6 (1)", async () => {
+    var Record = [];
 
-  //   return await NODE_MGR.getStorageProviderStatus(
-  //     "6",
-  //     { from: account1 },
-  //     function (_err, _result) {
-  //       if (_err) {
-  //       } else {
-  //         Record = Object.values(_result);
-  //         console.log(Record);
-  //       }
-  //     }
-  //   );
-  // });
+    return await NODE_STOR.getStorageProviderStatus(
+      "6",
+      { from: account1 },
+      function (_err, _result) {
+        if (_err) {
+        } else {
+          Record = Object.values(_result);
+          console.log(Record);
+        }
+      }
+    );
+  });
 
-  // it("Should retrieve management type status 6 (0)", async () => {
-  //   var Record = [];
+  it("Should retrieve management type status 6 (0)", async () => {
+    var Record = [];
 
-  //   return await NODE_MGR.getManagementTypeStatus(
-  //     "6",
-  //     { from: account1 },
-  //     function (_err, _result) {
-  //       if (_err) {
-  //       } else {
-  //         Record = Object.values(_result);
-  //         console.log(Record);
-  //       }
-  //     }
-  //   );
-  // });
+    return await NODE_STOR.getManagementTypeStatus(
+      "6",
+      { from: account1 },
+      function (_err, _result) {
+        if (_err) {
+        } else {
+          Record = Object.values(_result);
+          console.log(Record);
+        }
+      }
+    );
+  });
 
   it("Should enable management type 6", async () => {
     return NODE_STOR.setManagementTypes("6", "1", { from: account1 });
   });
 
-  // it("Should retrieve management type status 6 (1)", async () => {
-  //   var Record = [];
+  it("Should retrieve management type status 6 (1)", async () => {
+    var Record = [];
 
-  //   return await NODE_MGR.getManagementTypeStatus(
-  //     "6",
-  //     { from: account1 },
-  //     function (_err, _result) {
-  //       if (_err) {
-  //       } else {
-  //         Record = Object.values(_result);
-  //         console.log(Record);
-  //       }
-  //     }
-  //   );
-  // });
+    return await NODE_STOR.getManagementTypeStatus(
+      "6",
+      { from: account1 },
+      function (_err, _result) {
+        if (_err) {
+        } else {
+          Record = Object.values(_result);
+          console.log(Record);
+        }
+      }
+    );
+  });
 
-  // it("Should retrieve custody type status 6 (0)", async () => {
-  //   var Record = [];
+  it("Should retrieve custody type status 6 (0)", async () => {
+    var Record = [];
 
-  //   return await NODE_MGR.getCustodyTypeStatus(
-  //     "6",
-  //     { from: account1 },
-  //     function (_err, _result) {
-  //       if (_err) {
-  //       } else {
-  //         Record = Object.values(_result);
-  //         console.log(Record);
-  //       }
-  //     }
-  //   );
-  // });
+    return await NODE_STOR.getCustodyTypeStatus(
+      "6",
+      { from: account1 },
+      function (_err, _result) {
+        if (_err) {
+        } else {
+          Record = Object.values(_result);
+          console.log(Record);
+        }
+      }
+    );
+  });
 
   it("Should enable management type 6", async () => {
     return NODE_STOR.setCustodyTypes("6", "1", { from: account1 });
   });
 
-  // it("Should retrieve management type status 6 (1)", async () => {
-  //   var Record = [];
+  it("Should retrieve management type status 6 (1)", async () => {
+    var Record = [];
 
-  //   return await NODE_MGR.getCustodyTypeStatus(
-  //     "6",
-  //     { from: account1 },
-  //     function (_err, _result) {
-  //       if (_err) {
-  //       } else {
-  //         Record = Object.values(_result);
-  //         console.log(Record);
-  //       }
-  //     }
-  //   );
-  // });
+    return await NODE_STOR.getCustodyTypeStatus(
+      "6",
+      { from: account1 },
+      function (_err, _result) {
+        if (_err) {
+        } else {
+          Record = Object.values(_result);
+          console.log(Record);
+        }
+      }
+    );
+  });
 
   it("Should set ipfs of Node 1000002 to 0xF", async () => {
     return NODE_STOR.updateNodeCAS(
