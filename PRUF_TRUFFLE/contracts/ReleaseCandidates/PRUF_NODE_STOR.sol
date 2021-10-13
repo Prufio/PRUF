@@ -184,7 +184,8 @@ contract NODE_STOR is BASIC {
         //^^^^^^^effects^^^^^^^^^
     }
 
-    function setNodeId(uint32 _node, string memory _name) external isNodeAdmin {
+    function setNodeIdForName(uint32 _node, string memory _name) external isNodeAdmin {
+        //DPS:TEST NEW FUNCTION NAME
         delete nodeId[_name];
         if (
             keccak256(abi.encodePacked(_name)) !=

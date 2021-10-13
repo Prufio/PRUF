@@ -820,7 +820,7 @@ interface NODE_STOR_Interface {
         address _caller
     ) external;
 
-    function setNodeId(uint32 _node, string memory _name) external;
+    function setNodeIdForName(uint32 _node, string memory _name) external;
 
     /**
      * @dev Modifies node.switches bitwise (see NODE option switches in ZZ_PRUF_DOCS)
