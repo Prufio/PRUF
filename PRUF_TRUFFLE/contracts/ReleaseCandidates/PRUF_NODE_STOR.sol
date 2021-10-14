@@ -191,6 +191,11 @@ contract NODE_STOR is BASIC {
         //^^^^^^^effects^^^^^^^^^
     }
 
+    /**
+     * @dev Modifies the name => nodeid name resolution mapping
+     * @param _node - node being mapped to the name
+     * @param _name - namespace being remapped
+     */
     function setNodeIdForName(uint32 _node, string memory _name)
         external
         isNodeAdmin
@@ -387,10 +392,13 @@ contract NODE_STOR is BASIC {
     /**
      * @dev Sets the equivelant local node for a foreign node when paired to this chain from another.
      * @param _node - node being referenced DPS:TEST
-     * @param _localNode - paired local node for foreign node _node. when _node is referenced, it will mean _localNode 
+     * @param _localNode - paired local node for foreign node _node. when _node is referenced, it will mean _localNode
      * by default, nodes are created with the local node pointing to itself - localNodeFor[_node] = _node.
-     */ 
-    function setLocalNodeFor(uint32 _node, uint32 _localNode) external isNodeAdmin{
+     */
+    function setLocalNodeFor(uint32 _node, uint32 _localNode)
+        external
+        isNodeAdmin
+    {
         localNodeFor[_node] = _localNode;
     }
 
@@ -399,8 +407,8 @@ contract NODE_STOR is BASIC {
      * @param _node - node being queried  DPS:TEST
      * returns _localNode - paired local node for foreign node _node.
      * by default, nodes are created with the local node pointing to itself - localNodeFor[_node] = _node.
-     */ 
-    function getLocalNodeFor(uint32 _node) external view returns(uint32) {
+     */
+    function getLocalNodeFor(uint32 _node) external view returns (uint32) {
         return localNodeFor[_node];
     }
 
