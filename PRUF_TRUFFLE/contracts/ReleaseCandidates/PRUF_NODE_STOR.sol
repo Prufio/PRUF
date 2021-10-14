@@ -15,6 +15,12 @@ _________\/// _____________\/// _______\/// __\///////// __\/// _____________
  * NODE_MGR must be given NODE_ADMIN_ROLE
  * Contract for storing Node information
  *
+ * For usage-level (not administrative) functions, NODE_STOR supports indirect node references
+ * via the localNodeFor mapping. By default, nodes will have a mirror entry in localNodeFor, so that
+ * localNodeFor[node] == node.... but in the case where a node is "twinned" from another chain, 
+ * querying the a foreign origin nodeID can point to the corresponding local node -IF- the entry for
+ * localNodeFor[foreignNodeID] is set to the corresponding local nodeID.  //DPS:TEST
+ *
  * STATEMENT OF TERMS OF SERVICE (TOS):
  * User agrees not to intentionally claim any namespace that is a recognized or registered brand name, trade mark,
  * or other Intellectual property not belonging to the user, and agrees to voluntarily remove any name or brand found to be
@@ -33,7 +39,8 @@ contract NODE_STOR is BASIC {
     bytes32 public constant NODE_ADMIN_ROLE = keccak256("NODE_ADMIN_ROLE");
     bytes32 public constant B320xF_ =
         0xFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFF;
-
+    mapping(uint32 => uint32) private localNodeFor; //lookup table for child nodes from origin nodeID
+    //DPS:TEST note that when setting up a local node, this will have to be set localID=LocaID
     mapping(uint32 => mapping(uint16 => Costs)) private cost; //Cost per function by Node => Costs struct (see RESOURCE_PRUF_INTERFACES for struct definitions)
     mapping(uint32 => Node) private nodeData; //node info database Node to node struct (see RESOURCE_PRUF_INTERFACES for struct definitions)
     mapping(string => uint32) private nodeId; //name to Node resolution map
@@ -184,7 +191,10 @@ contract NODE_STOR is BASIC {
         //^^^^^^^effects^^^^^^^^^
     }
 
-    function setNodeIdForName(uint32 _node, string memory _name) external isNodeAdmin {
+    function setNodeIdForName(uint32 _node, string memory _name)
+        external
+        isNodeAdmin
+    {
         //DPS:TEST NEW FUNCTION NAME
         delete nodeId[_name];
         if (
@@ -375,6 +385,26 @@ contract NODE_STOR is BASIC {
     }
 
     /**
+     * @dev Sets the equivelant local node for a foreign node when paired to this chain from another.
+     * @param _node - node being referenced DPS:TEST
+     * @param _localNode - paired local node for foreign node _node. when _node is referenced, it will mean _localNode 
+     * by default, nodes are created with the local node pointing to itself - localNodeFor[_node] = _node.
+     */ 
+    function setLocalNodeFor(uint32 _node, uint32 _localNode) external isNodeAdmin{
+        localNodeFor[_node] = _localNode;
+    }
+
+    /**
+     * @dev Gets the equivelant local node for a foreign node when paired to this chain from another.
+     * @param _node - node being queried  DPS:TEST
+     * returns _localNode - paired local node for foreign node _node.
+     * by default, nodes are created with the local node pointing to itself - localNodeFor[_node] = _node.
+     */ 
+    function getLocalNodeFor(uint32 _node) external view returns(uint32) {
+        return localNodeFor[_node];
+    }
+
+    /**
      * @dev get an node Node User type for a specified address
      * @param _userHash - hash of selected user
      * @param _node - node of query
@@ -443,13 +473,12 @@ contract NODE_STOR is BASIC {
      * @dev Retrieve extended nodeData @ _node
      * @param _node - node associated with query
      * @return nodeData (see docs)
+     * supports indirect node reference via localNodeFor[node] //DPS:CHECK
      */
-    function getNodeData(
-        uint32 _node 
-    ) external view returns (Node memory) {
+    function getNodeData(uint32 _node) external view returns (Node memory) {
         //^^^^^^^checks^^^^^^^^^
-
-        return (nodeData[_node]);
+        uint32 node = localNodeFor[_node];
+        return (nodeData[node]);
         //^^^^^^^interactions^^^^^^^^^
     }
 
@@ -458,14 +487,17 @@ contract NODE_STOR is BASIC {
      * @param _node1 - first node associated with query
      * @param _node2 - second node associated with query
      * @return 170 or 0 (true or false)
+     * supports indirect node reference via localNodeFor[node] //DPS:CHECK
      */
     function isSameRootNode(uint32 _node1, uint32 _node2)
         external
         view
         returns (uint8)
     {
+        uint32 node1 = localNodeFor[_node1];
+        uint32 node2 = localNodeFor[_node2];
         //^^^^^^^checks^^^^^^^^^
-        if (nodeData[_node1].nodeRoot == nodeData[_node2].nodeRoot) {
+        if (nodeData[node1].nodeRoot == nodeData[node2].nodeRoot) {
             return uint8(170);
         } else {
             return uint8(0);
@@ -475,12 +507,13 @@ contract NODE_STOR is BASIC {
 
     /**
      * @dev Retrieve Node_name @ _tokenId or node
-     * @param node - tokenId associated with query
-     * @return name of token @ _tokenID
+     * @param _node - tokenId associated with query
+     * return name of token @ _tokenID
+     * supports indirect node reference via localNodeFor[node] //DPS:CHECK
      */
-    function getNodeName(uint32 node) external view returns (string memory) {
+    function getNodeName(uint32 _node) external view returns (string memory) {
         //^^^^^^^checks^^^^^^^^^
-
+        uint32 node = localNodeFor[_node];
         return (nodeData[node].name);
         //^^^^^^^interactions^^^^^^^^^
     }
@@ -512,20 +545,22 @@ contract NODE_STOR is BASIC {
          NTHprice: @ _node service cost @ _service
          node: Node index
      }
+     * supports indirect node reference via localNodeFor[node] //DPS:CHECK
      */
     function getInvoice(uint32 _node, uint16 _service)
         external
         view
         returns (Invoice memory)
     {
-        Node memory node_info = nodeData[_node];
+        uint32 node = localNodeFor[_node];
+        Node memory node_info = nodeData[node];
         require(node_info.nodeRoot != 0, "NS:GSC: node !exist");
 
         require(_service != 0, "NS:GSC: Service type = 0");
         //^^^^^^^checks^^^^^^^^^
         uint32 rootNode = node_info.nodeRoot;
 
-        Costs memory costs = cost[_node][_service];
+        Costs memory costs = cost[node][_service];
         Costs memory rootCosts = cost[rootNode][_service];
         Invoice memory invoice;
 
@@ -543,6 +578,7 @@ contract NODE_STOR is BASIC {
      * @param _node - node associated with query
      * @param _service - service associated with query
      * @return Costs Struct for_node
+     * supports indirect node reference via localNodeFor[node] //DPS:CHECK
      */
     function getPaymentData(uint32 _node, uint16 _service)
         external
@@ -551,9 +587,10 @@ contract NODE_STOR is BASIC {
     {
         //^^^^^^^checks^^^^^^^^^
         Costs memory paymentData;
+        uint32 node = localNodeFor[_node];
 
-        paymentData.paymentAddress = cost[_node][_service].paymentAddress;
-        paymentData.serviceCost = cost[_node][_service].serviceCost;
+        paymentData.paymentAddress = cost[node][_service].paymentAddress;
+        paymentData.serviceCost = cost[node][_service].serviceCost;
         //^^^^^^^effects^^^^^^^^^
 
         return paymentData;
@@ -564,11 +601,13 @@ contract NODE_STOR is BASIC {
      * @dev Retrieve Node_discount @ _node
      * @param _node - node associated with query
      * @return percentage of rewards distribution @ _node
+     * supports indirect node reference via localNodeFor[node] //DPS:CHECK
      */
     function getNodeDiscount(uint32 _node) external view returns (uint32) {
         //^^^^^^^checks^^^^^^^^^
+        uint32 node = localNodeFor[_node];
 
-        return (nodeData[_node].discount);
+        return (nodeData[node].discount);
         //^^^^^^^interactions^^^^^^^^^
     }
 
@@ -577,6 +616,7 @@ contract NODE_STOR is BASIC {
      * @param _node - node associated with query
      * @param _position - bit position associated with query
      * @return 1 or 0 (enabled or disabled)
+     * supports indirect node reference via localNodeFor[node] //DPS:CHECK
      */
     function getSwitchAt(uint32 _node, uint8 _position)
         external
@@ -588,8 +628,9 @@ contract NODE_STOR is BASIC {
             "NS:GSA: bit position must be between 1 and 8"
         );
         //^^^^^^^checks^^^^^^^^^
+        uint32 node = localNodeFor[_node];
 
-        if ((nodeData[_node].switches & (1 << (_position - 1))) > 0) {
+        if ((nodeData[node].switches & (1 << (_position - 1))) > 0) {
             return 1;
         } else {
             return 0;
@@ -601,6 +642,7 @@ contract NODE_STOR is BASIC {
      * @dev creates an node and its corresponding namespace and data fields
      * @param _newNodeData - creation Data for new Node
      * @param _newNode - Node to be created (unique)
+     * sets localNodeFor[_newNode] to _newNode //DPS:CHECK
      */
     function createNodeData(
         Node memory _newNodeData,
@@ -656,6 +698,8 @@ contract NODE_STOR is BASIC {
         nodeData[_newNode].switches = _RootNodeData.switches;
         nodeData[_newNode].CAS1 = _newNodeData.CAS1;
         nodeData[_newNode].CAS2 = _newNodeData.CAS2;
+        //DPS:CHECK
+        localNodeFor[_newNode] = _newNode; //create default pairing for local node lookup (assumes node is native)
         //^^^^^^^effects^^^^^^^^^
     }
 }
