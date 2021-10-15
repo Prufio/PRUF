@@ -81,34 +81,34 @@ contract WRAP is CORE {
         );
 
         Record memory rec = getRecord(idxHash);
-        Node memory node_info = getNodeinfo(_node);
+        Node memory nodeInfo = getNodeinfo(_node);
 
         uint256 newTokenId = uint256(idxHash);
 
         require(
-            node_info.custodyType == 5,
+            nodeInfo.custodyType == 5,
             "W:W:custodyType must be 5 (wrapped/decorated erc721)"
         );
         require(
-            (node_info.referenceAddress == _foreignTokenContract) ||
-                (node_info.referenceAddress == address(0)),
+            (nodeInfo.referenceAddress == _foreignTokenContract) ||
+                (nodeInfo.referenceAddress == address(0)),
             "W:W:referenceAddress must be '0' or ERC721 contract address"
         );
         require( //DPS:TEST NEW
-            (node_info.managementType < 6),
+            (nodeInfo.managementType < 6),
             "ANC:IA: Contract does not support management types > 5 or node is locked"
         );
         if (
             //DPS:TEST NEW
-            (node_info.managementType == 1) ||
-            (node_info.managementType == 2) ||
-            (node_info.managementType == 5)
+            (nodeInfo.managementType == 1) ||
+            (nodeInfo.managementType == 2) ||
+            (nodeInfo.managementType == 5)
         ) {
             require( //DPS:TEST NEW
                 (NODE_TKN.ownerOf(_node) == _msgSender()),
                 "ANC:IA: Cannot create asset in node mgmt type 1||2||5 - caller does not hold node token"
             );
-        } else if (node_info.managementType == 3) {
+        } else if (nodeInfo.managementType == 3) {
             require( //DPS:TEST NEW
                 NODE_STOR.getUserType(
                     keccak256(abi.encodePacked(_msgSender())),
@@ -116,7 +116,7 @@ contract WRAP is CORE {
                 ) == 1,
                 "ANC:IA: Cannot create asset - caller address !authorized"
             );
-        } else if (node_info.managementType == 4) {
+        } else if (nodeInfo.managementType == 4) {
             require( //DPS:TEST NEW
                 ID_MGR.trustLevel(_msgSender()) > 10,
                 "ANC:IA: Caller !trusted ID holder"
@@ -169,14 +169,14 @@ contract WRAP is CORE {
     {
         bytes32 idxHash = bytes32(_tokenId);
         Record memory rec = getRecord(idxHash);
-        Node memory node_info = getNodeinfo(rec.node);
+        Node memory nodeInfo = getNodeinfo(rec.node);
         address foreignTokenContract = wrapped[_tokenId].tokenContract;
         uint256 foreignTokenID = wrapped[_tokenId].tokenID;
 
-        require(node_info.custodyType == 5, "W:UW: Node.custodyType != 5");
+        require(nodeInfo.custodyType == 5, "W:UW: Node.custodyType != 5");
         require(
-            (node_info.referenceAddress == foreignTokenContract) ||
-                (node_info.referenceAddress == address(0)),
+            (nodeInfo.referenceAddress == foreignTokenContract) ||
+                (nodeInfo.referenceAddress == address(0)),
             "W:UW: Node extended data must be '0' or ERC721 contract address"
         );
         require(
@@ -184,7 +184,7 @@ contract WRAP is CORE {
             "W:UW: Asset not in transferrable status"
         );
         //^^^^^^^checks^^^^^^^^^
-
+        delete wrapped[_tokenId];
         A_TKN.trustedAgentBurn(_tokenId);
 
         foreignTransfer(
@@ -193,6 +193,27 @@ contract WRAP is CORE {
             _msgSender(),
             foreignTokenID
         );
+
+        //^^^^^^^interactions^^^^^^^^^
+    }
+
+    /**
+     * @dev reveals core tokenContract address and token ID for a wrapped token.
+     * @param _tokenId tokenID of PRUF token being inspected
+     * Returns tokenContractAddress, tokenId of wrapped token //DPS:TEST
+     */
+    function getCoreToken(uint256 _tokenId)
+        external
+        view
+        returns (address, uint256)
+    {
+        require(
+            wrapped[_tokenId].tokenContract != address(0),
+            "W:GCT:tokenId does not refer to a wrapped token"
+        );
+        //^^^^^^^checks^^^^^^^^^
+
+        return (wrapped[_tokenId].tokenContract, wrapped[_tokenId].tokenID);
         //^^^^^^^interactions^^^^^^^^^
     }
 
@@ -210,6 +231,7 @@ contract WRAP is CORE {
         uint256 _tokenId
     ) internal {
         IERC721(_tokenContract).transferFrom(_from, _to, _tokenId);
+        //^^^^^^^interactions^^^^^^^^^
     }
 
     /**
@@ -229,30 +251,30 @@ contract WRAP is CORE {
     ) internal override {
         bytes32 idxHash = keccak256(abi.encodePacked(_idxRaw, _node)); //hash idxRaw with node to get idxHash DPS:TEST
         uint256 tokenId = uint256(idxHash);
-        Node memory node_info = getNodeinfo(_node);
+        Node memory nodeInfo = getNodeinfo(_node);
 
         require(
             A_TKN.tokenExists(tokenId) == 0,
             "W:CR: Asset token already exists"
         );
         require(
-            (node_info.custodyType == 5),
+            (nodeInfo.custodyType == 5),
             "W:CR: Cannot create asset - contract not authorized for node custody type"
         );
         require(
-            (node_info.managementType < 6),
+            (nodeInfo.managementType < 6),
             "W:CR: Contract does not support management types > 5 or node is locked"
         );
         if (
-            (node_info.managementType == 1) ||
-            (node_info.managementType == 2) ||
-            (node_info.managementType == 5)
+            (nodeInfo.managementType == 1) ||
+            (nodeInfo.managementType == 2) ||
+            (nodeInfo.managementType == 5)
         ) {
             require(
                 (NODE_TKN.ownerOf(_node) == _msgSender()),
                 "W:CR: Cannot create asset in node mgmt type 1||2||5 - caller does not hold node token"
             );
-        } else if (node_info.managementType == 3) {
+        } else if (nodeInfo.managementType == 3) {
             require(
                 NODE_STOR.getUserType(
                     keccak256(abi.encodePacked(_msgSender())),
@@ -260,7 +282,7 @@ contract WRAP is CORE {
                 ) == 1,
                 "W:CR:Cannot create asset - caller address not authorized"
             );
-        } else if (node_info.managementType == 4) {
+        } else if (nodeInfo.managementType == 4) {
             require(
                 ID_MGR.trustLevel(_msgSender()) > 10,
                 "W:CR:Caller does not hold sufficiently trusted ID"
