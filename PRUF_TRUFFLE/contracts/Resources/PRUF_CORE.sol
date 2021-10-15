@@ -35,31 +35,31 @@ contract CORE is BASIC {
         uint32 _countDownStart
     ) internal virtual {
         uint256 tokenId = uint256(_idxHash);
-        Node memory node_info = getNodeinfo(_node);
+        Node memory nodeInfo = getNodeinfo(_node);
 
         require(
             A_TKN.tokenExists(tokenId) == 0,
             "C:CR:Asset token already exists"
         );
         require(
-            node_info.custodyType != 3,
+            nodeInfo.custodyType != 3,
             "C:CR:Cannot create asset in a root node"
         );
         require(
-            (node_info.managementType < 6),
+            (nodeInfo.managementType < 6),
             "C:CR:Contract does not support management types > 5 or node is locked"
         );
-        if (node_info.custodyType != 1) {
+        if (nodeInfo.custodyType != 1) {
             if (
-                (node_info.managementType == 1) ||
-                (node_info.managementType == 2) ||
-                (node_info.managementType == 5)
+                (nodeInfo.managementType == 1) ||
+                (nodeInfo.managementType == 2) ||
+                (nodeInfo.managementType == 5)
             ) {
                 require(
                     (NODE_TKN.ownerOf(_node) == _msgSender()),
                     "C:CR:Cannot create asset in node mgmt type 1||2||5 - caller does not hold node token"
                 );
-            } else if (node_info.managementType == 3) {
+            } else if (nodeInfo.managementType == 3) {
                 require(
                     NODE_STOR.getUserType(
                         keccak256(abi.encodePacked(_msgSender())),
@@ -67,7 +67,7 @@ contract CORE is BASIC {
                     ) == 1,
                     "C:CR:Cannot create asset - caller not authorized"
                 );
-            } else if (node_info.managementType == 4) {
+            } else if (nodeInfo.managementType == 4) {
                 require(
                     ID_MGR.trustLevel(_msgSender()) > 10,
                     "C:CR:Caller does not hold sufficiently trusted ID"
@@ -75,9 +75,9 @@ contract CORE is BASIC {
             }
         }
         require(
-            (node_info.custodyType == 1) ||
-                (node_info.custodyType == 2) ||
-                (node_info.custodyType == 4),
+            (nodeInfo.custodyType == 1) ||
+                (nodeInfo.custodyType == 2) ||
+                (nodeInfo.custodyType == 4),
             "C:CR:Cannot create asset - contract not authorized for node custody type"
         );
         //^^^^^^^Checks^^^^^^^^
@@ -86,7 +86,7 @@ contract CORE is BASIC {
         if (NODE_STOR.getSwitchAt(_node, 2) == 0) {
             //if switch at bit 2 is not set, set the mint to address to the node holder
             recipient = NODE_TKN.ownerOf(_node);
-        } else if (node_info.custodyType == 1) {
+        } else if (nodeInfo.custodyType == 1) {
             //if switch at bit 2 is set, and and the custody type is 1, send the token to this cointract.
             recipient = address(this);
         } else {
@@ -134,13 +134,13 @@ contract CORE is BASIC {
         virtual
         whenNotPaused
     {
-        Node memory node_info = getNodeinfo(_rec.node);
+        Node memory nodeInfo = getNodeinfo(_rec.node);
 
         require(
-            (node_info.managementType < 6),
+            (nodeInfo.managementType < 6),
             "C:WMS:Contract does not support management types > 5 or node is locked"
         );
-        if ((node_info.custodyType != 1) && (node_info.managementType == 5)) {
+        if ((nodeInfo.custodyType != 1) && (nodeInfo.managementType == 5)) {
             require(
                 (NODE_TKN.ownerOf(_rec.node) == _msgSender()),
                 "C:WMS: Caller must hold node (management type 5)"

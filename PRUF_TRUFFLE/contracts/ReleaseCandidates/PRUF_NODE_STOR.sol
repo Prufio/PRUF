@@ -559,12 +559,12 @@ contract NODE_STOR is BASIC {
         returns (Invoice memory)
     {
         uint32 node = localNodeFor[_node];
-        Node memory node_info = nodeData[node];
-        require(node_info.nodeRoot != 0, "NS:GSC: node !exist");
+        Node memory nodeInfo = nodeData[node];
+        require(nodeInfo.nodeRoot != 0, "NS:GSC: node !exist");
 
         require(_service != 0, "NS:GSC: Service type = 0");
         //^^^^^^^checks^^^^^^^^^
-        uint32 rootNode = node_info.nodeRoot;
+        uint32 rootNode = nodeInfo.nodeRoot;
 
         Costs memory costs = cost[node][_service];
         Costs memory rootCosts = cost[rootNode][_service];

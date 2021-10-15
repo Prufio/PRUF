@@ -111,7 +111,7 @@ contract RCLR is ECR_CORE, CORE {
     //     isAuthorized(_idxHash)
     // {
     //     Record memory rec = getRecord(_idxHash);
-    //     Node memory node_info = getNodeinfo(rec.node);
+    //     Node memory nodeInfo = getNodeinfo(rec.node);
 
     //     require(
     //         (rec.assetStatus == 51) || (rec.assetStatus == 70),
@@ -122,11 +122,11 @@ contract RCLR is ECR_CORE, CORE {
     //         "APP_NC:EXT: Cannot change node to new root"
     //     );
     //     require(
-    //         (node_info.managementType < 6),
+    //         (nodeInfo.managementType < 6),
     //         "APP_NC:EXT: Contract does not support management types > 5 or node is locked"
     //     );
     //     if (
-    //         (node_info.managementType == 1) || (node_info.managementType == 5)
+    //         (nodeInfo.managementType == 1) || (nodeInfo.managementType == 5)
     //     ) {
     //         require(
     //             (NODE_TKN.ownerOf(rec.node) == _msgSender()),
@@ -154,7 +154,7 @@ contract RCLR is ECR_CORE, CORE {
     //     isAuthorized(_idxHash)
     // {
     //     Record memory rec = getRecord(_idxHash);
-    //     Node memory node_info = getNodeinfo(_newNode);
+    //     Node memory nodeInfo = getNodeinfo(_newNode);
 
     //     require(rec.assetStatus == 70, "ANC:IA: Asset !exported");
     //     require(
@@ -166,19 +166,19 @@ contract RCLR is ECR_CORE, CORE {
     //         "ANC:IA: Cannot change node to new root"
     //     );
     //     require(
-    //         (node_info.managementType < 6),
+    //         (nodeInfo.managementType < 6),
     //         "ANC:IA: Contract does not support management types > 5 or node is locked"
     //     );
     //     if (
-    //         (node_info.managementType == 1) ||
-    //         (node_info.managementType == 2) ||
-    //         (node_info.managementType == 5)
+    //         (nodeInfo.managementType == 1) ||
+    //         (nodeInfo.managementType == 2) ||
+    //         (nodeInfo.managementType == 5)
     //     ) {
     //         require(
     //             (NODE_TKN.ownerOf(_newNode) == _msgSender()),
     //             "ANC:IA: Cannot import asset in node mgmt type 1||2||5 - caller does not hold node token"
     //         );
-    //     } else if (node_info.managementType == 3) {
+    //     } else if (nodeInfo.managementType == 3) {
     //         require(
     //             NODE_STOR.getUserType(
     //                 keccak256(abi.encodePacked(_msgSender())),
@@ -186,7 +186,7 @@ contract RCLR is ECR_CORE, CORE {
     //             ) == 1,
     //             "ANC:IA: Cannot create asset - caller address !authorized"
     //         );
-    //     } else if (node_info.managementType == 4) {
+    //     } else if (nodeInfo.managementType == 4) {
     //         require(
     //             ID_MGR.trustLevel(_msgSender()) > 10,
     //             "ANC:IA: Caller !trusted ID holder"

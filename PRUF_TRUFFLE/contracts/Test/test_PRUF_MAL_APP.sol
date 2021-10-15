@@ -47,7 +47,7 @@ contract MAL_APP is CORE_MAL {
         bytes32 idxHash = keccak256(abi.encodePacked(_idxHash, _node)); //hash idxRaw with node to get idxHash
         // Record memory rec = getRecord(_idxHash);
         // uint8 userType = getCallingUserType(_node);
-        // Node memory node_info =getNodeinfo(_node);
+        // Node memory nodeInfo =getNodeinfo(_node);
         // Node memory oldNode_info =getNodeinfo(rec.node);
         // ContractDataHash memory contractInfo = getContractInfo(
         //     address(this),
@@ -69,7 +69,7 @@ contract MAL_APP is CORE_MAL {
         //bytes32 userHash = keccak256(abi.encodePacked(_msgSender()));
         //^^^^^^^effects^^^^^^^^^
 
-        // if (node_info.nodeRoot == oldNode_info.nodeRoot) {
+        // if (nodeInfo.nodeRoot == oldNode_info.nodeRoot) {
             // createRecord(_idxHash, _rgtHash, _node, rec.countDownStart);
         // } else {
             createRecord(idxHash, _rgtHash, _node, _countDownStart);

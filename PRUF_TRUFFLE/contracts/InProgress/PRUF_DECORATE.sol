@@ -66,12 +66,12 @@ contract DECORATE is CORE {
     {   //DPS:TEST
         bytes32 idxHash = keccak256(abi.encodePacked(_tokenID, _tokenContract));
         Record memory rec = getRecord(idxHash);
-        Node memory node_info =getNodeinfo(_node);
+        Node memory nodeInfo =getNodeinfo(_node);
 
-        require(node_info.custodyType == 5, "D:D:Node.custodyType != 5");
+        require(nodeInfo.custodyType == 5, "D:D:Node.custodyType != 5");
         require(
-            (node_info.referenceAddress == _tokenContract) ||
-                (node_info.referenceAddress == address(0)),
+            (nodeInfo.referenceAddress == _tokenContract) ||
+                (nodeInfo.referenceAddress == address(0)),
             "D:D:Node reference address must be '0' or ERC721 contract address"
         );
         require(
@@ -79,19 +79,19 @@ contract DECORATE is CORE {
             "D:D:Wrapper, decoration, or record already exists"
         );
         require( //DPS:TEST NEW
-            (node_info.managementType < 6),
+            (nodeInfo.managementType < 6),
             "ANC:IA: Contract does not support management types > 5 or node is locked"
         );
         if (    //DPS:TEST NEW
-            (node_info.managementType == 1) ||
-            (node_info.managementType == 2) ||
-            (node_info.managementType == 5)
+            (nodeInfo.managementType == 1) ||
+            (nodeInfo.managementType == 2) ||
+            (nodeInfo.managementType == 5)
         ) {
             require(    //DPS:TEST NEW
                 (NODE_TKN.ownerOf(_node) == _msgSender()),
                 "ANC:IA: Cannot create asset in node mgmt type 1||2||5 - caller does not hold node token"
             );
-        } else if (node_info.managementType == 3) {
+        } else if (nodeInfo.managementType == 3) {
             require(    //DPS:TEST NEW
                 NODE_STOR.getUserType(
                     keccak256(abi.encodePacked(_msgSender())),
@@ -99,7 +99,7 @@ contract DECORATE is CORE {
                 ) == 1,
                 "ANC:IA: Cannot create asset - caller address !authorized"
             );
-        } else if (node_info.managementType == 4) {
+        } else if (nodeInfo.managementType == 4) {
             require(    //DPS:TEST NEW
                 ID_MGR.trustLevel(_msgSender()) > 10,
                 "ANC:IA: Caller !trusted ID holder"
@@ -132,15 +132,15 @@ contract DECORATE is CORE {
     {
         bytes32 idxHash = keccak256(abi.encodePacked(_tokenID, _tokenContract));
         Record memory rec = getRecord(idxHash);
-        Node memory node_info =getNodeinfo(rec.node);
+        Node memory nodeInfo =getNodeinfo(rec.node);
 
         require(
-            node_info.custodyType == 5,
+            nodeInfo.custodyType == 5,
             "D:MS:Node.custodyType != 5 & record must exist"
         );
         require(
-            (node_info.referenceAddress == _tokenContract) ||
-                (node_info.referenceAddress == address(0)),
+            (nodeInfo.referenceAddress == _tokenContract) ||
+                (nodeInfo.referenceAddress == address(0)),
             "D:MS:Node extended data must be '0' or ERC721 contract address"
         );
         require(
@@ -188,15 +188,15 @@ contract DECORATE is CORE {
     {
         bytes32 idxHash = keccak256(abi.encodePacked(_tokenID, _tokenContract));
         Record memory rec = getRecord(idxHash);
-        Node memory node_info =getNodeinfo(rec.node);
+        Node memory nodeInfo =getNodeinfo(rec.node);
 
         require(
-            node_info.custodyType == 5,
+            nodeInfo.custodyType == 5,
             "D:DC:Node.custodyType != 5 & record must exist"
         );
         require(
-            (node_info.referenceAddress == _tokenContract) ||
-                (node_info.referenceAddress == address(0)),
+            (nodeInfo.referenceAddress == _tokenContract) ||
+                (nodeInfo.referenceAddress == address(0)),
             "D:DC:Node extended data must be '0' or ERC721 contract address"
         );
 
@@ -238,25 +238,25 @@ contract DECORATE is CORE {
     {
         bytes32 idxHash = keccak256(abi.encodePacked(_tokenID, _tokenContract));
         Record memory rec = getRecord(idxHash);
-        Node memory node_info =getNodeinfo(rec.node);
+        Node memory nodeInfo =getNodeinfo(rec.node);
 
         require(
-            node_info.custodyType == 5,
+            nodeInfo.custodyType == 5,
             "D:MI1:Node.custodyType != 5 & record must exist"
         );
         require(
-            (node_info.managementType < 6),
+            (nodeInfo.managementType < 6),
             "C:CR:Contract does not support management types > 5 or node is locked"
         );
-        if ((node_info.custodyType != 1) && (node_info.managementType == 5)) {
+        if ((nodeInfo.custodyType != 1) && (nodeInfo.managementType == 5)) {
             require(
                 (NODE_TKN.ownerOf(rec.node) == _msgSender()),
                 "C:WRMS: Caller must hold node (management type 5)"
             );
         }
         require(
-            (node_info.referenceAddress == _tokenContract) ||
-                (node_info.referenceAddress == address(0)),
+            (nodeInfo.referenceAddress == _tokenContract) ||
+                (nodeInfo.referenceAddress == address(0)),
             "D:MI1:Node extended data must be '0' or ERC721 contract address"
         );
 
@@ -296,15 +296,15 @@ contract DECORATE is CORE {
     {
         bytes32 idxHash = keccak256(abi.encodePacked(_tokenID, _tokenContract));
         Record memory rec = getRecord(idxHash);
-        Node memory node_info =getNodeinfo(rec.node);
+        Node memory nodeInfo =getNodeinfo(rec.node);
 
         require(
-            node_info.custodyType == 5,
+            nodeInfo.custodyType == 5,
             "D:AI2:Node.custodyType != 5 & record must exist"
         );
         require(
-            (node_info.referenceAddress == _tokenContract) ||
-                (node_info.referenceAddress == address(0)),
+            (nodeInfo.referenceAddress == _tokenContract) ||
+                (nodeInfo.referenceAddress == address(0)),
             "D:AI2:Node extended data must be '0' or ERC721 contract address"
         );
 
@@ -337,25 +337,25 @@ contract DECORATE is CORE {
     // {   
     //     bytes32 idxHash = keccak256(abi.encodePacked(_tokenID, _tokenContract));
     //     Record memory rec = getRecord(idxHash);
-    //     Node memory node_info =getNodeinfo(rec.node);
+    //     Node memory nodeInfo =getNodeinfo(rec.node);
 
     //     require(
-    //         node_info.custodyType == 5,
+    //         nodeInfo.custodyType == 5,
     //         "D:E:Node.custodyType != 5 & record must exist"
     //     );
     //     require(
-    //         (node_info.managementType < 6),
+    //         (nodeInfo.managementType < 6),
     //         "C:CR:Contract does not support management types > 5 or node is locked"
     //     );
-    //     if ((node_info.managementType == 1) || (node_info.managementType == 5)) {
+    //     if ((nodeInfo.managementType == 1) || (nodeInfo.managementType == 5)) {
     //         require(
     //             (NODE_TKN.ownerOf(rec.node) == _msgSender()),
     //             "D:E: Restricted from exporting assets from this node - does not hold NodeToken"
     //         );
     //     }
     //     require(
-    //         (node_info.referenceAddress == _tokenContract) ||
-    //             (node_info.referenceAddress == address(0)),
+    //         (nodeInfo.referenceAddress == _tokenContract) ||
+    //             (nodeInfo.referenceAddress == address(0)),
     //         "D:E:Node extended data must be '0' or ERC721 contract address"
     //     );
 
@@ -395,16 +395,16 @@ contract DECORATE is CORE {
     // {
     //     bytes32 idxHash = keccak256(abi.encodePacked(_tokenID, _tokenContract));
     //     Record memory rec = getRecord(idxHash);
-    //     Node memory node_info =getNodeinfo(rec.node);
+    //     Node memory nodeInfo =getNodeinfo(rec.node);
     //     Node memory newNodeInfo =getNodeinfo(_newNode);
 
     //     require(
-    //         (node_info.custodyType == 5) && (newNodeInfo.custodyType == 5), //only allow import of other wrappers
+    //         (nodeInfo.custodyType == 5) && (newNodeInfo.custodyType == 5), //only allow import of other wrappers
     //         "D:I:Node.custodyType != 5 & record must exist"
     //     );
     //     require(
-    //         ((node_info.referenceAddress == _tokenContract) ||
-    //             (node_info.referenceAddress == address(0))) &&
+    //         ((nodeInfo.referenceAddress == _tokenContract) ||
+    //             (nodeInfo.referenceAddress == address(0))) &&
     //             ((newNodeInfo.referenceAddress == _tokenContract) ||
     //                 (newNodeInfo.referenceAddress == address(0))),
     //         "D:I:Node extended data must be '0' or ERC721 contract address" //if node has a contract erc721address specified, it must match
@@ -473,30 +473,30 @@ contract DECORATE is CORE {
     ) internal {
         bytes32 idxHash = keccak256(abi.encodePacked(_idxRaw, _node)); //hash idxRaw with node to get idxHash DPS:TEST
         uint256 tokenId = uint256(idxHash);
-        Node memory node_info =getNodeinfo(_node);
+        Node memory nodeInfo =getNodeinfo(_node);
 
         require(
             A_TKN.tokenExists(tokenId) == 0,
             "D:CRO: token is already wrapped. Must discard wrapper before decorating"
         );
         require(
-            node_info.custodyType == 5,
+            nodeInfo.custodyType == 5,
             "D:CRO:Node.custodyType must be 5 (wrapped/decorated erc721)"
         );
         require(
-            (node_info.managementType < 5),
+            (nodeInfo.managementType < 5),
             "D:CRO:Contract does not support management types > 5 or node is locked"
         );
         if (
-            (node_info.managementType == 1) ||
-            (node_info.managementType == 2) ||
-            (node_info.managementType == 5)
+            (nodeInfo.managementType == 1) ||
+            (nodeInfo.managementType == 2) ||
+            (nodeInfo.managementType == 5)
         ) {
             require(
                 (NODE_TKN.ownerOf(_node) == _msgSender()),
                 "D:CRO:Cannot create asset in node mgmt type 1||2||5 - caller does not hold node token"
             );
-        } else if (node_info.managementType == 3) {
+        } else if (nodeInfo.managementType == 3) {
             require(
                 NODE_STOR.getUserType(
                     keccak256(abi.encodePacked(_msgSender())),
@@ -504,7 +504,7 @@ contract DECORATE is CORE {
                 ) == 1,
                 "D:CRO:Cannot create asset - caller address not authorized"
             );
-        } else if (node_info.managementType == 4) {
+        } else if (nodeInfo.managementType == 4) {
             require(
                 ID_MGR.trustLevel(_msgSender()) > 10,
                 "D:CRO:Caller does not hold sufficiently trusted ID"

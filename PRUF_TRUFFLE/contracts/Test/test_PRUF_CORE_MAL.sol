@@ -55,7 +55,7 @@ contract CORE_MAL is BASIC {
         uint32 _countDownStart
     ) internal virtual {
         uint256 tokenId = uint256(_idxHash);
-        Node memory node_info = getNodeinfo(_node);
+        Node memory nodeInfo = getNodeinfo(_node);
 
         require(
             A_TKN.tokenExists(tokenId) == 0,
@@ -63,15 +63,15 @@ contract CORE_MAL is BASIC {
         );
 
         require(
-            node_info.custodyType != 3,
+            nodeInfo.custodyType != 3,
             "C:CR:Cannot create asset in a root node"
         );
 
-        if (node_info.custodyType == 1) {
+        if (nodeInfo.custodyType == 1) {
             A_TKN.mintAssetToken(address(this), tokenId);
         }
 
-        if ((node_info.custodyType == 2) || (node_info.custodyType == 4)) {
+        if ((nodeInfo.custodyType == 2) || (nodeInfo.custodyType == 4)) {
             A_TKN.mintAssetToken(_msgSender(), tokenId);
         }
 
