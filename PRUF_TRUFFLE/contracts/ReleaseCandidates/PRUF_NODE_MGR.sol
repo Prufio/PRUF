@@ -12,7 +12,7 @@ _________\/// _____________\/// _______\/// __\///////// __\/// _____________
 
 /**-----------------------------------------------------------------
  * PRUF NODE_MGR
- *
+ * CTS:EXAIMINE when setting local nodes, must be same custody type
  * Contract for minting and managing Nodes
  *
  * STATEMENT OF TERMS OF SERVICE (TOS):

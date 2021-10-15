@@ -389,7 +389,7 @@ contract NODE_STOR is BASIC {
 
     /** CTS:EXAMINE take out "For" in name
      * @dev Sets the equivelant local node for a foreign node when paired to this chain from another.
-     * @param _node - node being referenced DPS:TEST
+     * @param _node - node being referenced
      * @param _localNode - paired local node for foreign node _node. when _node is referenced, it will mean _localNode
      * by default, nodes are created with the local node pointing to itself - localNodeFor[_node] = _node.
      */
@@ -402,7 +402,7 @@ contract NODE_STOR is BASIC {
 
     /** CTS:EXAMINE take out "For" in name
      * @dev Gets the equivelant local node for a foreign node when paired to this chain from another.
-     * @param _node - node being queried  DPS:TEST
+     * @param _node - node being queried
      * returns _localNode - paired local node for foreign node _node.
      * by default, nodes are created with the local node pointing to itself - localNodeFor[_node] = _node.
      */

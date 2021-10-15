@@ -2323,9 +2323,20 @@ contract("NODE_STOR", (accounts) => {
   });
 
   //44
-  it("Should fail because bit pos !<0||>9", async () => {
+  it("Should fail because caller !nodeAdmin", async () => {
     console.log(
       "//**************************************END setNonMutableData FAIL BATCH**********************************************/"
+    );
+    console.log(
+      "//**************************************BEGIN setLocalNodeFor FAIL BATCH**********************************************/"
+    );
+    return NODE_STOR.setLocalNodeFor("1000001", "10", { from: account2 });
+  });
+
+  //45
+  it("Should fail because bit pos !<0||>9", async () => {
+    console.log(
+      "//**************************************END setLocalNodeFor FAIL BATCH**********************************************/"
     );
     console.log(
       "//**************************************BEGIN getSwitchAt FAIL BATCH**********************************************/"
@@ -2333,7 +2344,7 @@ contract("NODE_STOR", (accounts) => {
     return NODE_STOR.getSwitchAt("1000001", "10", { from: account2 });
   });
 
-  //45
+  //46
   it("Should fail because Node not yet populated", async () => {
     console.log(
       "//**************************************END getSwitchAt FAIL BATCH**********************************************/"
@@ -2344,7 +2355,7 @@ contract("NODE_STOR", (accounts) => {
     return NODE_STOR.getInvoice("100", "1", { from: account2 });
   });
 
-  //46
+  //47
   it("Should fail because service 0 is not valid", async () => {
     return NODE_STOR.getInvoice("1000001", "0", { from: account2 });
   });

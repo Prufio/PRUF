@@ -1600,6 +1600,26 @@ contract("NODE_STOR", (accounts) => {
     );
   });
 
+  it("Should setLocalNodeFor node 1000002", async () => {
+    return NODE_STOR.setLocalNodeFor("1000002", "1000001", { from: account1 });
+  });
+
+  it("Should retrieve Local Node For 1000002", async () => {
+    var Record = [];
+
+    return await NODE_STOR.getLocalNodeFor(
+      "1000002",
+      { from: account1 },
+      function (_err, _result) {
+        if (_err) {
+        } else {
+          Record = Object.values(_result);
+          console.log(Record);
+        }
+      }
+    );
+  });
+
   it("Should retrieve paymentData of node 1000001 @ service 1", async () => {
     var Record = [];
 
@@ -2292,6 +2312,24 @@ contract("NODE_STOR", (accounts) => {
         } else {
           Record = Object.values(_result);
           console.log(Record);
+        }
+      }
+    );
+  });
+
+  it("Should retrieve owner of asset13", async () => {
+    var Record = [];
+
+    return await A_TKN.ownerOf(
+      asset13,
+      { from: account4 },
+      function (_err, _result) {
+        if (_err) {
+        } else {
+          Record = Object.values(_result);
+          console.log("APP_NC", APP_NC.address);
+          console.log("account1", account1);
+          console.log("result",Record);
         }
       }
     );
