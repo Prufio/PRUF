@@ -34,14 +34,14 @@ contract WRAP is CORE {
 
     /**
      * @dev Verify user credentials
-     * @param _tokenID tokenID of token
+     * @param _tokenId tokenID of token
      * @param _tokenContract Contract to check
      * Originating Address:
      *    require that user holds token @ ID-Contract
      */
-    modifier isTokenHolder(uint256 _tokenID, address _tokenContract) {
+    modifier isTokenHolder(uint256 _tokenId, address _tokenContract) {
         require(
-            (IERC721(_tokenContract).ownerOf(_tokenID) == _msgSender()),
+            (IERC721(_tokenContract).ownerOf(_tokenId) == _msgSender()),
             "W:MOD-ITH: Caller does not hold specified token"
         );
         _;
@@ -157,21 +157,21 @@ contract WRAP is CORE {
 
     /**
      * @dev Unwraps a token, returns original to caller
-     * @param _tokenID tokenID of PRUF token being unwrapped
+     * @param _tokenId tokenID of PRUF token being unwrapped
      * burns pruf asset from caller wallet
      * Sends original 721 to caller
      */
-    function unWrap721(uint256 _tokenID)
+    function unWrap721(uint256 _tokenId)
         external
         nonReentrant
         whenNotPaused
-        isTokenHolder(_tokenID, A_TKN_Address) //caller holds the wrapped token
+        isTokenHolder(_tokenId, A_TKN_Address) //caller holds the wrapped token
     {
-        bytes32 idxHash = bytes32(_tokenID);
+        bytes32 idxHash = bytes32(_tokenId);
         Record memory rec = getRecord(idxHash);
         Node memory node_info = getNodeinfo(rec.node);
-        address foreignTokenContract = wrapped[_tokenID].tokenContract;
-        uint256 foreignTokenID = wrapped[_tokenID].tokenID;
+        address foreignTokenContract = wrapped[_tokenId].tokenContract;
+        uint256 foreignTokenID = wrapped[_tokenId].tokenID;
 
         require(node_info.custodyType == 5, "W:UW: Node.custodyType != 5");
         require(
@@ -185,7 +185,7 @@ contract WRAP is CORE {
         );
         //^^^^^^^checks^^^^^^^^^
 
-        A_TKN.trustedAgentBurn(_tokenID);
+        A_TKN.trustedAgentBurn(_tokenId);
 
         foreignTransfer(
             foreignTokenContract,
@@ -201,15 +201,15 @@ contract WRAP is CORE {
      * @param _tokenContract Address of foreign token contract
      * @param _from origin
      * @param _to destination
-     * @param _tokenID Token ID
+     * @param _tokenId Token ID
      */
     function foreignTransfer(
         address _tokenContract,
         address _from,
         address _to,
-        uint256 _tokenID
+        uint256 _tokenId
     ) internal {
-        IERC721(_tokenContract).transferFrom(_from, _to, _tokenID);
+        IERC721(_tokenContract).transferFrom(_from, _to, _tokenId);
     }
 
     /**
