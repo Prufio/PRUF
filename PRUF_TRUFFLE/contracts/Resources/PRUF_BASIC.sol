@@ -267,7 +267,7 @@ abstract contract BASIC is
      * @param _node - to check user type in
      * @return user authorization type of caller, from NODE_MGR user mapping
      */
-    function getCallingUserType(uint32 _node) internal virtual returns (uint8) {
+    function getCallingUserType(uint32 _node) internal view virtual returns (uint8) {
         //^^^^^^^checks^^^^^^^^^
 
         uint8 userTypeInNode = NODE_STOR.getUserType(
@@ -284,7 +284,7 @@ abstract contract BASIC is
      * @param _node - to retrireve info about
      * @return entire node struct (see interfaces for struct definitions)
      */
-    function getNodeinfo(uint32 _node) internal virtual returns (Node memory) {
+    function getNodeinfo(uint32 _node) internal view virtual returns (Node memory) {
         //^^^^^^^checks^^^^^^^^^
 
         return NODE_STOR.getNodeData(_node); //for new NODE_STOR
