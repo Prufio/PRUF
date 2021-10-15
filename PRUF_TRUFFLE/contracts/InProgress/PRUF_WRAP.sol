@@ -202,7 +202,7 @@ contract WRAP is CORE {
      * @param _tokenId tokenID of PRUF token being inspected
      * Returns tokenContractAddress, tokenId of wrapped token //DPS:TEST
      */
-    function getCoreToken(uint256 _tokenId)
+    function getCoreTokenInfo(uint256 _tokenId)
         external
         view
         returns (address, uint256)
