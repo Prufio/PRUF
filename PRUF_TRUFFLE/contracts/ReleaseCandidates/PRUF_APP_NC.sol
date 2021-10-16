@@ -59,7 +59,7 @@ contract APP_NC is CORE {
     ) external nonReentrant whenNotPaused {
         bytes32 idxHash = keccak256(abi.encodePacked(_idxHash, _node)); //hash idxRaw with node to get idxHash/
         require(
-            (ID_MGR.trustLevel(_msgSender()) > 0), //_msgSender() is ID token holder
+            (ID_MGR.trustLevel(_msgSender()) > 0), //_msgSender() has a trust level rating
             "ANC:NRWD: Caller !PRuF_ID holder"
         );
         //^^^^^^^Checks^^^^^^^^^
@@ -93,7 +93,7 @@ contract APP_NC is CORE {
     ) external nonReentrant whenNotPaused {
         bytes32 idxHash = keccak256(abi.encodePacked(_idxHash, _node)); //hash idxRaw with node to get idxHash 
         require(
-            (ID_MGR.trustLevel(_msgSender()) > 0), //_msgSender() is ID token holder
+            (ID_MGR.trustLevel(_msgSender()) > 0), //_msgSender() has a trust level rating
             "ANC:NRWD: Caller !PRuF_ID holder"
         );
         //^^^^^^^Checks^^^^^^^^^
@@ -122,7 +122,7 @@ contract APP_NC is CORE {
     ) external nonReentrant whenNotPaused {
         bytes32 idxHash = keccak256(abi.encodePacked(_idxHash, _node)); //hash idxRaw with node to get idxHash
         require(
-            (ID_MGR.trustLevel(_msgSender()) > 0), //_msgSender() is ID token holder
+            (ID_MGR.trustLevel(_msgSender()) > 0), //_msgSender() has a trust level rating
             "ANC:NR: Caller !PRuF_ID holder"
         );
         //^^^^^^^Checks^^^^^^^^^
