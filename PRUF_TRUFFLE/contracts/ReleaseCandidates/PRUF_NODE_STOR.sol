@@ -257,6 +257,23 @@ contract NODE_STOR is BASIC {
     }
 
     /**
+     * @dev Administratively Deauthorize address be permitted to mint or modify records
+     * @dev only useful for custody types that designate user adresses (type1...)
+     * @param _node - node that user is being deauthorized in
+     * @param _addrHash - hash of address to deauthorize
+     */
+    function DAOblockUser(
+        uint32 _node,
+        bytes32 _addrHash
+    ) external isNodeAdmin {
+        //^^^^^^^checks^^^^^^^^^
+
+        registeredUsers[_addrHash][_node] = 0; //deauth node
+        registeredUsers[_addrHash][0]--; //decrease user count
+        //^^^^^^^effects^^^^^^^^^
+    }
+
+    /**
      * @dev Modifies an node Node content adressable storage data pointer
      * @param _node - node being modified
      * @param _CAS1 - any external data attatched to node 1/2
@@ -319,7 +336,7 @@ contract NODE_STOR is BASIC {
      * @param _addrHash - hash of address belonging to user being authorized
      * @param _userType - authority level for user (see docs)
      */
-    function addUser( NEED TO ADD A FUNCTION TO REMOVE USERS AND DEPRICATE ID MANAGER
+    function addUser(
         uint32 _node,
         bytes32 _addrHash,
         uint8 _userType
@@ -329,11 +346,11 @@ contract NODE_STOR is BASIC {
         registeredUsers[_addrHash][_node] = _userType;
 
         if ((_userType != 0) && (registeredUsers[_addrHash][0] < 255)) {
-            registeredUsers[_addrHash][0]++;
+            registeredUsers[_addrHash][0]++; //increase user count
         }
 
         if ((_userType == 0) && (registeredUsers[_addrHash][0] > 0)) {
-            registeredUsers[_addrHash][0]--;
+            registeredUsers[_addrHash][0]--; //decrease user count
         }
         //^^^^^^^effects^^^^^^^^^
     }
