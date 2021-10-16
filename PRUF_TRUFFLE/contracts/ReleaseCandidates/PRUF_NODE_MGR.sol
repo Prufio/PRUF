@@ -30,10 +30,12 @@ import "../Resources/PRUF_BASIC.sol";
 import "../Imports/security/ReentrancyGuard.sol";
 
 contract NODE_MGR is BASIC {
-    bytes32 public constant NODE_MINTER_ROLE = keccak256("NODE_MINTER_ROLE");
     uint256 private nodeTokenIndex = 1000000; //Starting index for purchased node tokens
     uint256 public node_price = 200000 ether;
     uint32 private constant startingDiscount = 9500; //Purchased nodes start with 95% profit share
+
+    bytes32 public constant NODE_MINTER_ROLE = keccak256("NODE_MINTER_ROLE");
+    bytes32 public constant ID_VERIFIER_ROLE = keccak256("ID_VERIFIER_ROLE");
 
     constructor() {
         _setupRole(NODE_MINTER_ROLE, _msgSender());
@@ -150,23 +152,26 @@ contract NODE_MGR is BASIC {
         uint32 _nodeRoot,
         uint8 _custodyType,
         bytes32 _CAS1,
-        bytes32 _CAS2
+        bytes32 _CAS2,
+        address _mintNodeFor
     ) external nonReentrant returns (uint256) {
         require(
             nodeTokenIndex < 4294000000,
             "NM:PN: Only 4294000000 node tokens allowed"
         );
         require(
-            (ID_MGR.trustLevel(_msgSender()) > 0),
-            "NM:PN: Caller !valid PRuF_ID holder"
+            hasRole(ID_VERIFIER_ROLE, _msgSender()),
+            "NM:MOD-INM: Must have ID_VERIFIER_ROLE"
         );
+
+        // require(
+        //     (ID_MGR.trustLevel(_msgSender()) > 99), // to mint nodes must have a trust type > 99
+        //     "NM:PN: Caller !valid PRuF_ID holder"
+        // );
         //^^^^^^^checks^^^^^^^^^
 
         nodeTokenIndex++;
-        Costs memory paymentData = NODE_STOR.getPaymentData(
-            _nodeRoot,
-            1
-        );
+        Costs memory paymentData = NODE_STOR.getPaymentData(_nodeRoot, 1);
 
         address rootPaymentAddress = paymentData.paymentAddress; //payment for upgrade goes to root node payment address specified for service (1)
 
@@ -183,14 +188,14 @@ contract NODE_MGR is BASIC {
         ThisNode.CAS2 = _CAS2;
         //^^^^^^^effects^^^^^^^^^
 
-        UTIL_TKN.trustedAgentBurn(_msgSender(), node_price / 2);
+        UTIL_TKN.trustedAgentBurn(_mintNodeFor, node_price / 2);
         UTIL_TKN.trustedAgentTransfer(
-            _msgSender(),
+            _mintNodeFor,
             rootPaymentAddress,
             node_price - (node_price / 2)
         ); //burning 50% so we have tokens to incentivise outreach performance
 
-        _createNode(ThisNode, uint32(nodeTokenIndex), _msgSender());
+        _createNode(ThisNode, uint32(nodeTokenIndex), _mintNodeFor);
 
         //Set the default 11 authorized contracts
         if (_custodyType == 2) {
@@ -315,5 +320,4 @@ contract NODE_MGR is BASIC {
         NODE_TKN.mintNodeToken(_recipientAddress, tokenId, "pruf.io/nodeToken");
         //^^^^^^^interactions^^^^^^^^^
     }
-
 }
