@@ -12,7 +12,11 @@ _________\/// _____________\/// _______\/// __\///////// __\/// _____________
 
 /**-----------------------------------------------------------------
  * PRUF NODE_MGR
- * Contract for minting new nodes using manual verification
+ * Simple identity provider for minting new nodes using manual verification.
+ *
+ * !!!! CONTRACT MUST BE GIVEN ID_PROVIDER_ROLE IN NODE_MGR !!!!
+ *
+ *DPS:NEW
  *
  * STATEMENT OF TERMS OF SERVICE (TOS):
  * User agrees not to intentionally claim any namespace that is a recognized or registered brand name, trade mark,
@@ -22,15 +26,13 @@ _________\/// _____________\/// _______\/// __\///////// __\/// _____________
  * Use of this software constitutes consent to the terms above.
  -----------------------------------------------------------------*/
 
- //MUST BE GIVEN ID_VERIFIER_ROLE IN NODE_MGR
-
 // SPDX-License-Identifier: UNLICENSED
 pragma solidity ^0.8.7;
 
 import "../Resources/PRUF_BASIC.sol";
 import "../Imports/security/ReentrancyGuard.sol";
 
-contract BUILDER is BASIC {
+contract NODE_BLDR is BASIC {
 
     bytes32 public constant NODE_MINTER_ROLE = keccak256("NODE_MINTER_ROLE");
 
