@@ -328,13 +328,16 @@ interface NODE_MGR_Interface {
      * @param _custodyType - chosen custodyType of node (see docs)
      * @param _CAS1 - any external data attatched to node 1/2
      * @param _CAS2 - any external data attatched to node 2/2
+     * @param _mintNodeTo - address to mint the node to and get payment from
+     * requires that caller has ID_VERIFIER_ROLE
      */
     function purchaseNode(
         string calldata _name,
         uint32 _nodeRoot,
         uint8 _custodyType,
         bytes32 _CAS1,
-        bytes32 _CAS2
+        bytes32 _CAS2,
+        address _mintNodeTo
     ) external returns (uint256);
 
     /**
