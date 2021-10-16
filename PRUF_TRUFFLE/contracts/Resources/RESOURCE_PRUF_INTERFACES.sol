@@ -804,16 +804,6 @@ interface ECR_MGR_Interface {
         view
         returns (escrowDataExtHeavy memory);
 
-    /**
-     * @dev creates an node and its corresponding namespace and data fields
-     * @param _newNodeData - creation Data for new Node
-     * @param _newNode - Node to be created (unique)
-     */
-    function createNodeData(
-        Node memory _newNodeData,
-        uint32 _newNode,
-        address _caller
-    ) external;
 }
 
 //---------------------------------------------------------------------------------------------------------------

@@ -188,7 +188,7 @@ contract RCLR is ECR_CORE, CORE {
     //         );
     //     } else if (nodeInfo.managementType == DEPRICATED) {
     //         require(
-    //             ID_MGR.trustLevel(_msgSender()) > 10,
+    //             DEPRICATEDID_MGR.trustLevel(_msgSender()) > 10,
     //             "ANC:IA: Caller !trusted ID holder"
     //         );
     //     }

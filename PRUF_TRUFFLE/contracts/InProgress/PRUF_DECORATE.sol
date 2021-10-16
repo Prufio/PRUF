@@ -442,7 +442,7 @@ contract DECORATE is CORE {
     //         );
     //     } else if (newNodeInfo.managementType == DEPRICATED) {
     //         require( //DPS:TEST NEW
-    //             ID_MGR.trustLevel(_msgSender()) > 10,
+    //             DEPRICATEDID_MGR.trustLevel(_msgSender()) > 10,
     //             "D:I: Caller !trusted ID holder"
     //         );
     //     }
