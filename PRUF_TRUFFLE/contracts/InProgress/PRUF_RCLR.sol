@@ -186,7 +186,7 @@ contract RCLR is ECR_CORE, CORE {
     //             ) == 1,
     //             "ANC:IA: Cannot create asset - caller address !authorized"
     //         );
-    //     } else if (nodeInfo.managementType == 4) {
+    //     } else if (nodeInfo.managementType == DEPRICATED) {
     //         require(
     //             ID_MGR.trustLevel(_msgSender()) > 10,
     //             "ANC:IA: Caller !trusted ID holder"

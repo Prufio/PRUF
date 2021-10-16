@@ -319,7 +319,7 @@ contract NODE_STOR is BASIC {
      * @param _addrHash - hash of address belonging to user being authorized
      * @param _userType - authority level for user (see docs)
      */
-    function addUser(
+    function addUser( NEED TO ADD A FUNCTION TO REMOVE USERS AND DEPRICATE ID MANAGER
         uint32 _node,
         bytes32 _addrHash,
         uint8 _userType

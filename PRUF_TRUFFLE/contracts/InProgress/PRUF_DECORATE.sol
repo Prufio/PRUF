@@ -14,7 +14,6 @@ _________\/// _____________\/// _______\/// __\///////// __\/// _____________
  * Decorates ERC721 compliant tokens with a PRUF record
  *----------------------------------------------------------------*/
 
-
 // Must set up a custodyType 5 node for decorated assets and auth this contract type 1. Root must be private to class.
 // Extended Data for nodes must be set to 0 <works with any ERC721>
 // or set to ERC721 contract address <works only with tokens from specified contract address>
@@ -26,7 +25,6 @@ import "../Resources/PRUF_CORE.sol";
 import "../Imports/token/ERC721/IERC721.sol";
 
 contract DECORATE is CORE {
-
     /**
      * @dev Verify user credentials
      * @param _tokenID - tokenID of token @_tokenContract caller is trying to interact with
@@ -45,7 +43,7 @@ contract DECORATE is CORE {
     //-----------------------------------------External Functions--------------------------
 
     /**
-     * @dev Decorates an external ERC721 with a PRüF data record 
+     * @dev Decorates an external ERC721 with a PRüF data record
      * @param _tokenID - tokenID of token being decorated from @_tokenContract
      * @param _tokenContract - token contract for @_tokenID
      * @param _rgtHash - hash of new rightsholder information created by frontend inputs
@@ -63,10 +61,11 @@ contract DECORATE is CORE {
         nonReentrant
         whenNotPaused
         isTokenHolder(_tokenID, _tokenContract)
-    {   //DPS:TEST
+    {
+        //DPS:TEST
         bytes32 idxHash = keccak256(abi.encodePacked(_tokenID, _tokenContract));
         Record memory rec = getRecord(idxHash);
-        Node memory nodeInfo =getNodeinfo(_node);
+        Node memory nodeInfo = getNodeinfo(_node);
 
         require(nodeInfo.custodyType == 5, "D:D:Node.custodyType != 5");
         require(
@@ -79,30 +78,32 @@ contract DECORATE is CORE {
             "D:D:Wrapper, decoration, or record already exists"
         );
         require( //DPS:TEST NEW
-            (nodeInfo.managementType < 6),
-            "ANC:IA: Contract does not support management types > 5 or node is locked"
+            NODE_STOR.getManagementTypeStatus(nodeInfo.managementType) > 0,
+            "ANC:IA: Invalid management type"
         );
-        if (    //DPS:TEST NEW
+
+        if (
+            //DPS:TEST NEW
             (nodeInfo.managementType == 1) ||
             (nodeInfo.managementType == 2) ||
             (nodeInfo.managementType == 5)
         ) {
-            require(    //DPS:TEST NEW
+            require( //DPS:TEST NEW
                 (NODE_TKN.ownerOf(_node) == _msgSender()),
                 "ANC:IA: Cannot create asset in node mgmt type 1||2||5 - caller does not hold node token"
             );
         } else if (nodeInfo.managementType == 3) {
-            require(    //DPS:TEST NEW
+            require( //DPS:TEST NEW
                 NODE_STOR.getUserType(
                     keccak256(abi.encodePacked(_msgSender())),
                     _node
                 ) == 1,
                 "ANC:IA: Cannot create asset - caller address !authorized"
             );
-        } else if (nodeInfo.managementType == 4) {
-            require(    //DPS:TEST NEW
-                ID_MGR.trustLevel(_msgSender()) > 10,
-                "ANC:IA: Caller !trusted ID holder"
+        } else {
+            require( //DPS:TEST NEW
+                1 == 0, //always revert if it gets to here
+                "ANC:IA: Contract does not support management type or node is locked"
             );
         }
 
@@ -115,7 +116,7 @@ contract DECORATE is CORE {
     }
 
     /**
-     * @dev Modify Record.assetStatus 
+     * @dev Modify Record.assetStatus
      * @param _tokenID - tokenID of assets token @_tokenContract
      * @param _tokenContract - token contract of _tokenID
      * @param _newAssetStatus - new status of decorated token (see docs)
@@ -132,7 +133,7 @@ contract DECORATE is CORE {
     {
         bytes32 idxHash = keccak256(abi.encodePacked(_tokenID, _tokenContract));
         Record memory rec = getRecord(idxHash);
-        Node memory nodeInfo =getNodeinfo(rec.node);
+        Node memory nodeInfo = getNodeinfo(rec.node);
 
         require(
             nodeInfo.custodyType == 5,
@@ -188,7 +189,7 @@ contract DECORATE is CORE {
     {
         bytes32 idxHash = keccak256(abi.encodePacked(_tokenID, _tokenContract));
         Record memory rec = getRecord(idxHash);
-        Node memory nodeInfo =getNodeinfo(rec.node);
+        Node memory nodeInfo = getNodeinfo(rec.node);
 
         require(
             nodeInfo.custodyType == 5,
@@ -238,7 +239,7 @@ contract DECORATE is CORE {
     {
         bytes32 idxHash = keccak256(abi.encodePacked(_tokenID, _tokenContract));
         Record memory rec = getRecord(idxHash);
-        Node memory nodeInfo =getNodeinfo(rec.node);
+        Node memory nodeInfo = getNodeinfo(rec.node);
 
         require(
             nodeInfo.custodyType == 5,
@@ -296,7 +297,7 @@ contract DECORATE is CORE {
     {
         bytes32 idxHash = keccak256(abi.encodePacked(_tokenID, _tokenContract));
         Record memory rec = getRecord(idxHash);
-        Node memory nodeInfo =getNodeinfo(rec.node);
+        Node memory nodeInfo = getNodeinfo(rec.node);
 
         require(
             nodeInfo.custodyType == 5,
@@ -334,7 +335,7 @@ contract DECORATE is CORE {
     //     external
     //     whenNotPaused
     //     isTokenHolder(_tokenID, _tokenContract)
-    // {   
+    // {
     //     bytes32 idxHash = keccak256(abi.encodePacked(_tokenID, _tokenContract));
     //     Record memory rec = getRecord(idxHash);
     //     Node memory nodeInfo =getNodeinfo(rec.node);
@@ -439,7 +440,7 @@ contract DECORATE is CORE {
     //             ) == 1,
     //             "D:I: Cannot create asset - caller address !authorized"
     //         );
-    //     } else if (newNodeInfo.managementType == 4) {
+    //     } else if (newNodeInfo.managementType == DEPRICATED) {
     //         require( //DPS:TEST NEW
     //             ID_MGR.trustLevel(_msgSender()) > 10,
     //             "D:I: Caller !trusted ID holder"
@@ -473,7 +474,7 @@ contract DECORATE is CORE {
     ) internal {
         bytes32 idxHash = keccak256(abi.encodePacked(_idxRaw, _node)); //hash idxRaw with node to get idxHash DPS:TEST
         uint256 tokenId = uint256(idxHash);
-        Node memory nodeInfo =getNodeinfo(_node);
+        Node memory nodeInfo = getNodeinfo(_node);
 
         require(
             A_TKN.tokenExists(tokenId) == 0,
@@ -483,10 +484,11 @@ contract DECORATE is CORE {
             nodeInfo.custodyType == 5,
             "D:CRO:Node.custodyType must be 5 (wrapped/decorated erc721)"
         );
-        require(
-            (nodeInfo.managementType < 5),
-            "D:CRO:Contract does not support management types > 5 or node is locked"
+        require( //DPS:TEST NEW
+            NODE_STOR.getManagementTypeStatus(nodeInfo.managementType) > 0,
+            "D:CRO: Invalid management type"
         );
+
         if (
             (nodeInfo.managementType == 1) ||
             (nodeInfo.managementType == 2) ||
@@ -504,12 +506,13 @@ contract DECORATE is CORE {
                 ) == 1,
                 "D:CRO:Cannot create asset - caller address not authorized"
             );
-        } else if (nodeInfo.managementType == 4) {
-            require(
-                ID_MGR.trustLevel(_msgSender()) > 10,
-                "D:CRO:Caller does not hold sufficiently trusted ID"
+        } else {
+            require( //DPS:TEST NEW
+                1 == 0, //always revert if it gets to here
+                "D:CRO: Contract does not support management type or node is locked"
             );
         }
+
         //^^^^^^^checks^^^^^^^^^
 
         STOR.newRecord(idxHash, _rgtHash, _node, _countDownStart);

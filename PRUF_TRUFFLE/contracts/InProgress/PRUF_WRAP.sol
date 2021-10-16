@@ -95,8 +95,8 @@ contract WRAP is CORE {
             "W:W:referenceAddress must be '0' or ERC721 contract address"
         );
         require( //DPS:TEST NEW
-            (nodeInfo.managementType < 6),
-            "ANC:IA: Contract does not support management types > 5 or node is locked"
+            NODE_STOR.getManagementTypeStatus(nodeInfo.managementType) > 0,
+            "W:W: Invalid management type"
         );
         if (
             //DPS:TEST NEW
@@ -106,7 +106,7 @@ contract WRAP is CORE {
         ) {
             require( //DPS:TEST NEW
                 (NODE_TKN.ownerOf(_node) == _msgSender()),
-                "ANC:IA: Cannot create asset in node mgmt type 1||2||5 - caller does not hold node token"
+                "W:W: Cannot create asset in node mgmt type 1||2||5 - caller does not hold node token"
             );
         } else if (nodeInfo.managementType == 3) {
             require( //DPS:TEST NEW
@@ -114,12 +114,12 @@ contract WRAP is CORE {
                     keccak256(abi.encodePacked(_msgSender())),
                     _node
                 ) == 1,
-                "ANC:IA: Cannot create asset - caller address !authorized"
+                "W:W: Cannot create asset - caller address !authorized"
             );
-        } else if (nodeInfo.managementType == 4) {
+        } else {
             require( //DPS:TEST NEW
-                ID_MGR.trustLevel(_msgSender()) > 10,
-                "ANC:IA: Caller !trusted ID holder"
+                1 == 0, //always revert if it gets to here
+                "W:W: Contract does not support management type or node is locked"
             );
         }
         //^^^^^^^checks^^^^^^^^^

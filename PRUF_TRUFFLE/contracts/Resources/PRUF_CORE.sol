@@ -45,9 +45,9 @@ contract CORE is BASIC {
             nodeInfo.custodyType != 3,
             "C:CR:Cannot create asset in a root node"
         );
-        require(
-            (nodeInfo.managementType < 6),
-            "C:CR:Contract does not support management types > 5 or node is locked"
+        require( //DPS:TEST NEW
+            NODE_STOR.getManagementTypeStatus(nodeInfo.managementType) > 0,
+            "C:CR: Invalid management type"
         );
         if (nodeInfo.custodyType != 1) {
             if (
@@ -67,13 +67,33 @@ contract CORE is BASIC {
                     ) == 1,
                     "C:CR:Cannot create asset - caller not authorized"
                 );
-            } else if (nodeInfo.managementType == 4) {
-                require(
-                    ID_MGR.trustLevel(_msgSender()) > 10,
-                    "C:CR:Caller does not hold sufficiently trusted ID"
+            } else {
+                require( //DPS:TEST NEW
+                    1 == 0, //always revert if it gets to here
+                    "C:CR: Contract does not support management type or node is locked"
                 );
             }
         }
+
+        if (
+            (nodeInfo.managementType == 1) ||
+            (nodeInfo.managementType == 2) ||
+            (nodeInfo.managementType == 5)
+        ) {
+            require(
+                (NODE_TKN.ownerOf(_node) == _msgSender()),
+                "D:CRO:Cannot create asset in node mgmt type 1||2||5 - caller does not hold node token"
+            );
+        } else if (nodeInfo.managementType == 3) {
+            require(
+                NODE_STOR.getUserType(
+                    keccak256(abi.encodePacked(_msgSender())),
+                    _node
+                ) == 1,
+                "D:CRO:Cannot create asset - caller address not authorized"
+            );
+        }
+
         require(
             (nodeInfo.custodyType == 1) ||
                 (nodeInfo.custodyType == 2) ||
