@@ -35,7 +35,7 @@ contract NODE_MGR is BASIC {
     uint32 private constant startingDiscount = 9500; //Purchased nodes start with 95% profit share
 
     bytes32 public constant NODE_MINTER_ROLE = keccak256("NODE_MINTER_ROLE");
-    bytes32 public constant ID_VERIFIER_ROLE = keccak256("ID_VERIFIER_ROLE");
+    bytes32 public constant ID_PROVIDER_ROLE = keccak256("ID_PROVIDER_ROLE");
 
     constructor() {
         _setupRole(NODE_MINTER_ROLE, _msgSender());
@@ -160,8 +160,8 @@ contract NODE_MGR is BASIC {
             "NM:PN: Only 4294000000 node tokens allowed"
         );
         require(
-            hasRole(ID_VERIFIER_ROLE, _msgSender()),
-            "NM:MOD-INM: Must have ID_VERIFIER_ROLE"
+            hasRole(ID_PROVIDER_ROLE, _msgSender()),
+            "NM:MOD-INM: Must have ID_PROVIDER_ROLE"
         );
         //^^^^^^^checks^^^^^^^^^
 

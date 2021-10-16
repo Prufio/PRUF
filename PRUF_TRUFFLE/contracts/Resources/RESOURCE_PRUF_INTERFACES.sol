@@ -329,7 +329,7 @@ interface NODE_MGR_Interface {
      * @param _CAS1 - any external data attatched to node 1/2
      * @param _CAS2 - any external data attatched to node 2/2
      * @param _mintNodeTo - address to mint the node to and get payment from
-     * requires that caller has ID_VERIFIER_ROLE
+     * requires that caller has ID_PROVIDER_ROLE
      */
     function purchaseNode(
         string calldata _name,
