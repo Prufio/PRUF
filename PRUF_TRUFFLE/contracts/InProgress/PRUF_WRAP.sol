@@ -257,9 +257,9 @@ contract WRAP is CORE {
             A_TKN.tokenExists(tokenId) == 0,
             "W:CR: Asset token already exists"
         );
-        require(
-            (nodeInfo.custodyType == 5),
-            "W:CR: Cannot create asset - contract not authorized for node custody type"
+        require( //DPS:TEST NEW
+            NODE_STOR.getManagementTypeStatus(nodeInfo.managementType) > 0,
+            "W:CR: Invalid management type"
         );
         require(
             (nodeInfo.managementType < 6),
@@ -282,12 +282,12 @@ contract WRAP is CORE {
                 ) == 1,
                 "W:CR:Cannot create asset - caller address not authorized"
             );
-        } else if (nodeInfo.managementType == 4) {
-            require(
-                ID_MGR.trustLevel(_msgSender()) > 10,
-                "W:CR:Caller does not hold sufficiently trusted ID"
-            );
-        }
+        } else {
+                require( //DPS:TEST NEW
+                    1 == 0, //always revert if it gets to here
+                    "W:CR: Contract does not support management type or node is locked"
+                );
+            }
         //^^^^^^^checks^^^^^^^^^
 
         if (NODE_STOR.getSwitchAt(_node, 2) == 0) {

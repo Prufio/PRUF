@@ -135,7 +135,7 @@ contract NODE_MGR is BASIC {
         _newNode.CAS1 = _CAS1;
         _newNode.CAS2 = _CAS2;
 
-        _createNode(_newNode, _node, _recipientAddress);
+        _createNode(_newNode, _node, _recipientAddress, _msgSender());
         //^^^^^^^effects^^^^^^^^^
     }
 
@@ -163,11 +163,6 @@ contract NODE_MGR is BASIC {
             hasRole(ID_VERIFIER_ROLE, _msgSender()),
             "NM:MOD-INM: Must have ID_VERIFIER_ROLE"
         );
-
-        // require(
-        //     (ID_MGR.trustLevel(_msgSender()) > 99), // to mint nodes must have a trust type > 99
-        //     "NM:PN: Caller !valid PRuF_ID holder"
-        // );
         //^^^^^^^checks^^^^^^^^^
 
         nodeTokenIndex++;
@@ -195,7 +190,7 @@ contract NODE_MGR is BASIC {
             node_price - (node_price / 2)
         ); //burning 50% so we have tokens to incentivise outreach performance
 
-        _createNode(ThisNode, uint32(nodeTokenIndex), _mintNodeFor);
+        _createNode(ThisNode, uint32(nodeTokenIndex), _mintNodeFor, _mintNodeFor);
 
         //Set the default 11 authorized contracts
         if (_custodyType == 2) {
@@ -312,11 +307,12 @@ contract NODE_MGR is BASIC {
     function _createNode(
         Node memory _newNodeData,
         uint32 _newNode,
-        address _recipientAddress
+        address _recipientAddress,
+        address _caller
     ) private whenNotPaused {
         uint256 tokenId = uint256(_newNode);
 
-        NODE_STOR.createNodeData(_newNodeData, _newNode, _msgSender());
+        NODE_STOR.createNodeData(_newNodeData, _newNode, _caller);
         NODE_TKN.mintNodeToken(_recipientAddress, tokenId, "pruf.io/nodeToken");
         //^^^^^^^interactions^^^^^^^^^
     }

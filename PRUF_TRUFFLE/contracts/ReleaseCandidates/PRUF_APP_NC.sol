@@ -11,7 +11,7 @@ _________\/// _____________\/// _______\/// __\///////// __\/// _____________
 *---------------------------------------------------------------------------*/
 
 /**-----------------------------------------------------------------
- * PRUF APP_NC 
+ * PRUF APP_NC
  * Application layer contract for noncustodial asset management.
  *---------------------------------------------------------------*/
 
@@ -58,10 +58,6 @@ contract APP_NC is CORE {
         bytes32 _mutableStorage2
     ) external nonReentrant whenNotPaused {
         bytes32 idxHash = keccak256(abi.encodePacked(_idxHash, _node)); //hash idxRaw with node to get idxHash/
-        require(
-            (ID_MGR.trustLevel(_msgSender()) > 0), //_msgSender() has a trust level rating
-            "ANC:NRWD: Caller !PRuF_ID holder"
-        );
         //^^^^^^^Checks^^^^^^^^^
 
         Record memory rec;
@@ -91,11 +87,7 @@ contract APP_NC is CORE {
         bytes32 _nonMutableStorage1,
         bytes32 _nonMutableStorage2
     ) external nonReentrant whenNotPaused {
-        bytes32 idxHash = keccak256(abi.encodePacked(_idxHash, _node)); //hash idxRaw with node to get idxHash 
-        require(
-            (ID_MGR.trustLevel(_msgSender()) > 0), //_msgSender() has a trust level rating
-            "ANC:NRWD: Caller !PRuF_ID holder"
-        );
+        bytes32 idxHash = keccak256(abi.encodePacked(_idxHash, _node)); //hash idxRaw with node to get idxHash
         //^^^^^^^Checks^^^^^^^^^
 
         Record memory rec;
@@ -121,10 +113,6 @@ contract APP_NC is CORE {
         uint32 _countDownStart
     ) external nonReentrant whenNotPaused {
         bytes32 idxHash = keccak256(abi.encodePacked(_idxHash, _node)); //hash idxRaw with node to get idxHash
-        require(
-            (ID_MGR.trustLevel(_msgSender()) > 0), //_msgSender() has a trust level rating
-            "ANC:NR: Caller !PRuF_ID holder"
-        );
         //^^^^^^^Checks^^^^^^^^^
 
         createRecord(idxHash, _rgtHash, _node, _countDownStart);
@@ -313,5 +301,4 @@ contract APP_NC is CORE {
         deductServiceCosts(rec.node, 8);
         //^^^^^^^effects^^^^^^^^^
     }
-
 }
