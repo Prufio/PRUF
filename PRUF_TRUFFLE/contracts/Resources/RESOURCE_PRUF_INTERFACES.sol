@@ -808,88 +808,88 @@ interface ECR_MGR_Interface {
 
 //---------------------------------------------------------------------------------------------------------------
 
-/**
- * @dev Interface for ID_MGR
- * INHERITANCE:
-// import "./RESOURCE_PRUF_STRUCTS.sol";
-// import "./Imports/access/AccessControl.sol";
-// import "./Imports/security/Pausable.sol";
-*/
-interface ID_MGR_Interface {
-    /**
-     * @dev Mint an Asset token
-     * @param _recipientAddress - Address to mint token into
-     * @param _trustLevel - Token ID to mint
-     * @param _IdHash - URI string to atatch to token
-     */
-    function mintID(
-        address _recipientAddress,
-        uint256 _trustLevel,
-        bytes32 _IdHash
-    ) external;
+// /**
+//  * @dev Interface for ID_MGR
+//  * INHERITANCE:
+// // import "./RESOURCE_PRUF_STRUCTS.sol";
+// // import "./Imports/access/AccessControl.sol";
+// // import "./Imports/security/Pausable.sol";
+// */
+// interface ID_MGR_Interface {
+//     /**
+//      * @dev Mint an Asset token
+//      * @param _recipientAddress - Address to mint token into
+//      * @param _trustLevel - Token ID to mint
+//      * @param _IdHash - URI string to atatch to token
+//      */
+//     function mintID(
+//         address _recipientAddress,
+//         uint256 _trustLevel,
+//         bytes32 _IdHash
+//     ) external;
 
-    /**
-     * @dev Burn PRUF_ID token
-     * @param _addr - address to burn ID from
-     */
-    function burnID(address _addr) external;
+//     /**
+//      * @dev Burn PRUF_ID token
+//      * @param _addr - address to burn ID from
+//      */
+//     function burnID(address _addr) external;
 
-    /**
-     * @dev Set new ID data fields
-     * @param _addr - address to set trust level
-     * @param _trustLevel - _trustLevel to set
-     */
-    function setTrustLevel(address _addr, uint256 _trustLevel) external;
+//     /**
+//      * @dev Set new ID data fields
+//      * @param _addr - address to set trust level
+//      * @param _trustLevel - _trustLevel to set
+//      */
+//     function setTrustLevel(address _addr, uint256 _trustLevel) external;
 
-    /**
-     * @dev get ID data given an address to look up
-     * @param _addr - address to check
-     * @return ID struct (see interfaces for struct definitions)
-     */
-    function IdDataByAddress(address _addr)
-        external
-        view
-        returns (PRUFID memory);
+//     /**
+//      * @dev get ID data given an address to look up
+//      * @param _addr - address to check
+//      * @return ID struct (see interfaces for struct definitions)
+//      */
+//     function IdDataByAddress(address _addr)
+//         external
+//         view
+//         returns (PRUFID memory);
 
-    /**
-     * @dev get ID data given an IdHash to look up
-     * @param _IdHash - IdHash to check
-     * @return ID struct (see interfaces for struct definitions)
-     */
-    function IdDataByIdHash(bytes32 _IdHash)
-        external
-        view
-        returns (PRUFID memory);
+//     /**
+//      * @dev get ID data given an IdHash to look up
+//      * @param _IdHash - IdHash to check
+//      * @return ID struct (see interfaces for struct definitions)
+//      */
+//     function IdDataByIdHash(bytes32 _IdHash)
+//         external
+//         view
+//         returns (PRUFID memory);
 
-    /**
-     * @dev get ID trustLevel
-     * @param _addr - address to check
-     * @return trust level of token id
-     */
-    function trustLevel(address _addr) external view returns (uint256);
+//     /**
+//      * @dev get ID trustLevel
+//      * @param _addr - address to check
+//      * @return trust level of token id
+//      */
+//     function trustLevel(address _addr) external view returns (uint256);
 
-    /**
-     * @dev Pauses all token transfers.
-     *
-     * See {ERC721Pausable} and {Pausable-_pause}.
-     *
-     * Requirements:
-     *
-     * - the caller must have the `PAUSER_ROLE`.
-     */
-    function pause() external;
+//     /**
+//      * @dev Pauses all token transfers.
+//      *
+//      * See {ERC721Pausable} and {Pausable-_pause}.
+//      *
+//      * Requirements:
+//      *
+//      * - the caller must have the `PAUSER_ROLE`.
+//      */
+//     function pause() external;
 
-    /**
-     * @dev Unpauses all token transfers.
-     *
-     * See {ERC721Pausable} and {Pausable-_unpause}.
-     *
-     * Requirements:
-     *
-     * - the caller must have the `PAUSER_ROLE`.
-     */
-    function unpause() external;
-}
+//     /**
+//      * @dev Unpauses all token transfers.
+//      *
+//      * See {ERC721Pausable} and {Pausable-_unpause}.
+//      *
+//      * Requirements:
+//      *
+//      * - the caller must have the `PAUSER_ROLE`.
+//      */
+//     function unpause() external;
+// }
 
 //---------------------------------------------------------------------------------------------------------------
 

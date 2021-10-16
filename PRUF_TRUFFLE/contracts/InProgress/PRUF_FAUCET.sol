@@ -108,8 +108,8 @@ contract FAUCET is CORE {
         APP_NC_Address = STOR.resolveContractAddress("APP_NC");
         APP_NC = APP_NC_Interface(APP_NC_Address);
 
-        ID_MGR_Address = STOR.resolveContractAddress("ID_MGR");
-        ID_MGR = ID_MGR_Interface(ID_MGR_Address);
+        // ID_MGR_Address = STOR.resolveContractAddress("ID_MGR");
+        // ID_MGR = ID_MGR_Interface(ID_MGR_Address);
 
         //^^^^^^^effects^^^^^^^^^
     }

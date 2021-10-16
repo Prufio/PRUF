@@ -128,11 +128,11 @@ struct MarketFees {
     uint256 saleCommission;
 }
 
-struct PRUFID {
-    //ID struct for ID info
-    uint256 trustLevel; //admin only
-    bytes32 IdHash;
-}
+// struct PRUFID {
+//     //ID struct for ID info
+//     uint256 trustLevel; //admin only
+//     bytes32 IdHash;
+// }
 
 struct Stake {
     uint256 stakedAmount; //tokens in stake
