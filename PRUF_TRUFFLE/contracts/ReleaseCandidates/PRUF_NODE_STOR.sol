@@ -37,6 +37,8 @@ import "../Imports/security/ReentrancyGuard.sol";
 
 contract NODE_STOR is BASIC {
     bytes32 public constant NODE_ADMIN_ROLE = keccak256("NODE_ADMIN_ROLE");
+    bytes32 public constant DAO_ROLE = keccak256("DAO_ROLE"); //DPS:NEW
+
     bytes32 public constant B320xF_ =
         0xFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFF;
     mapping(uint32 => uint32) private localNodeFor; //lookup table for child nodes from origin nodeID
@@ -67,6 +69,19 @@ contract NODE_STOR is BASIC {
         _;
     }
 
+    /**
+     * @dev Verify user credentials
+     * Originating Address:
+     *      has DAO_ROLE //DPS:NEW
+     */
+    modifier isDAO() {
+        require(
+            hasRole(DAO_ROLE, _msgSender()),
+            "NS:MOD-INA: Must have DAO_ROLE"
+        );
+        _;
+    }
+
     //--------------------------------------------Administrative Setters--------------------------
 
     /**
@@ -76,7 +91,7 @@ contract NODE_STOR is BASIC {
      */
     function setStorageProviders(uint8 _storageProvider, uint8 _status)
         external
-        isContractAdmin
+        isDAO
     {
         //^^^^^^^checks^^^^^^^^^
         validStorageProviders[_storageProvider] = _status;
@@ -90,7 +105,7 @@ contract NODE_STOR is BASIC {
      */
     function setManagementTypes(uint8 _managementType, uint8 _status)
         external
-        isContractAdmin
+        isDAO
     {
         //^^^^^^^checks^^^^^^^^^
         validManagementTypes[_managementType] = _status;
@@ -104,7 +119,7 @@ contract NODE_STOR is BASIC {
      */
     function setCustodyTypes(uint8 _custodyType, uint8 _status)
         external
-        isContractAdmin
+        isDAO
     {
         //^^^^^^^checks^^^^^^^^^
         validCustodyTypes[_custodyType] = _status;
@@ -118,15 +133,11 @@ contract NODE_STOR is BASIC {
      * @param _node - node in which cost share is being modified
      * @param _newDiscount - discount(1% == 100, 10000 == max)
      */
-    function increaseShare(uint32 _node, uint32 _newDiscount)
+    function changeShare(uint32 _node, uint32 _newDiscount) //DPS:TEST:NEW NAME
         external
-        isContractAdmin
+        isDAO
     {
         require((nodeData[_node].nodeRoot != 0), "NS:IS: node !exist");
-        require(
-            _newDiscount >= nodeData[_node].discount,
-            "NS:IS: New share < old share"
-        );
         require(_newDiscount <= 10000, "NS:IS: Discount > 100% (10000)");
         //^^^^^^^checks^^^^^^^^^
 
@@ -147,7 +158,7 @@ contract NODE_STOR is BASIC {
         uint32 _fromNode,
         uint32 _toNode,
         string calldata _thisName
-    ) external isNodeAdmin {
+    ) external isDAO {
         require(
             nodeId[_thisName] == _fromNode,
             "NS:TN: Name not in source node"
@@ -211,6 +222,7 @@ contract NODE_STOR is BASIC {
     /**
      * !! -------- to be used with great caution -----------
      * @dev Modifies an Node with minimal controls
+     * note that a node can be diasbled by setting the management type to an invalid value (or 0) //DPS:TEST
      * @param _node - node to be modified
      * @param _nodeRoot - root of node
      * @param _custodyType - custodyType of node (see docs)
@@ -231,7 +243,7 @@ contract NODE_STOR is BASIC {
         address _refAddress,
         bytes32 _CAS1,
         bytes32 _CAS2
-    ) external isNodeAdmin nonReentrant {
+    ) external isDAO nonReentrant {
         Node memory _ac = nodeData[_nodeRoot];
         uint256 tokenId = uint256(_node);
 
@@ -262,10 +274,10 @@ contract NODE_STOR is BASIC {
      * @param _node - node that user is being deauthorized in
      * @param _addrHash - hash of address to deauthorize
      */
-    function DAOblockUser(
+    function blockUser(
         uint32 _node,
         bytes32 _addrHash
-    ) external isNodeAdmin {
+    ) external isDAO {
         //^^^^^^^checks^^^^^^^^^
 
         registeredUsers[_addrHash][_node] = 0; //deauth node
@@ -665,6 +677,7 @@ contract NODE_STOR is BASIC {
      * @dev creates an node and its corresponding namespace and data fields
      * @param _newNodeData - creation Data for new Node
      * @param _newNode - Node to be created (unique)
+     * @param _caller - function caller passed by trusted calling contract
      * sets localNodeFor[_newNode] to _newNode
      */
     function createNodeData(
