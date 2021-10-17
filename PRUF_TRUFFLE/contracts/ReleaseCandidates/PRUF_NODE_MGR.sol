@@ -63,7 +63,7 @@ contract NODE_MGR is BASIC {
     modifier isNodeHolder(uint32 _node) {
         require(
             (NODE_TKN.ownerOf(_node) == _msgSender()),
-            "NM:MOD-INH: _msgSender() not authorized in Node"
+            "NM:MOD-INH: _msgSender() does not hold node token"
         );
         _;
     }
@@ -316,4 +316,12 @@ contract NODE_MGR is BASIC {
         NODE_TKN.mintNodeToken(_recipientAddress, tokenId, "pruf.io/nodeToken");
         //^^^^^^^interactions^^^^^^^^^
     }
+
+    // function isAuthToMintAsset(address _addr, uint32 _node) external returns(uint256){
+
+    //     require(
+    //         (NODE_TKN.ownerOf(_node) == _addr),
+    //         "NM:MOD-INH: _msgSender() does not hold node token"
+    //     );
+    // }
 }

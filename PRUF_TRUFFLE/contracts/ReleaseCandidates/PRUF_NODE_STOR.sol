@@ -41,11 +41,15 @@ contract NODE_STOR is BASIC {
 
     bytes32 public constant B320xF_ =
         0xFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFF;
+
     mapping(uint32 => uint32) private localNodeFor; //lookup table for child nodes from origin nodeID
+
     mapping(uint32 => mapping(uint16 => Costs)) private cost; //Cost per function by Node => Costs struct (see RESOURCE_PRUF_INTERFACES for struct definitions)
     mapping(uint32 => Node) private nodeData; //node info database Node to node struct (see RESOURCE_PRUF_INTERFACES for struct definitions)
     mapping(string => uint32) private nodeId; //name to Node resolution map
+
     mapping(bytes32 => mapping(uint32 => uint8)) private registeredUsers; //Authorized recorder database by Node, by address hash
+
     mapping(uint8 => uint8) private validStorageProviders; //storageProviders -> status (enabled or disabled)
     mapping(uint8 => uint8) private validManagementTypes; //managementTypes -> status (enabled or disabled)
     mapping(uint8 => uint8) private validCustodyTypes; //custodyTypes -> status (enabled or disabled)
@@ -117,10 +121,7 @@ contract NODE_STOR is BASIC {
      * @param _custodyType - uint position for custody type
      * @param _status - uint position for custody type status
      */
-    function setCustodyTypes(uint8 _custodyType, uint8 _status)
-        external
-        isDAO
-    {
+    function setCustodyTypes(uint8 _custodyType, uint8 _status) external isDAO {
         //^^^^^^^checks^^^^^^^^^
         validCustodyTypes[_custodyType] = _status;
         //^^^^^^^effects^^^^^^^^^
@@ -133,10 +134,10 @@ contract NODE_STOR is BASIC {
      * @param _node - node in which cost share is being modified
      * @param _newDiscount - discount(1% == 100, 10000 == max)
      */
-    function changeShare(uint32 _node, uint32 _newDiscount) //DPS:TEST:NEW NAME
-        external
-        isDAO
-    {
+    function changeShare(
+        uint32 _node,
+        uint32 _newDiscount //DPS:TEST:NEW NAME
+    ) external isDAO {
         require((nodeData[_node].nodeRoot != 0), "NS:IS: node !exist");
         require(_newDiscount <= 10000, "NS:IS: Discount > 100% (10000)");
         //^^^^^^^checks^^^^^^^^^
@@ -274,10 +275,7 @@ contract NODE_STOR is BASIC {
      * @param _node - node that user is being deauthorized in
      * @param _addrHash - hash of address to deauthorize
      */
-    function blockUser(
-        uint32 _node,
-        bytes32 _addrHash
-    ) external isDAO {
+    function blockUser(uint32 _node, bytes32 _addrHash) external isDAO {
         //^^^^^^^checks^^^^^^^^^
 
         registeredUsers[_addrHash][_node] = 0; //deauth node
