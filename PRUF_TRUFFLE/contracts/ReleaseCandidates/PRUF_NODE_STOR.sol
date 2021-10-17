@@ -12,14 +12,22 @@ _________\/// _____________\/// _______\/// __\///////// __\/// _____________
 
 /**-----------------------------------------------------------------
  * PRUF NODE_STOR
+ *
+ * TODO NEED IMPORTABLE MAPPING nodeTo->nodeFrom->allowed or not.
+ *
  * NODE_MGR must be given NODE_ADMIN_ROLE
  * Contract for storing Node information
  *
  * For usage-level (not administrative) functions, NODE_STOR supports indirect node references
- * via the localNodeFor mapping. By default, nodes will have a mirror entry in localNodeFor, so that
+ * via the localNodeFor[] mapping. By default, nodes will have a mirror entry in localNodeFor[], so that
  * localNodeFor[node] == node.... but in the case where a node is "twinned" from another chain, 
  * querying the a foreign origin nodeID can point to the corresponding local node -IF- the entry for
- * localNodeFor[foreignNodeID] is set to the corresponding local nodeID.
+ * localNodeFor[foreignNode] is set to the corresponding local nodeID.
+ * 
+ * the nodeDetails[] mapping contains mappings for an external token contract/ID for use at the
+ * APP layer to check minting authority (for example must hold the Node token AND the foreign token
+ * in order to mint new records ) There are also extra data fields to pad the struct to two words.
+ *
  *
  * STATEMENT OF TERMS OF SERVICE (TOS):
  * User agrees not to intentionally claim any namespace that is a recognized or registered brand name, trade mark,
@@ -42,7 +50,8 @@ contract NODE_STOR is BASIC {
     bytes32 public constant B320xF_ =
         0xFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFF;
 
-    mapping(uint32 => ExtendedNodeData) private nodeDetails; //lookup table for child nodes from origin nodeID
+    mapping(uint32 => uint32) private localNodeFor; //lookup table for child nodes from origin nodeID
+    mapping(uint32 => ExtendedNodeData) private nodeDetails; //Extended Node Data
 
     mapping(uint32 => mapping(uint16 => Costs)) private cost; //Cost per function by Node => Costs struct (see RESOURCE_PRUF_INTERFACES for struct definitions)
     mapping(uint32 => Node) private nodeData; //node info database Node to node struct (see RESOURCE_PRUF_INTERFACES for struct definitions)
@@ -274,6 +283,7 @@ contract NODE_STOR is BASIC {
      * @dev only useful for custody types that designate user adresses (type1...)
      * @param _node - node that user is being deauthorized in
      * @param _addrHash - hash of address to deauthorize
+     * DPS:TEST:NEW
      */
     function blockUser(uint32 _node, bytes32 _addrHash) external isDAO {
         //^^^^^^^checks^^^^^^^^^
@@ -414,38 +424,55 @@ contract NODE_STOR is BASIC {
         //^^^^^^^effects^^^^^^^^^
     }
 
-    /** 
-     * @dev Sets the equivelant local node for a foreign node when paired to this chain from another.
-     * @param _node - node being referenced
-     * @param _localNode - paired local node for foreign node _node. when _node is referenced, it will mean _localNode
-     * by default, nodes are created with the local node pointing to itself - localNodeFor[_node] = _node.
+    /**
+     * @dev extended node data setter
+     * @param _node - node being setup
+     * @param _exData ExtendedNodeData struct to write (see resources-structs)
+     * DPS:TEST:NEW
      */
-    function setLocalNode(uint32 _node, uint32 _localNode)
+    function setExtendedNodeData(uint32 _node, ExtendedNodeData memory _exData)
         external
         isNodeAdmin
     {
-        nodeDetails[_node].localNode = _localNode;
+        nodeDetails[_node] = _exData;
     }
 
-    /** 
-     * @dev Sets the equivelant local node for a foreign node when paired to this chain from another.
-     * @param _node - node being referenced
-     * @param _addr - address for ID provider connector contract. Must support "isAuthorizedToMint" and other functions
-     * by default, nodes are created with the local node pointing to itself - localNodeFor[_node] = _node.
+    /**
+     * @dev extended node data setter
+     * @param _foreignNode - node from other blockcahin to point to local node
+     * @param _localNode local node to point to
+     * DPS:TEST:NEW
      */
-    function setIDproviderAddress(uint32 _node, address _addr)
+    function setLocalNode(uint32 _foreignNode, uint32 _localNode)
         external
         isNodeAdmin
     {
-        nodeDetails[_node].IDproviderAddr = _addr;
+        localNodeFor[_foreignNode] = _localNode;
     }
 
-    /** CTS:EXAMINE take out "For" in name
-     * @dev Gets the equivelant local node for a foreign node when paired to this chain from another.
+    /**
+     * @dev extended node data setter
+     * @param _foreignNode - node from other blockcahin to check for local node
+     * DPS:TEST:NEW
+     */
+    function getLocalNode(uint32 _foreignNode) external view returns (uint32)
+    {
+        return localNodeFor[_foreignNode];
+    }
+
+
+
+    /**
+     * @dev exttended node data getter
      * @param _node - node being queried
      * returns ExtendedNodeData struct (see resources-structs)
+     * DPS:TEST:NEW
      */
-    function getExtNodeData(uint32 _node) external view returns (ExtendedNodeData memory) {
+    function getExtNodeData(uint32 _node)
+        external
+        view
+        returns (ExtendedNodeData memory)
+    {
         return nodeDetails[_node];
     }
 
@@ -522,7 +549,7 @@ contract NODE_STOR is BASIC {
      */
     function getNodeData(uint32 _node) external view returns (Node memory) {
         //^^^^^^^checks^^^^^^^^^
-        uint32 node = nodeDetails[_node].localNode;
+        uint32 node = localNodeFor[_node];
         return (nodeData[node]);
         //^^^^^^^interactions^^^^^^^^^
     }
@@ -539,8 +566,8 @@ contract NODE_STOR is BASIC {
         view
         returns (uint8)
     {
-        uint32 node1 = nodeDetails[_node1].localNode;
-        uint32 node2 = nodeDetails[_node2].localNode;
+        uint32 node1 = localNodeFor[_node1];
+        uint32 node2 = localNodeFor[_node2];
         //^^^^^^^checks^^^^^^^^^
         if (nodeData[node1].nodeRoot == nodeData[node2].nodeRoot) {
             return uint8(170);
@@ -558,7 +585,7 @@ contract NODE_STOR is BASIC {
      */
     function getNodeName(uint32 _node) external view returns (string memory) {
         //^^^^^^^checks^^^^^^^^^
-        uint32 node = nodeDetails[_node].localNode;
+        uint32 node = localNodeFor[_node];
         return (nodeData[node].name);
         //^^^^^^^interactions^^^^^^^^^
     }
@@ -597,7 +624,7 @@ contract NODE_STOR is BASIC {
         view
         returns (Invoice memory)
     {
-        uint32 node = nodeDetails[_node].localNode;
+        uint32 node = localNodeFor[_node];
         Node memory nodeInfo = nodeData[node];
         require(nodeInfo.nodeRoot != 0, "NS:GSC: node !exist");
 
@@ -632,7 +659,7 @@ contract NODE_STOR is BASIC {
     {
         //^^^^^^^checks^^^^^^^^^
         Costs memory paymentData;
-        uint32 node = nodeDetails[_node].localNode;
+        uint32 node = localNodeFor[_node];
 
         paymentData.paymentAddress = cost[node][_service].paymentAddress;
         paymentData.serviceCost = cost[node][_service].serviceCost;
@@ -650,7 +677,7 @@ contract NODE_STOR is BASIC {
      */
     function getNodeDiscount(uint32 _node) external view returns (uint32) {
         //^^^^^^^checks^^^^^^^^^
-        uint32 node = nodeDetails[_node].localNode;
+        uint32 node = localNodeFor[_node];
 
         return (nodeData[node].discount);
         //^^^^^^^interactions^^^^^^^^^
@@ -673,7 +700,7 @@ contract NODE_STOR is BASIC {
             "NS:GSA: bit position must be between 1 and 8"
         );
         //^^^^^^^checks^^^^^^^^^
-        uint32 node = nodeDetails[_node].localNode;
+        uint32 node = localNodeFor[_node];
 
         if ((nodeData[node].switches & (1 << (_position - 1))) > 0) {
             return 1;
@@ -726,7 +753,7 @@ contract NODE_STOR is BASIC {
             require( //holds root token if root is restricted
                 (NODE_TKN.ownerOf(_newNodeData.nodeRoot) == _caller),
                 "NS:CN: Restricted from creating node in this root - caller !hold root token"
-            );
+            ); // DPS:TEST
         }
         require(nodeId[_newNodeData.name] == 0, "NS:CN: node name exists");
         require(
@@ -744,7 +771,7 @@ contract NODE_STOR is BASIC {
         nodeData[_newNode].switches = _RootNodeData.switches;
         nodeData[_newNode].CAS1 = _newNodeData.CAS1;
         nodeData[_newNode].CAS2 = _newNodeData.CAS2;
-        nodeDetails[_newNode].localNode = _newNode; //create default pairing for local node lookup (assumes node is native)
+        localNodeFor[_newNode] = _newNode; //create default pairing for local node lookup (assumes node is native)
         //^^^^^^^effects^^^^^^^^^
     }
 }

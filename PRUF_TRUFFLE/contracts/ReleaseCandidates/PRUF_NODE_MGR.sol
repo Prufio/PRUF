@@ -121,8 +121,7 @@ contract NODE_MGR is BASIC {
         uint32 _discount,
         bytes32 _CAS1,
         bytes32 _CAS2,
-        address _recipientAddress,
-        address _idProvider
+        address _recipientAddress
     ) external isNodeMinter nonReentrant {
         //^^^^^^^checks^^^^^^^^^
 
@@ -136,7 +135,7 @@ contract NODE_MGR is BASIC {
         _newNode.CAS1 = _CAS1;
         _newNode.CAS2 = _CAS2;
 
-        _createNode(_newNode, _node, _recipientAddress, _idProvider);
+        _createNode(_newNode, _node, _recipientAddress, _msgSender());
         //^^^^^^^effects^^^^^^^^^
     }
 
@@ -154,7 +153,7 @@ contract NODE_MGR is BASIC {
         uint8 _custodyType,
         bytes32 _CAS1,
         bytes32 _CAS2,
-        address _mintNodeFor
+        address _mintNodeTo
     ) external nonReentrant returns (uint256) {
         require(
             nodeTokenIndex < 4294000000,
@@ -184,14 +183,14 @@ contract NODE_MGR is BASIC {
         ThisNode.CAS2 = _CAS2;
         //^^^^^^^effects^^^^^^^^^
 
-        UTIL_TKN.trustedAgentBurn(_mintNodeFor, node_price / 2);
+        UTIL_TKN.trustedAgentBurn(_mintNodeTo, node_price / 2);
         UTIL_TKN.trustedAgentTransfer(
-            _mintNodeFor,
+            _mintNodeTo,
             rootPaymentAddress,
             node_price - (node_price / 2)
         ); //burning 50% so we have tokens to incentivise outreach performance
 
-        _createNode(ThisNode, uint32(nodeTokenIndex), _mintNodeFor, _msgSender());
+        _createNode(ThisNode, uint32(nodeTokenIndex), _mintNodeTo, _msgSender());
 
         //Set the default 11 authorized contracts
         if (_custodyType == 2) {
@@ -318,11 +317,4 @@ contract NODE_MGR is BASIC {
         //^^^^^^^interactions^^^^^^^^^
     }
 
-    // function isAuthToMintAsset(address _addr, uint32 _node) external returns(uint256){
-
-    //     require(
-    //         (NODE_TKN.ownerOf(_node) == _addr),
-    //         "NM:MOD-INH: _msgSender() does not hold node token"
-    //     );
-    // }
 }
