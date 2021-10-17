@@ -547,6 +547,18 @@ interface NODE_STOR_Interface {
     ) external;
 
     /**
+     * @dev Set import status for foreign nodes
+     * @param _thisNode - node to dis/allow importing into
+     * @param _otherNode - node to be imported
+     * @param _newStatus - importability status (0=not importable, 1=importable >1 =????)
+     */
+    function updateImportStatus(
+        uint32 _thisNode,
+        uint32 _otherNode,
+        uint256 _newStatus
+    ) external;
+
+    /**
      * @dev Set function costs and payment address per Node, in PRUF(18 decimals)
      * @param _node - node to set service costs
      * @param _service - service type being modified (see service types in ZZ_PRUF_DOCS)

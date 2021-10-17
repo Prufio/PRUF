@@ -193,7 +193,12 @@ contract NODE_MGR is BASIC {
             node_price - (node_price / 2)
         ); //burning 50% so we have tokens to incentivise outreach performance
 
-        _createNode(ThisNode, uint32(nodeTokenIndex), _mintNodeTo, _msgSender());
+        _createNode(
+            ThisNode,
+            uint32(nodeTokenIndex),
+            _mintNodeTo,
+            _msgSender()
+        );
 
         //Set the default 11 authorized contracts
         if (_custodyType == 2) {
@@ -220,6 +225,20 @@ contract NODE_MGR is BASIC {
 
         NODE_STOR.addUser(_node, _addrHash, _userType);
         //^^^^^^^interactions^^^^^^^^^
+    }
+
+    /**
+     * @dev Set import status for foreign nodes
+     * @param _thisNode - node to dis/allow importing into
+     * @param _otherNode - node to be imported
+     * @param _newStatus - importability status (0=not importable, 1=importable >1 =????)
+     */
+    function updateImportStatus(
+        uint32 _thisNode,
+        uint32 _otherNode,
+        uint256 _newStatus
+    ) external isNodeHolder(_thisNode) {
+        NODE_STOR.updateImportStatus(_thisNode, _otherNode, _newStatus);
     }
 
     /**
@@ -319,5 +338,4 @@ contract NODE_MGR is BASIC {
         NODE_TKN.mintNodeToken(_recipientAddress, tokenId, "pruf.io/nodeToken");
         //^^^^^^^interactions^^^^^^^^^
     }
-
 }
