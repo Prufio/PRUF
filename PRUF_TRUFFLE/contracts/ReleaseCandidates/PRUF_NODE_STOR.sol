@@ -414,27 +414,39 @@ contract NODE_STOR is BASIC {
         //^^^^^^^effects^^^^^^^^^
     }
 
-    /** CTS:EXAMINE take out "For" in name
+    /** 
      * @dev Sets the equivelant local node for a foreign node when paired to this chain from another.
      * @param _node - node being referenced
      * @param _localNode - paired local node for foreign node _node. when _node is referenced, it will mean _localNode
      * by default, nodes are created with the local node pointing to itself - localNodeFor[_node] = _node.
      */
-    function setLocalNodeFor(uint32 _node, uint32 _localNode)
+    function setLocalNode(uint32 _node, uint32 _localNode)
         external
         isNodeAdmin
     {
         nodeDetails[_node].localNode = _localNode;
     }
 
+    /** 
+     * @dev Sets the equivelant local node for a foreign node when paired to this chain from another.
+     * @param _node - node being referenced
+     * @param _addr - address for ID provider connector contract. Must support "isAuthorizedToMint" and other functions
+     * by default, nodes are created with the local node pointing to itself - localNodeFor[_node] = _node.
+     */
+    function setIDproviderAddress(uint32 _node, address _addr)
+        external
+        isNodeAdmin
+    {
+        nodeDetails[_node].IDproviderAddr = _addr;
+    }
+
     /** CTS:EXAMINE take out "For" in name
      * @dev Gets the equivelant local node for a foreign node when paired to this chain from another.
      * @param _node - node being queried
-     * returns _localNode - paired local node for foreign node _node.
-     * by default, nodes are created with the local node pointing to itself - localNodeFor[_node] = _node.
+     * returns ExtendedNodeData struct (see resources-structs)
      */
-    function getLocalNodeFor(uint32 _node) external view returns (uint32) {
-        return nodeDetails[_node].localNode;
+    function getExtNodeData(uint32 _node) external view returns (ExtendedNodeData memory) {
+        return nodeDetails[_node];
     }
 
     /**
