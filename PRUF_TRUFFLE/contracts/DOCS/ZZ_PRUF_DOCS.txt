@@ -268,13 +268,13 @@ CTS:EXAMINE MOVE EXTRANEOUS STRUCTS OUT OF TOKEN CONTRACTS (A_TKN, ID_MGR)
 - -----------------------------------------------------------------
 
 *-----------------------------------------------------------------
- * node Management Types: AC_data.managementType (AC_manager)
+ * node Management Types: node_data.managementType (node_manager)
  *              normal ROOT ACs should be set to type 0 because non type-zero root 
  *              classes will not permit public minting of ACs inside them
  * 0   -- CANNOT MINT ASSETS IN THIS MT (DEPRICATED for non-root use). If root not zero, ACNodes cannot be created in the root w/o root token 
  *              
- * 1   -- Restricted (Only ACNode holder can create, export or import - does not require IDtoken)
- * 2   -- Less Restricted (Only ACNode holder can create, import - does not require IDtoken)
+ * 1   -- Restricted (Only ACNode holder can create, discard)
+ * 2   -- Less Restricted (Only ACNode holder can create)
  * 3   -- Authorized (caller address must be user authorized type 1 in Node)
  * 4   DEPRICATED (USE type 3 functionality)
  * 5   -- Remotely Managed (same as 1-restricted except ONLY ACnode hoder can change IPFS1a/b )
