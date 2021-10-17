@@ -42,7 +42,7 @@ contract NODE_STOR is BASIC {
     bytes32 public constant B320xF_ =
         0xFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFF;
 
-    mapping(uint32 => uint32) private localNodeFor; //lookup table for child nodes from origin nodeID
+    mapping(uint32 => ExtendedNodeData) private nodeDetails; //lookup table for child nodes from origin nodeID
 
     mapping(uint32 => mapping(uint16 => Costs)) private cost; //Cost per function by Node => Costs struct (see RESOURCE_PRUF_INTERFACES for struct definitions)
     mapping(uint32 => Node) private nodeData; //node info database Node to node struct (see RESOURCE_PRUF_INTERFACES for struct definitions)
@@ -424,7 +424,7 @@ contract NODE_STOR is BASIC {
         external
         isNodeAdmin
     {
-        localNodeFor[_node] = _localNode;
+        nodeDetails[_node].localNode = _localNode;
     }
 
     /** CTS:EXAMINE take out "For" in name
@@ -434,7 +434,7 @@ contract NODE_STOR is BASIC {
      * by default, nodes are created with the local node pointing to itself - localNodeFor[_node] = _node.
      */
     function getLocalNodeFor(uint32 _node) external view returns (uint32) {
-        return localNodeFor[_node];
+        return nodeDetails[_node].localNode;
     }
 
     /**
@@ -510,7 +510,7 @@ contract NODE_STOR is BASIC {
      */
     function getNodeData(uint32 _node) external view returns (Node memory) {
         //^^^^^^^checks^^^^^^^^^
-        uint32 node = localNodeFor[_node];
+        uint32 node = nodeDetails[_node].localNode;
         return (nodeData[node]);
         //^^^^^^^interactions^^^^^^^^^
     }
@@ -527,8 +527,8 @@ contract NODE_STOR is BASIC {
         view
         returns (uint8)
     {
-        uint32 node1 = localNodeFor[_node1];
-        uint32 node2 = localNodeFor[_node2];
+        uint32 node1 = nodeDetails[_node1].localNode;
+        uint32 node2 = nodeDetails[_node2].localNode;
         //^^^^^^^checks^^^^^^^^^
         if (nodeData[node1].nodeRoot == nodeData[node2].nodeRoot) {
             return uint8(170);
@@ -546,7 +546,7 @@ contract NODE_STOR is BASIC {
      */
     function getNodeName(uint32 _node) external view returns (string memory) {
         //^^^^^^^checks^^^^^^^^^
-        uint32 node = localNodeFor[_node];
+        uint32 node = nodeDetails[_node].localNode;
         return (nodeData[node].name);
         //^^^^^^^interactions^^^^^^^^^
     }
@@ -585,7 +585,7 @@ contract NODE_STOR is BASIC {
         view
         returns (Invoice memory)
     {
-        uint32 node = localNodeFor[_node];
+        uint32 node = nodeDetails[_node].localNode;
         Node memory nodeInfo = nodeData[node];
         require(nodeInfo.nodeRoot != 0, "NS:GSC: node !exist");
 
@@ -620,7 +620,7 @@ contract NODE_STOR is BASIC {
     {
         //^^^^^^^checks^^^^^^^^^
         Costs memory paymentData;
-        uint32 node = localNodeFor[_node];
+        uint32 node = nodeDetails[_node].localNode;
 
         paymentData.paymentAddress = cost[node][_service].paymentAddress;
         paymentData.serviceCost = cost[node][_service].serviceCost;
@@ -638,7 +638,7 @@ contract NODE_STOR is BASIC {
      */
     function getNodeDiscount(uint32 _node) external view returns (uint32) {
         //^^^^^^^checks^^^^^^^^^
-        uint32 node = localNodeFor[_node];
+        uint32 node = nodeDetails[_node].localNode;
 
         return (nodeData[node].discount);
         //^^^^^^^interactions^^^^^^^^^
@@ -661,7 +661,7 @@ contract NODE_STOR is BASIC {
             "NS:GSA: bit position must be between 1 and 8"
         );
         //^^^^^^^checks^^^^^^^^^
-        uint32 node = localNodeFor[_node];
+        uint32 node = nodeDetails[_node].localNode;
 
         if ((nodeData[node].switches & (1 << (_position - 1))) > 0) {
             return 1;
@@ -732,7 +732,7 @@ contract NODE_STOR is BASIC {
         nodeData[_newNode].switches = _RootNodeData.switches;
         nodeData[_newNode].CAS1 = _newNodeData.CAS1;
         nodeData[_newNode].CAS2 = _newNodeData.CAS2;
-        localNodeFor[_newNode] = _newNode; //create default pairing for local node lookup (assumes node is native)
+        nodeDetails[_newNode].localNode = _newNode; //create default pairing for local node lookup (assumes node is native)
         //^^^^^^^effects^^^^^^^^^
     }
 }

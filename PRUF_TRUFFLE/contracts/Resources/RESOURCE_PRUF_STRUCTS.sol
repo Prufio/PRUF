@@ -48,16 +48,21 @@ struct Record {
 
 struct Node {
     //Struct for holding and manipulating node data
-    string name; // NameHash for node
-    uint32 nodeRoot; // asset type root (bicyles - USA Bicycles)             //immutable
     uint8 custodyType; // custodial or noncustodial, special asset types       //immutable
     uint8 managementType; // type of management for asset creation, import, export //immutable
     uint8 storageProvider; // Storage Provider
+    uint8 switches; // bitwise Flags for node control                          //immutable
+    uint32 nodeRoot; // asset type root (bicyles - USA Bicycles)             //immutable
     uint32 discount; // price sharing //internal admin                                      //immutable
     address referenceAddress; // Used with wrap / decorate
-    uint8 switches; // bitwise Flags for node control                          //immutable
     bytes32 CAS1; //content adressable storage pointer 1
     bytes32 CAS2; //content adressable storage pointer 1
+    string name; // NameHash for node
+}
+
+struct ExtendedNodeData {
+    uint32 localNode;
+    address IDproviderAddr;
 }
 
 struct ContractDataHash {
