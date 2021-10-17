@@ -61,8 +61,13 @@ struct Node {
 }
 
 struct ExtendedNodeData {
-    uint32 localNode;
-    address IDproviderAddr;
+    uint8 u8a;
+    uint8 u8b;
+    uint16 u16c;
+    uint32 u32d;
+    uint32 u32e;
+    address IdProviderAddr;
+    uint256 tokenId;
 }
 
 struct ContractDataHash {
