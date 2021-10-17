@@ -30,6 +30,7 @@ _________\/// _____________\/// _______\/// __\///////// __\/// _____________
 pragma solidity ^0.8.7;
 
 import "../Resources/PRUF_BASIC.sol";
+import "../Imports/token/ERC721/IERC721.sol";
 import "../Imports/security/ReentrancyGuard.sol";
 
 contract NODE_BLDR is BASIC {
@@ -50,7 +51,22 @@ contract NODE_BLDR is BASIC {
     modifier isNodeMinter() {
         require(
             hasRole(NODE_MINTER_ROLE, _msgSender()),
-            "NM:MOD-INM: Must have NODE_MINTER_ROLE"
+            "NB:MOD-INM: Must have NODE_MINTER_ROLE"
+        );
+        _;
+    }
+
+    /**
+     * @dev Verify user credentials
+     * @param _tokenId tokenID of token
+     * @param _tokenContract Contract to check
+     * Originating Address:
+     *    require that user holds token @ ID-Contract
+     */
+    modifier isTokenHolder(uint256 _tokenId, address _tokenContract) {
+        require(
+            (IERC721(_tokenContract).ownerOf(_tokenId) == _msgSender()),
+            "NB:MOD-ITH: Caller does not hold specified token"
         );
         _;
     }
@@ -81,6 +97,23 @@ contract NODE_BLDR is BASIC {
         uint256 mintedNode = NODE_MGR.purchaseNode(_name,_nodeRoot,_custodyType,_CAS1,_CAS2,_mintNodeFor);
 
         return mintedNode;
+        //^^^^^^^interactions^^^^^^^^^
+    }
+
+    /**
+     * @dev transfer a foreign token
+     * @param _tokenContract Address of foreign token contract
+     * @param _from origin
+     * @param _to destination
+     * @param _tokenId Token ID
+     */
+    function foreignTransfer(
+        address _tokenContract,
+        address _from,
+        address _to,
+        uint256 _tokenId
+    ) internal {
+        IERC721(_tokenContract).transferFrom(_from, _to, _tokenId);
         //^^^^^^^interactions^^^^^^^^^
     }
 
