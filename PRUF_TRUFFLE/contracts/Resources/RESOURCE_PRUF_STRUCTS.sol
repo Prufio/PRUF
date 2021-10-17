@@ -54,7 +54,6 @@ struct Node {
     uint8 managementType; // type of management for asset creation, import, export //immutable
     uint8 storageProvider; // Storage Provider
     uint32 discount; // price sharing //internal admin                                      //immutable
-    uint8 U8; //Spare uint8
     address referenceAddress; // Used with wrap / decorate
     uint8 switches; // bitwise Flags for node control                          //immutable
     bytes32 CAS1; //content adressable storage pointer 1
