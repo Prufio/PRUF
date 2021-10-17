@@ -15,6 +15,9 @@ _________\/// _____________\/// _______\/// __\///////// __\/// _____________
  * CTS:EXAIMINE when setting local nodes, must be same custody type
  * Contract for minting and managing Nodes
  *
+ * TODO: make a node builder that uses unstoppable domains to build nodes,
+ * and an APP that requires both the node and the UD token to be held in order to mint.
+ *
  * STATEMENT OF TERMS OF SERVICE (TOS):
  * User agrees not to intentionally claim any namespace that is a recognized or registered brand name, trade mark,
  * or other Intellectual property not belonging to the user, and agrees to voluntarily remove any name or brand found to be

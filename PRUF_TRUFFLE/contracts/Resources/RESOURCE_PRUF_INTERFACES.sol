@@ -354,6 +354,18 @@ interface NODE_MGR_Interface {
     ) external;
 
     /**
+     * @dev Set import status for foreign nodes
+     * @param _thisNode - node to dis/allow importing into
+     * @param _otherNode - node to be imported
+     * @param _newStatus - importability status (0=not importable, 1=importable >1 =????)
+     */
+    function updateImportStatus(
+        uint32 _thisNode,
+        uint32 _otherNode,
+        uint256 _newStatus
+    ) external;
+
+    /**
      * @dev Modifies an node Node content adressable storage data pointer
      * @param _node - node being modified
      * @param _CAS1 - any external data attatched to node 1/2
@@ -404,12 +416,6 @@ interface NODE_STOR_Interface {
     //--------------------------------------------Administrative Setters--------------------------
 
     /**
-     * @dev Set pricing for Nodes
-     * @param newNodePrice - cost per node (18 decimals)
-     */
-    function setNodePricing(uint256 newNodePrice) external;
-
-    /**
      *
      * @dev Sets the valid storage type providers.
      * @param _storageProvider - uint position for storage provider
@@ -433,6 +439,15 @@ interface NODE_STOR_Interface {
     function setCustodyTypes(uint8 _custodyType, uint8 _status) external;
 
     /**
+     * !! to be used with great caution !!
+     * This potentially breaks decentralization and must eventually be given over to DAO.
+     * @dev Increases (but cannot decrease) price share for a given node
+     * @param _node - node in which cost share is being modified
+     * @param _newDiscount - discount(1% == 100, 10000 == max)
+     */
+    function changeShare(uint32 _node, uint32 _newDiscount) external;
+
+    /**
      * !! -------- to be used with great caution and only as a result of community governance action -----------
      * @dev Transfers a name from one node to another
      *   -Designed to remedy brand infringement issues. This breaks decentralization and must eventually be given
@@ -453,6 +468,13 @@ interface NODE_STOR_Interface {
      * @param _newName - updated name associated with node (unique)
      */
     function updateNodeName(uint32 _node, string calldata _newName) external;
+
+    /**
+     * @dev Modifies the name => nodeid name resolution mapping
+     * @param _node - node being mapped to the name
+     * @param _name - namespace being remapped
+     */
+    function setNodeIdForName(uint32 _node, string memory _name) external;
 
     /**
      * !! -------- to be used with great caution -----------
@@ -480,17 +502,24 @@ interface NODE_STOR_Interface {
     ) external;
 
     /**
-     * @dev creates an node and its corresponding namespace and data fields
-     * @param _newNodeData - creation Data for new Node
-     * @param _newNode - Node to be created (unique)
+     * @dev Administratively Deauthorize address be permitted to mint or modify records (DAO)
+     * @dev only useful for custody types that designate user adresses (type1...)
+     * @param _node - node that user is being deauthorized in
+     * @param _addrHash - hash of address to deauthorize
      */
-    function createNodeData(
-        Node memory _newNodeData,
-        uint32 _newNode,
-        address _caller
-    ) external;
+    function blockUser(uint32 _node, bytes32 _addrHash) external;
 
-    function setNodeIdForName(uint32 _node, string memory _name) external;
+    /**
+     * @dev Modifies an node Node content adressable storage data pointer
+     * @param _node - node being modified
+     * @param _CAS1 - any external data attatched to node 1/2
+     * @param _CAS2 - any external data attatched to node 2/2
+     */
+    function updateNodeCAS(
+        uint32 _node,
+        bytes32 _CAS1,
+        bytes32 _CAS2
+    ) external;
 
     /**
      * @dev Modifies node.switches bitwise (see NODE option switches in ZZ_PRUF_DOCS)
@@ -532,18 +561,6 @@ interface NODE_STOR_Interface {
     ) external;
 
     /**
-     * @dev Modifies an node Node content adressable storage data pointer
-     * @param _node - node being modified
-     * @param _CAS1 - any external data attatched to node 1/2
-     * @param _CAS2 - any external data attatched to node 2/2
-     */
-    function updateNodeCAS(
-        uint32 _node,
-        bytes32 _CAS1,
-        bytes32 _CAS2
-    ) external;
-
-    /**
      * @dev Configure the immutable data in an Node one time
      * @param _node - node being modified
      * @param _managementType - managementType of node (see docs)
@@ -558,20 +575,49 @@ interface NODE_STOR_Interface {
     ) external;
 
     /**
-     * @dev Sets the equivelant local node for a foreign node when paired to this chain from another.
-     * @param _node - node being referenced
-     * @param _localNode - paired local node for foreign node _node. when _node is referenced, it will mean _localNode
-     * by default, nodes are created with the local node pointing to itself - localNodeFor[_node] = _node.
+     * @dev extended node data setter.
+     * Use to set Native Node for foreign node, foreign ID tokens, etc.
+     * @param _node - node being setup
+     * @param _exData ExtendedNodeData struct to write (see resources-structs)
      */
-    function setLocalNodeFor(uint32 _node, uint32 _localNode) external;
+    function setExtendedNodeData(uint32 _node, ExtendedNodeData memory _exData)
+        external;
 
     /**
-     * @dev Gets the equivelant local node for a foreign node when paired to this chain from another.
-     * @param _node - node being queried
-     * returns _localNode - paired local node for foreign node _node.
-     * by default, nodes are created with the local node pointing to itself - localNodeFor[_node] = _node.
+     * @dev extended node data setter
+     * @param _foreignNode - node from other blockcahin to point to local node
+     * @param _localNode local node to point to
+     * DPS:TEST:NEW
      */
-    function getLocalNodeFor(uint32 _node) external view returns (uint32);
+    function setLocalNode(uint32 _foreignNode, uint32 _localNode) external;
+
+    /**
+     * @dev Set import status for foreing nodes
+     * @param _thisNode - node to dis/allow importing into
+     * @param _otherNode - node to be potentially imported
+     * returns importability status of _thisNode=>_othernode mapping
+     */
+    function getImportstatus(uint32 _thisNode, uint32 _otherNode)
+        external
+        view
+        returns (uint256);
+
+    /**
+     * @dev extended node data setter
+     * @param _foreignNode - node from other blockcahin to check for local node
+     * DPS:TEST:NEW
+     */
+    function getLocalNode(uint32 _foreignNode) external view returns (uint32);
+
+    /**
+     * @dev exttended node data getter
+     * @param _node - node being queried
+     * returns ExtendedNodeData struct (see resources-structs)
+     */
+    function getExtNodeData(uint32 _node)
+        external
+        view
+        returns (ExtendedNodeData memory);
 
     /**
      * @dev get an node Node User type for a specified address
@@ -626,6 +672,7 @@ interface NODE_STOR_Interface {
      * @param _node1 - first node associated with query
      * @param _node2 - second node associated with query
      * @return 170 or 0 (true or false)
+     * supports indirect node reference via localNodeFor[node]
      */
     function isSameRootNode(uint32 _node1, uint32 _node2)
         external
@@ -634,10 +681,11 @@ interface NODE_STOR_Interface {
 
     /**
      * @dev Retrieve Node_name @ _tokenId or node
-     * @param node - tokenId associated with query
-     * @return name of token @ _tokenID
+     * @param _node - tokenId associated with query
+     * return name of token @ _tokenID
+     * supports indirect node reference via localNodeFor[node]
      */
-    function getNodeName(uint32 node) external view returns (string memory);
+    function getNodeName(uint32 _node) external view returns (string memory);
 
     /**
      * @dev Retrieve node @ Node_name
@@ -648,15 +696,6 @@ interface NODE_STOR_Interface {
         external
         view
         returns (uint32);
-
-    /**
-     * @dev return current node token index and price
-     * @return {
-         nodeTokenIndex: current token number
-         Node_price: current price per node
-     }
-     */
-    function currentNodePricingInfo() external view returns (uint256, uint256);
 
     /**
      * @dev Retrieve function costs per Node, per service type in PRUF(18 decimals)
@@ -703,6 +742,17 @@ interface NODE_STOR_Interface {
         external
         view
         returns (uint256);
+
+    /**
+     * @dev creates an node and its corresponding namespace and data fields
+     * @param _newNodeData - creation Data for new Node
+     * @param _newNode - Node to be created (unique)
+     */
+    function createNodeData(
+        Node memory _newNodeData,
+        uint32 _newNode,
+        address _caller
+    ) external;
 }
 
 //---------------------------------------------------------------------------------------------------------------
@@ -803,7 +853,6 @@ interface ECR_MGR_Interface {
         external
         view
         returns (escrowDataExtHeavy memory);
-
 }
 
 //---------------------------------------------------------------------------------------------------------------

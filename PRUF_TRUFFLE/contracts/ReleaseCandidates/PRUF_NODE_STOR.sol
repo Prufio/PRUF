@@ -13,8 +13,6 @@ _________\/// _____________\/// _______\/// __\///////// __\/// _____________
 /**-----------------------------------------------------------------
  * PRUF NODE_STOR
  *
- * TODO NEED IMPORTABLE MAPPING nodeTo->nodeFrom->allowed or not.
- *
  * NODE_MGR must be given NODE_ADMIN_ROLE
  * Contract for storing Node information
  *
@@ -51,7 +49,8 @@ contract NODE_STOR is BASIC {
         0xFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFF;
 
     mapping(uint32 => uint32) private localNodeFor; //lookup table for child nodes from origin nodeID
-    mapping(uint32 => ExtendedNodeData) private nodeDetails; //Extended Node Data
+    mapping(uint32 => ExtendedNodeData) private nodeDetails; //Extended Node
+    mapping(uint32 => mapping(uint32 => uint256)) private importApprovals; //list of approved nodes to import from for each node
 
     mapping(uint32 => mapping(uint16 => Costs)) private cost; //Cost per function by Node => Costs struct (see RESOURCE_PRUF_INTERFACES for struct definitions)
     mapping(uint32 => Node) private nodeData; //node info database Node to node struct (see RESOURCE_PRUF_INTERFACES for struct definitions)
@@ -376,6 +375,20 @@ contract NODE_STOR is BASIC {
     }
 
     /**
+     * @dev Set import status for foreign nodes
+     * @param _thisNode - node to dis/allow importing into
+     * @param _otherNode - node to be imported
+     * @param _newStatus - importability status (0=not importable, 1=importable >1 =????)
+     */
+    function updateImportStatus(
+        uint32 _thisNode,
+        uint32 _otherNode,
+        uint256 _newStatus
+    ) external isNodeAdmin {
+        importApprovals[_thisNode][_otherNode] = _newStatus;
+    }
+
+    /**
      * @dev Set function costs and payment address per Node, in PRUF(18 decimals)
      * @param _node - node to set service costs
      * @param _service - service type being modified (see service types in ZZ_PRUF_DOCS)
@@ -451,16 +464,27 @@ contract NODE_STOR is BASIC {
     }
 
     /**
+     * @dev Set import status for foreing nodes
+     * @param _thisNode - node to dis/allow importing into
+     * @param _otherNode - node to be potentially imported
+     * returns importability status of _thisNode=>_othernode mapping
+     */
+    function getImportstatus(uint32 _thisNode, uint32 _otherNode)
+        external
+        view
+        returns (uint256)
+    {
+        return importApprovals[_thisNode][_otherNode];
+    }
+
+    /**
      * @dev extended node data setter
      * @param _foreignNode - node from other blockcahin to check for local node
      * DPS:TEST:NEW
      */
-    function getLocalNode(uint32 _foreignNode) external view returns (uint32)
-    {
+    function getLocalNode(uint32 _foreignNode) external view returns (uint32) {
         return localNodeFor[_foreignNode];
     }
-
-
 
     /**
      * @dev exttended node data getter
