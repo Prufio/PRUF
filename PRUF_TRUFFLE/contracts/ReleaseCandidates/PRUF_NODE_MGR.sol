@@ -121,7 +121,8 @@ contract NODE_MGR is BASIC {
         uint32 _discount,
         bytes32 _CAS1,
         bytes32 _CAS2,
-        address _recipientAddress
+        address _recipientAddress,
+        address _idProvider
     ) external isNodeMinter nonReentrant {
         //^^^^^^^checks^^^^^^^^^
 
@@ -135,7 +136,7 @@ contract NODE_MGR is BASIC {
         _newNode.CAS1 = _CAS1;
         _newNode.CAS2 = _CAS2;
 
-        _createNode(_newNode, _node, _recipientAddress, _msgSender());
+        _createNode(_newNode, _node, _recipientAddress, _idProvider);
         //^^^^^^^effects^^^^^^^^^
     }
 
@@ -190,7 +191,7 @@ contract NODE_MGR is BASIC {
             node_price - (node_price / 2)
         ); //burning 50% so we have tokens to incentivise outreach performance
 
-        _createNode(ThisNode, uint32(nodeTokenIndex), _mintNodeFor, _mintNodeFor);
+        _createNode(ThisNode, uint32(nodeTokenIndex), _mintNodeFor, _msgSender());
 
         //Set the default 11 authorized contracts
         if (_custodyType == 2) {
