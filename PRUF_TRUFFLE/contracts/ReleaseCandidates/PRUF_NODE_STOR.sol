@@ -480,7 +480,6 @@ contract NODE_STOR is BASIC {
     /**
      * @dev extended node data setter
      * @param _foreignNode - node from other blockcahin to check for local node
-     * DPS:TEST:NEW
      */
     function getLocalNode(uint32 _foreignNode) external view returns (uint32) {
         return localNodeFor[_foreignNode];

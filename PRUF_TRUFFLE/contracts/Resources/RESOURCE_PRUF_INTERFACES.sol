@@ -599,7 +599,6 @@ interface NODE_STOR_Interface {
      * @dev extended node data setter
      * @param _foreignNode - node from other blockcahin to point to local node
      * @param _localNode local node to point to
-     * DPS:TEST:NEW
      */
     function setLocalNode(uint32 _foreignNode, uint32 _localNode) external;
 
@@ -617,7 +616,6 @@ interface NODE_STOR_Interface {
     /**
      * @dev extended node data setter
      * @param _foreignNode - node from other blockcahin to check for local node
-     * DPS:TEST:NEW
      */
     function getLocalNode(uint32 _foreignNode) external view returns (uint32);
 
