@@ -78,7 +78,7 @@ contract APP_NC is CORE {
      * @param _countDownStart - decremental counter for an assets lifecycle
      * @param _nonMutableStorage1 - field for permanent external asset data
      * @param _nonMutableStorage2 - field for permanent external asset data
-     * @param _URIhash - Hash of external CAS from URI 
+     * @param _URIhash - Hash of external CAS from URI
      */
     function newRecordWithNote(
         bytes32 _idxHash,
@@ -128,7 +128,7 @@ contract APP_NC is CORE {
      * @param _idxHash - hash of asset information created by frontend inputs
      * @param _nonMutableStorage1 - field for permanent external asset data
      * @param _nonMutableStorage2 - field for permanent external asset data
-     * @param _URIhash - Hash of external CAS from URI 
+     * @param _URIhash - Hash of external CAS from URI
      */
     function addNonMutableStorage(
         bytes32 _idxHash,
