@@ -399,22 +399,19 @@ contract A_TKN is
         bytes32 _idxHash = bytes32(_tokenId);
         Record memory rec = getRecord(_idxHash);
 
-        if (NODE_STOR.getSwitchAt(rec.node, 1) == 1) {
-            //if switch at bit 1 (0) is set
-            string memory oldTokenURI = tokenURI(_tokenId);
-
-            require(
-                bytes(oldTokenURI).length == 0,
-                "AT:SU:URI is set, and immutable"
-            );
-
-            require(
-                NODE_TKN.ownerOf(rec.node) == _msgSender(),
-                "AT:SU:Caller !NTH"
-            );
-        }
+        require(
+            (bytes(tokenURI(_tokenId)).length == 0) ||
+                (NODE_STOR.getSwitchAt(rec.node, 2) == 0),
+            //Allows resetting URI if switch 2 is not set
+            "AT:SU:URI is set, and immutable"
+        );
 
         require(
+            NODE_TKN.ownerOf(rec.node) == _msgSender(),
+            "AT:SU:Caller !NTH"
+        );
+
+        require( //If no switches are set, tokenholder can change URI
             _isApprovedOrOwner(_msgSender(), _tokenId),
             "AT:SU:Caller !owner nor approved"
         );
