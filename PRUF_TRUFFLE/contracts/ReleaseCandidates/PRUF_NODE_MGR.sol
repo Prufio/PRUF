@@ -237,7 +237,7 @@ contract NODE_MGR is BASIC {
         uint32 _thisNode,
         uint32 _otherNode,
         uint256 _newStatus
-    ) external isNodeHolder(_thisNode) {
+    ) external whenNotPaused isNodeHolder(_thisNode) {
         NODE_STOR.updateImportStatus(_thisNode, _otherNode, _newStatus);
     }
 
