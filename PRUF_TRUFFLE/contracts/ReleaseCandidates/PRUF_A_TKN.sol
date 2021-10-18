@@ -67,6 +67,7 @@ contract A_TKN is
     bytes32 public constant PAUSER_ROLE = keccak256("PAUSER_ROLE");
     bytes32 public constant TRUSTED_AGENT_ROLE =
         keccak256("TRUSTED_AGENT_ROLE");
+    bytes32 public constant DAO_ROLE = keccak256("DAO_ROLE");
 
     uint256 trustedAgentEnabled = 1;
 
