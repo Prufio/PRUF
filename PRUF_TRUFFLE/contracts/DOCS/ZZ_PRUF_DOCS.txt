@@ -292,16 +292,16 @@ CTS:EXAMINE MOVE EXTRANEOUS STRUCTS OUT OF TOKEN CONTRACTS (A_TKN, ID_MGR)
  * 6   -- RAW data (internal) => low Res Image
 - -----------------------------------------------------------------
 
-*-----------------------------------------------------------------
+*-----------------------------------------------------------------//DPS:TEST:CHANGED
  * node option switches, 1 or 0 : AC_data.switches (AC_manager)
  *             Switches will be duplicated from root 
- * bit1  -- If set, cannot change URI or CAS data after initial setting
- * bit2  -- If set, node allows minting to third parties in management types that support address delegation. Also supports "mint to" if implemented in app
+ * bit1  -- If set, cannot change CAS data after initial setting
+ * bit2  -- If set, cannot change URI data after initial setting 
  * bit4  --
  * bit5  --
  * bit6  --
  * bit7  --
- * bit8  --
+ * bit8  -- If set, node allows minting to third parties in management types that support address delegation. Also supports "mint to" if implemented in app
 - -----------------------------------------------------------------
 
 /*-----------------------------------------------------------------
