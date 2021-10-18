@@ -180,7 +180,7 @@ interface STOR_Interface {
      * @param _nonMutableStorage2 - second half of content addressable storage location
      * @param _URIhash - Hash of external CAS from URI
      */
-    function modifyNonMutableStorage(
+    function setNonMutableStorage(
         bytes32 _idxHash,
         bytes32 _nonMutableStorage1,
         bytes32 _nonMutableStorage2,

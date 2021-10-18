@@ -632,13 +632,13 @@ contract STOR is AccessControl, ReentrancyGuard, Pausable {
     }
 
     /**
-     * @dev Modify NonMutableStorage data //DPS:TEST:NEW PARAMS
+     * @dev Modify NonMutableStorage data //DPS:TEST:NEW PARAMS / Name
      * @param _idxHash - record asset ID
      * @param _nonMutableStorage1 - first half of content addressable storage location
      * @param _nonMutableStorage2 - second half of content addressable storage location
      * @param _URIhash - Hash of external CAS from URI 
      */
-    function modifyNonMutableStorage(
+    function setNonMutableStorage(
         bytes32 _idxHash,
         bytes32 _nonMutableStorage1,
         bytes32 _nonMutableStorage2,

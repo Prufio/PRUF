@@ -187,7 +187,7 @@ contract CORE is BASIC {
     {
         //^^^^^^^checks^^^^^^^^^
 
-        STOR.modifyNonMutableStorage(
+        STOR.setNonMutableStorage(
             _idxHash,
             _rec.nonMutableStorage1,
             _rec.nonMutableStorage2,
