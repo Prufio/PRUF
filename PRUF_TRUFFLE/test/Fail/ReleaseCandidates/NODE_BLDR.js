@@ -16,7 +16,7 @@ const PRUF_NODE_MGR = artifacts.require("NODE_MGR");
 const PRUF_NODE_STOR = artifacts.require("NODE_STOR");
 const PRUF_NODE_TKN = artifacts.require("NODE_TKN");
 const PRUF_A_TKN = artifacts.require("A_TKN");
-const PRUF_ID_MGR = artifacts.require("ID_MGR");
+const PRUF_NODE_BLDR = artifacts.require("NODE_BLDR");
 const PRUF_ECR_MGR = artifacts.require("ECR_MGR");
 const PRUF_ECR = artifacts.require("ECR");
 const PRUF_ECR2 = artifacts.require("ECR2");
@@ -26,7 +26,6 @@ const PRUF_RCLR = artifacts.require("RCLR");
 const PRUF_HELPER = artifacts.require("Helper");
 const PRUF_MAL_APP = artifacts.require("MAL_APP");
 const PRUF_UTIL_TKN = artifacts.require("UTIL_TKN");
-// const PRUF_PURCHASE = artifacts.require("PURCHASE");
 const PRUF_DECORATE = artifacts.require("DECORATE");
 const PRUF_WRAP = artifacts.require("WRAP");
 
@@ -36,7 +35,7 @@ let NODE_MGR;
 let NODE_STOR;
 let NODE_TKN;
 let A_TKN;
-let ID_MGR;
+let NODE_BLDR;
 let ECR_MGR;
 let ECR;
 let ECR2;
@@ -105,13 +104,16 @@ let nakedAuthCode3;
 let nakedAuthCode7;
 
 let payableRoleB32;
+let IDproviderRoleB32;
 let minterRoleB32;
-let IDminterRoleB32;
 let trustedAgentRoleB32;
 let assetTransferRoleB32;
 let discardRoleB32;
+let DAOroleB32;
+let nodeAdminRoleB32;
+let nodeMinterRoleB32;
 
-contract("ID_MGR", (accounts) => {
+contract("NODE_BLDR", (accounts) => {
   console.log(
     "//**************************BEGIN BOOTSTRAP**************************//"
   );
@@ -313,6 +315,8 @@ contract("ID_MGR", (accounts) => {
 
     minterRoleB32 = await Helper.getStringHash("MINTER_ROLE");
 
+    IDproviderRoleB32 = await Helper.getStringHash("ID_PROVIDER_ROLE");
+
     IDminterRoleB32 = await Helper.getStringHash("ID_MINTER_ROLE");
 
     trustedAgentRoleB32 = await Helper.getStringHash("TRUSTED_AGENT_ROLE");
@@ -321,7 +325,11 @@ contract("ID_MGR", (accounts) => {
 
     discardRoleB32 = await Helper.getStringHash("DISCARD_ROLE");
 
+    DAOroleB32 = await Helper.getStringHash("DAO_ROLE");
+
     nodeAdminRoleB32 = await Helper.getStringHash("NODE_ADMIN_ROLE");
+
+    nodeMinterRoleB32 = await Helper.getStringHash("NODE_MINTER_ROLE");
   });
 
   it("Should deploy Storage", async () => {
@@ -401,11 +409,11 @@ contract("ID_MGR", (accounts) => {
     RCLR = PRUF_RCLR_TEST;
   });
 
-  it("Should deploy PRUF_ID_MGR", async () => {
-    const PRUF_ID_MGR_TEST = await PRUF_ID_MGR.deployed({ from: account1 });
-    console.log(PRUF_ID_MGR_TEST.address);
-    assert(PRUF_ID_MGR_TEST.address !== "");
-    ID_MGR = PRUF_ID_MGR_TEST;
+  it("Should deploy PRUF_NODE_BLDR", async () => {
+    const PRUF_NODE_BLDR_TEST = await PRUF_NODE_BLDR.deployed({ from: account1 });
+    console.log(PRUF_NODE_BLDR_TEST.address);
+    assert(PRUF_NODE_BLDR_TEST.address !== "");
+    NODE_BLDR = PRUF_NODE_BLDR_TEST;
   });
 
   it("Should deploy PRUF_ECR2", async () => {
@@ -428,13 +436,6 @@ contract("ID_MGR", (accounts) => {
     assert(PRUF_UTIL_TKN_TEST.address !== "");
     UTIL_TKN = PRUF_UTIL_TKN_TEST;
   });
-
-  // it("Should deploy PURCHASE", async () => {
-  //   const PRUF_PURCHASE_TEST = await PRUF_PURCHASE.deployed({ from: account1 });
-  //   console.log(PRUF_PURCHASE_TEST.address);
-  //   assert(PRUF_PURCHASE_TEST.address !== "");
-  //   PURCHASE = PRUF_PURCHASE_TEST;
-  // });
 
   it("Should deploy DECORATE", async () => {
     const PRUF_DECORATE_TEST = await PRUF_DECORATE.deployed({ from: account1 });
@@ -536,13 +537,6 @@ contract("ID_MGR", (accounts) => {
       })
 
       .then(() => {
-        console.log("Adding ID_MGR to storage for use in Node 0");
-        return STOR.authorizeContract("ID_MGR", ID_MGR.address, "0", "1", {
-          from: account1,
-        });
-      })
-
-      .then(() => {
         console.log("Adding ECR_MGR to storage for use in Node 0");
         return STOR.authorizeContract("ECR_MGR", ECR_MGR.address, "0", "1", {
           from: account1,
@@ -620,6 +614,11 @@ contract("ID_MGR", (accounts) => {
       });
   });
 
+  it("Should authorize account1 for NODE_STOR", () => {
+    console.log("Authorizing account1");
+    return NODE_STOR.grantRole(DAOroleB32, account1, { from: account1 });
+  });
+
   it("Should add Storage to each contract", () => {
     console.log("Adding in APP");
     return APP.setStorageContract(STOR.address, { from: account1 })
@@ -686,12 +685,12 @@ contract("ID_MGR", (accounts) => {
         return RCLR.setStorageContract(STOR.address, { from: account1 });
       })
 
-      // .then(() => {
-      //   console.log("Adding in PURCHASE");
-      //   return PURCHASE.setStorageContract(STOR.address, {
-      //     from: account1,
-      //   });
-      // })
+      .then(() => {
+        console.log("Adding in NODE_BLDR");
+        return NODE_BLDR.setStorageContract(STOR.address, {
+          from: account1,
+        });
+      })
 
       .then(() => {
         console.log("Adding in DECORATE");
@@ -760,10 +759,10 @@ contract("ID_MGR", (accounts) => {
         return RCLR.resolveContractAddresses({ from: account1 });
       })
 
-      // .then(() => {
-      //   console.log("Resolving in PURCHASE");
-      //   return PURCHASE.resolveContractAddresses({ from: account1 });
-      // })
+      .then(() => {
+        console.log("Resolving in NODE_BLDR");
+        return NODE_BLDR.resolveContractAddresses({ from: account1 });
+      })
 
       .then(() => {
         console.log("Resolving in DECORATE");
@@ -882,20 +881,6 @@ contract("ID_MGR", (accounts) => {
         console.log("Authorizing RCLR");
         return A_TKN.grantRole(minterRoleB32, RCLR.address, { from: account1 });
       })
-
-      // .then(() => {
-      //   console.log("Authorizing PURCHASE");
-      //   return A_TKN.grantRole(trustedAgentRoleB32, PURCHASE.address, {
-      //     from: account1,
-      //   });
-      // });
-  });
-
-  it("Should authorize all minter addresses for minting ID(s)", () => {
-    console.log("Authorizing NODE_MGR");
-    return ID_MGR.grantRole(IDminterRoleB32, account1, {
-      from: account1,
-    });
   });
 
   it("Should authorize all payable contracts for transactions", () => {
@@ -952,25 +937,18 @@ contract("ID_MGR", (accounts) => {
           from: account1,
         });
       })
-
-      // .then(() => {
-      //   console.log("Authorizing PURCHASE");
-      //   return UTIL_TKN.grantRole(payableRoleB32, PURCHASE.address, {
-      //     from: account1,
-      //   });
-      // })
-
-      // .then(() => {
-      //   console.log("Authorizing PURCHASE");
-      //   return UTIL_TKN.grantRole(trustedAgentRoleB32, PURCHASE.address, {
-      //     from: account1,
-      //   });
-      // });
   });
 
   it("Should authorize all minter contracts for minting NODE_TKN(s)", () => {
     console.log("Authorizing NODE_MGR");
     return NODE_TKN.grantRole(minterRoleB32, NODE_MGR.address, {
+      from: account1,
+    });
+  });
+
+  it("Should authorize NODE_BLDR", () => {
+    console.log("Authorizing NODE_BLDR");
+    return NODE_MGR.grantRole(IDproviderRoleB32, NODE_BLDR.address, {
       from: account1,
     });
   });
@@ -988,6 +966,11 @@ contract("ID_MGR", (accounts) => {
   it("Should authorize NODE_MGR for NODE_STOR", () => {
     console.log("Authorizing NODE_MGR");
     return NODE_STOR.grantRole(nodeAdminRoleB32, account1, { from: account1 });
+  });
+
+  it("Should authorize account10 for nodeMinterRoleB32", () => {
+    console.log("Authorizing NODE_MGR");
+    return NODE_BLDR.grantRole(nodeMinterRoleB32, account10, { from: account1 });
   });
 
 
@@ -1227,18 +1210,8 @@ contract("ID_MGR", (accounts) => {
       })
 
       .then(() => {
-        console.log("Minting ID to account1");
-        return ID_MGR.mintID(account1, "1", asset1, { from: account1 });
-      })
-
-      .then(() => {
-        console.log("Minting ID to account10");
-        return ID_MGR.mintID(account10, "2", asset2, { from: account1 });
-      })
-
-      .then(() => {
         console.log("Minting Node 1000001 -C");
-        return NODE_MGR.purchaseNode(
+        return NODE_BLDR.purchaseNode(
           "Custodial_AC1",
           "1",
           "1",
@@ -1250,7 +1223,7 @@ contract("ID_MGR", (accounts) => {
 
       .then(() => {
         console.log("Minting Node 1000002 -NC");
-        return NODE_MGR.purchaseNode(
+        return NODE_BLDR.purchaseNode(
           "Non_Custodial_AC2",
           "1",
           "2",
@@ -1262,7 +1235,7 @@ contract("ID_MGR", (accounts) => {
 
       .then(() => {
         console.log("Minting Node 1000003 -NC");
-        return NODE_MGR.purchaseNode(
+        return NODE_BLDR.purchaseNode(
           "Non_Custodial_AC3",
           "1",
           "2",
@@ -1274,7 +1247,7 @@ contract("ID_MGR", (accounts) => {
 
       .then(() => {
         console.log("Minting Node 1000004 -NC");
-        return NODE_MGR.purchaseNode(
+        return NODE_BLDR.purchaseNode(
           "Non_Custodial_AC4",
           "1",
           "2",
@@ -1287,7 +1260,7 @@ contract("ID_MGR", (accounts) => {
 
   it("Should Mint 2 non-cust Node tokens in AC_ROOT 2", () => {
     console.log("Minting Node 1000005 -NC");
-    return NODE_MGR.purchaseNode(
+    return NODE_BLDR.purchaseNode(
       "Non-Custodial_AC5",
       "2",
       "2",
@@ -1296,7 +1269,7 @@ contract("ID_MGR", (accounts) => {
       { from: account1 }
     ).then(() => {
       console.log("Minting Node 1000006 -NC");
-      return NODE_MGR.purchaseNode(
+      return NODE_BLDR.purchaseNode(
         "Non_Custodial_AC6",
         "2",
         "2",
@@ -1405,37 +1378,37 @@ contract("ID_MGR", (accounts) => {
       })
 
       .then(() => {
-        return NODE_STOR.modifyNodeSwitches("1000001", "2", "1", {
+        return NODE_STOR.modifyNodeSwitches("1000001", "8", "1", {
           from: account1,
         });
       })
 
       .then(() => {
-        return NODE_STOR.modifyNodeSwitches("1000002", "2", "1", {
+        return NODE_STOR.modifyNodeSwitches("1000002", "8", "1", {
           from: account1,
         });
       })
 
       .then(() => {
-        return NODE_STOR.modifyNodeSwitches("1000003", "2", "1", {
+        return NODE_STOR.modifyNodeSwitches("1000003", "8", "1", {
           from: account1,
         });
       })
 
       .then(() => {
-        return NODE_STOR.modifyNodeSwitches("1000004", "2", "1", {
+        return NODE_STOR.modifyNodeSwitches("1000004", "8", "1", {
           from: account1,
         });
       })
 
       .then(() => {
-        return NODE_STOR.modifyNodeSwitches("1000005", "2", "1", {
+        return NODE_STOR.modifyNodeSwitches("1000005", "8", "1", {
           from: account1,
         });
       })
 
       .then(() => {
-        return NODE_STOR.modifyNodeSwitches("1000006", "2", "1", {
+        return NODE_STOR.modifyNodeSwitches("1000006", "8", "1", {
           from: account1,
         });
       });
@@ -1613,284 +1586,49 @@ contract("ID_MGR", (accounts) => {
       });
   });
 
-  it("Should mint ID to account4", async () => {
-    return ID_MGR.mintID(account4, "3", asset3, { from: account1 });
-  });
-
-  it("Should mint ID to account4", async () => {
-    return ID_MGR.mintID(account5, "1", asset4, { from: account1 });
-  });
-
   it("Should mint 30000 tokens to account2", async () => {
     console.log(
-      "//**************************************BEGIN ID_MGR TEST**********************************************/"
+      "//**************************************BEGIN NODE_BLDR TEST**********************************************/"
     );
     console.log(
-      "//**************************************BEGIN ID_MGR SETUP**********************************************/"
+      "//**************************************BEGIN NODE_BLDR SETUP**********************************************/"
     );
     return UTIL_TKN.mint(account2, "30000000000000000000000", {
       from: account1,
     });
   });
 
-  it("Should mint ID to account2", async () => {
-    return ID_MGR.mintID(account2, "4", asset5, { from: account1 });
-  });
-
-  it("Should retrieve hasMinterRole true", async () => {
-    var Record = "";
-
-    return await ID_MGR.hasRole(
-      minterRoleB32,
-      account2,
-      { from: account2 },
-      function (_err, _result) {
-        if (_err) {
-        } else {
-          Record = _result;
-          console.log(Record);
-        }
-      }
-    );
-  });
-
-  it("Should pause ID_MGR", async () => {
-    return ID_MGR.pause({
-      from: account1,
-    });
-  });
-
-  it("Should authorize all minter addresses for minting ID(s)", () => {
-    console.log("Authorizing account2");
-    return ID_MGR.grantRole(IDminterRoleB32, account2, {
-      from: account1,
-    });
-  });
 
   //1
-  it("Should Fail because ID_MGR is paused", async () => {
+  it("Should Fail because caller !Node_Minter", async () => {
     console.log(
-      "//**************************************END ID_MGR SETUP**********************************************/"
+      "//**************************************END NODE_BLDR SETUP**********************************************/"
     );
     console.log(
-      "//**************************************BEGIN ID_MGR FAIL BATCH (13)**********************************************/"
+      "//**************************************BEGIN NODE_BLDR FAIL BATCH (13)**********************************************/"
     );
     console.log(
-      "//**************************************BEGIN mintID FAIL BATCH**********************************************/"
+      "//**************************************BEGIN purchaseNode FAIL BATCH**********************************************/"
     );
-    return ID_MGR.mintID(account2, "1", asset6, {
-      from: account2,
-    });
-  });
-
-  it("Should unauthorize all minter addresses for minting ID(s)", () => {
-    console.log("Authorizing account2");
-    return ID_MGR.revokeRole(IDminterRoleB32, account2, {
-      from: account1,
-    });
-  });
-
-  it("Should unpause ID_MGR", async () => {
-    return ID_MGR.unpause({
-      from: account1,
-    });
-  });
-
-  //2
-  it("Should Fail because caller is not Minter", async () => {
-    return ID_MGR.mintID(account2, "1", asset1, {
-      from: account2,
-    });
-  });
-
-  it("Should authorize all minter addresses for minting ID(s)", () => {
-    console.log("Authorizing account2");
-    return ID_MGR.grantRole(IDminterRoleB32, account2, {
-      from: account1,
-    });
-  });
-
-  //3
-  it("Should Fail because ID authorization is not sufficient.", async () => {
-    return ID_MGR.mintID(account2, "10", asset6, {
-      from: account2,
-    });
-  });
-
-  it("Should unauthorize all minter addresses for minting ID(s)", () => {
-    console.log("Unauthorizing account2");
-    return ID_MGR.revokeRole(IDminterRoleB32, account2, {
-      from: account1,
-    });
-  });
-
-  //4
-  it("Should Fail because IDhash already exists", async () => {
-    return ID_MGR.mintID(account5, "5", asset1, {
-      from: account1,
-    });
-  });
-
-  //5
-  it("Should Fail because reciever already has ID", async () => {
-    return ID_MGR.mintID(account2, "5", asset7, {
-      from: account1,
-    });
-  });
-
-  it("Should pause ID_MGR", async () => {
-    return ID_MGR.pause({
-      from: account1,
-    });
-  });
-
-  it("Should authorize all minter addresses for minting ID(s)", () => {
-    console.log("Authorizing account2");
-    return ID_MGR.grantRole(IDminterRoleB32, account2, {
-      from: account1,
-    });
-  });
-
-  //6
-  it("Should Fail because ID_MGR is paused", async () => {
-    console.log(
-      "//**************************************END mintID FAIL BATCH**********************************************/"
+    return NODE_BLDR.purchaseNode(
+      "Custodial_AC1",
+      "55",
+      "1",
+      rgt000,
+      rgt000,
+      { from: account2 }
     );
-    console.log(
-      "//**************************************BEGIN burnID FAIL BATCH**********************************************/"
-    );
-    return ID_MGR.burnID(account1, { from: account2 });
-  });
-
-  it("Should unauthorize all minter addresses for minting ID(s)", () => {
-    console.log("Authorizing account2");
-    return ID_MGR.revokeRole(IDminterRoleB32, account2, {
-      from: account1,
-    });
-  });
-
-  it("Should unpause ID_MGR", async () => {
-    return ID_MGR.unpause({
-      from: account1,
-    });
-  });
-
-  //7
-  it("Should Fail because caller is not Minter", async () => {
-    return ID_MGR.burnID(account1, { from: account2 });
-  });
-
-  it("Should authorize all minter addresses for minting ID(s)", () => {
-    console.log("Authorizing account5");
-    return ID_MGR.grantRole(IDminterRoleB32, account5, {
-      from: account1,
-    });
-  });
-
-  //8
-  it("Should Fail because caller is not authorized at a high enough level to burn ID of lower tier", async () => {
-    return ID_MGR.burnID(account4, { from: account5 });
-  });
-
-  it("Should unauthorize all minter addresses for minting ID(s)", () => {
-    console.log("unauthorizing account5");
-    return ID_MGR.grantRole(IDminterRoleB32, account5, {
-      from: account1,
-    });
-  });
-
-  it("Should pause ID_MGR", async () => {
-    return ID_MGR.pause({
-      from: account1,
-    });
-  });
-
-  it("Should authorize all minter addresses for minting ID(s)", () => {
-    console.log("Authorizing account2");
-    return ID_MGR.grantRole(IDminterRoleB32, account2, {
-      from: account1,
-    });
-  });
-
-  //9
-  it("Should Fail because ID_MGR is paused", async () => {
-    console.log(
-      "//**************************************END burnID FAIL BATCH**********************************************/"
-    );
-    console.log(
-      "//**************************************BEGIN setTrustLevel FAIL BATCH**********************************************/"
-    );
-    return ID_MGR.setTrustLevel(account1, '5', { from: account2 });
-  });
-
-  it("Should unauthorize all minter addresses for minting ID(s)", () => {
-    console.log("unauthorizing account2");
-    return ID_MGR.revokeRole(IDminterRoleB32, account2, {
-      from: account1,
-    });
-  });
-
-  it("Should unpause ID_MGR", async () => {
-    return ID_MGR.unpause({
-      from: account1,
-    });
-  });
-
-  //10
-  it("Should Fail because caller is not Minter", async () => {
-    return ID_MGR.setTrustLevel(account1, '5', { from: account2 });
-  });
-
-  it("Should authorize all minter addresses for minting ID(s)", () => {
-    console.log("Authorizing account5");
-    return ID_MGR.grantRole(IDminterRoleB32, account5, {
-      from: account1,
-    });
-  });
-
-  //11
-  it("Should Fail because caller is not authorized at a high enough level to burn ID of lower tier", async () => {
-    return ID_MGR.setTrustLevel(account5, '5', { from: account5 });
-  });
-
-  it("Should unauthorize all minter addresses for minting ID(s)", () => {
-    console.log("unauthorizing account5");
-    return ID_MGR.revokeRole(IDminterRoleB32, account5, {
-      from: account1,
-    });
-  });
-
-  //12
-  it("Should Fail because caller is not pauser", async () => {
-    console.log(
-      "//**************************************END setTrustLevel FAIL BATCH**********************************************/"
-    );
-    console.log(
-      "//**************************************BEGIN pause FAIL BATCH**********************************************/"
-    );
-    return ID_MGR.pause({ from: account2 });
-  });
-
-  //13
-  it("Should Fail because caller is not pauser", async () => {
-    console.log(
-      "//**************************************END pause FAIL BATCH**********************************************/"
-    );
-    console.log(
-      "//**************************************BEGIN unpause FAIL BATCH**********************************************/"
-    );
-    return ID_MGR.unpause({ from: account2 });
   });
 
   it("Should set SharesAddress", async () => {
     console.log(
-      "//**************************************END unpause FAIL BATCH**********************************************/"
+      "//**************************************END purchaseNode FAIL BATCH**********************************************/"
     );
     console.log(
-      "//**************************************END ID_MGR FAIL BATCH**********************************************/"
+      "//**************************************END NODE_BLDR FAIL BATCH**********************************************/"
     );
     console.log(
-      "//**************************************END ID_MGR TEST**********************************************/"
+      "//**************************************END NODE_BLDR TEST**********************************************/"
     );
     console.log(
       "//**************************************BEGIN THE WORKS CUSTODIAL**********************************************/"

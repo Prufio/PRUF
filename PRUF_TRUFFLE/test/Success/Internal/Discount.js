@@ -4,7 +4,7 @@ const PRUF_NODE_MGR = artifacts.require("NODE_MGR");
 const PRUF_NODE_STOR = artifacts.require("NODE_STOR");
 const PRUF_NODE_TKN = artifacts.require("NODE_TKN");
 const PRUF_A_TKN = artifacts.require("A_TKN");
-const PRUF_ID_MGR = artifacts.require("ID_MGR");
+const PRUF_NODE_BLDR = artifacts.require("NODE_BLDR");
 const PRUF_ECR_MGR = artifacts.require("ECR_MGR");
 const PRUF_ECR = artifacts.require("ECR");
 const PRUF_ECR2 = artifacts.require("ECR2");
@@ -22,7 +22,7 @@ let NODE_MGR;
 let NODE_STOR;
 let NODE_TKN;
 let A_TKN;
-let ID_MGR;
+let NODE_BLDR;
 let ECR_MGR;
 let ECR;
 let ECR2;
@@ -201,11 +201,11 @@ contract("Discount", (accounts) => {
     Helper = PRUF_HELPER_TEST;
   });
 
-  it("Should deploy PRUF_ID_MGR", async () => {
-    const PRUF_ID_MGR_TEST = await PRUF_ID_MGR.deployed({ from: account1 });
-    console.log(PRUF_ID_MGR_TEST.address);
-    assert(PRUF_ID_MGR_TEST.address !== "");
-    ID_MGR = PRUF_ID_MGR_TEST;
+  it("Should deploy PRUF_NODE_BLDR", async () => {
+    const PRUF_NODE_BLDR_TEST = await PRUF_NODE_BLDR.deployed({ from: account1 });
+    console.log(PRUF_NODE_BLDR_TEST.address);
+    assert(PRUF_NODE_BLDR_TEST.address !== "");
+    NODE_BLDR = PRUF_NODE_BLDR_TEST;
   });
 
   it("Should deploy PRUF_ECR2", async () => {
@@ -408,6 +408,8 @@ contract("Discount", (accounts) => {
 
     minterRoleB32 = await Helper.getStringHash("MINTER_ROLE");
 
+    IDproviderRoleB32 = await Helper.getStringHash("ID_PROVIDER_ROLE");
+
     trustedAgentRoleB32 = await Helper.getStringHash("TRUSTED_AGENT_ROLE");
   });
 
@@ -439,13 +441,6 @@ contract("Discount", (accounts) => {
       .then(() => {
         console.log("Adding A_TKN to storage for use in Node 0");
         return STOR.authorizeContract("A_TKN", A_TKN.address, "0", "1", {
-          from: account1,
-        });
-      })
-
-      .then(() => {
-        console.log("Adding ID_MGR to storage for use in Node 0");
-        return STOR.authorizeContract("ID_MGR", ID_MGR.address, "0", "1", {
           from: account1,
         });
       })

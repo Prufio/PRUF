@@ -68,7 +68,7 @@ contract CORE is BASIC {
                     "C:CR:Cannot create asset - caller not authorized"
                 );
             } else {
-                revert(
+                revert( //DPS:TEST NEW
                     "C:CR: Contract does not support management type or node is locked"
                 );
             }

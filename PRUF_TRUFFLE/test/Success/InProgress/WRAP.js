@@ -39,7 +39,7 @@ _________\/// _____________\/// _______\/// __\///////// __\/// _____________
         let NODE_TKN;
         let A_TKN;
         let Foreign721;
-        let ID_MGR;
+        let NODE_BLDR;
         let ECR_MGR;
         let ECR;
         let ECR2;
