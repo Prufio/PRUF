@@ -225,8 +225,7 @@ contract NODE_STOR is BASIC {
     {
         delete nodeId[_name];
         if (
-            keccak256(abi.encodePacked(_name)) !=
-            keccak256(abi.encodePacked(""))
+            bytes(_name).length != 0
         ) {
             nodeId[_name] = _node;
         }
