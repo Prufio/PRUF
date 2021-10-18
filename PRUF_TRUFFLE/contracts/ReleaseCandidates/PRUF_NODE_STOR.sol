@@ -19,12 +19,15 @@ _________\/// _____________\/// _______\/// __\///////// __\/// _____________
  * For usage-level (not administrative) functions, NODE_STOR supports indirect node references
  * via the localNodeFor[] mapping. By default, nodes will have a mirror entry in localNodeFor[], so that
  * localNodeFor[node] == node.... but in the case where a node is "twinned" from another chain, 
- * querying the a foreign origin nodeID can point to the corresponding local node -IF- the entry for
+ * querying a foreign origin nodeID can point to the corresponding local node -IF- the entry for
  * localNodeFor[foreignNode] is set to the corresponding local nodeID.
  * 
  * the nodeDetails[] mapping contains mappings for an external token contract/ID for use at the
  * APP layer to check minting authority (for example must hold the Node token AND the foreign token
  * in order to mint new records ) There are also extra data fields to pad the struct to two words.
+ *
+ * Nodes holders can approve other asset classes that can be imported into their node space 
+ * via the importApprovals mapping. This will be implemented for recycle / import.
  *
  *
  * STATEMENT OF TERMS OF SERVICE (TOS):
@@ -217,12 +220,12 @@ contract NODE_STOR is BASIC {
      */
     function setNodeIdForName(uint32 _node, string memory _name)
         external
+        whenNotPaused
         isNodeAdmin
     {
         delete nodeId[_name];
         if (
-            keccak256(abi.encodePacked(_name)) !=
-            keccak256(abi.encodePacked(""))
+            bytes(_name).length != 0
         ) {
             nodeId[_name] = _node;
         }
@@ -325,7 +328,7 @@ contract NODE_STOR is BASIC {
         uint32 _node,
         uint8 _position,
         uint8 _bit
-    ) external isNodeAdmin nonReentrant {
+    ) external isNodeAdmin whenNotPaused {
         require(
             (_position > 0) && (_position < 9),
             "NS:MNS: Bit position !>0||<9"
@@ -384,7 +387,7 @@ contract NODE_STOR is BASIC {
         uint32 _thisNode,
         uint32 _otherNode,
         uint256 _newStatus
-    ) external isNodeAdmin {
+    ) external whenNotPaused isNodeAdmin {
         importApprovals[_thisNode][_otherNode] = _newStatus;
     }
 
@@ -445,6 +448,7 @@ contract NODE_STOR is BASIC {
      */
     function setExtendedNodeData(uint32 _node, ExtendedNodeData memory _exData)
         external
+        whenNotPaused
         isNodeAdmin
     {
         nodeDetails[_node] = _exData;
@@ -458,6 +462,7 @@ contract NODE_STOR is BASIC {
      */
     function setLocalNode(uint32 _foreignNode, uint32 _localNode)
         external
+        whenNotPaused
         isNodeAdmin
     {
         localNodeFor[_foreignNode] = _localNode;
