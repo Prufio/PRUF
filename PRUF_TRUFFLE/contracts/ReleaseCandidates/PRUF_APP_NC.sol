@@ -70,7 +70,7 @@ contract APP_NC is CORE {
         //^^^^^^^effects^^^^^^^^^
     }
 
-    /**
+    /** //DPS:TEST:NEW PARAMS
      * @dev Create a newRecord with permanent description
      * @param _idxHash - hash of asset information created by frontend inputs
      * @param _rgtHash - hash of rightsholder information created by frontend inputs
@@ -78,6 +78,7 @@ contract APP_NC is CORE {
      * @param _countDownStart - decremental counter for an assets lifecycle
      * @param _nonMutableStorage1 - field for permanent external asset data
      * @param _nonMutableStorage2 - field for permanent external asset data
+     * @param _URIhash - Hash of external CAS from URI 
      */
     function newRecordWithNote(
         bytes32 _idxHash,
@@ -85,7 +86,8 @@ contract APP_NC is CORE {
         uint32 _node,
         uint32 _countDownStart,
         bytes32 _nonMutableStorage1,
-        bytes32 _nonMutableStorage2
+        bytes32 _nonMutableStorage2,
+        bytes32 _URIhash
     ) external nonReentrant whenNotPaused {
         bytes32 idxHash = keccak256(abi.encodePacked(_idxHash, _node)); //hash idxRaw with node to get idxHash
         //^^^^^^^Checks^^^^^^^^^
@@ -93,6 +95,7 @@ contract APP_NC is CORE {
         Record memory rec;
         rec.nonMutableStorage1 = _nonMutableStorage1;
         rec.nonMutableStorage2 = _nonMutableStorage2;
+        rec.URIhash = _URIhash;
 
         createRecord(idxHash, _rgtHash, _node, _countDownStart);
         writeNonMutableStorage(idxHash, rec);
@@ -120,16 +123,18 @@ contract APP_NC is CORE {
         //^^^^^^^effects^^^^^^^^^
     }
 
-    /**
+    /** //DPS:TEST:NEW PARAMS
      * @dev record NonMutableStorage data
      * @param _idxHash - hash of asset information created by frontend inputs
      * @param _nonMutableStorage1 - field for permanent external asset data
      * @param _nonMutableStorage2 - field for permanent external asset data
+     * @param _URIhash - Hash of external CAS from URI 
      */
     function addNonMutableStorage(
         bytes32 _idxHash,
         bytes32 _nonMutableStorage1,
-        bytes32 _nonMutableStorage2
+        bytes32 _nonMutableStorage2,
+        bytes32 _URIhash
     ) external nonReentrant whenNotPaused isAuthorized(_idxHash) {
         Record memory rec = getRecord(_idxHash);
         require(
@@ -140,6 +145,7 @@ contract APP_NC is CORE {
 
         rec.nonMutableStorage1 = _nonMutableStorage1;
         rec.nonMutableStorage2 = _nonMutableStorage2;
+        rec.URIhash = _URIhash;
 
         writeNonMutableStorage(_idxHash, rec);
         deductServiceCosts(rec.node, 3);

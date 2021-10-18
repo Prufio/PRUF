@@ -463,13 +463,14 @@ contract MAL_APP is CORE_MAL {
         //^^^^^^^interactions^^^^^^^^^
     }
 
-    /*
+    /* /** //DPS:TEST:NEW PARAMS
      * @dev Modify **Record**.NonMutableStorage with confirmation
      */
     function addNonMutableStorage(
         bytes32 _idxHash,
         bytes32 _nonMutableStorage1,
-        bytes32 _nonMutableStorage2
+        bytes32 _nonMutableStorage2,
+        bytes32 _URIhash
     )
         external
         
@@ -520,6 +521,7 @@ contract MAL_APP is CORE_MAL {
 
         rec.nonMutableStorage1 = _nonMutableStorage1;
         rec.nonMutableStorage2 = _nonMutableStorage2;
+        rec.URIhash = _URIhash;
         //^^^^^^^effects^^^^^^^^^
 
         writeNonMutableStorage(_idxHash, rec);
