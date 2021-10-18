@@ -386,7 +386,7 @@ contract A_TKN is
         //^^^^^^^interactions^^^^^^^^^
     }
 
-    /**
+    /** //DPS:TEST changed logic
      * @dev Set new token URI String
      * @param _tokenId - Token ID to set URI
      * @param _tokenURI - URI string to atatch to token
@@ -409,6 +409,33 @@ contract A_TKN is
         require(
             NODE_TKN.ownerOf(rec.node) == _msgSender(),
             "AT:SU:Caller !NTH"
+        );
+
+        require( //If no switches are set, tokenholder can change URI
+            _isApprovedOrOwner(_msgSender(), _tokenId),
+            "AT:SU:Caller !owner nor approved"
+        );
+        //^^^^^^^checks^^^^^^^^^
+
+        _setTokenURI(_tokenId, _tokenURI);
+        return _tokenId;
+        //^^^^^^^effects^^^^^^^^^
+    }
+
+    /** //DPS:TEST NEW
+     * @dev Set new token URI String DAO mode REQUIRES DAO_ROLE
+     * @param _tokenId - Token ID to set URI
+     * @param _tokenURI - URI string to atatch to token
+     * @return tokenId
+     */
+    function newURI(uint256 _tokenId, string calldata _tokenURI)
+        external
+        returns (uint256)
+    {
+
+        require(
+            hasRole(DAO_ROLE, _msgSender()),
+            "AT:SU-IM:Calling address is not DAO"
         );
 
         require( //If no switches are set, tokenholder can change URI
