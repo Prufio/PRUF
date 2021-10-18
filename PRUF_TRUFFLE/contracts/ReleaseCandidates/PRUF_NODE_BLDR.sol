@@ -88,7 +88,7 @@ contract NODE_BLDR is BASIC {
         bytes32 _CAS1,
         bytes32 _CAS2,
         address _mintNodeFor
-    ) external nonReentrant isNodeMinter returns (uint256) {
+    ) external whenNotPaused nonReentrant isNodeMinter returns (uint256) {
 
         //^^^^^^^checks^^^^^^^^^
 
