@@ -139,13 +139,19 @@ contract("REWARDS_VAULT", (accounts) => {
 
     minterRoleB32 = await Helper.getStringHash("MINTER_ROLE");
 
+    IDproviderRoleB32 = await Helper.getStringHash("ID_PROVIDER_ROLE");
+
     trustedAgentRoleB32 = await Helper.getStringHash("TRUSTED_AGENT_ROLE");
 
     assetTransferRoleB32 = await Helper.getStringHash("ASSET_TXFR_ROLE");
 
     discardRoleB32 = await Helper.getStringHash("DISCARD_ROLE");
 
+    DAOroleB32 = await Helper.getStringHash("DAO_ROLE");
+
     nodeAdminRoleB32 = await Helper.getStringHash("NODE_ADMIN_ROLE");
+
+    nodeMinterRoleB32 = await Helper.getStringHash("NODE_MINTER_ROLE");
 
     stakeRoleB32 = await Helper.getStringHash("STAKE_ROLE");
 

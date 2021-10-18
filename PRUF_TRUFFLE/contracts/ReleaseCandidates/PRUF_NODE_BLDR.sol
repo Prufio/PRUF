@@ -89,10 +89,7 @@ contract NODE_BLDR is BASIC {
         bytes32 _CAS2,
         address _mintNodeFor
     ) external nonReentrant isNodeMinter returns (uint256) {
-
         //^^^^^^^checks^^^^^^^^^
-
-        //^^^^^^^effects^^^^^^^^^
 
         uint256 mintedNode = NODE_MGR.purchaseNode(_name,_nodeRoot,_custodyType,_CAS1,_CAS2,_mintNodeFor);
 

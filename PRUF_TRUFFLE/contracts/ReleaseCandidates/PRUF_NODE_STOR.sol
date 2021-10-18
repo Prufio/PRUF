@@ -43,7 +43,7 @@ import "../Imports/security/ReentrancyGuard.sol";
 
 contract NODE_STOR is BASIC {
     bytes32 public constant NODE_ADMIN_ROLE = keccak256("NODE_ADMIN_ROLE");
-    bytes32 public constant DAO_ROLE = keccak256("DAO_ROLE"); //DPS:NEW
+    bytes32 public constant DAO_ROLE = keccak256("DAO_ROLE");
 
     bytes32 public constant B320xF_ =
         0xFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFF;
