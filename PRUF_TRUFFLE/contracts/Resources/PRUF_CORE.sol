@@ -102,7 +102,7 @@ contract CORE is BASIC {
         //^^^^^^^Checks^^^^^^^^
 
         address recipient;
-        if (NODE_STOR.getSwitchAt(_node, 2) == 0) {
+        if (NODE_STOR.getSwitchAt(_node, 8) == 0) {
             //if switch at bit 2 is not set, set the mint to address to the node holder
             recipient = NODE_TKN.ownerOf(_node);
         } else if (nodeInfo.custodyType == 1) {

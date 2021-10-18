@@ -140,7 +140,7 @@ contract WRAP is CORE {
         } else {
             //DPS:TEST
             //just mint the token, record already exists
-            if (NODE_STOR.getSwitchAt(_node, 2) == 0) {
+            if (NODE_STOR.getSwitchAt(_node, 8) == 0) {
                 //if switch at bit 2 is not set, set the mint to address to the node holder
                 A_TKN.mintAssetToken(NODE_TKN.ownerOf(_node), newTokenId);
             } else {
@@ -288,7 +288,7 @@ contract WRAP is CORE {
         }
         //^^^^^^^checks^^^^^^^^^
 
-        if (NODE_STOR.getSwitchAt(_node, 2) == 0) {
+        if (NODE_STOR.getSwitchAt(_node, 8) == 0) {
             //DPS:TEST
             //if switch at bit 2 is not set, set the mint to address to the node holder
             A_TKN.mintAssetToken(NODE_TKN.ownerOf(_node), tokenId);
