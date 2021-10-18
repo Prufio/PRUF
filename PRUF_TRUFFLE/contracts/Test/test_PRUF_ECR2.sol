@@ -24,9 +24,6 @@ contract ECR2 is ECR_CORE {
     
     /*
      * @dev Verify user credentials
-     * Originating Address:
-     *      Exists in registeredUsers as a usertype 1 to 9
-     *      Is authorized for node
      */
     modifier isAuthorized(bytes32 _idxHash) override {
         uint256 tokenId = uint256(_idxHash);
