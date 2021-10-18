@@ -642,6 +642,13 @@ interface NODE_STOR_Interface {
         view
         returns (uint8);
 
+    /** //DPS:TEST:NEW
+     * @dev get the number of adresses authorized on a node
+     * @param _node - node to query
+     * @return number of auth users
+     */
+    function getNumberOfUsers(uint32 _node) external view returns (uint256);
+
     /**
      * @dev get the status of a specific management type
      * @param _managementType - management type associated with query (see docs)
