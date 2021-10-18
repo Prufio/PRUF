@@ -68,8 +68,7 @@ contract CORE is BASIC {
                     "C:CR:Cannot create asset - caller not authorized"
                 );
             } else {
-                require( //DPS:TEST NEW
-                    1 == 0, //always revert if it gets to here
+                revert(
                     "C:CR: Contract does not support management type or node is locked"
                 );
             }

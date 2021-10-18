@@ -101,8 +101,7 @@ contract DECORATE is CORE {
                 "ANC:IA: Cannot create asset - caller address !authorized"
             );
         } else {
-            require( //DPS:TEST NEW
-                1 == 0, //always revert if it gets to here
+            revert(
                 "ANC:IA: Contract does not support management type or node is locked"
             );
         }
@@ -507,8 +506,7 @@ contract DECORATE is CORE {
                 "D:CRO:Cannot create asset - caller address not authorized"
             );
         } else {
-            require( //DPS:TEST NEW
-                1 == 0, //always revert if it gets to here
+            revert(
                 "D:CRO: Contract does not support management type or node is locked"
             );
         }

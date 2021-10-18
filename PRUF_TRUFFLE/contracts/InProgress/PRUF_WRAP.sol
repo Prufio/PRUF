@@ -117,8 +117,7 @@ contract WRAP is CORE {
                 "W:W: Cannot create asset - caller address !authorized"
             );
         } else {
-            require( //DPS:TEST NEW
-                1 == 0, //always revert if it gets to here
+            revert(
                 "W:W: Contract does not support management type or node is locked"
             );
         }
@@ -283,11 +282,10 @@ contract WRAP is CORE {
                 "W:CR:Cannot create asset - caller address not authorized"
             );
         } else {
-                require( //DPS:TEST NEW
-                    1 == 0, //always revert if it gets to here
-                    "W:CR: Contract does not support management type or node is locked"
-                );
-            }
+            revert(
+                "W:CR: Contract does not support management type or node is locked"
+            );
+        }
         //^^^^^^^checks^^^^^^^^^
 
         if (NODE_STOR.getSwitchAt(_node, 2) == 0) {
