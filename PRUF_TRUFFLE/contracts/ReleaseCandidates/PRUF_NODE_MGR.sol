@@ -252,9 +252,10 @@ contract NODE_MGR is BASIC {
         bytes32 _CAS1,
         bytes32 _CAS2
     ) external whenNotPaused isNodeHolder(_node) {
-        require(
-            NODE_STOR.getSwitchAt(_node, 1) == 0,
-            "NM:UNC: CAS for node is locked and cannot be written"
+        Node memory thisNode = NODE_STOR.getNodeData(_node);
+        require(//DPS:TEST NEW PASS CONDITION, SW1 = 0 or CAS IS BLANK
+            (NODE_STOR.getSwitchAt(_node, 1) == 0) || (thisNode.CAS1 & thisNode.CAS2 == 0),
+            "NM:UNC: CAS for node is set and cannot be written"
         );
         //^^^^^^^checks^^^^^^^^^
 
