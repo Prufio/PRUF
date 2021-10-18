@@ -632,15 +632,17 @@ contract STOR is AccessControl, ReentrancyGuard, Pausable {
     }
 
     /**
-     * @dev Modify NonMutableStorage data
+     * @dev Modify NonMutableStorage data //DPS:TEST:NEW PARAMS
      * @param _idxHash - record asset ID
      * @param _nonMutableStorage1 - first half of content addressable storage location
      * @param _nonMutableStorage2 - second half of content addressable storage location
+     * @param _URIhash - Hash of external CAS from URI 
      */
     function modifyNonMutableStorage(
         bytes32 _idxHash,
         bytes32 _nonMutableStorage1,
-        bytes32 _nonMutableStorage2
+        bytes32 _nonMutableStorage2,
+        bytes32 _URIhash
     )
         external
         nonReentrant
@@ -654,14 +656,15 @@ contract STOR is AccessControl, ReentrancyGuard, Pausable {
         require(isTransferred(rec.assetStatus) == 0, "S:MNMS: Txfrd. asset"); //asset cannot be in transferred status
 
         require(
-            ((rec.nonMutableStorage1 == 0) && (rec.nonMutableStorage2 == 0)) ||
-                (rec.assetStatus == 201),
+            (rec.nonMutableStorage1 & rec.nonMutableStorage2 & rec.URIhash ==
+                0) || (rec.assetStatus == 201),
             "S:MNMS: Cannot overwrite NM Storage"
         ); //NonMutableStorage record is immutable after first write unless status 201 is set (Storage provider has died)
         //^^^^^^^checks^^^^^^^^^
 
         rec.nonMutableStorage1 = _nonMutableStorage1;
         rec.nonMutableStorage2 = _nonMutableStorage2;
+        rec.URIhash = _URIhash;
 
         database[_idxHash] = rec;
         //^^^^^^^effects^^^^^^^^^
@@ -737,7 +740,7 @@ contract STOR is AccessControl, ReentrancyGuard, Pausable {
      * @param _rgtHash - record owner ID hash
      * @return 170 if matches, 0 if not
      */
-    function _verifyRightsHolder(bytes32 _idxHash, bytes32 _rgtHash)
+    function verifyRightsHolder(bytes32 _idxHash, bytes32 _rgtHash)
         external
         view
         returns (uint256)

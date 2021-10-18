@@ -174,15 +174,17 @@ interface STOR_Interface {
     ) external;
 
     /**
-     * @dev Modify NonMutableStorage data
+     * @dev Modify NonMutableStorage data //DPS:TEST:NEW PARAMS
      * @param _idxHash - record asset ID
-     * @param _nonMutableStorage1 - first half of content adressable storage location
-     * @param _nonMutableStorage2 - second half of content adressable storage location
+     * @param _nonMutableStorage1 - first half of content addressable storage location
+     * @param _nonMutableStorage2 - second half of content addressable storage location
+     * @param _URIhash - Hash of external CAS from URI
      */
     function modifyNonMutableStorage(
         bytes32 _idxHash,
         bytes32 _nonMutableStorage1,
-        bytes32 _nonMutableStorage2
+        bytes32 _nonMutableStorage2,
+        bytes32 _URIhash
     ) external;
 
     /**
@@ -230,7 +232,7 @@ interface STOR_Interface {
      * @param _rgtHash - record owner ID hash
      * @return 170 if matches, 0 if not
      */
-    function _verifyRightsHolder(bytes32 _idxHash, bytes32 _rgtHash)
+    function verifyRightsHolder(bytes32 _idxHash, bytes32 _rgtHash)
         external
         view
         returns (uint256);

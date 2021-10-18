@@ -126,7 +126,8 @@ contract CORE_MAL is BASIC {
         STOR.modifyNonMutableStorage(
             _idxHash,
             _rec.nonMutableStorage1,
-            _rec.nonMutableStorage2
+            _rec.nonMutableStorage2,
+            _rec.URIhash
         ); // Send data to storage
         //^^^^^^^interactions^^^^^^^^^
     }
