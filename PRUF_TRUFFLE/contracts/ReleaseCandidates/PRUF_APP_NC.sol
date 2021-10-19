@@ -40,7 +40,7 @@ contract APP_NC is CORE {
 
     //---------------------------------------External Functions-------------------------------
 
-    /**
+    /** //DPS:CHECK
      * @dev Create a newRecord with description
      * @param _idxHash - hash of asset information created by frontend inputs
      * @param _rgtHash - hash of rightsholder information created by frontend inputs
@@ -48,6 +48,7 @@ contract APP_NC is CORE {
      * @param _countDownStart - decremental counter for an assets lifecycle
      * @param _mutableStorage1 - field for external asset data
      * @param _mutableStorage2 - field for external asset data
+     * @param _URIsuffix - Hash of external CAS from URI
      */
     function newRecordWithDescription(
         bytes32 _idxHash,
@@ -55,7 +56,8 @@ contract APP_NC is CORE {
         uint32 _node,
         uint32 _countDownStart,
         bytes32 _mutableStorage1,
-        bytes32 _mutableStorage2
+        bytes32 _mutableStorage2,
+        string calldata _URIsuffix
     ) external nonReentrant whenNotPaused {
         bytes32 idxHash = keccak256(abi.encodePacked(_idxHash, _node)); //hash idxRaw with node to get idxHash/
         //^^^^^^^Checks^^^^^^^^^
@@ -64,7 +66,7 @@ contract APP_NC is CORE {
         rec.mutableStorage1 = _mutableStorage1;
         rec.mutableStorage2 = _mutableStorage2;
 
-        createRecord(idxHash, _rgtHash, _node, _countDownStart);
+        createRecord(idxHash, _rgtHash, _node, _countDownStart, _URIsuffix);
         writeMutableStorage(idxHash, rec);
         deductServiceCosts(_node, 1);
         //^^^^^^^effects^^^^^^^^^
@@ -78,7 +80,7 @@ contract APP_NC is CORE {
      * @param _countDownStart - decremental counter for an assets lifecycle
      * @param _nonMutableStorage1 - field for permanent external asset data
      * @param _nonMutableStorage2 - field for permanent external asset data
-     * @param _URIhash - Hash of external CAS from URI
+     * @param _URIsuffix - Hash of external CAS from URI
      */
     function newRecordWithNote(
         bytes32 _idxHash,
@@ -87,7 +89,7 @@ contract APP_NC is CORE {
         uint32 _countDownStart,
         bytes32 _nonMutableStorage1,
         bytes32 _nonMutableStorage2,
-        bytes32 _URIhash
+        string calldata _URIsuffix
     ) external nonReentrant whenNotPaused {
         bytes32 idxHash = keccak256(abi.encodePacked(_idxHash, _node)); //hash idxRaw with node to get idxHash
         //^^^^^^^Checks^^^^^^^^^
@@ -95,30 +97,31 @@ contract APP_NC is CORE {
         Record memory rec;
         rec.nonMutableStorage1 = _nonMutableStorage1;
         rec.nonMutableStorage2 = _nonMutableStorage2;
-        rec.URIhash = _URIhash;
 
-        createRecord(idxHash, _rgtHash, _node, _countDownStart);
+        createRecord(idxHash, _rgtHash, _node, _countDownStart, _URIsuffix);
         writeNonMutableStorage(idxHash, rec);
         deductServiceCosts(_node, 1);
     }
 
-    /**
+    /** //DPS:CHECK
      * @dev Create a newRecord
      * @param _idxHash - hash of asset information created by frontend inputs
      * @param _rgtHash - hash of rightsholder information created by frontend inputs
      * @param _node - node the asset will be created in
      * @param _countDownStart - decremental counter for an assets lifecycle
+     * @param _URIsuffix - Hash of external CAS from URI
      */
     function newRecord(
         bytes32 _idxHash,
         bytes32 _rgtHash,
         uint32 _node,
-        uint32 _countDownStart
+        uint32 _countDownStart,
+        string calldata _URIsuffix
     ) external nonReentrant whenNotPaused {
         bytes32 idxHash = keccak256(abi.encodePacked(_idxHash, _node)); //hash idxRaw with node to get idxHash
         //^^^^^^^Checks^^^^^^^^^
 
-        createRecord(idxHash, _rgtHash, _node, _countDownStart);
+        createRecord(idxHash, _rgtHash, _node, _countDownStart, _URIsuffix);
         deductServiceCosts(_node, 1);
         //^^^^^^^effects^^^^^^^^^
     }

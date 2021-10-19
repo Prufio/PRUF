@@ -71,18 +71,17 @@ contract PIP is CORE {
         tokenURI = uint256toString(uint256(b32URI));
         //^^^^^^^effects^^^^^^^^^^^^
 
-        A_TKN.mintAssetToken(address(this), tokenId); //mint a PIP token...this needs to send it to the right address, its dumb right now
-        A_TKN.setURI(tokenId, tokenURI); 
+        A_TKN.mintAssetToken(address(this), tokenId, tokenURI ); //CTS:CHECK mint a PIP token...this needs to send it to the right address, its dumb right now
     }
 
-    /*
+    /* CTS:CHECK NOT FINISHED, ACCEPTS URIHASH WITH NO VERIFICATION OF ACTUAL URI
      * @dev Import a record into a new node
      */
     function claimPipAsset(
         bytes32 _idxHash,
-        //String calldata _authCode,
-        uint32 _newNode,
         bytes32 _rgtHash,
+        bytes32 _URIhash,
+        uint32 _newNode,
         uint32 _countDownStart
     ) external nonReentrant whenNotPaused {
         uint256 tokenId = uint256(_idxHash);
@@ -94,7 +93,7 @@ contract PIP is CORE {
         //^^^^^^^checks^^^^^^^^^
 
         //A_TKN.validatePipToken(tokenId, _newNode, _authCode); //check supplied data matches tokenURI
-        STOR.newRecord(_idxHash, _rgtHash, _newNode, _countDownStart); // Make a new record at the tokenId b32
+        STOR.newRecord(_idxHash, _rgtHash, _URIhash, _newNode, _countDownStart); // Make a new record at the tokenId b32
         A_TKN.setURI(tokenId, "pruf.io/PIP"); // set URI
         A_TKN.safeTransferFrom(address(this), _msgSender(), tokenId); // sends token from this holding contract to caller wallet
         deductImportRecordCosts(_newNode);

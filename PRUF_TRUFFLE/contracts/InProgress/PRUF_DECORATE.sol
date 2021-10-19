@@ -22,7 +22,7 @@ _________\/// _____________\/// _______\/// __\///////// __\/// _____________
 pragma solidity ^0.8.7;
 
 import "../Resources/PRUF_CORE.sol";
-import "../Imports/token/ERC721/IERC721.sol";
+//import "../Imports/token/ERC721/IERC721.sol";
 
 contract DECORATE is CORE {
     /**
@@ -459,7 +459,7 @@ contract DECORATE is CORE {
     //     //^^^^^^^interactions^^^^^^^^^
     // }
 
-    //--------------------------------------------External Functions--------------------------
+    //--------------------------------------------INTERNAL Functions--------------------------
 
     /**
      * @dev create a Record in Storage @ idxHash (SETTER)
@@ -516,7 +516,7 @@ contract DECORATE is CORE {
 
         //^^^^^^^checks^^^^^^^^^
 
-        STOR.newRecord(idxHash, _rgtHash, _node, _countDownStart);
+        STOR.newRecord(idxHash, _rgtHash, 0x0, _node, _countDownStart);
         //^^^^^^^interactions^^^^^^^^^
     }
 }
