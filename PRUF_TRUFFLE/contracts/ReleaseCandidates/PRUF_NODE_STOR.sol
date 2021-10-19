@@ -55,7 +55,9 @@ contract NODE_STOR is BASIC {
     mapping(uint32 => ExtendedNodeData) private nodeDetails; //Extended Node
     mapping(uint32 => mapping(uint32 => uint256)) private importApprovals; //list of approved nodes to import from for each node
 
-    //mapping()
+    mapping(string => mapping(uint8 => uint256)) private validBaseURIs; //URIstrings => (storageType => validity/index)
+    mapping(uint8 => mapping(uint256 => string)) private URIsForStorageType; //storageType => (index => URI)
+    mapping(uint8 => uint256) private numberOfURIs; //number of URIs for storage type
 
     mapping(uint32 => mapping(uint16 => Costs)) private cost; //Cost per function by Node => Costs struct (see RESOURCE_PRUF_INTERFACES for struct definitions)
     mapping(uint32 => Node) private nodeData; //node info database Node to node struct (see RESOURCE_PRUF_INTERFACES for struct definitions)
@@ -139,6 +141,69 @@ contract NODE_STOR is BASIC {
         //^^^^^^^checks^^^^^^^^^
         validCustodyTypes[_custodyType] = _status;
         //^^^^^^^effects^^^^^^^^^
+    }
+
+    /** //DPS TEST
+     * @dev Sets a new baseURI for a storage provider.
+     * @param _storageProvider - storage provider number
+     * @param _URI - baseURI to add
+     */
+    function addBaseURIforStorageProvider(
+        uint8 _storageProvider,
+        string calldata _URI
+    ) external isDAO {
+        require(
+            validBaseURIs[_URI][_storageProvider] == 0,
+            "NS:AUFSP:URI already added"
+        );
+        //^^^^^^^checks^^^^^^^^^
+
+        numberOfURIs[_storageProvider]++;
+
+        URIsForStorageType[_storageProvider][
+            numberOfURIs[_storageProvider]
+        ] = _URI;
+
+        validBaseURIs[_URI][_storageProvider] = 1;
+        //^^^^^^^effects^^^^^^^^^
+    }
+
+    /** //DPS TEST
+     * @dev Removes a baseURI for a storage provider.
+     * @param _storageProvider - storage provider number
+     * @param _URI - baseURI to remove
+     */
+    function removeBaseURIforStorageProvider(
+        uint8 _storageProvider,
+        string calldata _URI
+    ) external isDAO {
+        require(
+            validBaseURIs[_URI][_storageProvider] == 1,
+            "NS:AUFSP:URI not provisioned"
+        );
+        //^^^^^^^checks^^^^^^^^^
+
+        delete validBaseURIs[_URI][_storageProvider];
+        //^^^^^^^effects^^^^^^^^^
+    }
+
+    /** //DPS TEST
+     * @dev returns a baseURI for a storage provider / index combination, as well as the total number of URIs.
+     * @param _storageProvider - storage provider number
+     * @param _index - baseURI to get
+     */
+    function getBaseURIbyindex(uint8 _storageProvider, uint256 _index)
+        external
+        view
+        returns (string memory, uint256)
+    {
+        //^^^^^^^checks^^^^^^^^^
+
+        return (
+            URIsForStorageType[_storageProvider][_index],
+            numberOfURIs[_storageProvider]
+        );
+        //^^^^^^^interactions^^^^^^^^^
     }
 
     /**
@@ -295,7 +360,7 @@ contract NODE_STOR is BASIC {
             numberOfUsers[_node]--;
         }
 
-        registeredUsers[_node][_addrHash] = 0; //deauth node
+        delete registeredUsers[_node][_addrHash]; //deauth node
 
         //^^^^^^^effects^^^^^^^^^
     }

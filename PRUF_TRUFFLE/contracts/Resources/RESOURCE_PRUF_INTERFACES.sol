@@ -440,6 +440,36 @@ interface NODE_STOR_Interface {
      */
     function setCustodyTypes(uint8 _custodyType, uint8 _status) external;
 
+        /** //DPS TEST
+     * @dev Sets a new baseURI for a storage provider.
+     * @param _storageProvider - storage provider number
+     * @param _URI - baseURI to add
+     */
+    function addBaseURIforStorageProvider(
+        uint8 _storageProvider,
+        string calldata _URI
+    ) external;
+
+    /** //DPS TEST
+     * @dev Removes a baseURI for a storage provider.
+     * @param _storageProvider - storage provider number
+     * @param _URI - baseURI to remove
+     */
+    function removeBaseURIforStorageProvider(
+        uint8 _storageProvider,
+        string calldata _URI
+    ) external;
+
+    /** //DPS TEST
+     * @dev returns a baseURI for a storage provider / index combination, as well as the total number of URIs.
+     * @param _storageProvider - storage provider number
+     * @param _index - baseURI to get
+     */
+    function getBaseURIbyindex(uint8 _storageProvider, uint256 _index)
+        external
+        view
+        returns (string memory, uint256);
+
     /**
      * !! to be used with great caution !!
      * This potentially breaks decentralization and must eventually be given over to DAO.
