@@ -294,8 +294,8 @@ pragma solidity ^0.6.7;
 *-----------------------------------------------------------------//DPS:TEST:CHANGED
  * node option switches, 1 or 0 : AC_data.switches (AC_manager)
  *             Switches will be duplicated from root 
- * bit1  -- If set, cannot change CAS data after initial setting
- * bit2  -- If set, cannot change URI data after initial setting 
+ * bit1  -- If set, node cannot change CAS data after initial setting
+ * bit2  -- If set, User can set first NMS 
  * bit4  --
  * bit5  --
  * bit6  --
@@ -348,6 +348,8 @@ pragma solidity ^0.6.7;
  * 59 = Discardable
  * 60 = Recyclable (can only be reimported by an ACAdmin) (discarded)
  * 70 = Importable(Exported)
+ * 200 = Updating of NMS is allowed with NH cooperation (stat should also probably be set also with NH coop)
+ * 201 = storage provider is dead and storage assets inaccessible. Allows changing of NMS and URI with NH cooperation
  *
 - -----------------------------------------------------------------
 

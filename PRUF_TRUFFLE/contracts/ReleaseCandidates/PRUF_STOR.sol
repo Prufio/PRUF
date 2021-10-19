@@ -660,7 +660,7 @@ contract STOR is AccessControl, ReentrancyGuard, Pausable {
 
         require(
             (rec.nonMutableStorage1 & rec.nonMutableStorage2 ==
-                0) || (rec.assetStatus == 201),
+                0) || ((rec.assetStatus == 201) || (rec.assetStatus == 200)),
             "S:MNMS: Cannot overwrite NM Storage"
         ); //NonMutableStorage record is immutable after first write unless status 201 is set (Storage provider has died)
         //^^^^^^^checks^^^^^^^^^
