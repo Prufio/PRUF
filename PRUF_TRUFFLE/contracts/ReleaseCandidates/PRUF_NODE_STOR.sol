@@ -55,9 +55,7 @@ contract NODE_STOR is BASIC {
     mapping(uint32 => ExtendedNodeData) private nodeDetails; //Extended Node
     mapping(uint32 => mapping(uint32 => uint256)) private importApprovals; //list of approved nodes to import from for each node
 
-    mapping(string => mapping(uint8 => uint256)) private validBaseURIs; //URIstrings => (storageType => validity/index)
-    mapping(uint8 => mapping(uint256 => string)) private URIsForStorageType; //storageType => (index => URI)
-    mapping(uint8 => uint256) private numberOfURIs; //number of URIs for storage type
+    mapping(uint8 => string) private URIforStorageType; //storageType => (index => URI)
 
     mapping(uint32 => mapping(uint16 => Costs)) private cost; //Cost per function by Node => Costs struct (see RESOURCE_PRUF_INTERFACES for struct definitions)
     mapping(uint32 => Node) private nodeData; //node info database Node to node struct (see RESOURCE_PRUF_INTERFACES for struct definitions)
@@ -148,62 +146,18 @@ contract NODE_STOR is BASIC {
      * @param _storageProvider - storage provider number
      * @param _URI - baseURI to add
      */
-    function addBaseURIforStorageProvider(
+    function setBaseURIforStorageType(
         uint8 _storageProvider,
         string calldata _URI
     ) external isDAO {
         require(
-            validBaseURIs[_URI][_storageProvider] == 0,
-            "NS:AUFSP:URI already added"
+            validStorageProviders[_storageProvider] != 0,
+            "NS:AUFSP:Invalid storage provider"
         );
         //^^^^^^^checks^^^^^^^^^
 
-        numberOfURIs[_storageProvider]++;
-
-        URIsForStorageType[_storageProvider][
-            numberOfURIs[_storageProvider]
-        ] = _URI;
-
-        validBaseURIs[_URI][_storageProvider] = 1;
+        URIforStorageType[_storageProvider] = _URI;
         //^^^^^^^effects^^^^^^^^^
-    }
-
-    /** //DPS TEST
-     * @dev Removes a baseURI for a storage provider.
-     * @param _storageProvider - storage provider number
-     * @param _URI - baseURI to remove
-     */
-    function removeBaseURIforStorageProvider(
-        uint8 _storageProvider,
-        string calldata _URI
-    ) external isDAO {
-        require(
-            validBaseURIs[_URI][_storageProvider] == 1,
-            "NS:AUFSP:URI not provisioned"
-        );
-        //^^^^^^^checks^^^^^^^^^
-
-        delete validBaseURIs[_URI][_storageProvider];
-        //^^^^^^^effects^^^^^^^^^
-    }
-
-    /** //DPS TEST
-     * @dev returns a baseURI for a storage provider / index combination, as well as the total number of URIs.
-     * @param _storageProvider - storage provider number
-     * @param _index - baseURI to get
-     */
-    function getBaseURIbyindex(uint8 _storageProvider, uint256 _index)
-        external
-        view
-        returns (string memory, uint256)
-    {
-        //^^^^^^^checks^^^^^^^^^
-
-        return (
-            URIsForStorageType[_storageProvider][_index],
-            numberOfURIs[_storageProvider]
-        );
-        //^^^^^^^interactions^^^^^^^^^
     }
 
     /**
@@ -213,10 +167,7 @@ contract NODE_STOR is BASIC {
      * @param _node - node in which cost share is being modified
      * @param _newDiscount - discount(1% == 100, 10000 == max)
      */
-    function changeShare(
-        uint32 _node,
-        uint32 _newDiscount
-    ) external isDAO {
+    function changeShare(uint32 _node, uint32 _newDiscount) external isDAO {
         require((nodeData[_node].nodeRoot != 0), "NS:IS: node !exist");
         require(_newDiscount <= 10000, "NS:IS: Discount > 100% (10000)");
         //^^^^^^^checks^^^^^^^^^
@@ -539,6 +490,53 @@ contract NODE_STOR is BASIC {
         isNodeAdmin
     {
         localNodeFor[_foreignNode] = _localNode;
+    }
+
+    /** //DPS TEST
+     * @dev returns a baseURI for a storage provider / index combination, as well as the total number of URIs.
+     * @param _storageProvider - storage provider number
+     */
+    function getBaseURIforStorageType(uint8 _storageProvider)
+        external
+        view
+        returns (string memory)
+    {
+        //^^^^^^^checks^^^^^^^^^
+
+        return (URIforStorageType[_storageProvider]);
+        //^^^^^^^interactions^^^^^^^^^
+    }
+
+    /** //DPS TEST
+     * @dev returns a baseURI for a storage provider / index combination, as well as the total number of URIs.
+     * @param _node - node
+     */
+    function getBaseURIbyForNode(uint32 _node)
+        external
+        view
+        returns (string memory)
+    {
+        uint8 storageProvider = nodeData[_node].storageProvider;
+        //^^^^^^^checks^^^^^^^^^
+
+        return (URIforStorageType[storageProvider]);
+        //^^^^^^^interactions^^^^^^^^^
+    }
+
+    /** //DPS:TEST
+     * @dev reverts unless a baseURI for a storage provider is valid.
+     * @param _URIhash - hashed baseURI to check
+     * @param _node - node to check
+     */
+    function isValidBaseURI(bytes32 _URIhash, uint32 _node) external view {
+        require(
+            keccak256(
+                abi.encodePacked(
+                    URIforStorageType[nodeData[_node].storageProvider]
+                )
+            ) == _URIhash,
+            "NS:IVBU:Base URI not valid for node"
+        );
     }
 
     /**

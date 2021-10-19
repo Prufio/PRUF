@@ -440,35 +440,15 @@ interface NODE_STOR_Interface {
      */
     function setCustodyTypes(uint8 _custodyType, uint8 _status) external;
 
-        /** //DPS TEST
+    /** //DPS TEST
      * @dev Sets a new baseURI for a storage provider.
      * @param _storageProvider - storage provider number
      * @param _URI - baseURI to add
      */
-    function addBaseURIforStorageProvider(
+    function setBaseURIforStorageType(
         uint8 _storageProvider,
         string calldata _URI
     ) external;
-
-    /** //DPS TEST
-     * @dev Removes a baseURI for a storage provider.
-     * @param _storageProvider - storage provider number
-     * @param _URI - baseURI to remove
-     */
-    function removeBaseURIforStorageProvider(
-        uint8 _storageProvider,
-        string calldata _URI
-    ) external;
-
-    /** //DPS TEST
-     * @dev returns a baseURI for a storage provider / index combination, as well as the total number of URIs.
-     * @param _storageProvider - storage provider number
-     * @param _index - baseURI to get
-     */
-    function getBaseURIbyindex(uint8 _storageProvider, uint256 _index)
-        external
-        view
-        returns (string memory, uint256);
 
     /**
      * !! to be used with great caution !!
@@ -633,6 +613,31 @@ interface NODE_STOR_Interface {
      * @param _localNode local node to point to
      */
     function setLocalNode(uint32 _foreignNode, uint32 _localNode) external;
+
+    /** //DPS TEST
+     * @dev returns a baseURI for a storage provider / index combination, as well as the total number of URIs.
+     * @param _storageProvider - storage provider number
+     */
+    function getBaseURIforStorageType(uint8 _storageProvider)
+        external
+        view
+        returns (string memory);
+
+    /** 
+     * @dev returns a baseURI for a storage provider / index combination, as well as the total number of URIs.
+     * @param _node - node
+     */
+    function getBaseURIbyForNode(uint32 _node)
+        external
+        view
+        returns (string memory);
+
+    /**
+     * @dev REVERTS unless a baseURI for a storage provider is valid.
+     * @param _URIhash - hashed baseURI to check
+     * @param _node - node to check
+     */
+    function isValidBaseURI(bytes32 _URIhash, uint32 _node) external view;
 
     /**
      * @dev Set import status for foreing nodes
