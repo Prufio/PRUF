@@ -55,11 +55,16 @@ contract NODE_STOR is BASIC {
     mapping(uint32 => ExtendedNodeData) private nodeDetails; //Extended Node
     mapping(uint32 => mapping(uint32 => uint256)) private importApprovals; //list of approved nodes to import from for each node
 
+    mapping(string => mapping(uint8 => uint256)) private validBaseURIs; //URIstrings => (storageType => validity/index)
+    mapping(uint8 => mapping(uint256 => string)) private URIsForStorageType; //storageType => (index => URI)
+    mapping(uint8 => uint256) private numberOfURIs; //number of URIs for storage type
+
     mapping(uint32 => mapping(uint16 => Costs)) private cost; //Cost per function by Node => Costs struct (see RESOURCE_PRUF_INTERFACES for struct definitions)
     mapping(uint32 => Node) private nodeData; //node info database Node to node struct (see RESOURCE_PRUF_INTERFACES for struct definitions)
     mapping(string => uint32) private nodeId; //name to Node resolution map
 
-    mapping(bytes32 => mapping(uint32 => uint8)) private registeredUsers; //Authorized recorder database by Node, by address hash
+    mapping(uint32 => mapping(bytes32 => uint8)) private registeredUsers; //Authorized recorder mapping by Node, by address hash
+    mapping(uint32 => uint256) numberOfUsers; //number of users active on a node for recorder mapping (usertype != 0)
 
     mapping(uint8 => uint8) private validStorageProviders; //storageProviders -> status (enabled or disabled)
     mapping(uint8 => uint8) private validManagementTypes; //managementTypes -> status (enabled or disabled)
@@ -136,6 +141,69 @@ contract NODE_STOR is BASIC {
         //^^^^^^^checks^^^^^^^^^
         validCustodyTypes[_custodyType] = _status;
         //^^^^^^^effects^^^^^^^^^
+    }
+
+    /** //DPS TEST
+     * @dev Sets a new baseURI for a storage provider.
+     * @param _storageProvider - storage provider number
+     * @param _URI - baseURI to add
+     */
+    function addBaseURIforStorageProvider(
+        uint8 _storageProvider,
+        string calldata _URI
+    ) external isDAO {
+        require(
+            validBaseURIs[_URI][_storageProvider] == 0,
+            "NS:AUFSP:URI already added"
+        );
+        //^^^^^^^checks^^^^^^^^^
+
+        numberOfURIs[_storageProvider]++;
+
+        URIsForStorageType[_storageProvider][
+            numberOfURIs[_storageProvider]
+        ] = _URI;
+
+        validBaseURIs[_URI][_storageProvider] = 1;
+        //^^^^^^^effects^^^^^^^^^
+    }
+
+    /** //DPS TEST
+     * @dev Removes a baseURI for a storage provider.
+     * @param _storageProvider - storage provider number
+     * @param _URI - baseURI to remove
+     */
+    function removeBaseURIforStorageProvider(
+        uint8 _storageProvider,
+        string calldata _URI
+    ) external isDAO {
+        require(
+            validBaseURIs[_URI][_storageProvider] == 1,
+            "NS:AUFSP:URI not provisioned"
+        );
+        //^^^^^^^checks^^^^^^^^^
+
+        delete validBaseURIs[_URI][_storageProvider];
+        //^^^^^^^effects^^^^^^^^^
+    }
+
+    /** //DPS TEST
+     * @dev returns a baseURI for a storage provider / index combination, as well as the total number of URIs.
+     * @param _storageProvider - storage provider number
+     * @param _index - baseURI to get
+     */
+    function getBaseURIbyindex(uint8 _storageProvider, uint256 _index)
+        external
+        view
+        returns (string memory, uint256)
+    {
+        //^^^^^^^checks^^^^^^^^^
+
+        return (
+            URIsForStorageType[_storageProvider][_index],
+            numberOfURIs[_storageProvider]
+        );
+        //^^^^^^^interactions^^^^^^^^^
     }
 
     /**
@@ -224,9 +292,7 @@ contract NODE_STOR is BASIC {
         isNodeAdmin
     {
         delete nodeId[_name];
-        if (
-            bytes(_name).length != 0
-        ) {
+        if (bytes(_name).length != 0) {
             nodeId[_name] = _node;
         }
     }
@@ -289,9 +355,13 @@ contract NODE_STOR is BASIC {
      */
     function blockUser(uint32 _node, bytes32 _addrHash) external isDAO {
         //^^^^^^^checks^^^^^^^^^
+        //if deauthing an address, decrease usercount for node //DPS:TEST
+        if (registeredUsers[_node][_addrHash] != 0) {
+            numberOfUsers[_node]--;
+        }
 
-        registeredUsers[_addrHash][_node] = 0; //deauth node
-        registeredUsers[_addrHash][0]--; //decrease user count
+        delete registeredUsers[_node][_addrHash]; //deauth node
+
         //^^^^^^^effects^^^^^^^^^
     }
 
@@ -365,15 +435,18 @@ contract NODE_STOR is BASIC {
     ) external whenNotPaused isNodeAdmin {
         //^^^^^^^checks^^^^^^^^^
 
-        registeredUsers[_addrHash][_node] = _userType;
-
-        if ((_userType != 0) && (registeredUsers[_addrHash][0] < 255)) {
-            registeredUsers[_addrHash][0]++; //increase user count
+        //if adding a new address, increase usercount for node //DPS:TEST
+        if ((registeredUsers[_node][_addrHash] == 0) && (_userType != 0)) {
+            numberOfUsers[_node]++;
         }
 
-        if ((_userType == 0) && (registeredUsers[_addrHash][0] > 0)) {
-            registeredUsers[_addrHash][0]--; //decrease user count
+        //if deauthing an address, decrease usercount for node //DPS:TEST
+        if ((registeredUsers[_node][_addrHash] != 0) && (_userType == 0)) {
+            numberOfUsers[_node]--;
         }
+
+        registeredUsers[_node][_addrHash] = _userType;
+
         //^^^^^^^effects^^^^^^^^^
     }
 
@@ -517,7 +590,19 @@ contract NODE_STOR is BASIC {
     {
         //^^^^^^^checks^^^^^^^^^
 
-        return (registeredUsers[_userHash][_node]);
+        return (registeredUsers[_node][_userHash]);
+        //^^^^^^^interactions^^^^^^^^^
+    }
+
+    /** //DPS:TEST:NEW
+     * @dev get the number of adresses authorized on a node
+     * @param _node - node to query
+     * @return number of auth users
+     */
+    function getNumberOfUsers(uint32 _node) external view returns (uint256) {
+        //^^^^^^^checks^^^^^^^^^
+
+        return numberOfUsers[_node];
         //^^^^^^^interactions^^^^^^^^^
     }
 

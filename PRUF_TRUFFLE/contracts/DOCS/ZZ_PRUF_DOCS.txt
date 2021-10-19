@@ -32,8 +32,7 @@ pragma solidity ^0.6.7;
 - ----------------------------------------------------------------
 
 /*----------------------------------------------------------------
- *TO DO :
-CTS:EXAMINE MOVE EXTRANEOUS STRUCTS OUT OF TOKEN CONTRACTS (A_TKN, ID_MGR)
+ *TO DO : look through all RC1 contracts for DAO functions CTS:CHECK
 
 
 
