@@ -1026,6 +1026,13 @@ interface A_TKN_Interface {
     function unpause() external;
 
     /**
+     * @dev externalized IAOO
+     * @param _addr adress to check
+     * @param _tokenId token to check
+     */
+    function isApprovedOrOwner(address _addr, uint256 _tokenId) external view;
+
+    /**
      * @dev Returns the owner of the `tokenId` token.
      *
      * Requirements:
