@@ -29,6 +29,7 @@ _________\/// _____________\/// _______\/// __\///////// __\/// _____________
  * Nodes holders can approve other asset classes that can be imported into their node space 
  * via the importApprovals mapping. This will be implemented for recycle / import.
  *
+ * the DAO sets the base URI for each storage type in the  URIforStorageType struct.
  *
  * STATEMENT OF TERMS OF SERVICE (TOS):
  * User agrees not to intentionally claim any namespace that is a recognized or registered brand name, trade mark,
@@ -54,10 +55,6 @@ contract NODE_STOR is BASIC {
     mapping(uint32 => uint32) private localNodeFor; //lookup table for child nodes from origin nodeID
     mapping(uint32 => ExtendedNodeData) private nodeDetails; //Extended Node
     mapping(uint32 => mapping(uint32 => uint256)) private importApprovals; //list of approved nodes to import from for each node
-
-    mapping(string => mapping(uint8 => uint256)) private validBaseURIs; //URIstrings => (storageType => validity/index)
-    mapping(uint8 => mapping(uint256 => string)) private URIsForStorageType; //storageType => (index => URI)
-    mapping(uint8 => uint256) private numberOfURIs; //number of URIs for storage type
 
     mapping(uint32 => mapping(uint16 => Costs)) private cost; //Cost per function by Node => Costs struct (see RESOURCE_PRUF_INTERFACES for struct definitions)
     mapping(uint32 => Node) private nodeData; //node info database Node to node struct (see RESOURCE_PRUF_INTERFACES for struct definitions)
@@ -143,69 +140,6 @@ contract NODE_STOR is BASIC {
         //^^^^^^^effects^^^^^^^^^
     }
 
-    /** //DPS TEST
-     * @dev Sets a new baseURI for a storage provider.
-     * @param _storageProvider - storage provider number
-     * @param _URI - baseURI to add
-     */
-    function addBaseURIforStorageProvider(
-        uint8 _storageProvider,
-        string calldata _URI
-    ) external isDAO {
-        require(
-            validBaseURIs[_URI][_storageProvider] == 0,
-            "NS:AUFSP:URI already added"
-        );
-        //^^^^^^^checks^^^^^^^^^
-
-        numberOfURIs[_storageProvider]++;
-
-        URIsForStorageType[_storageProvider][
-            numberOfURIs[_storageProvider]
-        ] = _URI;
-
-        validBaseURIs[_URI][_storageProvider] = 1;
-        //^^^^^^^effects^^^^^^^^^
-    }
-
-    /** //DPS TEST
-     * @dev Removes a baseURI for a storage provider.
-     * @param _storageProvider - storage provider number
-     * @param _URI - baseURI to remove
-     */
-    function removeBaseURIforStorageProvider(
-        uint8 _storageProvider,
-        string calldata _URI
-    ) external isDAO {
-        require(
-            validBaseURIs[_URI][_storageProvider] == 1,
-            "NS:AUFSP:URI not provisioned"
-        );
-        //^^^^^^^checks^^^^^^^^^
-
-        delete validBaseURIs[_URI][_storageProvider];
-        //^^^^^^^effects^^^^^^^^^
-    }
-
-    /** //DPS TEST
-     * @dev returns a baseURI for a storage provider / index combination, as well as the total number of URIs.
-     * @param _storageProvider - storage provider number
-     * @param _index - baseURI to get
-     */
-    function getBaseURIbyindex(uint8 _storageProvider, uint256 _index)
-        external
-        view
-        returns (string memory, uint256)
-    {
-        //^^^^^^^checks^^^^^^^^^
-
-        return (
-            URIsForStorageType[_storageProvider][_index],
-            numberOfURIs[_storageProvider]
-        );
-        //^^^^^^^interactions^^^^^^^^^
-    }
-
     /**
      * !! to be used with great caution !!
      * This potentially breaks decentralization and must eventually be given over to DAO.
@@ -213,10 +147,7 @@ contract NODE_STOR is BASIC {
      * @param _node - node in which cost share is being modified
      * @param _newDiscount - discount(1% == 100, 10000 == max)
      */
-    function changeShare(
-        uint32 _node,
-        uint32 _newDiscount
-    ) external isDAO {
+    function changeShare(uint32 _node, uint32 _newDiscount) external isDAO {
         require((nodeData[_node].nodeRoot != 0), "NS:IS: node !exist");
         require(_newDiscount <= 10000, "NS:IS: Discount > 100% (10000)");
         //^^^^^^^checks^^^^^^^^^

@@ -947,7 +947,8 @@ interface A_TKN_Interface {
      */
     function mintAssetToken(
         address _recipientAddress,
-        uint256 _tokenId
+        uint256 _tokenId,
+        string calldata _URIsuffix
     ) external returns (uint256);
 
     /**

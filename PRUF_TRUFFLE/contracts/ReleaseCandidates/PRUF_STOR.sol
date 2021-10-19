@@ -384,19 +384,22 @@ contract STOR is AccessControl, ReentrancyGuard, Pausable {
         //^^^^^^^effects^^^^^^^^^
     }
 
-    /**
+    /** //DPS:CHECK
      * @dev Make a new record, writing to the 'database' mapping with basic initial asset data
      * calling contract must be authorized in relevant node
      * @param   _idxHash - asset ID befor node hashing
      * @param   _rgtHash - rightsholder id hash
+     * @param _URIhash - hash of URI Suffix
      * @param   _node - node in which to create the asset
      * @param   _countDownStart - initial value for decrement-only value
      */
     function newRecord(
         bytes32 _idxHash,
         bytes32 _rgtHash,
+        bytes32 _URIhash,
         uint32 _node,
         uint32 _countDownStart
+        
     ) external nonReentrant whenNotPaused isAuthorized(_node) {
         require(database[_idxHash].node == 0, "S:NR: Rec already exists"); //idxHash
         require(_rgtHash != 0, "S:NR: RGT = 0");
@@ -414,6 +417,7 @@ contract STOR is AccessControl, ReentrancyGuard, Pausable {
         rec.node = _node;
         rec.countDown = _countDownStart;
         rec.rightsHolder = _rgtHash;
+        rec.URIhash = _URIhash;
 
         database[_idxHash] = rec; //idxhash
         //^^^^^^^effects^^^^^^^^^
@@ -637,13 +641,11 @@ contract STOR is AccessControl, ReentrancyGuard, Pausable {
      * @param _idxHash - record asset ID
      * @param _nonMutableStorage1 - first half of content addressable storage location
      * @param _nonMutableStorage2 - second half of content addressable storage location
-     * @param _URIhash - Hash of external CAS from URI 
      */
     function setNonMutableStorage(
         bytes32 _idxHash,
         bytes32 _nonMutableStorage1,
-        bytes32 _nonMutableStorage2,
-        bytes32 _URIhash
+        bytes32 _nonMutableStorage2
     )
         external
         nonReentrant
@@ -657,7 +659,7 @@ contract STOR is AccessControl, ReentrancyGuard, Pausable {
         require(isTransferred(rec.assetStatus) == 0, "S:MNMS: Txfrd. asset"); //asset cannot be in transferred status
 
         require(
-            (rec.nonMutableStorage1 & rec.nonMutableStorage2 & rec.URIhash ==
+            (rec.nonMutableStorage1 & rec.nonMutableStorage2 ==
                 0) || (rec.assetStatus == 201),
             "S:MNMS: Cannot overwrite NM Storage"
         ); //NonMutableStorage record is immutable after first write unless status 201 is set (Storage provider has died)
@@ -665,7 +667,6 @@ contract STOR is AccessControl, ReentrancyGuard, Pausable {
 
         rec.nonMutableStorage1 = _nonMutableStorage1;
         rec.nonMutableStorage2 = _nonMutableStorage2;
-        rec.URIhash = _URIhash;
 
         database[_idxHash] = rec;
         //^^^^^^^effects^^^^^^^^^

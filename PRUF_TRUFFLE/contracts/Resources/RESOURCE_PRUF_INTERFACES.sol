@@ -104,12 +104,14 @@ interface STOR_Interface {
      * calling contract must be authorized in relevant node
      * @param   _idxHash - asset ID
      * @param   _rgtHash - rightsholder id hash
+     * @param _URIhash - hash of URI Suffix
      * @param   _node - node in which to create the asset
      * @param   _countDownStart - initial value for decrement-only value
      */
     function newRecord(
         bytes32 _idxHash,
         bytes32 _rgtHash,
+        bytes32 _URIhash,
         uint32 _node,
         uint32 _countDownStart
     ) external;
@@ -174,7 +176,7 @@ interface STOR_Interface {
     ) external;
 
     /**
-     * @dev Modify NonMutableStorage data //DPS:TEST:NEW PARAMS
+     * @dev Modify NonMutableStorage data
      * @param _idxHash - record asset ID
      * @param _nonMutableStorage1 - first half of content addressable storage location
      * @param _nonMutableStorage2 - second half of content addressable storage location
@@ -440,36 +442,6 @@ interface NODE_STOR_Interface {
      */
     function setCustodyTypes(uint8 _custodyType, uint8 _status) external;
 
-        /** //DPS TEST
-     * @dev Sets a new baseURI for a storage provider.
-     * @param _storageProvider - storage provider number
-     * @param _URI - baseURI to add
-     */
-    function addBaseURIforStorageProvider(
-        uint8 _storageProvider,
-        string calldata _URI
-    ) external;
-
-    /** //DPS TEST
-     * @dev Removes a baseURI for a storage provider.
-     * @param _storageProvider - storage provider number
-     * @param _URI - baseURI to remove
-     */
-    function removeBaseURIforStorageProvider(
-        uint8 _storageProvider,
-        string calldata _URI
-    ) external;
-
-    /** //DPS TEST
-     * @dev returns a baseURI for a storage provider / index combination, as well as the total number of URIs.
-     * @param _storageProvider - storage provider number
-     * @param _index - baseURI to get
-     */
-    function getBaseURIbyindex(uint8 _storageProvider, uint256 _index)
-        external
-        view
-        returns (string memory, uint256);
-
     /**
      * !! to be used with great caution !!
      * This potentially breaks decentralization and must eventually be given over to DAO.
@@ -672,7 +644,7 @@ interface NODE_STOR_Interface {
         view
         returns (uint8);
 
-    /** //DPS:TEST:NEW
+    /**
      * @dev get the number of adresses authorized on a node
      * @param _node - node to query
      * @return number of auth users
@@ -1031,12 +1003,14 @@ interface APP_Interface {
      * @param _rgtHash - hash of rightsholder information created by frontend inputs
      * @param _node - node the asset will be created in
      * @param _countDownStart - decremental counter for an assets lifecycle
+     * @param _URIsuffix URI
      */
     function newRecord(
         bytes32 _idxHash,
         bytes32 _rgtHash,
         uint32 _node,
-        uint32 _countDownStart
+        uint32 _countDownStart,
+        string memory _URIsuffix
     ) external;
 
     // /** //import & export have been slated for reevaluation
@@ -1171,6 +1145,7 @@ interface APP_NC_Interface {
      * @param _countDownStart - decremental counter for an assets lifecycle
      * @param _mutableStorage1 - field for external asset data
      * @param _mutableStorage2 - field for external asset data
+     * @param _URIsuffix - tokenURI
      */
     function newRecordWithDescription(
         bytes32 _idxHash,
@@ -1178,7 +1153,8 @@ interface APP_NC_Interface {
         uint32 _node,
         uint32 _countDownStart,
         bytes32 _mutableStorage1,
-        bytes32 _mutableStorage2
+        bytes32 _mutableStorage2,
+        string memory _URIsuffix
     ) external;
 
     /**
@@ -1189,6 +1165,7 @@ interface APP_NC_Interface {
      * @param _countDownStart - decremental counter for an assets lifecycle
      * @param _nonMutableStorage1 - field for permanent external asset data
      * @param _nonMutableStorage2 - field for permanent external asset data
+     * @param _URIsuffix - tokenURI
      */
     function newRecordWithNote(
         bytes32 _idxHash,
@@ -1196,7 +1173,8 @@ interface APP_NC_Interface {
         uint32 _node,
         uint32 _countDownStart,
         bytes32 _nonMutableStorage1,
-        bytes32 _nonMutableStorage2
+        bytes32 _nonMutableStorage2,
+        string memory _URIsuffix
     ) external;
 
     /**
@@ -1205,12 +1183,14 @@ interface APP_NC_Interface {
      * @param _rgtHash - hash of rightsholder information created by frontend inputs
      * @param _node - node the asset will be created in
      * @param _countDownStart - decremental counter for an assets lifecycle
+     * @param _URIsuffix - tokenURI
      */
     function newRecord(
         bytes32 _idxHash,
         bytes32 _rgtHash,
         uint32 _node,
-        uint32 _countDownStart
+        uint32 _countDownStart,
+        string memory _URIsuffix
     ) external;
 
     // /** //import & export have been slated for reevaluation

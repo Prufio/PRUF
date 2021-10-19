@@ -21,21 +21,24 @@ import "../Imports/security/ReentrancyGuard.sol";
 import "../Resources/PRUF_BASIC.sol";
 
 contract CORE is BASIC {
-    /**
+    /** //DPS:CHECK
      * @dev create a Record in Storage @ idxHash (SETTER) and mint an asset token (may mint to node holder depending on flags)
      * @param _idxHash - Asset Index
      * @param _rgtHash - Owner ID Hash
      * @param _node - node to create asset in
      * @param _countDownStart - initial value for decrement only register
+     * @param _URIsuffix - suffix for URI
      */
     function createRecord(
         bytes32 _idxHash,
         bytes32 _rgtHash,
         uint32 _node,
-        uint32 _countDownStart
+        uint32 _countDownStart,
+        string calldata _URIsuffix
     ) internal virtual {
         uint256 tokenId = uint256(_idxHash);
         Node memory nodeInfo = getNodeinfo(_node);
+        bytes32 URIhash = keccak256(abi.encodePacked(_URIsuffix));
 
         require(
             A_TKN.tokenExists(tokenId) == 0,
@@ -113,9 +116,9 @@ contract CORE is BASIC {
             recipient = _msgSender();
         }
 
-        A_TKN.mintAssetToken(recipient, tokenId);
+        A_TKN.mintAssetToken(recipient, tokenId, _URIsuffix);
 
-        STOR.newRecord(_idxHash, _rgtHash, _node, _countDownStart);
+        STOR.newRecord(_idxHash, _rgtHash, URIhash, _node, _countDownStart);
         //^^^^^^^interactions^^^^^^^^^
     }
 

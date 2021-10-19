@@ -40,7 +40,8 @@ contract MAL_APP is CORE_MAL {
         bytes32 _idxHash,
         bytes32 _rgtHash,
         uint32 _node,
-        uint32 _countDownStart
+        uint32 _countDownStart,
+        string calldata _URIsuffix
     ) external {
         bytes32 idxHash = keccak256(abi.encodePacked(_idxHash, _node)); //hash idxRaw with node to get idxHash
         // Record memory rec = getRecord(_idxHash);
@@ -70,7 +71,7 @@ contract MAL_APP is CORE_MAL {
         // if (nodeInfo.nodeRoot == oldNode_info.nodeRoot) {
         // createRecord(_idxHash, _rgtHash, _node, rec.countDownStart);
         // } else {
-        createRecord(idxHash, _rgtHash, _node, _countDownStart);
+        createRecord(idxHash, _rgtHash, _node, _countDownStart, _URIsuffix);
         // }
         deductServiceCosts(_node, 1);
 

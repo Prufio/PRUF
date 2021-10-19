@@ -38,7 +38,7 @@ contract APP is CORE {
 
     //--------------------------------------------External Functions--------------------------
 
-    /**
+    /** //DPS:CHECK
      * @dev Creates a new record
      * @param _idxHash - hash of asset information created by frontend inputs
      * @param _rgtHash - hash of rightsholder information created by frontend inputs
@@ -49,7 +49,8 @@ contract APP is CORE {
         bytes32 _idxHash,
         bytes32 _rgtHash,
         uint32 _node,
-        uint32 _countDownStart
+        uint32 _countDownStart,
+        string calldata _URIsuffix
     ) external nonReentrant whenNotPaused {
         bytes32 idxHash = keccak256(abi.encodePacked(_idxHash, _node)); //hash idxRaw with node to get idxHash 
         uint8 userType = getCallingUserType(_node);
@@ -58,7 +59,7 @@ contract APP is CORE {
         require(userType < 5, "A:NR: User !authorized to create records");
         //^^^^^^^checks^^^^^^^^^
 
-        createRecord(idxHash, _rgtHash, _node, _countDownStart);
+        createRecord(idxHash, _rgtHash, _node, _countDownStart, _URIsuffix);
         deductServiceCosts(_node, 1);
         //^^^^^^^interactions^^^^^^^^^
     }

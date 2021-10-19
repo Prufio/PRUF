@@ -56,6 +56,7 @@ contract A_TKN is
 
     //mapping for token URIs
     mapping(uint256 => string) private _tokenURIs;
+    mapping(uint8 => string) private baseURIforStorageType; //storageType => (index => URI)
 
     Counters.Counter private _tokenIdTracker;
 
@@ -138,6 +139,19 @@ contract A_TKN is
         _;
     }
 
+    /**
+     * @dev Verify user credentials
+     * Originating Address:
+     *      has DAO_ROLE //DPS:NEW
+     */
+    modifier isDAO() {
+        require(
+            hasRole(DAO_ROLE, _msgSender()),
+            "NS:MOD-INA: Must have DAO_ROLE"
+        );
+        _;
+    }
+
     //---------------------------------------Public Functions-------------------------------
 
     /**
@@ -156,7 +170,9 @@ contract A_TKN is
         //^^^^^^^checks^^^^^^^^^
 
         string memory _tokenURI = _tokenURIs[tokenId];
-        string memory base = _baseURI();
+        Record memory rec = getRecord(bytes32(tokenId));
+        Node memory nodeData = NODE_STOR.getNodeData(rec.node);
+        string memory base = baseURIforStorageType[nodeData.storageProvider];
 
         // If there is no base URI, return the token URI.
         if (bytes(base).length == 0) {
@@ -277,9 +293,74 @@ contract A_TKN is
     }
 
     //---------------------------------------External Functions-------------------------------
+    /** //DPS TEST
+     * @dev Sets the baseURI for a storage provider.
+     * @param _storageProvider - storage provider number
+     * @param _URI - baseURI to add
+     */
+    function setBaseURIforStorageType(
+        uint8 _storageProvider,
+        string calldata _URI
+    ) external isDAO {
+        //^^^^^^^checks^^^^^^^^^
+
+        baseURIforStorageType[_storageProvider] = _URI;
+        //^^^^^^^effects^^^^^^^^^
+    }
+
+    /** //DPS TEST
+     * @dev returns a baseURI for a storage provider / index combination, as well as the total number of URIs.
+     * @param _storageProvider - storage provider number
+     */
+    function getBaseURIforStorageType(uint8 _storageProvider)
+        external
+        view
+        returns (string memory)
+    {
+        //^^^^^^^checks^^^^^^^^^
+
+        return (baseURIforStorageType[_storageProvider]);
+        //^^^^^^^interactions^^^^^^^^^
+    }
+
+    /** //DPS:TEST
+     * @dev returns a baseURI for a storage provider / index combination, as well as the total number of URIs.
+     * @param _node - node
+     */
+    function getBaseURIbyForNode(uint32 _node)
+        external
+        view
+        returns (string memory)
+    {
+        Node memory thisNode = NODE_STOR.getNodeData(_node);
+        uint8 storageProvider = thisNode.storageProvider;
+        //^^^^^^^checks^^^^^^^^^
+
+        return (baseURIforStorageType[storageProvider]);
+        //^^^^^^^interactions^^^^^^^^^
+    }
+
+    // /** //DPS:TEST
+    //  * @dev reverts unless a baseURI for a storage provider is valid.
+    //  * @param _URIhash - hashed baseURI to check
+    //  * @param _node - node to check
+    //  */
+    // function isValidBaseURI(bytes32 _URIhash, uint32 _node) external view {
+    //     Node memory thisNode = NODE_STOR.getNodeData(_node);
+    //     uint8 storageProvider = thisNode.storageProvider;
+
+    //     require(
+    //         keccak256(
+    //             abi.encodePacked(
+    //                 baseURIforStorageType[storageProvider]
+    //             )
+    //         ) == _URIhash,
+    //         "NS:IVBU:Base URI not valid for node"
+    //     );
+    // }
 
     /**
-     * @dev !!! PERMANANTLY !!!  Kills trusted agent and payable functions
+     * @dev !!! PERMANENTLY !!!  Kills trusted agent and payable functions
      * this will break the functionality of current payment mechanisms.
      *
      * The workaround for this is to create an allowance for pruf contracts for a single or multiple payments,
@@ -288,7 +369,7 @@ contract A_TKN is
      * PRuF "banked" in an allowance for use in the system.
      * @param _key - set to 170 to PERMENANTLY REMOVE TRUSTED AGENT CAPABILITY
      */
-    function killTrustedAgent(uint256 _key) external isContractAdmin {
+    function killTrustedAgent(uint256 _key) external isDAO {
         //^^^^^^^checks^^^^^^^^^
 
         if (_key == 170) {
@@ -369,17 +450,19 @@ contract A_TKN is
      * @dev Mint an Asset token (may mint only to node holder depending on flags)
      * @param _recipientAddress - Address to mint token into
      * @param _tokenId - Token ID to mint
+     * @param _URIsuffix - URI suffix
      * @return Token ID of minted token
      */
-    function mintAssetToken(address _recipientAddress, uint256 _tokenId)
-        external
-        isMinter
-        nonReentrant
-        returns (uint256)
-    {
+    function mintAssetToken(
+        address _recipientAddress,
+        uint256 _tokenId,
+        string memory _URIsuffix
+    ) external isMinter nonReentrant returns (uint256) {
         //^^^^^^^checks^^^^^^^^^
 
         _safeMint(_recipientAddress, _tokenId);
+
+        _setTokenURI(_tokenId, _URIsuffix);
         //^^^^^^^effects^^^^^^^^^
 
         return (_tokenId);
@@ -399,12 +482,7 @@ contract A_TKN is
         bytes32 _idxHash = bytes32(_tokenId);
         Record memory rec = getRecord(_idxHash);
 
-        require(
-            (bytes(tokenURI(_tokenId)).length == 0) ||
-                (NODE_STOR.getSwitchAt(rec.node, 2) == 0),
-            //Allows resetting URI if switch 2 is not set
-            "AT:SU:URI is set, and immutable"
-        );
+        require(rec.assetStatus == 201, "AT:SU: Record status != 201");
 
         require(
             NODE_TKN.ownerOf(rec.node) == _msgSender(),
@@ -422,32 +500,31 @@ contract A_TKN is
         //^^^^^^^effects^^^^^^^^^
     }
 
-    /** //DPS:TEST NEW
-     * @dev Set new token URI String DAO mode REQUIRES DAO_ROLE
-     * @param _tokenId - Token ID to set URI
-     * @param _tokenURI - URI string to atatch to token
-     * @return tokenId
-     */
-    function newURI(uint256 _tokenId, string calldata _tokenURI)
-        external
-        returns (uint256)
-    {
+    // /** //DPS:TEST NEW
+    //  * @dev Set new token URI String DAO mode REQUIRES DAO_ROLE
+    //  * @param _tokenId - Token ID to set URI
+    //  * @param _tokenURI - URI string to atatch to token
+    //  * @return tokenId
+    //  */
+    // function newURI(uint256 _tokenId, string calldata _tokenURI)
+    //     external
+    //     returns (uint256)
+    // {
+    //     require(
+    //         hasRole(DAO_ROLE, _msgSender()),
+    //         "AT:SU-IM:Calling address is not DAO"
+    //     );
 
-        require(
-            hasRole(DAO_ROLE, _msgSender()),
-            "AT:SU-IM:Calling address is not DAO"
-        );
+    //     require( //If no switches are set, tokenholder can change URI
+    //         _isApprovedOrOwner(_msgSender(), _tokenId),
+    //         "AT:SU:Caller !owner nor approved"
+    //     );
+    //     //^^^^^^^checks^^^^^^^^^
 
-        require( //If no switches are set, tokenholder can change URI
-            _isApprovedOrOwner(_msgSender(), _tokenId),
-            "AT:SU:Caller !owner nor approved"
-        );
-        //^^^^^^^checks^^^^^^^^^
-
-        _setTokenURI(_tokenId, _tokenURI);
-        return _tokenId;
-        //^^^^^^^effects^^^^^^^^^
-    }
+    //     _setTokenURI(_tokenId, _tokenURI);
+    //     return _tokenId;
+    //     //^^^^^^^effects^^^^^^^^^
+    // }
 
     /**
      * @dev See if asset token exists
