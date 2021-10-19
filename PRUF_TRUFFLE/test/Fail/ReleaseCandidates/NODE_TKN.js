@@ -892,20 +892,6 @@ contract("NODE_TKN", (accounts) => {
         console.log("Authorizing RCLR");
         return A_TKN.grantRole(minterRoleB32, RCLR.address, { from: account1 });
       })
-
-      // .then(() => {
-      //   console.log("Authorizing PURCHASE");
-      //   return A_TKN.grantRole(trustedAgentRoleB32, PURCHASE.address, {
-      //     from: account1,
-      //   });
-      // });
-  });
-
-  it("Should authorize all minter addresses for minting ID(s)", () => {
-    console.log("Authorizing NODE_MGR");
-    return ID_MGR.grantRole(IDminterRoleB32, account1, {
-      from: account1,
-    });
   });
 
   it("Should authorize all payable contracts for transactions", () => {
@@ -962,20 +948,6 @@ contract("NODE_TKN", (accounts) => {
           from: account1,
         });
       })
-
-      // .then(() => {
-      //   console.log("Authorizing PURCHASE");
-      //   return UTIL_TKN.grantRole(payableRoleB32, PURCHASE.address, {
-      //     from: account1,
-      //   });
-      // })
-
-      // .then(() => {
-      //   console.log("Authorizing PURCHASE");
-      //   return UTIL_TKN.grantRole(trustedAgentRoleB32, PURCHASE.address, {
-      //     from: account1,
-      //   });
-      // });
   });
 
   it("Should authorize all minter contracts for minting NODE_TKN(s)", () => {
@@ -1013,15 +985,6 @@ contract("NODE_TKN", (accounts) => {
   it("Should authorize account10 for nodeMinterRoleB32", () => {
     console.log("Authorizing NODE_MGR");
     return NODE_BLDR.grantRole(nodeMinterRoleB32, account10, { from: account1 });
-  });
-
-
-
-  it("Should authorize all minter addresses for minting ID_MGR(s)", () => {
-    console.log("Authorizing NODE_MGR");
-    return ID_MGR.grantRole(minterRoleB32, account1, {
-      from: account1,
-    });
   });
 
   it("Should mint a couple of asset root tokens", () => {
@@ -1170,16 +1133,6 @@ contract("NODE_TKN", (accounts) => {
       })
 
       .then(() => {
-        console.log("Minting ID to account1");
-        return ID_MGR.mintID(account1, "1", asset1, { from: account1 });
-      })
-
-      .then(() => {
-        console.log("Minting ID to account10");
-        return ID_MGR.mintID(account10, "2", asset2, { from: account1 });
-      })
-
-      .then(() => {
         console.log("Minting Node 1000001 -C");
         return NODE_BLDR.purchaseNode(
           "Custodial_AC1",
@@ -1187,6 +1140,7 @@ contract("NODE_TKN", (accounts) => {
           "1",
           rgt000,
           rgt000,
+          account1,
           { from: account1 }
         );
       })
@@ -1199,6 +1153,7 @@ contract("NODE_TKN", (accounts) => {
           "2",
           rgt000,
           rgt000,
+          account1,
           { from: account1 }
         );
       })
@@ -1211,6 +1166,7 @@ contract("NODE_TKN", (accounts) => {
           "2",
           rgt000,
           rgt000,
+          account1,
           { from: account1 }
         );
       })
@@ -1223,6 +1179,7 @@ contract("NODE_TKN", (accounts) => {
           "2",
           rgt000,
           rgt000,
+          account10,
           { from: account10 }
         );
       });
@@ -1236,6 +1193,7 @@ contract("NODE_TKN", (accounts) => {
       "2",
       rgt000,
       rgt000,
+      account1,
       { from: account1 }
     )
     .then(() => {
@@ -1246,6 +1204,7 @@ contract("NODE_TKN", (accounts) => {
         "2",
         rgt000,
         rgt000,
+        account10,
         { from: account10 }
       );
     });
@@ -1554,11 +1513,6 @@ contract("NODE_TKN", (accounts) => {
         });
       });
   });
-
-  it("Should mint ID(3) to account4", async () => {
-    return ID_MGR.mintID(account4, "3", asset3, { from: account1 });
-  });
-
 
     it('Should mint 30000 tokens to account2', async () => {
 
