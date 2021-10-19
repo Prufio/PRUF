@@ -1217,6 +1217,7 @@ contract("NODE_BLDR", (accounts) => {
           "1",
           rgt000,
           rgt000,
+          account1,
           { from: account1 }
         );
       })
@@ -1229,6 +1230,7 @@ contract("NODE_BLDR", (accounts) => {
           "2",
           rgt000,
           rgt000,
+          account1,
           { from: account1 }
         );
       })
@@ -1241,6 +1243,7 @@ contract("NODE_BLDR", (accounts) => {
           "2",
           rgt000,
           rgt000,
+          account1,
           { from: account1 }
         );
       })
@@ -1253,6 +1256,7 @@ contract("NODE_BLDR", (accounts) => {
           "2",
           rgt000,
           rgt000,
+          account10,
           { from: account10 }
         );
       });
@@ -1266,8 +1270,10 @@ contract("NODE_BLDR", (accounts) => {
       "2",
       rgt000,
       rgt000,
+      account1,
       { from: account1 }
-    ).then(() => {
+    )
+    .then(() => {
       console.log("Minting Node 1000006 -NC");
       return NODE_BLDR.purchaseNode(
         "Non_Custodial_AC6",
@@ -1275,6 +1281,7 @@ contract("NODE_BLDR", (accounts) => {
         "2",
         rgt000,
         rgt000,
+        account10,
         { from: account10 }
       );
     });
@@ -1616,6 +1623,7 @@ contract("NODE_BLDR", (accounts) => {
       "1",
       rgt000,
       rgt000,
+      account2,
       { from: account2 }
     );
   });

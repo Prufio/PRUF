@@ -1806,8 +1806,8 @@ _________\/// _____________\/// _______\/// __\///////// __\/// _____________
     // })
 
 
-    // it('Should increaseShare to 3/97 split @AC13', async () => {
-    //     return NODE_STOR.increaseShare(
+    // it('Should changeShare to 3/97 split @AC13', async () => {
+    //     return NODE_STOR.changeShare(
     //         '13',
     //         '3000000000000000000000',
     //         { from: account1 }
@@ -1864,7 +1864,7 @@ _________\/// _____________\/// _______\/// __\///////// __\/// _____________
 
 
     it('Should purchace ACtoken to account2', async () => {
-        return NODE_MGR.purchaseNode(
+        return NODE_BLDR.purchaseNode(
             'account2FTW',
             '1',
             '1',
@@ -1936,7 +1936,7 @@ _________\/// _____________\/// _______\/// __\///////// __\/// _____________
 
 
     it('Should purchace ACtoken to account3', async () => {
-        return NODE_MGR.purchaseNode(
+        return NODE_BLDR.purchaseNode(
             'account3FTW',
             '1',
             '1',

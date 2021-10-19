@@ -1685,8 +1685,8 @@ contract("Discount", (accounts) => {
     });
   });
 
-  it("Should increaseShare to 66/36 split @AC13", async () => {
-    return NODE_STOR.increaseShare("13", "6600", { from: account1 });
+  it("Should changeShare to 66/36 split @AC13", async () => {
+    return NODE_STOR.changeShare("13", "6600", { from: account1 });
   });
 
   it("Should retrieve balanceOf(295000) Pruf tokens @account1", async () => {
@@ -1705,8 +1705,8 @@ contract("Discount", (accounts) => {
     );
   });
 
-  it("Should increaseShare to 90/10 split @AC11", async () => {
-    return NODE_STOR.increaseShare("11", "9000", { from: account1 });
+  it("Should changeShare to 90/10 split @AC11", async () => {
+    return NODE_STOR.changeShare("11", "9000", { from: account1 });
   });
 
   it("Should retrieve balanceOf(256000) Pruf tokens @account1", async () => {
@@ -1743,7 +1743,7 @@ contract("Discount", (accounts) => {
   });
 
   it("Should buy node 20", async () => {
-    return NODE_MGR.purchaseNode("AC20", "1", "1", rgt000, { from: account1 });
+    return NODE_BLDR.purchaseNode("AC20", "1", "1", rgt000, { from: account1 });
   });
 
   it("Should retrieve balanceOf(110000) Pruf tokens @account1", async () => {

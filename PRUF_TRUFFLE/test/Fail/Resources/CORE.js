@@ -1194,56 +1194,56 @@ contract("CORE", (accounts) => {
 
       .then(() => {
         console.log("Minting Node 1000001 -C");
-        return NODE_MGR.purchaseNode("Custodial_AC1", "1", "1", rgt000, rgt000, {
+        return NODE_BLDR.purchaseNode("Custodial_AC1", "1", "1", rgt000, rgt000, {
           from: account1,
         });
       })
 
       .then(() => {
         console.log("Minting Node 1000002 -NC");
-        return NODE_MGR.purchaseNode("Non_Custodial_AC2", "1", "2", rgt000, rgt000, {
+        return NODE_BLDR.purchaseNode("Non_Custodial_AC2", "1", "2", rgt000, rgt000, {
           from: account1,
         });
       })
 
       .then(() => {
         console.log("Minting Node 1000003 -NC");
-        return NODE_MGR.purchaseNode("Non_Custodial_AC3", "1", "2", rgt000, rgt000, {
+        return NODE_BLDR.purchaseNode("Non_Custodial_AC3", "1", "2", rgt000, rgt000, {
           from: account1,
         });
       })
 
       .then(() => {
         console.log("Minting Node 1000004 -NC");
-        return NODE_MGR.purchaseNode("Non_Custodial_AC4", "1", "2", rgt000, rgt000, {
+        return NODE_BLDR.purchaseNode("Non_Custodial_AC4", "1", "2", rgt000, rgt000, {
           from: account10,
         });
       })
 
       .then(() => {
         console.log("Minting Node 1000005 -NC");
-        return NODE_MGR.purchaseNode("Non_Custodial_AC5", "1", "5", rgt000, rgt000, {
+        return NODE_BLDR.purchaseNode("Non_Custodial_AC5", "1", "5", rgt000, rgt000, {
           from: account1,
         });
       })
 
       .then(() => {
         console.log("Minting Node 1000006 -NC");
-        return NODE_MGR.purchaseNode("Non_Custodial_AC6", "1", "2", rgt000, rgt000, {
+        return NODE_BLDR.purchaseNode("Non_Custodial_AC6", "1", "2", rgt000, rgt000, {
           from: account1,
         });
       })
 
       .then(() => {
         console.log("Minting Node 1000007 -NC");
-        return NODE_MGR.purchaseNode("Non_Custodial_AC7", "1", "2", rgt000, rgt000, {
+        return NODE_BLDR.purchaseNode("Non_Custodial_AC7", "1", "2", rgt000, rgt000, {
           from: account1,
         });
       })
 
       .then(() => {
         console.log("Minting Node 1000008 -NC");
-        return NODE_MGR.purchaseNode("Non_Custodial_AC8", "1", "2", rgt000, rgt000, {
+        return NODE_BLDR.purchaseNode("Non_Custodial_AC8", "1", "2", rgt000, rgt000, {
           from: account10,
         });
       });
@@ -1251,11 +1251,11 @@ contract("CORE", (accounts) => {
 
   it("Should Mint 2 non-cust Node tokens in AC_ROOT 2", () => {
     console.log("Minting Node 10000011 -NC");
-    return NODE_MGR.purchaseNode("Non-Custodial_AC9", "2", "2", rgt000, rgt000, {
+    return NODE_BLDR.purchaseNode("Non-Custodial_AC9", "2", "2", rgt000, rgt000, {
       from: account1,
     }).then(() => {
       console.log("Minting Node 1000012 -NC");
-      return NODE_MGR.purchaseNode("Non_Custodial_AC10", "2", "2", rgt000, rgt000, {
+      return NODE_BLDR.purchaseNode("Non_Custodial_AC10", "2", "2", rgt000, rgt000, {
         from: account10,
       });
     });

@@ -112,7 +112,6 @@ let discardRoleB32;
 let DAOroleB32;
 let nodeAdminRoleB32;
 let nodeMinterRoleB32;
-let nodeMinterRoleB32;
 
 contract("NODE_STOR", (accounts) => {
   console.log(
@@ -331,8 +330,6 @@ contract("NODE_STOR", (accounts) => {
     nodeMinterRoleB32 = await Helper.getStringHash("NODE_MINTER_ROLE");
 
     IDminterRoleB32 = await Helper.getStringHash("ID_MINTER_ROLE");
-
-    nodeMinterRoleB32 = await Helper.getStringHash("NODE_MINTER_ROLE");
   });
 
   it("Should deploy Storage", async () => {
@@ -891,20 +888,6 @@ contract("NODE_STOR", (accounts) => {
         console.log("Authorizing RCLR");
         return A_TKN.grantRole(minterRoleB32, RCLR.address, { from: account1 });
       })
-
-      // .then(() => {
-      //   console.log("Authorizing PURCHASE");
-      //   return A_TKN.grantRole(trustedAgentRoleB32, PURCHASE.address, {
-      //     from: account1,
-      //   });
-      // });
-  });
-
-  it("Should authorize all minter addresses for minting ID(s)", () => {
-    console.log("Authorizing NODE_MGR");
-    return ID_MGR.grantRole(IDminterRoleB32, account1, {
-      from: account1,
-    });
   });
 
   it("Should authorize all payable contracts for transactions", () => {
@@ -961,20 +944,6 @@ contract("NODE_STOR", (accounts) => {
           from: account1,
         });
       })
-
-      // .then(() => {
-      //   console.log("Authorizing PURCHASE");
-      //   return UTIL_TKN.grantRole(payableRoleB32, PURCHASE.address, {
-      //     from: account1,
-      //   });
-      // })
-
-      // .then(() => {
-      //   console.log("Authorizing PURCHASE");
-      //   return UTIL_TKN.grantRole(trustedAgentRoleB32, PURCHASE.address, {
-      //     from: account1,
-      //   });
-      // });
   });
 
   it("Should authorize all minter contracts for minting NODE_TKN(s)", () => {
@@ -1229,6 +1198,11 @@ contract("NODE_STOR", (accounts) => {
       });
   });
 
+  it("Should authorize account10 for nodeMinterRoleB32", () => {
+    console.log("Authorizing NODE_MGR");
+    return NODE_BLDR.grantRole(nodeMinterRoleB32, account10, { from: account1 });
+  });
+
   it("Should Mint 2 cust and 2 non-cust Node tokens in AC_ROOT 1", () => {
     console.log("Minting PRUF to account1");
     return UTIL_TKN.mint(account1, "8000000000000000000000000", {
@@ -1243,59 +1217,53 @@ contract("NODE_STOR", (accounts) => {
       })
 
       .then(() => {
-        console.log("Minting ID to account1");
-        return ID_MGR.mintID(account1, "1", asset1, { from: account1 });
-      })
-
-      .then(() => {
-        console.log("Minting ID to account10");
-        return ID_MGR.mintID(account10, "2", asset2, { from: account1 });
-      })
-
-      .then(() => {
         console.log("Minting Node 1000001 -C");
-        return NODE_MGR.purchaseNode(
+        return NODE_BLDR.purchaseNode(
           "Custodial_AC1",
           "1",
           "1",
           rgt000,
           rgt000,
+          account1,
           { from: account1 }
         );
       })
 
       .then(() => {
         console.log("Minting Node 1000002 -NC");
-        return NODE_MGR.purchaseNode(
+        return NODE_BLDR.purchaseNode(
           "Non_Custodial_AC2",
           "1",
           "2",
           rgt000,
           rgt000,
+          account1,
           { from: account1 }
         );
       })
 
       .then(() => {
         console.log("Minting Node 1000003 -NC");
-        return NODE_MGR.purchaseNode(
+        return NODE_BLDR.purchaseNode(
           "Non_Custodial_AC3",
           "1",
           "2",
           rgt000,
           rgt000,
+          account1,
           { from: account1 }
         );
       })
 
       .then(() => {
         console.log("Minting Node 1000004 -NC");
-        return NODE_MGR.purchaseNode(
+        return NODE_BLDR.purchaseNode(
           "Non_Custodial_AC4",
           "1",
           "2",
           rgt000,
           rgt000,
+          account10,
           { from: account10 }
         );
       });
@@ -1303,21 +1271,24 @@ contract("NODE_STOR", (accounts) => {
 
   it("Should Mint 2 non-cust Node tokens in AC_ROOT 2", () => {
     console.log("Minting Node 1000005 -NC");
-    return NODE_MGR.purchaseNode(
+    return NODE_BLDR.purchaseNode(
       "Non-Custodial_AC5",
       "2",
       "2",
       rgt000,
       rgt000,
+      account1,
       { from: account1 }
-    ).then(() => {
+    )
+    .then(() => {
       console.log("Minting Node 1000006 -NC");
-      return NODE_MGR.purchaseNode(
+      return NODE_BLDR.purchaseNode(
         "Non_Custodial_AC6",
         "2",
         "2",
         rgt000,
         rgt000,
+        account10,
         { from: account10 }
       );
     });
@@ -1635,10 +1606,6 @@ contract("NODE_STOR", (accounts) => {
       });
   });
 
-  it("Should mint ID to account4", async () => {
-    return ID_MGR.mintID(account4, "3", asset3, { from: account1 });
-  });
-
   it("Should set SharesAddress", async () => {
     console.log(
       "//**************************************BEGIN NODE_STOR TEST**********************************************/"
@@ -1735,34 +1702,34 @@ contract("NODE_STOR", (accounts) => {
       "//**************************************END setStorageProviders FAIL BATCH**********************************************/"
     );
     console.log(
-      "//**************************************BEGIN increaseShare FAIL BATCH**********************************************/"
+      "//**************************************BEGIN changeShare FAIL BATCH**********************************************/"
     );
-    return NODE_STOR.increaseShare("1000001", "5100", { from: account2 });
+    return NODE_STOR.changeShare("1000001", "5100", { from: account2 });
   });
 
   //5
   it("Should fail because Node !exist", async () => {
-    return NODE_STOR.increaseShare("50", "5100", { from: account1 });
+    return NODE_STOR.changeShare("50", "5100", { from: account1 });
   });
 
   it("Should increase share of Node 10", async () => {
-    return NODE_STOR.increaseShare("1000001", "9900", { from: account1 });
+    return NODE_STOR.changeShare("1000001", "9900", { from: account1 });
   });
 
   //6
   it("Should fail because cannot decrease share", async () => {
-    return NODE_STOR.increaseShare("1000001", "5000", { from: account1 });
+    return NODE_STOR.changeShare("1000001", "5000", { from: account1 });
   });
 
   //7
   it("Should fail because increase share of Node 10 > 10000", async () => {
-    return NODE_STOR.increaseShare("1000001", "10001", { from: account1 });
+    return NODE_STOR.changeShare("1000001", "10001", { from: account1 });
   });
 
   //8
   it("Should fail because caller !admin", async () => {
     console.log(
-      "//**************************************END increaseShare FAIL BATCH**********************************************/"
+      "//**************************************END changeShare FAIL BATCH**********************************************/"
     );
     console.log(
       "//**************************************BEGIN transferName FAIL BATCH**********************************************/"

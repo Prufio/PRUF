@@ -147,7 +147,7 @@ contract NODE_STOR is BASIC {
      */
     function changeShare(
         uint32 _node,
-        uint32 _newDiscount //DPS:TEST:NEW NAME
+        uint32 _newDiscount
     ) external isDAO {
         require((nodeData[_node].nodeRoot != 0), "NS:IS: node !exist");
         require(_newDiscount <= 10000, "NS:IS: Discount > 100% (10000)");

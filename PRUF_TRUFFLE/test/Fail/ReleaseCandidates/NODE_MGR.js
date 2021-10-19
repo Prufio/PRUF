@@ -112,7 +112,6 @@ let discardRoleB32;
 let DAOroleB32;
 let nodeAdminRoleB32;
 let nodeMinterRoleB32;
-let nodeMinterRoleB32;
 
 contract("NODE_MGR", (accounts) => {
   console.log(
@@ -331,8 +330,6 @@ contract("NODE_MGR", (accounts) => {
     nodeMinterRoleB32 = await Helper.getStringHash("NODE_MINTER_ROLE");
 
     IDminterRoleB32 = await Helper.getStringHash("ID_MINTER_ROLE");
-
-    nodeMinterRoleB32 = await Helper.getStringHash("NODE_MINTER_ROLE");
   });
 
   it("Should deploy Storage", async () => {
@@ -891,20 +888,6 @@ contract("NODE_MGR", (accounts) => {
         console.log("Authorizing RCLR");
         return A_TKN.grantRole(minterRoleB32, RCLR.address, { from: account1 });
       })
-
-      // .then(() => {
-      //   console.log("Authorizing PURCHASE");
-      //   return A_TKN.grantRole(trustedAgentRoleB32, PURCHASE.address, {
-      //     from: account1,
-      //   });
-      // });
-  });
-
-  it("Should authorize all minter addresses for minting ID(s)", () => {
-    console.log("Authorizing NODE_MGR");
-    return ID_MGR.grantRole(IDminterRoleB32, account1, {
-      from: account1,
-    });
   });
 
   it("Should authorize all payable contracts for transactions", () => {
@@ -961,20 +944,6 @@ contract("NODE_MGR", (accounts) => {
           from: account1,
         });
       })
-
-      // .then(() => {
-      //   console.log("Authorizing PURCHASE");
-      //   return UTIL_TKN.grantRole(payableRoleB32, PURCHASE.address, {
-      //     from: account1,
-      //   });
-      // })
-
-      // .then(() => {
-      //   console.log("Authorizing PURCHASE");
-      //   return UTIL_TKN.grantRole(trustedAgentRoleB32, PURCHASE.address, {
-      //     from: account1,
-      //   });
-      // });
   });
 
   it("Should authorize all minter contracts for minting NODE_TKN(s)", () => {
@@ -1248,59 +1217,53 @@ contract("NODE_MGR", (accounts) => {
       })
 
       .then(() => {
-        console.log("Minting ID to account1");
-        return ID_MGR.mintID(account1, "1", asset1, { from: account1 });
-      })
-
-      .then(() => {
-        console.log("Minting ID to account10");
-        return ID_MGR.mintID(account10, "2", asset2, { from: account1 });
-      })
-
-      .then(() => {
         console.log("Minting Node 1000001 -C");
-        return NODE_MGR.purchaseNode(
+        return NODE_BLDR.purchaseNode(
           "Custodial_AC1",
           "1",
           "1",
           rgt000,
           rgt000,
+          account1,
           { from: account1 }
         );
       })
 
       .then(() => {
         console.log("Minting Node 1000002 -NC");
-        return NODE_MGR.purchaseNode(
+        return NODE_BLDR.purchaseNode(
           "Non_Custodial_AC2",
           "1",
           "2",
           rgt000,
           rgt000,
+          account1,
           { from: account1 }
         );
       })
 
       .then(() => {
         console.log("Minting Node 1000003 -NC");
-        return NODE_MGR.purchaseNode(
+        return NODE_BLDR.purchaseNode(
           "Non_Custodial_AC3",
           "1",
           "2",
           rgt000,
           rgt000,
+          account1,
           { from: account1 }
         );
       })
 
       .then(() => {
         console.log("Minting Node 1000004 -NC");
-        return NODE_MGR.purchaseNode(
+        return NODE_BLDR.purchaseNode(
           "Non_Custodial_AC4",
           "1",
           "2",
           rgt000,
           rgt000,
+          account10,
           { from: account10 }
         );
       });
@@ -1308,21 +1271,23 @@ contract("NODE_MGR", (accounts) => {
 
   it("Should Mint 2 non-cust Node tokens in AC_ROOT 2", () => {
     console.log("Minting Node 1000005 -NC");
-    return NODE_MGR.purchaseNode(
+    return NODE_BLDR.purchaseNode(
       "Non-Custodial_AC5",
       "2",
       "2",
       rgt000,
       rgt000,
+      account1,
       { from: account1 }
     ).then(() => {
       console.log("Minting Node 1000006 -NC");
-      return NODE_MGR.purchaseNode(
+      return NODE_BLDR.purchaseNode(
         "Non_Custodial_AC6",
         "2",
         "2",
         rgt000,
         rgt000,
+        account10,
         { from: account10 }
       );
     });
@@ -1640,10 +1605,6 @@ contract("NODE_MGR", (accounts) => {
       });
   });
 
-  it("Should mint ID to account4", async () => {
-    return ID_MGR.mintID(account4, "3", asset3, { from: account1 });
-  });
-
   it("Should set SharesAddress", async () => {
     console.log(
       "//**************************************BEGIN NODE_MGR TEST**********************************************/"
@@ -1735,20 +1696,9 @@ contract("NODE_MGR", (accounts) => {
     );
   });
 
-  //3
-  it("Should fail because caller is not holder of an ID Token", async () => {
-    console.log(
-      "//**************************************END createNode FAIL BATCH**********************************************/"
-    );
-    console.log(
-      "//**************************************BEGIN purchaseNode FAIL BATCH**********************************************/"
-    );
-    return NODE_MGR.purchaseNode("20", "1", "1", rgt000, rgt000, { from: account2 });
-  });
-
   it("Should pause NODE_MGR", async () => {
     console.log(
-      "//**************************************END purchaseNode FAIL BATCH**********************************************/"
+      "//**************************************END createNode FAIL BATCH**********************************************/"
     );
     console.log(
       "//**************************************BEGIN addUser FAIL BATCH**********************************************/"
@@ -1756,7 +1706,7 @@ contract("NODE_MGR", (accounts) => {
     return NODE_MGR.pause({ from: account1 });
   });
 
-  //4
+  //3
   it("Should fail because NODE_MGR is paused", async () => {
     return NODE_MGR.addUser("1000001", account2Hash, "10", { from: account2 });
   });
@@ -1765,7 +1715,7 @@ contract("NODE_MGR", (accounts) => {
     return NODE_MGR.unpause({ from: account1 });
   });
 
-  //5
+  //4
   it("Should fail because caller does not hold Node token", async () => {
     return NODE_MGR.addUser("1000001", account2Hash, "10", { from: account2 });
   });
@@ -1780,7 +1730,7 @@ contract("NODE_MGR", (accounts) => {
     return NODE_MGR.pause({ from: account1 });
   });
 
-  //6
+  //5
   it("Should fail because NODE_MGR is paused", async () => {
     return NODE_MGR.updateNodeCAS("1", rgt000, rgt000, { from: account1 });
   });
@@ -1789,12 +1739,12 @@ contract("NODE_MGR", (accounts) => {
     return NODE_MGR.unpause({ from: account1 });
   });
 
-  //7
+  //6
   it("Should fail because caller is not NTH", async () => {
     return NODE_MGR.updateNodeCAS("1", rgt000, rgt000,{ from: account2 });
   });
 
-  //8
+  //7
   it("Should fail because CAS for node is locked", async () => {
     return NODE_MGR.updateNodeCAS("1", rgt000, rgt000,{ from: account1 });
   });
@@ -1809,7 +1759,7 @@ contract("NODE_MGR", (accounts) => {
     return NODE_MGR.pause({ from: account1 });
   });
 
-  //9
+  //8
   it("Should fail because NODE_MGR is paused", async () => {
     return NODE_MGR.setOperationCosts(
       "1000001",
@@ -1826,7 +1776,7 @@ contract("NODE_MGR", (accounts) => {
     return NODE_MGR.unpause({ from: account1 });
   });
 
-  //10
+  //9
   it("Should fail because caller is not NTH", async () => {
     return NODE_MGR.setOperationCosts(
       "1000001",
@@ -1849,7 +1799,7 @@ contract("NODE_MGR", (accounts) => {
     return NODE_MGR.pause({ from: account1 });
   });
 
-  //11
+  //10
   it("Should fail because NODE_MGR is paused", async () => {
     return NODE_MGR.setNonMutableData("1000001", "1", "0", account2, {
       from: account2,
@@ -1860,7 +1810,7 @@ contract("NODE_MGR", (accounts) => {
     return NODE_MGR.unpause({ from: account1 });
   });
 
-  //12
+  //11
   it("Should fail because caller is not NTH", async () => {
     return NODE_MGR.setNonMutableData("1000001", "1", "0", account2, {
       from: account2,
@@ -1883,7 +1833,7 @@ contract("NODE_MGR", (accounts) => {
     );
   });
 
-  //13
+  //12
   it("Should fail because immutable data = 255", async () => {
     return NODE_MGR.setNonMutableData("50", "255", "0", account1, {
       from: account1,
@@ -1896,7 +1846,7 @@ contract("NODE_MGR", (accounts) => {
     });
   });
 
-  //14
+  //13
   it("Should fail because immutable data has already been set", async () => {
     return NODE_MGR.setNonMutableData("50", "1", "0", account1, {
       from: account1,

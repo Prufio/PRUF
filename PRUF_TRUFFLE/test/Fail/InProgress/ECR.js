@@ -1254,7 +1254,7 @@ contract("ECR", (accounts) => {
 
       .then(() => {
         console.log("Minting Node 1000001 -C");
-        return NODE_MGR.purchaseNode(
+        return NODE_BLDR.purchaseNode(
           "Custodial_AC1",
           "1",
           "1",
@@ -1266,7 +1266,7 @@ contract("ECR", (accounts) => {
 
       .then(() => {
         console.log("Minting Node 1000002 -NC");
-        return NODE_MGR.purchaseNode(
+        return NODE_BLDR.purchaseNode(
           "Non_Custodial_AC2",
           "1",
           "2",
@@ -1278,7 +1278,7 @@ contract("ECR", (accounts) => {
 
       .then(() => {
         console.log("Minting Node 1000003 -NC");
-        return NODE_MGR.purchaseNode(
+        return NODE_BLDR.purchaseNode(
           "Non_Custodial_AC3",
           "1",
           "2",
@@ -1290,7 +1290,7 @@ contract("ECR", (accounts) => {
 
       .then(() => {
         console.log("Minting Node 1000004 -NC");
-        return NODE_MGR.purchaseNode(
+        return NODE_BLDR.purchaseNode(
           "Non_Custodial_AC4",
           "1",
           "2",
@@ -1303,7 +1303,7 @@ contract("ECR", (accounts) => {
 
   it("Should Mint 2 non-cust Node tokens in AC_ROOT 2", () => {
     console.log("Minting Node 1000005 -NC");
-    return NODE_MGR.purchaseNode(
+    return NODE_BLDR.purchaseNode(
       "Non-Custodial_AC5",
       "2",
       "2",
@@ -1312,7 +1312,7 @@ contract("ECR", (accounts) => {
       { from: account1 }
     ).then(() => {
       console.log("Minting Node 1000006 -NC");
-      return NODE_MGR.purchaseNode(
+      return NODE_BLDR.purchaseNode(
         "Non_Custodial_AC6",
         "2",
         "2",
