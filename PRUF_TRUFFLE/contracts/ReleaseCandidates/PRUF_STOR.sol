@@ -16,6 +16,7 @@ _________\/// _____________\/// _______\/// __\///////// __\/// _____________
  * The primary data repository for the PRUF protocol. No direct user writes are permitted in STOR, all data must come from explicitly approved contracts.
  * Stores records in a map of Records, foreward and reverse name resolution for approved contracts, as well as contract authorization data.
  *
+ * TODO:look through all RC1 contracts for DAO functions
  *
  * IMPORTANT NOTE : DO NOT REMOVE FROM CODE:
  *      Verification of rgtHash in curated, certain management types are not secure beyond the honorable intentions
