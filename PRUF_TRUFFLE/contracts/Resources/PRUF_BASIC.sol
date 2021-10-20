@@ -109,7 +109,7 @@ abstract contract BASIC is
     /**
      * @dev Verify user credentials
      * Originating Address:
-     *      has CONTRACT_ADMIN_ROLE
+     *      has ASSET_TXFR_ROLE
      */
     modifier isAssetAdmin() virtual {
         require(
@@ -119,6 +119,11 @@ abstract contract BASIC is
         _;
     }
 
+    /**
+     * @dev Verify user credentials
+     * Originating Address:
+     *      has PAUSER_ROLE
+     */
     modifier isPauser() virtual {
         require(
             hasRole(PAUSER_ROLE, _msgSender()),
@@ -127,6 +132,11 @@ abstract contract BASIC is
         _;
     }
 
+    /**
+     * @dev Verify user credentials
+     * Originating Address:
+     *      has DAO_ROLE
+     */
     modifier isDAO() virtual {
         require(
             hasRole(DAO_ROLE, _msgSender()),

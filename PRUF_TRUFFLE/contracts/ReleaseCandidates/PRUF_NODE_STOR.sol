@@ -47,7 +47,6 @@ import "../Imports/security/ReentrancyGuard.sol";
 
 contract NODE_STOR is BASIC {
     bytes32 public constant NODE_ADMIN_ROLE = keccak256("NODE_ADMIN_ROLE");
-    bytes32 public constant DAO_ROLE = keccak256("DAO_ROLE");
 
     bytes32 public constant B320xF_ =
         0xFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFF;
@@ -82,19 +81,6 @@ contract NODE_STOR is BASIC {
         require(
             hasRole(NODE_ADMIN_ROLE, _msgSender()),
             "NS:MOD-INA: Must have NODE_ADMIN_ROLE"
-        );
-        _;
-    }
-
-    /**
-     * @dev Verify user credentials
-     * Originating Address:
-     *      has DAO_ROLE //DPS:NEW
-     */
-    modifier isDAO() {
-        require(
-            hasRole(DAO_ROLE, _msgSender()),
-            "NS:MOD-INA: Must have DAO_ROLE"
         );
         _;
     }

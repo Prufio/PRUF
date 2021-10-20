@@ -74,23 +74,30 @@ contract NODE_MGR is BASIC {
 
     //--------------------------------------------External Functions--------------------------
 
-    /**
+    /** DPS:CHECK:NEW ARGS, REQUIRE, ROLE
      * @dev Set pricing for Nodes
      * @param _newNodePrice - cost per node (18 decimals)
      * @param _newNodeBurn - burn per node (18 decimals)
      */
-    function setNodePricing(uint256 _newNodePrice, uint256 _newNodeBurn) external isDAO {
+    function setNodePricing(uint256 _newNodePrice, uint256 _newNodeBurn)
+        external
+        isDAO
+    {
+        require( //DPS:CHECK:NEW REQUIRE
+            _newNodePrice <= _newNodeBurn,
+            "NM:SNP:node burn must be => node price"
+        ); //Enforce 50% + node cost burning
         //^^^^^^^checks^^^^^^^^^
 
         node_price = _newNodePrice;
         node_burn = _newNodeBurn;
         //^^^^^^^effects^^^^^^^^^
 
-        emit REPORT("node pricing Changed!"); //report access to internal parameter
+        emit REPORT("node pricing changed!"); //report access to internal parameter
         //^^^^^^^interactions^^^^^^^^^
     }
 
-    /**
+    /** DPS:CHECK:NEW ARGS
      * @dev return current node token index and price
      * @return {
          nodeTokenIndex: current token number
@@ -98,7 +105,15 @@ contract NODE_MGR is BASIC {
          node_burn: burn per node
      }
      */
-    function currentNodePricingInfo() external view returns (uint256, uint256, uint256) {
+    function currentNodePricingInfo()
+        external
+        view
+        returns (
+            uint256,
+            uint256,
+            uint256
+        )
+    {
         //^^^^^^^checks^^^^^^^^^
 
         return (nodeTokenIndex, node_price, node_burn);
@@ -190,12 +205,12 @@ contract NODE_MGR is BASIC {
         ThisNode.CAS2 = _CAS2;
         //^^^^^^^effects^^^^^^^^^
 
-        UTIL_TKN.trustedAgentBurn(_mintNodeTo, node_price / 2);
+        UTIL_TKN.trustedAgentBurn(_mintNodeTo, node_burn);
         UTIL_TKN.trustedAgentTransfer(
             _mintNodeTo,
             rootPaymentAddress,
-            node_price - (node_price / 2)
-        ); //burning 50% so we have tokens to incentivise outreach performance
+            node_price
+        ); //burning 50%+ so we have tokens to incentivise outreach performance
 
         _createNode(
             ThisNode,
@@ -257,8 +272,9 @@ contract NODE_MGR is BASIC {
         bytes32 _CAS2
     ) external whenNotPaused isNodeHolder(_node) {
         Node memory thisNode = NODE_STOR.getNodeData(_node);
-        require(//DPS:TEST NEW PASS CONDITION, SW1 = 0 or CAS IS BLANK
-            (NODE_STOR.getSwitchAt(_node, 1) == 0) || (thisNode.CAS1 & thisNode.CAS2 == 0),
+        require( //DPS:TEST NEW PASS CONDITION, SW1 = 0 or CAS IS BLANK
+            (NODE_STOR.getSwitchAt(_node, 1) == 0) ||
+                (thisNode.CAS1 & thisNode.CAS2 == 0),
             "NM:UNC: CAS for node is set and cannot be written"
         );
         //^^^^^^^checks^^^^^^^^^
