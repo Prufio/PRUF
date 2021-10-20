@@ -34,7 +34,8 @@ import "../Imports/security/ReentrancyGuard.sol";
 
 contract NODE_MGR is BASIC {
     uint256 private nodeTokenIndex = 1000000; //Starting index for purchased node tokens
-    uint256 public node_price = 200000 ether;
+    uint256 public node_price = 100000 ether;
+    uint256 private node_burn = 100000 ether;
     uint32 private constant startingDiscount = 9500; //Purchased nodes start with 95% profit share
 
     bytes32 public constant NODE_MINTER_ROLE = keccak256("NODE_MINTER_ROLE");
@@ -75,12 +76,14 @@ contract NODE_MGR is BASIC {
 
     /**
      * @dev Set pricing for Nodes
-     * @param newNodePrice - cost per node (18 decimals)
+     * @param _newNodePrice - cost per node (18 decimals)
+     * @param _newNodeBurn - burn per node (18 decimals)
      */
-    function setNodePricing(uint256 newNodePrice) external isContractAdmin {
+    function setNodePricing(uint256 _newNodePrice, uint256 _newNodeBurn) external isDAO {
         //^^^^^^^checks^^^^^^^^^
 
-        node_price = newNodePrice;
+        node_price = _newNodePrice;
+        node_burn = _newNodeBurn;
         //^^^^^^^effects^^^^^^^^^
 
         emit REPORT("node pricing Changed!"); //report access to internal parameter
@@ -91,13 +94,14 @@ contract NODE_MGR is BASIC {
      * @dev return current node token index and price
      * @return {
          nodeTokenIndex: current token number
-         Node_price: current price per node
+         node_price: current price per node
+         node_burn: burn per node
      }
      */
-    function currentNodePricingInfo() external view returns (uint256, uint256) {
+    function currentNodePricingInfo() external view returns (uint256, uint256, uint256) {
         //^^^^^^^checks^^^^^^^^^
 
-        return (nodeTokenIndex, node_price);
+        return (nodeTokenIndex, node_price, node_burn);
         //^^^^^^^interactions^^^^^^^^^
     }
 
