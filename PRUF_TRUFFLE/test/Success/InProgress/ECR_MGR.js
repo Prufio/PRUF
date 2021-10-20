@@ -798,6 +798,21 @@ contract("ECR_MGR", (accounts) => {
       });
   });
 
+  it("Should set all baseURI(s) for storage providers", () => {
+    console.log("TEST0 == UNCONFIGURED");
+    return A_TKN.setBaseURIforStorageType("0", "TEST0", { from: account1 })
+
+      .then(() => {
+        console.log("TEST1 == Mutable");
+        return A_TKN.setBaseURIforStorageType("1", "TEST1", { from: account1 });
+      })
+
+      .then(() => {
+        console.log("TEST2 == ARWEAVE");
+        return A_TKN.setBaseURIforStorageType("2", "TEST2", { from: account1 });
+      });
+  });
+
   it("Should set all permitted management types", () => {
     console.log("Authorizing Unrestricted");
     return NODE_STOR.setManagementTypes("0", "1", { from: account1 })

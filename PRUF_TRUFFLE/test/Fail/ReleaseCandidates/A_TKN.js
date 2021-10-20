@@ -630,6 +630,11 @@ contract("A_TKN", (accounts) => {
     return NODE_STOR.grantRole(DAOroleB32, account1, { from: account1 });
   });
 
+  it("Should authorize account1 for A_TKN", () => {
+    console.log("Authorizing account1");
+    return A_TKN.grantRole(DAOroleB32, account1, { from: account1 });
+  });
+
   it("Should add Storage to each contract", () => {
     console.log("Adding in APP");
     return APP.setStorageContract(STOR.address, { from: account1 })
@@ -801,6 +806,21 @@ contract("A_TKN", (accounts) => {
       });
   });
 
+  it("Should set all baseURI(s) for storage providers", () => {
+    console.log("TEST0 == UNCONFIGURED");
+    return A_TKN.setBaseURIforStorageType("0", "TEST0", { from: account1 })
+
+      .then(() => {
+        console.log("TEST1 == Mutable");
+        return A_TKN.setBaseURIforStorageType("1", "TEST1", { from: account1 });
+      })
+
+      .then(() => {
+        console.log("TEST2 == ARWEAVE");
+        return A_TKN.setBaseURIforStorageType("2", "TEST2", { from: account1 });
+      });
+  });
+
   it("Should set all permitted management types", () => {
     console.log("Authorizing Unrestricted");
     return NODE_STOR.setManagementTypes("0", "1", { from: account1 })
@@ -892,13 +912,6 @@ contract("A_TKN", (accounts) => {
         console.log("Authorizing RCLR");
         return A_TKN.grantRole(minterRoleB32, RCLR.address, { from: account1 });
       })
-
-      // .then(() => {
-      //   console.log("Authorizing PURCHASE");
-      //   return A_TKN.grantRole(trustedAgentRoleB32, PURCHASE.address, {
-      //     from: account1,
-      //   });
-      // });
   });
 
   it("Should authorize all payable contracts for transactions", () => {
@@ -1640,15 +1653,15 @@ contract("A_TKN", (accounts) => {
   });
 
   it("Should mint asset1 to account4", async () => {
-    return APP_NC.newRecord(asset1raw, rgt1, "1000003", "100", { from: account4 });
+    return APP_NC.newRecord(asset1raw, rgt1, "1000003", "100", asset1raw, { from: account4 });
   });
   
   it("Should mint asset2 to account4", async () => {
-    return APP_NC.newRecord(asset2raw, rgt2, "1000003", "100", { from: account4 });
+    return APP_NC.newRecord(asset2raw, rgt2, "1000003", "100", asset2raw, { from: account4 });
   });
 
   it("Should mint asset3 to account4", async () => {
-    return APP_NC.newRecord(asset3raw, rgt3, "1000004", "100", { from: account4 });
+    return APP_NC.newRecord(asset3raw, rgt3, "1000004", "100", asset3raw, { from: account4 });
   });
 
   it("Should set assetClass 13 switch to 1:1", async () => {
@@ -1988,7 +2001,7 @@ contract("A_TKN", (accounts) => {
   });
 
   it("Should write asset12 in Node 1000001", async () => {
-    return APP.newRecord(asset12raw, rgt12, "1000001", "100", { from: account2 });
+    return APP.newRecord(asset12raw, rgt12, "1000001", "100", asset12raw, { from: account2 });
   });
 
   it("Should retrieve show clean asset 12", async () => {
@@ -2277,7 +2290,7 @@ contract("A_TKN", (accounts) => {
     console.log(
       "//**************************************BEGIN THE WORKS NON CUSTODIAL**********************************************/"
     );
-    return APP_NC.newRecord(asset13raw, rgt13, "1000003", "100", {
+    return APP_NC.newRecord(asset13raw, rgt13, "1000003", "100", asset13raw, {
       from: account4,
     });
   });
@@ -2341,7 +2354,7 @@ contract("A_TKN", (accounts) => {
   });
 
   it("Should set NonMutable note to (asset13)", async () => {
-    return APP_NC.addNonMutableStorage(asset13, asset13, rgt000, {
+    return APP_NC.addNonMutableStorage(asset13, asset13, rgt000, asset13, {
       from: account4,
     });
   });
