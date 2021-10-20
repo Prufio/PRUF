@@ -25,7 +25,6 @@ import "../Imports/access/AccessControl.sol";
 import "../Imports/security/Pausable.sol";
 import "../Imports/security/ReentrancyGuard.sol";
 import "../Imports/token/ERC721/IERC721Receiver.sol";
-//import "../Imports/token/ERC721/IERC721.sol";
 import "../Resources/IERC721withURI.sol";
 import "../Imports/token/ERC20/IERC20.sol";
 
@@ -38,6 +37,7 @@ abstract contract BASIC is
     bytes32 public constant CONTRACT_ADMIN_ROLE =
         keccak256("CONTRACT_ADMIN_ROLE");
     bytes32 public constant PAUSER_ROLE = keccak256("PAUSER_ROLE");
+    bytes32 public constant DAO_ROLE = keccak256("DAO_ROLE");
     bytes32 public constant ASSET_TXFR_ROLE = keccak256("ASSET_TXFR_ROLE");
 
     address internal STOR_Address;
@@ -57,9 +57,6 @@ abstract contract BASIC is
 
     address internal NODE_TKN_Address;
     NODE_TKN_Interface internal NODE_TKN;
-
-    // address internal ID_MGR_Address;
-    // ID_MGR_Interface internal ID_MGR;
 
     address internal ECR_MGR_Address;
     ECR_MGR_Interface internal ECR_MGR;
@@ -101,7 +98,7 @@ abstract contract BASIC is
      * Originating Address:
      *      has CONTRACT_ADMIN_ROLE
      */
-    modifier isContractAdmin() {
+    modifier isContractAdmin() virtual {
         require(
             hasRole(CONTRACT_ADMIN_ROLE, _msgSender()),
             "B:MOD:-IADM Caller !CONTRACT_ADMIN_ROLE"
@@ -114,7 +111,7 @@ abstract contract BASIC is
      * Originating Address:
      *      has CONTRACT_ADMIN_ROLE
      */
-    modifier isAssetAdmin() {
+    modifier isAssetAdmin() virtual {
         require(
             hasRole(ASSET_TXFR_ROLE, _msgSender()),
             "B:MOD:-IADM Caller !ASSET_TXFR_ROLE"
@@ -122,10 +119,18 @@ abstract contract BASIC is
         _;
     }
 
-    modifier isPauser() {
+    modifier isPauser() virtual {
         require(
             hasRole(PAUSER_ROLE, _msgSender()),
             "B:MOD-IP:Calling address is not pauser"
+        );
+        _;
+    }
+
+    modifier isDAO() virtual {
+        require(
+            hasRole(DAO_ROLE, _msgSender()),
+            "B:MOD-IP:Calling address is not DAO"
         );
         _;
     }
@@ -268,7 +273,12 @@ abstract contract BASIC is
      * @param _node - to check user type in
      * @return user authorization type of caller, from NODE_MGR user mapping
      */
-    function getCallingUserType(uint32 _node) internal view virtual returns (uint8) {
+    function getCallingUserType(uint32 _node)
+        internal
+        view
+        virtual
+        returns (uint8)
+    {
         //^^^^^^^checks^^^^^^^^^
 
         uint8 userTypeInNode = NODE_STOR.getUserType(
@@ -285,7 +295,12 @@ abstract contract BASIC is
      * @param _node - to retrireve info about
      * @return entire node struct (see interfaces for struct definitions)
      */
-    function getNodeinfo(uint32 _node) internal view virtual returns (Node memory) {
+    function getNodeinfo(uint32 _node)
+        internal
+        view
+        virtual
+        returns (Node memory)
+    {
         //^^^^^^^checks^^^^^^^^^
 
         return NODE_STOR.getNodeData(_node); //for new NODE_STOR
@@ -302,6 +317,7 @@ abstract contract BASIC is
     function getContractInfo(address _addr, uint32 _node)
         internal
         view
+        virtual
         returns (ContractDataHash memory)
     {
         //^^^^^^^checks^^^^^^^^^
@@ -318,7 +334,12 @@ abstract contract BASIC is
      * @param _idxHash - asset index
      * @return entire record struct form PRUF_STOR (see interfaces for struct definitions)
      */
-    function getRecord(bytes32 _idxHash) internal view returns (Record memory) {
+    function getRecord(bytes32 _idxHash)
+        internal
+        view
+        virtual
+        returns (Record memory)
+    {
         //^^^^^^^checks^^^^^^^^^
 
         Record memory rec = STOR.retrieveRecord(_idxHash);
