@@ -1051,8 +1051,7 @@ interface APP_Interface {
         bytes32 _idxHash,
         bytes32 _rgtHash,
         bytes32 _nonMutableStorage1,
-        bytes32 _nonMutableStorage2,
-        bytes32 _URIhash
+        bytes32 _nonMutableStorage2
     ) external;
 
     /**
@@ -1217,8 +1216,7 @@ interface APP_NC_Interface {
     function addNonMutableStorage(
         bytes32 _idxHash,
         bytes32 _nonMutableStorage1,
-        bytes32 _nonMutableStorage2,
-        bytes32 _URIhash
+        bytes32 _nonMutableStorage2
     ) external;
 
     /**

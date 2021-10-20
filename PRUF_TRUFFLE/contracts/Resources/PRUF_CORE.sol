@@ -193,8 +193,7 @@ contract CORE is BASIC {
         STOR.setNonMutableStorage(
             _idxHash,
             _rec.nonMutableStorage1,
-            _rec.nonMutableStorage2,
-            _rec.URIhash
+            _rec.nonMutableStorage2
         ); // Send NonMutableStorage data to storage
         //^^^^^^^interactions^^^^^^^^^
     }
