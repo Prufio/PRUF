@@ -154,14 +154,12 @@ contract APP is CORE {
      * @param _rgtHash - hash of rightsholder information created by frontend inputs
      * @param _nonMutableStorage1 - field for permanent external asset data
      * @param _nonMutableStorage2 - field for permanent external asset data
-     * @param _URIhash - Hash of external CAS from URI 
      */
     function addNonMutableStorage(
         bytes32 _idxHash,
         bytes32 _rgtHash,
         bytes32 _nonMutableStorage1,
-        bytes32 _nonMutableStorage2,
-        bytes32 _URIhash
+        bytes32 _nonMutableStorage2
     ) external nonReentrant whenNotPaused isAuthorized(_idxHash) {
         Record memory rec = getRecord(_idxHash);
         uint8 userType = getCallingUserType(rec.node);
@@ -183,7 +181,6 @@ contract APP is CORE {
 
         rec.nonMutableStorage1 = _nonMutableStorage1;
         rec.nonMutableStorage2 = _nonMutableStorage2;
-        rec.URIhash = _URIhash;
         //^^^^^^^effects^^^^^^^^^
 
         writeNonMutableStorage(_idxHash, rec);
