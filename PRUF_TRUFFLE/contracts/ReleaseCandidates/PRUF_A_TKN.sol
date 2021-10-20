@@ -340,25 +340,6 @@ contract A_TKN is
         //^^^^^^^interactions^^^^^^^^^
     }
 
-    // /** //DPS:TEST
-    //  * @dev reverts unless a baseURI for a storage provider is valid.
-    //  * @param _URIhash - hashed baseURI to check
-    //  * @param _node - node to check
-    //  */
-    // function isValidBaseURI(bytes32 _URIhash, uint32 _node) external view {
-    //     Node memory thisNode = NODE_STOR.getNodeData(_node);
-    //     uint8 storageProvider = thisNode.storageProvider;
-
-    //     require(
-    //         keccak256(
-    //             abi.encodePacked(
-    //                 baseURIforStorageType[storageProvider]
-    //             )
-    //         ) == _URIhash,
-    //         "NS:IVBU:Base URI not valid for node"
-    //     );
-    // }
-
     /**
      * @dev !!! PERMANENTLY !!!  Kills trusted agent and payable functions
      * this will break the functionality of current payment mechanisms.
@@ -484,12 +465,16 @@ contract A_TKN is
 
         require(rec.assetStatus == 201, "AT:SU: Record status != 201");
 
-        require(
-            NODE_TKN.ownerOf(rec.node) == _msgSender(),
-            "AT:SU:Caller !NTH"
+        require( //DPS:TEST
+            (NODE_TKN.ownerOf(rec.node) == _msgSender()) || //caller holds the NT
+                (NODE_STOR.getUserType(
+                    keccak256(abi.encodePacked(_msgSender())),
+                    rec.node
+                ) == 100),                                  //or is auth type 100 in node
+            "AT:SU:Caller !NTH or authorized"
         );
 
-        require( //If no switches are set, tokenholder can change URI
+        require( 
             _isApprovedOrOwner(_msgSender(), _tokenId),
             "AT:SU:Caller !owner nor approved"
         );
@@ -499,32 +484,6 @@ contract A_TKN is
         return _tokenId;
         //^^^^^^^effects^^^^^^^^^
     }
-
-    // /** //DPS:TEST NEW
-    //  * @dev Set new token URI String DAO mode REQUIRES DAO_ROLE
-    //  * @param _tokenId - Token ID to set URI
-    //  * @param _tokenURI - URI string to atatch to token
-    //  * @return tokenId
-    //  */
-    // function newURI(uint256 _tokenId, string calldata _tokenURI)
-    //     external
-    //     returns (uint256)
-    // {
-    //     require(
-    //         hasRole(DAO_ROLE, _msgSender()),
-    //         "AT:SU-IM:Calling address is not DAO"
-    //     );
-
-    //     require( //If no switches are set, tokenholder can change URI
-    //         _isApprovedOrOwner(_msgSender(), _tokenId),
-    //         "AT:SU:Caller !owner nor approved"
-    //     );
-    //     //^^^^^^^checks^^^^^^^^^
-
-    //     _setTokenURI(_tokenId, _tokenURI);
-    //     return _tokenId;
-    //     //^^^^^^^effects^^^^^^^^^
-    // }
 
     /**
      * @dev See if asset token exists
@@ -656,6 +615,13 @@ contract A_TKN is
 
         _unpause();
         //^^^^^^^effects^^^^^^^^^
+    }
+
+    function isApprovedOrOwner(address _addr, uint256 _tokenId) external view {
+        require(
+            _isApprovedOrOwner(_addr, _tokenId),
+            "AT:IAOO:Not approved or owner"
+        );
     }
 
     //---------------------------------------Internal Functions-------------------------------
