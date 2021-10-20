@@ -180,13 +180,11 @@ interface STOR_Interface {
      * @param _idxHash - record asset ID
      * @param _nonMutableStorage1 - first half of content addressable storage location
      * @param _nonMutableStorage2 - second half of content addressable storage location
-     * @param _URIhash - Hash of external CAS from URI
      */
     function setNonMutableStorage(
         bytes32 _idxHash,
         bytes32 _nonMutableStorage1,
-        bytes32 _nonMutableStorage2,
-        bytes32 _URIhash
+        bytes32 _nonMutableStorage2
     ) external;
 
     /**
@@ -284,18 +282,20 @@ interface NODE_MGR_Interface {
     //--------------------------------------------Admin Related Functions--------------------------
     /**
      * @dev Set pricing for Nodes
-     * @param newNodePrice - cost per node (18 decimals)
+     * @param _newNodePrice - cost per node (18 decimals)
+     * @param _newNodeBurn - burn per node (18 decimals)
      */
-    function setNodePricing(uint256 newNodePrice) external;
+    function setNodePricing(uint256 _newNodePrice, uint256 _newNodeBurn) external;
 
     /**
      * @dev return current node token index and price
      * @return {
          nodeTokenIndex: current token number
-         Node_price: current price per node
+         node_price: current price per node
+         node_burn: burn per node
      }
      */
-    function currentNodePricingInfo() external view returns (uint256, uint256);
+    function currentNodePricingInfo() external view returns (uint256, uint256, uint256);
 
     //--------------------------------------------External Functions--------------------------
 

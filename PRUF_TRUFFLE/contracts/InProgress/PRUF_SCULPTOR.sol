@@ -36,8 +36,6 @@ pragma solidity ^0.8.7;
 import "../Resources/PRUF_CORE.sol";
 
 contract SCULPTOR is CORE {
-    bytes32 public constant DAO_ROLE = keccak256("DAO_ROLE");
-
     mapping(bytes32 => mapping(bytes32 => string)) internal foundry; // idxHash=>location=>data
     mapping(bytes32 => mapping(bytes32 => Block)) internal quarry; // idxHash=>location=>data
 
@@ -87,8 +85,7 @@ contract SCULPTOR is CORE {
      * @param _idxHash - idxHash of asset data to delete
      * @param _location - location of data to delete
      */
-    function DAOdelete(bytes32 _idxHash, bytes32 _location) external {
-        require(hasRole("DAO_ROLE", _msgSender()));
+    function DAOdelete(bytes32 _idxHash, bytes32 _location) external isDAO {
         //^^^^^^^Checks^^^^^^^^^
 
         delete foundry[_idxHash][_location];

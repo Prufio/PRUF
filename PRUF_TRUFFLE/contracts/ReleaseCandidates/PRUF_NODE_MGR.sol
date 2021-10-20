@@ -34,7 +34,8 @@ import "../Imports/security/ReentrancyGuard.sol";
 
 contract NODE_MGR is BASIC {
     uint256 private nodeTokenIndex = 1000000; //Starting index for purchased node tokens
-    uint256 public node_price = 200000 ether;
+    uint256 public node_price = 100000 ether;
+    uint256 private node_burn = 100000 ether;
     uint32 private constant startingDiscount = 9500; //Purchased nodes start with 95% profit share
 
     bytes32 public constant NODE_MINTER_ROLE = keccak256("NODE_MINTER_ROLE");
@@ -73,31 +74,49 @@ contract NODE_MGR is BASIC {
 
     //--------------------------------------------External Functions--------------------------
 
-    /**
+    /** DPS:CHECK:NEW ARGS, REQUIRE, ROLE
      * @dev Set pricing for Nodes
-     * @param newNodePrice - cost per node (18 decimals)
+     * @param _newNodePrice - cost per node (18 decimals)
+     * @param _newNodeBurn - burn per node (18 decimals)
      */
-    function setNodePricing(uint256 newNodePrice) external isContractAdmin {
+    function setNodePricing(uint256 _newNodePrice, uint256 _newNodeBurn)
+        external
+        isDAO
+    {
+        require( //DPS:CHECK:NEW REQUIRE
+            _newNodePrice <= _newNodeBurn,
+            "NM:SNP:node burn must be => node price"
+        ); //Enforce 50% + node cost burning
         //^^^^^^^checks^^^^^^^^^
 
-        node_price = newNodePrice;
+        node_price = _newNodePrice;
+        node_burn = _newNodeBurn;
         //^^^^^^^effects^^^^^^^^^
 
-        emit REPORT("node pricing Changed!"); //report access to internal parameter
+        emit REPORT("node pricing changed!"); //report access to internal parameter
         //^^^^^^^interactions^^^^^^^^^
     }
 
-    /**
+    /** DPS:CHECK:NEW ARGS
      * @dev return current node token index and price
      * @return {
          nodeTokenIndex: current token number
-         Node_price: current price per node
+         node_price: current price per node
+         node_burn: burn per node
      }
      */
-    function currentNodePricingInfo() external view returns (uint256, uint256) {
+    function currentNodePricingInfo()
+        external
+        view
+        returns (
+            uint256,
+            uint256,
+            uint256
+        )
+    {
         //^^^^^^^checks^^^^^^^^^
 
-        return (nodeTokenIndex, node_price);
+        return (nodeTokenIndex, node_price, node_burn);
         //^^^^^^^interactions^^^^^^^^^
     }
 
@@ -186,12 +205,12 @@ contract NODE_MGR is BASIC {
         ThisNode.CAS2 = _CAS2;
         //^^^^^^^effects^^^^^^^^^
 
-        UTIL_TKN.trustedAgentBurn(_mintNodeTo, node_price / 2);
+        UTIL_TKN.trustedAgentBurn(_mintNodeTo, node_burn);
         UTIL_TKN.trustedAgentTransfer(
             _mintNodeTo,
             rootPaymentAddress,
-            node_price - (node_price / 2)
-        ); //burning 50% so we have tokens to incentivise outreach performance
+            node_price
+        ); //burning 50%+ so we have tokens to incentivise outreach performance
 
         _createNode(
             ThisNode,
@@ -253,8 +272,9 @@ contract NODE_MGR is BASIC {
         bytes32 _CAS2
     ) external whenNotPaused isNodeHolder(_node) {
         Node memory thisNode = NODE_STOR.getNodeData(_node);
-        require(//DPS:TEST NEW PASS CONDITION, SW1 = 0 or CAS IS BLANK
-            (NODE_STOR.getSwitchAt(_node, 1) == 0) || (thisNode.CAS1 & thisNode.CAS2 == 0),
+        require( //DPS:TEST NEW PASS CONDITION, SW1 = 0 or CAS IS BLANK
+            (NODE_STOR.getSwitchAt(_node, 1) == 0) ||
+                (thisNode.CAS1 & thisNode.CAS2 == 0),
             "NM:UNC: CAS for node is set and cannot be written"
         );
         //^^^^^^^checks^^^^^^^^^

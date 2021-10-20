@@ -38,8 +38,7 @@ import "../Imports/security/ReentrancyGuard.sol";
 
 contract STOR is AccessControl, ReentrancyGuard, Pausable {
     bytes32 public constant PAUSER_ROLE = keccak256("PAUSER_ROLE");
-    bytes32 public constant CONTRACT_ADMIN_ROLE =
-        keccak256("CONTRACT_ADMIN_ROLE");
+    bytes32 public constant DAO_ROLE = keccak256("DAO_ROLE");
 
     bytes32 public constant B320xF_ =
         0xFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFF;
@@ -56,7 +55,7 @@ contract STOR is AccessControl, ReentrancyGuard, Pausable {
 
     constructor() {
         _setupRole(DEFAULT_ADMIN_ROLE, _msgSender());
-        _setupRole(CONTRACT_ADMIN_ROLE, _msgSender());
+        _setupRole(DAO_ROLE, _msgSender());
         _setupRole(PAUSER_ROLE, _msgSender());
     }
 
@@ -65,12 +64,12 @@ contract STOR is AccessControl, ReentrancyGuard, Pausable {
     /**
      * @dev Verify user credentials
      * Originating Address:
-     *      has CONTRACT_ADMIN_ROLE
+     *      has DAO_ROLE
      */
-    modifier isContractAdmin() {
+    modifier isDAO() {
         require(
-            hasRole(CONTRACT_ADMIN_ROLE, _msgSender()),
-            "S:MOD-ICA: Must have CONTRACT_ADMIN_ROLE"
+            hasRole(DAO_ROLE, _msgSender()),
+            "S:MOD-ICA: Must have DAO_ROLE"
         );
         _;
     }
@@ -262,7 +261,8 @@ contract STOR is AccessControl, ReentrancyGuard, Pausable {
         address _contractAddr,
         uint32 _node,
         uint8 _contractAuthLevel
-    ) external isContractAdmin {
+    ) external isDAO {
+        //DPS:NEW ROLE
         require(_node == 0, "S:AC: node !=0");
         //^^^^^^^checks^^^^^^^^^
 
@@ -289,7 +289,8 @@ contract STOR is AccessControl, ReentrancyGuard, Pausable {
         uint256 _contractNumber,
         string calldata _name,
         uint8 _contractAuthLevel
-    ) external isContractAdmin {
+    ) external isDAO {
+        //DPS:NEW ROLE
         require(_contractNumber <= 10, "S:ADC: Contract number > 10");
         //^^^^^^^checks^^^^^^^^^
 
@@ -302,11 +303,12 @@ contract STOR is AccessControl, ReentrancyGuard, Pausable {
      * @dev retrieve a record from the default list of 11 contracts to be applied to Nodees
      * @param _contractNumber to look up (0-10)
      * @return the name and auth level of indexed contract
+     * DPS:NEW ROLE
      */
     function getDefaultContract(uint256 _contractNumber)
         external
         view
-        isContractAdmin
+        isDAO
         returns (DefaultContract memory)
     {
         //^^^^^^^checks^^^^^^^^^
@@ -399,7 +401,6 @@ contract STOR is AccessControl, ReentrancyGuard, Pausable {
         bytes32 _URIhash,
         uint32 _node,
         uint32 _countDownStart
-        
     ) external nonReentrant whenNotPaused isAuthorized(_node) {
         require(database[_idxHash].node == 0, "S:NR: Rec already exists"); //idxHash
         require(_rgtHash != 0, "S:NR: RGT = 0");
@@ -659,8 +660,8 @@ contract STOR is AccessControl, ReentrancyGuard, Pausable {
         require(isTransferred(rec.assetStatus) == 0, "S:MNMS: Txfrd. asset"); //asset cannot be in transferred status
 
         require(
-            (rec.nonMutableStorage1 & rec.nonMutableStorage2 ==
-                0) || ((rec.assetStatus == 201) || (rec.assetStatus == 200)),
+            (rec.nonMutableStorage1 & rec.nonMutableStorage2 == 0) ||
+                ((rec.assetStatus == 201) || (rec.assetStatus == 200)),
             "S:MNMS: Cannot overwrite NM Storage"
         ); //NonMutableStorage record is immutable after first write unless status 201 is set (Storage provider has died)
         //^^^^^^^checks^^^^^^^^^
