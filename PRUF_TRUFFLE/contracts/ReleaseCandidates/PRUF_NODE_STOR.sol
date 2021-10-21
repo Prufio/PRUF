@@ -270,7 +270,7 @@ contract NODE_STOR is BASIC {
      */
     function blockUser(uint32 _node, bytes32 _addrHash) external isDAO {
         //^^^^^^^checks^^^^^^^^^
-        //if deauthing an address, decrease usercount for node //DPS:TEST
+        //if deauthing an address, decrease usercount for node
         if (registeredUsers[_node][_addrHash] != 0) {
             numberOfUsers[_node]--;
         }
@@ -446,7 +446,6 @@ contract NODE_STOR is BASIC {
      * @dev extended node data setter
      * @param _foreignNode - node from other blockcahin to point to local node
      * @param _localNode local node to point to
-     * DPS:TEST:NEW
      */
     function setLocalNode(uint32 _foreignNode, uint32 _localNode)
         external
@@ -482,7 +481,6 @@ contract NODE_STOR is BASIC {
      * @dev exttended node data getter
      * @param _node - node being queried
      * returns ExtendedNodeData struct (see resources-structs)
-     * DPS:TEST:NEW
      */
     function getExtNodeData(uint32 _node)
         external

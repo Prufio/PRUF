@@ -126,7 +126,7 @@ contract APP_NC is CORE {
         //^^^^^^^effects^^^^^^^^^
     }
 
-    /**
+    /**CTS:EXAMINE if node is burned, this breaks in NODE_TKN.ownerOf below
      * @dev record NonMutableStorage data
      * @param _idxHash - hash of asset information created by frontend inputs
      * @param _nonMutableStorage1 - field for permanent external asset data

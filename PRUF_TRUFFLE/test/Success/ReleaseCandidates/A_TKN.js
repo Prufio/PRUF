@@ -815,6 +815,23 @@ contract("TheWorks", (accounts) => {
     console.log("TEST0 == UNCONFIGURED");
     return A_TKN.setBaseURIforStorageType("0", "TEST0", { from: account1 })
 
+    .then(() => {
+      console.log("should retrieve TEST0")
+      var Record = [];
+  
+      return await A_TKN.getBaseURIforStorageType(
+        "0",
+        { from: account1 },
+        function (_err, _result) {
+          if (_err) {
+          } else {
+            Record = Object.values(_result);
+            console.log(Record);
+          }
+        }
+      );
+    })
+
       .then(() => {
         console.log("TEST1 == Mutable");
         return A_TKN.setBaseURIforStorageType("1", "TEST1", { from: account1 });
@@ -922,20 +939,6 @@ contract("TheWorks", (accounts) => {
         console.log("Authorizing account1");
         return A_TKN.grantRole(minterRoleB32, account1, { from: account1 });
       })
-
-      // .then(() => {
-      //   console.log("Authorizing PURCHASE");
-      //   return A_TKN.grantRole(trustedAgentRoleB32, PURCHASE.address, {
-      //     from: account1,
-      //   });
-      // });
-  });
-
-  it("Should authorize all minter addresses for minting ID(s)", () => {
-    console.log("Authorizing NODE_MGR");
-    return ID_MGR.grantRole(IDminterRoleB32, account1, {
-      from: account1,
-    });
   });
 
   it("Should authorize all payable contracts for transactions", () => {
@@ -1030,8 +1033,6 @@ contract("TheWorks", (accounts) => {
     console.log("Authorizing NODE_MGR");
     return NODE_BLDR.grantRole(nodeMinterRoleB32, account10, { from: account1 });
   });
-
-
 
   it("Should mint a couple of asset root tokens", () => {
     console.log("Minting root token 1 -C");
@@ -1179,16 +1180,6 @@ contract("TheWorks", (accounts) => {
       })
 
       .then(() => {
-        console.log("Minting ID to account1");
-        return ID_MGR.mintID(account1, "1", asset1, { from: account1 });
-      })
-
-      .then(() => {
-        console.log("Minting ID_MGR to account10");
-        return ID_MGR.mintID(account10, "2", asset2, { from: account1 });
-      })
-
-      .then(() => {
         console.log("Minting Node 1000001 -C");
         return NODE_BLDR.purchaseNode(
           "Custodial_AC1",
@@ -1196,6 +1187,7 @@ contract("TheWorks", (accounts) => {
           "1",
           rgt000,
           rgt000,
+          account1,
           { from: account1 }
         );
       })
@@ -1208,6 +1200,7 @@ contract("TheWorks", (accounts) => {
           "2",
           rgt000,
           rgt000,
+          account1,
           { from: account1 }
         );
       })
@@ -1220,6 +1213,7 @@ contract("TheWorks", (accounts) => {
           "2",
           rgt000,
           rgt000,
+          account1,
           { from: account1 }
         );
       })
@@ -1232,6 +1226,7 @@ contract("TheWorks", (accounts) => {
           "2",
           rgt000,
           rgt000,
+          account10,
           { from: account10 }
         );
       });
@@ -1245,6 +1240,7 @@ contract("TheWorks", (accounts) => {
       "2",
       rgt000,
       rgt000,
+      account1,
       { from: account1 }
     )
     .then(() => {
@@ -1255,6 +1251,7 @@ contract("TheWorks", (accounts) => {
         "2",
         rgt000,
         rgt000,
+        account10,
         { from: account10 }
       );
     });
@@ -1269,6 +1266,23 @@ contract("TheWorks", (accounts) => {
       "0x0000000000000000000000000000000000000000",
       { from: account1 }
     )
+
+    .then(() => {
+      console.log("should retrieve TEST1")
+      var Record = [];
+  
+      return await A_TKN.getBaseURIbyForNode(
+        "1000001",
+        { from: account1 },
+        function (_err, _result) {
+          if (_err) {
+          } else {
+            Record = Object.values(_result);
+            console.log(Record);
+          }
+        }
+      );
+    })
 
       .then(() => {
         return NODE_MGR.setNonMutableData(
@@ -1446,6 +1460,11 @@ contract("TheWorks", (accounts) => {
       return STOR.enableContractForNode("MAL_APP", "1000002", "1", {
         from: account1,
       });
+    })
+    .then(() => {
+      return STOR.enableContractForNode("MAL_APP", "1000003", "1", {
+        from: account1,
+      });
     });
   });
 
@@ -1569,10 +1588,6 @@ contract("TheWorks", (accounts) => {
       });
   });
 
-  it("Should mint ID to account4", async () => {
-    return ID_MGR.mintID(account4, "3", asset3, { from: account1 });
-  });
-
 
     it('Should set SharesAddress', async () => {
 
@@ -1611,29 +1626,10 @@ contract("TheWorks", (accounts) => {
     })
 
 
-    it('Should mint ID to account2', async () => {
-        return ID_MGR.mintID(
-            account2,
-            '5',
-            asset4,
-            { from: account1 }
-        )
-    })
-
-
-    it('Should mint ID to account3', async () => {
-        return ID_MGR.mintID(
-            account3,
-            '4',
-            asset5,
-            { from: account1 }
-        )
-    })
-
-
     it('Should mint asset5', async () => {
         return A_TKN.mintAssetToken(
             account4,
+            asset5,
             asset5,
             { from: account1 }
         )
@@ -1646,6 +1642,7 @@ contract("TheWorks", (accounts) => {
         rgt1,
         '1000003',
         '100',
+        asset1raw,
         {from: account1}
         )
     })
@@ -1657,6 +1654,7 @@ contract("TheWorks", (accounts) => {
         rgt2,
         '1000003',
         '100',
+        asset2raw,
         {from: account2}
         )
     })
@@ -1668,6 +1666,7 @@ contract("TheWorks", (accounts) => {
         rgt3,
         '1000003',
         '100',
+        asset3raw,
         {from: account3}
         )
     })
@@ -1707,6 +1706,7 @@ contract("TheWorks", (accounts) => {
         rgt4,
         '1000003',
         '100',
+        asset4raw,
         {from: account3}
         )
     })
@@ -1992,6 +1992,13 @@ it('Should authorize all minter contracts for minting A_TKN(s)', async () => {
         })
     })
 
+    it('Should set status of of asset 1 to 201', async () => {
+        return MAL_APP.modifyStatus(
+            asset1,
+            "201",
+            { from: account1 }
+        )
+    })
 
     it('Should setURI of asset 1 to 111', async () => {
         return A_TKN.setURI(
@@ -2000,7 +2007,6 @@ it('Should authorize all minter contracts for minting A_TKN(s)', async () => {
             { from: account1 }
         )
     })
-
 
     it('Should setColdWallet to account1', async () => {
         return A_TKN.setColdWallet(
@@ -2136,7 +2142,7 @@ it('Should authorize all minter contracts for minting A_TKN(s)', async () => {
   });
 
   it("Should write asset12 in Node 1000001", async () => {
-    return APP.newRecord(asset12raw, rgt12, "1000001", "100", { from: account2 });
+    return APP.newRecord(asset12raw, rgt12, "1000001", "100", asset12raw, { from: account2 });
   });
 
   it("Should retrieve show clean asset 12", async () => {
@@ -2425,7 +2431,7 @@ it('Should authorize all minter contracts for minting A_TKN(s)', async () => {
     console.log(
       "//**************************************BEGIN THE WORKS NON CUSTODIAL**********************************************/"
     );
-    return APP_NC.newRecord(asset13raw, rgt13, "1000003", "100", {
+    return APP_NC.newRecord(asset13raw, rgt13, "1000003", "100", asset13raw, {
       from: account1,
     });
   });

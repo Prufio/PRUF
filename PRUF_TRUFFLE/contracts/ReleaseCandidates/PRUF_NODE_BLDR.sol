@@ -55,13 +55,13 @@ contract NODE_BLDR is BASIC {
         _;
     }
 
-    /**
+    /**CTS:EXAMINE not used anywhere
      * @dev Verify user credentials
      * @param _tokenId tokenID of token
      * @param _tokenContract Contract to check
      * Originating Address:
      *    require that user holds token @ ID-Contract
-     */
+     */ 
     modifier isTokenHolder(uint256 _tokenId, address _tokenContract) {
         require(
             (IERC721(_tokenContract).ownerOf(_tokenId) == _msgSender()),

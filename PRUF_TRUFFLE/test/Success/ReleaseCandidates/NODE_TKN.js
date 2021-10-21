@@ -26,7 +26,6 @@ const PRUF_RCLR = artifacts.require("RCLR");
 const PRUF_HELPER = artifacts.require("Helper");
 const PRUF_MAL_APP = artifacts.require("MAL_APP");
 const PRUF_UTIL_TKN = artifacts.require("UTIL_TKN");
-// const PRUF_PURCHASE = artifacts.require("PURCHASE");      
 const PRUF_DECORATE = artifacts.require("DECORATE");
 const PRUF_WRAP = artifacts.require("WRAP");
 
@@ -435,13 +434,6 @@ contract("NODE_TKN", (accounts) => {
     UTIL_TKN = PRUF_UTIL_TKN_TEST;
   });
 
-  // it("Should deploy PURCHASE", async () => {
-  //   const PRUF_PURCHASE_TEST = await PRUF_PURCHASE.deployed({ from: account1 });
-  //   console.log(PRUF_PURCHASE_TEST.address);
-  //   assert(PRUF_PURCHASE_TEST.address !== "");
-  //   PURCHASE = PRUF_PURCHASE_TEST;
-  // });
-
   it("Should deploy DECORATE", async () => {
     const PRUF_DECORATE_TEST = await PRUF_DECORATE.deployed({ from: account1 });
     console.log(PRUF_DECORATE_TEST.address);
@@ -596,13 +588,6 @@ contract("NODE_TKN", (accounts) => {
           from: account1,
         });
       })
-
-      // .then(() => {
-      //   console.log("Adding PURCHASE to storage for use in Node 0");
-      //   return STOR.authorizeContract("PURCHASE", PURCHASE.address, "0", "2", {
-      //     from: account1,
-      //   });
-      // })
 
       .then(() => {
         console.log("Adding DECORATE to storage for use in Node 0");
@@ -895,13 +880,6 @@ contract("NODE_TKN", (accounts) => {
       });
   });
 
-  it("Should authorize all minter addresses for minting ID(s)", () => {
-    console.log("Authorizing NODE_MGR");
-    return ID_MGR.grantRole(IDminterRoleB32, account1, {
-      from: account1,
-    });
-  });
-
   it("Should authorize all minter contracts for minting A_TKN(s)", () => {
         console.log("Authorizing APP_NC");
         return A_TKN.grantRole(minterRoleB32, APP_NC.address, {
@@ -918,13 +896,6 @@ contract("NODE_TKN", (accounts) => {
         console.log("Authorizing RCLR");
         return A_TKN.grantRole(minterRoleB32, RCLR.address, { from: account1 });
       })
-
-      // .then(() => {
-      //   console.log("Authorizing PURCHASE");
-      //   return A_TKN.grantRole(trustedAgentRoleB32, PURCHASE.address, {
-      //     from: account1,
-      //   });
-      // });
   });
 
   it("Should authorize all payable contracts for transactions", () => {
@@ -981,20 +952,6 @@ contract("NODE_TKN", (accounts) => {
           from: account1,
         });
       })
-
-      // .then(() => {
-      //   console.log("Authorizing PURCHASE");
-      //   return UTIL_TKN.grantRole(payableRoleB32, PURCHASE.address, {
-      //     from: account1,
-      //   });
-      // })
-
-      // .then(() => {
-      //   console.log("Authorizing PURCHASE");
-      //   return UTIL_TKN.grantRole(trustedAgentRoleB32, PURCHASE.address, {
-      //     from: account1,
-      //   });
-      // });
   });
 
   it("Should authorize all minter contracts for minting NODE_TKN(s)", () => {
@@ -1275,16 +1232,6 @@ contract("NODE_TKN", (accounts) => {
       })
 
       .then(() => {
-        console.log("Minting ID to account1");
-        return ID_MGR.mintID(account1, "1", asset1, { from: account1 });
-      })
-
-      .then(() => {
-        console.log("Minting ID to account10");
-        return ID_MGR.mintID(account10, "2", asset2, { from: account1 });
-      })
-
-      .then(() => {
         console.log("Minting Node 1000001 -C");
         return NODE_BLDR.purchaseNode(
           "Custodial_AC1",
@@ -1292,6 +1239,7 @@ contract("NODE_TKN", (accounts) => {
           "1",
           rgt000,
           rgt000,
+          account1,
           { from: account1 }
         );
       })
@@ -1304,6 +1252,7 @@ contract("NODE_TKN", (accounts) => {
           "2",
           rgt000,
           rgt000,
+          account1,
           { from: account1 }
         );
       })
@@ -1316,6 +1265,7 @@ contract("NODE_TKN", (accounts) => {
           "2",
           rgt000,
           rgt000,
+          account1,
           { from: account1 }
         );
       })
@@ -1328,6 +1278,7 @@ contract("NODE_TKN", (accounts) => {
           "2",
           rgt000,
           rgt000,
+          account10,
           { from: account10 }
         );
       });
@@ -1341,6 +1292,7 @@ contract("NODE_TKN", (accounts) => {
       "2",
       rgt000,
       rgt000,
+      account1,
       { from: account1 }
     ).then(() => {
       console.log("Minting Node 1000006 -NC");
@@ -1350,6 +1302,7 @@ contract("NODE_TKN", (accounts) => {
         "2",
         rgt000,
         rgt000,
+        account10,
         { from: account10 }
       );
     });
@@ -1661,10 +1614,6 @@ contract("NODE_TKN", (accounts) => {
       });
   });
 
-  it("Should mint ID to account4", async () => {
-    return ID_MGR.mintID(account4, "3", asset3, { from: account1 });
-  });
-
   it("Should mint 30000 tokens to account2", async () => {
     "//**************************************BEGIN NODE_TKN TEST**********************************************/";
     return UTIL_TKN.mint(account2, "30000000000000000000000", {
@@ -1762,7 +1711,7 @@ contract("NODE_TKN", (accounts) => {
   });
 
   it("Should write asset12 in Node 1000001", async () => {
-    return APP.newRecord(asset12raw, rgt12, "1000001", "100", { from: account2 });
+    return APP.newRecord(asset12raw, rgt12, "1000001", "100", asset12raw, { from: account2 });
   });
 
   it("Should retrieve show clean asset 12", async () => {
@@ -2051,7 +2000,7 @@ contract("NODE_TKN", (accounts) => {
     console.log(
       "//**************************************BEGIN THE WORKS NON CUSTODIAL**********************************************/"
     );
-    return APP_NC.newRecord(asset13raw, rgt13, "1000003", "100", {
+    return APP_NC.newRecord(asset13raw, rgt13, "1000003", "100", asset13raw, {
       from: account1,
     });
   });

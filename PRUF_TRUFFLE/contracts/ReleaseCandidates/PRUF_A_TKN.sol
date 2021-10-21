@@ -308,7 +308,7 @@ contract A_TKN is
         //^^^^^^^effects^^^^^^^^^
     }
 
-    /** //DPS TEST
+    /**
      * @dev returns a baseURI for a storage provider / index combination, as well as the total number of URIs.
      * @param _storageProvider - storage provider number
      */
@@ -323,7 +323,7 @@ contract A_TKN is
         //^^^^^^^interactions^^^^^^^^^
     }
 
-    /** //DPS:TEST
+    /**
      * @dev returns a baseURI for a storage provider / index combination, as well as the total number of URIs.
      * @param _node - node
      */

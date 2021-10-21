@@ -1659,137 +1659,6 @@ contract("NODE_STOR", (accounts) => {
         });
       })
 
-      .then(async () => {
-        console.log("should get number of users (x)");
-        var Record = [];
-        return await NODE_STOR.getNumberOfUsers(
-          "1000003",
-          { from: account2 },
-          function (_err, _result) {
-            if (_err) {
-            } else {
-              Record = Object.values(_result);
-              console.log(Record);
-            }
-          }
-        );
-      })
-
-      .then(() => {
-        console.log("Account4 => 1000003");
-        return NODE_MGR.addUser("1000003", account4Hash, "1", {
-          from: account1,
-        });
-      })
-
-      .then(async () => {
-        console.log("should get number of users (x+1)");
-        var Record = [];
-        return await NODE_STOR.getNumberOfUsers(
-          "1000003",
-          { from: account2 },
-          function (_err, _result) {
-            if (_err) {
-            } else {
-              Record = Object.values(_result);
-              console.log(Record);
-            }
-          }
-        );
-      })
-
-      .then(() => {
-        console.log("Account4 => 1000003");
-        return NODE_MGR.addUser("1000003", account4Hash, "0", {
-          from: account1,
-        });
-      })
-
-      .then(async () => {
-        console.log("should get number of users (x)");
-        var Record = [];
-        return await NODE_STOR.getNumberOfUsers(
-          "1000003",
-          { from: account2 },
-          function (_err, _result) {
-            if (_err) {
-            } else {
-              Record = Object.values(_result);
-              console.log(Record);
-            }
-          }
-        );
-      })
-
-      .then(() => {
-        console.log("Account4 => 1000003");
-        return NODE_MGR.addUser("1000003", account4Hash, "1", {
-          from: account1,
-        });
-      })
-
-      .then(async () => {
-        console.log("should get number of users (x+1)");
-        var Record = [];
-        return await NODE_STOR.getNumberOfUsers(
-          "1000003",
-          { from: account2 },
-          function (_err, _result) {
-            if (_err) {
-            } else {
-              Record = Object.values(_result);
-              console.log(Record);
-            }
-          }
-        );
-      })
-
-      .then(() => {
-        console.log("Account4 blocked");
-        return NODE_STOR.blockUser("1000003", account4Hash, {
-          from: account1,
-        });
-      })
-
-      .then(async () => {
-        console.log("should get number of users (x)");
-        var Record = [];
-        return await NODE_STOR.getNumberOfUsers(
-          "1000003",
-          { from: account2 },
-          function (_err, _result) {
-            if (_err) {
-            } else {
-              Record = Object.values(_result);
-              console.log(Record);
-            }
-          }
-        );
-      })
-
-      .then(() => {
-        console.log("Account4 => 1000003");
-        return NODE_MGR.addUser("1000003", account4Hash, "1", {
-          from: account1,
-        });
-      })
-
-      .then(async () => {
-        console.log("should get number of users (x+1)");
-        var Record = [];
-        return await NODE_STOR.getNumberOfUsers(
-          "1000003",
-          { from: account2 },
-          function (_err, _result) {
-            if (_err) {
-            } else {
-              Record = Object.values(_result);
-              console.log(Record);
-            }
-          }
-        );
-      })
-
       .then(() => {
         console.log("Account4 => 1000004");
         return NODE_MGR.addUser("1000004", account4Hash, "1", {
@@ -2053,7 +1922,7 @@ contract("NODE_STOR", (accounts) => {
     console.log(
       "//**************************************BEGIN blockUser FAIL BATCH**********************************************/"
     );
-    return NODE_STOR.modifyNodeSwitches("1000003", "1", "1", {
+    return NODE_STOR.blockUser("1000003", "1", "1", {
       from: account2,
     });
   });

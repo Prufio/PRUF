@@ -1083,7 +1083,7 @@ contract("CORE", (accounts) => {
         "30",
         "test",
         "2",
-        "3",
+        "1",
         "100",
         "0",
         "9500",
@@ -1417,55 +1417,55 @@ contract("CORE", (accounts) => {
       })
 
       .then(() => {
-        return NODE_STOR.modifyNodeSwitches("1000001", "2", "1", {
+        return NODE_STOR.modifyNodeSwitches("1000001", "8", "1", {
           from: account1,
         });
       })
 
       .then(() => {
-        return NODE_STOR.modifyNodeSwitches("1000002", "2", "1", {
+        return NODE_STOR.modifyNodeSwitches("1000002", "8", "1", {
           from: account1,
         });
       })
 
       .then(() => {
-        return NODE_STOR.modifyNodeSwitches("1000003", "2", "1", {
+        return NODE_STOR.modifyNodeSwitches("1000003", "8", "1", {
           from: account1,
         });
       })
 
       .then(() => {
-        return NODE_STOR.modifyNodeSwitches("1000004", "2", "1", {
+        return NODE_STOR.modifyNodeSwitches("1000004", "8", "1", {
           from: account1,
         });
       })
 
       .then(() => {
-        return NODE_STOR.modifyNodeSwitches("1000005", "2", "1", {
+        return NODE_STOR.modifyNodeSwitches("1000005", "8", "1", {
           from: account1,
         });
       })
 
       .then(() => {
-        return NODE_STOR.modifyNodeSwitches("1000006", "2", "1", {
+        return NODE_STOR.modifyNodeSwitches("1000006", "8", "1", {
           from: account1,
         });
       })
 
       .then(() => {
-        return NODE_STOR.modifyNodeSwitches("1000007", "2", "1", {
+        return NODE_STOR.modifyNodeSwitches("1000007", "8", "1", {
           from: account1,
         });
       })
 
       .then(() => {
-        return NODE_STOR.modifyNodeSwitches("1000008", "2", "1", {
+        return NODE_STOR.modifyNodeSwitches("1000008", "8", "1", {
           from: account1,
         });
       })
 
       .then(() => {
-        return NODE_STOR.modifyNodeSwitches("1000009", "2", "1", {
+        return NODE_STOR.modifyNodeSwitches("1000009", "8", "1", {
           from: account1,
         });
       });
@@ -1772,7 +1772,7 @@ contract("CORE", (accounts) => {
       "//**************************************END CORE SETUP**********************************************/"
     );
     console.log(
-      "//**************************************BEGIN CORE FAIL BATCH (9)**********************************************/"
+      "//**************************************BEGIN CORE FAIL BATCH (7)**********************************************/"
     );
     console.log(
       "//**************************************BEGIN createRecord FAIL BATCH**********************************************/"
@@ -1810,18 +1810,23 @@ contract("CORE", (accounts) => {
   });
 
   //4
-  it("Should fail because user !NTH", async () => {
-    return APP.newRecord(asset2raw, rgt2, "1000006", "100", asset2raw, { from: account2 });
+  it("Should fail because contract is not correct custody type", async () => {
+    return MAL_APP.newRecord(asset2raw, rgt2, "1000005", "100", asset2raw, { from: account2 });
   });
 
   //5
-  it("Should fail because contract !support managementType", async () => {
-    return APP.newRecord(asset2raw, rgt2, "30", "100", asset2raw, { from: account2 });
+  it("Should fail because user !NTH", async () => {
+    return APP.newRecord(asset2raw, rgt2, "1000006", "100", asset2raw, { from: account2 });
   });
 
   //6
   it("Should fail because caller not authorzed", async () => {
     return APP.newRecord(asset2raw, rgt2, "1000007", "100", asset2raw, { from: account2 });
+  });
+
+  //7
+  it("Should fail because contract !support managementType", async () => {
+    return APP.newRecord(asset2raw, rgt2, "30", "100", asset2raw, { from: account2 });
   });
 
   it("should unauthorize MAL_APP for AC1", async () => {
@@ -1832,11 +1837,6 @@ contract("CORE", (accounts) => {
     return UTIL_TKN.grantRole(payableRoleB32, MAL_APP.address, {
       from: account1,
     });
-  });
-
-  //8
-  it("Should fail because contract is not correct custody type", async () => {
-    return MAL_APP.newRecord(asset2raw, rgt2, "1000005", "100", asset2raw, { from: account2 });
   });
 
   it("Should set SharesAddress", async () => {
