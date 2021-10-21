@@ -473,11 +473,8 @@ contract MAL_APP is CORE_MAL {
     function addNonMutableStorage(
         bytes32 _idxHash,
         bytes32 _nonMutableStorage1,
-        bytes32 _nonMutableStorage2,
-        bytes32 _URIhash
-    ) external // nonReentrant
-    // whenNotPaused
-    // isAuthorized(_idxHash)
+        bytes32 _nonMutableStorage2
+    ) external
     {
         Record memory rec = getRecord(_idxHash);
         // uint8 userType = getCallingUserType(rec.node);
@@ -522,7 +519,6 @@ contract MAL_APP is CORE_MAL {
 
         rec.nonMutableStorage1 = _nonMutableStorage1;
         rec.nonMutableStorage2 = _nonMutableStorage2;
-        rec.URIhash = _URIhash;
         //^^^^^^^effects^^^^^^^^^
 
         writeNonMutableStorage(_idxHash, rec);

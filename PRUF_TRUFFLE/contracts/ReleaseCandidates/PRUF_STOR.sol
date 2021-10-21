@@ -262,7 +262,7 @@ contract STOR is AccessControl, ReentrancyGuard, Pausable {
         uint32 _node,
         uint8 _contractAuthLevel
     ) external isDAO {
-        //DPS:NEW ROLE
+
         require(_node == 0, "S:AC: node !=0");
         //^^^^^^^checks^^^^^^^^^
 
@@ -290,7 +290,6 @@ contract STOR is AccessControl, ReentrancyGuard, Pausable {
         string calldata _name,
         uint8 _contractAuthLevel
     ) external isDAO {
-        //DPS:NEW ROLE
         require(_contractNumber <= 10, "S:ADC: Contract number > 10");
         //^^^^^^^checks^^^^^^^^^
 
@@ -303,7 +302,6 @@ contract STOR is AccessControl, ReentrancyGuard, Pausable {
      * @dev retrieve a record from the default list of 11 contracts to be applied to Nodees
      * @param _contractNumber to look up (0-10)
      * @return the name and auth level of indexed contract
-     * DPS:NEW ROLE
      */
     function getDefaultContract(uint256 _contractNumber)
         external
@@ -386,7 +384,7 @@ contract STOR is AccessControl, ReentrancyGuard, Pausable {
         //^^^^^^^effects^^^^^^^^^
     }
 
-    /** //DPS:CHECK
+    /**
      * @dev Make a new record, writing to the 'database' mapping with basic initial asset data
      * calling contract must be authorized in relevant node
      * @param   _idxHash - asset ID befor node hashing
@@ -638,7 +636,7 @@ contract STOR is AccessControl, ReentrancyGuard, Pausable {
     }
 
     /**
-     * @dev Modify NonMutableStorage data //DPS:TEST:NEW PARAMS / Name
+     * @dev Modify NonMutableStorage data
      * @param _idxHash - record asset ID
      * @param _nonMutableStorage1 - first half of content addressable storage location
      * @param _nonMutableStorage2 - second half of content addressable storage location

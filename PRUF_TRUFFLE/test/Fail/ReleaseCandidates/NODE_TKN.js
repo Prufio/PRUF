@@ -1626,7 +1626,7 @@ contract("NODE_TKN", (accounts) => {
       });
     
       it("Should write asset12 in Node 1000001", async () => {
-        return APP.newRecord(asset12raw, rgt12, "1000001", "100", { from: account2 });
+        return APP.newRecord(asset12raw, rgt12, "1000001", "100", asset12raw, { from: account2 });
       });
     
       it("Should retrieve show clean asset 12", async () => {
@@ -1915,7 +1915,7 @@ contract("NODE_TKN", (accounts) => {
         console.log(
           "//**************************************BEGIN THE WORKS NON CUSTODIAL**********************************************/"
         );
-        return APP_NC.newRecord(asset13raw, rgt13, "1000003", "100", {
+        return APP_NC.newRecord(asset13raw, rgt13, "1000003", "100", asset13raw, {
           from: account1,
         });
       });
