@@ -664,6 +664,13 @@ contract("STOR", (accounts) => {
       })
 
       .then(() => {
+        console.log("Adding in NODE_BLDR");
+        return NODE_BLDR.setStorageContract(STOR.address, {
+          from: account1,
+        });
+      })
+
+      .then(() => {
         console.log("Adding in ECR2");
         return ECR2.setStorageContract(STOR.address, { from: account1 });
       })
@@ -722,6 +729,11 @@ contract("STOR", (accounts) => {
       .then(() => {
         console.log("Resolving in A_TKN");
         return A_TKN.resolveContractAddresses({ from: account1 });
+      })
+
+      .then(() => {
+        console.log("Resolving in NODE_BLDR");
+        return NODE_BLDR.resolveContractAddresses({ from: account1 });
       })
 
       .then(() => {
@@ -893,13 +905,6 @@ contract("STOR", (accounts) => {
       //     from: account1,
       //   });
       // });
-  });
-
-  it("Should authorize all minter addresses for minting ID(s)", () => {
-    console.log("Authorizing NODE_MGR");
-    return ID_MGR.grantRole(IDminterRoleB32, account1, {
-      from: account1,
-    });
   });
 
   it("Should authorize all payable contracts for transactions", () => {
@@ -1234,16 +1239,6 @@ contract("STOR", (accounts) => {
       })
 
       .then(() => {
-        console.log("Minting ID to account1");
-        return ID_MGR.mintID(account1, "1", asset1, { from: account1 });
-      })
-
-      .then(() => {
-        console.log("Minting ID to account10");
-        return ID_MGR.mintID(account10, "2", asset2, { from: account1 });
-      })
-
-      .then(() => {
         console.log("Minting Node 1000001 -C");
         return NODE_BLDR.purchaseNode(
           "Custodial_AC1",
@@ -1251,6 +1246,7 @@ contract("STOR", (accounts) => {
           "1",
           rgt000,
           rgt000,
+          account1,
           { from: account1 }
         );
       })
@@ -1263,6 +1259,7 @@ contract("STOR", (accounts) => {
           "2",
           rgt000,
           rgt000,
+          account1,
           { from: account1 }
         );
       })
@@ -1275,6 +1272,7 @@ contract("STOR", (accounts) => {
           "2",
           rgt000,
           rgt000,
+          account1,
           { from: account1 }
         );
       })
@@ -1287,6 +1285,7 @@ contract("STOR", (accounts) => {
           "2",
           rgt000,
           rgt000,
+          account10,
           { from: account10 }
         );
       });
@@ -1300,6 +1299,7 @@ contract("STOR", (accounts) => {
       "2",
       rgt000,
       rgt000,
+      account1,
       { from: account1 }
     ).then(() => {
       console.log("Minting Node 1000006 -NC");
@@ -1309,6 +1309,7 @@ contract("STOR", (accounts) => {
         "2",
         rgt000,
         rgt000,
+        account10,
         { from: account10 }
       );
     });
@@ -1620,10 +1621,6 @@ contract("STOR", (accounts) => {
       });
   });
 
-  it("Should mint ID to account4", async () => {
-    return ID_MGR.mintID(account4, "3", asset3, { from: account1 });
-  });
-
   it("Should set SharesAddress", async () => {
     console.log(
       "//**************************************BEGIN STOR TEST**********************************************/"
@@ -1646,16 +1643,12 @@ contract("STOR", (accounts) => {
     });
   });
 
-  it("Should write ID to account2", async () => {
-    return ID_MGR.mintID(account2, "4", asset4, { from: account1 });
-  });
-
   it("Should write asset1 in AC1000003", async () => {
-    return APP_NC.newRecord(asset1raw, rgt1, "1000003", "100", { from: account4 });
+    return APP_NC.newRecord(asset1raw, rgt1, "1000003", "100", asset1raw, { from: account4 });
   });
 
   it("Should write asset11 in AC1000003", async () => {
-    return APP_NC.newRecord(asset11raw, rgt8, "1000003", "100", {
+    return APP_NC.newRecord(asset11raw, rgt8, "1000003", "100", asset11raw, {
       from: account4,
     });
   });
@@ -1669,11 +1662,11 @@ contract("STOR", (accounts) => {
   });
 
   it("Should write asset2 in AC1000001", async () => {
-    return APP.newRecord(asset2raw, rgt2, "1000001", "100", { from: account2 });
+    return APP.newRecord(asset2raw, rgt2, "1000001", "100", asset2raw, { from: account2 });
   });
 
   it("Should write asset3 in AC1000001", async () => {
-    return APP.newRecord(asset3raw, rgt3, "1000001", "100", { from: account2 });
+    return APP.newRecord(asset3raw, rgt3, "1000001", "100", asset3raw, { from: account2 });
   });
 
   it("Should set asset3 status to 1", async () => {
@@ -1685,7 +1678,7 @@ contract("STOR", (accounts) => {
   });
 
   it("Should write asset4 in AC1000001", async () => {
-    return APP.newRecord(asset4raw, rgt4, "1000001", "100", { from: account2 });
+    return APP.newRecord(asset4raw, rgt4, "1000001", "100", asset4raw, { from: account2 });
   });
 
   it("Should set asset4 status to 3", async () => {
@@ -1693,7 +1686,7 @@ contract("STOR", (accounts) => {
   });
 
   it("Should write asset5 in AC1000001", async () => {
-    return APP.newRecord(asset5raw, rgt5, "1000001", "100", { from: account2 });
+    return APP.newRecord(asset5raw, rgt5, "1000001", "100", asset5raw, { from: account2 });
   });
 
   it("Should set asset5 status to 4", async () => {
@@ -1701,7 +1694,7 @@ contract("STOR", (accounts) => {
   });
 
   it("Should write asset6 in AC1000003", async () => {
-    return APP_NC.newRecord(asset6raw, rgt6, "1000003", "100", { from: account4 });
+    return APP_NC.newRecord(asset6raw, rgt6, "1000003", "100", asset6raw, { from: account4 });
   });
 
   it("Should set asset6 status to 59", async () => {
@@ -1713,7 +1706,7 @@ contract("STOR", (accounts) => {
   });
 
   it("Should write asset7 in AC1000001", async () => {
-    return APP.newRecord(asset7raw, rgt7, "1000001", "100", { from: account2 });
+    return APP.newRecord(asset7raw, rgt7, "1000001", "100", asset7raw, { from: account2 });
   });
 
   it("Should set asset7 status to 1", async () => {
@@ -1725,7 +1718,7 @@ contract("STOR", (accounts) => {
   });
 
   it("Should write asset8 in AC1000001", async () => {
-    return APP.newRecord(asset8raw, rgt8, "1000001", "100", { from: account2 });
+    return APP.newRecord(asset8raw, rgt8, "1000001", "100", asset8raw, { from: account2 });
   });
 
   //1
@@ -1834,7 +1827,7 @@ contract("STOR", (accounts) => {
     console.log(
       "//**************************************BEGIN NewRecord FAIL BATCH**********************************************/"
     );
-    return APP_NC.newRecord(asset1, rgt1, "1000001", "100", { from: account2 });
+    return APP_NC.newRecord(asset1raw, rgt1, "1000001", "100", asset1raw, { from: account2 });
   });
 
   it("Should unpause STOR", async () => {
@@ -1843,19 +1836,19 @@ contract("STOR", (accounts) => {
 
   //11
   it("Should fail because calling contract not auth in Node", async () => {
-    return APP_NC.newRecord(asset1, rgt1, "1000001", "100", { from: account2 });
+    return APP_NC.newRecord(asset1raw, rgt1, "1000001", "100", asset1raw, { from: account2 });
   });
 
   //12
   it("Should fail because rgt = 0", async () => {
-    return APP_NC.newRecord(asset10, rgt000, "1000003", "100", {
+    return APP_NC.newRecord(asset10raw, rgt000, "1000003", "100", asset10raw, {
       from: account4,
     });
   });
 
   //13
   it("Should fail because Node = 0", async () => {
-    return MAL_APP.newRecord(asset10, rgt1, "0", "100", { from: account4 });
+    return MAL_APP.newRecord(asset10raw, rgt1, "0", "100", asset10raw, { from: account4 });
   });
 
   it("Should pause STOR", async () => {
@@ -2369,7 +2362,7 @@ contract("STOR", (accounts) => {
   });
 
   it("Should set asset8 ipfs2 to asset8", async () => {
-    return MAL_APP.addNonMutableStorage(asset8, asset8, rgt000, {
+    return MAL_APP.addNonMutableStorage(asset8, asset8, asset8, {
       from: account2,
     });
   });
@@ -2431,7 +2424,7 @@ contract("STOR", (accounts) => {
   });
 
   it("Should write asset12 in Node 1000001", async () => {
-    return APP.newRecord(asset12raw, rgt12, "1000001", "100", { from: account2 });
+    return APP.newRecord(asset12raw, rgt12, "1000001", "100", asset12raw, { from: account2 });
   });
 
   it("Should retrieve show clean asset 12", async () => {
@@ -2720,7 +2713,7 @@ contract("STOR", (accounts) => {
     console.log(
       "//**************************************BEGIN THE WORKS NON CUSTODIAL**********************************************/"
     );
-    return APP_NC.newRecord(asset13raw, rgt13, "1000003", "100", {
+    return APP_NC.newRecord(asset13raw, rgt13, "1000003", "100", asset13raw, {
       from: account1,
     });
   });

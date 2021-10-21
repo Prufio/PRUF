@@ -21,7 +21,7 @@ import "../Imports/security/ReentrancyGuard.sol";
 import "../Resources/PRUF_BASIC.sol";
 
 contract CORE is BASIC {
-    /** //DPS:CHECK
+    /** 
      * @dev create a Record in Storage @ idxHash (SETTER) and mint an asset token (may mint to node holder depending on flags)
      * @param _idxHash - Asset Index
      * @param _rgtHash - Owner ID Hash
@@ -48,7 +48,7 @@ contract CORE is BASIC {
             nodeInfo.custodyType != 3,
             "C:CR:Cannot create asset in a root node"
         );
-        require( //DPS:TEST NEW
+        require(
             NODE_STOR.getManagementTypeStatus(nodeInfo.managementType) > 0,
             "C:CR: Invalid management type"
         );
@@ -71,7 +71,7 @@ contract CORE is BASIC {
                     "C:CR:Cannot create asset - caller not authorized"
                 );
             } else {
-                revert( //DPS:TEST NEW
+                revert(
                     "C:CR: Contract does not support management type or node is locked"
                 );
             }

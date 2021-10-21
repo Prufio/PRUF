@@ -1003,13 +1003,6 @@ contract("BASIC", (accounts) => {
     });
   });
 
-  it("Should authorize all minter addresses for minting ID(s)", () => {
-    console.log("Authorizing NODE_MGR");
-    return ID_MGR.grantRole(IDminterRoleB32, account1, {
-      from: account1,
-    });
-  });
-
   it("Should authorize A_TKN to discard", () => {
     console.log("Authorizing A_TKN");
     return RCLR.grantRole(discardRoleB32, A_TKN.address, { from: account1 });
@@ -1267,16 +1260,6 @@ contract("BASIC", (accounts) => {
       })
 
       .then(() => {
-        console.log("Minting ID to account1");
-        return ID_MGR.mintID(account1, "1", asset1, { from: account1 });
-      })
-
-      .then(() => {
-        console.log("Minting ID to account10");
-        return ID_MGR.mintID(account10, "2", asset2, { from: account1 });
-      })
-
-      .then(() => {
         console.log("Minting Node 1000001 -C");
         return NODE_BLDR.purchaseNode(
           "Custodial_AC1",
@@ -1284,6 +1267,7 @@ contract("BASIC", (accounts) => {
           "1",
           rgt000,
           rgt000,
+          account1,
           { from: account1 }
         );
       })
@@ -1296,6 +1280,7 @@ contract("BASIC", (accounts) => {
           "2",
           rgt000,
           rgt000,
+          account1,
           { from: account1 }
         );
       })
@@ -1308,6 +1293,7 @@ contract("BASIC", (accounts) => {
           "2",
           rgt000,
           rgt000,
+          account1,
           { from: account1 }
         );
       })
@@ -1320,6 +1306,7 @@ contract("BASIC", (accounts) => {
           "2",
           rgt000,
           rgt000,
+          account10,
           { from: account10 }
         );
       });
@@ -1333,8 +1320,11 @@ contract("BASIC", (accounts) => {
       "2",
       rgt000,
       rgt000,
+      account1,
       { from: account1 }
-    ).then(() => {
+    )
+    
+    .then(() => {
       console.log("Minting Node 1000006 -NC");
       return NODE_BLDR.purchaseNode(
         "Non_Custodial_AC6",
@@ -1342,6 +1332,7 @@ contract("BASIC", (accounts) => {
         "2",
         rgt000,
         rgt000,
+        account10,
         { from: account10 }
       );
     });
@@ -1653,10 +1644,6 @@ contract("BASIC", (accounts) => {
       });
   });
 
-  it("Should mint ID to account4", async () => {
-    return ID_MGR.mintID(account4, "3", asset3, { from: account1 });
-  });
-
   it("Should set SharesAddress", async () => {
     console.log(
       "//**************************************BEGIN BASIC TEST**********************************************/"
@@ -1674,7 +1661,7 @@ contract("BASIC", (accounts) => {
   });
 
   it("Should write asset1 in Node 1000001", async () => {
-    return APP.newRecord(asset1raw, rgt1, "1000001", "100", { from: account2 });
+    return APP.newRecord(asset1raw, rgt1, "1000001", "100", asset1raw, { from: account2 });
   });
 
   //1
@@ -1791,7 +1778,7 @@ contract("BASIC", (accounts) => {
   });
 
   it("Should write asset12 in Node 1000001", async () => {
-    return APP.newRecord(asset12raw, rgt12, "1000001", "100", { from: account2 });
+    return APP.newRecord(asset12raw, rgt12, "1000001", "100", asset12raw, { from: account2 });
   });
 
   it("Should retrieve show clean asset 12", async () => {
@@ -2080,7 +2067,7 @@ contract("BASIC", (accounts) => {
     console.log(
       "//**************************************BEGIN THE WORKS NON CUSTODIAL**********************************************/"
     );
-    return APP_NC.newRecord(asset13raw, rgt13, "1000003", "100", {
+    return APP_NC.newRecord(asset13raw, rgt13, "1000003", "100", asset13raw, {
       from: account1,
     });
   });

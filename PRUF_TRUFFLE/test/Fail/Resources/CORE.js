@@ -862,6 +862,11 @@ contract("CORE", (accounts) => {
       .then(() => {
         console.log("Authorizing Unconfigured");
         return NODE_STOR.setManagementTypes("255", "1", { from: account1 });
+      })
+
+      .then(() => {
+        console.log("Authorizing Unconfigured");
+        return NODE_STOR.setManagementTypes("100", "1", { from: account1 });
       });
   });
 
@@ -928,20 +933,6 @@ contract("CORE", (accounts) => {
         console.log("Authorizing RCLR");
         return A_TKN.grantRole(minterRoleB32, RCLR.address, { from: account1 });
       })
-
-      // .then(() => {
-      //   console.log("Authorizing PURCHASE");
-      //   return A_TKN.grantRole(trustedAgentRoleB32, PURCHASE.address, {
-      //     from: account1,
-      //   });
-      // });
-  });
-
-  it("Should authorize all minter addresses for minting ID(s)", () => {
-    console.log("Authorizing NODE_MGR");
-    return ID_MGR.grantRole(IDminterRoleB32, account1, {
-      from: account1,
-    });
   });
 
   it("Should authorize all payable contracts for transactions", () => {
@@ -1067,7 +1058,9 @@ contract("CORE", (accounts) => {
       rgt000,
       account1,
       { from: account1 }
-    ).then(() => {
+    )
+    
+    .then(() => {
       console.log("Minting root token 2 -NC");
       return NODE_MGR.createNode(
         "2",
@@ -1075,6 +1068,23 @@ contract("CORE", (accounts) => {
         "2",
         "3",
         "0",
+        "0",
+        "9500",
+        rgt000,
+        rgt000,
+        account1,
+        { from: account1 }
+      );
+    })
+    
+    .then(() => {
+      console.log("Minting root token 2 -NC");
+      return NODE_MGR.createNode(
+        "30",
+        "test",
+        "2",
+        "3",
+        "100",
         "0",
         "9500",
         rgt000,
@@ -1198,92 +1208,67 @@ contract("CORE", (accounts) => {
       })
 
       .then(() => {
-        console.log("Minting ID_MGR to account1");
-        return ID_MGR.mintID(account1, "1", asset1, { from: account1 });
-      })
-
-      .then(() => {
-        console.log("Minting ID_MGR to account1");
-        return ID_MGR.mintID(account2, "2", asset2, { from: account1 });
-      })
-
-      .then(() => {
-        console.log("Minting ID_MGR to account4");
-        return ID_MGR.mintID(account4, "3", asset3, { from: account1 });
-      })
-
-      .then(() => {
-        console.log("Minting ID_MGR to account10");
-        return ID_MGR.mintID(account10, "4", asset4, { from: account1 });
-      })
-
-      .then(() => {
         console.log("Minting Node 1000001 -C");
-        return NODE_BLDR.purchaseNode("Custodial_AC1", "1", "1", rgt000, rgt000, {
+        return NODE_BLDR.purchaseNode("Custodial_AC1", "1", "1", rgt000, rgt000, account1, { 
           from: account1,
         });
       })
 
       .then(() => {
         console.log("Minting Node 1000002 -NC");
-        return NODE_BLDR.purchaseNode("Non_Custodial_AC2", "1", "2", rgt000, rgt000, {
+        return NODE_BLDR.purchaseNode("Non_Custodial_AC2", "1", "2", rgt000, rgt000, account1, {
           from: account1,
         });
       })
 
       .then(() => {
         console.log("Minting Node 1000003 -NC");
-        return NODE_BLDR.purchaseNode("Non_Custodial_AC3", "1", "2", rgt000, rgt000, {
+        return NODE_BLDR.purchaseNode("Non_Custodial_AC3", "1", "2", rgt000, rgt000, account1, {
           from: account1,
         });
       })
 
       .then(() => {
         console.log("Minting Node 1000004 -NC");
-        return NODE_BLDR.purchaseNode("Non_Custodial_AC4", "1", "2", rgt000, rgt000, {
+        return NODE_BLDR.purchaseNode("Non_Custodial_AC4", "1", "2", rgt000, rgt000, account10, {
           from: account10,
         });
       })
 
       .then(() => {
         console.log("Minting Node 1000005 -NC");
-        return NODE_BLDR.purchaseNode("Non_Custodial_AC5", "1", "5", rgt000, rgt000, {
+        return NODE_BLDR.purchaseNode("Non_Custodial_AC5", "1", "5", rgt000, rgt000, account1, {
           from: account1,
         });
       })
 
       .then(() => {
         console.log("Minting Node 1000006 -NC");
-        return NODE_BLDR.purchaseNode("Non_Custodial_AC6", "1", "2", rgt000, rgt000, {
+        return NODE_BLDR.purchaseNode("Non_Custodial_AC6", "1", "2", rgt000, rgt000, account1, {
           from: account1,
         });
       })
 
       .then(() => {
         console.log("Minting Node 1000007 -NC");
-        return NODE_BLDR.purchaseNode("Non_Custodial_AC7", "1", "2", rgt000, rgt000, {
+        return NODE_BLDR.purchaseNode("Non_Custodial_AC7", "1", "2", rgt000, rgt000, account1, {
           from: account1,
         });
       })
 
       .then(() => {
         console.log("Minting Node 1000008 -NC");
-        return NODE_BLDR.purchaseNode("Non_Custodial_AC8", "1", "2", rgt000, rgt000, {
+        return NODE_BLDR.purchaseNode("Non_Custodial_AC8", "1", "2", rgt000, rgt000, account10, {
           from: account10,
         });
       });
   });
 
   it("Should Mint 2 non-cust Node tokens in AC_ROOT 2", () => {
-    console.log("Minting Node 10000011 -NC");
-    return NODE_BLDR.purchaseNode("Non-Custodial_AC9", "2", "2", rgt000, rgt000, {
+    console.log("Minting Node 1000009 -NC");
+    return NODE_BLDR.purchaseNode("Non-Custodial_AC9", "2", "2", rgt000, rgt000, account1, {
       from: account1,
-    }).then(() => {
-      console.log("Minting Node 1000012 -NC");
-      return NODE_BLDR.purchaseNode("Non_Custodial_AC10", "2", "2", rgt000, rgt000, {
-        from: account10,
-      });
-    });
+    })
   });
 
   it("Should finalize all ACs", () => {
@@ -1369,7 +1354,7 @@ contract("CORE", (accounts) => {
       .then(() => {
         return NODE_MGR.setNonMutableData(
           "1000009",
-          "4",
+          "0",
           "1",
           "0x0000000000000000000000000000000000000000",
           { from: account1 }
@@ -1748,6 +1733,13 @@ contract("CORE", (accounts) => {
         return NODE_MGR.addUser("1000001", account10Hash, "1", {
           from: account1,
         });
+      })
+
+      .then(() => {
+        console.log("Account2 => 30");
+        return NODE_MGR.addUser("30", account2Hash, "1", {
+          from: account1,
+        });
       });
   });
 
@@ -1768,7 +1760,8 @@ contract("CORE", (accounts) => {
           asset1raw,
           rgt13,
           '1000002',
-          "100", 
+          "100",
+          asset1raw,
           { from: account2 }
       )
   })
@@ -1779,12 +1772,12 @@ contract("CORE", (accounts) => {
       "//**************************************END CORE SETUP**********************************************/"
     );
     console.log(
-      "//**************************************BEGIN CORE FAIL BATCH (7)**********************************************/"
+      "//**************************************BEGIN CORE FAIL BATCH (9)**********************************************/"
     );
     console.log(
       "//**************************************BEGIN createRecord FAIL BATCH**********************************************/"
     );
-    return APP_NC.newRecord(asset1raw, rgt13, "1000002", "100", { from: account2 });
+    return APP_NC.newRecord(asset1raw, rgt13, "1000002", "100", asset1raw, { from: account2 });
   });
 
   it("should authorize account2 in root Node 1", async () => {
@@ -1798,27 +1791,37 @@ contract("CORE", (accounts) => {
 
   //2
   it("Should fail because you cannot create asset in root node", async () => {
-    return APP.newRecord(asset2, rgt2, "1", "100", { from: account2 });
+    return APP.newRecord(asset2raw, rgt2, "1", "100", asset2raw, { from: account2 });
+  });
+
+  it("Should set managementType 0 to 0", () => {
+    console.log("Authorizing Unrestricted");
+    return NODE_STOR.setManagementTypes("0", "0", { from: account1 })
   });
 
   //3
-  it("Should fail because you cannot create asset in Node managementType > 5", async () => {
-    return APP.newRecord(asset2, rgt2, "1000004", "100", { from: account2 });
+  it("Should fail because managementType is invalid", async () => {
+    return APP.newRecord(asset2raw, rgt2, "1000009", "100", asset2raw, { from: account2 });
+  });
+
+  it("Should set managementType 0 to 1", () => {
+    console.log("Authorizing Unrestricted");
+    return NODE_STOR.setManagementTypes("0", "1", { from: account1 })
   });
 
   //4
   it("Should fail because user !NTH", async () => {
-    return APP.newRecord(asset2, rgt2, "1000006", "100", { from: account2 });
+    return APP.newRecord(asset2raw, rgt2, "1000006", "100", asset2raw, { from: account2 });
   });
 
   //5
-  it("Should fail because caller not authorzed", async () => {
-    return APP.newRecord(asset2, rgt2, "1000007", "100", { from: account2 });
+  it("Should fail because contract !support managementType", async () => {
+    return APP.newRecord(asset2raw, rgt2, "30", "100", asset2raw, { from: account2 });
   });
 
   //6
-  it("Should fail because user not trusted", async () => {
-    return APP.newRecord(asset2, rgt2, "1000008", "100", { from: account2 });
+  it("Should fail because caller not authorzed", async () => {
+    return APP.newRecord(asset2raw, rgt2, "1000007", "100", asset2raw, { from: account2 });
   });
 
   it("should unauthorize MAL_APP for AC1", async () => {
@@ -1831,9 +1834,9 @@ contract("CORE", (accounts) => {
     });
   });
 
-  //7
+  //8
   it("Should fail because contract is not correct custody type", async () => {
-    return MAL_APP.newRecord(asset2, rgt2, "1000005", "100", { from: account2 });
+    return MAL_APP.newRecord(asset2raw, rgt2, "1000005", "100", asset2raw, { from: account2 });
   });
 
   it("Should set SharesAddress", async () => {
@@ -1865,7 +1868,7 @@ contract("CORE", (accounts) => {
   });
 
   it("Should write asset12 in Node 1000001", async () => {
-    return APP.newRecord(asset12raw, rgt12, "1000001", "100", { from: account2 });
+    return APP.newRecord(asset12raw, rgt12, "1000001", "100", asset12raw, { from: account2 });
   });
 
   it("Should retrieve show clean asset 12", async () => {
@@ -2154,7 +2157,7 @@ contract("CORE", (accounts) => {
     console.log(
       "//**************************************BEGIN THE WORKS NON CUSTODIAL**********************************************/"
     );
-    return APP_NC.newRecord(asset13raw, rgt13, "1000003", "100", {
+    return APP_NC.newRecord(asset13raw, rgt13, "1000003", "100", asset13raw, {
       from: account1,
     });
   });

@@ -121,7 +121,6 @@ contract CORE_MAL is BASIC {
     function writeNonMutableStorage(bytes32 _idxHash, Record memory _rec)
         internal
         whenNotPaused
-    //isAuthorized(_idxHash)
     {
         //^^^^^^^checks^^^^^^^^^
 
