@@ -52,31 +52,13 @@ contract CORE is BASIC {
             NODE_STOR.getManagementTypeStatus(nodeInfo.managementType) > 0,
             "C:CR: Invalid management type"
         );
-        if (nodeInfo.custodyType != 1) {
-            if (
-                (nodeInfo.managementType == 1) ||
-                (nodeInfo.managementType == 2) ||
-                (nodeInfo.managementType == 5)
-            ) {
-                require(
-                    (NODE_TKN.ownerOf(_node) == _msgSender()),
-                    "C:CR:Cannot create asset in node mgmt type 1||2||5 - caller does not hold node token"
-                );
-            } else if (nodeInfo.managementType == 3) {
-                require(
-                    NODE_STOR.getUserType(
-                        keccak256(abi.encodePacked(_msgSender())),
-                        _node
-                    ) == 1,
-                    "C:CR:Cannot create asset - caller not authorized"
-                );
-            } else {
-                revert(
-                    "C:CR: Contract does not support management type or node is locked"
-                );
-            }
-        }
-
+        require( //check custody types for this contract
+            (nodeInfo.custodyType == 1) ||
+                (nodeInfo.custodyType == 2) ||
+                (nodeInfo.custodyType == 4),
+            "C:CR:Cannot create asset - contract not authorized for node custody type"
+        );
+        // if (nodeInfo.custodyType != 1) {
         if (
             (nodeInfo.managementType == 1) ||
             (nodeInfo.managementType == 2) ||
@@ -84,7 +66,7 @@ contract CORE is BASIC {
         ) {
             require(
                 (NODE_TKN.ownerOf(_node) == _msgSender()),
-                "D:CRO:Cannot create asset in node mgmt type 1||2||5 - caller does not hold node token"
+                "C:CR:Cannot create asset in node mgmt type 1||2||5 - caller does not hold node token"
             );
         } else if (nodeInfo.managementType == 3) {
             require(
@@ -92,16 +74,35 @@ contract CORE is BASIC {
                     keccak256(abi.encodePacked(_msgSender())),
                     _node
                 ) == 1,
-                "D:CRO:Cannot create asset - caller address not authorized"
+                "C:CR:Cannot create asset - caller not authorized"
+            );
+        } else {
+            revert( //DPS:TEST NEW
+                "C:CR: Contract does not support management type or node is locked"
             );
         }
+        // }
 
-        require(
-            (nodeInfo.custodyType == 1) ||
-                (nodeInfo.custodyType == 2) ||
-                (nodeInfo.custodyType == 4),
-            "C:CR:Cannot create asset - contract not authorized for node custody type"
-        );
+        // if (
+        //     (nodeInfo.managementType == 1) ||
+        //     (nodeInfo.managementType == 2) ||
+        //     (nodeInfo.managementType == 5)
+        // ) {
+        //     require(
+        //         (NODE_TKN.ownerOf(_node) == _msgSender()),
+        //         "D:CRO:Cannot create asset in node mgmt type 1||2||5 - caller does not hold node token"
+        //     );
+        // } else if (nodeInfo.managementType == 3) {
+        //     require(
+        //         NODE_STOR.getUserType(
+        //             keccak256(abi.encodePacked(_msgSender())),
+        //             _node
+        //         ) == 1,
+        //         "D:CRO:Cannot create asset - caller address not authorized"
+        //     );
+        // }
+
+        
         //^^^^^^^Checks^^^^^^^^
 
         address recipient;
