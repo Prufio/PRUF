@@ -1220,6 +1220,18 @@ interface APP_NC_Interface {
     ) external;
 
     /**
+     * @dev record NonMutableStorage data
+     * @param _idxHash - hash of asset information created by frontend inputs
+     * @param _nonMutableStorage1 - field for permanent external asset data
+     * @param _nonMutableStorage2 - field for permanent external asset data
+     */
+    function updateNonMutableStorage(
+        bytes32 _idxHash,
+        bytes32 _nonMutableStorage1,
+        bytes32 _nonMutableStorage2
+    ) external;
+
+    /**
      * @dev Modify rgtHash (like forceModify)
      * @param _idxHash idx of asset to Modify
      * @param _newRgtHash rew rgtHash to apply

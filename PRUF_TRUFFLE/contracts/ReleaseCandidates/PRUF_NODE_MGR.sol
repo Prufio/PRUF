@@ -74,7 +74,7 @@ contract NODE_MGR is BASIC {
 
     //--------------------------------------------External Functions--------------------------
 
-    /** DPS:CHECK:NEW ARGS, REQUIRE, ROLE
+    /**
      * @dev Set pricing for Nodes
      * @param _newNodePrice - cost per node (18 decimals)
      * @param _newNodeBurn - burn per node (18 decimals)
@@ -83,7 +83,7 @@ contract NODE_MGR is BASIC {
         external
         isDAO
     {
-        require( //DPS:CHECK:NEW REQUIRE
+        require(
             _newNodePrice <= _newNodeBurn,
             "NM:SNP:node burn must be => node price"
         ); //Enforce 50% + node cost burning
@@ -97,7 +97,7 @@ contract NODE_MGR is BASIC {
         //^^^^^^^interactions^^^^^^^^^
     }
 
-    /** DPS:CHECK:NEW ARGS
+    /**
      * @dev return current node token index and price
      * @return {
          nodeTokenIndex: current token number

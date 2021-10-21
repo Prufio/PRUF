@@ -40,7 +40,7 @@ contract APP_NC is CORE {
 
     //---------------------------------------External Functions-------------------------------
 
-    /** //DPS:CHECK
+    /**
      * @dev Create a newRecord with description
      * @param _idxHash - hash of asset information created by frontend inputs
      * @param _rgtHash - hash of rightsholder information created by frontend inputs
@@ -72,7 +72,7 @@ contract APP_NC is CORE {
         //^^^^^^^effects^^^^^^^^^
     }
 
-    /** //DPS:TEST:NEW PARAMS
+    /**
      * @dev Create a newRecord with permanent description
      * @param _idxHash - hash of asset information created by frontend inputs
      * @param _rgtHash - hash of rightsholder information created by frontend inputs
@@ -103,7 +103,7 @@ contract APP_NC is CORE {
         deductServiceCosts(_node, 1);
     }
 
-    /** //DPS:CHECK
+    /**
      * @dev Create a newRecord
      * @param _idxHash - hash of asset information created by frontend inputs
      * @param _rgtHash - hash of rightsholder information created by frontend inputs
@@ -126,7 +126,7 @@ contract APP_NC is CORE {
         //^^^^^^^effects^^^^^^^^^
     }
 
-    /** //DPS:TEST:NEW PARAMS
+    /**
      * @dev record NonMutableStorage data
      * @param _idxHash - hash of asset information created by frontend inputs
      * @param _nonMutableStorage1 - field for permanent external asset data
@@ -148,7 +148,7 @@ contract APP_NC is CORE {
             "ANC:ANMS:NMS is not empty"
         );
 
-        require(                                            //caller must be nodeholder/permissioned or sw2+tokenholder
+        require( //caller must be nodeholder/permissioned or sw2+tokenholder
             ((NODE_STOR.getSwitchAt(rec.node, 2) == 1) &&   //sw2 is set
                 (A_TKN.ownerOf(uint256(_idxHash)) == _msgSender())) || //and caller holds the token
                 ((NODE_TKN.ownerOf(rec.node) == _msgSender()) || //caller holds the NT
@@ -168,18 +168,16 @@ contract APP_NC is CORE {
         //^^^^^^^effects^^^^^^^^^
     }
 
-    /** //DPS:TEST:NEW
+    /**
      * @dev Update NonMutableStorage with data priovided by nodeholder (only works if asset is in 200,201 stat)
      * @param _idxHash - hash of asset information created by frontend inputs
      * @param _nonMutableStorage1 - field for permanent external asset data
      * @param _nonMutableStorage2 - field for permanent external asset data
-     * @param _URIhash - Hash of external CAS from URI
      */
     function updateNonMutableStorage(
         bytes32 _idxHash,
         bytes32 _nonMutableStorage1,
-        bytes32 _nonMutableStorage2,
-        bytes32 _URIhash
+        bytes32 _nonMutableStorage2
     ) external nonReentrant whenNotPaused {
 
         A_TKN.isApprovedOrOwner(_msgSender(), uint256(_idxHash)); //throws if not approved (or owner)
@@ -189,7 +187,6 @@ contract APP_NC is CORE {
             needsImport(rec.assetStatus) == 0,
             "ANC:ANMN: Record In Transferred, exported, or discarded status"
         );
-
         require(                                            // caller is node authorized
             (NODE_TKN.ownerOf(rec.node) == _msgSender()) || //caller holds the NT
                 (NODE_STOR.getUserType(
@@ -202,7 +199,6 @@ contract APP_NC is CORE {
 
         rec.nonMutableStorage1 = _nonMutableStorage1;
         rec.nonMutableStorage2 = _nonMutableStorage2;
-        rec.URIhash = _URIhash;
 
         writeNonMutableStorage(_idxHash, rec);
         deductServiceCosts(rec.node, 3);

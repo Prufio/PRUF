@@ -217,7 +217,6 @@ contract NODE_STOR is BASIC {
     /**
      * !! -------- to be used with great caution -----------
      * @dev Modifies an Node with minimal controls
-     * note that a node can be diasbled by setting the management type to an invalid value (or 0) //DPS:TEST
      * @param _node - node to be modified
      * @param _nodeRoot - root of node
      * @param _custodyType - custodyType of node (see docs)
@@ -268,7 +267,6 @@ contract NODE_STOR is BASIC {
      * @dev only useful for custody types that designate user adresses (type1...)
      * @param _node - node that user is being deauthorized in
      * @param _addrHash - hash of address to deauthorize
-     * DPS:TEST:NEW
      */
     function blockUser(uint32 _node, bytes32 _addrHash) external isDAO {
         //^^^^^^^checks^^^^^^^^^
@@ -352,12 +350,12 @@ contract NODE_STOR is BASIC {
     ) external whenNotPaused isNodeAdmin {
         //^^^^^^^checks^^^^^^^^^
 
-        //if adding a new address, increase usercount for node //DPS:TEST
+        //if adding a new address, increase usercount for node
         if ((registeredUsers[_node][_addrHash] == 0) && (_userType != 0)) {
             numberOfUsers[_node]++;
         }
 
-        //if deauthing an address, decrease usercount for node //DPS:TEST
+        //if deauthing an address, decrease usercount for node
         if ((registeredUsers[_node][_addrHash] != 0) && (_userType == 0)) {
             numberOfUsers[_node]--;
         }
@@ -434,7 +432,7 @@ contract NODE_STOR is BASIC {
      * @dev extended node data setter
      * @param _node - node being setup
      * @param _exData ExtendedNodeData struct to write (see resources-structs)
-     * DPS:TEST:NEW
+     * DPS:TEST:NEW CTS:EXAMINE how do I call this without a setter in NODE_MGR? it takes a struct
      */
     function setExtendedNodeData(uint32 _node, ExtendedNodeData memory _exData)
         external
@@ -511,7 +509,7 @@ contract NODE_STOR is BASIC {
         //^^^^^^^interactions^^^^^^^^^
     }
 
-    /** //DPS:TEST:NEW
+    /**
      * @dev get the number of adresses authorized on a node
      * @param _node - node to query
      * @return number of auth users
@@ -783,7 +781,7 @@ contract NODE_STOR is BASIC {
             require( //holds root token if root is restricted
                 (NODE_TKN.ownerOf(_newNodeData.nodeRoot) == _caller),
                 "NS:CN: Restricted from creating node in this root - caller !hold root token"
-            ); // DPS:TEST
+            );
         }
         require(nodeId[_newNodeData.name] == 0, "NS:CN: node name exists");
         require(

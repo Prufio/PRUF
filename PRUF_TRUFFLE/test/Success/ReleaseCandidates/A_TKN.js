@@ -630,6 +630,16 @@ contract("TheWorks", (accounts) => {
     return NODE_STOR.grantRole(DAOroleB32, account1, { from: account1 });
   });
 
+  it("Should authorize account1 for A_TKN", () => {
+    console.log("Authorizing account1");
+    return A_TKN.grantRole(DAOroleB32, account1, { from: account1 });
+  });
+
+  it("Should authorize account1 for NODE_STOR", () => {
+    console.log("Authorizing account1");
+    return NODE_STOR.grantRole(DAOroleB32, account1, { from: account1 });
+  });
+
   it("Should add Storage to each contract", () => {
     console.log("Adding in APP");
     return APP.setStorageContract(STOR.address, { from: account1 })

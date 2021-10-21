@@ -142,7 +142,7 @@ contract A_TKN is
     /**
      * @dev Verify user credentials
      * Originating Address:
-     *      has DAO_ROLE //DPS:NEW
+     *      has DAO_ROLE
      */
     modifier isDAO() {
         require(
@@ -293,7 +293,7 @@ contract A_TKN is
     }
 
     //---------------------------------------External Functions-------------------------------
-    /** //DPS TEST
+    /**
      * @dev Sets the baseURI for a storage provider.
      * @param _storageProvider - storage provider number
      * @param _URI - baseURI to add
@@ -450,7 +450,7 @@ contract A_TKN is
         //^^^^^^^interactions^^^^^^^^^
     }
 
-    /** //DPS:TEST changed logic
+    /**
      * @dev Set new token URI String
      * @param _tokenId - Token ID to set URI
      * @param _tokenURI - URI string to atatch to token
@@ -465,7 +465,7 @@ contract A_TKN is
 
         require(rec.assetStatus == 201, "AT:SU: Record status != 201");
 
-        require( //DPS:TEST
+        require(
             (NODE_TKN.ownerOf(rec.node) == _msgSender()) || //caller holds the NT
                 (NODE_STOR.getUserType(
                     keccak256(abi.encodePacked(_msgSender())),

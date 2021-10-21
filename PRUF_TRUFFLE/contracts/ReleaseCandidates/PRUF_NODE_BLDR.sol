@@ -16,7 +16,6 @@ _________\/// _____________\/// _______\/// __\///////// __\/// _____________
  *
  * !!!! CONTRACT MUST BE GIVEN ID_PROVIDER_ROLE IN NODE_MGR !!!!
  *
- *DPS:NEW
  *
  * STATEMENT OF TERMS OF SERVICE (TOS):
  * User agrees not to intentionally claim any namespace that is a recognized or registered brand name, trade mark,

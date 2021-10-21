@@ -592,13 +592,6 @@ contract("NODE_BLDR", (accounts) => {
         });
       })
 
-      // .then(() => {
-      //   console.log("Adding PURCHASE to storage for use in Node 0");
-      //   return STOR.authorizeContract("PURCHASE", PURCHASE.address, "0", "2", {
-      //     from: account1,
-      //   });
-      // })
-
       .then(() => {
         console.log("Adding DECORATE to storage for use in Node 0");
         return STOR.authorizeContract("DECORATE", DECORATE.address, "0", "2", {
@@ -612,6 +605,16 @@ contract("NODE_BLDR", (accounts) => {
           from: account1,
         });
       });
+  });
+
+  it("Should authorize account1 for NODE_STOR", () => {
+    console.log("Authorizing account1");
+    return NODE_STOR.grantRole(DAOroleB32, account1, { from: account1 });
+  });
+
+  it("Should authorize account1 for A_TKN", () => {
+    console.log("Authorizing account1");
+    return A_TKN.grantRole(DAOroleB32, account1, { from: account1 });
   });
 
   it("Should authorize account1 for NODE_STOR", () => {
@@ -1672,7 +1675,7 @@ contract("NODE_BLDR", (accounts) => {
   });
 
   it("Should write asset12 in Node 1000001", async () => {
-    return APP.newRecord(asset12raw, rgt12, "1000001", "100", { from: account2 });
+    return APP.newRecord(asset12raw, rgt12, "1000001", "100", asset12raw, { from: account2 });
   });
 
   it("Should retrieve show clean asset 12", async () => {
@@ -1961,7 +1964,7 @@ contract("NODE_BLDR", (accounts) => {
     console.log(
       "//**************************************BEGIN THE WORKS NON CUSTODIAL**********************************************/"
     );
-    return APP_NC.newRecord(asset13raw, rgt13, "1000003", "100", {
+    return APP_NC.newRecord(asset13raw, rgt13, "1000003", "100", asset13raw, {
       from: account1,
     });
   });

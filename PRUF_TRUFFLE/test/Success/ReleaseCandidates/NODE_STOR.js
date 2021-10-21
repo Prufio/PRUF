@@ -627,6 +627,16 @@ contract("NODE_STOR", (accounts) => {
     return NODE_STOR.grantRole(DAOroleB32, account1, { from: account1 });
   });
 
+  it("Should authorize account1 for A_TKN", () => {
+    console.log("Authorizing account1");
+    return A_TKN.grantRole(DAOroleB32, account1, { from: account1 });
+  });
+
+  it("Should authorize account1 for NODE_STOR", () => {
+    console.log("Authorizing account1");
+    return NODE_STOR.grantRole(DAOroleB32, account1, { from: account1 });
+  });
+
   it("Should add Storage to each contract", () => {
     console.log("Adding in APP");
     return APP.setStorageContract(STOR.address, { from: account1 })
@@ -1631,8 +1641,8 @@ contract("NODE_STOR", (accounts) => {
     );
   });
 
-  it("Should setLocalNodeFor node 1000002", async () => {
-    return NODE_STOR.setLocalNodeFor("1000002", "1000001", { from: account1 });
+  it("Should setLocalNode node 1000002", async () => {
+    return NODE_STOR.setLocalNode("1000002", "1000001", { from: account1 });
   });
 
   it("Should retrieve Local Node For 1000002", async () => {

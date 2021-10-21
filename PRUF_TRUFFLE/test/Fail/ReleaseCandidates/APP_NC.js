@@ -166,33 +166,33 @@ contract("APP_NC", (accounts) => {
 
     asset14raw = await Helper.getIdxHashRaw("nnn", "nnn", "nnn", "nnn");
 
-    asset1 = await Helper.getIdxHash(asset1raw, '1000004');
+    asset1 = await Helper.getIdxHash(asset1raw, "1000004");
 
-    asset2 = await Helper.getIdxHash(asset2raw, '1000004');
+    asset2 = await Helper.getIdxHash(asset2raw, "1000004");
 
-    asset3 = await Helper.getIdxHash(asset3raw, '1000004');
+    asset3 = await Helper.getIdxHash(asset3raw, "1000004");
 
-    asset4 = await Helper.getIdxHash(asset4raw, '1000004');
+    asset4 = await Helper.getIdxHash(asset4raw, "1000004");
 
-    asset5 = await Helper.getIdxHash(asset5raw, '1000006');
+    asset5 = await Helper.getIdxHash(asset5raw, "1000004");
 
-    asset6 = await Helper.getIdxHash(asset6raw, '1000003');
+    asset6 = await Helper.getIdxHash(asset6raw, "1000003");
 
-    asset7 = await Helper.getIdxHash(asset7raw, '1000003');
+    asset7 = await Helper.getIdxHash(asset7raw, "1000003");
 
-    asset8 = await Helper.getIdxHash(asset8raw, '1000004');
+    asset8 = await Helper.getIdxHash(asset8raw, "1000004");
 
-    asset9 = await Helper.getIdxHash(asset9raw, '1000001');
+    asset9 = await Helper.getIdxHash(asset9raw, "1000001");
 
-    asset10 = await Helper.getIdxHash(asset10raw, '1000001');
+    asset10 = await Helper.getIdxHash(asset10raw, "1000001");
 
-    asset11 = await Helper.getIdxHash(asset11raw, '1000001');
+    asset11 = await Helper.getIdxHash(asset11raw, "1000001");
 
-    asset12 = await Helper.getIdxHash(asset12raw, '1000001');
+    asset12 = await Helper.getIdxHash(asset12raw, "1000001");
 
-    asset13 = await Helper.getIdxHash(asset13raw, '1000003');
+    asset13 = await Helper.getIdxHash(asset13raw, "1000003");
 
-    asset14 = await Helper.getIdxHash(asset14raw, '1000001');
+    asset14 = await Helper.getIdxHash(asset14raw, "1000001");
 
     rgt1 = await Helper.getJustRgtHash(
       asset1,
@@ -355,7 +355,9 @@ contract("APP_NC", (accounts) => {
   });
 
   it("Should deploy PRUF_NODE_STOR", async () => {
-    const PRUF_NODE_STOR_TEST = await PRUF_NODE_STOR.deployed({ from: account1 });
+    const PRUF_NODE_STOR_TEST = await PRUF_NODE_STOR.deployed({
+      from: account1,
+    });
     console.log(PRUF_NODE_STOR_TEST.address);
     assert(PRUF_NODE_STOR_TEST.address !== "");
     NODE_STOR = PRUF_NODE_STOR_TEST;
@@ -411,7 +413,9 @@ contract("APP_NC", (accounts) => {
   });
 
   it("Should deploy PRUF_NODE_BLDR", async () => {
-    const PRUF_NODE_BLDR_TEST = await PRUF_NODE_BLDR.deployed({ from: account1 });
+    const PRUF_NODE_BLDR_TEST = await PRUF_NODE_BLDR.deployed({
+      from: account1,
+    });
     console.log(PRUF_NODE_BLDR_TEST.address);
     assert(PRUF_NODE_BLDR_TEST.address !== "");
     NODE_BLDR = PRUF_NODE_BLDR_TEST;
@@ -465,7 +469,9 @@ contract("APP_NC", (accounts) => {
 
       .then(() => {
         console.log("Adding NODE_TKN to default contract list");
-        return STOR.addDefaultContracts("1", "NODE_TKN", "1", { from: account1 });
+        return STOR.addDefaultContracts("1", "NODE_TKN", "1", {
+          from: account1,
+        });
       })
 
       .then(() => {
@@ -517,112 +523,154 @@ contract("APP_NC", (accounts) => {
 
   it("Should add contract addresses to storage", () => {
     console.log("Adding APP to storage for use in Node 0");
-    return STOR.authorizeContract("APP", APP.address, "0", "1", { from: account1 })
+    return (
+      STOR.authorizeContract("APP", APP.address, "0", "1", { from: account1 })
 
-      .then(() => {
-        console.log("Adding NODE_MGR to storage for use in Node 0");
-        return STOR.authorizeContract("NODE_MGR", NODE_MGR.address, "0", "1", {
-          from: account1,
-        });
-      })
+        .then(() => {
+          console.log("Adding NODE_MGR to storage for use in Node 0");
+          return STOR.authorizeContract(
+            "NODE_MGR",
+            NODE_MGR.address,
+            "0",
+            "1",
+            {
+              from: account1,
+            }
+          );
+        })
 
-      .then(() => {
-        console.log("Adding NODE_STOR to storage for use in Node 0");
-        return STOR.authorizeContract("NODE_STOR", NODE_STOR.address, "0", "1", {
-          from: account1,
-        });
-      })
+        .then(() => {
+          console.log("Adding NODE_STOR to storage for use in Node 0");
+          return STOR.authorizeContract(
+            "NODE_STOR",
+            NODE_STOR.address,
+            "0",
+            "1",
+            {
+              from: account1,
+            }
+          );
+        })
 
-      .then(() => {
-        console.log("Adding NODE_TKN to storage for use in Node 0");
-        return STOR.authorizeContract("NODE_TKN", NODE_TKN.address, "0", "1", {
-          from: account1,
-        });
-      })
+        .then(() => {
+          console.log("Adding NODE_TKN to storage for use in Node 0");
+          return STOR.authorizeContract(
+            "NODE_TKN",
+            NODE_TKN.address,
+            "0",
+            "1",
+            {
+              from: account1,
+            }
+          );
+        })
 
-      .then(() => {
-        console.log("Adding A_TKN to storage for use in Node 0");
-        return STOR.authorizeContract("A_TKN", A_TKN.address, "0", "1", {
-          from: account1,
-        });
-      })
+        .then(() => {
+          console.log("Adding A_TKN to storage for use in Node 0");
+          return STOR.authorizeContract("A_TKN", A_TKN.address, "0", "1", {
+            from: account1,
+          });
+        })
 
-      .then(() => {
-        console.log("Adding ECR_MGR to storage for use in Node 0");
-        return STOR.authorizeContract("ECR_MGR", ECR_MGR.address, "0", "1", {
-          from: account1,
-        });
-      })
+        .then(() => {
+          console.log("Adding ECR_MGR to storage for use in Node 0");
+          return STOR.authorizeContract("ECR_MGR", ECR_MGR.address, "0", "1", {
+            from: account1,
+          });
+        })
 
-      .then(() => {
-        console.log("Adding ECR to storage for use in Node 0");
-        return STOR.authorizeContract("ECR", ECR.address, "0", "3", {
-          from: account1,
-        });
-      })
+        .then(() => {
+          console.log("Adding ECR to storage for use in Node 0");
+          return STOR.authorizeContract("ECR", ECR.address, "0", "3", {
+            from: account1,
+          });
+        })
 
-      .then(() => {
-        console.log("Adding ECR2 to storage for use in Node 0");
-        return STOR.authorizeContract("ECR2", ECR2.address, "0", "3", {
-          from: account1,
-        });
-      })
+        .then(() => {
+          console.log("Adding ECR2 to storage for use in Node 0");
+          return STOR.authorizeContract("ECR2", ECR2.address, "0", "3", {
+            from: account1,
+          });
+        })
 
-      .then(() => {
-        console.log("Adding APP_NC to storage for use in Node 0");
-        return STOR.authorizeContract("APP_NC", APP_NC.address, "0", "2", {
-          from: account1,
-        });
-      })
+        .then(() => {
+          console.log("Adding APP_NC to storage for use in Node 0");
+          return STOR.authorizeContract("APP_NC", APP_NC.address, "0", "2", {
+            from: account1,
+          });
+        })
 
-      .then(() => {
-        console.log("Adding ECR_NC to storage for use in Node 0");
-        return STOR.authorizeContract("ECR_NC", ECR_NC.address, "0", "3", {
-          from: account1,
-        });
-      })
+        .then(() => {
+          console.log("Adding ECR_NC to storage for use in Node 0");
+          return STOR.authorizeContract("ECR_NC", ECR_NC.address, "0", "3", {
+            from: account1,
+          });
+        })
 
-      .then(() => {
-        console.log("Adding RCLR to storage for use in Node 0");
-        return STOR.authorizeContract("RCLR", RCLR.address, "0", "3", {
-          from: account1,
-        });
-      })
+        .then(() => {
+          console.log("Adding RCLR to storage for use in Node 0");
+          return STOR.authorizeContract("RCLR", RCLR.address, "0", "3", {
+            from: account1,
+          });
+        })
 
-      .then(() => {
-        console.log("Adding MAL_APP to storage for use in Node 0");
-        return STOR.authorizeContract("MAL_APP", MAL_APP.address, "0", "1", {
-          from: account1,
-        });
-      })
+        .then(() => {
+          console.log("Adding MAL_APP to storage for use in Node 0");
+          return STOR.authorizeContract("MAL_APP", MAL_APP.address, "0", "1", {
+            from: account1,
+          });
+        })
 
-      .then(() => {
-        console.log("Adding UTIL_TKN to storage for use in Node 0");
-        return STOR.authorizeContract("UTIL_TKN", UTIL_TKN.address, "0", "1", {
-          from: account1,
-        });
-      })
+        .then(() => {
+          console.log("Adding UTIL_TKN to storage for use in Node 0");
+          return STOR.authorizeContract(
+            "UTIL_TKN",
+            UTIL_TKN.address,
+            "0",
+            "1",
+            {
+              from: account1,
+            }
+          );
+        })
 
-      // .then(() => {
-      //   console.log("Adding PURCHASE to storage for use in Node 0");
-      //   return STOR.authorizeContract("PURCHASE", PURCHASE.address, "0", "2", {
-      //     from: account1,
-      //   });
-      // })
+        // .then(() => {
+        //   console.log("Adding PURCHASE to storage for use in Node 0");
+        //   return STOR.authorizeContract("PURCHASE", PURCHASE.address, "0", "2", {
+        //     from: account1,
+        //   });
+        // })
 
-      .then(() => {
-        console.log("Adding DECORATE to storage for use in Node 0");
-        return STOR.authorizeContract("DECORATE", DECORATE.address, "0", "2", {
-          from: account1,
-        });
-      })
+        .then(() => {
+          console.log("Adding DECORATE to storage for use in Node 0");
+          return STOR.authorizeContract(
+            "DECORATE",
+            DECORATE.address,
+            "0",
+            "2",
+            {
+              from: account1,
+            }
+          );
+        })
 
-      .then(() => {
-        console.log("Adding WRAP to storage for use in Node 0");
-        return STOR.authorizeContract("WRAP", WRAP.address, "0", "2", {
-          from: account1,
-        });
-      });
+        .then(() => {
+          console.log("Adding WRAP to storage for use in Node 0");
+          return STOR.authorizeContract("WRAP", WRAP.address, "0", "2", {
+            from: account1,
+          });
+        })
+    );
+  });
+
+  it("Should authorize account1 for NODE_STOR", () => {
+    console.log("Authorizing account1");
+    return NODE_STOR.grantRole(DAOroleB32, account1, { from: account1 });
+  });
+
+  it("Should authorize account1 for A_TKN", () => {
+    console.log("Authorizing account1");
+    return A_TKN.grantRole(DAOroleB32, account1, { from: account1 });
   });
 
   it("Should authorize account1 for NODE_STOR", () => {
@@ -897,11 +945,10 @@ contract("APP_NC", (accounts) => {
   });
 
   it("Should authorize all minter contracts for minting A_TKN(s)", () => {
-        console.log("Authorizing APP_NC");
-        return A_TKN.grantRole(minterRoleB32, APP_NC.address, {
-          from: account1,
-        })
-
+    console.log("Authorizing APP_NC");
+    return A_TKN.grantRole(minterRoleB32, APP_NC.address, {
+      from: account1,
+    })
 
       .then(() => {
         console.log("Authorizing APP");
@@ -911,7 +958,7 @@ contract("APP_NC", (accounts) => {
       .then(() => {
         console.log("Authorizing RCLR");
         return A_TKN.grantRole(minterRoleB32, RCLR.address, { from: account1 });
-      })
+      });
   });
 
   it("Should authorize all payable contracts for transactions", () => {
@@ -967,12 +1014,14 @@ contract("APP_NC", (accounts) => {
         return UTIL_TKN.grantRole(payableRoleB32, APP_NC.address, {
           from: account1,
         });
-      })
+      });
   });
 
   it("Should authorize all minter contracts for minting NODE_TKN(s)", () => {
     console.log("Authorizing NODE_MGR");
-    return NODE_TKN.grantRole(minterRoleB32, NODE_MGR.address, { from: account1 });
+    return NODE_TKN.grantRole(minterRoleB32, NODE_MGR.address, {
+      from: account1,
+    });
   });
 
   it("Should authorize NODE_BLDR", () => {
@@ -994,7 +1043,9 @@ contract("APP_NC", (accounts) => {
 
   it("Should authorize NODE_MGR for NODE_STOR", () => {
     console.log("Authorizing NODE_MGR");
-    return NODE_STOR.grantRole(nodeAdminRoleB32, NODE_MGR.address, { from: account1 });
+    return NODE_STOR.grantRole(nodeAdminRoleB32, NODE_MGR.address, {
+      from: account1,
+    });
   });
 
   it("Should authorize NODE_MGR for NODE_STOR", () => {
@@ -1004,10 +1055,10 @@ contract("APP_NC", (accounts) => {
 
   it("Should authorize account10 for nodeMinterRoleB32", () => {
     console.log("Authorizing NODE_MGR");
-    return NODE_BLDR.grantRole(nodeMinterRoleB32, account10, { from: account1 });
+    return NODE_BLDR.grantRole(nodeMinterRoleB32, account10, {
+      from: account1,
+    });
   });
-
-
 
   it("Should mint a couple of asset root tokens", () => {
     console.log("Minting root token 1 -C");
@@ -1023,8 +1074,7 @@ contract("APP_NC", (accounts) => {
       rgt000,
       account1,
       { from: account1 }
-    )
-    .then(() => {
+    ).then(() => {
       console.log("Minting root token 2 -NC");
       return NODE_MGR.createNode(
         "2",
@@ -1050,94 +1100,184 @@ contract("APP_NC", (accounts) => {
     })
 
       .then(() => {
-        return NODE_MGR.setOperationCosts("1", "2", "10000000000000000", account1, {
-          from: account1,
-        });
+        return NODE_MGR.setOperationCosts(
+          "1",
+          "2",
+          "10000000000000000",
+          account1,
+          {
+            from: account1,
+          }
+        );
       })
 
       .then(() => {
-        return NODE_MGR.setOperationCosts("1", "3", "10000000000000000", account1, {
-          from: account1,
-        });
+        return NODE_MGR.setOperationCosts(
+          "1",
+          "3",
+          "10000000000000000",
+          account1,
+          {
+            from: account1,
+          }
+        );
       })
 
       .then(() => {
-        return NODE_MGR.setOperationCosts("1", "4", "10000000000000000", account1, {
-          from: account1,
-        });
+        return NODE_MGR.setOperationCosts(
+          "1",
+          "4",
+          "10000000000000000",
+          account1,
+          {
+            from: account1,
+          }
+        );
       })
 
       .then(() => {
-        return NODE_MGR.setOperationCosts("1", "5", "10000000000000000", account1, {
-          from: account1,
-        });
+        return NODE_MGR.setOperationCosts(
+          "1",
+          "5",
+          "10000000000000000",
+          account1,
+          {
+            from: account1,
+          }
+        );
       })
 
       .then(() => {
-        return NODE_MGR.setOperationCosts("1", "6", "10000000000000000", account1, {
-          from: account1,
-        });
+        return NODE_MGR.setOperationCosts(
+          "1",
+          "6",
+          "10000000000000000",
+          account1,
+          {
+            from: account1,
+          }
+        );
       })
 
       .then(() => {
-        return NODE_MGR.setOperationCosts("1", "7", "10000000000000000", account1, {
-          from: account1,
-        });
+        return NODE_MGR.setOperationCosts(
+          "1",
+          "7",
+          "10000000000000000",
+          account1,
+          {
+            from: account1,
+          }
+        );
       })
 
       .then(() => {
-        return NODE_MGR.setOperationCosts("1", "8", "10000000000000000", account1, {
-          from: account1,
-        });
+        return NODE_MGR.setOperationCosts(
+          "1",
+          "8",
+          "10000000000000000",
+          account1,
+          {
+            from: account1,
+          }
+        );
       })
 
       .then(() => {
         console.log("Setting base costs in Node 2");
-        return NODE_MGR.setOperationCosts("2", "1", "10000000000000000", account1, {
-          from: account1,
-        });
+        return NODE_MGR.setOperationCosts(
+          "2",
+          "1",
+          "10000000000000000",
+          account1,
+          {
+            from: account1,
+          }
+        );
       })
 
       .then(() => {
-        return NODE_MGR.setOperationCosts("2", "2", "10000000000000000", account1, {
-          from: account1,
-        });
+        return NODE_MGR.setOperationCosts(
+          "2",
+          "2",
+          "10000000000000000",
+          account1,
+          {
+            from: account1,
+          }
+        );
       })
 
       .then(() => {
-        return NODE_MGR.setOperationCosts("2", "3", "10000000000000000", account1, {
-          from: account1,
-        });
+        return NODE_MGR.setOperationCosts(
+          "2",
+          "3",
+          "10000000000000000",
+          account1,
+          {
+            from: account1,
+          }
+        );
       })
 
       .then(() => {
-        return NODE_MGR.setOperationCosts("2", "4", "10000000000000000", account1, {
-          from: account1,
-        });
+        return NODE_MGR.setOperationCosts(
+          "2",
+          "4",
+          "10000000000000000",
+          account1,
+          {
+            from: account1,
+          }
+        );
       })
 
       .then(() => {
-        return NODE_MGR.setOperationCosts("2", "5", "10000000000000000", account1, {
-          from: account1,
-        });
+        return NODE_MGR.setOperationCosts(
+          "2",
+          "5",
+          "10000000000000000",
+          account1,
+          {
+            from: account1,
+          }
+        );
       })
 
       .then(() => {
-        return NODE_MGR.setOperationCosts("2", "6", "10000000000000000", account1, {
-          from: account1,
-        });
+        return NODE_MGR.setOperationCosts(
+          "2",
+          "6",
+          "10000000000000000",
+          account1,
+          {
+            from: account1,
+          }
+        );
       })
 
       .then(() => {
-        return NODE_MGR.setOperationCosts("2", "7", "10000000000000000", account1, {
-          from: account1,
-        });
+        return NODE_MGR.setOperationCosts(
+          "2",
+          "7",
+          "10000000000000000",
+          account1,
+          {
+            from: account1,
+          }
+        );
       })
 
       .then(() => {
-        return NODE_MGR.setOperationCosts("2", "8", "10000000000000000", account1, {
-          from: account1,
-        });
+        return NODE_MGR.setOperationCosts(
+          "2",
+          "8",
+          "10000000000000000",
+          account1,
+          {
+            from: account1,
+          }
+        );
       });
   });
 
@@ -1218,30 +1358,30 @@ contract("APP_NC", (accounts) => {
       account1,
       { from: account1 }
     )
-    .then(() => {
-      console.log("Minting Node 1000006 -NC");
-      return NODE_BLDR.purchaseNode(
-        "Non_Custodial_AC6",
-        "2",
-        "2",
-        rgt000,
-        rgt000,
-        account10,
-        { from: account10 }
-      );
-    })
-    .then(() => {
-      console.log("Minting Node 1000007 -NC");
-      return NODE_BLDR.purchaseNode(
-        "Non_Custodial_AC7",
-        "2",
-        "2",
-        rgt000,
-        rgt000,
-        account1,
-        { from: account1 }
-      );
-    })
+      .then(() => {
+        console.log("Minting Node 1000006 -NC");
+        return NODE_BLDR.purchaseNode(
+          "Non_Custodial_AC6",
+          "2",
+          "2",
+          rgt000,
+          rgt000,
+          account10,
+          { from: account10 }
+        );
+      })
+      .then(() => {
+        console.log("Minting Node 1000007 -NC");
+        return NODE_BLDR.purchaseNode(
+          "Non_Custodial_AC7",
+          "2",
+          "2",
+          rgt000,
+          rgt000,
+          account1,
+          { from: account1 }
+        );
+      });
   });
 
   it("Should finalize all ACs", () => {
@@ -1312,7 +1452,7 @@ contract("APP_NC", (accounts) => {
           "0x0000000000000000000000000000000000000000",
           { from: account1 }
         );
-      })
+      });
   });
 
   it("Should finalize all ACs", () => {
@@ -1390,8 +1530,9 @@ contract("APP_NC", (accounts) => {
 
   it("Should authorize APP in all relevant nodes", () => {
     console.log("Authorizing APP");
-    return STOR.enableContractForNode("APP", "1000001", "1", { from: account1 })
-    .then(() => {
+    return STOR.enableContractForNode("APP", "1000001", "1", {
+      from: account1,
+    }).then(() => {
       return STOR.enableContractForNode("APP", "1000002", "1", {
         from: account1,
       });
@@ -1420,14 +1561,17 @@ contract("APP_NC", (accounts) => {
         return STOR.enableContractForNode("APP_NC", "1000007", "2", {
           from: account1,
         });
-      })
+      });
   });
 
   it("Should authorize APP in all relevant nodes", () => {
     console.log("Authorizing APP");
-    return STOR.enableContractForNode("APP", "1000001", "1", { from: account1 })
-    .then(() => {
-      return STOR.enableContractForNode("APP", "1000002", "1", { from: account1 });
+    return STOR.enableContractForNode("APP", "1000001", "1", {
+      from: account1,
+    }).then(() => {
+      return STOR.enableContractForNode("APP", "1000002", "1", {
+        from: account1,
+      });
     });
   });
 
@@ -1435,8 +1579,7 @@ contract("APP_NC", (accounts) => {
     console.log("Authorizing MAL_APP");
     return STOR.enableContractForNode("MAL_APP", "1000001", "1", {
       from: account1,
-    })
-    .then(() => {
+    }).then(() => {
       return STOR.enableContractForNode("MAL_APP", "1000002", "1", {
         from: account1,
       });
@@ -1445,8 +1588,9 @@ contract("APP_NC", (accounts) => {
 
   it("Should authorize ECR in all relevant nodes", () => {
     console.log("Authorizing ECR");
-    return STOR.enableContractForNode("ECR", "1000001", "3", { from: account1 })
-    .then(() => {
+    return STOR.enableContractForNode("ECR", "1000001", "3", {
+      from: account1,
+    }).then(() => {
       return STOR.enableContractForNode("ECR", "1000002", "3", {
         from: account1,
       });
@@ -1459,11 +1603,11 @@ contract("APP_NC", (accounts) => {
       from: account1,
     })
 
-    .then(() => {
-      return STOR.enableContractForNode("ECR_NC", "1000002", "3", {
-        from: account1,
-      });
-    })
+      .then(() => {
+        return STOR.enableContractForNode("ECR_NC", "1000002", "3", {
+          from: account1,
+        });
+      })
 
       .then(() => {
         return STOR.enableContractForNode("ECR_NC", "1000004", "3", {
@@ -1486,8 +1630,9 @@ contract("APP_NC", (accounts) => {
 
   it("Should authorize ECR2 in all relevant nodes", () => {
     console.log("Authorizing ECR2");
-    return STOR.enableContractForNode("ECR2", "1000001", "3", { from: account1 })
-    .then(() => {
+    return STOR.enableContractForNode("ECR2", "1000001", "3", {
+      from: account1,
+    }).then(() => {
       return STOR.enableContractForNode("ECR2", "1000002", "3", {
         from: account1,
       });
@@ -1499,7 +1644,9 @@ contract("APP_NC", (accounts) => {
     return STOR.enableContractForNode("A_TKN", "1", "1", { from: account1 })
 
       .then(() => {
-        return STOR.enableContractForNode("A_TKN", "2", "1", { from: account1 });
+        return STOR.enableContractForNode("A_TKN", "2", "1", {
+          from: account1,
+        });
       })
 
       .then(() => {
@@ -1524,27 +1671,37 @@ contract("APP_NC", (accounts) => {
 
       .then(() => {
         console.log("Account2 => 1000001");
-        return NODE_MGR.addUser("1000001", account2Hash, "1", { from: account1 });
+        return NODE_MGR.addUser("1000001", account2Hash, "1", {
+          from: account1,
+        });
       })
 
       .then(() => {
         console.log("Account2 => 1000002");
-        return NODE_MGR.addUser("1000002", account2Hash, "1", { from: account1 });
+        return NODE_MGR.addUser("1000002", account2Hash, "1", {
+          from: account1,
+        });
       })
 
       .then(() => {
         console.log("Account4 => 1000002");
-        return NODE_MGR.addUser("1000002", account4Hash, "1", { from: account1 });
+        return NODE_MGR.addUser("1000002", account4Hash, "1", {
+          from: account1,
+        });
       })
 
       .then(() => {
         console.log("Account2 => 1000003");
-        return NODE_MGR.addUser("1000003", account2Hash, "1", { from: account1 });
+        return NODE_MGR.addUser("1000003", account2Hash, "1", {
+          from: account1,
+        });
       })
 
       .then(() => {
         console.log("Account4 => 1000003");
-        return NODE_MGR.addUser("1000003", account4Hash, "1", { from: account1 });
+        return NODE_MGR.addUser("1000003", account4Hash, "1", {
+          from: account1,
+        });
       })
 
       .then(() => {
@@ -1560,6 +1717,7 @@ contract("APP_NC", (accounts) => {
           from: account10,
         });
       })
+
       .then(() => {
         console.log("Account4 => 1000004");
         return NODE_MGR.addUser("1000004", account4Hash, "1", {
@@ -1568,8 +1726,15 @@ contract("APP_NC", (accounts) => {
       })
 
       .then(() => {
-        console.log("Account5 => 1000004");
+        console.log("Account4 => 1000004");
         return NODE_MGR.addUser("1000004", account5Hash, "1", {
+          from: account10,
+        });
+      })
+
+      .then(() => {
+        console.log("Account5 => 1000006");
+        return NODE_MGR.addUser("1000006", account5Hash, "1", {
           from: account10,
         });
       })
@@ -1625,41 +1790,45 @@ contract("APP_NC", (accounts) => {
   });
 
   it("Should mint asset1 in Node 1000004", async () => {
-    return APP_NC.newRecord(asset1raw, rgt1, "1000004", "5000", { from: account1 });
-  })
-
-  it("Should mint asset2 in Node 1000004", async () => {
-    return APP_NC.newRecord(asset2raw, rgt2, "1000004", "5000", { from: account2 });
-  })
-
-  it("Should mint asset3 in Node 1000004", async () => {
-    return APP_NC.newRecord(asset3raw, rgt3, "1000004", "5000", { from: account2 });
-  })
-
-  it("Should mint asset4 in Node 1000004", async () => {
-    return APP_NC.newRecord(asset4raw, rgt4, "1000004", "5000", { from: account2 });
-  })
-
-  it("Should mint asset5 in Node 1000004", async () => {
-    return APP_NC.newRecord(asset5raw, rgt5, "1000006", "5000", { from: account10 });
-  })
-
-  it("Should put asset5 in to transferable status", async () => {
-    return APP_NC.modifyStatus(asset5, "51", { from: account10 });
+    return APP_NC.newRecord(asset1raw, rgt1, "1000004", "5000", asset1raw, {
+      from: account1,
+    });
   });
 
-  it("Should transfer asset5 to put in unregistered status", async () => {
-    return A_TKN.safeTransferFrom(account10, account4, asset5, {
-      from: account10,
+  it("Should mint asset2 in Node 1000004", async () => {
+    return APP_NC.newRecord(asset2raw, rgt2, "1000004", "5000", asset2raw, {
+      from: account2,
+    });
+  });
+
+  it("Should mint asset3 in Node 1000004", async () => {
+    return APP_NC.newRecord(asset3raw, rgt3, "1000004", "5000", asset3raw, {
+      from: account2,
+    });
+  });
+
+  it("Should mint asset4 in Node 1000004", async () => {
+    return APP_NC.newRecord(asset4raw, rgt4, "1000004", "5000", asset4raw, {
+      from: account2,
+    });
+  });
+
+  it("Should mint asset5 in Node 1000004", async () => {
+    return APP_NC.newRecord(asset5raw, rgt5, "1000004", "5000", asset5raw, {
+      from: account1,
     });
   });
 
   it("Should mint asset6 in 1000003", async () => {
-    return APP_NC.newRecord(asset6raw, rgt6, "1000003", "100", { from: account1 });
+    return APP_NC.newRecord(asset6raw, rgt6, "1000003", "100", asset6raw, {
+      from: account1,
+    });
   });
 
   it("Should mint asset7 in 1000003", async () => {
-    return APP_NC.newRecord(asset7raw, rgt7, "1000003", "100", { from: account1 });
+    return APP_NC.newRecord(asset7raw, rgt7, "1000003", "100", asset7raw, {
+      from: account1,
+    });
   });
 
   it("Should put asset6 in to stolen status", async () => {
@@ -1671,7 +1840,9 @@ contract("APP_NC", (accounts) => {
   });
 
   it("Should mint asset8 in 1000004", async () => {
-    return APP_NC.newRecord(asset8raw, rgt2, "1000004", "100", { from: account5 });
+    return APP_NC.newRecord(asset8raw, rgt2, "1000004", "100", asset8raw, {
+      from: account5,
+    });
   });
 
   it("Should put asset8 in to discardable status", async () => {
@@ -1692,12 +1863,49 @@ contract("APP_NC", (accounts) => {
   //1
   it("Should fail because APP_NC is paused", async () => {
     console.log(
-      "//**************************************************BEGIN APP_NC FAIL BATCH (25) ***************************************************//"
+      "//**************************************************BEGIN APP_NC FAIL BATCH (27) ***************************************************//"
     );
     console.log(
       "//**************************************************BEGIN newRecordWithDescription FAIL BATCH***************************************************//"
     );
-    return APP_NC.newRecordWithDescription(asset1raw, rgt1, "1000004", "5000", rgt000, rgt000, { from: account1 });
+    return APP_NC.newRecordWithDescription(
+      asset1raw,
+      rgt1,
+      "1000004",
+      "5000",
+      rgt000,
+      rgt000,
+      asset1raw,
+      { from: account1 }
+    );
+  });
+
+  it("Should unpause APP_NC", async () => {
+    return APP_NC.unpause({ from: account1 });
+  });
+
+  it("Should pause APP_NC", async () => {
+    return APP_NC.pause({ from: account1 });
+  });
+
+  //2
+  it("Should fail because APP_NC is paused", async () => {
+    console.log(
+      "//**************************************************END newRecordWithDescription FAIL BATCH***************************************************//"
+    );
+    console.log(
+      "//**************************************************BEGIN newRecordWithNote FAIL BATCH***************************************************//"
+    );
+    return APP_NC.newRecordWithNote(
+      asset1raw,
+      rgt1,
+      "1000004",
+      "5000",
+      rgt000,
+      rgt000,
+      asset1raw,
+      { from: account1 }
+    );
   });
 
   it("Should unpause APP_NC", async () => {
@@ -1711,31 +1919,14 @@ contract("APP_NC", (accounts) => {
   //3
   it("Should fail because APP_NC is paused", async () => {
     console.log(
-      "//**************************************************END newRecordWithDescription FAIL BATCH***************************************************//"
-    );
-    console.log(
-      "//**************************************************BEGIN newRecordWithNote FAIL BATCH***************************************************//"
-    );
-    return APP_NC.newRecordWithNote(asset1raw, rgt1, "1000004", "5000", rgt000, rgt000, { from: account1 });
-  });
-
-  it("Should unpause APP_NC", async () => {
-    return APP_NC.unpause({ from: account1 });
-  });
-
-  it("Should pause APP_NC", async () => {
-    return APP_NC.pause({ from: account1 });
-  });
-
-  //5
-  it("Should fail because APP_NC is paused", async () => {
-    console.log(
       "//**************************************************END newRecordWithNote FAIL BATCH***************************************************//"
     );
     console.log(
       "//**************************************************BEGIN newRecord FAIL BATCH***************************************************//"
     );
-    return APP_NC.newRecord(asset1raw, rgt1, "1000004", "5000", { from: account1 });
+    return APP_NC.newRecord(asset1raw, rgt1, "1000004", "5000", asset1raw, {
+      from: account1,
+    });
   });
 
   it("Should unpause APP_NC", async () => {
@@ -1746,7 +1937,7 @@ contract("APP_NC", (accounts) => {
     return APP_NC.pause({ from: account1 });
   });
 
-  //7
+  //4
   it("Should fail because APP_NC is paused", async () => {
     console.log(
       "//**************************************************END newRecord FAIL BATCH***************************************************//"
@@ -1761,14 +1952,75 @@ contract("APP_NC", (accounts) => {
     return APP_NC.unpause({ from: account1 });
   });
 
-  //8
+  //5
   it("Should fail because caller !token holder", async () => {
     return APP_NC.addNonMutableStorage(asset5, rgt1, rgt1, { from: account2 });
   });
 
+  it("Should set non mutable storage for asset5", async () => {
+    return APP_NC.addNonMutableStorage(asset5, rgt1, rgt1, { from: account1 });
+  });
+
+  //6
+  it("Should fail because NMS is occupied", async () => {
+    return APP_NC.addNonMutableStorage(asset5, rgt1, rgt1, { from: account1 });
+  });
+
+  it("Should unauthorize account2 in AC 1000004", async () => {
+    return NODE_MGR.addUser("1000004", account2Hash, "0", {
+      from: account10,
+    });
+  });
+
+  //7
+  it("Should fail because user not permissioned to add NMS", async () => {
+    return APP_NC.addNonMutableStorage(asset4, rgt1, rgt1, { from: account2 });
+  });
+
+  it("Should unauthorize account2 in AC 1000004", async () => {
+    return NODE_MGR.addUser("1000004", account2Hash, "0", {
+      from: account10,
+    });
+  });
+
+  it("Should pause APP_NC", async () => {
+    return APP_NC.pause({ from: account1 });
+  });
+
+  //8
+  it("Should fail because APP_NC is paused", async () => {
+    console.log(
+      "//**************************************************END addNonMutableStorage FAIL BATCH***************************************************//"
+    );
+    console.log(
+      "//**************************************************BEGIN updateNonMutableStorage FAIL BATCH***************************************************//"
+    );
+    return APP_NC.updateNonMutableStorage(asset5, rgt1, rgt1, {
+      from: account1,
+    });
+  });
+
+  it("Should unpause APP_NC", async () => {
+    return APP_NC.unpause({ from: account1 });
+  });
+
+  //9
+  it("Should fail because caller approvedOrOwner", async () => {
+    return APP_NC.updateNonMutableStorage(asset5, rgt1, rgt1, {
+      from: account2,
+    });
+  });
+
+  //10
+  it("Should fail because user not permissioned to update NMS", async () => {
+    return APP_NC.updateNonMutableStorage(asset2, rgt1, rgt1, {
+      from: account2,
+    });
+  });
+
   it("Should pause APP_NC", async () => {
     console.log(
-      "//**************************************END addNonMutableStorage FAIL BATCH**********************************************/"
+      "//**************************************END updateNonMutableStorage FAIL BATCH**********************************************/"
     );
     console.log(
       "//**************************************BEGIN _changeRGT FAIL BATCH**********************************************/"
@@ -1776,7 +2028,7 @@ contract("APP_NC", (accounts) => {
     return APP_NC.pause({ from: account1 });
   });
 
-  //9
+  //11
   it("Should Fail because APP_NC is paused", async () => {
     return APP_NC.changeRgt(asset1, rgt2, { from: account5 });
   });
@@ -1785,21 +2037,20 @@ contract("APP_NC", (accounts) => {
     return APP_NC.unpause({ from: account1 });
   });
 
-  //10
+  //12
   it("Should Fail because caller does not hold token", async () => {
     return APP_NC.changeRgt(asset1, rgt2, { from: account5 });
   });
 
-  //11
+  //13
   it("Should fail because record is in stolen status", async () => {
     return APP_NC.changeRgt(asset6, rgt5, { from: account1 });
   });
 
-  //12
+  //14
   it("Should fail because record is in lost status", async () => {
     return APP_NC.changeRgt(asset7, rgt6, { from: account1 });
   });
-
 
   it("Should pause APP_NC", async () => {
     console.log(
@@ -1811,7 +2062,7 @@ contract("APP_NC", (accounts) => {
     return APP_NC.pause({ from: account1 });
   });
 
-  //13
+  //15
   it("Should Fail because APP_NC is paused", async () => {
     return APP_NC.modifyStatus(asset1, "51", { from: account5 });
   });
@@ -1820,32 +2071,32 @@ contract("APP_NC", (accounts) => {
     return APP_NC.unpause({ from: account1 });
   });
 
-  //14
+  //16
   it("Should Fail because caller does not hold token", async () => {
     return APP_NC.modifyStatus(asset1, "51", { from: account5 });
   });
 
-  //15
+  //17
   it("Should Fail because being placed in status > 100", async () => {
     return APP_NC.modifyStatus(asset1, "101", { from: account1 });
   });
 
-  //16
+  //18
   it("Should Fail because being placed in status 7", async () => {
     return APP_NC.modifyStatus(asset1, "7", { from: account1 });
   });
 
-  //17
+  //19
   it("Should Fail because being placed in reserved status 57", async () => {
     return APP_NC.modifyStatus(asset1, "57", { from: account1 });
   });
 
-  //18
+  //20
   it("Should Fail because being placed in reserved status 58", async () => {
     return APP_NC.modifyStatus(asset1, "58", { from: account1 });
   });
 
-  //19
+  //21
   it("Should Fail because being placed in status <50", async () => {
     return APP_NC.modifyStatus(asset1, "1", { from: account1 });
   });
@@ -1860,7 +2111,7 @@ contract("APP_NC", (accounts) => {
     return APP_NC.pause({ from: account1 });
   });
 
-  //20
+  //22
   it("Should Fail because APP_NC is paused", async () => {
     return APP_NC.setLostOrStolen(asset1, "53", { from: account5 });
   });
@@ -1869,12 +2120,12 @@ contract("APP_NC", (accounts) => {
     return APP_NC.unpause({ from: account1 });
   });
 
-  //21
+  //23
   it("Should fail because caller does not hold token", async () => {
     return APP_NC.setLostOrStolen(asset1, "53", { from: account5 });
   });
 
-  //22
+  //24
   it("Should fail because assetStatus is < 50", async () => {
     return APP_NC.setLostOrStolen(asset1, "3", { from: account1 });
   });
@@ -1893,7 +2144,7 @@ contract("APP_NC", (accounts) => {
     return APP_NC.unpause({ from: account1 });
   });
 
-  //23
+  //25
   it("Should fail becasue caller does not hold token", async () => {
     return APP_NC.decrementCounter(asset1, "15", { from: account5 });
   });
@@ -1908,7 +2159,7 @@ contract("APP_NC", (accounts) => {
     return APP_NC.pause({ from: account1 });
   });
 
-  //24
+  //26
   it("Should Fail because APP_NC is paused", async () => {
     return APP_NC.modifyMutableStorage(asset1, rgt1, rgt000, {
       from: account5,
@@ -1919,7 +2170,7 @@ contract("APP_NC", (accounts) => {
     return APP_NC.unpause({ from: account1 });
   });
 
-  //25
+  //27
   it("Should fail because caller does not hold token", async () => {
     return APP_NC.modifyMutableStorage(asset1, rgt1, rgt000, {
       from: account5,
@@ -1955,7 +2206,9 @@ contract("APP_NC", (accounts) => {
   });
 
   it("Should write asset12 in Node 1000001", async () => {
-    return APP.newRecord(asset12raw, rgt12, "1000001", "100", { from: account2 });
+    return APP.newRecord(asset12raw, rgt12, "1000001", "100", asset12raw, {
+      from: account2,
+    });
   });
 
   it("Should retrieve show clean asset 12", async () => {
@@ -2244,7 +2497,7 @@ contract("APP_NC", (accounts) => {
     console.log(
       "//**************************************BEGIN THE WORKS NON CUSTODIAL**********************************************/"
     );
-    return APP_NC.newRecord(asset13raw, rgt13, "1000003", "100", {
+    return APP_NC.newRecord(asset13raw, rgt13, "1000003", "100", asset13raw, {
       from: account1,
     });
   });
