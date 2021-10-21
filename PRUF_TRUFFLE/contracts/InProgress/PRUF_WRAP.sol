@@ -256,7 +256,7 @@ contract WRAP is CORE {
         bytes32 idxHash = keccak256(abi.encodePacked(_idxRaw, _node)); //hash idxRaw with node to get idxHash DPS:TEST
         bytes32 URIhash = keccak256(abi.encodePacked(_URIsuffix));
         uint256 tokenId = uint256(idxHash);
-       Node memory nodeInfo = getNodeinfo(_node);
+        Node memory nodeInfo = getNodeinfo(_node);
 
         require(
             A_TKN.tokenExists(tokenId) == 0,
@@ -294,15 +294,18 @@ contract WRAP is CORE {
         }
         //^^^^^^^checks^^^^^^^^^
 
+        address recipient;
         if (NODE_STOR.getSwitchAt(_node, 8) == 0) {
-            //DPS:TEST
             //if switch at bit 2 is not set, set the mint to address to the node holder
-            A_TKN.mintAssetToken(NODE_TKN.ownerOf(_node), tokenId, _URIsuffix);
+            recipient = NODE_TKN.ownerOf(_node);
+        } else if (nodeInfo.custodyType == 1) {
+            //if switch at bit 2 is set, and and the custody type is 1, send the token to this cointract.
+            recipient = address(this);
         } else {
-            //if switch at bit 2 is set, send the token to the caller.
-            //caller might be a custodial contract, or it might be an individual.
-            A_TKN.mintAssetToken(_msgSender(), tokenId, _URIsuffix);
-        } //DPS:TEST end
+            //if switch at bit 2 is set, and and the custody type is not 1, send the token to the caller.
+            recipient = _msgSender();
+        }
+        A_TKN.mintAssetToken(recipient, tokenId, _URIsuffix);
 
         STOR.newRecord(idxHash, _rgtHash, URIhash, _node, _countDownStart);
         //^^^^^^^interactions^^^^^^^^^

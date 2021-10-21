@@ -102,7 +102,6 @@ contract CORE is BASIC {
         //     );
         // }
 
-        
         //^^^^^^^Checks^^^^^^^^
 
         address recipient;
