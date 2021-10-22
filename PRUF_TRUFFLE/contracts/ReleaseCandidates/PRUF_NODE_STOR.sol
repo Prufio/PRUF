@@ -432,7 +432,7 @@ contract NODE_STOR is BASIC {
      * @dev extended node data setter
      * @param _node - node being setup
      * @param _exData ExtendedNodeData struct to write (see resources-structs)
-     * DPS:TEST:NEW CTS:EXAMINE how do I call this without a setter in NODE_MGR? it takes a struct
+     * how do I call this without a setter in NODE_MGR? it takes a struct (THIS CANNOT BE CALLED WITH THE CURRENT VERSION OF NODE MANANGER)
      */
     function setExtendedNodeData(uint32 _node, ExtendedNodeData memory _exData)
         external

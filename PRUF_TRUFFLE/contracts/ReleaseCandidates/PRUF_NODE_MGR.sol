@@ -12,8 +12,11 @@ _________\/// _____________\/// _______\/// __\///////// __\/// _____________
 
 /**-----------------------------------------------------------------
  * PRUF NODE_MGR
- * CTS:EXAIMINE when setting local nodes, must be same custody type
+ *
  * Contract for minting and managing Nodes
+ *
+ ** IMPORTANT Local (child) node behaviours overwrite parent nodes; **
+ ** so local nodes should only be mapped if their nonmutable attributes match those of their parent. **
  *
  * TODO: make a node builder that uses unstoppable domains to build nodes,
  * and an APP that requires both the node and the UD token to be held in order to mint.
