@@ -137,21 +137,7 @@ contract WRAP is CORE {
             _foreignTokenID
         ); // move token to this contract
 
-        // if (rec.node == 0) {
-        //     //record does not exist
         createRecord(idxHash, _rgtHash, _node, _countDownStart, URIsuffix); //URI PRefix set to null for wrapped assets
-        // } else {
-        //     //DPS:TEST
-        //     //just mint the token, record already exists
-        //     if (NODE_STOR.getSwitchAt(_node, 8) == 0) {
-        //         //if switch at bit 2 is not set, set the mint to address to the node holder
-        //         A_TKN.mintAssetToken(NODE_TKN.ownerOf(_node), newTokenId, URIsuffix); //URI PRefix set to null for wrapped assets
-        //     } else {
-        //         //if switch at bit 2 is set, send the token to the caller.
-        //         //caller might be a custodial contract, or it might be an individual.
-        //         A_TKN.mintAssetToken(_msgSender(), newTokenId, URIsuffix); //URI PRefix set to null for wrapped assets
-        //     }
-        // } //DPS:TEST end
 
         deductServiceCosts(_node, 1);
         //^^^^^^^interactions^^^^^^^^^
