@@ -126,7 +126,7 @@ contract APP_NC is CORE {
         //^^^^^^^effects^^^^^^^^^
     }
 
-    /**CTS:EXAMINE if node is burned, this breaks in NODE_TKN.ownerOf below
+    /**DPS:RESPONSE if node is burned, this breaks in NODE_TKN.ownerOf below. I think this is OK? If no node, cannot add NMS is a feature?
      * @dev record NonMutableStorage data
      * @param _idxHash - hash of asset information created by frontend inputs
      * @param _nonMutableStorage1 - field for permanent external asset data
@@ -143,16 +143,16 @@ contract APP_NC is CORE {
             "ANC:ANMS: Record In Transferred, exported, or discarded status"
         );
 
-        require( 
+        require(
             (rec.nonMutableStorage1 & rec.nonMutableStorage2) == 0,
             "ANC:ANMS:NMS is not empty"
         );
 
         require( //caller must be nodeholder/permissioned or sw2+tokenholder
-            ((NODE_STOR.getSwitchAt(rec.node, 2) == 1) &&   //sw2 is set
+            ((NODE_STOR.getSwitchAt(rec.node, 2) == 1) && //sw2 is set
                 (A_TKN.ownerOf(uint256(_idxHash)) == _msgSender())) || //and caller holds the token
                 ((NODE_TKN.ownerOf(rec.node) == _msgSender()) || //caller holds the NT
-                    (NODE_STOR.getUserType(                     // or is auth by node
+                    (NODE_STOR.getUserType( // or is auth by node
                         keccak256(abi.encodePacked(_msgSender())),
                         rec.node
                     ) == 1)),
@@ -179,7 +179,6 @@ contract APP_NC is CORE {
         bytes32 _nonMutableStorage1,
         bytes32 _nonMutableStorage2
     ) external nonReentrant whenNotPaused {
-
         A_TKN.isApprovedOrOwner(_msgSender(), uint256(_idxHash)); //throws if not approved (or owner)
 
         Record memory rec = getRecord(_idxHash);
@@ -187,12 +186,12 @@ contract APP_NC is CORE {
             needsImport(rec.assetStatus) == 0,
             "ANC:ANMN: Record In Transferred, exported, or discarded status"
         );
-        require(                                            // caller is node authorized
+        require( // caller is node authorized
             (NODE_TKN.ownerOf(rec.node) == _msgSender()) || //caller holds the NT
                 (NODE_STOR.getUserType(
                     keccak256(abi.encodePacked(_msgSender())),
                     rec.node
-                ) == 100),                                  //or is auth type 100 in node
+                ) == 100), //or is auth type 100 in node
             "AT:SU:Caller !NTH or authorized(100)"
         );
         //^^^^^^^checks^^^^^^^^^

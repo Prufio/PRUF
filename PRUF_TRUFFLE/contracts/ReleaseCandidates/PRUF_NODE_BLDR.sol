@@ -33,7 +33,6 @@ import "../Resources/PRUF_BASIC.sol";
 import "../Imports/security/ReentrancyGuard.sol";
 
 contract NODE_BLDR is BASIC {
-
     bytes32 public constant NODE_MINTER_ROLE = keccak256("NODE_MINTER_ROLE");
 
     constructor() {
@@ -55,20 +54,20 @@ contract NODE_BLDR is BASIC {
         _;
     }
 
-    /**CTS:EXAMINE not used anywhere
-     * @dev Verify user credentials
-     * @param _tokenId tokenID of token
-     * @param _tokenContract Contract to check
-     * Originating Address:
-     *    require that user holds token @ ID-Contract
-     */ 
-    modifier isTokenHolder(uint256 _tokenId, address _tokenContract) {
-        require(
-            (IERC721(_tokenContract).ownerOf(_tokenId) == _msgSender()),
-            "NB:MOD-ITH: Caller does not hold specified token"
-        );
-        _;
-    }
+    // /** LEAVE AS BOILERPLATE
+    //  * @dev Verify user credentials
+    //  * @param _tokenId tokenID of token
+    //  * @param _tokenContract Contract to check
+    //  * Originating Address:
+    //  *    require that user holds token @ ID-Contract
+    //  */
+    // modifier isTokenHolder(uint256 _tokenId, address _tokenContract) {
+    //     require(
+    //         (IERC721(_tokenContract).ownerOf(_tokenId) == _msgSender()),
+    //         "NB:MOD-ITH: Caller does not hold specified token"
+    //     );
+    //     _;
+    // }
 
     //--------------------------------------------External Functions--------------------------
 
@@ -90,27 +89,33 @@ contract NODE_BLDR is BASIC {
     ) external nonReentrant isNodeMinter returns (uint256) {
         //^^^^^^^checks^^^^^^^^^
 
-        uint256 mintedNode = NODE_MGR.purchaseNode(_name,_nodeRoot,_custodyType,_CAS1,_CAS2,_mintNodeFor);
+        uint256 mintedNode = NODE_MGR.purchaseNode(
+            _name,
+            _nodeRoot,
+            _custodyType,
+            _CAS1,
+            _CAS2,
+            _mintNodeFor
+        );
 
         return mintedNode;
         //^^^^^^^interactions^^^^^^^^^
     }
 
-    /**
-     * @dev transfer a foreign token
-     * @param _tokenContract Address of foreign token contract
-     * @param _from origin
-     * @param _to destination
-     * @param _tokenId Token ID
-     */
-    function foreignTransfer(
-        address _tokenContract,
-        address _from,
-        address _to,
-        uint256 _tokenId
-    ) internal {
-        IERC721(_tokenContract).transferFrom(_from, _to, _tokenId);
-        //^^^^^^^interactions^^^^^^^^^
-    }
-
-}
+//     /** /** LEAVE AS BOILERPLATE
+//      * @dev transfer a foreign token
+//      * @param _tokenContract Address of foreign token contract
+//      * @param _from origin
+//      * @param _to destination
+//      * @param _tokenId Token ID
+//      */
+//     function foreignTransfer(
+//         address _tokenContract,
+//         address _from,
+//         address _to,
+//         uint256 _tokenId
+//     ) internal {
+//         IERC721(_tokenContract).transferFrom(_from, _to, _tokenId);
+//         //^^^^^^^interactions^^^^^^^^^
+//     }
+// }
