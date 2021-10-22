@@ -109,6 +109,7 @@ let trustedAgentRoleB32;
 let IDminterRoleB32;
 let assetTransferRoleB32;
 let discardRoleB32;
+let DAOroleB32;
 
 contract("NODE_MGR", (accounts) => {
   console.log(
@@ -607,24 +608,108 @@ contract("NODE_MGR", (accounts) => {
       });
   });
 
-  it("Should authorize account1 for NODE_STOR", () => {
-    console.log("Authorizing account1");
-    return NODE_STOR.grantRole(DAOroleB32, account1, { from: account1 });
+  it("Should authorize all minter contracts for minting A_TKN(s)", () => {
+        console.log("Authorizing APP_NC");
+        return A_TKN.grantRole(minterRoleB32, APP_NC.address, {
+          from: account1,
+        })
+
+      .then(() => {
+        console.log("Authorizing APP");
+        return A_TKN.grantRole(minterRoleB32, APP.address, { from: account1 });
+      })
+
+      .then(() => {
+        console.log("Authorizing RCLR");
+        return A_TKN.grantRole(minterRoleB32, RCLR.address, { from: account1 });
+      })
+
+      .then(() => {
+        console.log("Authorizing account1");
+        return A_TKN.grantRole(DAOroleB32, account1, { from: account1 });
+      })
   });
 
-  it("Should authorize account1 for NODE_STOR", () => {
-    console.log("Authorizing account1");
-    return NODE_MGR.grantRole(DAOroleB32, account1, { from: account1 });
+  it("Should authorize all payable contracts for transactions", () => {
+    console.log("Authorizing NODE_MGR");
+    return UTIL_TKN.grantRole(payableRoleB32, NODE_MGR.address, {
+      from: account1,
+    })
+
+      .then(() => {
+        console.log("Authorizing APP_NC");
+        return UTIL_TKN.grantRole(payableRoleB32, APP_NC.address, {
+          from: account1,
+        });
+      })
+
+      .then(() => {
+        console.log("Authorizing APP");
+        return UTIL_TKN.grantRole(payableRoleB32, APP.address, {
+          from: account1,
+        });
+      })
+
+      .then(() => {
+        console.log("Authorizing RCLR");
+        return UTIL_TKN.grantRole(payableRoleB32, RCLR.address, {
+          from: account1,
+        });
+      })
+
+      .then(() => {
+        console.log("Authorizing NODE_MGR");
+        return UTIL_TKN.grantRole(trustedAgentRoleB32, NODE_MGR.address, {
+          from: account1,
+        });
+      })
   });
 
-  it("Should authorize account1 for A_TKN", () => {
-    console.log("Authorizing account1");
-    return A_TKN.grantRole(DAOroleB32, account1, { from: account1 });
+  it("Should authorize all minter contracts for minting NODE_TKN(s)", () => {
+    console.log("Authorizing NODE_MGR");
+    return NODE_TKN.grantRole(minterRoleB32, NODE_MGR.address, { from: account1 });
   });
 
-  it("Should authorize account1 for NODE_STOR", () => {
-    console.log("Authorizing account1");
-    return NODE_STOR.grantRole(DAOroleB32, account1, { from: account1 });
+  it("Should authorize NODE_BLDR", () => {
+    console.log("Authorizing NODE_BLDR");
+    return NODE_MGR.grantRole(IDproviderRoleB32, NODE_BLDR.address, {
+      from: account1,
+    })
+
+    .then(() => {
+      console.log("Authorizing account1");
+      return NODE_MGR.grantRole(DAOroleB32, account1, { from: account1 });
+    })
+  });
+
+  it("Should authorize all minter contracts for minting NODE_TKN(s)", () => {
+    console.log("Authorizing NODE_MGR");
+    return APP.grantRole(assetTransferRoleB32, APP.address, { from: account1 });
+  });
+
+  it("Should authorize A_TKN to discard", () => {
+    console.log("Authorizing A_TKN");
+    return RCLR.grantRole(discardRoleB32, A_TKN.address, { from: account1 });
+  });
+
+  it("Should authorize NODE_MGR for NODE_STOR", () => {
+    console.log("Authorizing NODE_MGR");
+    return NODE_STOR.grantRole(nodeAdminRoleB32, NODE_MGR.address, { from: account1 })
+
+    .then(() => {
+      console.log("Authorizing NODE_MGR");
+      return NODE_STOR.grantRole(nodeAdminRoleB32, account1, { from: account1 });
+    })
+
+    .then(() => {
+      console.log("Authorizing account1");
+      return NODE_STOR.grantRole(DAOroleB32, account1, { from: account1 });
+    })
+  });
+
+  it("Should authorize account10 for nodeMinterRoleB32", () => {
+    console.log("Authorizing NODE_MGR");
+    return NODE_BLDR.grantRole(nodeMinterRoleB32, account10, { from: account1 });
   });
 
   it("Should add Storage to each contract", () => {
@@ -887,119 +972,6 @@ contract("NODE_MGR", (accounts) => {
         return NODE_STOR.setCustodyTypes("12", "1", { from: account1 });
       });
   });
-
-  it("Should authorize all minter contracts for minting A_TKN(s)", () => {
-        console.log("Authorizing APP_NC");
-        return A_TKN.grantRole(minterRoleB32, APP_NC.address, {
-          from: account1,
-        })
-
-
-      .then(() => {
-        console.log("Authorizing APP");
-        return A_TKN.grantRole(minterRoleB32, APP.address, { from: account1 });
-      })
-
-      .then(() => {
-        console.log("Authorizing RCLR");
-        return A_TKN.grantRole(minterRoleB32, RCLR.address, { from: account1 });
-      })
-  });
-
-  it("Should authorize all payable contracts for transactions", () => {
-    console.log("Authorizing NODE_MGR");
-    return UTIL_TKN.grantRole(payableRoleB32, NODE_MGR.address, {
-      from: account1,
-    })
-
-      .then(() => {
-        console.log("Authorizing APP_NC");
-        return UTIL_TKN.grantRole(payableRoleB32, APP_NC.address, {
-          from: account1,
-        });
-      })
-
-      .then(() => {
-        console.log("Authorizing APP");
-        return UTIL_TKN.grantRole(payableRoleB32, APP.address, {
-          from: account1,
-        });
-      })
-
-      .then(() => {
-        console.log("Authorizing RCLR");
-        return UTIL_TKN.grantRole(payableRoleB32, RCLR.address, {
-          from: account1,
-        });
-      })
-
-      .then(() => {
-        console.log("Authorizing NODE_MGR");
-        return UTIL_TKN.grantRole(trustedAgentRoleB32, NODE_MGR.address, {
-          from: account1,
-        });
-      })
-
-      .then(() => {
-        console.log("Authorizing NODE_MGR");
-        return UTIL_TKN.grantRole(trustedAgentRoleB32, NODE_MGR.address, {
-          from: account1,
-        });
-      })
-
-      .then(() => {
-        console.log("Authorizing APP");
-        return UTIL_TKN.grantRole(payableRoleB32, APP.address, {
-          from: account1,
-        });
-      })
-
-      .then(() => {
-        console.log("Authorizing APP_NC");
-        return UTIL_TKN.grantRole(payableRoleB32, APP_NC.address, {
-          from: account1,
-        });
-      })
-  });
-
-  it("Should authorize all minter contracts for minting NODE_TKN(s)", () => {
-    console.log("Authorizing NODE_MGR");
-    return NODE_TKN.grantRole(minterRoleB32, NODE_MGR.address, { from: account1 });
-  });
-
-  it("Should authorize NODE_BLDR", () => {
-    console.log("Authorizing NODE_BLDR");
-    return NODE_MGR.grantRole(IDproviderRoleB32, NODE_BLDR.address, {
-      from: account1,
-    });
-  });
-
-  it("Should authorize all minter contracts for minting NODE_TKN(s)", () => {
-    console.log("Authorizing NODE_MGR");
-    return APP.grantRole(assetTransferRoleB32, APP.address, { from: account1 });
-  });
-
-  it("Should authorize A_TKN to discard", () => {
-    console.log("Authorizing A_TKN");
-    return RCLR.grantRole(discardRoleB32, A_TKN.address, { from: account1 });
-  });
-
-  it("Should authorize NODE_MGR for NODE_STOR", () => {
-    console.log("Authorizing NODE_MGR");
-    return NODE_STOR.grantRole(nodeAdminRoleB32, NODE_MGR.address, { from: account1 });
-  });
-
-  it("Should authorize NODE_MGR for NODE_STOR", () => {
-    console.log("Authorizing NODE_MGR");
-    return NODE_STOR.grantRole(nodeAdminRoleB32, account1, { from: account1 });
-  });
-
-  it("Should authorize account10 for nodeMinterRoleB32", () => {
-    console.log("Authorizing NODE_MGR");
-    return NODE_BLDR.grantRole(nodeMinterRoleB32, account10, { from: account1 });
-  });
-
-
 
   it("Should mint a couple of asset root tokens", () => {
     console.log("Minting root token 1 -C");

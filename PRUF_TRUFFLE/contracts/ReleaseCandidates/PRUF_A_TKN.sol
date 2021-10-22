@@ -1,4 +1,4 @@
-/*--------------------------------------------------------PRüF0.8.8
+/*--------------------------------------------------------PRüF0.8.9
 __/\\\\\\\\\\\\\ _____/\\\\\\\\\ _______/\\__/\\ ___/\\\\\\\\\\\\\\\        
 __\/\\\/////////\\\ _/\\\///////\\\ ____\//__\//____\/\\\///////////__       
 ___\/\\\_______\/\\\_\/\\\_____\/\\\ ________________\/\\\ ____________      
@@ -11,8 +11,8 @@ _________\/// _____________\/// _______\/// __\///////// __\/// _____________
 *---------------------------------------------------------------------------*/
 
 /**-----------------------------------------------------------------
- * PRUF A_TKN
- * ASSET NFT CONTRACT - PRüF Asset tokens. Supports trusted agent role.
+ * PRüF A_TKN
+ * PRüF ASSET NFT CONTRACT - PRüF Asset tokens. Supports trusted agent role.
  *---------------------------------------------------------------*/
 
 // SPDX-License-Identifier: UNLICENSED
@@ -147,7 +147,7 @@ contract A_TKN is
     modifier isDAO() {
         require(
             hasRole(DAO_ROLE, _msgSender()),
-            "NS:MOD-INA: Must have DAO_ROLE"
+            "NS:MOD-ID: Must have DAO_ROLE"
         );
         _;
     }
@@ -169,15 +169,17 @@ contract A_TKN is
         require(_exists(tokenId), "AT:TU: URI query for nonexistent token");
         //^^^^^^^checks^^^^^^^^^
 
-        string memory _tokenURI = _tokenURIs[tokenId];
         Record memory rec = getRecord(bytes32(tokenId));
         Node memory nodeData = NODE_STOR.getNodeData(rec.node);
+
+        string memory _tokenURI = _tokenURIs[tokenId];
         string memory base = baseURIforStorageType[nodeData.storageProvider];
 
         // If there is no base URI, return the token URI.
         if (bytes(base).length == 0) {
             return _tokenURI;
         }
+
         // If both are set, concatenate the baseURI and tokenURI (via abi.encodePacked).
         if (bytes(_tokenURI).length > 0) {
             return string(abi.encodePacked(base, _tokenURI));
