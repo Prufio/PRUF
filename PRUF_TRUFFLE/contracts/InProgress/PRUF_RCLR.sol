@@ -70,8 +70,9 @@ contract RCLR is ECR_CORE, CORE {
      * maybe describe the reqs in this one, back us up on the security
      * @param _idxHash asset ID
      * @param _rgtHash rights holder hash to set
+     * @param _URIsuffix //CTS:CHECK - where does this get the URI Suffix?
      */
-    function recycle(bytes32 _idxHash, bytes32 _rgtHash)
+    function recycle(bytes32 _idxHash, bytes32 _rgtHash, string memory _URIsuffix) 
         external
         nonReentrant
         whenNotPaused
@@ -91,7 +92,7 @@ contract RCLR is ECR_CORE, CORE {
         rec.numberOfTransfers = 170;
         //^^^^^^^effects^^^^^^^^^^^^
 
-        A_TKN.mintAssetToken(_msgSender(), tokenId); //only sends to caller. Noneed to mint to node, custodial does not recycle
+        A_TKN.mintAssetToken(_msgSender(), tokenId, _URIsuffix); //only sends to caller. Noneed to mint to node, custodial does not recycle
 
         ECR_MGR.endEscrow(_idxHash);
         deductRecycleCosts(rec.node, escrowDataLight.addr_1);
@@ -100,7 +101,7 @@ contract RCLR is ECR_CORE, CORE {
         //^^^^^^^interactions^^^^^^^^^^^^
     }
 
-     // /** //import & export have been slated for reevaluation
+    //import & export have been slated for reevaluation
     //  * @dev exportTo - sets asset to status 70 (importable) and defines the node that the item can be imported into
     //  * @param _idxHash idx of asset to Modify
     //  * @param _exportTo node target for export

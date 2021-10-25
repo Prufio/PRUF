@@ -1,4 +1,4 @@
-/*--------------------------------------------------------PRüF0.8.8
+/*--------------------------------------------------------PRüF0.8.9
 __/\\\\\\\\\\\\\ _____/\\\\\\\\\ _______/\\__/\\ ___/\\\\\\\\\\\\\\\        
 __\/\\\/////////\\\ _/\\\///////\\\ ____\//__\//____\/\\\///////////__       
 ___\/\\\_______\/\\\_\/\\\_____\/\\\ ________________\/\\\ ____________      
@@ -11,8 +11,8 @@ _________\/// _____________\/// _______\/// __\///////// __\/// _____________
 *---------------------------------------------------------------------------*/
 
 /**-----------------------------------------------------------------
- * PRUF A_TKN
- * ASSET NFT CONTRACT - PRüF Asset tokens. Supports trusted agent role.
+ * PRüF A_TKN
+ * PRüF ASSET NFT CONTRACT - PRüF Asset tokens. Supports trusted agent role.
  *---------------------------------------------------------------*/
 
 // SPDX-License-Identifier: UNLICENSED
@@ -56,6 +56,7 @@ contract A_TKN is
 
     //mapping for token URIs
     mapping(uint256 => string) private _tokenURIs;
+    mapping(uint8 => string) private baseURIforStorageType; //storageType => (index => URI)
 
     Counters.Counter private _tokenIdTracker;
 
@@ -67,6 +68,7 @@ contract A_TKN is
     bytes32 public constant PAUSER_ROLE = keccak256("PAUSER_ROLE");
     bytes32 public constant TRUSTED_AGENT_ROLE =
         keccak256("TRUSTED_AGENT_ROLE");
+    bytes32 public constant DAO_ROLE = keccak256("DAO_ROLE");
 
     uint256 trustedAgentEnabled = 1;
 
@@ -137,6 +139,19 @@ contract A_TKN is
         _;
     }
 
+    /**
+     * @dev Verify user credentials
+     * Originating Address:
+     *      has DAO_ROLE
+     */
+    modifier isDAO() {
+        require(
+            hasRole(DAO_ROLE, _msgSender()),
+            "NS:MOD-ID: Must have DAO_ROLE"
+        );
+        _;
+    }
+
     //---------------------------------------Public Functions-------------------------------
 
     /**
@@ -154,13 +169,17 @@ contract A_TKN is
         require(_exists(tokenId), "AT:TU: URI query for nonexistent token");
         //^^^^^^^checks^^^^^^^^^
 
+        Record memory rec = getRecord(bytes32(tokenId));
+        Node memory nodeData = NODE_STOR.getNodeData(rec.node);
+
         string memory _tokenURI = _tokenURIs[tokenId];
-        string memory base = _baseURI();
+        string memory base = baseURIforStorageType[nodeData.storageProvider];
 
         // If there is no base URI, return the token URI.
         if (bytes(base).length == 0) {
             return _tokenURI;
         }
+
         // If both are set, concatenate the baseURI and tokenURI (via abi.encodePacked).
         if (bytes(_tokenURI).length > 0) {
             return string(abi.encodePacked(base, _tokenURI));
@@ -276,9 +295,55 @@ contract A_TKN is
     }
 
     //---------------------------------------External Functions-------------------------------
+    /**
+     * @dev Sets the baseURI for a storage provider.
+     * @param _storageProvider - storage provider number
+     * @param _URI - baseURI to add
+     */
+    function setBaseURIforStorageType(
+        uint8 _storageProvider,
+        string calldata _URI
+    ) external isDAO {
+        //^^^^^^^checks^^^^^^^^^
+
+        baseURIforStorageType[_storageProvider] = _URI;
+        //^^^^^^^effects^^^^^^^^^
+    }
 
     /**
-     * @dev !!! PERMANANTLY !!!  Kills trusted agent and payable functions
+     * @dev returns a baseURI for a storage provider / index combination, as well as the total number of URIs.
+     * @param _storageProvider - storage provider number
+     */
+    function getBaseURIforStorageType(uint8 _storageProvider)
+        external
+        view
+        returns (string memory)
+    {
+        //^^^^^^^checks^^^^^^^^^
+
+        return (baseURIforStorageType[_storageProvider]);
+        //^^^^^^^interactions^^^^^^^^^
+    }
+
+    /**
+     * @dev returns a baseURI for a storage provider / index combination, as well as the total number of URIs.
+     * @param _node - node
+     */
+    function getBaseURIbyForNode(uint32 _node)
+        external
+        view
+        returns (string memory)
+    {
+        Node memory thisNode = NODE_STOR.getNodeData(_node);
+        uint8 storageProvider = thisNode.storageProvider;
+        //^^^^^^^checks^^^^^^^^^
+
+        return (baseURIforStorageType[storageProvider]);
+        //^^^^^^^interactions^^^^^^^^^
+    }
+
+    /**
+     * @dev !!! PERMANENTLY !!!  Kills trusted agent and payable functions
      * this will break the functionality of current payment mechanisms.
      *
      * The workaround for this is to create an allowance for pruf contracts for a single or multiple payments,
@@ -287,7 +352,7 @@ contract A_TKN is
      * PRuF "banked" in an allowance for use in the system.
      * @param _key - set to 170 to PERMENANTLY REMOVE TRUSTED AGENT CAPABILITY
      */
-    function killTrustedAgent(uint256 _key) external isContractAdmin {
+    function killTrustedAgent(uint256 _key) external isDAO {
         //^^^^^^^checks^^^^^^^^^
 
         if (_key == 170) {
@@ -368,17 +433,19 @@ contract A_TKN is
      * @dev Mint an Asset token (may mint only to node holder depending on flags)
      * @param _recipientAddress - Address to mint token into
      * @param _tokenId - Token ID to mint
+     * @param _URIsuffix - URI suffix
      * @return Token ID of minted token
      */
-    function mintAssetToken(address _recipientAddress, uint256 _tokenId)
-        external
-        isMinter
-        nonReentrant
-        returns (uint256)
-    {
+    function mintAssetToken(
+        address _recipientAddress,
+        uint256 _tokenId,
+        string memory _URIsuffix
+    ) external isMinter nonReentrant returns (uint256) {
         //^^^^^^^checks^^^^^^^^^
 
         _safeMint(_recipientAddress, _tokenId);
+
+        _setTokenURI(_tokenId, _URIsuffix);
         //^^^^^^^effects^^^^^^^^^
 
         return (_tokenId);
@@ -398,22 +465,18 @@ contract A_TKN is
         bytes32 _idxHash = bytes32(_tokenId);
         Record memory rec = getRecord(_idxHash);
 
-        if (NODE_STOR.getSwitchAt(rec.node, 1) == 1) {
-            //if switch at bit 1 (0) is set
-            string memory oldTokenURI = tokenURI(_tokenId);
-
-            require(
-                bytes(oldTokenURI).length == 0,
-                "AT:SU:URI is set, and immutable"
-            );
-
-            require(
-                NODE_TKN.ownerOf(rec.node) == _msgSender(),
-                "AT:SU:Caller !NTH"
-            );
-        }
+        require(rec.assetStatus == 201, "AT:SU: Record status != 201");
 
         require(
+            (NODE_TKN.ownerOf(rec.node) == _msgSender()) || //caller holds the NT
+                (NODE_STOR.getUserType(
+                    keccak256(abi.encodePacked(_msgSender())),
+                    rec.node
+                ) == 100),                                  //or is auth type 100 in node
+            "AT:SU:Caller !NTH or authorized"
+        );
+
+        require( 
             _isApprovedOrOwner(_msgSender(), _tokenId),
             "AT:SU:Caller !owner nor approved"
         );
@@ -554,6 +617,13 @@ contract A_TKN is
 
         _unpause();
         //^^^^^^^effects^^^^^^^^^
+    }
+
+    function isApprovedOrOwner(address _addr, uint256 _tokenId) external view {
+        require(
+            _isApprovedOrOwner(_addr, _tokenId),
+            "AT:IAOO:Not approved or owner"
+        );
     }
 
     //---------------------------------------Internal Functions-------------------------------

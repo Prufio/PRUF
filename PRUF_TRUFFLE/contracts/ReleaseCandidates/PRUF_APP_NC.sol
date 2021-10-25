@@ -32,7 +32,7 @@ contract APP_NC is CORE {
     modifier isAuthorized(bytes32 _idxHash) override {
         uint256 tokenId = uint256(_idxHash);
         require(
-            (A_TKN.ownerOf(tokenId) == _msgSender()), //_msgSender() is token holder
+            A_TKN.ownerOf(tokenId) == _msgSender(), //_msgSender() is token holder
             "ANC:MOD-IA: Caller does not hold token"
         );
         _;
@@ -48,6 +48,7 @@ contract APP_NC is CORE {
      * @param _countDownStart - decremental counter for an assets lifecycle
      * @param _mutableStorage1 - field for external asset data
      * @param _mutableStorage2 - field for external asset data
+     * @param _URIsuffix - Hash of external CAS from URI
      */
     function newRecordWithDescription(
         bytes32 _idxHash,
@@ -55,7 +56,8 @@ contract APP_NC is CORE {
         uint32 _node,
         uint32 _countDownStart,
         bytes32 _mutableStorage1,
-        bytes32 _mutableStorage2
+        bytes32 _mutableStorage2,
+        string calldata _URIsuffix
     ) external nonReentrant whenNotPaused {
         bytes32 idxHash = keccak256(abi.encodePacked(_idxHash, _node)); //hash idxRaw with node to get idxHash/
         //^^^^^^^Checks^^^^^^^^^
@@ -64,7 +66,7 @@ contract APP_NC is CORE {
         rec.mutableStorage1 = _mutableStorage1;
         rec.mutableStorage2 = _mutableStorage2;
 
-        createRecord(idxHash, _rgtHash, _node, _countDownStart);
+        createRecord(idxHash, _rgtHash, _node, _countDownStart, _URIsuffix);
         writeMutableStorage(idxHash, rec);
         deductServiceCosts(_node, 1);
         //^^^^^^^effects^^^^^^^^^
@@ -78,6 +80,7 @@ contract APP_NC is CORE {
      * @param _countDownStart - decremental counter for an assets lifecycle
      * @param _nonMutableStorage1 - field for permanent external asset data
      * @param _nonMutableStorage2 - field for permanent external asset data
+     * @param _URIsuffix - Hash of external CAS from URI
      */
     function newRecordWithNote(
         bytes32 _idxHash,
@@ -85,7 +88,8 @@ contract APP_NC is CORE {
         uint32 _node,
         uint32 _countDownStart,
         bytes32 _nonMutableStorage1,
-        bytes32 _nonMutableStorage2
+        bytes32 _nonMutableStorage2,
+        string calldata _URIsuffix
     ) external nonReentrant whenNotPaused {
         bytes32 idxHash = keccak256(abi.encodePacked(_idxHash, _node)); //hash idxRaw with node to get idxHash
         //^^^^^^^Checks^^^^^^^^^
@@ -94,7 +98,7 @@ contract APP_NC is CORE {
         rec.nonMutableStorage1 = _nonMutableStorage1;
         rec.nonMutableStorage2 = _nonMutableStorage2;
 
-        createRecord(idxHash, _rgtHash, _node, _countDownStart);
+        createRecord(idxHash, _rgtHash, _node, _countDownStart, _URIsuffix);
         writeNonMutableStorage(idxHash, rec);
         deductServiceCosts(_node, 1);
     }
@@ -105,22 +109,24 @@ contract APP_NC is CORE {
      * @param _rgtHash - hash of rightsholder information created by frontend inputs
      * @param _node - node the asset will be created in
      * @param _countDownStart - decremental counter for an assets lifecycle
+     * @param _URIsuffix - Hash of external CAS from URI
      */
     function newRecord(
         bytes32 _idxHash,
         bytes32 _rgtHash,
         uint32 _node,
-        uint32 _countDownStart
+        uint32 _countDownStart,
+        string calldata _URIsuffix
     ) external nonReentrant whenNotPaused {
         bytes32 idxHash = keccak256(abi.encodePacked(_idxHash, _node)); //hash idxRaw with node to get idxHash
         //^^^^^^^Checks^^^^^^^^^
 
-        createRecord(idxHash, _rgtHash, _node, _countDownStart);
+        createRecord(idxHash, _rgtHash, _node, _countDownStart, _URIsuffix);
         deductServiceCosts(_node, 1);
         //^^^^^^^effects^^^^^^^^^
     }
 
-    /**
+    /**DPS:RESPONSE if node is burned, this breaks in NODE_TKN.ownerOf below. I think this is OK? If no node, cannot add NMS is a feature?
      * @dev record NonMutableStorage data
      * @param _idxHash - hash of asset information created by frontend inputs
      * @param _nonMutableStorage1 - field for permanent external asset data
@@ -134,7 +140,59 @@ contract APP_NC is CORE {
         Record memory rec = getRecord(_idxHash);
         require(
             needsImport(rec.assetStatus) == 0,
+            "ANC:ANMS: Record In Transferred, exported, or discarded status"
+        );
+
+        require(
+            (rec.nonMutableStorage1 & rec.nonMutableStorage2) == 0,
+            "ANC:ANMS:NMS is not empty"
+        );
+
+        require( //caller must be nodeholder/permissioned or sw2+tokenholder
+            ((NODE_STOR.getSwitchAt(rec.node, 2) == 1) && //sw2 is set
+                (A_TKN.ownerOf(uint256(_idxHash)) == _msgSender())) || //and caller holds the token
+                ((NODE_TKN.ownerOf(rec.node) == _msgSender()) || //caller holds the NT
+                    (NODE_STOR.getUserType( // or is auth by node
+                        keccak256(abi.encodePacked(_msgSender())),
+                        rec.node
+                    ) == 1)),
+            "ANC:ANMS:User not permissioned to add NMS"
+        );
+        //^^^^^^^checks^^^^^^^^^
+
+        rec.nonMutableStorage1 = _nonMutableStorage1;
+        rec.nonMutableStorage2 = _nonMutableStorage2;
+
+        writeNonMutableStorage(_idxHash, rec);
+        deductServiceCosts(rec.node, 3);
+        //^^^^^^^effects^^^^^^^^^
+    }
+
+    /**
+     * @dev Update NonMutableStorage with data priovided by nodeholder (only works if asset is in 200,201 stat)
+     * @param _idxHash - hash of asset information created by frontend inputs
+     * @param _nonMutableStorage1 - field for permanent external asset data
+     * @param _nonMutableStorage2 - field for permanent external asset data
+     */
+    function updateNonMutableStorage(
+        bytes32 _idxHash,
+        bytes32 _nonMutableStorage1,
+        bytes32 _nonMutableStorage2
+    ) external nonReentrant whenNotPaused {
+        A_TKN.isApprovedOrOwner(_msgSender(), uint256(_idxHash)); //throws if not approved (or owner)
+
+        Record memory rec = getRecord(_idxHash);
+        require(
+            needsImport(rec.assetStatus) == 0,
             "ANC:ANMN: Record In Transferred, exported, or discarded status"
+        );
+        require( // caller is node authorized
+            (NODE_TKN.ownerOf(rec.node) == _msgSender()) || //caller holds the NT
+                (NODE_STOR.getUserType(
+                    keccak256(abi.encodePacked(_msgSender())),
+                    rec.node
+                ) == 100), //or is auth type 100 in node
+            "AT:SU:Caller !NTH or authorized(100)"
         );
         //^^^^^^^checks^^^^^^^^^
 

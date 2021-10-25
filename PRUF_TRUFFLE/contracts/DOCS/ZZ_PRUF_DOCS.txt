@@ -32,8 +32,7 @@ pragma solidity ^0.6.7;
 - ----------------------------------------------------------------
 
 /*----------------------------------------------------------------
- *TO DO :
-CTS:EXAMINE MOVE EXTRANEOUS STRUCTS OUT OF TOKEN CONTRACTS (A_TKN, ID_MGR)
+ *TO DO : look through all RC1 contracts for DAO functions CTS:CHECK
 
 
 
@@ -292,29 +291,30 @@ CTS:EXAMINE MOVE EXTRANEOUS STRUCTS OUT OF TOKEN CONTRACTS (A_TKN, ID_MGR)
  * 6   -- RAW data (internal) => low Res Image
 - -----------------------------------------------------------------
 
-*-----------------------------------------------------------------
+*-----------------------------------------------------------------//DPS:TEST:CHANGED
  * node option switches, 1 or 0 : AC_data.switches (AC_manager)
  *             Switches will be duplicated from root 
- * bit1  -- If set, cannot change URI or CAS data after initial setting
- * bit2  -- If set, node allows minting to third parties in management types that support address delegation. Also supports "mint to" if implemented in app
+ * bit1  -- If set, node cannot change CAS data after initial setting
+ * bit2  -- If set, User can set first NMS 
  * bit4  --
  * bit5  --
  * bit6  --
  * bit7  --
- * bit8  --
+ * bit8  -- If set, node allows minting to third parties in management types that support address delegation. Also supports "mint to" if implemented in app
 - -----------------------------------------------------------------
 
 /*-----------------------------------------------------------------
- * ---------------- Authorized User Types, per Node -----------------
+ * ---------------- Authorized User Types, per Node NODE_STOR------
  *-----------------------------------------------------------------
  * 
- * -----------------  AC0 stores a count on the number of Node's a given addressHash is registered in
+ * -----------------  AC0 stores a count on the number of Node's a given addressHash is registered in 
  * 0 = NO AUTHORIZATIONS
  * 1 - 4 = Standard User types
  * 1 - all priveleges
  * 2 - all but force-modify
  * 5 - 9 = Robot (cannot create or force-modify)
  * 10 = issue naked assets only
+ * 100 - nonMutable storage / URI updater contract 
  * Other = no internal authorizations, but can be used by external functions
 *-----------------------------------------------------------------
 
@@ -349,6 +349,8 @@ CTS:EXAMINE MOVE EXTRANEOUS STRUCTS OUT OF TOKEN CONTRACTS (A_TKN, ID_MGR)
  * 59 = Discardable
  * 60 = Recyclable (can only be reimported by an ACAdmin) (discarded)
  * 70 = Importable(Exported)
+ * 200 = Updating of NMS is allowed with NH cooperation (stat should also probably be set also with NH coop)
+ * 201 = storage provider is dead and storage assets inaccessible. Allows changing of NMS and URI with NH cooperation
  *
 - -----------------------------------------------------------------
 

@@ -16,7 +16,6 @@ _________\/// _____________\/// _______\/// __\///////// __\/// _____________
  *
  * !!!! CONTRACT MUST BE GIVEN ID_PROVIDER_ROLE IN NODE_MGR !!!!
  *
- *DPS:NEW
  *
  * STATEMENT OF TERMS OF SERVICE (TOS):
  * User agrees not to intentionally claim any namespace that is a recognized or registered brand name, trade mark,
@@ -30,11 +29,10 @@ _________\/// _____________\/// _______\/// __\///////// __\/// _____________
 pragma solidity ^0.8.7;
 
 import "../Resources/PRUF_BASIC.sol";
-import "../Imports/token/ERC721/IERC721.sol";
+//import "../Imports/token/ERC721/IERC721.sol";
 import "../Imports/security/ReentrancyGuard.sol";
 
 contract NODE_BLDR is BASIC {
-
     bytes32 public constant NODE_MINTER_ROLE = keccak256("NODE_MINTER_ROLE");
 
     constructor() {
@@ -56,20 +54,20 @@ contract NODE_BLDR is BASIC {
         _;
     }
 
-    /**
-     * @dev Verify user credentials
-     * @param _tokenId tokenID of token
-     * @param _tokenContract Contract to check
-     * Originating Address:
-     *    require that user holds token @ ID-Contract
-     */
-    modifier isTokenHolder(uint256 _tokenId, address _tokenContract) {
-        require(
-            (IERC721(_tokenContract).ownerOf(_tokenId) == _msgSender()),
-            "NB:MOD-ITH: Caller does not hold specified token"
-        );
-        _;
-    }
+    // /** LEAVE AS BOILERPLATE
+    //  * @dev Verify user credentials
+    //  * @param _tokenId tokenID of token
+    //  * @param _tokenContract Contract to check
+    //  * Originating Address:
+    //  *    require that user holds token @ ID-Contract
+    //  */
+    // modifier isTokenHolder(uint256 _tokenId, address _tokenContract) {
+    //     require(
+    //         (IERC721(_tokenContract).ownerOf(_tokenId) == _msgSender()),
+    //         "NB:MOD-ITH: Caller does not hold specified token"
+    //     );
+    //     _;
+    // }
 
     //--------------------------------------------External Functions--------------------------
 
@@ -88,33 +86,36 @@ contract NODE_BLDR is BASIC {
         bytes32 _CAS1,
         bytes32 _CAS2,
         address _mintNodeFor
-    ) external whenNotPaused nonReentrant isNodeMinter returns (uint256) {
-
+    ) external nonReentrant isNodeMinter returns (uint256) {
         //^^^^^^^checks^^^^^^^^^
 
-        //^^^^^^^effects^^^^^^^^^
-
-        uint256 mintedNode = NODE_MGR.purchaseNode(_name,_nodeRoot,_custodyType,_CAS1,_CAS2,_mintNodeFor);
+        uint256 mintedNode = NODE_MGR.purchaseNode(
+            _name,
+            _nodeRoot,
+            _custodyType,
+            _CAS1,
+            _CAS2,
+            _mintNodeFor
+        );
 
         return mintedNode;
         //^^^^^^^interactions^^^^^^^^^
     }
 
-    /**
-     * @dev transfer a foreign token
-     * @param _tokenContract Address of foreign token contract
-     * @param _from origin
-     * @param _to destination
-     * @param _tokenId Token ID
-     */
-    function foreignTransfer(
-        address _tokenContract,
-        address _from,
-        address _to,
-        uint256 _tokenId
-    ) internal {
-        IERC721(_tokenContract).transferFrom(_from, _to, _tokenId);
-        //^^^^^^^interactions^^^^^^^^^
-    }
-
+//     /** /** LEAVE AS BOILERPLATE
+//      * @dev transfer a foreign token
+//      * @param _tokenContract Address of foreign token contract
+//      * @param _from origin
+//      * @param _to destination
+//      * @param _tokenId Token ID
+//      */
+//     function foreignTransfer(
+//         address _tokenContract,
+//         address _from,
+//         address _to,
+//         uint256 _tokenId
+//     ) internal {
+//         IERC721(_tokenContract).transferFrom(_from, _to, _tokenId);
+//         //^^^^^^^interactions^^^^^^^^^
+//     }
 }

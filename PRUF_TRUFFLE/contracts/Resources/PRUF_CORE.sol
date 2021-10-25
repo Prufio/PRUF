@@ -21,21 +21,24 @@ import "../Imports/security/ReentrancyGuard.sol";
 import "../Resources/PRUF_BASIC.sol";
 
 contract CORE is BASIC {
-    /**
+    /** 
      * @dev create a Record in Storage @ idxHash (SETTER) and mint an asset token (may mint to node holder depending on flags)
      * @param _idxHash - Asset Index
      * @param _rgtHash - Owner ID Hash
      * @param _node - node to create asset in
      * @param _countDownStart - initial value for decrement only register
+     * @param _URIsuffix - suffix for URI
      */
     function createRecord(
         bytes32 _idxHash,
         bytes32 _rgtHash,
         uint32 _node,
-        uint32 _countDownStart
+        uint32 _countDownStart,
+        string calldata _URIsuffix
     ) internal virtual {
         uint256 tokenId = uint256(_idxHash);
         Node memory nodeInfo = getNodeinfo(_node);
+        bytes32 URIhash = keccak256(abi.encodePacked(_URIsuffix));
 
         require(
             A_TKN.tokenExists(tokenId) == 0,
@@ -45,35 +48,17 @@ contract CORE is BASIC {
             nodeInfo.custodyType != 3,
             "C:CR:Cannot create asset in a root node"
         );
-        require( //DPS:TEST NEW
+        require(
             NODE_STOR.getManagementTypeStatus(nodeInfo.managementType) > 0,
             "C:CR: Invalid management type"
         );
-        if (nodeInfo.custodyType != 1) {
-            if (
-                (nodeInfo.managementType == 1) ||
-                (nodeInfo.managementType == 2) ||
-                (nodeInfo.managementType == 5)
-            ) {
-                require(
-                    (NODE_TKN.ownerOf(_node) == _msgSender()),
-                    "C:CR:Cannot create asset in node mgmt type 1||2||5 - caller does not hold node token"
-                );
-            } else if (nodeInfo.managementType == 3) {
-                require(
-                    NODE_STOR.getUserType(
-                        keccak256(abi.encodePacked(_msgSender())),
-                        _node
-                    ) == 1,
-                    "C:CR:Cannot create asset - caller not authorized"
-                );
-            } else {
-                revert(
-                    "C:CR: Contract does not support management type or node is locked"
-                );
-            }
-        }
-
+        require( //check custody types for this contract
+            (nodeInfo.custodyType == 1) ||
+                (nodeInfo.custodyType == 2) ||
+                (nodeInfo.custodyType == 4),
+            "C:CR:Cannot create asset - contract not authorized for node custody type"
+        );
+        // if (nodeInfo.custodyType != 1) {
         if (
             (nodeInfo.managementType == 1) ||
             (nodeInfo.managementType == 2) ||
@@ -81,7 +66,7 @@ contract CORE is BASIC {
         ) {
             require(
                 (NODE_TKN.ownerOf(_node) == _msgSender()),
-                "D:CRO:Cannot create asset in node mgmt type 1||2||5 - caller does not hold node token"
+                "C:CR:Cannot create asset in node mgmt type 1||2||5 - caller does not hold node token"
             );
         } else if (nodeInfo.managementType == 3) {
             require(
@@ -89,20 +74,38 @@ contract CORE is BASIC {
                     keccak256(abi.encodePacked(_msgSender())),
                     _node
                 ) == 1,
-                "D:CRO:Cannot create asset - caller address not authorized"
+                "C:CR:Cannot create asset - caller not authorized"
+            );
+        } else {
+            revert(
+                "C:CR: Contract does not support management type or node is locked"
             );
         }
+        // }
 
-        require(
-            (nodeInfo.custodyType == 1) ||
-                (nodeInfo.custodyType == 2) ||
-                (nodeInfo.custodyType == 4),
-            "C:CR:Cannot create asset - contract not authorized for node custody type"
-        );
+        // if (
+        //     (nodeInfo.managementType == 1) ||
+        //     (nodeInfo.managementType == 2) ||
+        //     (nodeInfo.managementType == 5)
+        // ) {
+        //     require(
+        //         (NODE_TKN.ownerOf(_node) == _msgSender()),
+        //         "D:CRO:Cannot create asset in node mgmt type 1||2||5 - caller does not hold node token"
+        //     );
+        // } else if (nodeInfo.managementType == 3) {
+        //     require(
+        //         NODE_STOR.getUserType(
+        //             keccak256(abi.encodePacked(_msgSender())),
+        //             _node
+        //         ) == 1,
+        //         "D:CRO:Cannot create asset - caller address not authorized"
+        //     );
+        // }
+
         //^^^^^^^Checks^^^^^^^^
 
         address recipient;
-        if (NODE_STOR.getSwitchAt(_node, 2) == 0) {
+        if (NODE_STOR.getSwitchAt(_node, 8) == 0) {
             //if switch at bit 2 is not set, set the mint to address to the node holder
             recipient = NODE_TKN.ownerOf(_node);
         } else if (nodeInfo.custodyType == 1) {
@@ -113,9 +116,9 @@ contract CORE is BASIC {
             recipient = _msgSender();
         }
 
-        A_TKN.mintAssetToken(recipient, tokenId);
+        A_TKN.mintAssetToken(recipient, tokenId, _URIsuffix);
 
-        STOR.newRecord(_idxHash, _rgtHash, _node, _countDownStart);
+        STOR.newRecord(_idxHash, _rgtHash, URIhash, _node, _countDownStart);
         //^^^^^^^interactions^^^^^^^^^
     }
 
@@ -187,7 +190,7 @@ contract CORE is BASIC {
     {
         //^^^^^^^checks^^^^^^^^^
 
-        STOR.modifyNonMutableStorage(
+        STOR.setNonMutableStorage(
             _idxHash,
             _rec.nonMutableStorage1,
             _rec.nonMutableStorage2

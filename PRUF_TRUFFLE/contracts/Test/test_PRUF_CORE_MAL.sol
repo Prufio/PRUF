@@ -52,10 +52,12 @@ contract CORE_MAL is BASIC {
         bytes32 _idxHash,
         bytes32 _rgtHash,
         uint32 _node,
-        uint32 _countDownStart
+        uint32 _countDownStart,
+        string calldata _URIsuffix
     ) internal virtual {
         uint256 tokenId = uint256(_idxHash);
         Node memory nodeInfo = getNodeinfo(_node);
+        bytes32 URIhash = keccak256(abi.encodePacked(_URIsuffix));
 
         require(
             A_TKN.tokenExists(tokenId) == 0,
@@ -68,14 +70,14 @@ contract CORE_MAL is BASIC {
         );
 
         if (nodeInfo.custodyType == 1) {
-            A_TKN.mintAssetToken(address(this), tokenId);
+            A_TKN.mintAssetToken(address(this), tokenId, _URIsuffix);
         }
 
         if ((nodeInfo.custodyType == 2) || (nodeInfo.custodyType == 4)) {
-            A_TKN.mintAssetToken(_msgSender(), tokenId);
+            A_TKN.mintAssetToken(_msgSender(), tokenId, _URIsuffix);
         }
 
-        STOR.newRecord(_idxHash, _rgtHash, _node, _countDownStart);
+        STOR.newRecord(_idxHash, _rgtHash, URIhash, _node, _countDownStart);
     }
 
     /*
@@ -119,11 +121,10 @@ contract CORE_MAL is BASIC {
     function writeNonMutableStorage(bytes32 _idxHash, Record memory _rec)
         internal
         whenNotPaused
-    //isAuthorized(_idxHash)
     {
         //^^^^^^^checks^^^^^^^^^
 
-        STOR.modifyNonMutableStorage(
+        STOR.setNonMutableStorage(
             _idxHash,
             _rec.nonMutableStorage1,
             _rec.nonMutableStorage2

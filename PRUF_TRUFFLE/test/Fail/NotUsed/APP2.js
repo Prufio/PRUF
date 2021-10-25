@@ -16,7 +16,7 @@ const PRUF_NODE_MGR = artifacts.require("NODE_MGR");
 const PRUF_NODE_STOR = artifacts.require("NODE_STOR");
 const PRUF_NODE_TKN = artifacts.require("NODE_TKN");
 const PRUF_A_TKN = artifacts.require("A_TKN");
-const PRUF_ID_MGR = artifacts.require("ID_MGR");
+const PRUF_NODE_BLDR = artifacts.require("NODE_BLDR");
 const PRUF_ECR_MGR = artifacts.require("ECR_MGR");
 const PRUF_ECR = artifacts.require("ECR");
 const PRUF_ECR2 = artifacts.require("ECR2");
@@ -36,7 +36,7 @@ let NODE_MGR;
 let NODE_STOR;
 let NODE_TKN;
 let A_TKN;
-let ID_MGR;
+let NODE_BLDR;
 let ECR_MGR;
 let ECR;
 let ECR2;
@@ -315,13 +315,19 @@ contract("APP", (accounts) => {
 
     minterRoleB32 = await Helper.getStringHash("MINTER_ROLE");
 
+    IDproviderRoleB32 = await Helper.getStringHash("ID_PROVIDER_ROLE");
+
     trustedAgentRoleB32 = await Helper.getStringHash("TRUSTED_AGENT_ROLE");
 
     assetTransferRoleB32 = await Helper.getStringHash("ASSET_TXFR_ROLE");
 
     discardRoleB32 = await Helper.getStringHash("DISCARD_ROLE");
 
+    DAOroleB32 = await Helper.getStringHash("DAO_ROLE");
+
     nodeAdminRoleB32 = await Helper.getStringHash("NODE_ADMIN_ROLE");
+
+    nodeMinterRoleB32 = await Helper.getStringHash("NODE_MINTER_ROLE");
   });
 
   it("Should deploy Storage", async () => {
@@ -401,11 +407,11 @@ contract("APP", (accounts) => {
     RCLR = PRUF_RCLR_TEST;
   });
 
-  it("Should deploy PRUF_ID_MGR", async () => {
-    const PRUF_ID_MGR_TEST = await PRUF_ID_MGR.deployed({ from: account1 });
-    console.log(PRUF_ID_MGR_TEST.address);
-    assert(PRUF_ID_MGR_TEST.address !== "");
-    ID_MGR = PRUF_ID_MGR_TEST;
+  it("Should deploy PRUF_NODE_BLDR", async () => {
+    const PRUF_NODE_BLDR_TEST = await PRUF_NODE_BLDR.deployed({ from: account1 });
+    console.log(PRUF_NODE_BLDR_TEST.address);
+    assert(PRUF_NODE_BLDR_TEST.address !== "");
+    NODE_BLDR = PRUF_NODE_BLDR_TEST;
   });
 
   it("Should deploy PRUF_ECR2", async () => {
@@ -536,13 +542,6 @@ contract("APP", (accounts) => {
       })
 
       .then(() => {
-        console.log("Adding ID_MGR to storage for use in Node 0");
-        return STOR.authorizeContract("ID_MGR", ID_MGR.address, "0", "1", {
-          from: account1,
-        });
-      })
-
-      .then(() => {
         console.log("Adding ECR_MGR to storage for use in Node 0");
         return STOR.authorizeContract("ECR_MGR", ECR_MGR.address, "0", "1", {
           from: account1,
@@ -620,6 +619,21 @@ contract("APP", (accounts) => {
       });
   });
 
+  it("Should authorize account1 for NODE_STOR", () => {
+    console.log("Authorizing account1");
+    return NODE_STOR.grantRole(DAOroleB32, account1, { from: account1 });
+  });
+
+  it("Should authorize account1 for A_TKN", () => {
+    console.log("Authorizing account1");
+    return A_TKN.grantRole(DAOroleB32, account1, { from: account1 });
+  });
+
+  it("Should authorize account1 for NODE_STOR", () => {
+    console.log("Authorizing account1");
+    return NODE_STOR.grantRole(DAOroleB32, account1, { from: account1 });
+  });
+
   it("Should add Storage to each contract", () => {
     console.log("Adding in APP");
     return APP.setStorageContract(STOR.address, { from: account1 })
@@ -686,12 +700,12 @@ contract("APP", (accounts) => {
         return RCLR.setStorageContract(STOR.address, { from: account1 });
       })
 
-      // .then(() => {
-      //   console.log("Adding in PURCHASE");
-      //   return PURCHASE.setStorageContract(STOR.address, {
-      //     from: account1,
-      //   });
-      // })
+      .then(() => {
+        console.log("Adding in NODE_BLDR");
+        return NODE_BLDR.setStorageContract(STOR.address, {
+          from: account1,
+        });
+      })
 
       .then(() => {
         console.log("Adding in DECORATE");
@@ -760,10 +774,10 @@ contract("APP", (accounts) => {
         return RCLR.resolveContractAddresses({ from: account1 });
       })
 
-      // .then(() => {
-      //   console.log("Resolving in PURCHASE");
-      //   return PURCHASE.resolveContractAddresses({ from: account1 });
-      // })
+      .then(() => {
+        console.log("Resolving in NODE_BLDR");
+        return NODE_BLDR.resolveContractAddresses({ from: account1 });
+      })
 
       .then(() => {
         console.log("Resolving in DECORATE");
@@ -788,6 +802,21 @@ contract("APP", (accounts) => {
       .then(() => {
         console.log("Authorizing ARWEAVE");
         return NODE_STOR.setStorageProviders("2", "1", { from: account1 });
+      });
+  });
+
+  it("Should set all baseURI(s) for storage providers", () => {
+    console.log("TEST0 == UNCONFIGURED");
+    return A_TKN.setBaseURIforStorageType("0", "TEST0", { from: account1 })
+
+      .then(() => {
+        console.log("TEST1 == Mutable");
+        return A_TKN.setBaseURIforStorageType("1", "TEST1", { from: account1 });
+      })
+
+      .then(() => {
+        console.log("TEST2 == ARWEAVE");
+        return A_TKN.setBaseURIforStorageType("2", "TEST2", { from: account1 });
       });
   });
 
@@ -968,6 +997,13 @@ contract("APP", (accounts) => {
     });
   });
 
+  it("Should authorize NODE_BLDR", () => {
+    console.log("Authorizing NODE_BLDR");
+    return NODE_MGR.grantRole(IDproviderRoleB32, NODE_BLDR.address, {
+      from: account1,
+    });
+  });
+
   it("Should authorize all minter addresses for minting ID(s)", () => {
     console.log("Authorizing NODE_MGR");
     return ID_MGR.grantRole(IDminterRoleB32, account1, {
@@ -988,6 +1024,11 @@ contract("APP", (accounts) => {
   it("Should authorize NODE_MGR for NODE_STOR", () => {
     console.log("Authorizing NODE_MGR");
     return NODE_STOR.grantRole(nodeAdminRoleB32, account1, { from: account1 });
+  });
+
+  it("Should authorize account10 for nodeMinterRoleB32", () => {
+    console.log("Authorizing NODE_MGR");
+    return NODE_BLDR.grantRole(nodeMinterRoleB32, account10, { from: account1 });
   });
 
 
@@ -1238,7 +1279,7 @@ contract("APP", (accounts) => {
 
       .then(() => {
         console.log("Minting Node 1000001 -C");
-        return NODE_MGR.purchaseNode(
+        return NODE_BLDR.purchaseNode(
           "Custodial_AC1",
           "1",
           "1",
@@ -1250,7 +1291,7 @@ contract("APP", (accounts) => {
 
       .then(() => {
         console.log("Minting Node 1000002 -NC");
-        return NODE_MGR.purchaseNode(
+        return NODE_BLDR.purchaseNode(
           "Non_Custodial_AC2",
           "1",
           "2",
@@ -1262,7 +1303,7 @@ contract("APP", (accounts) => {
 
       .then(() => {
         console.log("Minting Node 1000003 -NC");
-        return NODE_MGR.purchaseNode(
+        return NODE_BLDR.purchaseNode(
           "Non_Custodial_AC3",
           "1",
           "2",
@@ -1274,7 +1315,7 @@ contract("APP", (accounts) => {
 
       .then(() => {
         console.log("Minting Node 1000004 -NC");
-        return NODE_MGR.purchaseNode(
+        return NODE_BLDR.purchaseNode(
           "Non_Custodial_AC4",
           "1",
           "2",
@@ -1287,7 +1328,7 @@ contract("APP", (accounts) => {
 
   it("Should Mint 2 non-cust Node tokens in AC_ROOT 2", () => {
     console.log("Minting Node 1000005 -NC");
-    return NODE_MGR.purchaseNode(
+    return NODE_BLDR.purchaseNode(
       "Non-Custodial_AC5",
       "2",
       "2",
@@ -1296,7 +1337,7 @@ contract("APP", (accounts) => {
       { from: account1 }
     ).then(() => {
       console.log("Minting Node 1000006 -NC");
-      return NODE_MGR.purchaseNode(
+      return NODE_BLDR.purchaseNode(
         "Non_Custodial_AC6",
         "2",
         "2",

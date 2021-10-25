@@ -22,7 +22,6 @@ _________\/// _____________\/// _______\/// __\///////// __\/// _____________
 pragma solidity ^0.8.7;
 
 import "../Resources/PRUF_CORE.sol";
-import "../Imports/token/ERC721/IERC721.sol";
 
 contract WRAP is CORE {
     struct WrappedToken {
@@ -62,7 +61,7 @@ contract WRAP is CORE {
      * Mints a pruf token to caller (exists?) if so ???????
      * Node.custodyType must be 5 (wrapped/decorated erc721) / enabled for contract address
      * referenceAddress must be '0' or ERC721 contract address
-     *
+     * //CTS:CHECK THIS LOGIC OVERALL
      */
     function wrap721(
         uint256 _foreignTokenID,
@@ -79,8 +78,12 @@ contract WRAP is CORE {
         bytes32 idxHash = keccak256(
             abi.encodePacked(_foreignTokenID, _foreignTokenContract)
         );
+        string memory URIsuffix = IERC721(_foreignTokenContract).tokenURI(
+            _foreignTokenID
+        );
+        //bytes32 URIhash = keccak256(abi.encodePacked(URIsuffix));
 
-        Record memory rec = getRecord(idxHash);
+        //Record memory rec = getRecord(idxHash);
         Node memory nodeInfo = getNodeinfo(_node);
 
         uint256 newTokenId = uint256(idxHash);
@@ -134,21 +137,7 @@ contract WRAP is CORE {
             _foreignTokenID
         ); // move token to this contract
 
-        if (rec.node == 0) {
-            //record does not exist
-            createRecord(idxHash, _rgtHash, _node, _countDownStart);
-        } else {
-            //DPS:TEST
-            //just mint the token, record already exists
-            if (NODE_STOR.getSwitchAt(_node, 2) == 0) {
-                //if switch at bit 2 is not set, set the mint to address to the node holder
-                A_TKN.mintAssetToken(NODE_TKN.ownerOf(_node), newTokenId);
-            } else {
-                //if switch at bit 2 is set, send the token to the caller.
-                //caller might be a custodial contract, or it might be an individual.
-                A_TKN.mintAssetToken(_msgSender(), newTokenId);
-            }
-        } //DPS:TEST end
+        createRecord(idxHash, _rgtHash, _node, _countDownStart, URIsuffix); //URI PRefix set to null for wrapped assets
 
         deductServiceCosts(_node, 1);
         //^^^^^^^interactions^^^^^^^^^
@@ -233,12 +222,13 @@ contract WRAP is CORE {
         //^^^^^^^interactions^^^^^^^^^
     }
 
-    /**
+    /** //DPS:CHECK
      * @dev create a Record in Storage @ idxHash (SETTER)
      * @param _idxRaw Asset ID
      * @param _rgtHash Hash or user data
      * @param _node Node ID
      * @param _countDownStart Initial counter value
+     * @param _URIsuffix URI suffix string
      * Asset token already exists
      * depending on custody type/management type, caller ID token or address myst be authorized
      */
@@ -246,9 +236,11 @@ contract WRAP is CORE {
         bytes32 _idxRaw,
         bytes32 _rgtHash,
         uint32 _node,
-        uint32 _countDownStart
+        uint32 _countDownStart,
+        string memory _URIsuffix
     ) internal override {
         bytes32 idxHash = keccak256(abi.encodePacked(_idxRaw, _node)); //hash idxRaw with node to get idxHash DPS:TEST
+        bytes32 URIhash = keccak256(abi.encodePacked(_URIsuffix));
         uint256 tokenId = uint256(idxHash);
         Node memory nodeInfo = getNodeinfo(_node);
 
@@ -288,17 +280,20 @@ contract WRAP is CORE {
         }
         //^^^^^^^checks^^^^^^^^^
 
-        if (NODE_STOR.getSwitchAt(_node, 2) == 0) {
-            //DPS:TEST
+        address recipient;
+        if (NODE_STOR.getSwitchAt(_node, 8) == 0) {
             //if switch at bit 2 is not set, set the mint to address to the node holder
-            A_TKN.mintAssetToken(NODE_TKN.ownerOf(_node), tokenId);
+            recipient = NODE_TKN.ownerOf(_node);
+        } else if (nodeInfo.custodyType == 1) {
+            //if switch at bit 2 is set, and and the custody type is 1, send the token to this cointract.
+            recipient = address(this);
         } else {
-            //if switch at bit 2 is set, send the token to the caller.
-            //caller might be a custodial contract, or it might be an individual.
-            A_TKN.mintAssetToken(_msgSender(), tokenId);
-        } //DPS:TEST end
+            //if switch at bit 2 is set, and and the custody type is not 1, send the token to the caller.
+            recipient = _msgSender();
+        }
+        A_TKN.mintAssetToken(recipient, tokenId, _URIsuffix);
 
-        STOR.newRecord(idxHash, _rgtHash, _node, _countDownStart);
+        STOR.newRecord(idxHash, _rgtHash, URIhash, _node, _countDownStart);
         //^^^^^^^interactions^^^^^^^^^
     }
 }

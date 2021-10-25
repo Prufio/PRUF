@@ -947,7 +947,8 @@ interface A_TKN_Interface {
      */
     function mintAssetToken(
         address _recipientAddress,
-        uint256 _tokenId
+        uint256 _tokenId,
+        string calldata _URIsuffix
     ) external returns (uint256);
 
     /**
@@ -1023,6 +1024,13 @@ interface A_TKN_Interface {
      * - the caller must have the `PAUSER_ROLE`.
      */
     function unpause() external;
+
+    /**
+     * @dev externalized IAOO
+     * @param _addr adress to check
+     * @param _tokenId token to check
+     */
+    function isApprovedOrOwner(address _addr, uint256 _tokenId) external view;
 
     /**
      * @dev Returns the owner of the `tokenId` token.

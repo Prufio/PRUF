@@ -22,7 +22,7 @@ _________\/// _____________\/// _______\/// __\///////// __\/// _____________
 pragma solidity ^0.8.7;
 
 import "../Resources/PRUF_CORE.sol";
-import "../Imports/token/ERC721/IERC721.sol";
+//import "../Imports/token/ERC721/IERC721.sol";
 
 contract DECORATE is CORE {
     /**
@@ -276,18 +276,20 @@ contract DECORATE is CORE {
         //^^^^^^^interactions^^^^^^^^^
     }
 
-    /**
+    /** //DPS:TEST:NEW PARAMS
      * @dev SET rec.nonMutableStorage1/b (immutable) content adressable storage pointer
      * @param _tokenID - tokenID of assets token @_tokenContract
      * @param _tokenContract - token contract of _tokenID
      * @param _nonMutableStorage1 - field for permanent external asset data
      * @param _nonMutableStorage2 - field for permanent external asset data
+     * @param _URIhash - Hash of external CAS from URI
      */
     function addNonMutableStorage(
         uint256 _tokenID,
         address _tokenContract,
         bytes32 _nonMutableStorage1,
-        bytes32 _nonMutableStorage2
+        bytes32 _nonMutableStorage2,
+        bytes32 _URIhash
     )
         external
         nonReentrant
@@ -316,6 +318,7 @@ contract DECORATE is CORE {
 
         rec.nonMutableStorage1 = _nonMutableStorage1;
         rec.nonMutableStorage2 = _nonMutableStorage2;
+        rec.URIhash = _URIhash;
         //^^^^^^^effects^^^^^^^^^
 
         writeNonMutableStorage(idxHash, rec);
@@ -456,7 +459,7 @@ contract DECORATE is CORE {
     //     //^^^^^^^interactions^^^^^^^^^
     // }
 
-    //--------------------------------------------External Functions--------------------------
+    //--------------------------------------------INTERNAL Functions--------------------------
 
     /**
      * @dev create a Record in Storage @ idxHash (SETTER)
@@ -513,7 +516,7 @@ contract DECORATE is CORE {
 
         //^^^^^^^checks^^^^^^^^^
 
-        STOR.newRecord(idxHash, _rgtHash, _node, _countDownStart);
+        STOR.newRecord(idxHash, _rgtHash, 0x0, _node, _countDownStart);
         //^^^^^^^interactions^^^^^^^^^
     }
 }

@@ -29,6 +29,7 @@ _________\/// _____________\/// _______\/// __\///////// __\/// _____________
  * Nodes holders can approve other asset classes that can be imported into their node space 
  * via the importApprovals mapping. This will be implemented for recycle / import.
  *
+ * the DAO sets the base URI for each storage type in the  URIforStorageType struct.
  *
  * STATEMENT OF TERMS OF SERVICE (TOS):
  * User agrees not to intentionally claim any namespace that is a recognized or registered brand name, trade mark,
@@ -46,7 +47,6 @@ import "../Imports/security/ReentrancyGuard.sol";
 
 contract NODE_STOR is BASIC {
     bytes32 public constant NODE_ADMIN_ROLE = keccak256("NODE_ADMIN_ROLE");
-    bytes32 public constant DAO_ROLE = keccak256("DAO_ROLE"); //DPS:NEW
 
     bytes32 public constant B320xF_ =
         0xFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFF;
@@ -59,7 +59,8 @@ contract NODE_STOR is BASIC {
     mapping(uint32 => Node) private nodeData; //node info database Node to node struct (see RESOURCE_PRUF_INTERFACES for struct definitions)
     mapping(string => uint32) private nodeId; //name to Node resolution map
 
-    mapping(bytes32 => mapping(uint32 => uint8)) private registeredUsers; //Authorized recorder database by Node, by address hash
+    mapping(uint32 => mapping(bytes32 => uint8)) private registeredUsers; //Authorized recorder mapping by Node, by address hash
+    mapping(uint32 => uint256) numberOfUsers; //number of users active on a node for recorder mapping (usertype != 0)
 
     mapping(uint8 => uint8) private validStorageProviders; //storageProviders -> status (enabled or disabled)
     mapping(uint8 => uint8) private validManagementTypes; //managementTypes -> status (enabled or disabled)
@@ -80,19 +81,6 @@ contract NODE_STOR is BASIC {
         require(
             hasRole(NODE_ADMIN_ROLE, _msgSender()),
             "NS:MOD-INA: Must have NODE_ADMIN_ROLE"
-        );
-        _;
-    }
-
-    /**
-     * @dev Verify user credentials
-     * Originating Address:
-     *      has DAO_ROLE //DPS:NEW
-     */
-    modifier isDAO() {
-        require(
-            hasRole(DAO_ROLE, _msgSender()),
-            "NS:MOD-INA: Must have DAO_ROLE"
         );
         _;
     }
@@ -145,10 +133,7 @@ contract NODE_STOR is BASIC {
      * @param _node - node in which cost share is being modified
      * @param _newDiscount - discount(1% == 100, 10000 == max)
      */
-    function changeShare(
-        uint32 _node,
-        uint32 _newDiscount //DPS:TEST:NEW NAME
-    ) external isDAO {
+    function changeShare(uint32 _node, uint32 _newDiscount) external isDAO {
         require((nodeData[_node].nodeRoot != 0), "NS:IS: node !exist");
         require(_newDiscount <= 10000, "NS:IS: Discount > 100% (10000)");
         //^^^^^^^checks^^^^^^^^^
@@ -224,10 +209,7 @@ contract NODE_STOR is BASIC {
         isNodeAdmin
     {
         delete nodeId[_name];
-        if (
-            keccak256(abi.encodePacked(_name)) !=
-            keccak256(abi.encodePacked(""))
-        ) {
+        if (bytes(_name).length != 0) {
             nodeId[_name] = _node;
         }
     }
@@ -235,7 +217,6 @@ contract NODE_STOR is BASIC {
     /**
      * !! -------- to be used with great caution -----------
      * @dev Modifies an Node with minimal controls
-     * note that a node can be diasbled by setting the management type to an invalid value (or 0) //DPS:TEST
      * @param _node - node to be modified
      * @param _nodeRoot - root of node
      * @param _custodyType - custodyType of node (see docs)
@@ -286,13 +267,16 @@ contract NODE_STOR is BASIC {
      * @dev only useful for custody types that designate user adresses (type1...)
      * @param _node - node that user is being deauthorized in
      * @param _addrHash - hash of address to deauthorize
-     * DPS:TEST:NEW
      */
     function blockUser(uint32 _node, bytes32 _addrHash) external isDAO {
         //^^^^^^^checks^^^^^^^^^
+        //if deauthing an address, decrease usercount for node
+        if (registeredUsers[_node][_addrHash] != 0) {
+            numberOfUsers[_node]--;
+        }
 
-        registeredUsers[_addrHash][_node] = 0; //deauth node
-        registeredUsers[_addrHash][0]--; //decrease user count
+        delete registeredUsers[_node][_addrHash]; //deauth node
+
         //^^^^^^^effects^^^^^^^^^
     }
 
@@ -366,15 +350,18 @@ contract NODE_STOR is BASIC {
     ) external whenNotPaused isNodeAdmin {
         //^^^^^^^checks^^^^^^^^^
 
-        registeredUsers[_addrHash][_node] = _userType;
-
-        if ((_userType != 0) && (registeredUsers[_addrHash][0] < 255)) {
-            registeredUsers[_addrHash][0]++; //increase user count
+        //if adding a new address, increase usercount for node
+        if ((registeredUsers[_node][_addrHash] == 0) && (_userType != 0)) {
+            numberOfUsers[_node]++;
         }
 
-        if ((_userType == 0) && (registeredUsers[_addrHash][0] > 0)) {
-            registeredUsers[_addrHash][0]--; //decrease user count
+        //if deauthing an address, decrease usercount for node
+        if ((registeredUsers[_node][_addrHash] != 0) && (_userType == 0)) {
+            numberOfUsers[_node]--;
         }
+
+        registeredUsers[_node][_addrHash] = _userType;
+
         //^^^^^^^effects^^^^^^^^^
     }
 
@@ -445,7 +432,7 @@ contract NODE_STOR is BASIC {
      * @dev extended node data setter
      * @param _node - node being setup
      * @param _exData ExtendedNodeData struct to write (see resources-structs)
-     * DPS:TEST:NEW
+     * how do I call this without a setter in NODE_MGR? it takes a struct (THIS CANNOT BE CALLED WITH THE CURRENT VERSION OF NODE MANANGER)
      */
     function setExtendedNodeData(uint32 _node, ExtendedNodeData memory _exData)
         external
@@ -459,7 +446,6 @@ contract NODE_STOR is BASIC {
      * @dev extended node data setter
      * @param _foreignNode - node from other blockcahin to point to local node
      * @param _localNode local node to point to
-     * DPS:TEST:NEW
      */
     function setLocalNode(uint32 _foreignNode, uint32 _localNode)
         external
@@ -495,7 +481,6 @@ contract NODE_STOR is BASIC {
      * @dev exttended node data getter
      * @param _node - node being queried
      * returns ExtendedNodeData struct (see resources-structs)
-     * DPS:TEST:NEW
      */
     function getExtNodeData(uint32 _node)
         external
@@ -518,7 +503,19 @@ contract NODE_STOR is BASIC {
     {
         //^^^^^^^checks^^^^^^^^^
 
-        return (registeredUsers[_userHash][_node]);
+        return (registeredUsers[_node][_userHash]);
+        //^^^^^^^interactions^^^^^^^^^
+    }
+
+    /**
+     * @dev get the number of adresses authorized on a node
+     * @param _node - node to query
+     * @return number of auth users
+     */
+    function getNumberOfUsers(uint32 _node) external view returns (uint256) {
+        //^^^^^^^checks^^^^^^^^^
+
+        return numberOfUsers[_node];
         //^^^^^^^interactions^^^^^^^^^
     }
 
@@ -782,7 +779,7 @@ contract NODE_STOR is BASIC {
             require( //holds root token if root is restricted
                 (NODE_TKN.ownerOf(_newNodeData.nodeRoot) == _caller),
                 "NS:CN: Restricted from creating node in this root - caller !hold root token"
-            ); // DPS:TEST
+            );
         }
         require(nodeId[_newNodeData.name] == 0, "NS:CN: node name exists");
         require(

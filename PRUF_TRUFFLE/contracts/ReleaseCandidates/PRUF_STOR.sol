@@ -16,6 +16,7 @@ _________\/// _____________\/// _______\/// __\///////// __\/// _____________
  * The primary data repository for the PRUF protocol. No direct user writes are permitted in STOR, all data must come from explicitly approved contracts.
  * Stores records in a map of Records, foreward and reverse name resolution for approved contracts, as well as contract authorization data.
  *
+ * TODO:look through all RC1 contracts for DAO functions
  *
  * IMPORTANT NOTE : DO NOT REMOVE FROM CODE:
  *      Verification of rgtHash in curated, certain management types are not secure beyond the honorable intentions
@@ -37,8 +38,7 @@ import "../Imports/security/ReentrancyGuard.sol";
 
 contract STOR is AccessControl, ReentrancyGuard, Pausable {
     bytes32 public constant PAUSER_ROLE = keccak256("PAUSER_ROLE");
-    bytes32 public constant CONTRACT_ADMIN_ROLE =
-        keccak256("CONTRACT_ADMIN_ROLE");
+    bytes32 public constant DAO_ROLE = keccak256("DAO_ROLE");
 
     bytes32 public constant B320xF_ =
         0xFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFF;
@@ -55,7 +55,7 @@ contract STOR is AccessControl, ReentrancyGuard, Pausable {
 
     constructor() {
         _setupRole(DEFAULT_ADMIN_ROLE, _msgSender());
-        _setupRole(CONTRACT_ADMIN_ROLE, _msgSender());
+        _setupRole(DAO_ROLE, _msgSender());
         _setupRole(PAUSER_ROLE, _msgSender());
     }
 
@@ -64,12 +64,12 @@ contract STOR is AccessControl, ReentrancyGuard, Pausable {
     /**
      * @dev Verify user credentials
      * Originating Address:
-     *      has CONTRACT_ADMIN_ROLE
+     *      has DAO_ROLE
      */
-    modifier isContractAdmin() {
+    modifier isDAO() {
         require(
-            hasRole(CONTRACT_ADMIN_ROLE, _msgSender()),
-            "S:MOD-ICA: Must have CONTRACT_ADMIN_ROLE"
+            hasRole(DAO_ROLE, _msgSender()),
+            "S:MOD-ICA: Must have DAO_ROLE"
         );
         _;
     }
@@ -261,7 +261,8 @@ contract STOR is AccessControl, ReentrancyGuard, Pausable {
         address _contractAddr,
         uint32 _node,
         uint8 _contractAuthLevel
-    ) external isContractAdmin {
+    ) external isDAO {
+
         require(_node == 0, "S:AC: node !=0");
         //^^^^^^^checks^^^^^^^^^
 
@@ -288,7 +289,7 @@ contract STOR is AccessControl, ReentrancyGuard, Pausable {
         uint256 _contractNumber,
         string calldata _name,
         uint8 _contractAuthLevel
-    ) external isContractAdmin {
+    ) external isDAO {
         require(_contractNumber <= 10, "S:ADC: Contract number > 10");
         //^^^^^^^checks^^^^^^^^^
 
@@ -305,7 +306,7 @@ contract STOR is AccessControl, ReentrancyGuard, Pausable {
     function getDefaultContract(uint256 _contractNumber)
         external
         view
-        isContractAdmin
+        isDAO
         returns (DefaultContract memory)
     {
         //^^^^^^^checks^^^^^^^^^
@@ -388,12 +389,14 @@ contract STOR is AccessControl, ReentrancyGuard, Pausable {
      * calling contract must be authorized in relevant node
      * @param   _idxHash - asset ID befor node hashing
      * @param   _rgtHash - rightsholder id hash
+     * @param _URIhash - hash of URI Suffix
      * @param   _node - node in which to create the asset
      * @param   _countDownStart - initial value for decrement-only value
      */
     function newRecord(
         bytes32 _idxHash,
         bytes32 _rgtHash,
+        bytes32 _URIhash,
         uint32 _node,
         uint32 _countDownStart
     ) external nonReentrant whenNotPaused isAuthorized(_node) {
@@ -413,6 +416,7 @@ contract STOR is AccessControl, ReentrancyGuard, Pausable {
         rec.node = _node;
         rec.countDown = _countDownStart;
         rec.rightsHolder = _rgtHash;
+        rec.URIhash = _URIhash;
 
         database[_idxHash] = rec; //idxhash
         //^^^^^^^effects^^^^^^^^^
@@ -637,7 +641,7 @@ contract STOR is AccessControl, ReentrancyGuard, Pausable {
      * @param _nonMutableStorage1 - first half of content addressable storage location
      * @param _nonMutableStorage2 - second half of content addressable storage location
      */
-    function modifyNonMutableStorage(
+    function setNonMutableStorage(
         bytes32 _idxHash,
         bytes32 _nonMutableStorage1,
         bytes32 _nonMutableStorage2
@@ -654,8 +658,8 @@ contract STOR is AccessControl, ReentrancyGuard, Pausable {
         require(isTransferred(rec.assetStatus) == 0, "S:MNMS: Txfrd. asset"); //asset cannot be in transferred status
 
         require(
-            ((rec.nonMutableStorage1 == 0) && (rec.nonMutableStorage2 == 0)) ||
-                (rec.assetStatus == 201),
+            (rec.nonMutableStorage1 & rec.nonMutableStorage2 == 0) ||
+                ((rec.assetStatus == 201) || (rec.assetStatus == 200)),
             "S:MNMS: Cannot overwrite NM Storage"
         ); //NonMutableStorage record is immutable after first write unless status 201 is set (Storage provider has died)
         //^^^^^^^checks^^^^^^^^^
@@ -737,7 +741,7 @@ contract STOR is AccessControl, ReentrancyGuard, Pausable {
      * @param _rgtHash - record owner ID hash
      * @return 170 if matches, 0 if not
      */
-    function _verifyRightsHolder(bytes32 _idxHash, bytes32 _rgtHash)
+    function verifyRightsHolder(bytes32 _idxHash, bytes32 _rgtHash)
         external
         view
         returns (uint256)

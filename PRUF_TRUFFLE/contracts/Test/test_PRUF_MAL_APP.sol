@@ -19,9 +19,8 @@ _________\/// _____________\/// _______\/// __\///////// __\/// _____________
 pragma solidity ^0.8.7;
 
 import "./test_PRUF_CORE_MAL.sol";
- 
+
 contract MAL_APP is CORE_MAL {
-    
     /*
      * @dev Verify user credentials
      * Originating Address:
@@ -37,13 +36,13 @@ contract MAL_APP is CORE_MAL {
 
     //--------------------------------------------External Functions--------------------------
 
-        function newRecord(
+    function newRecord(
         bytes32 _idxHash,
         bytes32 _rgtHash,
         uint32 _node,
-        uint32 _countDownStart
-    ) external 
-    {
+        uint32 _countDownStart,
+        string calldata _URIsuffix
+    ) external {
         bytes32 idxHash = keccak256(abi.encodePacked(_idxHash, _node)); //hash idxRaw with node to get idxHash
         // Record memory rec = getRecord(_idxHash);
         // uint8 userType = getCallingUserType(_node);
@@ -70,9 +69,9 @@ contract MAL_APP is CORE_MAL {
         //^^^^^^^effects^^^^^^^^^
 
         // if (nodeInfo.nodeRoot == oldNode_info.nodeRoot) {
-            // createRecord(_idxHash, _rgtHash, _node, rec.countDownStart);
+        // createRecord(_idxHash, _rgtHash, _node, rec.countDownStart);
         // } else {
-            createRecord(idxHash, _rgtHash, _node, _countDownStart);
+        createRecord(idxHash, _rgtHash, _node, _countDownStart, _URIsuffix);
         // }
         deductServiceCosts(_node, 1);
 
@@ -88,10 +87,12 @@ contract MAL_APP is CORE_MAL {
         uint8 _newAssetStatus
     )
         external
-        // nonReentrant
-        // whenNotPaused
-        // isAuthorized(_idxHash)
-        returns (uint8)
+        returns (
+            // nonReentrant
+            // whenNotPaused
+            // isAuthorized(_idxHash)
+            uint8
+        )
     {
         Record memory rec = getRecord(_idxHash);
         // uint8 userType = getCallingUserType(rec.node);
@@ -164,10 +165,12 @@ contract MAL_APP is CORE_MAL {
         uint8 _newAssetStatus
     )
         external
-        // nonReentrant
-        // whenNotPaused
-        // isAuthorized(_idxHash)
-        returns (uint8)
+        returns (
+            // nonReentrant
+            // whenNotPaused
+            // isAuthorized(_idxHash)
+            uint8
+        )
     {
         Record memory rec = getRecord(_idxHash);
         // uint8 userType = getCallingUserType(rec.node);
@@ -229,10 +232,12 @@ contract MAL_APP is CORE_MAL {
         uint32 _decAmount
     )
         external
-        // nonReentrant
-        // whenNotPaused
-        // isAuthorized(_idxHash)
-        returns (uint32)
+        returns (
+            // nonReentrant
+            // whenNotPaused
+            // isAuthorized(_idxHash)
+            uint32
+        )
     {
         Record memory rec = getRecord(_idxHash);
         // uint8 userType = getCallingUserType(rec.node);
@@ -276,7 +281,7 @@ contract MAL_APP is CORE_MAL {
         //     rec.countDown = 0;
         // }
         //^^^^^^^effects^^^^^^^^^
-        if (rec.countDown > _decAmount){
+        if (rec.countDown > _decAmount) {
             rec.countDown = rec.countDown - _decAmount;
         } else {
             rec.countDown = 0;
@@ -285,7 +290,8 @@ contract MAL_APP is CORE_MAL {
         return (rec.countDown);
         //^^^^^^^interactions^^^^^^^^^
     }
-                                                                                               //NEEDS TO BE MODIFIED IN STORAGE
+
+    //NEEDS TO BE MODIFIED IN STORAGE
     // /*
     //  * @dev Decrement **Record**.countdown with confirmation required
     //  */
@@ -347,7 +353,7 @@ contract MAL_APP is CORE_MAL {
     //     return (rec.modCount);
     //     //^^^^^^^interactions^^^^^^^^^
     // }
-                                                                                               //NEEDS TO BE MODIFIED IN STORAGE
+    //NEEDS TO BE MODIFIED IN STORAGE
     // function decrementCounterTXFR(
     //     bytes32 _idxHash,
     //     bytes32 _rgtHash,
@@ -414,11 +420,9 @@ contract MAL_APP is CORE_MAL {
         bytes32 _idxHash,
         bytes32 _mutableStorage1,
         bytes32 _mutableStorage2
-    )
-        external
-        // nonReentrant
-        // whenNotPaused
-        // isAuthorized(_idxHash)
+    ) external // nonReentrant
+    // whenNotPaused
+    // isAuthorized(_idxHash)
     {
         Record memory rec = getRecord(_idxHash);
         // uint8 userType = getCallingUserType(rec.node);
@@ -463,19 +467,14 @@ contract MAL_APP is CORE_MAL {
         //^^^^^^^interactions^^^^^^^^^
     }
 
-    /*
+    /* /** //DPS:TEST:NEW PARAMS
      * @dev Modify **Record**.NonMutableStorage with confirmation
      */
     function addNonMutableStorage(
         bytes32 _idxHash,
         bytes32 _nonMutableStorage1,
         bytes32 _nonMutableStorage2
-    )
-        external
-        
-        // nonReentrant
-        // whenNotPaused
-        // isAuthorized(_idxHash)
+    ) external
     {
         Record memory rec = getRecord(_idxHash);
         // uint8 userType = getCallingUserType(rec.node);
@@ -531,8 +530,7 @@ contract MAL_APP is CORE_MAL {
     /*
      * @dev Export FROM Custodial:
      */
-    function changeNode(bytes32 _idxHash, uint32 newNode) external
-    {
+    function changeNode(bytes32 _idxHash, uint32 newNode) external {
         STOR.changeNode(_idxHash, newNode);
         //^^^^^^^interactions^^^^^^^^^
     }
@@ -542,8 +540,7 @@ contract MAL_APP is CORE_MAL {
         bytes32 _escrowOwnerHash,
         uint256 _escrowTime,
         uint8 _escrowStatus
-    ) external 
-    {
+    ) external {
         // Record memory rec = getRecord(_idxHash);
         // uint8 userType = getCallingUserType(rec.node);
         uint256 escrowTime = block.timestamp + _escrowTime;
@@ -605,12 +602,9 @@ contract MAL_APP is CORE_MAL {
         //^^^^^^^interactions^^^^^^^^^
     }
 
-
-        function setEscrowStor(
-        bytes32 _idxHash,
-        uint8 _escrowStatus
-    ) external 
-    // nonReentrant whenNotPaused isAuthorized(_idxHash) 
+    function setEscrowStor(bytes32 _idxHash, uint8 _escrowStatus)
+        external
+    // nonReentrant whenNotPaused isAuthorized(_idxHash)
     {
         // Record memory rec = getRecord(_idxHash);
         // uint8 userType = getCallingUserType(rec.node);
@@ -664,20 +658,15 @@ contract MAL_APP is CORE_MAL {
         // newEscrowStatus = _escrowStatus;
         //^^^^^^^effects^^^^^^^^^
 
-        STOR.setEscrow(
-            _idxHash,
-            _escrowStatus
-        );
+        STOR.setEscrow(_idxHash, _escrowStatus);
         //^^^^^^^interactions^^^^^^^^^
     }
 
     /*
      * @dev takes asset out of excrow status if time period has resolved || is escrow issuer
      */
-    function endEscrow(bytes32 _idxHash)
-        external
-        // nonReentrant
-        // isAuthorized(_idxHash)
+    function endEscrow(bytes32 _idxHash) external // nonReentrant
+    // isAuthorized(_idxHash)
     {
         // Record memory rec = getRecord(_idxHash);
         // escrowData memory escrow = getEscrowData(_idxHash);
@@ -719,11 +708,8 @@ contract MAL_APP is CORE_MAL {
         //^^^^^^^interactions^^^^^^^^^
     }
 
-
-    function endEscrowStor(bytes32 _idxHash)
-        external
-        // nonReentrant
-        // isAuthorized(_idxHash)
+    function endEscrowStor(bytes32 _idxHash) external // nonReentrant
+    // isAuthorized(_idxHash)
     {
         // Record memory rec = getRecord(_idxHash);
         // escrowData memory escrow = getEscrowData(_idxHash);
@@ -765,22 +751,19 @@ contract MAL_APP is CORE_MAL {
         //^^^^^^^interactions^^^^^^^^^
     }
 
-    function retrieveRecordStor(bytes32 _idxHash)
-        external view
-    {
+    function retrieveRecordStor(bytes32 _idxHash) external view {
         STOR.retrieveRecord(_idxHash);
         //^^^^^^^interactions^^^^^^^^^
     }
 
-
-        /**
+    /**
      * @dev Safely burns a token and sets the corresponding RGT to zero in storage.
      */
     function discard(uint256 tokenId) external nonReentrant {
         bytes32 _idxHash = bytes32(tokenId);
         //Record memory rec = getRecord(_idxHash);
-        
-        // require(                 
+
+        // require(
         //     _isApprovedOrOwner(_msgSender(), tokenId),
         //     "AT:D:transfer caller is not owner nor approved"
         // );
@@ -788,7 +771,7 @@ contract MAL_APP is CORE_MAL {
         //     (rec.assetStatus == 59),
         //     "AT:D:Asset must be in status 59 (discardable) to be discarded"
         // );
-// 
+        //
         //^^^^^^^checks^^^^^^^^^
         RCLR.discard(_idxHash, _msgSender());
         //^^^^^^^interactions^^^^^^^^^
@@ -799,8 +782,8 @@ contract MAL_APP is CORE_MAL {
     //     uint120 _price,
     //     uint8 _currency
     //     // uint256 _setForSale // if 170 then change to transferrable
-    // ) external nonReentrant 
-    // // whenNotPaused isAuthorized(_idxHash) 
+    // ) external nonReentrant
+    // // whenNotPaused isAuthorized(_idxHash)
     // {
     //     // Record memory rec = getRecord(_idxHash);
 
@@ -846,5 +829,4 @@ contract MAL_APP is CORE_MAL {
     //     STOR.clearPrice(_idxHash);
     //     //^^^^^^^interactions^^^^^^^^^
     // }
-    
 }
