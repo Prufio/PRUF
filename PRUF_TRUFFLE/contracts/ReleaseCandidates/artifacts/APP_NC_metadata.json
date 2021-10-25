@@ -1,0 +1,930 @@
+{
+	"compiler": {
+		"version": "0.8.9+commit.e5eed63a"
+	},
+	"language": "Solidity",
+	"output": {
+		"abi": [
+			{
+				"anonymous": false,
+				"inputs": [
+					{
+						"indexed": false,
+						"internalType": "address",
+						"name": "account",
+						"type": "address"
+					}
+				],
+				"name": "Paused",
+				"type": "event"
+			},
+			{
+				"anonymous": false,
+				"inputs": [
+					{
+						"indexed": false,
+						"internalType": "string",
+						"name": "_msg",
+						"type": "string"
+					}
+				],
+				"name": "REPORT",
+				"type": "event"
+			},
+			{
+				"anonymous": false,
+				"inputs": [
+					{
+						"indexed": true,
+						"internalType": "bytes32",
+						"name": "role",
+						"type": "bytes32"
+					},
+					{
+						"indexed": true,
+						"internalType": "bytes32",
+						"name": "previousAdminRole",
+						"type": "bytes32"
+					},
+					{
+						"indexed": true,
+						"internalType": "bytes32",
+						"name": "newAdminRole",
+						"type": "bytes32"
+					}
+				],
+				"name": "RoleAdminChanged",
+				"type": "event"
+			},
+			{
+				"anonymous": false,
+				"inputs": [
+					{
+						"indexed": true,
+						"internalType": "bytes32",
+						"name": "role",
+						"type": "bytes32"
+					},
+					{
+						"indexed": true,
+						"internalType": "address",
+						"name": "account",
+						"type": "address"
+					},
+					{
+						"indexed": true,
+						"internalType": "address",
+						"name": "sender",
+						"type": "address"
+					}
+				],
+				"name": "RoleGranted",
+				"type": "event"
+			},
+			{
+				"anonymous": false,
+				"inputs": [
+					{
+						"indexed": true,
+						"internalType": "bytes32",
+						"name": "role",
+						"type": "bytes32"
+					},
+					{
+						"indexed": true,
+						"internalType": "address",
+						"name": "account",
+						"type": "address"
+					},
+					{
+						"indexed": true,
+						"internalType": "address",
+						"name": "sender",
+						"type": "address"
+					}
+				],
+				"name": "RoleRevoked",
+				"type": "event"
+			},
+			{
+				"anonymous": false,
+				"inputs": [
+					{
+						"indexed": false,
+						"internalType": "address",
+						"name": "account",
+						"type": "address"
+					}
+				],
+				"name": "Unpaused",
+				"type": "event"
+			},
+			{
+				"inputs": [],
+				"name": "ASSET_TXFR_ROLE",
+				"outputs": [
+					{
+						"internalType": "bytes32",
+						"name": "",
+						"type": "bytes32"
+					}
+				],
+				"stateMutability": "view",
+				"type": "function"
+			},
+			{
+				"inputs": [],
+				"name": "CONTRACT_ADMIN_ROLE",
+				"outputs": [
+					{
+						"internalType": "bytes32",
+						"name": "",
+						"type": "bytes32"
+					}
+				],
+				"stateMutability": "view",
+				"type": "function"
+			},
+			{
+				"inputs": [],
+				"name": "DEFAULT_ADMIN_ROLE",
+				"outputs": [
+					{
+						"internalType": "bytes32",
+						"name": "",
+						"type": "bytes32"
+					}
+				],
+				"stateMutability": "view",
+				"type": "function"
+			},
+			{
+				"inputs": [
+					{
+						"internalType": "address",
+						"name": "_tokenContract",
+						"type": "address"
+					},
+					{
+						"internalType": "address",
+						"name": "_to",
+						"type": "address"
+					},
+					{
+						"internalType": "uint256",
+						"name": "_amount",
+						"type": "uint256"
+					}
+				],
+				"name": "ERC20Transfer",
+				"outputs": [],
+				"stateMutability": "nonpayable",
+				"type": "function"
+			},
+			{
+				"inputs": [
+					{
+						"internalType": "address",
+						"name": "_tokenContract",
+						"type": "address"
+					},
+					{
+						"internalType": "address",
+						"name": "_to",
+						"type": "address"
+					},
+					{
+						"internalType": "uint256",
+						"name": "_tokenID",
+						"type": "uint256"
+					}
+				],
+				"name": "ERC721Transfer",
+				"outputs": [],
+				"stateMutability": "nonpayable",
+				"type": "function"
+			},
+			{
+				"inputs": [],
+				"name": "PAUSER_ROLE",
+				"outputs": [
+					{
+						"internalType": "bytes32",
+						"name": "",
+						"type": "bytes32"
+					}
+				],
+				"stateMutability": "view",
+				"type": "function"
+			},
+			{
+				"inputs": [
+					{
+						"internalType": "bytes32",
+						"name": "_idxHash",
+						"type": "bytes32"
+					},
+					{
+						"internalType": "bytes32",
+						"name": "_nonMutableStorage1",
+						"type": "bytes32"
+					},
+					{
+						"internalType": "bytes32",
+						"name": "_nonMutableStorage2",
+						"type": "bytes32"
+					}
+				],
+				"name": "addNonMutableStorage",
+				"outputs": [],
+				"stateMutability": "nonpayable",
+				"type": "function"
+			},
+			{
+				"inputs": [
+					{
+						"internalType": "bytes32",
+						"name": "_idxHash",
+						"type": "bytes32"
+					},
+					{
+						"internalType": "bytes32",
+						"name": "_newRgtHash",
+						"type": "bytes32"
+					}
+				],
+				"name": "changeRgt",
+				"outputs": [],
+				"stateMutability": "nonpayable",
+				"type": "function"
+			},
+			{
+				"inputs": [
+					{
+						"internalType": "bytes32",
+						"name": "_idxHash",
+						"type": "bytes32"
+					},
+					{
+						"internalType": "uint32",
+						"name": "_decAmount",
+						"type": "uint32"
+					}
+				],
+				"name": "decrementCounter",
+				"outputs": [],
+				"stateMutability": "nonpayable",
+				"type": "function"
+			},
+			{
+				"inputs": [
+					{
+						"internalType": "bytes32",
+						"name": "role",
+						"type": "bytes32"
+					}
+				],
+				"name": "getRoleAdmin",
+				"outputs": [
+					{
+						"internalType": "bytes32",
+						"name": "",
+						"type": "bytes32"
+					}
+				],
+				"stateMutability": "view",
+				"type": "function"
+			},
+			{
+				"inputs": [
+					{
+						"internalType": "bytes32",
+						"name": "role",
+						"type": "bytes32"
+					},
+					{
+						"internalType": "address",
+						"name": "account",
+						"type": "address"
+					}
+				],
+				"name": "grantRole",
+				"outputs": [],
+				"stateMutability": "nonpayable",
+				"type": "function"
+			},
+			{
+				"inputs": [
+					{
+						"internalType": "bytes32",
+						"name": "role",
+						"type": "bytes32"
+					},
+					{
+						"internalType": "address",
+						"name": "account",
+						"type": "address"
+					}
+				],
+				"name": "hasRole",
+				"outputs": [
+					{
+						"internalType": "bool",
+						"name": "",
+						"type": "bool"
+					}
+				],
+				"stateMutability": "view",
+				"type": "function"
+			},
+			{
+				"inputs": [
+					{
+						"internalType": "bytes32",
+						"name": "_idxHash",
+						"type": "bytes32"
+					},
+					{
+						"internalType": "bytes32",
+						"name": "_mutableStorage1",
+						"type": "bytes32"
+					},
+					{
+						"internalType": "bytes32",
+						"name": "_mutableStorage2",
+						"type": "bytes32"
+					}
+				],
+				"name": "modifyMutableStorage",
+				"outputs": [],
+				"stateMutability": "nonpayable",
+				"type": "function"
+			},
+			{
+				"inputs": [
+					{
+						"internalType": "bytes32",
+						"name": "_idxHash",
+						"type": "bytes32"
+					},
+					{
+						"internalType": "uint8",
+						"name": "_newAssetStatus",
+						"type": "uint8"
+					}
+				],
+				"name": "modifyStatus",
+				"outputs": [],
+				"stateMutability": "nonpayable",
+				"type": "function"
+			},
+			{
+				"inputs": [
+					{
+						"internalType": "bytes32",
+						"name": "_idxHash",
+						"type": "bytes32"
+					},
+					{
+						"internalType": "bytes32",
+						"name": "_rgtHash",
+						"type": "bytes32"
+					},
+					{
+						"internalType": "uint32",
+						"name": "_node",
+						"type": "uint32"
+					},
+					{
+						"internalType": "uint32",
+						"name": "_countDownStart",
+						"type": "uint32"
+					}
+				],
+				"name": "newRecord",
+				"outputs": [],
+				"stateMutability": "nonpayable",
+				"type": "function"
+			},
+			{
+				"inputs": [
+					{
+						"internalType": "bytes32",
+						"name": "_idxHash",
+						"type": "bytes32"
+					},
+					{
+						"internalType": "bytes32",
+						"name": "_rgtHash",
+						"type": "bytes32"
+					},
+					{
+						"internalType": "uint32",
+						"name": "_node",
+						"type": "uint32"
+					},
+					{
+						"internalType": "uint32",
+						"name": "_countDownStart",
+						"type": "uint32"
+					},
+					{
+						"internalType": "bytes32",
+						"name": "_mutableStorage1",
+						"type": "bytes32"
+					},
+					{
+						"internalType": "bytes32",
+						"name": "_mutableStorage2",
+						"type": "bytes32"
+					}
+				],
+				"name": "newRecordWithDescription",
+				"outputs": [],
+				"stateMutability": "nonpayable",
+				"type": "function"
+			},
+			{
+				"inputs": [
+					{
+						"internalType": "bytes32",
+						"name": "_idxHash",
+						"type": "bytes32"
+					},
+					{
+						"internalType": "bytes32",
+						"name": "_rgtHash",
+						"type": "bytes32"
+					},
+					{
+						"internalType": "uint32",
+						"name": "_node",
+						"type": "uint32"
+					},
+					{
+						"internalType": "uint32",
+						"name": "_countDownStart",
+						"type": "uint32"
+					},
+					{
+						"internalType": "bytes32",
+						"name": "_nonMutableStorage1",
+						"type": "bytes32"
+					},
+					{
+						"internalType": "bytes32",
+						"name": "_nonMutableStorage2",
+						"type": "bytes32"
+					}
+				],
+				"name": "newRecordWithNote",
+				"outputs": [],
+				"stateMutability": "nonpayable",
+				"type": "function"
+			},
+			{
+				"inputs": [
+					{
+						"internalType": "address",
+						"name": "",
+						"type": "address"
+					},
+					{
+						"internalType": "address",
+						"name": "",
+						"type": "address"
+					},
+					{
+						"internalType": "uint256",
+						"name": "",
+						"type": "uint256"
+					},
+					{
+						"internalType": "bytes",
+						"name": "",
+						"type": "bytes"
+					}
+				],
+				"name": "onERC721Received",
+				"outputs": [
+					{
+						"internalType": "bytes4",
+						"name": "",
+						"type": "bytes4"
+					}
+				],
+				"stateMutability": "nonpayable",
+				"type": "function"
+			},
+			{
+				"inputs": [],
+				"name": "pause",
+				"outputs": [],
+				"stateMutability": "nonpayable",
+				"type": "function"
+			},
+			{
+				"inputs": [],
+				"name": "paused",
+				"outputs": [
+					{
+						"internalType": "bool",
+						"name": "",
+						"type": "bool"
+					}
+				],
+				"stateMutability": "view",
+				"type": "function"
+			},
+			{
+				"inputs": [
+					{
+						"internalType": "bytes32",
+						"name": "role",
+						"type": "bytes32"
+					},
+					{
+						"internalType": "address",
+						"name": "account",
+						"type": "address"
+					}
+				],
+				"name": "renounceRole",
+				"outputs": [],
+				"stateMutability": "nonpayable",
+				"type": "function"
+			},
+			{
+				"inputs": [],
+				"name": "resolveContractAddresses",
+				"outputs": [],
+				"stateMutability": "nonpayable",
+				"type": "function"
+			},
+			{
+				"inputs": [
+					{
+						"internalType": "bytes32",
+						"name": "role",
+						"type": "bytes32"
+					},
+					{
+						"internalType": "address",
+						"name": "account",
+						"type": "address"
+					}
+				],
+				"name": "revokeRole",
+				"outputs": [],
+				"stateMutability": "nonpayable",
+				"type": "function"
+			},
+			{
+				"inputs": [
+					{
+						"internalType": "bytes32",
+						"name": "_idxHash",
+						"type": "bytes32"
+					},
+					{
+						"internalType": "uint8",
+						"name": "_newAssetStatus",
+						"type": "uint8"
+					}
+				],
+				"name": "setLostOrStolen",
+				"outputs": [],
+				"stateMutability": "nonpayable",
+				"type": "function"
+			},
+			{
+				"inputs": [
+					{
+						"internalType": "address",
+						"name": "_storageAddress",
+						"type": "address"
+					}
+				],
+				"name": "setStorageContract",
+				"outputs": [],
+				"stateMutability": "nonpayable",
+				"type": "function"
+			},
+			{
+				"inputs": [
+					{
+						"internalType": "bytes4",
+						"name": "interfaceId",
+						"type": "bytes4"
+					}
+				],
+				"name": "supportsInterface",
+				"outputs": [
+					{
+						"internalType": "bool",
+						"name": "",
+						"type": "bool"
+					}
+				],
+				"stateMutability": "view",
+				"type": "function"
+			},
+			{
+				"inputs": [],
+				"name": "unpause",
+				"outputs": [],
+				"stateMutability": "nonpayable",
+				"type": "function"
+			}
+		],
+		"devdoc": {
+			"kind": "dev",
+			"methods": {
+				"ERC20Transfer(address,address,uint256)": {
+					"details": "send an ERC20 token from this contract",
+					"params": {
+						"_amount": "amount to transfer",
+						"_to": "destination",
+						"_tokenContract": "Address of foreign token contract"
+					}
+				},
+				"ERC721Transfer(address,address,uint256)": {
+					"details": "send an ERC721 token from this contract",
+					"params": {
+						"_to": "destination",
+						"_tokenContract": "Address of foreign token contract",
+						"_tokenID": "Token ID"
+					}
+				},
+				"addNonMutableStorage(bytes32,bytes32,bytes32)": {
+					"details": "record NonMutableStorage data",
+					"params": {
+						"_idxHash": "- hash of asset information created by frontend inputs",
+						"_nonMutableStorage1": "- field for permanent external asset data",
+						"_nonMutableStorage2": "- field for permanent external asset data"
+					}
+				},
+				"changeRgt(bytes32,bytes32)": {
+					"details": "Modify rgtHash (like forceModify)",
+					"params": {
+						"_idxHash": "idx of asset to Modify",
+						"_newRgtHash": "rew rgtHash to apply"
+					}
+				},
+				"decrementCounter(bytes32,uint32)": {
+					"details": "Decrement **Record**.countdown.",
+					"params": {
+						"_decAmount": "Amount to decrement",
+						"_idxHash": "index hash of asset to modify"
+					}
+				},
+				"getRoleAdmin(bytes32)": {
+					"details": "Returns the admin role that controls `role`. See {grantRole} and {revokeRole}. To change a role's admin, use {_setRoleAdmin}."
+				},
+				"grantRole(bytes32,address)": {
+					"details": "Grants `role` to `account`. If `account` had not been already granted `role`, emits a {RoleGranted} event. Requirements: - the caller must have ``role``'s admin role."
+				},
+				"hasRole(bytes32,address)": {
+					"details": "Returns `true` if `account` has been granted `role`."
+				},
+				"modifyMutableStorage(bytes32,bytes32,bytes32)": {
+					"details": "Modify **Record**.mutableStorage1 with confirmation of matching rgthash required.",
+					"params": {
+						"_idxHash": "idx of asset to Modify",
+						"_mutableStorage1": "content addressable storage address part 1",
+						"_mutableStorage2": "content addressable storage address part 2"
+					}
+				},
+				"modifyStatus(bytes32,uint8)": {
+					"details": "Modify **Record**.assetStatus with confirmation required",
+					"params": {
+						"_idxHash": "idx of asset to Modify",
+						"_newAssetStatus": "Updated status"
+					}
+				},
+				"newRecord(bytes32,bytes32,uint32,uint32)": {
+					"details": "Create a newRecord",
+					"params": {
+						"_countDownStart": "- decremental counter for an assets lifecycle",
+						"_idxHash": "- hash of asset information created by frontend inputs",
+						"_node": "- node the asset will be created in",
+						"_rgtHash": "- hash of rightsholder information created by frontend inputs"
+					}
+				},
+				"newRecordWithDescription(bytes32,bytes32,uint32,uint32,bytes32,bytes32)": {
+					"details": "Create a newRecord with description",
+					"params": {
+						"_countDownStart": "- decremental counter for an assets lifecycle",
+						"_idxHash": "- hash of asset information created by frontend inputs",
+						"_mutableStorage1": "- field for external asset data",
+						"_mutableStorage2": "- field for external asset data",
+						"_node": "- node the asset will be created in",
+						"_rgtHash": "- hash of rightsholder information created by frontend inputs"
+					}
+				},
+				"newRecordWithNote(bytes32,bytes32,uint32,uint32,bytes32,bytes32)": {
+					"details": "Create a newRecord with permanent description",
+					"params": {
+						"_countDownStart": "- decremental counter for an assets lifecycle",
+						"_idxHash": "- hash of asset information created by frontend inputs",
+						"_node": "- node the asset will be created in",
+						"_nonMutableStorage1": "- field for permanent external asset data",
+						"_nonMutableStorage2": "- field for permanent external asset data",
+						"_rgtHash": "- hash of rightsholder information created by frontend inputs"
+					}
+				},
+				"onERC721Received(address,address,uint256,bytes)": {
+					"details": "Compliance for erc721 reciever See OZ documentation"
+				},
+				"paused()": {
+					"details": "Returns true if the contract is paused, and false otherwise."
+				},
+				"renounceRole(bytes32,address)": {
+					"details": "Revokes `role` from the calling account. Roles are often managed via {grantRole} and {revokeRole}: this function's purpose is to provide a mechanism for accounts to lose their privileges if they are compromised (such as when a trusted device is misplaced). If the calling account had been granted `role`, emits a {RoleRevoked} event. Requirements: - the caller must be `account`."
+				},
+				"resolveContractAddresses()": {
+					"details": "Resolve contract addresses from STOR"
+				},
+				"revokeRole(bytes32,address)": {
+					"details": "Revokes `role` from `account`. If `account` had been granted `role`, emits a {RoleRevoked} event. Requirements: - the caller must have ``role``'s admin role."
+				},
+				"setLostOrStolen(bytes32,uint8)": {
+					"details": "set **Record**.assetStatus to lost or stolen, with confirmation of matching rgthash required.",
+					"params": {
+						"_idxHash": "idx of asset to Modify",
+						"_newAssetStatus": "Updated status"
+					}
+				},
+				"setStorageContract(address)": {
+					"details": "Set address of STOR contract to interface with",
+					"params": {
+						"_storageAddress": "address of PRUF_STOR"
+					}
+				},
+				"supportsInterface(bytes4)": {
+					"details": "See {IERC165-supportsInterface}."
+				}
+			},
+			"version": 1
+		},
+		"userdoc": {
+			"kind": "user",
+			"methods": {},
+			"version": 1
+		}
+	},
+	"settings": {
+		"compilationTarget": {
+			"Documents/PRUF/PRUF_TRUFFLE/contracts/ReleaseCandidates/PRUF_APP_NC.sol": "APP_NC"
+		},
+		"evmVersion": "london",
+		"libraries": {},
+		"metadata": {
+			"bytecodeHash": "ipfs"
+		},
+		"optimizer": {
+			"enabled": false,
+			"runs": 200
+		},
+		"remappings": []
+	},
+	"sources": {
+		"Documents/PRUF/PRUF_TRUFFLE/contracts/Imports/access/AccessControl.sol": {
+			"keccak256": "0x183481af1c40d2efb26b86f63d6fe9e22f24c87e436d60a69f261b38500e7cd6",
+			"license": "MIT",
+			"urls": [
+				"bzz-raw://f562746c399ae045994a88b2218d1238a349de07afbfb305aab0c7fdbc2954cc",
+				"dweb:/ipfs/QmYoFrDD2c6fi9CpPz1bjCMAyketjZ3G7ByUSVQMntysms"
+			]
+		},
+		"Documents/PRUF/PRUF_TRUFFLE/contracts/Imports/access/IAccessControl.sol": {
+			"keccak256": "0xfe0edb09653ed10e8a1bfe03eb9b0ff06775666eee817a95bd3d0799f1ee2b44",
+			"license": "MIT",
+			"urls": [
+				"bzz-raw://fbb9d503857eab98f87465df0f02fef03083f30c1dbec82f319f41aaadae19b4",
+				"dweb:/ipfs/QmTxDshRAMtoeM45YrTzQZdpmy4mt4scCNHjfZiWSvdETF"
+			]
+		},
+		"Documents/PRUF/PRUF_TRUFFLE/contracts/Imports/security/Pausable.sol": {
+			"keccak256": "0xa35b1f2a670cd2a701a52c398032c9fed72df1909fe394d77ceacbf074e8937b",
+			"license": "MIT",
+			"urls": [
+				"bzz-raw://72b957861691ebdaa78c52834465c4f8296480fe4f1a12ba72dc6c0c8ac076dd",
+				"dweb:/ipfs/QmVz1sHCwgEivHPRDswdt9tdvky7EnWqFmbuk1wFE55VMG"
+			]
+		},
+		"Documents/PRUF/PRUF_TRUFFLE/contracts/Imports/security/ReentrancyGuard.sol": {
+			"keccak256": "0x3ad0ec379a808f08bbb0b2eaa4533add9a458cc411115030842034d8c2032c2b",
+			"license": "MIT",
+			"urls": [
+				"bzz-raw://4a6ad8b70f72c7f95535ac08452129a4ccc9dd523a49d7b613938af95327debf",
+				"dweb:/ipfs/Qmc2HdxeQoi9CA1TTuB4sCAEr1Bbrj38ZLBrE8moHNbyA5"
+			]
+		},
+		"Documents/PRUF/PRUF_TRUFFLE/contracts/Imports/token/ERC20/IERC20.sol": {
+			"keccak256": "0x027b891937d20ccf213fdb9c31531574256de774bda99d3a70ecef6e1913ed2a",
+			"license": "MIT",
+			"urls": [
+				"bzz-raw://087318b21c528119f649899f5b5580566dd8d7b0303d4904bd0e8580c3545f14",
+				"dweb:/ipfs/Qmbn5Mj7aUn8hJuQ8VrQjjEXRsXyJKykgnjR9p4C3nfLtL"
+			]
+		},
+		"Documents/PRUF/PRUF_TRUFFLE/contracts/Imports/token/ERC721/IERC721.sol": {
+			"keccak256": "0xf101e8720213560fab41104d53b3cc7ba0456ef3a98455aa7f022391783144a0",
+			"license": "MIT",
+			"urls": [
+				"bzz-raw://3e7820bcf567e6892d937c3cb10db263a4042e446799bca602535868d822384e",
+				"dweb:/ipfs/QmPG2oeDjKncqsEeyYGjAN7CwAJmMgHterXGGnpzhha4z7"
+			]
+		},
+		"Documents/PRUF/PRUF_TRUFFLE/contracts/Imports/token/ERC721/IERC721Receiver.sol": {
+			"keccak256": "0xd9517254724276e2e8de3769183c1f738f445f0095c26fd9b86d3c6687e887b9",
+			"license": "MIT",
+			"urls": [
+				"bzz-raw://0e604bcdcd5e5b2fb299ad09769cde6db19d5aa1929d1b5e939234a0f10d7eb8",
+				"dweb:/ipfs/Qmd8hXE3GZfBHuWx3RNiYgFW2ci7KvHtib8DiwzJ2dgo9V"
+			]
+		},
+		"Documents/PRUF/PRUF_TRUFFLE/contracts/Imports/utils/Context.sol": {
+			"keccak256": "0x90565a39ae45c80f0468dc96c7b20d0afc3055f344c8203a0c9258239f350b9f",
+			"license": "MIT",
+			"urls": [
+				"bzz-raw://26e8b38a7ac8e7b4463af00cf7fff1bf48ae9875765bf4f7751e100124d0bc8c",
+				"dweb:/ipfs/QmWcsmkVr24xmmjfnBQZoemFniXjj3vwT78Cz6uqZW1Hux"
+			]
+		},
+		"Documents/PRUF/PRUF_TRUFFLE/contracts/Imports/utils/Strings.sol": {
+			"keccak256": "0x391d3ba97ab6856a16b225d6ee29617ad15ff00db70f3b4df1ab5ea33aa47c9d",
+			"license": "MIT",
+			"urls": [
+				"bzz-raw://d636ba90bbbeed04a1ea7fe9ec2466757e30fd38ba2ca173636dbf69a518735e",
+				"dweb:/ipfs/QmQwCB2BHnEuYR22PYt9HkpbgeFDhq4rHmaYqAZbX3WRC7"
+			]
+		},
+		"Documents/PRUF/PRUF_TRUFFLE/contracts/Imports/utils/introspection/ERC165.sol": {
+			"keccak256": "0x5718c5df9bd67ac68a796961df938821bb5dc0cd4c6118d77e9145afb187409b",
+			"license": "MIT",
+			"urls": [
+				"bzz-raw://d10e1d9b26042424789246603906ad06143bf9a928f4e99de8b5e3bdc662f549",
+				"dweb:/ipfs/Qmejonoaj5MLekPus229rJQHcC6E9dz2xorjHJR84fMfmn"
+			]
+		},
+		"Documents/PRUF/PRUF_TRUFFLE/contracts/Imports/utils/introspection/IERC165.sol": {
+			"keccak256": "0xa28007762d9da9db878dd421960c8cb9a10471f47ab5c1b3309bfe48e9e79ff4",
+			"license": "MIT",
+			"urls": [
+				"bzz-raw://796ab6e88af7bf0e78def0f059310c903af6a312b565344e0ff524a0f26e81c6",
+				"dweb:/ipfs/QmcsVgLgzWdor3UnAztUkXKNGcysm1MPneWksF72AvnwBx"
+			]
+		},
+		"Documents/PRUF/PRUF_TRUFFLE/contracts/ReleaseCandidates/PRUF_APP_NC.sol": {
+			"keccak256": "0x037f4161ce95843f3bee60782b46255cf0deac5a4df08c9f2d2b8b5f4767f4be",
+			"license": "UNLICENSED",
+			"urls": [
+				"bzz-raw://746622f9f8c1c1c4bf3bd64c153877a443dd123b8eb3d5762d9566601e9f4783",
+				"dweb:/ipfs/QmVzWACC3ZRFVNzdEnzNFef3JV1Uw85y1rWcGLZgqbBduL"
+			]
+		},
+		"Documents/PRUF/PRUF_TRUFFLE/contracts/Resources/PRUF_BASIC.sol": {
+			"keccak256": "0xba1127a8a2e76522d1ef529e8b113bfacbb743b10722438292a0e5c46d28215f",
+			"license": "UNLICENSED",
+			"urls": [
+				"bzz-raw://4d32b31a16085bb79f457975290c7083edc0f96d27a3d3ae86c62a9054a6cdf3",
+				"dweb:/ipfs/QmbBC9AHrSf6G98qWMEM9ZYRKTEhULk1nUzgW6ntaWiR1z"
+			]
+		},
+		"Documents/PRUF/PRUF_TRUFFLE/contracts/Resources/PRUF_CORE.sol": {
+			"keccak256": "0x243fb9ef1d068e8adea4c8eaba3b535faa14f309ceef1a3fc28cb9ffc6035c5f",
+			"license": "UNLICENSED",
+			"urls": [
+				"bzz-raw://f7b4bb3971ee32e47d96e595d432b8e69068faca52e1ae1c9c0ce4beb70d88ee",
+				"dweb:/ipfs/Qmdk5hqbiwFWQAzywkA1huJfgFNL57MDvWAu99vmickND1"
+			]
+		},
+		"Documents/PRUF/PRUF_TRUFFLE/contracts/Resources/RESOURCE_PRUF_INTERFACES.sol": {
+			"keccak256": "0x2588fbcfed3d633e8e09b68bf99454c6709fbd833bb1b466c28f6d47cafd5f50",
+			"license": "UNLICENSED",
+			"urls": [
+				"bzz-raw://d871e2106c9fd00a0a6d0e2b648c16e5c11e9eb9abc6742a384ce629a564d2bb",
+				"dweb:/ipfs/QmP2sKYSJdmgXt1LcVwi2c5BM5VJnvC1jCnigjPCVDznQj"
+			]
+		},
+		"Documents/PRUF/PRUF_TRUFFLE/contracts/Resources/RESOURCE_PRUF_STRUCTS.sol": {
+			"keccak256": "0x4ef2ffeef66d8e4f51a45f9f7ad6676cc63b86bf8c51a527436e05e1d06b64c7",
+			"license": "UNLICENSED",
+			"urls": [
+				"bzz-raw://2a5a93469287ace8f8011cab1d3685262b99a113d58aa9b7bdae6d102a04dad5",
+				"dweb:/ipfs/QmZgHHHRTNkTuitxPk1jFGZtTWR6yTjE1J16z1jMppu999"
+			]
+		},
+		"Documents/PRUF/PRUF_TRUFFLE/contracts/Resources/RESOURCE_PRUF_TKN_INTERFACES.sol": {
+			"keccak256": "0x86f05641e3f565bab49ed5b2b24b4a1d6088e0d8d7f74f62bcbebfc372a75f95",
+			"license": "UNLICENSED",
+			"urls": [
+				"bzz-raw://16ae4e8403c2b9e4a565578ef43876528d531f0fd56b35a0874299b57a06397e",
+				"dweb:/ipfs/QmT5TCaEdq2SvzPpNx61d6Qf5SxVoTPY62TzDsGChn6aXM"
+			]
+		}
+	},
+	"version": 1
+}
