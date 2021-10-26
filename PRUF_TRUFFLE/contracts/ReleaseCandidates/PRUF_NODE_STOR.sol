@@ -477,8 +477,8 @@ contract NODE_STOR is BASIC {
         return localNodeFor[_foreignNode];
     }
 
-    /**   //DPS:CHECK function renamed!!!
-     * @dev exttended node data getter
+    /**
+     * @dev extended node data getter
      * @param _node - node being queried
      * returns ExtendedNodeData struct (see resources-structs)
      */ 

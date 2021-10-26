@@ -47,8 +47,7 @@ contract CORE is BASIC {
             "C:CR:Asset token already exists"
         );
 
-        require( //check custody types for this contract CTS:EXAMIMNE ?
-            // ??THIS NEEDS TO BE MOVED INTO THE APP LAYER??? maybe not since the minting is below?
+        require( //check custody types for this contract
             (nodeInfo.custodyType == 1) ||
                 (nodeInfo.custodyType == 2) ||
                 (nodeInfo.custodyType == 4),
@@ -297,7 +296,7 @@ contract CORE is BASIC {
     }
 
     function getNodeinfoWithMinterCheck(
-        uint32 _node //DPS:TEST
+        uint32 _node
     ) internal view returns (Node memory nodeInfo) {
         nodeInfo = getNodeinfo(_node);
 

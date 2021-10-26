@@ -2102,7 +2102,7 @@ contract("NODE_STOR", (accounts) => {
   it("Should return ExtNodeData for Node 1000001", async () => {
     var Record = [];
 
-    return await NODE_STOR.getExtNodeData(
+    return await NODE_STOR.getExtendedNodeData(
       "1000001",
       { from: account1 },
       function (_err, _result) {

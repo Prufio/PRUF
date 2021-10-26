@@ -1766,8 +1766,7 @@ contract("CORE", (accounts) => {
       )
   })
 
-  //1
-  it("Should fail because assetToken already exists", async () => {
+  it("should authorize account2 in root Node 1", async () => {
     console.log(
       "//**************************************END CORE SETUP**********************************************/"
     );
@@ -1777,21 +1776,12 @@ contract("CORE", (accounts) => {
     console.log(
       "//**************************************BEGIN createRecord FAIL BATCH**********************************************/"
     );
-    return APP_NC.newRecord(asset1raw, rgt13, "1000002", "100", asset1raw, { from: account2 });
-  });
-
-  it("should authorize account2 in root Node 1", async () => {
     console.log("Account2 => AC1");
     return NODE_MGR.addUser("1", account2Hash, "1", { from: account1 });
   });
 
   it("should authorize APP for AC1", async () => {
     return STOR.enableContractForNode("APP", "1", "1", { from: account1 });
-  });
-
-  //2
-  it("Should fail because you cannot create asset in root node", async () => {
-    return APP.newRecord(asset2raw, rgt2, "1", "100", asset2raw, { from: account2 });
   });
 
   it("Should set managementType 0 to 0", () => {
@@ -1837,6 +1827,16 @@ contract("CORE", (accounts) => {
     return UTIL_TKN.grantRole(payableRoleB32, MAL_APP.address, {
       from: account1,
     });
+  });
+
+  //1
+  it("Should fail because assetToken already exists", async () => {
+    return APP_NC.newRecord(asset1raw, rgt13, "1000002", "100", asset1raw, { from: account2 });
+  });
+
+  //2
+  it("Should fail because you cannot create asset in root node", async () => {
+    return APP.newRecord(asset2raw, rgt2, "1", "100", asset2raw, { from: account2 });
   });
 
   it("Should set SharesAddress", async () => {
