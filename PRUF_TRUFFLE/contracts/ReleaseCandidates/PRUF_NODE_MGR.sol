@@ -339,6 +339,13 @@ contract NODE_MGR is BASIC {
             "NM:SNMD: managementType = 255(Unconfigured)"
         );
 
+        if(thisNode.custodyType != 3) { //CTS:EXAMINE
+            require(
+                _managementType != 0,
+                "NM:SNMD: managementType cannot = 0 unless root"
+            );
+        }
+
         NODE_STOR.setNonMutableData(
             _node,
             _managementType,
