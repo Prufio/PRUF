@@ -48,17 +48,20 @@ contract CORE is BASIC {
             nodeInfo.custodyType != 3,
             "C:CR:Cannot create asset in a root node"
         );
-        require(
-            NODE_STOR.getManagementTypeStatus(nodeInfo.managementType) > 0,
-            "C:CR: Invalid management type"
-        );
-        require( //check custody types for this contract
+        
+        require( //check custody types for this contract CTS:EXAMIMNE ?
+        // ??THIS NEEDS TO BE MOVED INTO THE APP LAYER??? maybe not since the minting is below?
             (nodeInfo.custodyType == 1) ||
                 (nodeInfo.custodyType == 2) ||
                 (nodeInfo.custodyType == 4),
             "C:CR:Cannot create asset - contract not authorized for node custody type"
         );
-        // if (nodeInfo.custodyType != 1) {
+
+
+        require(
+            NODE_STOR.getManagementTypeStatus(nodeInfo.managementType) > 0,
+            "C:CR: Invalid management type"
+        );
         if (
             (nodeInfo.managementType == 1) ||
             (nodeInfo.managementType == 2) ||
@@ -81,38 +84,18 @@ contract CORE is BASIC {
                 "C:CR: Contract does not support management type or node is locked"
             );
         }
-        // }
-
-        // if (
-        //     (nodeInfo.managementType == 1) ||
-        //     (nodeInfo.managementType == 2) ||
-        //     (nodeInfo.managementType == 5)
-        // ) {
-        //     require(
-        //         (NODE_TKN.ownerOf(_node) == _msgSender()),
-        //         "D:CRO:Cannot create asset in node mgmt type 1||2||5 - caller does not hold node token"
-        //     );
-        // } else if (nodeInfo.managementType == 3) {
-        //     require(
-        //         NODE_STOR.getUserType(
-        //             keccak256(abi.encodePacked(_msgSender())),
-        //             _node
-        //         ) == 1,
-        //         "D:CRO:Cannot create asset - caller address not authorized"
-        //     );
-        // }
 
         //^^^^^^^Checks^^^^^^^^
 
         address recipient;
         if (NODE_STOR.getSwitchAt(_node, 8) == 0) {
-            //if switch at bit 2 is not set, set the mint to address to the node holder
+            //if switch at bit 8 is not set, set the mint to address to the node holder
             recipient = NODE_TKN.ownerOf(_node);
         } else if (nodeInfo.custodyType == 1) {
-            //if switch at bit 2 is set, and and the custody type is 1, send the token to this cointract.
+            //if switch at bit 8 is set, and and the custody type is 1, send the token to this contract.
             recipient = address(this);
         } else {
-            //if switch at bit 2 is set, and and the custody type is not 1, send the token to the caller.
+            //if switch at bit 8 is set, and and the custody type is not 1, send the token to the caller.
             recipient = _msgSender();
         }
 

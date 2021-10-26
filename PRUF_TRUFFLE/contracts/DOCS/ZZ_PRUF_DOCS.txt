@@ -274,7 +274,7 @@ pragma solidity ^0.6.7;
  *              
  * 1   -- Restricted (Only ACNode holder can create, discard)
  * 2   -- Less Restricted (Only ACNode holder can create)
- * 3   -- Authorized (caller address must be user authorized type 1 in Node)
+ * 3   -- TBD Authorized (caller address must be user authorized type 1 in Node or nodehoder) to be depricated, use switch 
  * 4   DEPRICATED (USE type 3 functionality)
  * 5   -- Remotely Managed (same as 1-restricted except ONLY ACnode hoder can change IPFS1a/b )
  * 255 -- Unconfigured - No minting permitted, not yet activated (set by default on node purchase, cannot be reverted)
@@ -298,9 +298,12 @@ pragma solidity ^0.6.7;
  * bit2  -- If set, User can set first NMS 
  * bit4  --
  * bit5  --
- * bit6  --
- * bit7  --
- * bit8  -- If set, node allows minting to third parties in management types that support address delegation. Also supports "mint to" if implemented in app
+ * bit6  -- TBI If set, node token and IDroot token must reside in the same address for minting to occur
+ * bit7  -- TBI If set, delegated addresses may mint
+ * bit8  -- If not set, tokens will always mint to nodeholder.If set, node allows minting to delegated parties
+        in management types that support address delegation. Also supports "mint to" if implemented in app. 
+        !!MUST!! be set for custodial contracts
+                
 - -----------------------------------------------------------------
 
 /*-----------------------------------------------------------------
