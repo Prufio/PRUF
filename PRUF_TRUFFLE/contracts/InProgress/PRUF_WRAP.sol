@@ -97,33 +97,6 @@ contract WRAP is CORE {
                 (nodeInfo.referenceAddress == address(0)),
             "W:W:referenceAddress must be '0' or ERC721 contract address"
         );
-        require( //DPS:TEST NEW
-            NODE_STOR.getManagementTypeStatus(nodeInfo.managementType) > 0,
-            "W:W: Invalid management type"
-        );
-        if (
-            //DPS:TEST NEW
-            (nodeInfo.managementType == 1) ||
-            (nodeInfo.managementType == 2) ||
-            (nodeInfo.managementType == 5)
-        ) {
-            require( //DPS:TEST NEW
-                (NODE_TKN.ownerOf(_node) == _msgSender()),
-                "W:W: Cannot create asset in node mgmt type 1||2||5 - caller does not hold node token"
-            );
-        } else if (nodeInfo.managementType == 3) {
-            require( //DPS:TEST NEW
-                NODE_STOR.getUserType(
-                    keccak256(abi.encodePacked(_msgSender())),
-                    _node
-                ) == 1,
-                "W:W: Cannot create asset - caller address !authorized"
-            );
-        } else {
-            revert(
-                "W:W: Contract does not support management type or node is locked"
-            );
-        }
         //^^^^^^^checks^^^^^^^^^
 
         wrapped[newTokenId].tokenID = _foreignTokenID;
@@ -242,42 +215,12 @@ contract WRAP is CORE {
         bytes32 idxHash = keccak256(abi.encodePacked(_idxRaw, _node)); //hash idxRaw with node to get idxHash DPS:TEST
         bytes32 URIhash = keccak256(abi.encodePacked(_URIsuffix));
         uint256 tokenId = uint256(idxHash);
-        Node memory nodeInfo = getNodeinfo(_node);
+        Node memory nodeInfo = getNodeinfoWithMinterCheck(_node);
 
         require(
             A_TKN.tokenExists(tokenId) == 0,
             "W:CR: Asset token already exists"
         );
-        require( //DPS:TEST NEW
-            NODE_STOR.getManagementTypeStatus(nodeInfo.managementType) > 0,
-            "W:CR: Invalid management type"
-        );
-        require(
-            (nodeInfo.managementType < 6),
-            "W:CR: Contract does not support management types > 5 or node is locked"
-        );
-        if (
-            (nodeInfo.managementType == 1) ||
-            (nodeInfo.managementType == 2) ||
-            (nodeInfo.managementType == 5)
-        ) {
-            require(
-                (NODE_TKN.ownerOf(_node) == _msgSender()),
-                "W:CR: Cannot create asset in node mgmt type 1||2||5 - caller does not hold node token"
-            );
-        } else if (nodeInfo.managementType == 3) {
-            require(
-                NODE_STOR.getUserType(
-                    keccak256(abi.encodePacked(_msgSender())),
-                    _node
-                ) == 1,
-                "W:CR:Cannot create asset - caller address not authorized"
-            );
-        } else {
-            revert(
-                "W:CR: Contract does not support management type or node is locked"
-            );
-        }
         //^^^^^^^checks^^^^^^^^^
 
         address recipient;

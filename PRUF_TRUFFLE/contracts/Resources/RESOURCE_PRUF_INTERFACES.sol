@@ -628,7 +628,7 @@ interface NODE_STOR_Interface {
      * @param _node - node being queried
      * returns ExtendedNodeData struct (see resources-structs)
      */
-    function getExtNodeData(uint32 _node)
+    function getExtendedNodeData(uint32 _node)
         external
         view
         returns (ExtendedNodeData memory);

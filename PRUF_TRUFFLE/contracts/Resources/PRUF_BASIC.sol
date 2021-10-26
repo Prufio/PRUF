@@ -25,7 +25,7 @@ import "../Imports/access/AccessControl.sol";
 import "../Imports/security/Pausable.sol";
 import "../Imports/security/ReentrancyGuard.sol";
 import "../Imports/token/ERC721/IERC721Receiver.sol";
-import "../Resources/IERC721withURI.sol";
+import "../Resources/IERC721_URI.sol";
 import "../Imports/token/ERC20/IERC20.sol";
 
 abstract contract BASIC is
@@ -172,9 +172,6 @@ abstract contract BASIC is
 
         A_TKN_Address = STOR.resolveContractAddress("A_TKN");
         A_TKN = A_TKN_Interface(A_TKN_Address);
-
-        // ID_MGR_Address = STOR.resolveContractAddress("ID_MGR");
-        // ID_MGR = ID_MGR_Interface(ID_MGR_Address);
 
         ECR_MGR_Address = STOR.resolveContractAddress("ECR_MGR");
         ECR_MGR = ECR_MGR_Interface(ECR_MGR_Address);

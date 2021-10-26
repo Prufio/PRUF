@@ -1,0 +1,1694 @@
+{
+	"compiler": {
+		"version": "0.8.9+commit.e5eed63a"
+	},
+	"language": "Solidity",
+	"output": {
+		"abi": [
+			{
+				"inputs": [],
+				"stateMutability": "nonpayable",
+				"type": "constructor"
+			},
+			{
+				"anonymous": false,
+				"inputs": [
+					{
+						"indexed": false,
+						"internalType": "address",
+						"name": "account",
+						"type": "address"
+					}
+				],
+				"name": "Paused",
+				"type": "event"
+			},
+			{
+				"anonymous": false,
+				"inputs": [
+					{
+						"indexed": false,
+						"internalType": "string",
+						"name": "_msg",
+						"type": "string"
+					}
+				],
+				"name": "REPORT",
+				"type": "event"
+			},
+			{
+				"anonymous": false,
+				"inputs": [
+					{
+						"indexed": true,
+						"internalType": "bytes32",
+						"name": "role",
+						"type": "bytes32"
+					},
+					{
+						"indexed": true,
+						"internalType": "bytes32",
+						"name": "previousAdminRole",
+						"type": "bytes32"
+					},
+					{
+						"indexed": true,
+						"internalType": "bytes32",
+						"name": "newAdminRole",
+						"type": "bytes32"
+					}
+				],
+				"name": "RoleAdminChanged",
+				"type": "event"
+			},
+			{
+				"anonymous": false,
+				"inputs": [
+					{
+						"indexed": true,
+						"internalType": "bytes32",
+						"name": "role",
+						"type": "bytes32"
+					},
+					{
+						"indexed": true,
+						"internalType": "address",
+						"name": "account",
+						"type": "address"
+					},
+					{
+						"indexed": true,
+						"internalType": "address",
+						"name": "sender",
+						"type": "address"
+					}
+				],
+				"name": "RoleGranted",
+				"type": "event"
+			},
+			{
+				"anonymous": false,
+				"inputs": [
+					{
+						"indexed": true,
+						"internalType": "bytes32",
+						"name": "role",
+						"type": "bytes32"
+					},
+					{
+						"indexed": true,
+						"internalType": "address",
+						"name": "account",
+						"type": "address"
+					},
+					{
+						"indexed": true,
+						"internalType": "address",
+						"name": "sender",
+						"type": "address"
+					}
+				],
+				"name": "RoleRevoked",
+				"type": "event"
+			},
+			{
+				"anonymous": false,
+				"inputs": [
+					{
+						"indexed": false,
+						"internalType": "address",
+						"name": "account",
+						"type": "address"
+					}
+				],
+				"name": "Unpaused",
+				"type": "event"
+			},
+			{
+				"inputs": [],
+				"name": "ASSET_TXFR_ROLE",
+				"outputs": [
+					{
+						"internalType": "bytes32",
+						"name": "",
+						"type": "bytes32"
+					}
+				],
+				"stateMutability": "view",
+				"type": "function"
+			},
+			{
+				"inputs": [],
+				"name": "B320xF_",
+				"outputs": [
+					{
+						"internalType": "bytes32",
+						"name": "",
+						"type": "bytes32"
+					}
+				],
+				"stateMutability": "view",
+				"type": "function"
+			},
+			{
+				"inputs": [],
+				"name": "CONTRACT_ADMIN_ROLE",
+				"outputs": [
+					{
+						"internalType": "bytes32",
+						"name": "",
+						"type": "bytes32"
+					}
+				],
+				"stateMutability": "view",
+				"type": "function"
+			},
+			{
+				"inputs": [],
+				"name": "DEFAULT_ADMIN_ROLE",
+				"outputs": [
+					{
+						"internalType": "bytes32",
+						"name": "",
+						"type": "bytes32"
+					}
+				],
+				"stateMutability": "view",
+				"type": "function"
+			},
+			{
+				"inputs": [
+					{
+						"internalType": "address",
+						"name": "_tokenContract",
+						"type": "address"
+					},
+					{
+						"internalType": "address",
+						"name": "_to",
+						"type": "address"
+					},
+					{
+						"internalType": "uint256",
+						"name": "_amount",
+						"type": "uint256"
+					}
+				],
+				"name": "ERC20Transfer",
+				"outputs": [],
+				"stateMutability": "nonpayable",
+				"type": "function"
+			},
+			{
+				"inputs": [
+					{
+						"internalType": "address",
+						"name": "_tokenContract",
+						"type": "address"
+					},
+					{
+						"internalType": "address",
+						"name": "_to",
+						"type": "address"
+					},
+					{
+						"internalType": "uint256",
+						"name": "_tokenID",
+						"type": "uint256"
+					}
+				],
+				"name": "ERC721Transfer",
+				"outputs": [],
+				"stateMutability": "nonpayable",
+				"type": "function"
+			},
+			{
+				"inputs": [],
+				"name": "NODE_MINTER_ROLE",
+				"outputs": [
+					{
+						"internalType": "bytes32",
+						"name": "",
+						"type": "bytes32"
+					}
+				],
+				"stateMutability": "view",
+				"type": "function"
+			},
+			{
+				"inputs": [],
+				"name": "PAUSER_ROLE",
+				"outputs": [
+					{
+						"internalType": "bytes32",
+						"name": "",
+						"type": "bytes32"
+					}
+				],
+				"stateMutability": "view",
+				"type": "function"
+			},
+			{
+				"inputs": [
+					{
+						"internalType": "uint32",
+						"name": "_node",
+						"type": "uint32"
+					},
+					{
+						"internalType": "bytes32",
+						"name": "_addrHash",
+						"type": "bytes32"
+					},
+					{
+						"internalType": "uint8",
+						"name": "_userType",
+						"type": "uint8"
+					}
+				],
+				"name": "addUser",
+				"outputs": [],
+				"stateMutability": "nonpayable",
+				"type": "function"
+			},
+			{
+				"inputs": [
+					{
+						"internalType": "uint32",
+						"name": "_node",
+						"type": "uint32"
+					},
+					{
+						"internalType": "string",
+						"name": "_name",
+						"type": "string"
+					},
+					{
+						"internalType": "uint32",
+						"name": "_nodeRoot",
+						"type": "uint32"
+					},
+					{
+						"internalType": "uint8",
+						"name": "_custodyType",
+						"type": "uint8"
+					},
+					{
+						"internalType": "uint8",
+						"name": "_managementType",
+						"type": "uint8"
+					},
+					{
+						"internalType": "uint8",
+						"name": "_storageProvider",
+						"type": "uint8"
+					},
+					{
+						"internalType": "uint32",
+						"name": "_discount",
+						"type": "uint32"
+					},
+					{
+						"internalType": "bytes32",
+						"name": "_CAS1",
+						"type": "bytes32"
+					},
+					{
+						"internalType": "bytes32",
+						"name": "_CAS2",
+						"type": "bytes32"
+					},
+					{
+						"internalType": "address",
+						"name": "_recipientAddress",
+						"type": "address"
+					}
+				],
+				"name": "createNode",
+				"outputs": [],
+				"stateMutability": "nonpayable",
+				"type": "function"
+			},
+			{
+				"inputs": [],
+				"name": "currentNodePricingInfo",
+				"outputs": [
+					{
+						"internalType": "uint256",
+						"name": "",
+						"type": "uint256"
+					},
+					{
+						"internalType": "uint256",
+						"name": "",
+						"type": "uint256"
+					}
+				],
+				"stateMutability": "view",
+				"type": "function"
+			},
+			{
+				"inputs": [
+					{
+						"internalType": "uint8",
+						"name": "_custodyType",
+						"type": "uint8"
+					}
+				],
+				"name": "getCustodyTypeStatus",
+				"outputs": [
+					{
+						"internalType": "uint8",
+						"name": "",
+						"type": "uint8"
+					}
+				],
+				"stateMutability": "view",
+				"type": "function"
+			},
+			{
+				"inputs": [
+					{
+						"internalType": "uint32",
+						"name": "_node",
+						"type": "uint32"
+					}
+				],
+				"name": "getExtendedNodeData",
+				"outputs": [
+					{
+						"components": [
+							{
+								"internalType": "string",
+								"name": "name",
+								"type": "string"
+							},
+							{
+								"internalType": "uint32",
+								"name": "nodeRoot",
+								"type": "uint32"
+							},
+							{
+								"internalType": "uint8",
+								"name": "custodyType",
+								"type": "uint8"
+							},
+							{
+								"internalType": "uint8",
+								"name": "managementType",
+								"type": "uint8"
+							},
+							{
+								"internalType": "uint8",
+								"name": "storageProvider",
+								"type": "uint8"
+							},
+							{
+								"internalType": "uint32",
+								"name": "discount",
+								"type": "uint32"
+							},
+							{
+								"internalType": "uint8",
+								"name": "U8",
+								"type": "uint8"
+							},
+							{
+								"internalType": "address",
+								"name": "referenceAddress",
+								"type": "address"
+							},
+							{
+								"internalType": "uint8",
+								"name": "switches",
+								"type": "uint8"
+							},
+							{
+								"internalType": "bytes32",
+								"name": "CAS1",
+								"type": "bytes32"
+							},
+							{
+								"internalType": "bytes32",
+								"name": "CAS2",
+								"type": "bytes32"
+							}
+						],
+						"internalType": "struct Node",
+						"name": "",
+						"type": "tuple"
+					}
+				],
+				"stateMutability": "view",
+				"type": "function"
+			},
+			{
+				"inputs": [
+					{
+						"internalType": "uint32",
+						"name": "_node",
+						"type": "uint32"
+					},
+					{
+						"internalType": "uint16",
+						"name": "_service",
+						"type": "uint16"
+					}
+				],
+				"name": "getInvoice",
+				"outputs": [
+					{
+						"components": [
+							{
+								"internalType": "address",
+								"name": "rootAddress",
+								"type": "address"
+							},
+							{
+								"internalType": "address",
+								"name": "NTHaddress",
+								"type": "address"
+							},
+							{
+								"internalType": "uint256",
+								"name": "rootPrice",
+								"type": "uint256"
+							},
+							{
+								"internalType": "uint256",
+								"name": "NTHprice",
+								"type": "uint256"
+							}
+						],
+						"internalType": "struct Invoice",
+						"name": "",
+						"type": "tuple"
+					}
+				],
+				"stateMutability": "view",
+				"type": "function"
+			},
+			{
+				"inputs": [
+					{
+						"internalType": "uint8",
+						"name": "_managementType",
+						"type": "uint8"
+					}
+				],
+				"name": "getManagementTypeStatus",
+				"outputs": [
+					{
+						"internalType": "uint8",
+						"name": "",
+						"type": "uint8"
+					}
+				],
+				"stateMutability": "view",
+				"type": "function"
+			},
+			{
+				"inputs": [
+					{
+						"internalType": "uint32",
+						"name": "_node",
+						"type": "uint32"
+					}
+				],
+				"name": "getNodeDiscount",
+				"outputs": [
+					{
+						"internalType": "uint32",
+						"name": "",
+						"type": "uint32"
+					}
+				],
+				"stateMutability": "view",
+				"type": "function"
+			},
+			{
+				"inputs": [
+					{
+						"internalType": "uint32",
+						"name": "node",
+						"type": "uint32"
+					}
+				],
+				"name": "getNodeName",
+				"outputs": [
+					{
+						"internalType": "string",
+						"name": "",
+						"type": "string"
+					}
+				],
+				"stateMutability": "view",
+				"type": "function"
+			},
+			{
+				"inputs": [
+					{
+						"internalType": "bytes32",
+						"name": "role",
+						"type": "bytes32"
+					}
+				],
+				"name": "getRoleAdmin",
+				"outputs": [
+					{
+						"internalType": "bytes32",
+						"name": "",
+						"type": "bytes32"
+					}
+				],
+				"stateMutability": "view",
+				"type": "function"
+			},
+			{
+				"inputs": [
+					{
+						"internalType": "uint32",
+						"name": "_node",
+						"type": "uint32"
+					},
+					{
+						"internalType": "uint16",
+						"name": "_service",
+						"type": "uint16"
+					}
+				],
+				"name": "getServicePaymentData",
+				"outputs": [
+					{
+						"components": [
+							{
+								"internalType": "uint256",
+								"name": "serviceCost",
+								"type": "uint256"
+							},
+							{
+								"internalType": "address",
+								"name": "paymentAddress",
+								"type": "address"
+							}
+						],
+						"internalType": "struct Costs",
+						"name": "",
+						"type": "tuple"
+					}
+				],
+				"stateMutability": "view",
+				"type": "function"
+			},
+			{
+				"inputs": [
+					{
+						"internalType": "uint8",
+						"name": "_storageProvider",
+						"type": "uint8"
+					}
+				],
+				"name": "getStorageProviderStatus",
+				"outputs": [
+					{
+						"internalType": "uint8",
+						"name": "",
+						"type": "uint8"
+					}
+				],
+				"stateMutability": "view",
+				"type": "function"
+			},
+			{
+				"inputs": [
+					{
+						"internalType": "uint32",
+						"name": "_node",
+						"type": "uint32"
+					},
+					{
+						"internalType": "uint8",
+						"name": "_position",
+						"type": "uint8"
+					}
+				],
+				"name": "getSwitchAt",
+				"outputs": [
+					{
+						"internalType": "uint256",
+						"name": "",
+						"type": "uint256"
+					}
+				],
+				"stateMutability": "view",
+				"type": "function"
+			},
+			{
+				"inputs": [
+					{
+						"internalType": "bytes32",
+						"name": "_userHash",
+						"type": "bytes32"
+					},
+					{
+						"internalType": "uint32",
+						"name": "_node",
+						"type": "uint32"
+					}
+				],
+				"name": "getUserType",
+				"outputs": [
+					{
+						"internalType": "uint8",
+						"name": "",
+						"type": "uint8"
+					}
+				],
+				"stateMutability": "view",
+				"type": "function"
+			},
+			{
+				"inputs": [
+					{
+						"internalType": "bytes32",
+						"name": "role",
+						"type": "bytes32"
+					},
+					{
+						"internalType": "address",
+						"name": "account",
+						"type": "address"
+					}
+				],
+				"name": "grantRole",
+				"outputs": [],
+				"stateMutability": "nonpayable",
+				"type": "function"
+			},
+			{
+				"inputs": [
+					{
+						"internalType": "bytes32",
+						"name": "role",
+						"type": "bytes32"
+					},
+					{
+						"internalType": "address",
+						"name": "account",
+						"type": "address"
+					}
+				],
+				"name": "hasRole",
+				"outputs": [
+					{
+						"internalType": "bool",
+						"name": "",
+						"type": "bool"
+					}
+				],
+				"stateMutability": "view",
+				"type": "function"
+			},
+			{
+				"inputs": [
+					{
+						"internalType": "uint32",
+						"name": "_node",
+						"type": "uint32"
+					},
+					{
+						"internalType": "uint32",
+						"name": "_newDiscount",
+						"type": "uint32"
+					}
+				],
+				"name": "increaseShare",
+				"outputs": [],
+				"stateMutability": "nonpayable",
+				"type": "function"
+			},
+			{
+				"inputs": [
+					{
+						"internalType": "uint32",
+						"name": "_node1",
+						"type": "uint32"
+					},
+					{
+						"internalType": "uint32",
+						"name": "_node2",
+						"type": "uint32"
+					}
+				],
+				"name": "isSameRootNode",
+				"outputs": [
+					{
+						"internalType": "uint8",
+						"name": "",
+						"type": "uint8"
+					}
+				],
+				"stateMutability": "view",
+				"type": "function"
+			},
+			{
+				"inputs": [
+					{
+						"internalType": "uint32",
+						"name": "_node",
+						"type": "uint32"
+					},
+					{
+						"internalType": "uint32",
+						"name": "_nodeRoot",
+						"type": "uint32"
+					},
+					{
+						"internalType": "uint8",
+						"name": "_custodyType",
+						"type": "uint8"
+					},
+					{
+						"internalType": "uint8",
+						"name": "_managementType",
+						"type": "uint8"
+					},
+					{
+						"internalType": "uint8",
+						"name": "_storageProvider",
+						"type": "uint8"
+					},
+					{
+						"internalType": "uint32",
+						"name": "_discount",
+						"type": "uint32"
+					},
+					{
+						"internalType": "address",
+						"name": "_refAddress",
+						"type": "address"
+					},
+					{
+						"internalType": "bytes32",
+						"name": "_CAS1",
+						"type": "bytes32"
+					},
+					{
+						"internalType": "bytes32",
+						"name": "_CAS2",
+						"type": "bytes32"
+					}
+				],
+				"name": "modifyNode",
+				"outputs": [],
+				"stateMutability": "nonpayable",
+				"type": "function"
+			},
+			{
+				"inputs": [
+					{
+						"internalType": "uint32",
+						"name": "_node",
+						"type": "uint32"
+					},
+					{
+						"internalType": "uint8",
+						"name": "_position",
+						"type": "uint8"
+					},
+					{
+						"internalType": "uint8",
+						"name": "_bit",
+						"type": "uint8"
+					}
+				],
+				"name": "modifyNodeSwitches",
+				"outputs": [],
+				"stateMutability": "nonpayable",
+				"type": "function"
+			},
+			{
+				"inputs": [],
+				"name": "node_price",
+				"outputs": [
+					{
+						"internalType": "uint256",
+						"name": "",
+						"type": "uint256"
+					}
+				],
+				"stateMutability": "view",
+				"type": "function"
+			},
+			{
+				"inputs": [
+					{
+						"internalType": "address",
+						"name": "",
+						"type": "address"
+					},
+					{
+						"internalType": "address",
+						"name": "",
+						"type": "address"
+					},
+					{
+						"internalType": "uint256",
+						"name": "",
+						"type": "uint256"
+					},
+					{
+						"internalType": "bytes",
+						"name": "",
+						"type": "bytes"
+					}
+				],
+				"name": "onERC721Received",
+				"outputs": [
+					{
+						"internalType": "bytes4",
+						"name": "",
+						"type": "bytes4"
+					}
+				],
+				"stateMutability": "nonpayable",
+				"type": "function"
+			},
+			{
+				"inputs": [],
+				"name": "pause",
+				"outputs": [],
+				"stateMutability": "nonpayable",
+				"type": "function"
+			},
+			{
+				"inputs": [],
+				"name": "paused",
+				"outputs": [
+					{
+						"internalType": "bool",
+						"name": "",
+						"type": "bool"
+					}
+				],
+				"stateMutability": "view",
+				"type": "function"
+			},
+			{
+				"inputs": [
+					{
+						"internalType": "string",
+						"name": "_name",
+						"type": "string"
+					},
+					{
+						"internalType": "uint32",
+						"name": "_nodeRoot",
+						"type": "uint32"
+					},
+					{
+						"internalType": "uint8",
+						"name": "_custodyType",
+						"type": "uint8"
+					},
+					{
+						"internalType": "bytes32",
+						"name": "_CAS1",
+						"type": "bytes32"
+					},
+					{
+						"internalType": "bytes32",
+						"name": "_CAS2",
+						"type": "bytes32"
+					}
+				],
+				"name": "purchaseNode",
+				"outputs": [
+					{
+						"internalType": "uint256",
+						"name": "",
+						"type": "uint256"
+					}
+				],
+				"stateMutability": "nonpayable",
+				"type": "function"
+			},
+			{
+				"inputs": [
+					{
+						"internalType": "bytes32",
+						"name": "role",
+						"type": "bytes32"
+					},
+					{
+						"internalType": "address",
+						"name": "account",
+						"type": "address"
+					}
+				],
+				"name": "renounceRole",
+				"outputs": [],
+				"stateMutability": "nonpayable",
+				"type": "function"
+			},
+			{
+				"inputs": [],
+				"name": "resolveContractAddresses",
+				"outputs": [],
+				"stateMutability": "nonpayable",
+				"type": "function"
+			},
+			{
+				"inputs": [
+					{
+						"internalType": "string",
+						"name": "_forThisName",
+						"type": "string"
+					}
+				],
+				"name": "resolveNode",
+				"outputs": [
+					{
+						"internalType": "uint32",
+						"name": "",
+						"type": "uint32"
+					}
+				],
+				"stateMutability": "view",
+				"type": "function"
+			},
+			{
+				"inputs": [
+					{
+						"internalType": "bytes32",
+						"name": "role",
+						"type": "bytes32"
+					},
+					{
+						"internalType": "address",
+						"name": "account",
+						"type": "address"
+					}
+				],
+				"name": "revokeRole",
+				"outputs": [],
+				"stateMutability": "nonpayable",
+				"type": "function"
+			},
+			{
+				"inputs": [
+					{
+						"internalType": "uint8",
+						"name": "_custodyType",
+						"type": "uint8"
+					},
+					{
+						"internalType": "uint8",
+						"name": "_status",
+						"type": "uint8"
+					}
+				],
+				"name": "setCustodyTypes",
+				"outputs": [],
+				"stateMutability": "nonpayable",
+				"type": "function"
+			},
+			{
+				"inputs": [
+					{
+						"internalType": "uint8",
+						"name": "_managementType",
+						"type": "uint8"
+					},
+					{
+						"internalType": "uint8",
+						"name": "_status",
+						"type": "uint8"
+					}
+				],
+				"name": "setManagementTypes",
+				"outputs": [],
+				"stateMutability": "nonpayable",
+				"type": "function"
+			},
+			{
+				"inputs": [
+					{
+						"internalType": "uint256",
+						"name": "newNodePrice",
+						"type": "uint256"
+					}
+				],
+				"name": "setNodePricing",
+				"outputs": [],
+				"stateMutability": "nonpayable",
+				"type": "function"
+			},
+			{
+				"inputs": [
+					{
+						"internalType": "uint32",
+						"name": "_node",
+						"type": "uint32"
+					},
+					{
+						"internalType": "uint8",
+						"name": "_managementType",
+						"type": "uint8"
+					},
+					{
+						"internalType": "uint8",
+						"name": "_storageProvider",
+						"type": "uint8"
+					},
+					{
+						"internalType": "address",
+						"name": "_refAddress",
+						"type": "address"
+					}
+				],
+				"name": "setNonMutableData",
+				"outputs": [],
+				"stateMutability": "nonpayable",
+				"type": "function"
+			},
+			{
+				"inputs": [
+					{
+						"internalType": "uint32",
+						"name": "_node",
+						"type": "uint32"
+					},
+					{
+						"internalType": "uint16",
+						"name": "_service",
+						"type": "uint16"
+					},
+					{
+						"internalType": "uint256",
+						"name": "_serviceCost",
+						"type": "uint256"
+					},
+					{
+						"internalType": "address",
+						"name": "_paymentAddress",
+						"type": "address"
+					}
+				],
+				"name": "setOperationCosts",
+				"outputs": [],
+				"stateMutability": "nonpayable",
+				"type": "function"
+			},
+			{
+				"inputs": [
+					{
+						"internalType": "address",
+						"name": "_storageAddress",
+						"type": "address"
+					}
+				],
+				"name": "setStorageContract",
+				"outputs": [],
+				"stateMutability": "nonpayable",
+				"type": "function"
+			},
+			{
+				"inputs": [
+					{
+						"internalType": "uint8",
+						"name": "_storageProvider",
+						"type": "uint8"
+					},
+					{
+						"internalType": "uint8",
+						"name": "_status",
+						"type": "uint8"
+					}
+				],
+				"name": "setStorageProviders",
+				"outputs": [],
+				"stateMutability": "nonpayable",
+				"type": "function"
+			},
+			{
+				"inputs": [
+					{
+						"internalType": "bytes4",
+						"name": "interfaceId",
+						"type": "bytes4"
+					}
+				],
+				"name": "supportsInterface",
+				"outputs": [
+					{
+						"internalType": "bool",
+						"name": "",
+						"type": "bool"
+					}
+				],
+				"stateMutability": "view",
+				"type": "function"
+			},
+			{
+				"inputs": [
+					{
+						"internalType": "uint32",
+						"name": "_fromNode",
+						"type": "uint32"
+					},
+					{
+						"internalType": "uint32",
+						"name": "_toNode",
+						"type": "uint32"
+					},
+					{
+						"internalType": "string",
+						"name": "_thisName",
+						"type": "string"
+					}
+				],
+				"name": "transferName",
+				"outputs": [],
+				"stateMutability": "nonpayable",
+				"type": "function"
+			},
+			{
+				"inputs": [],
+				"name": "unpause",
+				"outputs": [],
+				"stateMutability": "nonpayable",
+				"type": "function"
+			},
+			{
+				"inputs": [
+					{
+						"internalType": "uint32",
+						"name": "_node",
+						"type": "uint32"
+					},
+					{
+						"internalType": "bytes32",
+						"name": "_CAS1",
+						"type": "bytes32"
+					},
+					{
+						"internalType": "bytes32",
+						"name": "_CAS2",
+						"type": "bytes32"
+					}
+				],
+				"name": "updateNodeCAS",
+				"outputs": [],
+				"stateMutability": "nonpayable",
+				"type": "function"
+			},
+			{
+				"inputs": [
+					{
+						"internalType": "uint32",
+						"name": "_node",
+						"type": "uint32"
+					},
+					{
+						"internalType": "string",
+						"name": "_newName",
+						"type": "string"
+					}
+				],
+				"name": "updateNodeName",
+				"outputs": [],
+				"stateMutability": "nonpayable",
+				"type": "function"
+			}
+		],
+		"devdoc": {
+			"kind": "dev",
+			"methods": {
+				"ERC20Transfer(address,address,uint256)": {
+					"details": "send an ERC20 token from this contract",
+					"params": {
+						"_amount": "amount to transfer",
+						"_to": "destination",
+						"_tokenContract": "Address of foreign token contract"
+					}
+				},
+				"ERC721Transfer(address,address,uint256)": {
+					"details": "send an ERC721 token from this contract",
+					"params": {
+						"_to": "destination",
+						"_tokenContract": "Address of foreign token contract",
+						"_tokenID": "Token ID"
+					}
+				},
+				"addUser(uint32,bytes32,uint8)": {
+					"details": "Authorize / Deauthorize users for an address be permitted to make record modificationsonly useful for custody types that designate user adresses (type1...)",
+					"params": {
+						"_addrHash": "- hash of address belonging to user being authorized",
+						"_node": "- node that user is being authorized in",
+						"_userType": "- authority level for user (see docs)"
+					}
+				},
+				"createNode(uint32,string,uint32,uint8,uint8,uint8,uint32,bytes32,bytes32,address)": {
+					"details": "Mints Node token and creates an node.",
+					"params": {
+						"_CAS1": "- any external data attatched to node 1/2",
+						"_CAS2": "- any external data attatched to node 2/2",
+						"_custodyType": "- custodyType of new node (see docs)",
+						"_discount": "- discount of node (100 == 1%, 10000 == max)",
+						"_managementType": "- managementType of new node (see docs)",
+						"_name": "- name to be configured to node (unique)",
+						"_node": "- node to be created (unique)",
+						"_nodeRoot": "- root of node",
+						"_recipientAddress": "- address to recieve node",
+						"_storageProvider": "- storageProvider of new node (see docs)"
+					}
+				},
+				"currentNodePricingInfo()": {
+					"details": "return current node token index and price",
+					"returns": {
+						"_0": "{ nodeTokenIndex: current token number Node_price: current price per node }"
+					}
+				},
+				"getCustodyTypeStatus(uint8)": {
+					"details": "get the status of a specific custody type",
+					"params": {
+						"_custodyType": "- custody type associated with query (see docs)"
+					},
+					"returns": {
+						"_0": "1 or 0 (enabled or disabled)"
+					}
+				},
+				"getExtendedNodeData(uint32)": {
+					"details": "Retrieve extended nodeData @ _node",
+					"params": {
+						"_node": "- node associated with query"
+					},
+					"returns": {
+						"_0": "nodeData (see docs)"
+					}
+				},
+				"getInvoice(uint32,uint16)": {
+					"details": "Retrieve function costs per Node, per service type in PRUF(18 decimals)",
+					"params": {
+						"_node": "- node associated with query",
+						"_service": "- service number associated with query (see service types in ZZ_PRUF_DOCS)"
+					},
+					"returns": {
+						"_0": "invoice{ _node root payment address @ _service _node root service cost @ _service _node payment address tied @ _service _node service cost @ _service node: Node index }"
+					}
+				},
+				"getManagementTypeStatus(uint8)": {
+					"details": "get the status of a specific management type",
+					"params": {
+						"_managementType": "- management type associated with query (see docs)"
+					},
+					"returns": {
+						"_0": "1 or 0 (enabled or disabled)"
+					}
+				},
+				"getNodeDiscount(uint32)": {
+					"details": "Retrieve Node_discount @ _node",
+					"params": {
+						"_node": "- node associated with query"
+					},
+					"returns": {
+						"_0": "percentage of rewards distribution @ _node"
+					}
+				},
+				"getNodeName(uint32)": {
+					"details": "Retrieve Node_name @ _tokenId or node",
+					"params": {
+						"node": "- tokenId associated with query"
+					},
+					"returns": {
+						"_0": "name of token @ _tokenID"
+					}
+				},
+				"getRoleAdmin(bytes32)": {
+					"details": "Returns the admin role that controls `role`. See {grantRole} and {revokeRole}. To change a role's admin, use {_setRoleAdmin}."
+				},
+				"getServicePaymentData(uint32,uint16)": {
+					"details": "Retrieve service costs for _node._service",
+					"params": {
+						"_node": "- node associated with query",
+						"_service": "- service associated with query"
+					},
+					"returns": {
+						"_0": "Costs Struct for_node"
+					}
+				},
+				"getStorageProviderStatus(uint8)": {
+					"details": "get the status of a specific storage provider",
+					"params": {
+						"_storageProvider": "- storage provider associated with query (see docs)"
+					},
+					"returns": {
+						"_0": "1 or 0 (enabled or disabled)"
+					}
+				},
+				"getSwitchAt(uint32,uint8)": {
+					"details": "get bit from .switches at specified position",
+					"params": {
+						"_node": "- node associated with query",
+						"_position": "- bit position associated with query"
+					},
+					"returns": {
+						"_0": "1 or 0 (enabled or disabled)"
+					}
+				},
+				"getUserType(bytes32,uint32)": {
+					"details": "get an node Node User type for a specified address",
+					"params": {
+						"_node": "- node of query",
+						"_userHash": "- hash of selected user"
+					},
+					"returns": {
+						"_0": "type of user @ _node (see docs)"
+					}
+				},
+				"grantRole(bytes32,address)": {
+					"details": "Grants `role` to `account`. If `account` had not been already granted `role`, emits a {RoleGranted} event. Requirements: - the caller must have ``role``'s admin role."
+				},
+				"hasRole(bytes32,address)": {
+					"details": "Returns `true` if `account` has been granted `role`."
+				},
+				"increaseShare(uint32,uint32)": {
+					"details": "Increases (but cannot decrease) price share for a given node",
+					"params": {
+						"_newDiscount": "- discount(1% == 100, 10000 == max)",
+						"_node": "- node in which cost share is being modified"
+					}
+				},
+				"isSameRootNode(uint32,uint32)": {
+					"details": "verify the root of two Nodees are equal",
+					"params": {
+						"_node1": "- first node associated with query",
+						"_node2": "- second node associated with query"
+					},
+					"returns": {
+						"_0": "170 or 0 (true or false)"
+					}
+				},
+				"modifyNode(uint32,uint32,uint8,uint8,uint8,uint32,address,bytes32,bytes32)": {
+					"details": "Modifies an Node with minimal controls",
+					"params": {
+						"_CAS1": "- any external data attatched to node 1/2",
+						"_CAS2": "- any external data attatched to node 2/2",
+						"_custodyType": "- custodyType of node (see docs)",
+						"_discount": "- discount of node (100 == 1%, 10000 == max)",
+						"_managementType": "- managementType of node (see docs)",
+						"_node": "- node to be modified",
+						"_nodeRoot": "- root of node",
+						"_refAddress": "- referance address associated with an node",
+						"_storageProvider": "- storageProvider of node (see docs)"
+					}
+				},
+				"modifyNodeSwitches(uint32,uint8,uint8)": {
+					"details": "Modifies node.switches bitwise (see NODE option switches in ZZ_PRUF_DOCS)",
+					"params": {
+						"_bit": "- switch - 1 or 0 (true or false)",
+						"_node": "- node to be modified",
+						"_position": "- uint position of bit to be modified"
+					}
+				},
+				"onERC721Received(address,address,uint256,bytes)": {
+					"details": "Compliance for erc721 reciever See OZ documentation"
+				},
+				"paused()": {
+					"details": "Returns true if the contract is paused, and false otherwise."
+				},
+				"purchaseNode(string,uint32,uint8,bytes32,bytes32)": {
+					"details": "Burns (amount) tokens and mints a new Node token to the calling address",
+					"params": {
+						"_CAS1": "- any external data attatched to node 1/2",
+						"_CAS2": "- any external data attatched to node 2/2",
+						"_custodyType": "- chosen custodyType of node (see docs)",
+						"_name": "- chosen name of node",
+						"_nodeRoot": "- chosen root of node"
+					}
+				},
+				"renounceRole(bytes32,address)": {
+					"details": "Revokes `role` from the calling account. Roles are often managed via {grantRole} and {revokeRole}: this function's purpose is to provide a mechanism for accounts to lose their privileges if they are compromised (such as when a trusted device is misplaced). If the calling account had been granted `role`, emits a {RoleRevoked} event. Requirements: - the caller must be `account`."
+				},
+				"resolveContractAddresses()": {
+					"details": "Resolve contract addresses from STOR"
+				},
+				"resolveNode(string)": {
+					"details": "Retrieve node @ Node_name",
+					"params": {
+						"_forThisName": "- name of node for nodeNumber query"
+					},
+					"returns": {
+						"_0": "node number @ _name"
+					}
+				},
+				"revokeRole(bytes32,address)": {
+					"details": "Revokes `role` from `account`. If `account` had been granted `role`, emits a {RoleRevoked} event. Requirements: - the caller must have ``role``'s admin role."
+				},
+				"setCustodyTypes(uint8,uint8)": {
+					"details": "Sets the valid custody types.",
+					"params": {
+						"_custodyType": "- uint position for custody type",
+						"_status": "- uint position for custody type status"
+					}
+				},
+				"setManagementTypes(uint8,uint8)": {
+					"details": "Sets the valid management types.",
+					"params": {
+						"_managementType": "- uint position for management type",
+						"_status": "- uint position for custody type status"
+					}
+				},
+				"setNodePricing(uint256)": {
+					"details": "Set pricing for Nodes",
+					"params": {
+						"newNodePrice": "- cost per node (18 decimals)"
+					}
+				},
+				"setNonMutableData(uint32,uint8,uint8,address)": {
+					"details": "Configure the immutable data in an Node one time",
+					"params": {
+						"_managementType": "- managementType of node (see docs)",
+						"_node": "- node being modified",
+						"_refAddress": "- address permanently tied to node",
+						"_storageProvider": "- storageProvider of node (see docs)"
+					}
+				},
+				"setOperationCosts(uint32,uint16,uint256,address)": {
+					"details": "Set function costs and payment address per Node, in PRUF(18 decimals)",
+					"params": {
+						"_node": "- node to set service costs",
+						"_paymentAddress": "- address to have _serviceCost paid to",
+						"_service": "- service type being modified (see service types in ZZ_PRUF_DOCS)",
+						"_serviceCost": "- 18 decimal fee in PRUF associated with specified service"
+					}
+				},
+				"setStorageContract(address)": {
+					"details": "Set address of STOR contract to interface with",
+					"params": {
+						"_storageAddress": "address of PRUF_STOR"
+					}
+				},
+				"setStorageProviders(uint8,uint8)": {
+					"details": "Sets the valid storage type providers.",
+					"params": {
+						"_status": "- uint position for custody type status",
+						"_storageProvider": "- uint position for storage provider"
+					}
+				},
+				"supportsInterface(bytes4)": {
+					"details": "See {IERC165-supportsInterface}."
+				},
+				"transferName(uint32,uint32,string)": {
+					"details": "Transfers a name from one node to another   -Designed to remedy brand infringement issues. This breaks decentralization and must eventually be given   -over to some kind of governance contract.",
+					"params": {
+						"_fromNode": "- source node",
+						"_thisName": "- name to be transferred",
+						"_toNode": "- destination node"
+					}
+				},
+				"updateNodeCAS(uint32,bytes32,bytes32)": {
+					"details": "Modifies an node Node content adressable storage data pointer",
+					"params": {
+						"_CAS1": "- any external data attatched to node 1/2",
+						"_CAS2": "- any external data attatched to node 2/2",
+						"_node": "- node being modified"
+					}
+				},
+				"updateNodeName(uint32,string)": {
+					"details": "Modifies an node Node name for its exclusive namespace",
+					"params": {
+						"_newName": "- updated name associated with node (unique)",
+						"_node": "- node being modified"
+					}
+				}
+			},
+			"version": 1
+		},
+		"userdoc": {
+			"kind": "user",
+			"methods": {
+				"increaseShare(uint32,uint32)": {
+					"notice": "!! to be used with great caution !! This potentially breaks decentralization and must eventually be given over to some kind of governance contract."
+				},
+				"modifyNode(uint32,uint32,uint8,uint8,uint8,uint32,address,bytes32,bytes32)": {
+					"notice": "!! -------- to be used with great caution -----------"
+				},
+				"transferName(uint32,uint32,string)": {
+					"notice": "!! -------- to be used with great caution and only as a result of community governance action -----------"
+				},
+				"updateNodeCAS(uint32,bytes32,bytes32)": {
+					"notice": "Î"
+				}
+			},
+			"version": 1
+		}
+	},
+	"settings": {
+		"compilationTarget": {
+			"Documents/PRUF/PRUF_TRUFFLE/contracts/ReleaseCandidates/PRUF_NODE_MGR.sol": "NODE_MGR"
+		},
+		"evmVersion": "london",
+		"libraries": {},
+		"metadata": {
+			"bytecodeHash": "ipfs"
+		},
+		"optimizer": {
+			"enabled": false,
+			"runs": 200
+		},
+		"remappings": []
+	},
+	"sources": {
+		"Documents/PRUF/PRUF_TRUFFLE/contracts/Imports/access/AccessControl.sol": {
+			"keccak256": "0x183481af1c40d2efb26b86f63d6fe9e22f24c87e436d60a69f261b38500e7cd6",
+			"license": "MIT",
+			"urls": [
+				"bzz-raw://f562746c399ae045994a88b2218d1238a349de07afbfb305aab0c7fdbc2954cc",
+				"dweb:/ipfs/QmYoFrDD2c6fi9CpPz1bjCMAyketjZ3G7ByUSVQMntysms"
+			]
+		},
+		"Documents/PRUF/PRUF_TRUFFLE/contracts/Imports/access/IAccessControl.sol": {
+			"keccak256": "0xfe0edb09653ed10e8a1bfe03eb9b0ff06775666eee817a95bd3d0799f1ee2b44",
+			"license": "MIT",
+			"urls": [
+				"bzz-raw://fbb9d503857eab98f87465df0f02fef03083f30c1dbec82f319f41aaadae19b4",
+				"dweb:/ipfs/QmTxDshRAMtoeM45YrTzQZdpmy4mt4scCNHjfZiWSvdETF"
+			]
+		},
+		"Documents/PRUF/PRUF_TRUFFLE/contracts/Imports/security/Pausable.sol": {
+			"keccak256": "0xa35b1f2a670cd2a701a52c398032c9fed72df1909fe394d77ceacbf074e8937b",
+			"license": "MIT",
+			"urls": [
+				"bzz-raw://72b957861691ebdaa78c52834465c4f8296480fe4f1a12ba72dc6c0c8ac076dd",
+				"dweb:/ipfs/QmVz1sHCwgEivHPRDswdt9tdvky7EnWqFmbuk1wFE55VMG"
+			]
+		},
+		"Documents/PRUF/PRUF_TRUFFLE/contracts/Imports/security/ReentrancyGuard.sol": {
+			"keccak256": "0x3ad0ec379a808f08bbb0b2eaa4533add9a458cc411115030842034d8c2032c2b",
+			"license": "MIT",
+			"urls": [
+				"bzz-raw://4a6ad8b70f72c7f95535ac08452129a4ccc9dd523a49d7b613938af95327debf",
+				"dweb:/ipfs/Qmc2HdxeQoi9CA1TTuB4sCAEr1Bbrj38ZLBrE8moHNbyA5"
+			]
+		},
+		"Documents/PRUF/PRUF_TRUFFLE/contracts/Imports/token/ERC20/IERC20.sol": {
+			"keccak256": "0x027b891937d20ccf213fdb9c31531574256de774bda99d3a70ecef6e1913ed2a",
+			"license": "MIT",
+			"urls": [
+				"bzz-raw://087318b21c528119f649899f5b5580566dd8d7b0303d4904bd0e8580c3545f14",
+				"dweb:/ipfs/Qmbn5Mj7aUn8hJuQ8VrQjjEXRsXyJKykgnjR9p4C3nfLtL"
+			]
+		},
+		"Documents/PRUF/PRUF_TRUFFLE/contracts/Imports/token/ERC721/IERC721.sol": {
+			"keccak256": "0xf101e8720213560fab41104d53b3cc7ba0456ef3a98455aa7f022391783144a0",
+			"license": "MIT",
+			"urls": [
+				"bzz-raw://3e7820bcf567e6892d937c3cb10db263a4042e446799bca602535868d822384e",
+				"dweb:/ipfs/QmPG2oeDjKncqsEeyYGjAN7CwAJmMgHterXGGnpzhha4z7"
+			]
+		},
+		"Documents/PRUF/PRUF_TRUFFLE/contracts/Imports/token/ERC721/IERC721Receiver.sol": {
+			"keccak256": "0xd9517254724276e2e8de3769183c1f738f445f0095c26fd9b86d3c6687e887b9",
+			"license": "MIT",
+			"urls": [
+				"bzz-raw://0e604bcdcd5e5b2fb299ad09769cde6db19d5aa1929d1b5e939234a0f10d7eb8",
+				"dweb:/ipfs/Qmd8hXE3GZfBHuWx3RNiYgFW2ci7KvHtib8DiwzJ2dgo9V"
+			]
+		},
+		"Documents/PRUF/PRUF_TRUFFLE/contracts/Imports/utils/Context.sol": {
+			"keccak256": "0x90565a39ae45c80f0468dc96c7b20d0afc3055f344c8203a0c9258239f350b9f",
+			"license": "MIT",
+			"urls": [
+				"bzz-raw://26e8b38a7ac8e7b4463af00cf7fff1bf48ae9875765bf4f7751e100124d0bc8c",
+				"dweb:/ipfs/QmWcsmkVr24xmmjfnBQZoemFniXjj3vwT78Cz6uqZW1Hux"
+			]
+		},
+		"Documents/PRUF/PRUF_TRUFFLE/contracts/Imports/utils/Strings.sol": {
+			"keccak256": "0x391d3ba97ab6856a16b225d6ee29617ad15ff00db70f3b4df1ab5ea33aa47c9d",
+			"license": "MIT",
+			"urls": [
+				"bzz-raw://d636ba90bbbeed04a1ea7fe9ec2466757e30fd38ba2ca173636dbf69a518735e",
+				"dweb:/ipfs/QmQwCB2BHnEuYR22PYt9HkpbgeFDhq4rHmaYqAZbX3WRC7"
+			]
+		},
+		"Documents/PRUF/PRUF_TRUFFLE/contracts/Imports/utils/introspection/ERC165.sol": {
+			"keccak256": "0x5718c5df9bd67ac68a796961df938821bb5dc0cd4c6118d77e9145afb187409b",
+			"license": "MIT",
+			"urls": [
+				"bzz-raw://d10e1d9b26042424789246603906ad06143bf9a928f4e99de8b5e3bdc662f549",
+				"dweb:/ipfs/Qmejonoaj5MLekPus229rJQHcC6E9dz2xorjHJR84fMfmn"
+			]
+		},
+		"Documents/PRUF/PRUF_TRUFFLE/contracts/Imports/utils/introspection/IERC165.sol": {
+			"keccak256": "0xa28007762d9da9db878dd421960c8cb9a10471f47ab5c1b3309bfe48e9e79ff4",
+			"license": "MIT",
+			"urls": [
+				"bzz-raw://796ab6e88af7bf0e78def0f059310c903af6a312b565344e0ff524a0f26e81c6",
+				"dweb:/ipfs/QmcsVgLgzWdor3UnAztUkXKNGcysm1MPneWksF72AvnwBx"
+			]
+		},
+		"Documents/PRUF/PRUF_TRUFFLE/contracts/ReleaseCandidates/PRUF_NODE_MGR.sol": {
+			"keccak256": "0x6254c2111d7a525834e44940a6f378d650a557c568b51c52c83d22f5fc83f7bb",
+			"license": "UNLICENSED",
+			"urls": [
+				"bzz-raw://15f3524a323ab0f3b8a047d944592faebc7ab04b1e220e2f0fc05b9227adec24",
+				"dweb:/ipfs/QmRDrnFTThGLUvR1A7biL9j3bv36bqBtmN7Cboz6ZRVLvs"
+			]
+		},
+		"Documents/PRUF/PRUF_TRUFFLE/contracts/Resources/PRUF_BASIC.sol": {
+			"keccak256": "0xba1127a8a2e76522d1ef529e8b113bfacbb743b10722438292a0e5c46d28215f",
+			"license": "UNLICENSED",
+			"urls": [
+				"bzz-raw://4d32b31a16085bb79f457975290c7083edc0f96d27a3d3ae86c62a9054a6cdf3",
+				"dweb:/ipfs/QmbBC9AHrSf6G98qWMEM9ZYRKTEhULk1nUzgW6ntaWiR1z"
+			]
+		},
+		"Documents/PRUF/PRUF_TRUFFLE/contracts/Resources/RESOURCE_PRUF_INTERFACES.sol": {
+			"keccak256": "0x2588fbcfed3d633e8e09b68bf99454c6709fbd833bb1b466c28f6d47cafd5f50",
+			"license": "UNLICENSED",
+			"urls": [
+				"bzz-raw://d871e2106c9fd00a0a6d0e2b648c16e5c11e9eb9abc6742a384ce629a564d2bb",
+				"dweb:/ipfs/QmP2sKYSJdmgXt1LcVwi2c5BM5VJnvC1jCnigjPCVDznQj"
+			]
+		},
+		"Documents/PRUF/PRUF_TRUFFLE/contracts/Resources/RESOURCE_PRUF_STRUCTS.sol": {
+			"keccak256": "0x4ef2ffeef66d8e4f51a45f9f7ad6676cc63b86bf8c51a527436e05e1d06b64c7",
+			"license": "UNLICENSED",
+			"urls": [
+				"bzz-raw://2a5a93469287ace8f8011cab1d3685262b99a113d58aa9b7bdae6d102a04dad5",
+				"dweb:/ipfs/QmZgHHHRTNkTuitxPk1jFGZtTWR6yTjE1J16z1jMppu999"
+			]
+		},
+		"Documents/PRUF/PRUF_TRUFFLE/contracts/Resources/RESOURCE_PRUF_TKN_INTERFACES.sol": {
+			"keccak256": "0x86f05641e3f565bab49ed5b2b24b4a1d6088e0d8d7f74f62bcbebfc372a75f95",
+			"license": "UNLICENSED",
+			"urls": [
+				"bzz-raw://16ae4e8403c2b9e4a565578ef43876528d531f0fd56b35a0874299b57a06397e",
+				"dweb:/ipfs/QmT5TCaEdq2SvzPpNx61d6Qf5SxVoTPY62TzDsGChn6aXM"
+			]
+		}
+	},
+	"version": 1
+}

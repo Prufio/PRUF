@@ -186,8 +186,13 @@ contract NODE_MGR is BASIC {
         );
         require(
             hasRole(ID_PROVIDER_ROLE, _msgSender()),
-            "NM:MOD-INM: Must have ID_PROVIDER_ROLE"
+            "NM:PN: Must have ID_PROVIDER_ROLE"
         );
+        require(
+            (_custodyType != 3) && (_custodyType != 0) ,
+            "NM:PN: custody type cannot be 0||3 "
+        );
+
         //^^^^^^^checks^^^^^^^^^
 
         nodeTokenIndex++;
