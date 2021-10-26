@@ -21,7 +21,7 @@ import "../Imports/security/ReentrancyGuard.sol";
 import "../Resources/PRUF_BASIC.sol";
 
 contract CORE is BASIC {
-    /** 
+    /**
      * @dev create a Record in Storage @ idxHash (SETTER) and mint an asset token (may mint to node holder depending on flags)
      * @param _idxHash - Asset Index
      * @param _rgtHash - Owner ID Hash
@@ -37,7 +37,9 @@ contract CORE is BASIC {
         string calldata _URIsuffix
     ) internal virtual {
         uint256 tokenId = uint256(_idxHash);
-        Node memory nodeInfo = getNodeinfo(_node);
+
+        Node memory nodeInfo = getNodeinfoWithMinterCheck(_node);
+
         bytes32 URIhash = keccak256(abi.encodePacked(_URIsuffix));
 
         require(
@@ -48,42 +50,14 @@ contract CORE is BASIC {
             nodeInfo.custodyType != 3,
             "C:CR:Cannot create asset in a root node"
         );
-        
+
         require( //check custody types for this contract CTS:EXAMIMNE ?
-        // ??THIS NEEDS TO BE MOVED INTO THE APP LAYER??? maybe not since the minting is below?
+            // ??THIS NEEDS TO BE MOVED INTO THE APP LAYER??? maybe not since the minting is below?
             (nodeInfo.custodyType == 1) ||
                 (nodeInfo.custodyType == 2) ||
                 (nodeInfo.custodyType == 4),
             "C:CR:Cannot create asset - contract not authorized for node custody type"
         );
-
-
-        require(
-            NODE_STOR.getManagementTypeStatus(nodeInfo.managementType) > 0,
-            "C:CR: Invalid management type"
-        );
-        if (
-            (nodeInfo.managementType == 1) ||
-            (nodeInfo.managementType == 2) ||
-            (nodeInfo.managementType == 5)
-        ) {
-            require(
-                (NODE_TKN.ownerOf(_node) == _msgSender()),
-                "C:CR:Cannot create asset in node mgmt type 1||2||5 - caller does not hold node token"
-            );
-        } else if (nodeInfo.managementType == 3) {
-            require(
-                NODE_STOR.getUserType(
-                    keccak256(abi.encodePacked(_msgSender())),
-                    _node
-                ) == 1,
-                "C:CR:Cannot create asset - caller not authorized"
-            );
-        } else {
-            revert(
-                "C:CR: Contract does not support management type or node is locked"
-            );
-        }
 
         //^^^^^^^Checks^^^^^^^^
 
@@ -148,7 +122,7 @@ contract CORE is BASIC {
         if ((nodeInfo.custodyType != 1) && (nodeInfo.managementType == 5)) {
             require(
                 (NODE_TKN.ownerOf(_rec.node) == _msgSender()),
-                "C:WMS: Caller must hold node (management type 5)"
+                "C:WMS: Caller must hold node to modify mutable storage (management type 5)"
             );
         }
         //^^^^^^^Checks^^^^^^^^^
@@ -322,6 +296,84 @@ contract CORE is BASIC {
             return 0;
         } else {
             return 170;
+        }
+        //^^^^^^^interactions^^^^^^^^^
+    }
+
+    function getNodeinfoWithMinterCheck(uint32 _node) //DPS:TEST
+        internal
+        view
+        returns (Node memory nodeInfo)
+    {
+        nodeInfo = getNodeinfo(_node);
+
+        require(
+            NODE_STOR.getManagementTypeStatus(nodeInfo.managementType) > 0,
+            "C:GNIWAC: Invalid management type"
+        );
+        require(
+            nodeInfo.managementType != 0,
+            "C:GNIWAC: Cannot mint in root node"
+        );
+        require(
+            nodeInfo.managementType != 255,
+            "C:GNIWAC: Cannot mint unprovisioned or locked node"
+        );
+        require(
+            (getBitAt(nodeInfo.switches, 7) == 0) ||
+                (NODE_STOR.getUserType(
+                    keccak256(abi.encodePacked(_msgSender())),
+                    _node
+                ) == 1),
+            "C:GNIWAC: Caller not authorized user"
+        );
+        require(
+            (getBitAt(nodeInfo.switches, 7) == 1) ||
+                (NODE_TKN.ownerOf(_node) == _msgSender()),
+            "C:GNIWAC: Caller not authorized user"
+        );
+
+        if (getBitAt(nodeInfo.switches, 6) == 1) {
+            ExtendedNodeData memory exNodeInfo = NODE_STOR.getExtendedNodeData(
+                _node
+            );
+
+            require(
+                (NODE_TKN.ownerOf(_node) ==
+                    IERC721(exNodeInfo.IdProviderAddr).ownerOf(
+                        exNodeInfo.tokenId
+                    )), //IDroot token are held in the same address,
+                "C:GNIWAC: Node and root of identity are seaparated. Minting is disabled"
+            );
+        }
+        //^^^^^^^checks^^^^^^^^^
+
+        return nodeInfo;
+        //^^^^^^^interactions^^^^^^^^^
+    }
+
+    /**
+     * @dev get bit from uint8 at specified position (1-8)
+     * @param _byte - node associated with query
+     * @param _position - bit position associated with query
+     * @return 1 or 0 (enabled or disabled)
+     * supports indirect node reference via localNodeFor[node]
+     */
+    function getBitAt(uint8 _byte, uint8 _position)
+        internal
+        pure
+        returns (uint256)
+    {
+        require(
+            (_position > 0) && (_position < 9),
+            "NS:GSA: bit position must be between 1 and 8"
+        );
+        //^^^^^^^checks^^^^^^^^^
+
+        if ((_byte & (1 << (_position - 1))) > 0) {
+            return 1;
+        } else {
+            return 0;
         }
         //^^^^^^^interactions^^^^^^^^^
     }
