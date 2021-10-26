@@ -25,7 +25,7 @@ import "../Imports/access/AccessControl.sol";
 import "../Imports/security/Pausable.sol";
 import "../Imports/security/ReentrancyGuard.sol";
 import "../Imports/token/ERC721/IERC721Receiver.sol";
-//import "../Resources/IERC721withURI.sol";
+import "../Resources/IERC721_URI.sol";
 import "../Imports/token/ERC20/IERC20.sol";
 
 abstract contract BASIC is
