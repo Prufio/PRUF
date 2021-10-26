@@ -309,12 +309,12 @@ contract CORE is BASIC {
             "C:GNIWAC: Invalid management type"
         );
         require(
-            nodeInfo.managementType != 0,
+            nodeInfo.managementType != 0, //impossible to reach in testing, here for redundancy in root nodes
             "C:GNIWAC: Cannot mint in root node"
         );
         require(
             nodeInfo.managementType != 255,
-            "C:GNIWAC: Cannot mint unprovisioned or locked node"
+            "C:GNIWAC: Cannot mint with unprovisioned or locked node"
         );
         require(
             (getBitAt(nodeInfo.switches, 7) == 0) ||
@@ -330,15 +330,15 @@ contract CORE is BASIC {
             "C:GNIWAC: Caller !NTH"
         );
 
-        if (getBitAt(nodeInfo.switches, 6) == 1) {
-            ExtendedNodeData memory exNodeInfo = NODE_STOR.getExtendedNodeData(
+        if (getBitAt(nodeInfo.switches, 6) == 1) { //DPS:TEST
+            ExtendedNodeData memory extendedNodeInfo = NODE_STOR.getExtendedNodeData(
                 _node
             );
 
             require(
                 (NODE_TKN.ownerOf(_node) ==
-                    IERC721(exNodeInfo.idProviderAddr).ownerOf(
-                        exNodeInfo.idProviderTokenId
+                    IERC721(extendedNodeInfo.idProviderAddr).ownerOf(
+                        extendedNodeInfo.idProviderTokenId
                     )), //IDroot token are held in the same address,
                 "C:GNIWAC: Node and root of identity are seaparated. Minting is disabled"
             );

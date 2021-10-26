@@ -1092,6 +1092,23 @@ contract("CORE", (accounts) => {
         account1,
         { from: account1 }
       );
+    })
+    
+    .then(() => {
+      console.log("Minting malformed node");
+      return NODE_MGR.createNode(
+        "35",
+        "test2",
+        "2",
+        "1",
+        "0",
+        "0",
+        "9500",
+        rgt000,
+        rgt000,
+        account1,
+        { from: account1 }
+      );
     });
   });
 
@@ -1261,7 +1278,21 @@ contract("CORE", (accounts) => {
         return NODE_BLDR.purchaseNode("Non_Custodial_AC8", "1", "2", rgt000, rgt000, account10, {
           from: account10,
         });
-      });
+      })
+
+      .then(() => {
+        console.log("Minting Node 1000009 -NC");
+        return NODE_BLDR.purchaseNode("Non_Custodial_AC8", "1", "2", rgt000, rgt000, account10, {
+          from: account10,
+        });
+      })
+
+      .then(() => {
+        console.log("Minting Node 1000010 -NC");
+        return NODE_BLDR.purchaseNode("Non_Custodial_AC9", "1", "2", rgt000, rgt000, account10, {
+          from: account10,
+        });
+      })
   });
 
   it("Should Mint 2 non-cust Node tokens in AC_ROOT 2", () => {
@@ -1774,7 +1805,7 @@ contract("CORE", (accounts) => {
       "//**************************************BEGIN CORE FAIL BATCH (7)**********************************************/"
     );
     console.log(
-      "//**************************************BEGIN createRecord FAIL BATCH**********************************************/"
+      "//**************************************BEGIN getNodeinfoWithMinterCheck FAIL BATCH**********************************************/"
     );
     console.log("Account2 => AC1");
     return NODE_MGR.addUser("1", account2Hash, "1", { from: account1 });
@@ -1784,12 +1815,17 @@ contract("CORE", (accounts) => {
     return STOR.enableContractForNode("APP", "1", "1", { from: account1 });
   });
 
+  //1
+  it("Should fail because you cannot create asset in root node", async () => {
+    return APP.newRecord(asset2raw, rgt2, "1", "100", asset2raw, { from: account2 });
+  });
+
   it("Should set managementType 0 to 0", () => {
     console.log("Authorizing Unrestricted");
     return NODE_STOR.setManagementTypes("0", "0", { from: account1 })
   });
 
-  //3
+  //2
   it("Should fail because managementType is invalid", async () => {
     return APP.newRecord(asset2raw, rgt2, "1000009", "100", asset2raw, { from: account2 });
   });
@@ -1799,24 +1835,36 @@ contract("CORE", (accounts) => {
     return NODE_STOR.setManagementTypes("0", "1", { from: account1 })
   });
 
+  it("Should set bit 7 to 1 in 1000007", async () => {
+    return NODE_STOR.modifyNodeSwitches("1000007", "7", "1", {
+      from: account1,
+    });
+  })
+
+  //3
+  it("Should fail because connot mint in root node", async () => {
+    return APP.newRecord(asset2raw, rgt2, "35", "100", asset2raw, { from: account2 });
+  });
+
   //4
-  it("Should fail because contract is not correct custody type", async () => {
-    return MAL_APP.newRecord(asset2raw, rgt2, "1000005", "100", asset2raw, { from: account2 });
+  it("Should fail because connot mint in unconfigured node", async () => {
+    return APP.newRecord(asset2raw, rgt2, "1000010", "100", asset2raw, { from: account2 });
   });
 
   //5
-  it("Should fail because user !NTH", async () => {
-    return APP.newRecord(asset2raw, rgt2, "1000006", "100", asset2raw, { from: account2 });
-  });
-
-  //6
   it("Should fail because caller not authorzed", async () => {
     return APP.newRecord(asset2raw, rgt2, "1000007", "100", asset2raw, { from: account2 });
   });
 
-  //7
-  it("Should fail because contract !support managementType", async () => {
-    return APP.newRecord(asset2raw, rgt2, "30", "100", asset2raw, { from: account2 });
+  it("Should set bit 7 to 0 in 1000007", async () => {
+    return NODE_STOR.modifyNodeSwitches("1000007", "7", "0", {
+      from: account1,
+    });
+  })
+
+  //6
+  it("Should fail because user !NTH", async () => {
+    return APP.newRecord(asset2raw, rgt2, "1000006", "100", asset2raw, { from: account2 });
   });
 
   it("should unauthorize MAL_APP for AC1", async () => {
@@ -1829,14 +1877,20 @@ contract("CORE", (accounts) => {
     });
   });
 
-  //1
-  it("Should fail because assetToken already exists", async () => {
-    return APP_NC.newRecord(asset1raw, rgt13, "1000002", "100", asset1raw, { from: account2 });
+  it("should authorize account2 in root Node 1", async () => {
+    console.log(
+      "//**************************************END createRecord FAIL BATCH**********************************************/"
+    );
+    console.log(
+      "//**************************************BEGIN createRecord FAIL BATCH**********************************************/"
+    );
+    console.log("Account2 => AC1");
+    return NODE_MGR.addUser("1", account2Hash, "1", { from: account1 });
   });
 
-  //2
-  it("Should fail because you cannot create asset in root node", async () => {
-    return APP.newRecord(asset2raw, rgt2, "1", "100", asset2raw, { from: account2 });
+  //7
+  it("Should fail because assetToken already exists", async () => {
+    return APP_NC.newRecord(asset1raw, rgt13, "1000002", "100", asset1raw, { from: account2 });
   });
 
   it("Should set SharesAddress", async () => {
