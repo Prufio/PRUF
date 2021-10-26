@@ -65,7 +65,7 @@ contract DECORATE is CORE {
         //DPS:TEST
         bytes32 idxHash = keccak256(abi.encodePacked(_tokenID, _tokenContract));
         Record memory rec = getRecord(idxHash);
-        Node memory nodeInfo = getNodeinfo(_node);
+        Node memory nodeInfo = getNodeinfoWithMinterCheck(_node);
 
         require(nodeInfo.custodyType == 5, "D:D:Node.custodyType != 5");
         require(
@@ -77,34 +77,6 @@ contract DECORATE is CORE {
             rec.node == 0,
             "D:D:Wrapper, decoration, or record already exists"
         );
-        require( //DPS:TEST NEW
-            NODE_STOR.getManagementTypeStatus(nodeInfo.managementType) > 0,
-            "ANC:IA: Invalid management type"
-        );
-
-        if (
-            //DPS:TEST NEW
-            (nodeInfo.managementType == 1) ||
-            (nodeInfo.managementType == 2) ||
-            (nodeInfo.managementType == 5)
-        ) {
-            require( //DPS:TEST NEW
-                (NODE_TKN.ownerOf(_node) == _msgSender()),
-                "ANC:IA: Cannot create asset in node mgmt type 1||2||5 - caller does not hold node token"
-            );
-        } else if (nodeInfo.managementType == 3) {
-            require( //DPS:TEST NEW
-                NODE_STOR.getUserType(
-                    keccak256(abi.encodePacked(_msgSender())),
-                    _node
-                ) == 1,
-                "ANC:IA: Cannot create asset - caller address !authorized"
-            );
-        } else {
-            revert(
-                "ANC:IA: Contract does not support management type or node is locked"
-            );
-        }
 
         //^^^^^^^checks^^^^^^^^^
 
@@ -240,7 +212,7 @@ contract DECORATE is CORE {
         Record memory rec = getRecord(idxHash);
         Node memory nodeInfo = getNodeinfo(rec.node);
 
-        require(
+        require( //CTS:EXAMINE - pretty sure this needs to be fixed to correctly allow modifications based on MT
             nodeInfo.custodyType == 5,
             "D:MI1:Node.custodyType != 5 & record must exist"
         );
@@ -345,7 +317,7 @@ contract DECORATE is CORE {
     ) internal {
         bytes32 idxHash = keccak256(abi.encodePacked(_idxRaw, _node)); //hash idxRaw with node to get idxHash DPS:TEST
         uint256 tokenId = uint256(idxHash);
-        Node memory nodeInfo = getNodeinfo(_node);
+        Node memory nodeInfo = getNodeinfoWithMinterCheck(_node);
 
         require(
             A_TKN.tokenExists(tokenId) == 0,
@@ -355,33 +327,6 @@ contract DECORATE is CORE {
             nodeInfo.custodyType == 5,
             "D:CRO:Node.custodyType must be 5 (wrapped/decorated erc721)"
         );
-        require( //DPS:TEST NEW
-            NODE_STOR.getManagementTypeStatus(nodeInfo.managementType) > 0,
-            "D:CRO: Invalid management type"
-        );
-
-        if (
-            (nodeInfo.managementType == 1) ||
-            (nodeInfo.managementType == 2) ||
-            (nodeInfo.managementType == 5)
-        ) {
-            require(
-                (NODE_TKN.ownerOf(_node) == _msgSender()),
-                "D:CRO:Cannot create asset in node mgmt type 1||2||5 - caller does not hold node token"
-            );
-        } else if (nodeInfo.managementType == 3) {
-            require(
-                NODE_STOR.getUserType(
-                    keccak256(abi.encodePacked(_msgSender())),
-                    _node
-                ) == 1,
-                "D:CRO:Cannot create asset - caller address not authorized"
-            );
-        } else {
-            revert(
-                "D:CRO: Contract does not support management type or node is locked"
-            );
-        }
 
         //^^^^^^^checks^^^^^^^^^
 
