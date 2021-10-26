@@ -46,10 +46,6 @@ contract CORE is BASIC {
             A_TKN.tokenExists(tokenId) == 0,
             "C:CR:Asset token already exists"
         );
-        require(
-            nodeInfo.custodyType != 3,
-            "C:CR:Cannot create asset in a root node"
-        );
 
         require( //check custody types for this contract CTS:EXAMIMNE ?
             // ??THIS NEEDS TO BE MOVED INTO THE APP LAYER??? maybe not since the minting is below?
@@ -305,6 +301,10 @@ contract CORE is BASIC {
     ) internal view returns (Node memory nodeInfo) {
         nodeInfo = getNodeinfo(_node);
 
+        require(
+            nodeInfo.custodyType != 3,
+            "C:GNIWAC:Cannot create asset in a root node (custodyType3)"
+        );
         require(
             NODE_STOR.getManagementTypeStatus(nodeInfo.managementType) > 0,
             "C:GNIWAC: Invalid management type"
