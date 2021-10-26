@@ -52,11 +52,11 @@ contract NODE_STOR is BASIC {
         0xFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFF;
 
     mapping(uint32 => uint32) private localNodeFor; //lookup table for child nodes from origin nodeID
-    mapping(uint32 => ExtendedNodeData) private nodeDetails; //Extended Node
     mapping(uint32 => mapping(uint32 => uint256)) private importApprovals; //list of approved nodes to import from for each node
 
     mapping(uint32 => mapping(uint16 => Costs)) private cost; //Cost per function by Node => Costs struct (see RESOURCE_PRUF_INTERFACES for struct definitions)
     mapping(uint32 => Node) private nodeData; //node info database Node to node struct (see RESOURCE_PRUF_INTERFACES for struct definitions)
+    mapping(uint32 => ExtendedNodeData) private nodeDetails; //Extended Node data
     mapping(string => uint32) private nodeId; //name to Node resolution map
 
     mapping(uint32 => mapping(bytes32 => uint8)) private registeredUsers; //Authorized recorder mapping by Node, by address hash
