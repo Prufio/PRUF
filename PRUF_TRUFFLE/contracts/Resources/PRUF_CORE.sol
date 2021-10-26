@@ -300,11 +300,9 @@ contract CORE is BASIC {
         //^^^^^^^interactions^^^^^^^^^
     }
 
-    function getNodeinfoWithMinterCheck(uint32 _node) //DPS:TEST
-        internal
-        view
-        returns (Node memory nodeInfo)
-    {
+    function getNodeinfoWithMinterCheck(
+        uint32 _node //DPS:TEST
+    ) internal view returns (Node memory nodeInfo) {
         nodeInfo = getNodeinfo(_node);
 
         require(
@@ -330,7 +328,7 @@ contract CORE is BASIC {
         require(
             (getBitAt(nodeInfo.switches, 7) == 1) ||
                 (NODE_TKN.ownerOf(_node) == _msgSender()),
-            "C:GNIWAC: Caller not authorized user"
+            "C:GNIWAC: Caller !NTH"
         );
 
         if (getBitAt(nodeInfo.switches, 6) == 1) {
@@ -340,8 +338,8 @@ contract CORE is BASIC {
 
             require(
                 (NODE_TKN.ownerOf(_node) ==
-                    IERC721(exNodeInfo.IdProviderAddr).ownerOf(
-                        exNodeInfo.tokenId
+                    IERC721(exNodeInfo.idProviderAddr).ownerOf(
+                        exNodeInfo.idProviderTokenId
                     )), //IDroot token are held in the same address,
                 "C:GNIWAC: Node and root of identity are seaparated. Minting is disabled"
             );

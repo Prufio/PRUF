@@ -67,8 +67,8 @@ struct ExtendedNodeData {
     uint16 u16c;
     uint32 u32d;
     uint32 u32e;
-    address IdProviderAddr;
-    uint256 tokenId;
+    address idProviderAddr;
+    uint256 idProviderTokenId;
 }
 
 struct ContractDataHash {
