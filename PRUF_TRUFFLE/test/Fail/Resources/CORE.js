@@ -1282,14 +1282,14 @@ contract("CORE", (accounts) => {
 
       .then(() => {
         console.log("Minting Node 1000009 -NC");
-        return NODE_BLDR.purchaseNode("Non_Custodial_AC8", "1", "2", rgt000, rgt000, account10, {
+        return NODE_BLDR.purchaseNode("Non_Custodial_AC9", "1", "2", rgt000, rgt000, account10, {
           from: account10,
         });
       })
 
       .then(() => {
         console.log("Minting Node 1000010 -NC");
-        return NODE_BLDR.purchaseNode("Non_Custodial_AC9", "1", "2", rgt000, rgt000, account10, {
+        return NODE_BLDR.purchaseNode("Non_Custodial_AC10", "1", "2", rgt000, rgt000, account1, {
           from: account10,
         });
       })
@@ -1306,7 +1306,7 @@ contract("CORE", (accounts) => {
     console.log("Updating Node Immutables");
     return NODE_MGR.setNonMutableData(
       "1000001",
-      "3",
+      "2",
       "1",
       "0x0000000000000000000000000000000000000000",
       { from: account1 }
@@ -1315,7 +1315,7 @@ contract("CORE", (accounts) => {
       .then(() => {
         return NODE_MGR.setNonMutableData(
           "1000002",
-          "3",
+          "2",
           "1",
           "0x0000000000000000000000000000000000000000",
           { from: account1 }
@@ -1325,7 +1325,7 @@ contract("CORE", (accounts) => {
       .then(() => {
         return NODE_MGR.setNonMutableData(
           "1000003",
-          "3",
+          "2",
           "1",
           "0x0000000000000000000000000000000000000000",
           { from: account1 }
@@ -1365,7 +1365,7 @@ contract("CORE", (accounts) => {
       .then(() => {
         return NODE_MGR.setNonMutableData(
           "1000007",
-          "3",
+          "2",
           "1",
           "0x0000000000000000000000000000000000000000",
           { from: account1 }
@@ -1385,10 +1385,10 @@ contract("CORE", (accounts) => {
       .then(() => {
         return NODE_MGR.setNonMutableData(
           "1000009",
-          "0",
+          "1",
           "1",
           "0x0000000000000000000000000000000000000000",
-          { from: account1 }
+          { from: account10 }
         );
       })
   });
@@ -1499,6 +1499,54 @@ contract("CORE", (accounts) => {
         return NODE_STOR.modifyNodeSwitches("1000009", "8", "1", {
           from: account1,
         });
+      })
+
+      .then(() => {
+        return NODE_STOR.modifyNodeSwitches("1000001", "7", "1", {
+          from: account1,
+        });
+      })
+
+      .then(() => {
+        return NODE_STOR.modifyNodeSwitches("1000002", "7", "1", {
+          from: account1,
+        });
+      })
+
+      .then(() => {
+        return NODE_STOR.modifyNodeSwitches("1000003", "7", "1", {
+          from: account1,
+        });
+      })
+
+      .then(() => {
+        return NODE_STOR.modifyNodeSwitches("1000004", "7", "1", {
+          from: account1,
+        });
+      })
+
+      .then(() => {
+        return NODE_STOR.modifyNodeSwitches("1000005", "7", "1", {
+          from: account1,
+        });
+      })
+
+      .then(() => {
+        return NODE_STOR.modifyNodeSwitches("1000007", "7", "1", {
+          from: account1,
+        });
+      })
+
+      .then(() => {
+        return NODE_STOR.modifyNodeSwitches("1000008", "7", "1", {
+          from: account1,
+        });
+      })
+
+      .then(() => {
+        return NODE_STOR.modifyNodeSwitches("1000009", "7", "1", {
+          from: account1,
+        });
       });
   });
 
@@ -1557,7 +1605,7 @@ contract("CORE", (accounts) => {
 
       .then(() => {
         return STOR.enableContractForNode("APP_NC", "1000009", "2", {
-          from: account1,
+          from: account10,
         });
       })
   });
@@ -1755,7 +1803,7 @@ contract("CORE", (accounts) => {
       .then(() => {
         console.log("Account2 => 1000009");
         return NODE_MGR.addUser("1000009", account2Hash, "1", {
-          from: account1,
+          from: account10,
         });
       })
 
@@ -1769,6 +1817,20 @@ contract("CORE", (accounts) => {
       .then(() => {
         console.log("Account2 => 30");
         return NODE_MGR.addUser("30", account2Hash, "1", {
+          from: account1,
+        });
+      })
+
+      .then(() => {
+        console.log("Account2 => 35");
+        return NODE_MGR.addUser("35", account2Hash, "1", {
+          from: account1,
+        });
+      })
+
+      .then(() => {
+        console.log("Account2 => 1000010");
+        return NODE_MGR.addUser("1000010", account2Hash, "1", {
           from: account1,
         });
       });
@@ -1820,9 +1882,9 @@ contract("CORE", (accounts) => {
     return APP.newRecord(asset2raw, rgt2, "1", "100", asset2raw, { from: account2 });
   });
 
-  it("Should set managementType 0 to 0", () => {
+  it("Should set managementType 1 to 0", () => {
     console.log("Authorizing Unrestricted");
-    return NODE_STOR.setManagementTypes("0", "0", { from: account1 })
+    return NODE_STOR.setManagementTypes("1", "0", { from: account1 })
   });
 
   //2
@@ -1832,7 +1894,7 @@ contract("CORE", (accounts) => {
 
   it("Should set managementType 0 to 1", () => {
     console.log("Authorizing Unrestricted");
-    return NODE_STOR.setManagementTypes("0", "1", { from: account1 })
+    return NODE_STOR.setManagementTypes("1", "1", { from: account1 })
   });
 
   it("Should set bit 7 to 1 in 1000007", async () => {
@@ -1864,7 +1926,7 @@ contract("CORE", (accounts) => {
 
   //6
   it("Should fail because user !NTH", async () => {
-    return APP.newRecord(asset2raw, rgt2, "1000006", "100", asset2raw, { from: account2 });
+    return APP_NC.newRecord(asset2raw, rgt2, "1000006", "100", asset2raw, { from: account2 });
   });
 
   it("should unauthorize MAL_APP for AC1", async () => {

@@ -19,59 +19,449 @@
       ],
       "stateMutability": "view",
       "type": "function"
-    },
-    {
-      "inputs": [
-        {
-          "internalType": "bytes4",
-          "name": "interfaceId",
-          "type": "bytes4"
-        }
-      ],
-      "name": "registerInterface",
-      "outputs": [],
-      "stateMutability": "nonpayable",
-      "type": "function"
     }
   ],
-  "metadata": "{\"compiler\":{\"version\":\"0.6.12+commit.27d51765\"},\"language\":\"Solidity\",\"output\":{\"abi\":[{\"inputs\":[{\"internalType\":\"bytes4\",\"name\":\"interfaceId\",\"type\":\"bytes4\"}],\"name\":\"registerInterface\",\"outputs\":[],\"stateMutability\":\"nonpayable\",\"type\":\"function\"},{\"inputs\":[{\"internalType\":\"bytes4\",\"name\":\"interfaceId\",\"type\":\"bytes4\"}],\"name\":\"supportsInterface\",\"outputs\":[{\"internalType\":\"bool\",\"name\":\"\",\"type\":\"bool\"}],\"stateMutability\":\"view\",\"type\":\"function\"}],\"devdoc\":{\"kind\":\"dev\",\"methods\":{\"supportsInterface(bytes4)\":{\"details\":\"See {IERC165-supportsInterface}. Time complexity O(1), guaranteed to always use less than 30 000 gas.\"}},\"version\":1},\"userdoc\":{\"kind\":\"user\",\"methods\":{},\"version\":1}},\"settings\":{\"compilationTarget\":{\"/Users/cts/dev/PRUF/PRUF_TRUFFLE/contracts/Imports/mocks/ERC165Mock.sol\":\"ERC165Mock\"},\"evmVersion\":\"istanbul\",\"libraries\":{},\"metadata\":{\"bytecodeHash\":\"ipfs\"},\"optimizer\":{\"enabled\":true,\"runs\":200},\"remappings\":[]},\"sources\":{\"/Users/cts/dev/PRUF/PRUF_TRUFFLE/contracts/Imports/introspection/ERC165.sol\":{\"keccak256\":\"0xb046d18f9d09683ca1c0ed6d80c61da8a8a7d9b30bad70a17b898538683eff74\",\"license\":\"MIT\",\"urls\":[\"bzz-raw://4728713afa6ae36cc9e92c7107c796a313add3ec20f813be2cde76c814486b2a\",\"dweb:/ipfs/QmUJBTXvYaGDF5PVnd5pUvYerc9DRXvqANDzgCzAp3FkkA\"]},\"/Users/cts/dev/PRUF/PRUF_TRUFFLE/contracts/Imports/introspection/IERC165.sol\":{\"keccak256\":\"0xfa152b6e88a1dc50780e8f1580426dc23ad2e1e2c2f086a088adf206a202f453\",\"license\":\"MIT\",\"urls\":[\"bzz-raw://5127b264994adab88fae419b1c493efc5acd07134c19ee5c0397e50018291ebf\",\"dweb:/ipfs/QmWwJZVhvdmvUCdimbb6R2Jiu59zjPqm6XTMchM6LaEHAp\"]},\"/Users/cts/dev/PRUF/PRUF_TRUFFLE/contracts/Imports/mocks/ERC165Mock.sol\":{\"keccak256\":\"0x8fca78f777e170150543ddadb08f1bc4878ca0119237577c99e867bfc12e7896\",\"license\":\"MIT\",\"urls\":[\"bzz-raw://1c72e8683d600a9ec38307067eadfbb2e5d71e379ccad0ee935e7df588f82c86\",\"dweb:/ipfs/QmSF9tidXvADbhW57XuzmkSq6EAz5u5R456TrsAmtUqBdn\"]}},\"version\":1}",
-  "bytecode": "0x608060405234801561001057600080fd5b506100216301ffc9a760e01b610026565b6100aa565b6001600160e01b03198082161415610085576040805162461bcd60e51b815260206004820152601c60248201527f4552433136353a20696e76616c696420696e7465726661636520696400000000604482015290519081900360640190fd5b6001600160e01b0319166000908152602081905260409020805460ff19166001179055565b610184806100b96000396000f3fe608060405234801561001057600080fd5b50600436106100365760003560e01c806301ffc9a71461003b578063214cdb8014610076575b600080fd5b6100626004803603602081101561005157600080fd5b50356001600160e01b03191661009f565b604080519115158252519081900360200190f35b61009d6004803603602081101561008c57600080fd5b50356001600160e01b0319166100be565b005b6001600160e01b03191660009081526020819052604090205460ff1690565b6100c7816100ca565b50565b6001600160e01b03198082161415610129576040805162461bcd60e51b815260206004820152601c60248201527f4552433136353a20696e76616c696420696e7465726661636520696400000000604482015290519081900360640190fd5b6001600160e01b0319166000908152602081905260409020805460ff1916600117905556fea26469706673582212204d535e92aef7bf426d040e2a26d6014f8bd8058b73c4a89a98a4a74addf8552a64736f6c634300060c0033",
-  "deployedBytecode": "0x608060405234801561001057600080fd5b50600436106100365760003560e01c806301ffc9a71461003b578063214cdb8014610076575b600080fd5b6100626004803603602081101561005157600080fd5b50356001600160e01b03191661009f565b604080519115158252519081900360200190f35b61009d6004803603602081101561008c57600080fd5b50356001600160e01b0319166100be565b005b6001600160e01b03191660009081526020819052604090205460ff1690565b6100c7816100ca565b50565b6001600160e01b03198082161415610129576040805162461bcd60e51b815260206004820152601c60248201527f4552433136353a20696e76616c696420696e7465726661636520696400000000604482015290519081900360640190fd5b6001600160e01b0319166000908152602081905260409020805460ff1916600117905556fea26469706673582212204d535e92aef7bf426d040e2a26d6014f8bd8058b73c4a89a98a4a74addf8552a64736f6c634300060c0033",
+  "metadata": "{\"compiler\":{\"version\":\"0.8.7+commit.e28d00a7\"},\"language\":\"Solidity\",\"output\":{\"abi\":[{\"inputs\":[{\"internalType\":\"bytes4\",\"name\":\"interfaceId\",\"type\":\"bytes4\"}],\"name\":\"supportsInterface\",\"outputs\":[{\"internalType\":\"bool\",\"name\":\"\",\"type\":\"bool\"}],\"stateMutability\":\"view\",\"type\":\"function\"}],\"devdoc\":{\"kind\":\"dev\",\"methods\":{\"supportsInterface(bytes4)\":{\"details\":\"See {IERC165-supportsInterface}.\"}},\"version\":1},\"userdoc\":{\"kind\":\"user\",\"methods\":{},\"version\":1}},\"settings\":{\"compilationTarget\":{\"project:/contracts/Imports/mocks/ERC165Mock.sol\":\"ERC165Mock\"},\"evmVersion\":\"london\",\"libraries\":{},\"metadata\":{\"bytecodeHash\":\"ipfs\"},\"optimizer\":{\"enabled\":true,\"runs\":200},\"remappings\":[]},\"sources\":{\"project:/contracts/Imports/mocks/ERC165Mock.sol\":{\"keccak256\":\"0x5b966b15826346c47e2a4ef8310c6bfa698b7c10aedef942847b94377d6a0b99\",\"license\":\"MIT\",\"urls\":[\"bzz-raw://2c5802ff35de99350974643b7599ff59ce5ad6b7e3c63be1267de3e80d2f984e\",\"dweb:/ipfs/QmcfYbAW1iBGTxhWrNYus2irXJKy7WmVEvHupm1y3gbURc\"]},\"project:/contracts/Imports/utils/introspection/ERC165.sol\":{\"keccak256\":\"0x5718c5df9bd67ac68a796961df938821bb5dc0cd4c6118d77e9145afb187409b\",\"license\":\"MIT\",\"urls\":[\"bzz-raw://d10e1d9b26042424789246603906ad06143bf9a928f4e99de8b5e3bdc662f549\",\"dweb:/ipfs/Qmejonoaj5MLekPus229rJQHcC6E9dz2xorjHJR84fMfmn\"]},\"project:/contracts/Imports/utils/introspection/IERC165.sol\":{\"keccak256\":\"0xa28007762d9da9db878dd421960c8cb9a10471f47ab5c1b3309bfe48e9e79ff4\",\"license\":\"MIT\",\"urls\":[\"bzz-raw://796ab6e88af7bf0e78def0f059310c903af6a312b565344e0ff524a0f26e81c6\",\"dweb:/ipfs/QmcsVgLgzWdor3UnAztUkXKNGcysm1MPneWksF72AvnwBx\"]}},\"version\":1}",
+  "bytecode": "0x608060405234801561001057600080fd5b5060c78061001f6000396000f3fe6080604052348015600f57600080fd5b506004361060285760003560e01c806301ffc9a714602d575b600080fd5b604e60383660046062565b6001600160e01b0319166301ffc9a760e01b1490565b604051901515815260200160405180910390f35b600060208284031215607357600080fd5b81356001600160e01b031981168114608a57600080fd5b939250505056fea2646970667358221220b38bf07bb9cc03aef37a1c683379f82814db8db02a1cfc92054cf8526bdbe06e64736f6c63430008070033",
+  "deployedBytecode": "0x6080604052348015600f57600080fd5b506004361060285760003560e01c806301ffc9a714602d575b600080fd5b604e60383660046062565b6001600160e01b0319166301ffc9a760e01b1490565b604051901515815260200160405180910390f35b600060208284031215607357600080fd5b81356001600160e01b031981168114608a57600080fd5b939250505056fea2646970667358221220b38bf07bb9cc03aef37a1c683379f82814db8db02a1cfc92054cf8526bdbe06e64736f6c63430008070033",
   "immutableReferences": {},
-  "sourceMap": "97:140:42:-:0;;;;;;;;;;;;-1:-1:-1;751:40:13;-1:-1:-1;;;751:18:13;:40::i;:::-;97:140:42;;1482:198:13;-1:-1:-1;;;;;;1565:25:13;;;;;1557:66;;;;;-1:-1:-1;;;1557:66:13;;;;;;;;;;;;;;;;;;;;;;;;;;;;-1:-1:-1;;;;;;1633:33:13;:20;:33;;;;;;;;;;:40;;-1:-1:-1;;1633:40:13;1669:4;1633:40;;;1482:198::o;97:140:42:-;;;;;;;",
-  "deployedSourceMap": "97:140:42:-:0;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;948::13;;;;;;;;;;;;;;;;-1:-1:-1;948:140:13;-1:-1:-1;;;;;;948:140:13;;:::i;:::-;;;;;;;;;;;;;;;;;;133:102:42;;;;;;;;;;;;;;;;-1:-1:-1;133:102:42;-1:-1:-1;;;;;;133:102:42;;:::i;:::-;;948:140:13;-1:-1:-1;;;;;;1048:33:13;1025:4;1048:33;;;;;;;;;;;;;;948:140::o;133:102:42:-;197:31;216:11;197:18;:31::i;:::-;133:102;:::o;1482:198:13:-;-1:-1:-1;;;;;;1565:25:13;;;;;1557:66;;;;;-1:-1:-1;;;1557:66:13;;;;;;;;;;;;;;;;;;;;;;;;;;;;-1:-1:-1;;;;;;1633:33:13;:20;:33;;;;;;;;;;:40;;-1:-1:-1;;1633:40:13;1669:4;1633:40;;;1482:198::o",
-  "source": "// SPDX-License-Identifier: MIT\n\npragma solidity ^0.6.0;\n\nimport \"../introspection/ERC165.sol\";\n\ncontract ERC165Mock is ERC165 {\n    function registerInterface(bytes4 interfaceId) public {\n        _registerInterface(interfaceId);\n    }\n}\n",
-  "sourcePath": "/Users/cts/dev/PRUF/PRUF_TRUFFLE/contracts/Imports/mocks/ERC165Mock.sol",
+  "generatedSources": [],
+  "deployedGeneratedSources": [
+    {
+      "ast": {
+        "nodeType": "YulBlock",
+        "src": "0:494:339",
+        "statements": [
+          {
+            "nodeType": "YulBlock",
+            "src": "6:3:339",
+            "statements": []
+          },
+          {
+            "body": {
+              "nodeType": "YulBlock",
+              "src": "83:217:339",
+              "statements": [
+                {
+                  "body": {
+                    "nodeType": "YulBlock",
+                    "src": "129:16:339",
+                    "statements": [
+                      {
+                        "expression": {
+                          "arguments": [
+                            {
+                              "kind": "number",
+                              "nodeType": "YulLiteral",
+                              "src": "138:1:339",
+                              "type": "",
+                              "value": "0"
+                            },
+                            {
+                              "kind": "number",
+                              "nodeType": "YulLiteral",
+                              "src": "141:1:339",
+                              "type": "",
+                              "value": "0"
+                            }
+                          ],
+                          "functionName": {
+                            "name": "revert",
+                            "nodeType": "YulIdentifier",
+                            "src": "131:6:339"
+                          },
+                          "nodeType": "YulFunctionCall",
+                          "src": "131:12:339"
+                        },
+                        "nodeType": "YulExpressionStatement",
+                        "src": "131:12:339"
+                      }
+                    ]
+                  },
+                  "condition": {
+                    "arguments": [
+                      {
+                        "arguments": [
+                          {
+                            "name": "dataEnd",
+                            "nodeType": "YulIdentifier",
+                            "src": "104:7:339"
+                          },
+                          {
+                            "name": "headStart",
+                            "nodeType": "YulIdentifier",
+                            "src": "113:9:339"
+                          }
+                        ],
+                        "functionName": {
+                          "name": "sub",
+                          "nodeType": "YulIdentifier",
+                          "src": "100:3:339"
+                        },
+                        "nodeType": "YulFunctionCall",
+                        "src": "100:23:339"
+                      },
+                      {
+                        "kind": "number",
+                        "nodeType": "YulLiteral",
+                        "src": "125:2:339",
+                        "type": "",
+                        "value": "32"
+                      }
+                    ],
+                    "functionName": {
+                      "name": "slt",
+                      "nodeType": "YulIdentifier",
+                      "src": "96:3:339"
+                    },
+                    "nodeType": "YulFunctionCall",
+                    "src": "96:32:339"
+                  },
+                  "nodeType": "YulIf",
+                  "src": "93:52:339"
+                },
+                {
+                  "nodeType": "YulVariableDeclaration",
+                  "src": "154:36:339",
+                  "value": {
+                    "arguments": [
+                      {
+                        "name": "headStart",
+                        "nodeType": "YulIdentifier",
+                        "src": "180:9:339"
+                      }
+                    ],
+                    "functionName": {
+                      "name": "calldataload",
+                      "nodeType": "YulIdentifier",
+                      "src": "167:12:339"
+                    },
+                    "nodeType": "YulFunctionCall",
+                    "src": "167:23:339"
+                  },
+                  "variables": [
+                    {
+                      "name": "value",
+                      "nodeType": "YulTypedName",
+                      "src": "158:5:339",
+                      "type": ""
+                    }
+                  ]
+                },
+                {
+                  "body": {
+                    "nodeType": "YulBlock",
+                    "src": "254:16:339",
+                    "statements": [
+                      {
+                        "expression": {
+                          "arguments": [
+                            {
+                              "kind": "number",
+                              "nodeType": "YulLiteral",
+                              "src": "263:1:339",
+                              "type": "",
+                              "value": "0"
+                            },
+                            {
+                              "kind": "number",
+                              "nodeType": "YulLiteral",
+                              "src": "266:1:339",
+                              "type": "",
+                              "value": "0"
+                            }
+                          ],
+                          "functionName": {
+                            "name": "revert",
+                            "nodeType": "YulIdentifier",
+                            "src": "256:6:339"
+                          },
+                          "nodeType": "YulFunctionCall",
+                          "src": "256:12:339"
+                        },
+                        "nodeType": "YulExpressionStatement",
+                        "src": "256:12:339"
+                      }
+                    ]
+                  },
+                  "condition": {
+                    "arguments": [
+                      {
+                        "arguments": [
+                          {
+                            "name": "value",
+                            "nodeType": "YulIdentifier",
+                            "src": "212:5:339"
+                          },
+                          {
+                            "arguments": [
+                              {
+                                "name": "value",
+                                "nodeType": "YulIdentifier",
+                                "src": "223:5:339"
+                              },
+                              {
+                                "arguments": [
+                                  {
+                                    "kind": "number",
+                                    "nodeType": "YulLiteral",
+                                    "src": "234:3:339",
+                                    "type": "",
+                                    "value": "224"
+                                  },
+                                  {
+                                    "kind": "number",
+                                    "nodeType": "YulLiteral",
+                                    "src": "239:10:339",
+                                    "type": "",
+                                    "value": "0xffffffff"
+                                  }
+                                ],
+                                "functionName": {
+                                  "name": "shl",
+                                  "nodeType": "YulIdentifier",
+                                  "src": "230:3:339"
+                                },
+                                "nodeType": "YulFunctionCall",
+                                "src": "230:20:339"
+                              }
+                            ],
+                            "functionName": {
+                              "name": "and",
+                              "nodeType": "YulIdentifier",
+                              "src": "219:3:339"
+                            },
+                            "nodeType": "YulFunctionCall",
+                            "src": "219:32:339"
+                          }
+                        ],
+                        "functionName": {
+                          "name": "eq",
+                          "nodeType": "YulIdentifier",
+                          "src": "209:2:339"
+                        },
+                        "nodeType": "YulFunctionCall",
+                        "src": "209:43:339"
+                      }
+                    ],
+                    "functionName": {
+                      "name": "iszero",
+                      "nodeType": "YulIdentifier",
+                      "src": "202:6:339"
+                    },
+                    "nodeType": "YulFunctionCall",
+                    "src": "202:51:339"
+                  },
+                  "nodeType": "YulIf",
+                  "src": "199:71:339"
+                },
+                {
+                  "nodeType": "YulAssignment",
+                  "src": "279:15:339",
+                  "value": {
+                    "name": "value",
+                    "nodeType": "YulIdentifier",
+                    "src": "289:5:339"
+                  },
+                  "variableNames": [
+                    {
+                      "name": "value0",
+                      "nodeType": "YulIdentifier",
+                      "src": "279:6:339"
+                    }
+                  ]
+                }
+              ]
+            },
+            "name": "abi_decode_tuple_t_bytes4",
+            "nodeType": "YulFunctionDefinition",
+            "parameters": [
+              {
+                "name": "headStart",
+                "nodeType": "YulTypedName",
+                "src": "49:9:339",
+                "type": ""
+              },
+              {
+                "name": "dataEnd",
+                "nodeType": "YulTypedName",
+                "src": "60:7:339",
+                "type": ""
+              }
+            ],
+            "returnVariables": [
+              {
+                "name": "value0",
+                "nodeType": "YulTypedName",
+                "src": "72:6:339",
+                "type": ""
+              }
+            ],
+            "src": "14:286:339"
+          },
+          {
+            "body": {
+              "nodeType": "YulBlock",
+              "src": "400:92:339",
+              "statements": [
+                {
+                  "nodeType": "YulAssignment",
+                  "src": "410:26:339",
+                  "value": {
+                    "arguments": [
+                      {
+                        "name": "headStart",
+                        "nodeType": "YulIdentifier",
+                        "src": "422:9:339"
+                      },
+                      {
+                        "kind": "number",
+                        "nodeType": "YulLiteral",
+                        "src": "433:2:339",
+                        "type": "",
+                        "value": "32"
+                      }
+                    ],
+                    "functionName": {
+                      "name": "add",
+                      "nodeType": "YulIdentifier",
+                      "src": "418:3:339"
+                    },
+                    "nodeType": "YulFunctionCall",
+                    "src": "418:18:339"
+                  },
+                  "variableNames": [
+                    {
+                      "name": "tail",
+                      "nodeType": "YulIdentifier",
+                      "src": "410:4:339"
+                    }
+                  ]
+                },
+                {
+                  "expression": {
+                    "arguments": [
+                      {
+                        "name": "headStart",
+                        "nodeType": "YulIdentifier",
+                        "src": "452:9:339"
+                      },
+                      {
+                        "arguments": [
+                          {
+                            "arguments": [
+                              {
+                                "name": "value0",
+                                "nodeType": "YulIdentifier",
+                                "src": "477:6:339"
+                              }
+                            ],
+                            "functionName": {
+                              "name": "iszero",
+                              "nodeType": "YulIdentifier",
+                              "src": "470:6:339"
+                            },
+                            "nodeType": "YulFunctionCall",
+                            "src": "470:14:339"
+                          }
+                        ],
+                        "functionName": {
+                          "name": "iszero",
+                          "nodeType": "YulIdentifier",
+                          "src": "463:6:339"
+                        },
+                        "nodeType": "YulFunctionCall",
+                        "src": "463:22:339"
+                      }
+                    ],
+                    "functionName": {
+                      "name": "mstore",
+                      "nodeType": "YulIdentifier",
+                      "src": "445:6:339"
+                    },
+                    "nodeType": "YulFunctionCall",
+                    "src": "445:41:339"
+                  },
+                  "nodeType": "YulExpressionStatement",
+                  "src": "445:41:339"
+                }
+              ]
+            },
+            "name": "abi_encode_tuple_t_bool__to_t_bool__fromStack_reversed",
+            "nodeType": "YulFunctionDefinition",
+            "parameters": [
+              {
+                "name": "headStart",
+                "nodeType": "YulTypedName",
+                "src": "369:9:339",
+                "type": ""
+              },
+              {
+                "name": "value0",
+                "nodeType": "YulTypedName",
+                "src": "380:6:339",
+                "type": ""
+              }
+            ],
+            "returnVariables": [
+              {
+                "name": "tail",
+                "nodeType": "YulTypedName",
+                "src": "391:4:339",
+                "type": ""
+              }
+            ],
+            "src": "305:187:339"
+          }
+        ]
+      },
+      "contents": "{\n    { }\n    function abi_decode_tuple_t_bytes4(headStart, dataEnd) -> value0\n    {\n        if slt(sub(dataEnd, headStart), 32) { revert(0, 0) }\n        let value := calldataload(headStart)\n        if iszero(eq(value, and(value, shl(224, 0xffffffff)))) { revert(0, 0) }\n        value0 := value\n    }\n    function abi_encode_tuple_t_bool__to_t_bool__fromStack_reversed(headStart, value0) -> tail\n    {\n        tail := add(headStart, 32)\n        mstore(headStart, iszero(iszero(value0)))\n    }\n}",
+      "id": 339,
+      "language": "Yul",
+      "name": "#utility.yul"
+    }
+  ],
+  "sourceMap": "103:32:73:-:0;;;;;;;;;;;;;;;;;;;",
+  "deployedSourceMap": "103:32:73:-:0;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;763:155:203;;;;;;:::i;:::-;-1:-1:-1;;;;;;871:40:203;-1:-1:-1;;;871:40:203;;763:155;;;;470:14:339;;463:22;445:41;;433:2;418:18;763:155:203;;;;;;;14:286:339;72:6;125:2;113:9;104:7;100:23;96:32;93:52;;;141:1;138;131:12;93:52;167:23;;-1:-1:-1;;;;;;219:32:339;;209:43;;199:71;;266:1;263;256:12;199:71;289:5;14:286;-1:-1:-1;;;14:286:339:o",
+  "source": "// SPDX-License-Identifier: MIT\n\npragma solidity ^0.8.0;\n\nimport \"../utils/introspection/ERC165.sol\";\n\ncontract ERC165Mock is ERC165 {}\n",
+  "sourcePath": "/Users/drake/Documents/DEV/PRUF/PRUF_TRUFFLE/contracts/Imports/mocks/ERC165Mock.sol",
   "ast": {
-    "absolutePath": "/Users/cts/dev/PRUF/PRUF_TRUFFLE/contracts/Imports/mocks/ERC165Mock.sol",
+    "absolutePath": "project:/contracts/Imports/mocks/ERC165Mock.sol",
     "exportedSymbols": {
+      "ERC165": [
+        24651
+      ],
       "ERC165Mock": [
-        5526
+        7414
+      ],
+      "IERC165": [
+        24975
       ]
     },
-    "id": 5527,
+    "id": 7415,
     "license": "MIT",
     "nodeType": "SourceUnit",
     "nodes": [
       {
-        "id": 5512,
+        "id": 7410,
         "literals": [
           "solidity",
           "^",
-          "0.6",
+          "0.8",
           ".0"
         ],
         "nodeType": "PragmaDirective",
-        "src": "33:23:42"
+        "src": "33:23:73"
       },
       {
-        "absolutePath": "/Users/cts/dev/PRUF/PRUF_TRUFFLE/contracts/Imports/introspection/ERC165.sol",
-        "file": "../introspection/ERC165.sol",
-        "id": 5513,
+        "absolutePath": "project:/contracts/Imports/utils/introspection/ERC165.sol",
+        "file": "../utils/introspection/ERC165.sol",
+        "id": 7411,
+        "nameLocation": "-1:-1:-1",
         "nodeType": "ImportDirective",
-        "scope": 5527,
-        "sourceUnit": 3128,
-        "src": "58:37:42",
+        "scope": 7415,
+        "sourceUnit": 24652,
+        "src": "58:43:73",
         "symbolAliases": [],
         "unitAlias": ""
       },
@@ -79,196 +469,75 @@
         "abstract": false,
         "baseContracts": [
           {
-            "arguments": null,
             "baseName": {
-              "contractScope": null,
-              "id": 5514,
+              "id": 7412,
               "name": "ERC165",
-              "nodeType": "UserDefinedTypeName",
-              "referencedDeclaration": 3127,
-              "src": "120:6:42",
-              "typeDescriptions": {
-                "typeIdentifier": "t_contract$_ERC165_$3127",
-                "typeString": "contract ERC165"
-              }
+              "nodeType": "IdentifierPath",
+              "referencedDeclaration": 24651,
+              "src": "126:6:73"
             },
-            "id": 5515,
+            "id": 7413,
             "nodeType": "InheritanceSpecifier",
-            "src": "120:6:42"
+            "src": "126:6:73"
           }
         ],
-        "contractDependencies": [
-          3127,
-          3373
-        ],
+        "contractDependencies": [],
         "contractKind": "contract",
-        "documentation": null,
         "fullyImplemented": true,
-        "id": 5526,
+        "id": 7414,
         "linearizedBaseContracts": [
-          5526,
-          3127,
-          3373
+          7414,
+          24651,
+          24975
         ],
         "name": "ERC165Mock",
+        "nameLocation": "112:10:73",
         "nodeType": "ContractDefinition",
-        "nodes": [
-          {
-            "body": {
-              "id": 5524,
-              "nodeType": "Block",
-              "src": "187:48:42",
-              "statements": [
-                {
-                  "expression": {
-                    "argumentTypes": null,
-                    "arguments": [
-                      {
-                        "argumentTypes": null,
-                        "id": 5521,
-                        "name": "interfaceId",
-                        "nodeType": "Identifier",
-                        "overloadedDeclarations": [],
-                        "referencedDeclaration": 5517,
-                        "src": "216:11:42",
-                        "typeDescriptions": {
-                          "typeIdentifier": "t_bytes4",
-                          "typeString": "bytes4"
-                        }
-                      }
-                    ],
-                    "expression": {
-                      "argumentTypes": [
-                        {
-                          "typeIdentifier": "t_bytes4",
-                          "typeString": "bytes4"
-                        }
-                      ],
-                      "id": 5520,
-                      "name": "_registerInterface",
-                      "nodeType": "Identifier",
-                      "overloadedDeclarations": [],
-                      "referencedDeclaration": 3126,
-                      "src": "197:18:42",
-                      "typeDescriptions": {
-                        "typeIdentifier": "t_function_internal_nonpayable$_t_bytes4_$returns$__$",
-                        "typeString": "function (bytes4)"
-                      }
-                    },
-                    "id": 5522,
-                    "isConstant": false,
-                    "isLValue": false,
-                    "isPure": false,
-                    "kind": "functionCall",
-                    "lValueRequested": false,
-                    "names": [],
-                    "nodeType": "FunctionCall",
-                    "src": "197:31:42",
-                    "tryCall": false,
-                    "typeDescriptions": {
-                      "typeIdentifier": "t_tuple$__$",
-                      "typeString": "tuple()"
-                    }
-                  },
-                  "id": 5523,
-                  "nodeType": "ExpressionStatement",
-                  "src": "197:31:42"
-                }
-              ]
-            },
-            "documentation": null,
-            "functionSelector": "214cdb80",
-            "id": 5525,
-            "implemented": true,
-            "kind": "function",
-            "modifiers": [],
-            "name": "registerInterface",
-            "nodeType": "FunctionDefinition",
-            "overrides": null,
-            "parameters": {
-              "id": 5518,
-              "nodeType": "ParameterList",
-              "parameters": [
-                {
-                  "constant": false,
-                  "id": 5517,
-                  "mutability": "mutable",
-                  "name": "interfaceId",
-                  "nodeType": "VariableDeclaration",
-                  "overrides": null,
-                  "scope": 5525,
-                  "src": "160:18:42",
-                  "stateVariable": false,
-                  "storageLocation": "default",
-                  "typeDescriptions": {
-                    "typeIdentifier": "t_bytes4",
-                    "typeString": "bytes4"
-                  },
-                  "typeName": {
-                    "id": 5516,
-                    "name": "bytes4",
-                    "nodeType": "ElementaryTypeName",
-                    "src": "160:6:42",
-                    "typeDescriptions": {
-                      "typeIdentifier": "t_bytes4",
-                      "typeString": "bytes4"
-                    }
-                  },
-                  "value": null,
-                  "visibility": "internal"
-                }
-              ],
-              "src": "159:20:42"
-            },
-            "returnParameters": {
-              "id": 5519,
-              "nodeType": "ParameterList",
-              "parameters": [],
-              "src": "187:0:42"
-            },
-            "scope": 5526,
-            "src": "133:102:42",
-            "stateMutability": "nonpayable",
-            "virtual": false,
-            "visibility": "public"
-          }
-        ],
-        "scope": 5527,
-        "src": "97:140:42"
+        "nodes": [],
+        "scope": 7415,
+        "src": "103:32:73",
+        "usedErrors": []
       }
     ],
-    "src": "33:205:42"
+    "src": "33:103:73"
   },
   "legacyAST": {
-    "absolutePath": "/Users/cts/dev/PRUF/PRUF_TRUFFLE/contracts/Imports/mocks/ERC165Mock.sol",
+    "absolutePath": "project:/contracts/Imports/mocks/ERC165Mock.sol",
     "exportedSymbols": {
+      "ERC165": [
+        24651
+      ],
       "ERC165Mock": [
-        5526
+        7414
+      ],
+      "IERC165": [
+        24975
       ]
     },
-    "id": 5527,
+    "id": 7415,
     "license": "MIT",
     "nodeType": "SourceUnit",
     "nodes": [
       {
-        "id": 5512,
+        "id": 7410,
         "literals": [
           "solidity",
           "^",
-          "0.6",
+          "0.8",
           ".0"
         ],
         "nodeType": "PragmaDirective",
-        "src": "33:23:42"
+        "src": "33:23:73"
       },
       {
-        "absolutePath": "/Users/cts/dev/PRUF/PRUF_TRUFFLE/contracts/Imports/introspection/ERC165.sol",
-        "file": "../introspection/ERC165.sol",
-        "id": 5513,
+        "absolutePath": "project:/contracts/Imports/utils/introspection/ERC165.sol",
+        "file": "../utils/introspection/ERC165.sol",
+        "id": 7411,
+        "nameLocation": "-1:-1:-1",
         "nodeType": "ImportDirective",
-        "scope": 5527,
-        "sourceUnit": 3128,
-        "src": "58:37:42",
+        "scope": 7415,
+        "sourceUnit": 24652,
+        "src": "58:43:73",
         "symbolAliases": [],
         "unitAlias": ""
       },
@@ -276,178 +545,50 @@
         "abstract": false,
         "baseContracts": [
           {
-            "arguments": null,
             "baseName": {
-              "contractScope": null,
-              "id": 5514,
+              "id": 7412,
               "name": "ERC165",
-              "nodeType": "UserDefinedTypeName",
-              "referencedDeclaration": 3127,
-              "src": "120:6:42",
-              "typeDescriptions": {
-                "typeIdentifier": "t_contract$_ERC165_$3127",
-                "typeString": "contract ERC165"
-              }
+              "nodeType": "IdentifierPath",
+              "referencedDeclaration": 24651,
+              "src": "126:6:73"
             },
-            "id": 5515,
+            "id": 7413,
             "nodeType": "InheritanceSpecifier",
-            "src": "120:6:42"
+            "src": "126:6:73"
           }
         ],
-        "contractDependencies": [
-          3127,
-          3373
-        ],
+        "contractDependencies": [],
         "contractKind": "contract",
-        "documentation": null,
         "fullyImplemented": true,
-        "id": 5526,
+        "id": 7414,
         "linearizedBaseContracts": [
-          5526,
-          3127,
-          3373
+          7414,
+          24651,
+          24975
         ],
         "name": "ERC165Mock",
+        "nameLocation": "112:10:73",
         "nodeType": "ContractDefinition",
-        "nodes": [
-          {
-            "body": {
-              "id": 5524,
-              "nodeType": "Block",
-              "src": "187:48:42",
-              "statements": [
-                {
-                  "expression": {
-                    "argumentTypes": null,
-                    "arguments": [
-                      {
-                        "argumentTypes": null,
-                        "id": 5521,
-                        "name": "interfaceId",
-                        "nodeType": "Identifier",
-                        "overloadedDeclarations": [],
-                        "referencedDeclaration": 5517,
-                        "src": "216:11:42",
-                        "typeDescriptions": {
-                          "typeIdentifier": "t_bytes4",
-                          "typeString": "bytes4"
-                        }
-                      }
-                    ],
-                    "expression": {
-                      "argumentTypes": [
-                        {
-                          "typeIdentifier": "t_bytes4",
-                          "typeString": "bytes4"
-                        }
-                      ],
-                      "id": 5520,
-                      "name": "_registerInterface",
-                      "nodeType": "Identifier",
-                      "overloadedDeclarations": [],
-                      "referencedDeclaration": 3126,
-                      "src": "197:18:42",
-                      "typeDescriptions": {
-                        "typeIdentifier": "t_function_internal_nonpayable$_t_bytes4_$returns$__$",
-                        "typeString": "function (bytes4)"
-                      }
-                    },
-                    "id": 5522,
-                    "isConstant": false,
-                    "isLValue": false,
-                    "isPure": false,
-                    "kind": "functionCall",
-                    "lValueRequested": false,
-                    "names": [],
-                    "nodeType": "FunctionCall",
-                    "src": "197:31:42",
-                    "tryCall": false,
-                    "typeDescriptions": {
-                      "typeIdentifier": "t_tuple$__$",
-                      "typeString": "tuple()"
-                    }
-                  },
-                  "id": 5523,
-                  "nodeType": "ExpressionStatement",
-                  "src": "197:31:42"
-                }
-              ]
-            },
-            "documentation": null,
-            "functionSelector": "214cdb80",
-            "id": 5525,
-            "implemented": true,
-            "kind": "function",
-            "modifiers": [],
-            "name": "registerInterface",
-            "nodeType": "FunctionDefinition",
-            "overrides": null,
-            "parameters": {
-              "id": 5518,
-              "nodeType": "ParameterList",
-              "parameters": [
-                {
-                  "constant": false,
-                  "id": 5517,
-                  "mutability": "mutable",
-                  "name": "interfaceId",
-                  "nodeType": "VariableDeclaration",
-                  "overrides": null,
-                  "scope": 5525,
-                  "src": "160:18:42",
-                  "stateVariable": false,
-                  "storageLocation": "default",
-                  "typeDescriptions": {
-                    "typeIdentifier": "t_bytes4",
-                    "typeString": "bytes4"
-                  },
-                  "typeName": {
-                    "id": 5516,
-                    "name": "bytes4",
-                    "nodeType": "ElementaryTypeName",
-                    "src": "160:6:42",
-                    "typeDescriptions": {
-                      "typeIdentifier": "t_bytes4",
-                      "typeString": "bytes4"
-                    }
-                  },
-                  "value": null,
-                  "visibility": "internal"
-                }
-              ],
-              "src": "159:20:42"
-            },
-            "returnParameters": {
-              "id": 5519,
-              "nodeType": "ParameterList",
-              "parameters": [],
-              "src": "187:0:42"
-            },
-            "scope": 5526,
-            "src": "133:102:42",
-            "stateMutability": "nonpayable",
-            "virtual": false,
-            "visibility": "public"
-          }
-        ],
-        "scope": 5527,
-        "src": "97:140:42"
+        "nodes": [],
+        "scope": 7415,
+        "src": "103:32:73",
+        "usedErrors": []
       }
     ],
-    "src": "33:205:42"
+    "src": "33:103:73"
   },
   "compiler": {
     "name": "solc",
-    "version": "0.6.12+commit.27d51765.Emscripten.clang"
+    "version": "0.8.7+commit.e28d00a7.Emscripten.clang"
   },
   "networks": {},
-  "schemaVersion": "3.2.3",
-  "updatedAt": "2020-12-13T01:45:40.061Z",
+  "schemaVersion": "3.4.3",
+  "updatedAt": "2021-10-26T17:58:03.588Z",
   "devdoc": {
     "kind": "dev",
     "methods": {
       "supportsInterface(bytes4)": {
-        "details": "See {IERC165-supportsInterface}. Time complexity O(1), guaranteed to always use less than 30 000 gas."
+        "details": "See {IERC165-supportsInterface}."
       }
     },
     "version": 1
