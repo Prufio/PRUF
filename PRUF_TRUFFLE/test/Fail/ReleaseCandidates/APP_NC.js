@@ -26,7 +26,6 @@ const PRUF_RCLR = artifacts.require("RCLR");
 const PRUF_HELPER = artifacts.require("Helper");
 const PRUF_MAL_APP = artifacts.require("MAL_APP");
 const PRUF_UTIL_TKN = artifacts.require("UTIL_TKN");
-// const PRUF_PURCHASE = artifacts.require("PURCHASE");
 const PRUF_DECORATE = artifacts.require("DECORATE");
 const PRUF_WRAP = artifacts.require("WRAP");
 
@@ -442,13 +441,6 @@ contract("APP_NC", (accounts) => {
     UTIL_TKN = PRUF_UTIL_TKN_TEST;
   });
 
-  // it("Should deploy PURCHASE", async () => {
-  //   const PRUF_PURCHASE_TEST = await PRUF_PURCHASE.deployed({ from: account1 });
-  //   console.log(PRUF_PURCHASE_TEST.address);
-  //   assert(PRUF_PURCHASE_TEST.address !== "");
-  //   PURCHASE = PRUF_PURCHASE_TEST;
-  // });
-
   it("Should deploy DECORATE", async () => {
     const PRUF_DECORATE_TEST = await PRUF_DECORATE.deployed({ from: account1 });
     console.log(PRUF_DECORATE_TEST.address);
@@ -633,13 +625,6 @@ contract("APP_NC", (accounts) => {
             }
           );
         })
-
-        // .then(() => {
-        //   console.log("Adding PURCHASE to storage for use in Node 0");
-        //   return STOR.authorizeContract("PURCHASE", PURCHASE.address, "0", "2", {
-        //     from: account1,
-        //   });
-        // })
 
         .then(() => {
           console.log("Adding DECORATE to storage for use in Node 0");
@@ -1397,7 +1382,7 @@ contract("APP_NC", (accounts) => {
       .then(() => {
         return NODE_MGR.setNonMutableData(
           "1000002",
-          "3",
+          "2",
           "1",
           "0x0000000000000000000000000000000000000000",
           { from: account1 }
@@ -1417,7 +1402,7 @@ contract("APP_NC", (accounts) => {
       .then(() => {
         return NODE_MGR.setNonMutableData(
           "1000004",
-          "3",
+          "2",
           "1",
           "0x0000000000000000000000000000000000000000",
           { from: account10 }
@@ -1427,7 +1412,7 @@ contract("APP_NC", (accounts) => {
       .then(() => {
         return NODE_MGR.setNonMutableData(
           "1000005",
-          "3",
+          "2",
           "1",
           "0x0000000000000000000000000000000000000000",
           { from: account1 }
@@ -1462,36 +1447,6 @@ contract("APP_NC", (accounts) => {
     })
 
       .then(() => {
-        return NODE_STOR.modifyNodeSwitches("1000002", "3", "1", {
-          from: account1,
-        });
-      })
-
-      .then(() => {
-        return NODE_STOR.modifyNodeSwitches("1000003", "3", "1", {
-          from: account1,
-        });
-      })
-
-      .then(() => {
-        return NODE_STOR.modifyNodeSwitches("1000004", "3", "1", {
-          from: account1,
-        });
-      })
-
-      .then(() => {
-        return NODE_STOR.modifyNodeSwitches("1000005", "3", "1", {
-          from: account1,
-        });
-      })
-
-      .then(() => {
-        return NODE_STOR.modifyNodeSwitches("1000006", "3", "1", {
-          from: account1,
-        });
-      })
-
-      .then(() => {
         return NODE_STOR.modifyNodeSwitches("1000001", "8", "1", {
           from: account1,
         });
@@ -1523,6 +1478,42 @@ contract("APP_NC", (accounts) => {
 
       .then(() => {
         return NODE_STOR.modifyNodeSwitches("1000006", "8", "1", {
+          from: account1,
+        });
+      })
+
+      .then(() => {
+        return NODE_STOR.modifyNodeSwitches("1000001", "7", "1", {
+          from: account1,
+        });
+      })
+
+      .then(() => {
+        return NODE_STOR.modifyNodeSwitches("1000002", "7", "1", {
+          from: account1,
+        });
+      })
+
+      .then(() => {
+        return NODE_STOR.modifyNodeSwitches("1000003", "7", "1", {
+          from: account1,
+        });
+      })
+
+      .then(() => {
+        return NODE_STOR.modifyNodeSwitches("1000004", "7", "1", {
+          from: account1,
+        });
+      })
+
+      .then(() => {
+        return NODE_STOR.modifyNodeSwitches("1000005", "7", "1", {
+          from: account1,
+        });
+      })
+
+      .then(() => {
+        return NODE_STOR.modifyNodeSwitches("1000006", "7", "1", {
           from: account1,
         });
       });
@@ -1686,6 +1677,13 @@ contract("APP_NC", (accounts) => {
       .then(() => {
         console.log("Account4 => 1000002");
         return NODE_MGR.addUser("1000002", account4Hash, "1", {
+          from: account1,
+        });
+      })
+
+      .then(() => {
+        console.log("Account1 => 1000003");
+        return NODE_MGR.addUser("1000003", account1Hash, "1", {
           from: account1,
         });
       })

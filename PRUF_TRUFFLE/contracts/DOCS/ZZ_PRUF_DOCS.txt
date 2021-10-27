@@ -291,7 +291,7 @@ pragma solidity ^0.6.7;
  * 6   -- RAW data (internal) => low Res Image
 - -----------------------------------------------------------------
 
-*-----------------------------------------------------------------//DPS:TEST:CHANGED
+*-----------------------------------------------------------------
  * node option switches, 1 or 0 : AC_data.switches (AC_manager)
  *             Switches will be duplicated from root 
  * bit1  -- (node CAS) If set, node cannot change CAS data after initial setting

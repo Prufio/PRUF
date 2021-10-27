@@ -1342,7 +1342,7 @@ contract("A_TKN", (accounts) => {
       .then(() => {
         return NODE_MGR.setNonMutableData(
           "1000002",
-          "3",
+          "2",
           "1",
           "0x0000000000000000000000000000000000000000",
           { from: account1 }
@@ -1352,7 +1352,7 @@ contract("A_TKN", (accounts) => {
       .then(() => {
         return NODE_MGR.setNonMutableData(
           "1000003",
-          "3",
+          "2",
           "1",
           "0x0000000000000000000000000000000000000000",
           { from: account1 }
@@ -1362,7 +1362,7 @@ contract("A_TKN", (accounts) => {
       .then(() => {
         return NODE_MGR.setNonMutableData(
           "1000004",
-          "3",
+          "2",
           "1",
           "0x0000000000000000000000000000000000000000",
           { from: account10 }
@@ -1372,7 +1372,7 @@ contract("A_TKN", (accounts) => {
       .then(() => {
         return NODE_MGR.setNonMutableData(
           "1000005",
-          "3",
+          "2",
           "1",
           "0x0000000000000000000000000000000000000000",
           { from: account1 }
@@ -1382,7 +1382,7 @@ contract("A_TKN", (accounts) => {
       .then(() => {
         return NODE_MGR.setNonMutableData(
           "1000006",
-          "3",
+          "2",
           "1",
           "0x0000000000000000000000000000000000000000",
           { from: account10 }
@@ -1395,36 +1395,6 @@ contract("A_TKN", (accounts) => {
     return NODE_STOR.modifyNodeSwitches("1000001", "1", "1", {
       from: account1,
     })
-
-      .then(() => {
-        return NODE_STOR.modifyNodeSwitches("1000002", "3", "1", {
-          from: account1,
-        });
-      })
-
-      .then(() => {
-        return NODE_STOR.modifyNodeSwitches("1000003", "3", "1", {
-          from: account1,
-        });
-      })
-
-      .then(() => {
-        return NODE_STOR.modifyNodeSwitches("1000004", "3", "1", {
-          from: account1,
-        });
-      })
-
-      .then(() => {
-        return NODE_STOR.modifyNodeSwitches("1000005", "3", "1", {
-          from: account1,
-        });
-      })
-
-      .then(() => {
-        return NODE_STOR.modifyNodeSwitches("1000006", "3", "1", {
-          from: account1,
-        });
-      })
 
       .then(() => {
         return NODE_STOR.modifyNodeSwitches("1000001", "8", "1", {
@@ -1458,6 +1428,42 @@ contract("A_TKN", (accounts) => {
 
       .then(() => {
         return NODE_STOR.modifyNodeSwitches("1000006", "8", "1", {
+          from: account1,
+        });
+      })
+
+      .then(() => {
+        return NODE_STOR.modifyNodeSwitches("1000001", "7", "1", {
+          from: account1,
+        });
+      })
+
+      .then(() => {
+        return NODE_STOR.modifyNodeSwitches("1000002", "7", "1", {
+          from: account1,
+        });
+      })
+
+      .then(() => {
+        return NODE_STOR.modifyNodeSwitches("1000003", "7", "1", {
+          from: account1,
+        });
+      })
+
+      .then(() => {
+        return NODE_STOR.modifyNodeSwitches("1000004", "7", "1", {
+          from: account1,
+        });
+      })
+
+      .then(() => {
+        return NODE_STOR.modifyNodeSwitches("1000005", "7", "1", {
+          from: account1,
+        });
+      })
+
+      .then(() => {
+        return NODE_STOR.modifyNodeSwitches("1000006", "7", "1", {
           from: account1,
         });
       });

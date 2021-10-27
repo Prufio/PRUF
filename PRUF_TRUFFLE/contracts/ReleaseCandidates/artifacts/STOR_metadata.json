@@ -144,19 +144,6 @@
 				"type": "function"
 			},
 			{
-				"inputs": [],
-				"name": "CONTRACT_ADMIN_ROLE",
-				"outputs": [
-					{
-						"internalType": "bytes32",
-						"name": "",
-						"type": "bytes32"
-					}
-				],
-				"stateMutability": "view",
-				"type": "function"
-			},
-			{
 				"inputs": [
 					{
 						"internalType": "address",
@@ -187,6 +174,19 @@
 			},
 			{
 				"inputs": [],
+				"name": "DAO_ROLE",
+				"outputs": [
+					{
+						"internalType": "bytes32",
+						"name": "",
+						"type": "bytes32"
+					}
+				],
+				"stateMutability": "view",
+				"type": "function"
+			},
+			{
+				"inputs": [],
 				"name": "DEFAULT_ADMIN_ROLE",
 				"outputs": [
 					{
@@ -206,30 +206,6 @@
 						"internalType": "bytes32",
 						"name": "",
 						"type": "bytes32"
-					}
-				],
-				"stateMutability": "view",
-				"type": "function"
-			},
-			{
-				"inputs": [
-					{
-						"internalType": "bytes32",
-						"name": "_idxHash",
-						"type": "bytes32"
-					},
-					{
-						"internalType": "bytes32",
-						"name": "_rgtHash",
-						"type": "bytes32"
-					}
-				],
-				"name": "_verifyRightsHolder",
-				"outputs": [
-					{
-						"internalType": "uint256",
-						"name": "",
-						"type": "uint256"
 					}
 				],
 				"stateMutability": "view",
@@ -501,29 +477,6 @@
 					},
 					{
 						"internalType": "bytes32",
-						"name": "_nonMutableStorage1",
-						"type": "bytes32"
-					},
-					{
-						"internalType": "bytes32",
-						"name": "_nonMutableStorage2",
-						"type": "bytes32"
-					}
-				],
-				"name": "modifyNonMutableStorage",
-				"outputs": [],
-				"stateMutability": "nonpayable",
-				"type": "function"
-			},
-			{
-				"inputs": [
-					{
-						"internalType": "bytes32",
-						"name": "_idxHash",
-						"type": "bytes32"
-					},
-					{
-						"internalType": "bytes32",
 						"name": "_rgtHash",
 						"type": "bytes32"
 					},
@@ -562,12 +515,17 @@
 				"inputs": [
 					{
 						"internalType": "bytes32",
-						"name": "_idxRaw",
+						"name": "_idxHash",
 						"type": "bytes32"
 					},
 					{
 						"internalType": "bytes32",
 						"name": "_rgtHash",
+						"type": "bytes32"
+					},
+					{
+						"internalType": "bytes32",
+						"name": "_URIhash",
 						"type": "bytes32"
 					},
 					{
@@ -684,6 +642,11 @@
 								"internalType": "uint32",
 								"name": "int32temp",
 								"type": "uint32"
+							},
+							{
+								"internalType": "bytes32",
+								"name": "URIhash",
+								"type": "bytes32"
 							},
 							{
 								"internalType": "bytes32",
@@ -840,6 +803,29 @@
 			{
 				"inputs": [
 					{
+						"internalType": "bytes32",
+						"name": "_idxHash",
+						"type": "bytes32"
+					},
+					{
+						"internalType": "bytes32",
+						"name": "_nonMutableStorage1",
+						"type": "bytes32"
+					},
+					{
+						"internalType": "bytes32",
+						"name": "_nonMutableStorage2",
+						"type": "bytes32"
+					}
+				],
+				"name": "setNonMutableStorage",
+				"outputs": [],
+				"stateMutability": "nonpayable",
+				"type": "function"
+			},
+			{
+				"inputs": [
+					{
 						"internalType": "bytes4",
 						"name": "interfaceId",
 						"type": "bytes4"
@@ -862,6 +848,30 @@
 				"outputs": [],
 				"stateMutability": "nonpayable",
 				"type": "function"
+			},
+			{
+				"inputs": [
+					{
+						"internalType": "bytes32",
+						"name": "_idxHash",
+						"type": "bytes32"
+					},
+					{
+						"internalType": "bytes32",
+						"name": "_rgtHash",
+						"type": "bytes32"
+					}
+				],
+				"name": "verifyRightsHolder",
+				"outputs": [
+					{
+						"internalType": "uint256",
+						"name": "",
+						"type": "uint256"
+					}
+				],
+				"stateMutability": "view",
+				"type": "function"
 			}
 		],
 		"devdoc": {
@@ -875,16 +885,6 @@
 					},
 					"returns": {
 						"_0": "contractType of given contract"
-					}
-				},
-				"_verifyRightsHolder(bytes32,bytes32)": {
-					"details": "Compare record.rightsholder with supplied bytes32 rightsholder",
-					"params": {
-						"_idxHash": "- record asset ID",
-						"_rgtHash": "- record owner ID hash"
-					},
-					"returns": {
-						"_0": "170 if matches, 0 if not"
 					}
 				},
 				"addDefaultContracts(uint256,string,uint8)": {
@@ -918,7 +918,7 @@
 					"details": "Change node of an asset - writes to node in the 'Record' struct of the 'database' at _idxHash",
 					"params": {
 						"_idxHash": "- record asset ID",
-						"_newNode": "- Aseet Class to change to"
+						"_newNode": "- Node to change to"
 					}
 				},
 				"enableContractForNode(string,uint32,uint8)": {
@@ -967,14 +967,6 @@
 						"_mutableStorage2": "- second half of content adressable storage location"
 					}
 				},
-				"modifyNonMutableStorage(bytes32,bytes32,bytes32)": {
-					"details": "Modify NonMutableStorage data",
-					"params": {
-						"_idxHash": "- record asset ID",
-						"_nonMutableStorage1": "- first half of content addressable storage location",
-						"_nonMutableStorage2": "- second half of content addressable storage location"
-					}
-				},
 				"modifyRecord(bytes32,bytes32,uint8,uint32,uint32,uint256,uint256)": {
 					"details": "Modify a record, writing to the 'database' mapping with updates to multiple fields",
 					"params": {
@@ -987,11 +979,12 @@
 						"_rgtHash": "- record owner ID hash"
 					}
 				},
-				"newRecord(bytes32,bytes32,uint32,uint32)": {
+				"newRecord(bytes32,bytes32,bytes32,uint32,uint32)": {
 					"details": "Make a new record, writing to the 'database' mapping with basic initial asset data calling contract must be authorized in relevant node",
 					"params": {
+						"_URIhash": "- hash of URI Suffix",
 						"_countDownStart": "- initial value for decrement-only value",
-						"_idxRaw": "- asset ID befor node hashing",
+						"_idxHash": "- asset ID befor node hashing",
 						"_node": "- node in which to create the asset",
 						"_rgtHash": "- rightsholder id hash"
 					}
@@ -1046,11 +1039,29 @@
 						"_newAssetStatus": "- Status to change to"
 					}
 				},
+				"setNonMutableStorage(bytes32,bytes32,bytes32)": {
+					"details": "Modify NonMutableStorage data",
+					"params": {
+						"_idxHash": "- record asset ID",
+						"_nonMutableStorage1": "- first half of content addressable storage location",
+						"_nonMutableStorage2": "- second half of content addressable storage location"
+					}
+				},
 				"supportsInterface(bytes4)": {
 					"details": "See {IERC165-supportsInterface}."
 				},
 				"unpause()": {
 					"details": "Returns to normal state. (pausable)"
+				},
+				"verifyRightsHolder(bytes32,bytes32)": {
+					"details": "Compare record.rightsholder with supplied bytes32 rightsholder",
+					"params": {
+						"_idxHash": "- record asset ID",
+						"_rgtHash": "- record owner ID hash"
+					},
+					"returns": {
+						"_0": "170 if matches, 0 if not"
+					}
 				}
 			},
 			"version": 1
@@ -1063,7 +1074,7 @@
 	},
 	"settings": {
 		"compilationTarget": {
-			"Documents/PRUF/PRUF_TRUFFLE/contracts/ReleaseCandidates/PRUF_STOR.sol": "STOR"
+			"Documents/DEV/PRUF/PRUF_TRUFFLE/contracts/ReleaseCandidates/PRUF_STOR.sol": "STOR"
 		},
 		"evmVersion": "london",
 		"libraries": {},
@@ -1071,13 +1082,13 @@
 			"bytecodeHash": "ipfs"
 		},
 		"optimizer": {
-			"enabled": false,
+			"enabled": true,
 			"runs": 200
 		},
 		"remappings": []
 	},
 	"sources": {
-		"Documents/PRUF/PRUF_TRUFFLE/contracts/Imports/access/AccessControl.sol": {
+		"Documents/DEV/PRUF/PRUF_TRUFFLE/contracts/Imports/access/AccessControl.sol": {
 			"keccak256": "0x183481af1c40d2efb26b86f63d6fe9e22f24c87e436d60a69f261b38500e7cd6",
 			"license": "MIT",
 			"urls": [
@@ -1085,7 +1096,7 @@
 				"dweb:/ipfs/QmYoFrDD2c6fi9CpPz1bjCMAyketjZ3G7ByUSVQMntysms"
 			]
 		},
-		"Documents/PRUF/PRUF_TRUFFLE/contracts/Imports/access/IAccessControl.sol": {
+		"Documents/DEV/PRUF/PRUF_TRUFFLE/contracts/Imports/access/IAccessControl.sol": {
 			"keccak256": "0xfe0edb09653ed10e8a1bfe03eb9b0ff06775666eee817a95bd3d0799f1ee2b44",
 			"license": "MIT",
 			"urls": [
@@ -1093,7 +1104,7 @@
 				"dweb:/ipfs/QmTxDshRAMtoeM45YrTzQZdpmy4mt4scCNHjfZiWSvdETF"
 			]
 		},
-		"Documents/PRUF/PRUF_TRUFFLE/contracts/Imports/security/Pausable.sol": {
+		"Documents/DEV/PRUF/PRUF_TRUFFLE/contracts/Imports/security/Pausable.sol": {
 			"keccak256": "0xa35b1f2a670cd2a701a52c398032c9fed72df1909fe394d77ceacbf074e8937b",
 			"license": "MIT",
 			"urls": [
@@ -1101,7 +1112,7 @@
 				"dweb:/ipfs/QmVz1sHCwgEivHPRDswdt9tdvky7EnWqFmbuk1wFE55VMG"
 			]
 		},
-		"Documents/PRUF/PRUF_TRUFFLE/contracts/Imports/security/ReentrancyGuard.sol": {
+		"Documents/DEV/PRUF/PRUF_TRUFFLE/contracts/Imports/security/ReentrancyGuard.sol": {
 			"keccak256": "0x3ad0ec379a808f08bbb0b2eaa4533add9a458cc411115030842034d8c2032c2b",
 			"license": "MIT",
 			"urls": [
@@ -1109,7 +1120,7 @@
 				"dweb:/ipfs/Qmc2HdxeQoi9CA1TTuB4sCAEr1Bbrj38ZLBrE8moHNbyA5"
 			]
 		},
-		"Documents/PRUF/PRUF_TRUFFLE/contracts/Imports/utils/Context.sol": {
+		"Documents/DEV/PRUF/PRUF_TRUFFLE/contracts/Imports/utils/Context.sol": {
 			"keccak256": "0x90565a39ae45c80f0468dc96c7b20d0afc3055f344c8203a0c9258239f350b9f",
 			"license": "MIT",
 			"urls": [
@@ -1117,7 +1128,7 @@
 				"dweb:/ipfs/QmWcsmkVr24xmmjfnBQZoemFniXjj3vwT78Cz6uqZW1Hux"
 			]
 		},
-		"Documents/PRUF/PRUF_TRUFFLE/contracts/Imports/utils/Strings.sol": {
+		"Documents/DEV/PRUF/PRUF_TRUFFLE/contracts/Imports/utils/Strings.sol": {
 			"keccak256": "0x391d3ba97ab6856a16b225d6ee29617ad15ff00db70f3b4df1ab5ea33aa47c9d",
 			"license": "MIT",
 			"urls": [
@@ -1125,7 +1136,7 @@
 				"dweb:/ipfs/QmQwCB2BHnEuYR22PYt9HkpbgeFDhq4rHmaYqAZbX3WRC7"
 			]
 		},
-		"Documents/PRUF/PRUF_TRUFFLE/contracts/Imports/utils/introspection/ERC165.sol": {
+		"Documents/DEV/PRUF/PRUF_TRUFFLE/contracts/Imports/utils/introspection/ERC165.sol": {
 			"keccak256": "0x5718c5df9bd67ac68a796961df938821bb5dc0cd4c6118d77e9145afb187409b",
 			"license": "MIT",
 			"urls": [
@@ -1133,7 +1144,7 @@
 				"dweb:/ipfs/Qmejonoaj5MLekPus229rJQHcC6E9dz2xorjHJR84fMfmn"
 			]
 		},
-		"Documents/PRUF/PRUF_TRUFFLE/contracts/Imports/utils/introspection/IERC165.sol": {
+		"Documents/DEV/PRUF/PRUF_TRUFFLE/contracts/Imports/utils/introspection/IERC165.sol": {
 			"keccak256": "0xa28007762d9da9db878dd421960c8cb9a10471f47ab5c1b3309bfe48e9e79ff4",
 			"license": "MIT",
 			"urls": [
@@ -1141,36 +1152,36 @@
 				"dweb:/ipfs/QmcsVgLgzWdor3UnAztUkXKNGcysm1MPneWksF72AvnwBx"
 			]
 		},
-		"Documents/PRUF/PRUF_TRUFFLE/contracts/ReleaseCandidates/PRUF_STOR.sol": {
-			"keccak256": "0xa862b5ca8cc242f5846f3217440dc1283a87d2e3562fdf1a297fd534898e553d",
+		"Documents/DEV/PRUF/PRUF_TRUFFLE/contracts/ReleaseCandidates/PRUF_STOR.sol": {
+			"keccak256": "0x599339f795b413629c9ebef557b40a0deb3f9ef6fcce448fb991af8a094afcb4",
 			"license": "UNLICENSED",
 			"urls": [
-				"bzz-raw://094fa4e3c87856978f5bb66c2392ad0771230d1554bad1d69c352c74ee7a8873",
-				"dweb:/ipfs/QmTc9VBvAoepoTtSLZb6AvNHduJtJYJZHpddgABvNp1SXv"
+				"bzz-raw://55d72ba2075c4448f3804b9e17afae6f9a76ac709ee7f573c93678e102347020",
+				"dweb:/ipfs/QmQCjcw1cRByinc7e7RGL2z27GeEDaHf3UfqQU5qvWU4Wy"
 			]
 		},
-		"Documents/PRUF/PRUF_TRUFFLE/contracts/Resources/RESOURCE_PRUF_INTERFACES.sol": {
-			"keccak256": "0x2588fbcfed3d633e8e09b68bf99454c6709fbd833bb1b466c28f6d47cafd5f50",
+		"Documents/DEV/PRUF/PRUF_TRUFFLE/contracts/Resources/RESOURCE_PRUF_INTERFACES.sol": {
+			"keccak256": "0x841b6fc8845d8872ce9dcbbbc0490ab7b40cfb36a245fab1bf24ad49a4ad9175",
 			"license": "UNLICENSED",
 			"urls": [
-				"bzz-raw://d871e2106c9fd00a0a6d0e2b648c16e5c11e9eb9abc6742a384ce629a564d2bb",
-				"dweb:/ipfs/QmP2sKYSJdmgXt1LcVwi2c5BM5VJnvC1jCnigjPCVDznQj"
+				"bzz-raw://f338c910bf89b65a2ac4d788726f2606ae13ebc7577a95999e55f30590ca426e",
+				"dweb:/ipfs/QmNa8ppLvDjtbsjB7Rw2Az6LhDoFbaYBvAssfaQi5e5NTz"
 			]
 		},
-		"Documents/PRUF/PRUF_TRUFFLE/contracts/Resources/RESOURCE_PRUF_STRUCTS.sol": {
-			"keccak256": "0x4ef2ffeef66d8e4f51a45f9f7ad6676cc63b86bf8c51a527436e05e1d06b64c7",
+		"Documents/DEV/PRUF/PRUF_TRUFFLE/contracts/Resources/RESOURCE_PRUF_STRUCTS.sol": {
+			"keccak256": "0xd3d7899f0b9c4c89a6e33efc0df7aca96c70de969fd9970faf25fe4c3afebb04",
 			"license": "UNLICENSED",
 			"urls": [
-				"bzz-raw://2a5a93469287ace8f8011cab1d3685262b99a113d58aa9b7bdae6d102a04dad5",
-				"dweb:/ipfs/QmZgHHHRTNkTuitxPk1jFGZtTWR6yTjE1J16z1jMppu999"
+				"bzz-raw://78c1a0d11459490772f78fcd3613d490ae7d2e2940bef39d1c7ee21407f26c11",
+				"dweb:/ipfs/QmcrYC83Kw2whseL1a6Kx1z1BkDQBkzNpVyAGQp69JDxbR"
 			]
 		},
-		"Documents/PRUF/PRUF_TRUFFLE/contracts/Resources/RESOURCE_PRUF_TKN_INTERFACES.sol": {
-			"keccak256": "0x86f05641e3f565bab49ed5b2b24b4a1d6088e0d8d7f74f62bcbebfc372a75f95",
+		"Documents/DEV/PRUF/PRUF_TRUFFLE/contracts/Resources/RESOURCE_PRUF_TKN_INTERFACES.sol": {
+			"keccak256": "0x95a979542ef281bb5420312fb7b76e6bd4774bcdb0cf00e2701bbc5aacd3809d",
 			"license": "UNLICENSED",
 			"urls": [
-				"bzz-raw://16ae4e8403c2b9e4a565578ef43876528d531f0fd56b35a0874299b57a06397e",
-				"dweb:/ipfs/QmT5TCaEdq2SvzPpNx61d6Qf5SxVoTPY62TzDsGChn6aXM"
+				"bzz-raw://2f0a8a77fa3d644cf03708ae994e6f3e3e7c171b239a545cab88ac40c0f2eb4c",
+				"dweb:/ipfs/QmTM6eppxkRm83bmMbfEBWzZbrh5Pxe7Kz23B1xCM1kgAr"
 			]
 		}
 	},

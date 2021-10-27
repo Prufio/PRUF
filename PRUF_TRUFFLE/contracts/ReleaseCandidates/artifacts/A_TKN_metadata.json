@@ -214,6 +214,19 @@
 			},
 			{
 				"inputs": [],
+				"name": "DAO_ROLE",
+				"outputs": [
+					{
+						"internalType": "bytes32",
+						"name": "",
+						"type": "bytes32"
+					}
+				],
+				"stateMutability": "view",
+				"type": "function"
+			},
+			{
+				"inputs": [],
 				"name": "DEFAULT_ADMIN_ROLE",
 				"outputs": [
 					{
@@ -341,6 +354,44 @@
 						"internalType": "address",
 						"name": "",
 						"type": "address"
+					}
+				],
+				"stateMutability": "view",
+				"type": "function"
+			},
+			{
+				"inputs": [
+					{
+						"internalType": "uint32",
+						"name": "_node",
+						"type": "uint32"
+					}
+				],
+				"name": "getBaseURIbyForNode",
+				"outputs": [
+					{
+						"internalType": "string",
+						"name": "",
+						"type": "string"
+					}
+				],
+				"stateMutability": "view",
+				"type": "function"
+			},
+			{
+				"inputs": [
+					{
+						"internalType": "uint8",
+						"name": "_storageProvider",
+						"type": "uint8"
+					}
+				],
+				"name": "getBaseURIforStorageType",
+				"outputs": [
+					{
+						"internalType": "string",
+						"name": "",
+						"type": "string"
 					}
 				],
 				"stateMutability": "view",
@@ -480,6 +531,24 @@
 						"internalType": "address",
 						"name": "_addr",
 						"type": "address"
+					},
+					{
+						"internalType": "uint256",
+						"name": "_tokenId",
+						"type": "uint256"
+					}
+				],
+				"name": "isApprovedOrOwner",
+				"outputs": [],
+				"stateMutability": "view",
+				"type": "function"
+			},
+			{
+				"inputs": [
+					{
+						"internalType": "address",
+						"name": "_addr",
+						"type": "address"
 					}
 				],
 				"name": "isColdWallet",
@@ -517,6 +586,11 @@
 						"internalType": "uint256",
 						"name": "_tokenId",
 						"type": "uint256"
+					},
+					{
+						"internalType": "string",
+						"name": "_URIsuffix",
+						"type": "string"
 					}
 				],
 				"name": "mintAssetToken",
@@ -690,6 +764,24 @@
 					}
 				],
 				"name": "setApprovalForAll",
+				"outputs": [],
+				"stateMutability": "nonpayable",
+				"type": "function"
+			},
+			{
+				"inputs": [
+					{
+						"internalType": "uint8",
+						"name": "_storageProvider",
+						"type": "uint8"
+					},
+					{
+						"internalType": "string",
+						"name": "_URI",
+						"type": "string"
+					}
+				],
+				"name": "setBaseURIforStorageType",
 				"outputs": [],
 				"stateMutability": "nonpayable",
 				"type": "function"
@@ -960,6 +1052,18 @@
 				"getApproved(uint256)": {
 					"details": "See {IERC721-getApproved}."
 				},
+				"getBaseURIbyForNode(uint32)": {
+					"details": "returns a baseURI for a storage provider / index combination, as well as the total number of URIs.",
+					"params": {
+						"_node": "- node"
+					}
+				},
+				"getBaseURIforStorageType(uint8)": {
+					"details": "returns a baseURI for a storage provider / index combination, as well as the total number of URIs.",
+					"params": {
+						"_storageProvider": "- storage provider number"
+					}
+				},
 				"getRoleAdmin(bytes32)": {
 					"details": "Returns the admin role that controls `role`. See {grantRole} and {revokeRole}. To change a role's admin, use {_setRoleAdmin}."
 				},
@@ -988,14 +1092,15 @@
 					}
 				},
 				"killTrustedAgent(uint256)": {
-					"details": "!!! PERMANANTLY !!!  Kills trusted agent and payable functions this will break the functionality of current payment mechanisms. The workaround for this is to create an allowance for pruf contracts for a single or multiple payments, either ahead of time \"loading up your PRUF account\" or on demand with an operation. On demand will use quite a bit more gas. \"preloading\" should be pretty gas efficient, but will add an extra step to the workflow, requiring users to have sufficient PRuF \"banked\" in an allowance for use in the system.",
+					"details": "!!! PERMANENTLY !!!  Kills trusted agent and payable functions this will break the functionality of current payment mechanisms. The workaround for this is to create an allowance for pruf contracts for a single or multiple payments, either ahead of time \"loading up your PRUF account\" or on demand with an operation. On demand will use quite a bit more gas. \"preloading\" should be pretty gas efficient, but will add an extra step to the workflow, requiring users to have sufficient PRuF \"banked\" in an allowance for use in the system.",
 					"params": {
 						"_key": "- set to 170 to PERMENANTLY REMOVE TRUSTED AGENT CAPABILITY"
 					}
 				},
-				"mintAssetToken(address,uint256)": {
+				"mintAssetToken(address,uint256,string)": {
 					"details": "Mint an Asset token (may mint only to node holder depending on flags)",
 					"params": {
+						"_URIsuffix": "- URI suffix",
 						"_recipientAddress": "- Address to mint token into",
 						"_tokenId": "- Token ID to mint"
 					},
@@ -1043,6 +1148,13 @@
 				},
 				"setApprovalForAll(address,bool)": {
 					"details": "See {IERC721-setApprovalForAll}."
+				},
+				"setBaseURIforStorageType(uint8,string)": {
+					"details": "Sets the baseURI for a storage provider.",
+					"params": {
+						"_URI": "- baseURI to add",
+						"_storageProvider": "- storage provider number"
+					}
 				},
 				"setColdWallet()": {
 					"details": "Set calling wallet to a \"cold Wallet\" that cannot be manipulated by TRUSTED_AGENT or PAYABLE permissioned functions WALLET ADDRESSES SET TO \"Cold\" DO NOT WORK WITH TRUSTED_AGENT FUNCTIONS and must be unset from cold before it can interact with contract functions."
@@ -1138,7 +1250,7 @@
 	},
 	"settings": {
 		"compilationTarget": {
-			"Documents/PRUF/PRUF_TRUFFLE/contracts/ReleaseCandidates/PRUF_A_TKN.sol": "A_TKN"
+			"Documents/DEV/PRUF/PRUF_TRUFFLE/contracts/ReleaseCandidates/PRUF_A_TKN.sol": "A_TKN"
 		},
 		"evmVersion": "london",
 		"libraries": {},
@@ -1146,13 +1258,13 @@
 			"bytecodeHash": "ipfs"
 		},
 		"optimizer": {
-			"enabled": false,
+			"enabled": true,
 			"runs": 200
 		},
 		"remappings": []
 	},
 	"sources": {
-		"Documents/PRUF/PRUF_TRUFFLE/contracts/Imports/access/AccessControl.sol": {
+		"Documents/DEV/PRUF/PRUF_TRUFFLE/contracts/Imports/access/AccessControl.sol": {
 			"keccak256": "0x183481af1c40d2efb26b86f63d6fe9e22f24c87e436d60a69f261b38500e7cd6",
 			"license": "MIT",
 			"urls": [
@@ -1160,7 +1272,7 @@
 				"dweb:/ipfs/QmYoFrDD2c6fi9CpPz1bjCMAyketjZ3G7ByUSVQMntysms"
 			]
 		},
-		"Documents/PRUF/PRUF_TRUFFLE/contracts/Imports/access/AccessControlEnumerable.sol": {
+		"Documents/DEV/PRUF/PRUF_TRUFFLE/contracts/Imports/access/AccessControlEnumerable.sol": {
 			"keccak256": "0x313834fba9dbefee1df7717a5e3063ebf567d276e67bc925a03c7f8423f4c50e",
 			"license": "MIT",
 			"urls": [
@@ -1168,7 +1280,7 @@
 				"dweb:/ipfs/QmZrc4aUrUf7GXzvs1Tsadj8Z89YqdoMN4WEaZKJq2ML3J"
 			]
 		},
-		"Documents/PRUF/PRUF_TRUFFLE/contracts/Imports/access/IAccessControl.sol": {
+		"Documents/DEV/PRUF/PRUF_TRUFFLE/contracts/Imports/access/IAccessControl.sol": {
 			"keccak256": "0xfe0edb09653ed10e8a1bfe03eb9b0ff06775666eee817a95bd3d0799f1ee2b44",
 			"license": "MIT",
 			"urls": [
@@ -1176,7 +1288,7 @@
 				"dweb:/ipfs/QmTxDshRAMtoeM45YrTzQZdpmy4mt4scCNHjfZiWSvdETF"
 			]
 		},
-		"Documents/PRUF/PRUF_TRUFFLE/contracts/Imports/access/IAccessControlEnumerable.sol": {
+		"Documents/DEV/PRUF/PRUF_TRUFFLE/contracts/Imports/access/IAccessControlEnumerable.sol": {
 			"keccak256": "0x6a9a31f278ee3ed0568ab7e3c09ecb72bf92f922475a274760b4c58f87f9ad0c",
 			"license": "MIT",
 			"urls": [
@@ -1184,7 +1296,7 @@
 				"dweb:/ipfs/QmbzCk1qyZxxxosAThz1fJTUjUhx3dj1VVMSQCwGtrXV8U"
 			]
 		},
-		"Documents/PRUF/PRUF_TRUFFLE/contracts/Imports/security/Pausable.sol": {
+		"Documents/DEV/PRUF/PRUF_TRUFFLE/contracts/Imports/security/Pausable.sol": {
 			"keccak256": "0xa35b1f2a670cd2a701a52c398032c9fed72df1909fe394d77ceacbf074e8937b",
 			"license": "MIT",
 			"urls": [
@@ -1192,7 +1304,7 @@
 				"dweb:/ipfs/QmVz1sHCwgEivHPRDswdt9tdvky7EnWqFmbuk1wFE55VMG"
 			]
 		},
-		"Documents/PRUF/PRUF_TRUFFLE/contracts/Imports/security/ReentrancyGuard.sol": {
+		"Documents/DEV/PRUF/PRUF_TRUFFLE/contracts/Imports/security/ReentrancyGuard.sol": {
 			"keccak256": "0x3ad0ec379a808f08bbb0b2eaa4533add9a458cc411115030842034d8c2032c2b",
 			"license": "MIT",
 			"urls": [
@@ -1200,7 +1312,7 @@
 				"dweb:/ipfs/Qmc2HdxeQoi9CA1TTuB4sCAEr1Bbrj38ZLBrE8moHNbyA5"
 			]
 		},
-		"Documents/PRUF/PRUF_TRUFFLE/contracts/Imports/token/ERC721/ERC721.sol": {
+		"Documents/DEV/PRUF/PRUF_TRUFFLE/contracts/Imports/token/ERC721/ERC721.sol": {
 			"keccak256": "0x7d2b8ba4b256bfcac347991b75242f9bc37f499c5236af50cf09d0b35943dc0c",
 			"license": "MIT",
 			"urls": [
@@ -1208,7 +1320,7 @@
 				"dweb:/ipfs/QmdnVKmDDWDvdRr6vtrxy3G6WafqA2TAhUZv1UFMsm4B4r"
 			]
 		},
-		"Documents/PRUF/PRUF_TRUFFLE/contracts/Imports/token/ERC721/IERC721.sol": {
+		"Documents/DEV/PRUF/PRUF_TRUFFLE/contracts/Imports/token/ERC721/IERC721.sol": {
 			"keccak256": "0xf101e8720213560fab41104d53b3cc7ba0456ef3a98455aa7f022391783144a0",
 			"license": "MIT",
 			"urls": [
@@ -1216,7 +1328,7 @@
 				"dweb:/ipfs/QmPG2oeDjKncqsEeyYGjAN7CwAJmMgHterXGGnpzhha4z7"
 			]
 		},
-		"Documents/PRUF/PRUF_TRUFFLE/contracts/Imports/token/ERC721/IERC721Receiver.sol": {
+		"Documents/DEV/PRUF/PRUF_TRUFFLE/contracts/Imports/token/ERC721/IERC721Receiver.sol": {
 			"keccak256": "0xd9517254724276e2e8de3769183c1f738f445f0095c26fd9b86d3c6687e887b9",
 			"license": "MIT",
 			"urls": [
@@ -1224,7 +1336,7 @@
 				"dweb:/ipfs/Qmd8hXE3GZfBHuWx3RNiYgFW2ci7KvHtib8DiwzJ2dgo9V"
 			]
 		},
-		"Documents/PRUF/PRUF_TRUFFLE/contracts/Imports/token/ERC721/extensions/ERC721Burnable.sol": {
+		"Documents/DEV/PRUF/PRUF_TRUFFLE/contracts/Imports/token/ERC721/extensions/ERC721Burnable.sol": {
 			"keccak256": "0x7481c284b0ff5983d3f1784f0ceae1ec397f8c8938bc60552b19889cc057aee8",
 			"license": "MIT",
 			"urls": [
@@ -1232,7 +1344,7 @@
 				"dweb:/ipfs/Qman8u5hNWrE34xNinnSgNqMXcsyPsHh5992b4G7iM2xFX"
 			]
 		},
-		"Documents/PRUF/PRUF_TRUFFLE/contracts/Imports/token/ERC721/extensions/ERC721Enumerable.sol": {
+		"Documents/DEV/PRUF/PRUF_TRUFFLE/contracts/Imports/token/ERC721/extensions/ERC721Enumerable.sol": {
 			"keccak256": "0x41dc7bf7f69c668eb98aa078c5140a4d3c3b097124ee4b6058a649ca99688300",
 			"license": "MIT",
 			"urls": [
@@ -1240,7 +1352,7 @@
 				"dweb:/ipfs/QmTptvu7MJ6QcogPJUxkDEkdKm97KGTC28bhsZKu4sex4M"
 			]
 		},
-		"Documents/PRUF/PRUF_TRUFFLE/contracts/Imports/token/ERC721/extensions/ERC721Pausable.sol": {
+		"Documents/DEV/PRUF/PRUF_TRUFFLE/contracts/Imports/token/ERC721/extensions/ERC721Pausable.sol": {
 			"keccak256": "0xe8f81ba5ba258c2a3ad5cf4c0bf6263c78e60f320bd0bc150c9de2445958c47b",
 			"license": "MIT",
 			"urls": [
@@ -1248,7 +1360,7 @@
 				"dweb:/ipfs/QmRoCfuwBaDRii84xeBFNGL1EWYX1AaAkYGVUe2y8JWP3a"
 			]
 		},
-		"Documents/PRUF/PRUF_TRUFFLE/contracts/Imports/token/ERC721/extensions/ERC721URIStorage.sol": {
+		"Documents/DEV/PRUF/PRUF_TRUFFLE/contracts/Imports/token/ERC721/extensions/ERC721URIStorage.sol": {
 			"keccak256": "0x188d038a65a945481cc13fe30db334472dfbed61f7959d4478d05feb6303b1ea",
 			"license": "MIT",
 			"urls": [
@@ -1256,7 +1368,7 @@
 				"dweb:/ipfs/QmPwk5uVSHPQkepebrZSQ9xqgXdPABKqHwJZ2HkzNByLRE"
 			]
 		},
-		"Documents/PRUF/PRUF_TRUFFLE/contracts/Imports/token/ERC721/extensions/IERC721Enumerable.sol": {
+		"Documents/DEV/PRUF/PRUF_TRUFFLE/contracts/Imports/token/ERC721/extensions/IERC721Enumerable.sol": {
 			"keccak256": "0xa69205e5009601cf13be78b1e2f500e1e3b1d8012f22d966e63975273f602038",
 			"license": "MIT",
 			"urls": [
@@ -1264,7 +1376,7 @@
 				"dweb:/ipfs/QmRZsS3EYuLp75nBym1QQ4y6aQXGew75wSbv1uwqkvouUK"
 			]
 		},
-		"Documents/PRUF/PRUF_TRUFFLE/contracts/Imports/token/ERC721/extensions/IERC721Metadata.sol": {
+		"Documents/DEV/PRUF/PRUF_TRUFFLE/contracts/Imports/token/ERC721/extensions/IERC721Metadata.sol": {
 			"keccak256": "0xd32fb7f530a914b1083d10a6bed3a586f2451952fec04fe542bcc670a82f7ba5",
 			"license": "MIT",
 			"urls": [
@@ -1272,7 +1384,7 @@
 				"dweb:/ipfs/QmUShaQEu8HS1GjDnsMJQ8jkZEBrecn6NuDZ3pfjY1gVck"
 			]
 		},
-		"Documents/PRUF/PRUF_TRUFFLE/contracts/Imports/utils/Address.sol": {
+		"Documents/DEV/PRUF/PRUF_TRUFFLE/contracts/Imports/utils/Address.sol": {
 			"keccak256": "0x3336baae5cf23e94274d75336e2d412193be508504aee185e61dc7d58cd05c8a",
 			"license": "MIT",
 			"urls": [
@@ -1280,7 +1392,7 @@
 				"dweb:/ipfs/QmVApz5fCUq2QC8gKTsNNdCmcedJ3ETHp68zR5N3WUKS4r"
 			]
 		},
-		"Documents/PRUF/PRUF_TRUFFLE/contracts/Imports/utils/Context.sol": {
+		"Documents/DEV/PRUF/PRUF_TRUFFLE/contracts/Imports/utils/Context.sol": {
 			"keccak256": "0x90565a39ae45c80f0468dc96c7b20d0afc3055f344c8203a0c9258239f350b9f",
 			"license": "MIT",
 			"urls": [
@@ -1288,7 +1400,7 @@
 				"dweb:/ipfs/QmWcsmkVr24xmmjfnBQZoemFniXjj3vwT78Cz6uqZW1Hux"
 			]
 		},
-		"Documents/PRUF/PRUF_TRUFFLE/contracts/Imports/utils/Counters.sol": {
+		"Documents/DEV/PRUF/PRUF_TRUFFLE/contracts/Imports/utils/Counters.sol": {
 			"keccak256": "0x78450f4e3b722cce467b21e285f72ce5eaf361e9ba9dd2241a413926246773cd",
 			"license": "MIT",
 			"urls": [
@@ -1296,7 +1408,7 @@
 				"dweb:/ipfs/QmSyDz67R2HCypDE8Pacn3voVwxw9x17NM66q47YgBnGqc"
 			]
 		},
-		"Documents/PRUF/PRUF_TRUFFLE/contracts/Imports/utils/Strings.sol": {
+		"Documents/DEV/PRUF/PRUF_TRUFFLE/contracts/Imports/utils/Strings.sol": {
 			"keccak256": "0x391d3ba97ab6856a16b225d6ee29617ad15ff00db70f3b4df1ab5ea33aa47c9d",
 			"license": "MIT",
 			"urls": [
@@ -1304,7 +1416,7 @@
 				"dweb:/ipfs/QmQwCB2BHnEuYR22PYt9HkpbgeFDhq4rHmaYqAZbX3WRC7"
 			]
 		},
-		"Documents/PRUF/PRUF_TRUFFLE/contracts/Imports/utils/introspection/ERC165.sol": {
+		"Documents/DEV/PRUF/PRUF_TRUFFLE/contracts/Imports/utils/introspection/ERC165.sol": {
 			"keccak256": "0x5718c5df9bd67ac68a796961df938821bb5dc0cd4c6118d77e9145afb187409b",
 			"license": "MIT",
 			"urls": [
@@ -1312,7 +1424,7 @@
 				"dweb:/ipfs/Qmejonoaj5MLekPus229rJQHcC6E9dz2xorjHJR84fMfmn"
 			]
 		},
-		"Documents/PRUF/PRUF_TRUFFLE/contracts/Imports/utils/introspection/IERC165.sol": {
+		"Documents/DEV/PRUF/PRUF_TRUFFLE/contracts/Imports/utils/introspection/IERC165.sol": {
 			"keccak256": "0xa28007762d9da9db878dd421960c8cb9a10471f47ab5c1b3309bfe48e9e79ff4",
 			"license": "MIT",
 			"urls": [
@@ -1320,7 +1432,7 @@
 				"dweb:/ipfs/QmcsVgLgzWdor3UnAztUkXKNGcysm1MPneWksF72AvnwBx"
 			]
 		},
-		"Documents/PRUF/PRUF_TRUFFLE/contracts/Imports/utils/structs/EnumerableSet.sol": {
+		"Documents/DEV/PRUF/PRUF_TRUFFLE/contracts/Imports/utils/structs/EnumerableSet.sol": {
 			"keccak256": "0x3778dc944f4a696335878bad8beca60f38b7c79b7a0bd8ddbeb618bd502a95ae",
 			"license": "MIT",
 			"urls": [
@@ -1328,36 +1440,36 @@
 				"dweb:/ipfs/QmXN79ZS3btSrPhiMBWtWmdwaWKjYTaAYpVMt5QHvwwKMw"
 			]
 		},
-		"Documents/PRUF/PRUF_TRUFFLE/contracts/ReleaseCandidates/PRUF_A_TKN.sol": {
-			"keccak256": "0xb97e7de09311f0b7e4f69960ccb198c022c5676c9de5994ad24f6df2e12aeb85",
+		"Documents/DEV/PRUF/PRUF_TRUFFLE/contracts/ReleaseCandidates/PRUF_A_TKN.sol": {
+			"keccak256": "0x101031a5244bc47e8f5e51bac0240e747d30b1fc9168d54dc7c8fc0785ab2550",
 			"license": "UNLICENSED",
 			"urls": [
-				"bzz-raw://721452cbc3b2c78fb90cb6310e40f445026ba15a1efa50f8b37cb257aeedf49c",
-				"dweb:/ipfs/Qma8tbSza1crucRCLy4xD8JE9fzY4qruDFez2Ud3j4KqwM"
+				"bzz-raw://5745c624294823860f205ca334ba4572d4e88241f6841e1d2ceae09194c0d67b",
+				"dweb:/ipfs/QmWCmXPmfZDj1qE3k5TpkPqBkxavo8rk5z6yBtS9FLwX7E"
 			]
 		},
-		"Documents/PRUF/PRUF_TRUFFLE/contracts/Resources/RESOURCE_PRUF_INTERFACES.sol": {
-			"keccak256": "0x2588fbcfed3d633e8e09b68bf99454c6709fbd833bb1b466c28f6d47cafd5f50",
+		"Documents/DEV/PRUF/PRUF_TRUFFLE/contracts/Resources/RESOURCE_PRUF_INTERFACES.sol": {
+			"keccak256": "0x841b6fc8845d8872ce9dcbbbc0490ab7b40cfb36a245fab1bf24ad49a4ad9175",
 			"license": "UNLICENSED",
 			"urls": [
-				"bzz-raw://d871e2106c9fd00a0a6d0e2b648c16e5c11e9eb9abc6742a384ce629a564d2bb",
-				"dweb:/ipfs/QmP2sKYSJdmgXt1LcVwi2c5BM5VJnvC1jCnigjPCVDznQj"
+				"bzz-raw://f338c910bf89b65a2ac4d788726f2606ae13ebc7577a95999e55f30590ca426e",
+				"dweb:/ipfs/QmNa8ppLvDjtbsjB7Rw2Az6LhDoFbaYBvAssfaQi5e5NTz"
 			]
 		},
-		"Documents/PRUF/PRUF_TRUFFLE/contracts/Resources/RESOURCE_PRUF_STRUCTS.sol": {
-			"keccak256": "0x4ef2ffeef66d8e4f51a45f9f7ad6676cc63b86bf8c51a527436e05e1d06b64c7",
+		"Documents/DEV/PRUF/PRUF_TRUFFLE/contracts/Resources/RESOURCE_PRUF_STRUCTS.sol": {
+			"keccak256": "0xd3d7899f0b9c4c89a6e33efc0df7aca96c70de969fd9970faf25fe4c3afebb04",
 			"license": "UNLICENSED",
 			"urls": [
-				"bzz-raw://2a5a93469287ace8f8011cab1d3685262b99a113d58aa9b7bdae6d102a04dad5",
-				"dweb:/ipfs/QmZgHHHRTNkTuitxPk1jFGZtTWR6yTjE1J16z1jMppu999"
+				"bzz-raw://78c1a0d11459490772f78fcd3613d490ae7d2e2940bef39d1c7ee21407f26c11",
+				"dweb:/ipfs/QmcrYC83Kw2whseL1a6Kx1z1BkDQBkzNpVyAGQp69JDxbR"
 			]
 		},
-		"Documents/PRUF/PRUF_TRUFFLE/contracts/Resources/RESOURCE_PRUF_TKN_INTERFACES.sol": {
-			"keccak256": "0x86f05641e3f565bab49ed5b2b24b4a1d6088e0d8d7f74f62bcbebfc372a75f95",
+		"Documents/DEV/PRUF/PRUF_TRUFFLE/contracts/Resources/RESOURCE_PRUF_TKN_INTERFACES.sol": {
+			"keccak256": "0x95a979542ef281bb5420312fb7b76e6bd4774bcdb0cf00e2701bbc5aacd3809d",
 			"license": "UNLICENSED",
 			"urls": [
-				"bzz-raw://16ae4e8403c2b9e4a565578ef43876528d531f0fd56b35a0874299b57a06397e",
-				"dweb:/ipfs/QmT5TCaEdq2SvzPpNx61d6Qf5SxVoTPY62TzDsGChn6aXM"
+				"bzz-raw://2f0a8a77fa3d644cf03708ae994e6f3e3e7c171b239a545cab88ac40c0f2eb4c",
+				"dweb:/ipfs/QmTM6eppxkRm83bmMbfEBWzZbrh5Pxe7Kz23B1xCM1kgAr"
 			]
 		}
 	},
