@@ -85,8 +85,8 @@ contract A_TKN is
     NODE_STOR_Interface internal NODE_STOR;
     NODE_TKN_Interface internal NODE_TKN;
 
-    bytes32 public constant B320xF_ =
-        0xFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFF;
+    bytes32 public constant B320x01 =
+        0x0000000000000000000000000000000000000000000000000000000000000001;
 
     constructor() ERC721("PRUF Asset Token", "PRAT") {
         _setupRole(DEFAULT_ADMIN_ROLE, _msgSender());
@@ -217,7 +217,7 @@ contract A_TKN is
 
         rec.numberOfTransfers = 170;
 
-        rec.rightsHolder = B320xF_;
+        rec.rightsHolder = B320x01;
 
         writeRecord(_idxHash, rec);
         _transfer(_from, _to, _tokenId);
@@ -287,7 +287,7 @@ contract A_TKN is
         //^^^^^^^checks^^^^^^^^^
 
         rec.numberOfTransfers = 170;
-        rec.rightsHolder = B320xF_;
+        rec.rightsHolder = B320x01;
 
         writeRecord(_idxHash, rec);
         _safeTransfer(_from, _to, _tokenId, _data);
@@ -453,7 +453,12 @@ contract A_TKN is
     }
 
     /**
-     * @dev Set new token URI String
+     * @dev Set new token URI String, under special circumstances
+     * only works if asset is in stat 201. Conceptually,
+     * nodeholder would deploy a contract to update URI for assets. that contract would
+     * hold the node or be auth100. TH would authorize the contract for their token, and
+     * call the updateMyURI function in that contract. The update function would set stat201, then
+     * call this function to update the NMS to the new value.
      * @param _tokenId - Token ID to set URI
      * @param _tokenURI - URI string to atatch to token
      * @return tokenId
@@ -531,7 +536,7 @@ contract A_TKN is
 
         rec.numberOfTransfers = 170;
 
-        rec.rightsHolder = B320xF_;
+        rec.rightsHolder = B320x01;
 
         writeRecord(_idxHash, rec);
         _transfer(_from, _to, _tokenId);

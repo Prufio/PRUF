@@ -40,8 +40,8 @@ contract STOR is AccessControl, ReentrancyGuard, Pausable {
     bytes32 public constant PAUSER_ROLE = keccak256("PAUSER_ROLE");
     bytes32 public constant DAO_ROLE = keccak256("DAO_ROLE");
 
-    bytes32 public constant B320xF_ =
-        0xFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFF;
+    bytes32 public constant B320x01 =
+        0x0000000000000000000000000000000000000000000000000000000000000001;
 
     mapping(string => mapping(uint32 => uint8)) internal contractInfo; // name=>node=>authorization level
     mapping(address => string) private contractAddressToName; // Authorized contract addresses, indexed by address, with auth level 0-255
@@ -565,7 +565,7 @@ contract STOR is AccessControl, ReentrancyGuard, Pausable {
 
         if (_newAssetStatus == 60) {
             //if setting to "escrow" status, set rgt to 0xFFF_
-            rec.rightsHolder = B320xF_;
+            rec.rightsHolder = B320x01;
         }
 
         rec.assetStatus = _newAssetStatus;
