@@ -26,7 +26,6 @@ const PRUF_RCLR = artifacts.require("RCLR");
 const PRUF_HELPER = artifacts.require("Helper");
 const PRUF_MAL_APP = artifacts.require("MAL_APP");
 const PRUF_UTIL_TKN = artifacts.require("UTIL_TKN");
-// const PRUF_PURCHASE = artifacts.require("PURCHASE");
 const PRUF_DECORATE = artifacts.require("DECORATE");
 const PRUF_WRAP = artifacts.require("WRAP");
 
@@ -1248,7 +1247,7 @@ contract("NODE_TKN", (accounts) => {
       .then(() => {
         return NODE_MGR.setNonMutableData(
           "1000002",
-          "3",
+          "2",
           "1",
           "0x0000000000000000000000000000000000000000",
           { from: account1 }
@@ -1258,7 +1257,7 @@ contract("NODE_TKN", (accounts) => {
       .then(() => {
         return NODE_MGR.setNonMutableData(
           "1000003",
-          "3",
+          "2",
           "1",
           "0x0000000000000000000000000000000000000000",
           { from: account1 }
@@ -1268,7 +1267,7 @@ contract("NODE_TKN", (accounts) => {
       .then(() => {
         return NODE_MGR.setNonMutableData(
           "1000004",
-          "3",
+          "2",
           "1",
           "0x0000000000000000000000000000000000000000",
           { from: account10 }
@@ -1278,7 +1277,7 @@ contract("NODE_TKN", (accounts) => {
       .then(() => {
         return NODE_MGR.setNonMutableData(
           "1000005",
-          "3",
+          "2",
           "1",
           "0x0000000000000000000000000000000000000000",
           { from: account1 }
@@ -1288,7 +1287,7 @@ contract("NODE_TKN", (accounts) => {
       .then(() => {
         return NODE_MGR.setNonMutableData(
           "1000006",
-          "3",
+          "2",
           "1",
           "0x0000000000000000000000000000000000000000",
           { from: account10 }
@@ -1302,35 +1301,41 @@ contract("NODE_TKN", (accounts) => {
       from: account1,
     })
 
-      .then(() => {
-        return NODE_STOR.modifyNodeSwitches("1000002", "3", "1", {
-          from: account1,
-        });
-      })
+    .then(() => {
+      return NODE_STOR.modifyNodeSwitches("1000001", "7", "1", {
+        from: account1,
+      });
+    })
 
-      .then(() => {
-        return NODE_STOR.modifyNodeSwitches("1000003", "3", "1", {
-          from: account1,
-        });
-      })
+    .then(() => {
+      return NODE_STOR.modifyNodeSwitches("1000002", "7", "1", {
+        from: account1,
+      });
+    })
 
-      .then(() => {
-        return NODE_STOR.modifyNodeSwitches("1000004", "3", "1", {
-          from: account1,
-        });
-      })
+    .then(() => {
+      return NODE_STOR.modifyNodeSwitches("1000003", "7", "1", {
+        from: account1,
+      });
+    })
 
-      .then(() => {
-        return NODE_STOR.modifyNodeSwitches("1000005", "3", "1", {
-          from: account1,
-        });
-      })
+    .then(() => {
+      return NODE_STOR.modifyNodeSwitches("1000004", "7", "1", {
+        from: account1,
+      });
+    })
 
-      .then(() => {
-        return NODE_STOR.modifyNodeSwitches("1000006", "3", "1", {
-          from: account1,
-        });
-      })
+    .then(() => {
+      return NODE_STOR.modifyNodeSwitches("1000005", "7", "1", {
+        from: account1,
+      });
+    })
+
+    .then(() => {
+      return NODE_STOR.modifyNodeSwitches("1000006", "7", "1", {
+        from: account1,
+      });
+    })
 
       .then(() => {
         return NODE_STOR.modifyNodeSwitches("1000001", "8", "1", {

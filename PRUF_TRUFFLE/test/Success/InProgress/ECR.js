@@ -1361,7 +1361,7 @@ contract("ECR", (accounts) => {
       .then(() => {
         return NODE_MGR.setNonMutableData(
           "1000002",
-          "3",
+          "2",
           "1",
           "0x0000000000000000000000000000000000000000",
           { from: account1 }
@@ -1371,7 +1371,7 @@ contract("ECR", (accounts) => {
       .then(() => {
         return NODE_MGR.setNonMutableData(
           "1000003",
-          "3",
+          "2",
           "1",
           "0x0000000000000000000000000000000000000000",
           { from: account1 }
@@ -1381,7 +1381,7 @@ contract("ECR", (accounts) => {
       .then(() => {
         return NODE_MGR.setNonMutableData(
           "1000004",
-          "3",
+          "2",
           "1",
           "0x0000000000000000000000000000000000000000",
           { from: account10 }
@@ -1391,7 +1391,7 @@ contract("ECR", (accounts) => {
       .then(() => {
         return NODE_MGR.setNonMutableData(
           "1000005",
-          "3",
+          "2",
           "1",
           "0x0000000000000000000000000000000000000000",
           { from: account1 }
@@ -1401,7 +1401,7 @@ contract("ECR", (accounts) => {
       .then(() => {
         return NODE_MGR.setNonMutableData(
           "1000006",
-          "3",
+          "2",
           "1",
           "0x0000000000000000000000000000000000000000",
           { from: account10 }
@@ -1413,37 +1413,7 @@ contract("ECR", (accounts) => {
     console.log("Authorizing Node Switch 1");
     return NODE_STOR.modifyNodeSwitches("1000001", "1", "1", {
       from: account1,
-    })
-
-      .then(() => {
-        return NODE_STOR.modifyNodeSwitches("1000002", "3", "1", {
-          from: account1,
-        });
-      })
-
-      .then(() => {
-        return NODE_STOR.modifyNodeSwitches("1000003", "3", "1", {
-          from: account1,
-        });
-      })
-
-      .then(() => {
-        return NODE_STOR.modifyNodeSwitches("1000004", "3", "1", {
-          from: account1,
-        });
-      })
-
-      .then(() => {
-        return NODE_STOR.modifyNodeSwitches("1000005", "3", "1", {
-          from: account1,
-        });
-      })
-
-      .then(() => {
-        return NODE_STOR.modifyNodeSwitches("1000006", "3", "1", {
-          from: account1,
-        });
-      });
+    });
   });
 
   it("Should authorize APP in all relevant nodes", () => {

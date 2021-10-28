@@ -6,6 +6,11 @@
 	"output": {
 		"abi": [
 			{
+				"inputs": [],
+				"stateMutability": "nonpayable",
+				"type": "constructor"
+			},
+			{
 				"anonymous": false,
 				"inputs": [
 					{
@@ -219,7 +224,7 @@
 			},
 			{
 				"inputs": [],
-				"name": "PAUSER_ROLE",
+				"name": "NODE_MINTER_ROLE",
 				"outputs": [
 					{
 						"internalType": "bytes32",
@@ -231,62 +236,16 @@
 				"type": "function"
 			},
 			{
-				"inputs": [
+				"inputs": [],
+				"name": "PAUSER_ROLE",
+				"outputs": [
 					{
 						"internalType": "bytes32",
-						"name": "_idxHash",
-						"type": "bytes32"
-					},
-					{
-						"internalType": "bytes32",
-						"name": "_nonMutableStorage1",
-						"type": "bytes32"
-					},
-					{
-						"internalType": "bytes32",
-						"name": "_nonMutableStorage2",
+						"name": "",
 						"type": "bytes32"
 					}
 				],
-				"name": "addNonMutableStorage",
-				"outputs": [],
-				"stateMutability": "nonpayable",
-				"type": "function"
-			},
-			{
-				"inputs": [
-					{
-						"internalType": "bytes32",
-						"name": "_idxHash",
-						"type": "bytes32"
-					},
-					{
-						"internalType": "bytes32",
-						"name": "_newRgtHash",
-						"type": "bytes32"
-					}
-				],
-				"name": "changeRgt",
-				"outputs": [],
-				"stateMutability": "nonpayable",
-				"type": "function"
-			},
-			{
-				"inputs": [
-					{
-						"internalType": "bytes32",
-						"name": "_idxHash",
-						"type": "bytes32"
-					},
-					{
-						"internalType": "uint32",
-						"name": "_decAmount",
-						"type": "uint32"
-					}
-				],
-				"name": "decrementCounter",
-				"outputs": [],
-				"stateMutability": "nonpayable",
+				"stateMutability": "view",
 				"type": "function"
 			},
 			{
@@ -353,166 +312,6 @@
 			{
 				"inputs": [
 					{
-						"internalType": "bytes32",
-						"name": "_idxHash",
-						"type": "bytes32"
-					},
-					{
-						"internalType": "bytes32",
-						"name": "_mutableStorage1",
-						"type": "bytes32"
-					},
-					{
-						"internalType": "bytes32",
-						"name": "_mutableStorage2",
-						"type": "bytes32"
-					}
-				],
-				"name": "modifyMutableStorage",
-				"outputs": [],
-				"stateMutability": "nonpayable",
-				"type": "function"
-			},
-			{
-				"inputs": [
-					{
-						"internalType": "bytes32",
-						"name": "_idxHash",
-						"type": "bytes32"
-					},
-					{
-						"internalType": "uint8",
-						"name": "_newAssetStatus",
-						"type": "uint8"
-					}
-				],
-				"name": "modifyStatus",
-				"outputs": [],
-				"stateMutability": "nonpayable",
-				"type": "function"
-			},
-			{
-				"inputs": [
-					{
-						"internalType": "bytes32",
-						"name": "_idxHash",
-						"type": "bytes32"
-					},
-					{
-						"internalType": "bytes32",
-						"name": "_rgtHash",
-						"type": "bytes32"
-					},
-					{
-						"internalType": "uint32",
-						"name": "_node",
-						"type": "uint32"
-					},
-					{
-						"internalType": "uint32",
-						"name": "_countDownStart",
-						"type": "uint32"
-					},
-					{
-						"internalType": "string",
-						"name": "_URIsuffix",
-						"type": "string"
-					}
-				],
-				"name": "newRecord",
-				"outputs": [],
-				"stateMutability": "nonpayable",
-				"type": "function"
-			},
-			{
-				"inputs": [
-					{
-						"internalType": "bytes32",
-						"name": "_idxHash",
-						"type": "bytes32"
-					},
-					{
-						"internalType": "bytes32",
-						"name": "_rgtHash",
-						"type": "bytes32"
-					},
-					{
-						"internalType": "uint32",
-						"name": "_node",
-						"type": "uint32"
-					},
-					{
-						"internalType": "uint32",
-						"name": "_countDownStart",
-						"type": "uint32"
-					},
-					{
-						"internalType": "bytes32",
-						"name": "_mutableStorage1",
-						"type": "bytes32"
-					},
-					{
-						"internalType": "bytes32",
-						"name": "_mutableStorage2",
-						"type": "bytes32"
-					},
-					{
-						"internalType": "string",
-						"name": "_URIsuffix",
-						"type": "string"
-					}
-				],
-				"name": "newRecordWithDescription",
-				"outputs": [],
-				"stateMutability": "nonpayable",
-				"type": "function"
-			},
-			{
-				"inputs": [
-					{
-						"internalType": "bytes32",
-						"name": "_idxHash",
-						"type": "bytes32"
-					},
-					{
-						"internalType": "bytes32",
-						"name": "_rgtHash",
-						"type": "bytes32"
-					},
-					{
-						"internalType": "uint32",
-						"name": "_node",
-						"type": "uint32"
-					},
-					{
-						"internalType": "uint32",
-						"name": "_countDownStart",
-						"type": "uint32"
-					},
-					{
-						"internalType": "bytes32",
-						"name": "_nonMutableStorage1",
-						"type": "bytes32"
-					},
-					{
-						"internalType": "bytes32",
-						"name": "_nonMutableStorage2",
-						"type": "bytes32"
-					},
-					{
-						"internalType": "string",
-						"name": "_URIsuffix",
-						"type": "string"
-					}
-				],
-				"name": "newRecordWithNote",
-				"outputs": [],
-				"stateMutability": "nonpayable",
-				"type": "function"
-			},
-			{
-				"inputs": [
-					{
 						"internalType": "address",
 						"name": "",
 						"type": "address"
@@ -567,6 +366,50 @@
 			{
 				"inputs": [
 					{
+						"internalType": "string",
+						"name": "_name",
+						"type": "string"
+					},
+					{
+						"internalType": "uint32",
+						"name": "_nodeRoot",
+						"type": "uint32"
+					},
+					{
+						"internalType": "uint8",
+						"name": "_custodyType",
+						"type": "uint8"
+					},
+					{
+						"internalType": "bytes32",
+						"name": "_CAS1",
+						"type": "bytes32"
+					},
+					{
+						"internalType": "bytes32",
+						"name": "_CAS2",
+						"type": "bytes32"
+					},
+					{
+						"internalType": "address",
+						"name": "_mintNodeFor",
+						"type": "address"
+					}
+				],
+				"name": "purchaseNode",
+				"outputs": [
+					{
+						"internalType": "uint256",
+						"name": "",
+						"type": "uint256"
+					}
+				],
+				"stateMutability": "nonpayable",
+				"type": "function"
+			},
+			{
+				"inputs": [
+					{
 						"internalType": "bytes32",
 						"name": "role",
 						"type": "bytes32"
@@ -610,24 +453,6 @@
 			{
 				"inputs": [
 					{
-						"internalType": "bytes32",
-						"name": "_idxHash",
-						"type": "bytes32"
-					},
-					{
-						"internalType": "uint8",
-						"name": "_newAssetStatus",
-						"type": "uint8"
-					}
-				],
-				"name": "setLostOrStolen",
-				"outputs": [],
-				"stateMutability": "nonpayable",
-				"type": "function"
-			},
-			{
-				"inputs": [
-					{
 						"internalType": "address",
 						"name": "_storageAddress",
 						"type": "address"
@@ -663,29 +488,6 @@
 				"outputs": [],
 				"stateMutability": "nonpayable",
 				"type": "function"
-			},
-			{
-				"inputs": [
-					{
-						"internalType": "bytes32",
-						"name": "_idxHash",
-						"type": "bytes32"
-					},
-					{
-						"internalType": "bytes32",
-						"name": "_nonMutableStorage1",
-						"type": "bytes32"
-					},
-					{
-						"internalType": "bytes32",
-						"name": "_nonMutableStorage2",
-						"type": "bytes32"
-					}
-				],
-				"name": "updateNonMutableStorage",
-				"outputs": [],
-				"stateMutability": "nonpayable",
-				"type": "function"
 			}
 		],
 		"devdoc": {
@@ -707,28 +509,6 @@
 						"_tokenID": "Token ID"
 					}
 				},
-				"addNonMutableStorage(bytes32,bytes32,bytes32)": {
-					"details": "record NonMutableStorage data",
-					"params": {
-						"_idxHash": "- hash of asset information created by frontend inputs",
-						"_nonMutableStorage1": "- field for permanent external asset data",
-						"_nonMutableStorage2": "- field for permanent external asset data"
-					}
-				},
-				"changeRgt(bytes32,bytes32)": {
-					"details": "Modify rgtHash (like forceModify)",
-					"params": {
-						"_idxHash": "idx of asset to Modify",
-						"_newRgtHash": "rew rgtHash to apply"
-					}
-				},
-				"decrementCounter(bytes32,uint32)": {
-					"details": "Decrement **Record**.countdown.",
-					"params": {
-						"_decAmount": "Amount to decrement",
-						"_idxHash": "index hash of asset to modify"
-					}
-				},
 				"getRoleAdmin(bytes32)": {
 					"details": "Returns the admin role that controls `role`. See {grantRole} and {revokeRole}. To change a role's admin, use {_setRoleAdmin}."
 				},
@@ -738,60 +518,21 @@
 				"hasRole(bytes32,address)": {
 					"details": "Returns `true` if `account` has been granted `role`."
 				},
-				"modifyMutableStorage(bytes32,bytes32,bytes32)": {
-					"details": "Modify **Record**.mutableStorage1 with confirmation of matching rgthash required.",
-					"params": {
-						"_idxHash": "idx of asset to Modify",
-						"_mutableStorage1": "content addressable storage address part 1",
-						"_mutableStorage2": "content addressable storage address part 2"
-					}
-				},
-				"modifyStatus(bytes32,uint8)": {
-					"details": "Modify **Record**.assetStatus with confirmation required",
-					"params": {
-						"_idxHash": "idx of asset to Modify",
-						"_newAssetStatus": "Updated status"
-					}
-				},
-				"newRecord(bytes32,bytes32,uint32,uint32,string)": {
-					"details": "Create a newRecord",
-					"params": {
-						"_URIsuffix": "- Hash of external CAS from URI",
-						"_countDownStart": "- decremental counter for an assets lifecycle",
-						"_idxHash": "- hash of asset information created by frontend inputs",
-						"_node": "- node the asset will be created in",
-						"_rgtHash": "- hash of rightsholder information created by frontend inputs"
-					}
-				},
-				"newRecordWithDescription(bytes32,bytes32,uint32,uint32,bytes32,bytes32,string)": {
-					"details": "Create a newRecord with description",
-					"params": {
-						"_URIsuffix": "- Hash of external CAS from URI",
-						"_countDownStart": "- decremental counter for an assets lifecycle",
-						"_idxHash": "- hash of asset information created by frontend inputs",
-						"_mutableStorage1": "- field for external asset data",
-						"_mutableStorage2": "- field for external asset data",
-						"_node": "- node the asset will be created in",
-						"_rgtHash": "- hash of rightsholder information created by frontend inputs"
-					}
-				},
-				"newRecordWithNote(bytes32,bytes32,uint32,uint32,bytes32,bytes32,string)": {
-					"details": "Create a newRecord with permanent description",
-					"params": {
-						"_URIsuffix": "- Hash of external CAS from URI",
-						"_countDownStart": "- decremental counter for an assets lifecycle",
-						"_idxHash": "- hash of asset information created by frontend inputs",
-						"_node": "- node the asset will be created in",
-						"_nonMutableStorage1": "- field for permanent external asset data",
-						"_nonMutableStorage2": "- field for permanent external asset data",
-						"_rgtHash": "- hash of rightsholder information created by frontend inputs"
-					}
-				},
 				"onERC721Received(address,address,uint256,bytes)": {
 					"details": "Compliance for erc721 reciever See OZ documentation"
 				},
 				"paused()": {
 					"details": "Returns true if the contract is paused, and false otherwise."
+				},
+				"purchaseNode(string,uint32,uint8,bytes32,bytes32,address)": {
+					"details": "Burns (amount) tokens and mints a new Node token to the calling address",
+					"params": {
+						"_CAS1": "- any external data attatched to node 1/2",
+						"_CAS2": "- any external data attatched to node 2/2",
+						"_custodyType": "- chosen custodyType of node (see docs)",
+						"_name": "- chosen name of node",
+						"_nodeRoot": "- chosen root of node"
+					}
 				},
 				"renounceRole(bytes32,address)": {
 					"details": "Revokes `role` from the calling account. Roles are often managed via {grantRole} and {revokeRole}: this function's purpose is to provide a mechanism for accounts to lose their privileges if they are compromised (such as when a trusted device is misplaced). If the calling account had been granted `role`, emits a {RoleRevoked} event. Requirements: - the caller must be `account`."
@@ -802,13 +543,6 @@
 				"revokeRole(bytes32,address)": {
 					"details": "Revokes `role` from `account`. If `account` had been granted `role`, emits a {RoleRevoked} event. Requirements: - the caller must have ``role``'s admin role."
 				},
-				"setLostOrStolen(bytes32,uint8)": {
-					"details": "set **Record**.assetStatus to lost or stolen, with confirmation of matching rgthash required.",
-					"params": {
-						"_idxHash": "idx of asset to Modify",
-						"_newAssetStatus": "Updated status"
-					}
-				},
 				"setStorageContract(address)": {
 					"details": "Set address of STOR contract to interface with",
 					"params": {
@@ -817,14 +551,6 @@
 				},
 				"supportsInterface(bytes4)": {
 					"details": "See {IERC165-supportsInterface}."
-				},
-				"updateNonMutableStorage(bytes32,bytes32,bytes32)": {
-					"details": "Update NonMutableStorage with data priovided by nodeholder (only works if asset is in 200,201 stat)",
-					"params": {
-						"_idxHash": "- hash of asset information created by frontend inputs",
-						"_nonMutableStorage1": "- field for permanent external asset data",
-						"_nonMutableStorage2": "- field for permanent external asset data"
-					}
 				}
 			},
 			"version": 1
@@ -837,7 +563,7 @@
 	},
 	"settings": {
 		"compilationTarget": {
-			"Documents/DEV/PRUF/PRUF_TRUFFLE/contracts/ReleaseCandidates/PRUF_APP_NC.sol": "APP_NC"
+			"Documents/DEV/PRUF/PRUF_TRUFFLE/contracts/ReleaseCandidates/PRUF_NODE_BLDR.sol": "NODE_BLDR"
 		},
 		"evmVersion": "london",
 		"libraries": {},
@@ -931,12 +657,12 @@
 				"dweb:/ipfs/QmcsVgLgzWdor3UnAztUkXKNGcysm1MPneWksF72AvnwBx"
 			]
 		},
-		"Documents/DEV/PRUF/PRUF_TRUFFLE/contracts/ReleaseCandidates/PRUF_APP_NC.sol": {
-			"keccak256": "0x8cb2ae5aa0fb96a654156e24b93c1623a0c6a760eca3b7ef15c11572f80696e7",
+		"Documents/DEV/PRUF/PRUF_TRUFFLE/contracts/ReleaseCandidates/PRUF_NODE_BLDR.sol": {
+			"keccak256": "0xaa3f237236d19dd84b71acb7302fd5c368d4ad0d2466cbcc2e60a86514843620",
 			"license": "UNLICENSED",
 			"urls": [
-				"bzz-raw://8506f156df8f8db7856855fb8ab1962bdaf02a4124faa275bba60baac4b1ad91",
-				"dweb:/ipfs/Qmdwj8onSRZq5hbMZYpk3YbvqdVp6epToT1GKiFCYEct32"
+				"bzz-raw://080f7240aabba7d850ff787cbc58c375275326d57d4032ff58f3a8ded6feb717",
+				"dweb:/ipfs/Qma4XwuPjGjFN3MYG5fmx8g2pQ1xp4Pkb8HH2HxgAr3cWo"
 			]
 		},
 		"Documents/DEV/PRUF/PRUF_TRUFFLE/contracts/Resources/IERC721_URI.sol": {
@@ -953,14 +679,6 @@
 			"urls": [
 				"bzz-raw://89fbd259cffdc154b67d26b62b060ffd3de2f68461f70829f14036ec1f590b00",
 				"dweb:/ipfs/QmTURmZE22shTGv8VdjiwWPpYxM4ZLcFtBLZPD6kYWztd1"
-			]
-		},
-		"Documents/DEV/PRUF/PRUF_TRUFFLE/contracts/Resources/PRUF_CORE.sol": {
-			"keccak256": "0x37abd3b3ec619d3ccc5cb7b201ae8cbcf4ed5af9afcde2146380ccc42a568264",
-			"license": "UNLICENSED",
-			"urls": [
-				"bzz-raw://602e3d63ca1597a23988d73a456bf25035cf32366294f14b7ebd634101bf3e61",
-				"dweb:/ipfs/QmRGnhLqQo4Sw8g9Sr4DCJ5d3Z2Viur2Qy9DZKaQxh5TTC"
 			]
 		},
 		"Documents/DEV/PRUF/PRUF_TRUFFLE/contracts/Resources/RESOURCE_PRUF_INTERFACES.sol": {

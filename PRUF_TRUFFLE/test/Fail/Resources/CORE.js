@@ -26,7 +26,6 @@ const PRUF_RCLR = artifacts.require("RCLR");
 const PRUF_HELPER = artifacts.require("Helper");
 const PRUF_MAL_APP = artifacts.require("MAL_APP");
 const PRUF_UTIL_TKN = artifacts.require("UTIL_TKN");
-// const PRUF_PURCHASE = artifacts.require("PURCHASE");
 const PRUF_DECORATE = artifacts.require("DECORATE");
 const PRUF_WRAP = artifacts.require("WRAP");
 
@@ -1398,36 +1397,6 @@ contract("CORE", (accounts) => {
     return NODE_STOR.modifyNodeSwitches("1000001", "1", "1", {
       from: account1,
     })
-
-      .then(() => {
-        return NODE_STOR.modifyNodeSwitches("1000002", "3", "1", {
-          from: account1,
-        });
-      })
-
-      .then(() => {
-        return NODE_STOR.modifyNodeSwitches("1000003", "3", "1", {
-          from: account1,
-        });
-      })
-
-      .then(() => {
-        return NODE_STOR.modifyNodeSwitches("1000004", "3", "1", {
-          from: account1,
-        });
-      })
-
-      .then(() => {
-        return NODE_STOR.modifyNodeSwitches("1000005", "3", "1", {
-          from: account1,
-        });
-      })
-
-      .then(() => {
-        return NODE_STOR.modifyNodeSwitches("1000006", "3", "1", {
-          from: account1,
-        });
-      })
 
       .then(() => {
         return NODE_STOR.modifyNodeSwitches("1000007", "3", "1", {
