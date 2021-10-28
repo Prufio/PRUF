@@ -295,6 +295,11 @@ contract CORE is BASIC {
         //^^^^^^^interactions^^^^^^^^^
     }
 
+    /**
+     * @dev gets a node info struct, and checks to see if the caller is authorized to mint. Combined to save an OOCC.
+     * @param _node - status to check
+     * return nodeinfo struct
+     */
     function getNodeinfoWithMinterCheck(
         uint32 _node
     ) internal view returns (Node memory nodeInfo) {
@@ -305,7 +310,7 @@ contract CORE is BASIC {
             "C:GNIWAC:Cannot create asset in a root node (custodyType3)"
         );
         require(
-            NODE_STOR.getManagementTypeStatus(nodeInfo.managementType) > 0,
+            NODE_STOR.getManagementTypeStatus(nodeInfo.managementType) != 0,
             "C:GNIWAC: Invalid management type"
         );
         require(
@@ -316,17 +321,17 @@ contract CORE is BASIC {
             nodeInfo.managementType != 255,
             "C:GNIWAC: Cannot mint with unprovisioned or locked node"
         );
-        require(
-            (getBitAt(nodeInfo.switches, 7) == 0) ||
+        require( 
+            (getBitAt(nodeInfo.switches, 7) == 0) || 
                 (NODE_STOR.getUserType(
                     keccak256(abi.encodePacked(_msgSender())),
                     _node
-                ) == 1),
+                ) == 1), // If switch7 = 1, require calling adress is in the authorized users for the node
             "C:GNIWAC: Caller not authorized user"
         );
         require(
             (getBitAt(nodeInfo.switches, 7) == 1) ||
-                (NODE_TKN.ownerOf(_node) == _msgSender()),
+                (NODE_TKN.ownerOf(_node) == _msgSender()), // If switch7 = 0, require calling adress holds the node token
             "C:GNIWAC: Caller !NTH"
         );
 
@@ -339,7 +344,7 @@ contract CORE is BASIC {
                 (NODE_TKN.ownerOf(_node) ==
                     IERC721(extendedNodeInfo.idProviderAddr).ownerOf(
                         extendedNodeInfo.idProviderTokenId
-                    )), //IDroot token are held in the same address,
+                    )), // if switch6 = 1 verify that IDroot token and Node token are held in the same address 
                 "C:GNIWAC: Node and root of identity are seaparated. Minting is disabled"
             );
         }
