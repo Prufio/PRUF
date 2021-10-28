@@ -40,7 +40,7 @@ contract ID_721 is BASIC {
     }
 
     //address internal TOKEN_Address;
-    IERC721 internal token;
+    IERC721 internal UD_TOKEN_CONTRACT;
 
     //--------------------------------------------Modifiers--------------------------
 
@@ -57,15 +57,15 @@ contract ID_721 is BASIC {
         _;
     }
 
-    /** LEAVE AS BOILERPLATE
+    /**
      * @dev Verify user credentials
      * @param _tokenId tokenID of token
      * Originating Address:
      *    require that user holds token @ ID-Contract
      */
-    modifier isTokenHolder(uint256 _tokenId, address _tokenContract) {
+    modifier isTokenHolder(uint256 _tokenId) {
         require(
-            (token.ownerOf(_tokenId) == _msgSender()),
+            (UD_TOKEN_CONTRACT.ownerOf(_tokenId) == _msgSender()),
             "NB:MOD-ITH: Caller does not hold specified token"
         );
         _;
@@ -85,7 +85,7 @@ contract ID_721 is BASIC {
         require(_erc721Address != address(0), "B:SSC: Address = 0");
         //^^^^^^^checks^^^^^^^^^
 
-        token = IERC721(_erc721Address);
+        UD_TOKEN_CONTRACT = IERC721(_erc721Address);
         //^^^^^^^effects^^^^^^^^^
     }
 
@@ -96,6 +96,7 @@ contract ID_721 is BASIC {
      * @param _custodyType - chosen custodyType of node (see docs)
      * @param _CAS1 - any external data attatched to node 1/2
      * @param _CAS2 - any external data attatched to node 2/2
+     * @param _TokenIdToVerify - Token ID of token being used to verify that calling adress holds the xyz.tld domain
      */
     function purchaseNode(
         string calldata _name,
@@ -103,7 +104,7 @@ contract ID_721 is BASIC {
         uint8 _custodyType,
         bytes32 _CAS1,
         bytes32 _CAS2,
-        address _mintNodeFor
+        uint256 _TokenIdToVerify
     ) external nonReentrant isNodeMinter returns (uint256) {
         //^^^^^^^checks^^^^^^^^^
 
@@ -113,27 +114,82 @@ contract ID_721 is BASIC {
             _custodyType,
             _CAS1,
             _CAS2,
-            _mintNodeFor
+            _msgSender()
         );
 
         return mintedNode;
         //^^^^^^^interactions^^^^^^^^^
     }
 
-//     /** /** LEAVE AS BOILERPLATE
-//      * @dev transfer a foreign token
-//      * @param _tokenContract Address of foreign token contract
-//      * @param _from origin
-//      * @param _to destination
-//      * @param _tokenId Token ID
-//      */
-//     function foreignTransfer(
-//         address _tokenContract,
-//         address _from,
-//         address _to,
-//         uint256 _tokenId
-//     ) internal {
-//         IERC721(_tokenContract).transferFrom(_from, _to, _tokenId);
-//         //^^^^^^^interactions^^^^^^^^^
-//     }
+    /**
+     * @dev reverts if caller does not hold referenced token or if token does not represent the supplied domain
+     * where '_name' is xyz.tld
+     * @param _name - chosen name for node (will be the same as xyz.tld)
+     * @param _udTokenIdToVerify - Token ID of token being used to verify that calling adress holds the xyz.tld domain
+     */
+    function domainMatchesNode(
+        string calldata _name,
+        uint256 _udTokenIdToVerify
+    ) internal nonReentrant isTokenHolder(_udTokenIdToVerify) {
+        require(
+            _childId(_udTokenIdToVerify, _name) == // your child ID generator
+                uint256(
+                    keccak256(
+                        abi.encodePacked(
+                            UD_TOKEN_CONTRACT.tokenURI(_udTokenIdToVerify)
+                        )
+                    )
+                ), //obviously this wont work but you get the idea
+            "Supplied node name does not match tokenURI of reference token"
+        );
+        //^^^^^^^checks^^^^^^^^^
+
+        //^^^^^^^interactions^^^^^^^^^
+    }
+
+    //     /** /** LEAVE AS BOILERPLATE
+    //      * @dev transfer a foreign token
+    //      * @param _tokenContract Address of foreign token contract
+    //      * @param _from origin
+    //      * @param _to destination
+    //      * @param _tokenId Token ID
+    //      */
+    //     function foreignTransfer(
+    //         address _tokenContract,
+    //         address _from,
+    //         address _to,
+    //         uint256 _tokenId
+    //     ) internal {
+    //         IERC721(_tokenContract).transferFrom(_from, _to, _tokenId);
+    //         //^^^^^^^interactions^^^^^^^^^
+    //     }
+
+    function _childId(uint256 tokenId, string memory label)
+        internal
+        pure
+        returns (uint256)
+    {
+        require(bytes(label).length != 0, "Registry: LABEL_EMPTY");
+        return
+            uint256(
+                keccak256(
+                    abi.encodePacked(
+                        tokenId,
+                        keccak256(abi.encodePacked(label))
+                    )
+                )
+            );
+    }
+}
+contract C {
+    UNS internal _uns;
+    mapping (uint256 => bool) internal _tlds;
+
+    function isValidTldHash(uint256 tldHash) pure returns (bool) {
+        return _tlds[tldHash];
+    }
+
+    function isValid(uint256 tokenId, uint256 tldHash, string calldata label) pure returns (bool) {
+        return isValidTldHash(tldHash) && tokenId == uns.childIdOf(tldHash, label);
+    }
 }
