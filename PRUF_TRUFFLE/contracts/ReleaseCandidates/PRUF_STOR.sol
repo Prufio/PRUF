@@ -262,7 +262,6 @@ contract STOR is AccessControl, ReentrancyGuard, Pausable {
         uint32 _node,
         uint8 _contractAuthLevel
     ) external isDAO {
-
         require(_node == 0, "S:AC: node !=0");
         //^^^^^^^checks^^^^^^^^^
 
@@ -666,6 +665,9 @@ contract STOR is AccessControl, ReentrancyGuard, Pausable {
 
         rec.nonMutableStorage1 = _nonMutableStorage1;
         rec.nonMutableStorage2 = _nonMutableStorage2;
+        if (rec.assetStatus == 200) {
+            rec.assetStatus = 51;
+        } // unset status 200; set to transferrable status
 
         database[_idxHash] = rec;
         //^^^^^^^effects^^^^^^^^^
