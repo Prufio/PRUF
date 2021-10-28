@@ -470,18 +470,21 @@ contract A_TKN is
         bytes32 _idxHash = bytes32(_tokenId);
         Record memory rec = getRecord(_idxHash);
 
-        require(rec.assetStatus == 201, "AT:SU: Record status != 201");
+        require(
+            rec.assetStatus == 201,
+            "AT:SU: URI Immutable Record status != 201"
+        );
 
         require(
             (NODE_TKN.ownerOf(rec.node) == _msgSender()) || //caller holds the NT
                 (NODE_STOR.getUserType(
                     keccak256(abi.encodePacked(_msgSender())),
                     rec.node
-                ) == 100),                                  //or is auth type 100 in node
+                ) == 100), //or is auth type 100 in node
             "AT:SU:Caller !NTH or authorized"
         );
 
-        require( 
+        require(
             _isApprovedOrOwner(_msgSender(), _tokenId),
             "AT:SU:Caller !owner nor approved"
         );
