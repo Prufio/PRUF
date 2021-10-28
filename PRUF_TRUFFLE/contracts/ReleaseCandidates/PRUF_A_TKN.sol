@@ -454,11 +454,11 @@ contract A_TKN is
 
     /**
      * @dev Set new token URI String, under special circumstances
-     * only works if asset is in stat 201. Conceptually,
-     * nodeholder would deploy a contract to update URI for assets. that contract would
+     * only works if asset is in stat 201.
+     * Conceptually, the nodeHolder would deploy a contract to update URI for assets. that contract would
      * hold the node or be auth100. TH would authorize the contract for their token, and
      * call the updateMyURI function in that contract. The update function would set stat201, then
-     * call this function to update the NMS to the new value, then unset the 201 status.
+     * call this function to update the URI to the new value, then unset the 201 status.
      * @param _tokenId - Token ID to set URI
      * @param _tokenURI - URI string to atatch to token
      * @return tokenId

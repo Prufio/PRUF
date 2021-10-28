@@ -660,7 +660,7 @@ contract STOR is AccessControl, ReentrancyGuard, Pausable {
             (rec.nonMutableStorage1 & rec.nonMutableStorage2 == 0) ||
                 (rec.assetStatus == 201),
             "S:MNMS: Cannot overwrite NM Storage"
-        ); //NonMutableStorage record is immutable after first write unless status 201 is set 
+        ); //NonMutableStorage record is immutable after first write unless status 201 is set
         //^^^^^^^checks^^^^^^^^^
 
         rec.nonMutableStorage1 = _nonMutableStorage1;
