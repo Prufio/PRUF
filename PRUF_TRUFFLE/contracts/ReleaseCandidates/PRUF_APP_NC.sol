@@ -160,11 +160,11 @@ contract APP_NC is CORE {
 
     /**
      * @dev Update NonMutableStorage with data priovided by nodeholder
-     * only works if asset is in 200,201 stat (STOR enforces this). Conceptually,
+     * only works if asset is in stat201 (STOR enforces this). Conceptually,
      * nodeholder would deploy a contract to update NMS for assets. that contract would
      * hold the node or be auth100. TH would authorize the contract for their token, and
-     * call the update function in that contract. The update function would set stat200, then
-     * call this function to update the NMS to the new value.
+     * call the update function in that contract. The update function would set stat201, then
+     * call this function to update the NMS to the new value, then unset stat201.
      * @param _idxHash - hash of asset information created by frontend inputs
      * @param _nonMutableStorage1 - field for permanent external asset data
      * @param _nonMutableStorage2 - field for permanent external asset data
