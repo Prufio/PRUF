@@ -405,12 +405,14 @@ contract NODE_STOR is BASIC {
      * @param _managementType - managementType of node (see docs)
      * @param _storageProvider - storageProvider of node (see docs)
      * @param _refAddress - address permanently tied to node
+     * @param _switches - 8 switch bits
      */
     function setNonMutableData(
         uint32 _node,
         uint8 _managementType,
         uint8 _storageProvider,
-        address _refAddress
+        address _refAddress,
+        uint8 _switches
     ) external whenNotPaused isNodeAdmin {
         require( //_managementType is a valid type
             (validManagementTypes[_managementType] > 0),
@@ -425,6 +427,7 @@ contract NODE_STOR is BASIC {
         nodeData[_node].managementType = _managementType;
         nodeData[_node].storageProvider = _storageProvider;
         nodeData[_node].referenceAddress = _refAddress;
+        nodeData[_node].switches = _switches;
         //^^^^^^^effects^^^^^^^^^
     }
 

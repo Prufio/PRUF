@@ -189,7 +189,7 @@ contract NODE_MGR is BASIC {
             "NM:PN: Must have ID_PROVIDER_ROLE"
         );
         require(
-            (_custodyType != 3) && (_custodyType != 0) ,
+            (_custodyType != 3) && (_custodyType != 0),
             "NM:PN: custody type cannot be 0||3 "
         );
 
@@ -326,7 +326,8 @@ contract NODE_MGR is BASIC {
         uint32 _node,
         uint8 _managementType,
         uint8 _storageProvider,
-        address _refAddress
+        address _refAddress,
+        uint8 _switches
     ) external whenNotPaused isNodeHolder(_node) {
         Node memory thisNode = NODE_STOR.getNodeData(_node);
 
@@ -339,7 +340,8 @@ contract NODE_MGR is BASIC {
             "NM:SNMD: managementType = 255(Unconfigured)"
         );
 
-        if(thisNode.custodyType != 3) { //CTS:EXAMINE
+        if (thisNode.custodyType != 3) {
+            //CTS:EXAMINE
             require(
                 _managementType != 0,
                 "NM:SNMD: managementType cannot = 0 unless root"
@@ -350,7 +352,8 @@ contract NODE_MGR is BASIC {
             _node,
             _managementType,
             _storageProvider,
-            _refAddress
+            _refAddress,
+            _switches
         );
     }
 

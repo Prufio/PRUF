@@ -401,12 +401,14 @@ interface NODE_MGR_Interface {
      * @param _managementType - managementType of node (see docs)
      * @param _storageProvider - storageProvider of node (see docs)
      * @param _refAddress - address permanently tied to node
+     * @param _switches - 8 switch bits
      */
     function setNonMutableData(
         uint32 _node,
         uint8 _managementType,
         uint8 _storageProvider,
-        address _refAddress
+        address _refAddress,
+        uint8 _switches
     ) external;
 }
 
@@ -582,12 +584,14 @@ interface NODE_STOR_Interface {
      * @param _managementType - managementType of node (see docs)
      * @param _storageProvider - storageProvider of node (see docs)
      * @param _refAddress - address permanently tied to node
+     * @param _switches - 8 switch bits
      */
     function setNonMutableData(
         uint32 _node,
         uint8 _managementType,
         uint8 _storageProvider,
-        address _refAddress
+        address _refAddress,
+        uint8 _switches
     ) external;
 
     /**
