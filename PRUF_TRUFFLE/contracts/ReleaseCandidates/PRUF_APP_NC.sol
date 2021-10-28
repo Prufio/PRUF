@@ -127,7 +127,7 @@ contract APP_NC is CORE {
     }
 
     /**
-     * @dev record NonMutableStorage data
+     * @dev record NonMutableStorage data  //DPS:TEST changed requires
      * @param _idxHash - hash of asset information created by frontend inputs
      * @param _nonMutableStorage1 - field for permanent external asset data
      * @param _nonMutableStorage2 - field for permanent external asset data
@@ -143,20 +143,10 @@ contract APP_NC is CORE {
             "ANC:ANMS: Record In Transferred, exported, or discarded status"
         );
 
-        require(
-            (rec.nonMutableStorage1 & rec.nonMutableStorage2) == 0,
-            "ANC:ANMS:NMS is not empty"
-        );
-
-        require( //caller must be nodeholder/permissioned or sw2+tokenholder
-            ((NODE_STOR.getSwitchAt(rec.node, 2) == 1) && //sw2 is set
-                (A_TKN.ownerOf(uint256(_idxHash)) == _msgSender())) || //and caller holds the token
-                ((NODE_TKN.ownerOf(rec.node) == _msgSender()) || //caller holds the NT
-                    (NODE_STOR.getUserType( // or is auth by node
-                        keccak256(abi.encodePacked(_msgSender())),
-                        rec.node
-                    ) == 1)),
-            "ANC:ANMS:User not permissioned to add NMS"
+        require( //caller must be nodeholder/permissioned or sw2+tokenholder and caller holds the token
+            (NODE_STOR.getSwitchAt(rec.node, 2) == 1) && //sw2 is set
+                (A_TKN.ownerOf(uint256(_idxHash)) == _msgSender()),
+            "ANC:ANMS:User not permissioned to add NMS or does not hold asset"
         );
         //^^^^^^^checks^^^^^^^^^
 
@@ -169,7 +159,12 @@ contract APP_NC is CORE {
     }
 
     /**
-     * @dev Update NonMutableStorage with data priovided by nodeholder (only works if asset is in 200,201 stat)
+     * @dev Update NonMutableStorage with data priovided by nodeholder
+     * only works if asset is in 200,201 stat (STOR enforces this). Conceptually,
+     * nodeholder would deploy a contract to update NMS for assets. that contract would
+     * hold the node or be auth100. TH would authorize the contract for their token, and
+     * call the update function in that contract. The update function would set stat200, then
+     * call this function to update the NMS to the new value.
      * @param _idxHash - hash of asset information created by frontend inputs
      * @param _nonMutableStorage1 - field for permanent external asset data
      * @param _nonMutableStorage2 - field for permanent external asset data
@@ -186,6 +181,7 @@ contract APP_NC is CORE {
             needsImport(rec.assetStatus) == 0,
             "ANC:ANMN: Record In Transferred, exported, or discarded status"
         );
+
         require( // caller is node authorized
             (NODE_TKN.ownerOf(rec.node) == _msgSender()) || //caller holds the NT
                 (NODE_STOR.getUserType(
@@ -194,6 +190,7 @@ contract APP_NC is CORE {
                 ) == 100), //or is auth type 100 in node
             "AT:SU:Caller !NTH or authorized(100)"
         );
+
         //^^^^^^^checks^^^^^^^^^
 
         rec.nonMutableStorage1 = _nonMutableStorage1;
