@@ -12,7 +12,7 @@ _________\/// _____________\/// _______\/// __\///////// __\/// _____________
 
 /**-----------------------------------------------------------------
  * PRüF A_TKN
- * PRüF ASSET NFT CONTRACT - PRüF Asset tokens. Supports trusted agent role.
+ * PRüF ASSET NFT CONTRACT - PRüF Asset tokens.
  *---------------------------------------------------------------*/
 
 // SPDX-License-Identifier: UNLICENSED
@@ -34,7 +34,7 @@ import "../Resources/RESOURCE_PRUF_TKN_INTERFACES.sol";
  *  - ability for holders to burn (destroy) their tokens
  *  - a minter role that allows for token minting (creation)
  *  - a pauser role that allows to stop all token transfers
- *  - token ID and URI autogeneration
+ *  - token ID and URI autogeneration //CTS:EXAIMINE is this still applicable?
  *
  * This contract uses {AccessControl} to lock permissioned functions using the
  * different roles - head to its documentation for details.
@@ -52,17 +52,22 @@ contract A_TKN is
     ERC721Pausable
 {
     using Counters for Counters.Counter;
-    using Strings for uint256;
+    using Strings for uint256; //CTS:EXAMINE this only shows up once, is that correct?
 
     //mapping for token URIs
     mapping(uint256 => string) private _tokenURIs;
+    //mapping for base URIs associated with the corresponding storageType
     mapping(uint8 => string) private baseURIforStorageType; //storageType => (index => URI)
+    //mapping for coldWallet bool
+    mapping(address => uint256) private coldWallet; //CTS EXAMINE does this need to be a uint256 if its just being used as a bool?
 
     Counters.Counter private _tokenIdTracker;
 
     string private _baseTokenURI;
 
-    bytes32 public constant CONTRACT_ADMIN_ROLE =
+    uint256 trustedAgentEnabled = 1;
+
+    bytes32 public constant CONTRACT_ADMIN_ROLE = //CTS:EXAMINE do these need to be public?
         keccak256("CONTRACT_ADMIN_ROLE");
     bytes32 public constant MINTER_ROLE = keccak256("MINTER_ROLE");
     bytes32 public constant PAUSER_ROLE = keccak256("PAUSER_ROLE");
@@ -70,15 +75,12 @@ contract A_TKN is
         keccak256("TRUSTED_AGENT_ROLE");
     bytes32 public constant DAO_ROLE = keccak256("DAO_ROLE");
 
-    uint256 trustedAgentEnabled = 1;
-
-    mapping(address => uint256) private coldWallet;
-
     address internal STOR_Address;
     address internal RCLR_Address;
     address internal NODE_MGR_Address;
     address internal NODE_STOR_Address;
     address internal NODE_TKN_Address;
+
     STOR_Interface internal STOR;
     RCLR_Interface internal RCLR;
     NODE_MGR_Interface internal NODE_MGR;
@@ -86,7 +88,7 @@ contract A_TKN is
     NODE_TKN_Interface internal NODE_TKN;
 
     bytes32 public constant B320xF_ =
-        0xFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFF;
+        0xFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFF; //CTS:EXAMINE didnt we figure out that this was a heavy way to do things? shouldn't we just set it to 0x000...
 
     constructor() ERC721("PRUF Asset Token", "PRAT") {
         _setupRole(DEFAULT_ADMIN_ROLE, _msgSender());
@@ -379,7 +381,7 @@ contract A_TKN is
     /**
      * @dev Address Setters  - resolves addresses from storage and sets local interfaces
      */
-    function resolveContractAddresses() external isContractAdmin {
+    function resolveContractAddresses() external isContractAdmin { //CTS:EXAMINE is this limiting for upgradability?
         //^^^^^^^checks^^^^^^^^^
 
         RCLR_Address = STOR.resolveContractAddress("RCLR");
@@ -468,11 +470,11 @@ contract A_TKN is
         require(rec.assetStatus == 201, "AT:SU: Record status != 201");
 
         require(
-            (NODE_TKN.ownerOf(rec.node) == _msgSender()) || //caller holds the NT
+            (NODE_TKN.ownerOf(rec.node) == _msgSender()) || //caller holds the Node
                 (NODE_STOR.getUserType(
                     keccak256(abi.encodePacked(_msgSender())),
                     rec.node
-                ) == 100),                                  //or is auth type 100 in node
+                ) == 100),                                  //or is auth type 100 in Node
             "AT:SU:Caller !NTH or authorized"
         );
 
@@ -564,7 +566,6 @@ contract A_TKN is
      */
     function discard(uint256 _tokenId) external nonReentrant whenNotPaused {
         bytes32 _idxHash = bytes32(_tokenId);
-        //Record memory rec = getRecord(_idxHash);
 
         require(
             _isApprovedOrOwner(_msgSender(), _tokenId),
