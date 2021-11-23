@@ -87,8 +87,8 @@ contract A_TKN is
     NODE_STOR_Interface internal NODE_STOR;
     NODE_TKN_Interface internal NODE_TKN;
 
-    bytes32 public constant B320xF_ =
-        0xFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFF; //CTS:EXAMINE didnt we figure out that this was a heavy way to do things? shouldn't we just set it to 0x000...
+    bytes32 public constant B320x01 =
+        0x0000000000000000000000000000000000000000000000000000000000000001;
 
     constructor() ERC721("PRUF Asset Token", "PRAT") {
         _setupRole(DEFAULT_ADMIN_ROLE, _msgSender());
@@ -219,7 +219,7 @@ contract A_TKN is
 
         rec.numberOfTransfers = 170;
 
-        rec.rightsHolder = B320xF_;
+        rec.rightsHolder = B320x01;
 
         writeRecord(_idxHash, rec);
         _transfer(_from, _to, _tokenId);
@@ -289,7 +289,7 @@ contract A_TKN is
         //^^^^^^^checks^^^^^^^^^
 
         rec.numberOfTransfers = 170;
-        rec.rightsHolder = B320xF_;
+        rec.rightsHolder = B320x01;
 
         writeRecord(_idxHash, rec);
         _safeTransfer(_from, _to, _tokenId, _data);
@@ -455,7 +455,12 @@ contract A_TKN is
     }
 
     /**
-     * @dev Set new token URI String
+     * @dev Set new token URI String, under special circumstances
+     * only works if asset is in stat 201.
+     * Conceptually, the nodeHolder would deploy a contract to update URI for assets. that contract would
+     * hold the node or be auth100. TH would authorize the contract for their token, and
+     * call the updateMyURI function in that contract. The update function would set stat201, then
+     * call this function to update the URI to the new value, then unset the 201 status.
      * @param _tokenId - Token ID to set URI
      * @param _tokenURI - URI string to atatch to token
      * @return tokenId
@@ -467,7 +472,10 @@ contract A_TKN is
         bytes32 _idxHash = bytes32(_tokenId);
         Record memory rec = getRecord(_idxHash);
 
-        require(rec.assetStatus == 201, "AT:SU: Record status != 201");
+        require(
+            rec.assetStatus == 201,
+            "AT:SU: URI Immutable Record status != 201"
+        );
 
         require(
             (NODE_TKN.ownerOf(rec.node) == _msgSender()) || //caller holds the Node
@@ -478,7 +486,7 @@ contract A_TKN is
             "AT:SU:Caller !NTH or authorized"
         );
 
-        require( 
+        require(
             _isApprovedOrOwner(_msgSender(), _tokenId),
             "AT:SU:Caller !owner nor approved"
         );
@@ -533,7 +541,7 @@ contract A_TKN is
 
         rec.numberOfTransfers = 170;
 
-        rec.rightsHolder = B320xF_;
+        rec.rightsHolder = B320x01;
 
         writeRecord(_idxHash, rec);
         _transfer(_from, _to, _tokenId);

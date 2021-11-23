@@ -20,8 +20,8 @@ pragma solidity ^0.8.7;
 import "../Resources/PRUF_CORE.sol";
 
 contract APP is CORE {
-    bytes32 public constant B320xF_ =
-        0xFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFF;
+    bytes32 public constant B320x01 =
+        0x0000000000000000000000000000000000000000000000000000000000000001;
 
     /**
      * Checks that contract holds token
@@ -137,7 +137,7 @@ contract APP is CORE {
         if (_newrgtHash == 0x0) {
             //set to transferred status
             rec.assetStatus = 5;
-            _newrgtHash = B320xF_;
+            _newrgtHash = B320x01;
         }
 
         rec.rightsHolder = _newrgtHash;
