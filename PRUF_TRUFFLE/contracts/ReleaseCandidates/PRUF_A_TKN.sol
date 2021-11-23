@@ -149,7 +149,7 @@ contract A_TKN is
     modifier isDAO() {
         require(
             hasRole(DAO_ROLE, _msgSender()),
-            "NS:MOD-ID: Must have DAO_ROLE"
+            "AT:MOD-ID:Must have DAO_ROLE"
         );
         _;
     }
@@ -168,7 +168,7 @@ contract A_TKN is
         override
         returns (string memory)
     {
-        require(_exists(tokenId), "AT:TU: URI query for nonexistent token");
+        require(_exists(tokenId), "AT:TU:URI query for nonexistent token");
         //^^^^^^^checks^^^^^^^^^
 
         Record memory rec = getRecord(bytes32(tokenId));
@@ -474,7 +474,7 @@ contract A_TKN is
 
         require(
             rec.assetStatus == 201,
-            "AT:SU: URI Immutable Record status != 201"
+            "AT:SU:URI Immutable Record status != 201"
         );
 
         require(
@@ -600,7 +600,7 @@ contract A_TKN is
     function pause() external virtual {
         require(
             hasRole(PAUSER_ROLE, _msgSender()),
-            "AT:P: Caller !have pauser role"
+            "AT:P:Caller !have pauser role"
         );
         //^^^^^^^checks^^^^^^^^^
 
@@ -620,7 +620,7 @@ contract A_TKN is
     function unpause() external virtual {
         require(
             hasRole(PAUSER_ROLE, _msgSender()),
-            "AT:UP: Caller !have pauser role"
+            "AT:UP:Caller !have pauser role"
         );
         //^^^^^^^checks^^^^^^^^^
 
@@ -698,7 +698,7 @@ contract A_TKN is
         internal
         virtual
     {
-        require(_exists(tokenId), "AT:STU: URI set of nonexistent token");
+        require(_exists(tokenId), "AT:STU:URI set of nonexistent token");
         //^^^^^^^checks^^^^^^^^^
 
         _tokenURIs[tokenId] = _tokenURI;
