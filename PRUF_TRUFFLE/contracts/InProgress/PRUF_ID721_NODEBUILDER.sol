@@ -12,7 +12,7 @@ _________\/// _____________\/// _______\/// __\///////// __\/// _____________
 
 /**-----------------------------------------------------------------
  * PRUF UD_NODES
- * Identity provider for minting new nodes using manual verification.
+ * Identity provider for minting new nodes using posession of corresponding 721 token for verification.
  *
  * !!!! CONTRACT MUST BE GIVEN ID_PROVIDER_ROLE IN NODE_MGR !!!!
  *
@@ -104,7 +104,7 @@ contract ID_721 is BASIC {
         uint8 _custodyType,
         bytes32 _CAS1,
         bytes32 _CAS2,
-        uint256 _TokenIdToVerify
+        uint256 _TokenIdToVerify  // NEEDS TO BE IMPLEMENTED
     ) external nonReentrant isNodeMinter returns (uint256) {
         //^^^^^^^checks^^^^^^^^^
 
@@ -181,15 +181,16 @@ contract ID_721 is BASIC {
             );
     }
 }
-contract C {
-    UNS internal _uns;
-    mapping (uint256 => bool) internal _tlds;
+// Their stuff
+// contract C {
+//     UNS internal _uns;
+//     mapping (uint256 => bool) internal _tlds;
 
-    function isValidTldHash(uint256 tldHash) pure returns (bool) {
-        return _tlds[tldHash];
-    }
+//     function isValidTldHash(uint256 tldHash) pure returns (bool) {
+//         return _tlds[tldHash];
+//     }
 
-    function isValid(uint256 tokenId, uint256 tldHash, string calldata label) pure returns (bool) {
-        return isValidTldHash(tldHash) && tokenId == uns.childIdOf(tldHash, label);
-    }
-}
+//     function isValid(uint256 tokenId, uint256 tldHash, string calldata label) pure returns (bool) {
+//         return isValidTldHash(tldHash) && tokenId == uns.childIdOf(tldHash, label);
+//     }
+//}
