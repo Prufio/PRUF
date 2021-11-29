@@ -96,7 +96,7 @@ contract ID_721 is BASIC {
      * @param _custodyType - chosen custodyType of node (see docs)
      * @param _CAS1 - any external data attatched to node 1/2
      * @param _CAS2 - any external data attatched to node 2/2
-     * @param _TokenIdToVerify - Token ID of token being used to verify that calling adress holds the xyz.tld domain
+     * @param _tokenId - Token ID of token being used to verify that calling adress holds the xyz.tld domain
      */
     function purchaseNode(
         string calldata _name,
@@ -104,8 +104,9 @@ contract ID_721 is BASIC {
         uint8 _custodyType,
         bytes32 _CAS1,
         bytes32 _CAS2,
-        uint256 _TokenIdToVerify  // NEEDS TO BE IMPLEMENTED
+        uint256 _tokenId //dont really know what this is? TLD?
     ) external nonReentrant isNodeMinter returns (uint256) {
+        domainMatchesNode(_name, _tokenId); //throws if caller does not hod the appropriate UD token
         //^^^^^^^checks^^^^^^^^^
 
         uint256 mintedNode = NODE_MGR.purchaseNode(
@@ -124,45 +125,20 @@ contract ID_721 is BASIC {
     /**
      * @dev reverts if caller does not hold referenced token or if token does not represent the supplied domain
      * where '_name' is xyz.tld
-     * @param _name - chosen name for node (will be the same as xyz.tld)
-     * @param _udTokenIdToVerify - Token ID of token being used to verify that calling adress holds the xyz.tld domain
+     * @param _domainName - chosen name for node (will be the same as xyz.tld)
+     * @param _tokenId - Token ID of token being used to verify that calling adress holds the xyz.tld domain
      */
     function domainMatchesNode(
-        string calldata _name,
-        uint256 _udTokenIdToVerify
-    ) internal nonReentrant isTokenHolder(_udTokenIdToVerify) {
+        string calldata _domainName,
+        uint256 _tokenId //? not sure how this works //dont really know what this is? TLD?
+    ) internal nonReentrant {
         require(
-            _childId(_udTokenIdToVerify, _name) == // your child ID generator
-                uint256(
-                    keccak256(
-                        abi.encodePacked(
-                            UD_TOKEN_CONTRACT.tokenURI(_udTokenIdToVerify)
-                        )
-                    )
-                ), //obviously this wont work but you get the idea
-            "Supplied node name does not match tokenURI of reference token"
+            UD_TOKEN_CONTRACT.ownerOf(_childId(_tokenId, _domainName)) ==
+                _msgSender(), //obviously this wont work? but you get the idea
+            "Supplied node name does not match tokenID held by caller"
         );
         //^^^^^^^checks^^^^^^^^^
-
-        //^^^^^^^interactions^^^^^^^^^
     }
-
-    //     /** /** LEAVE AS BOILERPLATE
-    //      * @dev transfer a foreign token
-    //      * @param _tokenContract Address of foreign token contract
-    //      * @param _from origin
-    //      * @param _to destination
-    //      * @param _tokenId Token ID
-    //      */
-    //     function foreignTransfer(
-    //         address _tokenContract,
-    //         address _from,
-    //         address _to,
-    //         uint256 _tokenId
-    //     ) internal {
-    //         IERC721(_tokenContract).transferFrom(_from, _to, _tokenId);
-    //         //^^^^^^^interactions^^^^^^^^^
-    //     }
 
     function _childId(uint256 tokenId, string memory label)
         internal
@@ -181,6 +157,23 @@ contract ID_721 is BASIC {
             );
     }
 }
+
+//     /** /** LEAVE AS BOILERPLATE
+//      * @dev transfer a foreign token
+//      * @param _tokenContract Address of foreign token contract
+//      * @param _from origin
+//      * @param _to destination
+//      * @param _tokenId Token ID
+//      */
+//     function foreignTransfer(
+//         address _tokenContract,
+//         address _from,
+//         address _to,
+//         uint256 _tokenId
+//     ) internal {
+//         IERC721(_tokenContract).transferFrom(_from, _to, _tokenId);
+//         //^^^^^^^interactions^^^^^^^^^
+//     }
 // Their stuff
 // contract C {
 //     UNS internal _uns;
