@@ -63,17 +63,34 @@ contract NODE_MGR is BASIC {
         _;
     }
 
+
     /**
-     * @dev Verify caller holds Nodetoken of passed node
-     * @param _node - node in which caller is queried for ownership
+     * @dev Verify caller holds Nodetoken of passed node and holds verifying token if applicable (bit6=1)
+     * @param _node - node for which caller is queried for ownership
      */
-    modifier isNodeHolder(uint32 _node) {
+    modifier isNodeHolderAndHasIdRootToken(uint32 _node) {
         require(
             (NODE_TKN.ownerOf(_node) == _msgSender()),
-            "NM:MOD-INH: _msgSender() does not hold node token"
+            "NM:MOD-INHAHIRT: _msgSender() does not hold node token"
         );
+        Node memory nodeInfo = getNodeinfo(_node);
+        if (getBitAt(nodeInfo.switches, 6) == 1) { //DPS:TEST
+            ExtendedNodeData memory extendedNodeInfo = NODE_STOR.getExtendedNodeData(
+                _node
+            );
+
+            require(
+                (NODE_TKN.ownerOf(_node) ==
+                    IERC721(extendedNodeInfo.idProviderAddr).ownerOf(
+                        extendedNodeInfo.idProviderTokenId
+                    )), // if switch6 = 1 verify that IDroot token and Node token are held in the same address 
+                "NM:MOD-INHAHIRT: Node and root of identity are separated. Function is disabled"
+            );
+        }
         _;
     }
+
+
 
     //--------------------------------------------External Functions--------------------------
 
@@ -247,7 +264,7 @@ contract NODE_MGR is BASIC {
         uint32 _node,
         bytes32 _addrHash,
         uint8 _userType
-    ) external whenNotPaused isNodeHolder(_node) {
+    ) external whenNotPaused isNodeHolderAndHasIdRootToken(_node) {
         //^^^^^^^checks^^^^^^^^^
 
         NODE_STOR.addUser(_node, _addrHash, _userType);
@@ -264,7 +281,7 @@ contract NODE_MGR is BASIC {
         uint32 _thisNode,
         uint32 _otherNode,
         uint256 _newStatus
-    ) external whenNotPaused isNodeHolder(_thisNode) {
+    ) external whenNotPaused isNodeHolderAndHasIdRootToken(_thisNode) {
         NODE_STOR.updateImportStatus(_thisNode, _otherNode, _newStatus);
     }
 
@@ -278,7 +295,7 @@ contract NODE_MGR is BASIC {
         uint32 _node,
         bytes32 _CAS1,
         bytes32 _CAS2
-    ) external whenNotPaused isNodeHolder(_node) {
+    ) external whenNotPaused isNodeHolderAndHasIdRootToken(_node) {
         Node memory thisNode = NODE_STOR.getNodeData(_node);
         require(
             (NODE_STOR.getSwitchAt(_node, 1) == 0) ||
@@ -303,7 +320,7 @@ contract NODE_MGR is BASIC {
         uint16 _service,
         uint256 _serviceCost,
         address _paymentAddress
-    ) external whenNotPaused isNodeHolder(_node) {
+    ) external whenNotPaused isNodeHolderAndHasIdRootToken(_node) {
         //^^^^^^^checks^^^^^^^^^
 
         NODE_STOR.setOperationCosts(
@@ -328,7 +345,7 @@ contract NODE_MGR is BASIC {
         uint8 _storageProvider,
         address _refAddress,
         uint8 _switches
-    ) external whenNotPaused isNodeHolder(_node) {
+    ) external whenNotPaused isNodeHolderAndHasIdRootToken(_node) {
         Node memory thisNode = NODE_STOR.getNodeData(_node);
 
         require(
@@ -375,6 +392,32 @@ contract NODE_MGR is BASIC {
 
         NODE_STOR.createNodeData(_newNodeData, _newNode, _caller);
         NODE_TKN.mintNodeToken(_recipientAddress, tokenId, "pruf.io/nodeToken");
+        //^^^^^^^interactions^^^^^^^^^
+    }
+
+    /**
+     * @dev get bit from uint8 at specified position (1-8)
+     * @param _byte - node associated with query
+     * @param _position - bit position associated with query
+     * @return 1 or 0 (enabled or disabled)
+     * supports indirect node reference via localNodeFor[node]
+     */
+    function getBitAt(uint8 _byte, uint8 _position)
+        internal
+        pure
+        returns (uint256)
+    {
+        require(
+            (_position > 0) && (_position < 9),
+            "NS:GSA: bit position must be between 1 and 8"
+        );
+        //^^^^^^^checks^^^^^^^^^
+
+        if ((_byte & (1 << (_position - 1))) > 0) {
+            return 1;
+        } else {
+            return 0;
+        }
         //^^^^^^^interactions^^^^^^^^^
     }
 }
