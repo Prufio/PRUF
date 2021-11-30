@@ -63,17 +63,6 @@ contract NODE_MGR is BASIC {
         _;
     }
 
-    // /**
-    //  * @dev Verify caller holds Nodetoken of passed node
-    //  * @param _node - node in which caller is queried for ownership
-    //  */
-    // modifier isNodeHolder(uint32 _node) {
-    //     require(
-    //         (NODE_TKN.ownerOf(_node) == _msgSender()),
-    //         "NM:MOD-INH: _msgSender() does not hold node token"
-    //     );
-    //     _;
-    // }
 
     /**
      * @dev Verify caller holds Nodetoken of passed node and holds verifying token if applicable (bit6=1)
