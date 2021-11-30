@@ -34,6 +34,8 @@ import "../Imports/security/ReentrancyGuard.sol";
 
 contract ID_721 is BASIC {
     bytes32 public constant NODE_MINTER_ROLE = keccak256("NODE_MINTER_ROLE");
+    bytes32 private constant B320X =
+        0x0000000000000000000000000000000000000000000000000000000000000000;
 
     constructor() {
         _setupRole(NODE_MINTER_ROLE, _msgSender());
@@ -87,6 +89,22 @@ contract ID_721 is BASIC {
 
         UD_TOKEN_CONTRACT = IERC721(_erc721Address);
         //^^^^^^^effects^^^^^^^^^
+    }
+
+    /**
+     * @dev Set address of STOR contract to interface with
+     * @param _prefix prefix of domain
+     * @param _suffix suffix of domain
+     */
+    function createTokenId(string calldata _prefix, string calldata _suffix)
+        external
+        pure
+        returns (bytes32)
+    {
+        bytes32 tempVal = (keccak256(abi.encodePacked(B320X, _prefix)));
+        tempVal = (keccak256(abi.encodePacked(tempVal, _suffix)));
+
+        return tempVal;
     }
 
     /**
