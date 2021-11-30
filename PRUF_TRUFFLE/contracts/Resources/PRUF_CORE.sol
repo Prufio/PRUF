@@ -345,7 +345,7 @@ contract CORE is BASIC {
                     IERC721(extendedNodeInfo.idProviderAddr).ownerOf(
                         extendedNodeInfo.idProviderTokenId
                     )), // if switch6 = 1 verify that IDroot token and Node token are held in the same address 
-                "C:GNIWAC: Node and root of identity are seaparated. Minting is disabled"
+                "C:GNIWAC: Node and root of identity are separated. Minting is disabled"
             );
         }
         //^^^^^^^checks^^^^^^^^^
