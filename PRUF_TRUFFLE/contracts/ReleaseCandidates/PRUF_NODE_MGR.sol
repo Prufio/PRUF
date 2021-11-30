@@ -372,6 +372,7 @@ contract NODE_MGR is BASIC {
             _refAddress,
             _switches
         );
+        CTS DPS CRITICAL if extended data shows a verifying contract and token, set switch 6
     }
 
     //-------------------------------------------Private functions ----------------------------------------------

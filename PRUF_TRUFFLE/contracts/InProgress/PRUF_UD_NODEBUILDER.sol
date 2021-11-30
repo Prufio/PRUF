@@ -32,7 +32,7 @@ import "../Resources/PRUF_BASIC.sol";
 //import "../Imports/token/ERC721/IERC721.sol";
 import "../Imports/security/ReentrancyGuard.sol";
 
-contract ID_721 is BASIC {
+contract UD_721 is BASIC {
     bytes32 public constant NODE_MINTER_ROLE = keccak256("NODE_MINTER_ROLE");
 
     constructor() {
@@ -57,20 +57,6 @@ contract ID_721 is BASIC {
         _;
     }
 
-    /**
-     * @dev Verify user credentials
-     * @param _tokenId tokenID of token
-     * Originating Address:
-     *    require that user holds token @ ID-Contract
-     */
-    modifier isTokenHolder(uint256 _tokenId) {
-        require(
-            (UD_TOKEN_CONTRACT.ownerOf(_tokenId) == _msgSender()),
-            "NB:MOD-ITH: Caller does not hold specified token"
-        );
-        _;
-    }
-
     //--------------------------------------------External Functions--------------------------
 
     /**
@@ -91,26 +77,34 @@ contract ID_721 is BASIC {
 
     /**
      * @dev Burns (amount) tokens and mints a new Node token to the calling address
-     * @param _name - chosen name of node
+     * @param _domain - chosen domain of node
+     * @param _tld - chosen tld of node
      * @param _nodeRoot - chosen root of node
      * @param _custodyType - chosen custodyType of node (see docs)
      * @param _CAS1 - any external data attatched to node 1/2
      * @param _CAS2 - any external data attatched to node 2/2
-     * @param _tokenId - Token ID of token being used to verify that calling adress holds the xyz.tld domain
      */
     function purchaseNode(
-        string calldata _name,
+        string calldata _domain,
+        string calldata _tld,
         uint32 _nodeRoot,
         uint8 _custodyType,
         bytes32 _CAS1,
-        bytes32 _CAS2,
-        uint256 _tokenId //dont really know what this is? TLD?
+        bytes32 _CAS2
+        //uint8 switches
     ) external nonReentrant isNodeMinter returns (uint256) {
-        domainMatchesNode(_name, _tokenId); //throws if caller does not hod the appropriate UD token
+        uint256 tokenId = getTokenIdFromDomain(_domain, _tld);
+
+        require( //throws if caller does not hod the appropriate UD token
+            UD_TOKEN_CONTRACT.ownerOf(tokenId) == _msgSender(),
+            "UD_NB:PN:Supplied node name does not match tokenID held by caller"
+        );
         //^^^^^^^checks^^^^^^^^^
 
+        string memory nodeName = string(abi.encodePacked(_domain,".",_tld));
+
         uint256 mintedNode = NODE_MGR.purchaseNode(
-            _name,
+            nodeName,
             _nodeRoot,
             _custodyType,
             _CAS1,
@@ -118,72 +112,33 @@ contract ID_721 is BASIC {
             _msgSender()
         );
 
+        CTS DPS CRITICAL TO DO write ud contract, tokenId to node extended data
+
         return mintedNode;
         //^^^^^^^interactions^^^^^^^^^
     }
 
-    /**
-     * @dev reverts if caller does not hold referenced token or if token does not represent the supplied domain
-     * where '_name' is xyz.tld
-     * @param _domainName - chosen name for node (will be the same as xyz.tld)
-     * @param _tokenId - Token ID of token being used to verify that calling adress holds the xyz.tld domain
-     */
-    function domainMatchesNode(
-        string calldata _domainName,
-        uint256 _tokenId //? not sure how this works //dont really know what this is? TLD?
-    ) internal nonReentrant {
-        require(
-            UD_TOKEN_CONTRACT.ownerOf(_childId(_tokenId, _domainName)) ==
-                _msgSender(), //obviously this wont work? but you get the idea
-            "Supplied node name does not match tokenID held by caller"
-        );
-        //^^^^^^^checks^^^^^^^^^
-    }
 
-    function _childId(uint256 tokenId, string memory label)
-        internal
+    function getTokenIdFromDomain(string memory _domain, string memory _tld)
+        public
         pure
         returns (uint256)
     {
-        require(bytes(label).length != 0, "Registry: LABEL_EMPTY");
-        return
-            uint256(
-                keccak256(
-                    abi.encodePacked(
-                        tokenId,
-                        keccak256(abi.encodePacked(label))
-                    )
-                )
+        bytes32 namehash = 0;
+        if (bytes(abi.encodePacked(_domain, _tld)).length != 0) {
+            namehash = keccak256(
+                abi.encodePacked(namehash, keccak256(abi.encodePacked(_tld)))
             );
+
+            if (bytes(abi.encodePacked(_domain)).length != 0) {
+                namehash = keccak256(
+                    abi.encodePacked(
+                        namehash,
+                        keccak256(abi.encodePacked(_domain))
+                    )
+                );
+            }
+        }
+        return uint256(namehash);
     }
 }
-
-//     /** /** LEAVE AS BOILERPLATE
-//      * @dev transfer a foreign token
-//      * @param _tokenContract Address of foreign token contract
-//      * @param _from origin
-//      * @param _to destination
-//      * @param _tokenId Token ID
-//      */
-//     function foreignTransfer(
-//         address _tokenContract,
-//         address _from,
-//         address _to,
-//         uint256 _tokenId
-//     ) internal {
-//         IERC721(_tokenContract).transferFrom(_from, _to, _tokenId);
-//         //^^^^^^^interactions^^^^^^^^^
-//     }
-// Their stuff
-// contract C {
-//     UNS internal _uns;
-//     mapping (uint256 => bool) internal _tlds;
-
-//     function isValidTldHash(uint256 tldHash) pure returns (bool) {
-//         return _tlds[tldHash];
-//     }
-
-//     function isValid(uint256 tokenId, uint256 tldHash, string calldata label) pure returns (bool) {
-//         return isValidTldHash(tldHash) && tokenId == uns.childIdOf(tldHash, label);
-//     }
-//}

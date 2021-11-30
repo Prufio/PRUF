@@ -431,13 +431,15 @@ contract NODE_STOR is BASIC {
         //^^^^^^^effects^^^^^^^^^
     }
 
-    /**
+    /** CTS DPS CRITICAL this must be changed to only allow setting of non-token fields.
+    Token fields must use a separate setter, and it should be expressed in node manager as well
+    so that the ID providers can set it.(must be IMMUTABLE!!!!!)
      * @dev extended node data setter
      * @param _node - node being setup
      * @param _exData ExtendedNodeData struct to write (see resources-structs)
      * how do I call this without a setter in NODE_MGR? it takes a struct (THIS CANNOT BE CALLED WITH THE CURRENT VERSION OF NODE MANANGER)
      */
-    function setExtendedNodeData(uint32 _node, ExtendedNodeData memory _exData)
+    !function setExtendedNodeData(uint32 _node, ExtendedNodeData memory _exData)
         external
         whenNotPaused
         isNodeAdmin
