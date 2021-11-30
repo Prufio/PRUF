@@ -303,7 +303,9 @@ pragma solidity ^0.6.7;
  * bit8  -- (where to mint to)If not set, tokens will always mint to nodeholder.If set, node allows minting to delegated parties
         in management types that support address delegation. Also supports "mint to" if implemented in app. 
         !!MUST!! be set for custodial contracts
-                
+
+        ***NOTE for bit6=1 nodes It is important, for most purposes, to keep the node token and the token that
+        acts as the rood of identity under the custody of the same organization. ***
 - -----------------------------------------------------------------
 
 /*-----------------------------------------------------------------
