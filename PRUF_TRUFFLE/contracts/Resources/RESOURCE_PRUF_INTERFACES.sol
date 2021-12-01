@@ -285,7 +285,8 @@ interface NODE_MGR_Interface {
      * @param _newNodePrice - cost per node (18 decimals)
      * @param _newNodeBurn - burn per node (18 decimals)
      */
-    function setNodePricing(uint256 _newNodePrice, uint256 _newNodeBurn) external;
+    function setNodePricing(uint256 _newNodePrice, uint256 _newNodeBurn)
+        external;
 
     /**
      * @dev return current node token index and price
@@ -295,7 +296,14 @@ interface NODE_MGR_Interface {
          node_burn: burn per node
      }
      */
-    function currentNodePricingInfo() external view returns (uint256, uint256, uint256);
+    function currentNodePricingInfo()
+        external
+        view
+        returns (
+            uint256,
+            uint256,
+            uint256
+        );
 
     //--------------------------------------------External Functions--------------------------
 
@@ -332,8 +340,8 @@ interface NODE_MGR_Interface {
      * @param _custodyType - chosen custodyType of node (see docs)
      * @param _CAS1 - any external data attatched to node 1/2
      * @param _CAS2 - any external data attatched to node 2/2
-     * @param _mintNodeTo - address to mint the node to and get payment from
-     * requires that caller has ID_PROVIDER_ROLE
+     * @param _caller caller passed from an ID_VERIFIER
+     * requires that caller has ID_VERIFIER_ROLE
      */
     function purchaseNode(
         string calldata _name,
@@ -341,7 +349,7 @@ interface NODE_MGR_Interface {
         uint8 _custodyType,
         bytes32 _CAS1,
         bytes32 _CAS2,
-        address _mintNodeTo
+        address _caller
     ) external returns (uint256);
 
     /**
@@ -409,6 +417,36 @@ interface NODE_MGR_Interface {
         uint8 _storageProvider,
         address _refAddress,
         uint8 _switches
+    ) external;
+
+    /**
+     * @dev extended node data setter
+     * @param _node - node being configured
+     * @param _u8a ExtendedNodeData
+     * @param _u8b ExtendedNodeData
+     * @param _u16c ExtendedNodeData
+     * @param _u32d ExtendedNodeData
+     * @param _u32e ExtendedNodeData
+     */
+    function setExtendedNodeData(
+        uint32 _node,
+        uint8 _u8a,
+        uint8 _u8b,
+        uint16 _u16c,
+        uint32 _u32d,
+        uint32 _u32e
+    ) external;
+
+    /**
+     * @dev external erc721 token as ID configurator (bit 6 set to 1)
+     * @param _node - node being configured
+     * @param _tokenContractAddress  token contract used to verify id
+     * @param _tokenId token ID used to verify id
+     */
+    function setExternalIdToken(
+        uint32 _node,
+        address _tokenContractAddress,
+        uint256 _tokenId
     ) external;
 }
 
@@ -595,13 +633,35 @@ interface NODE_STOR_Interface {
     ) external;
 
     /**
-     * @dev extended node data setter.
-     * Use to set Native Node for foreign node, foreign ID tokens, etc.
-     * @param _node - node being setup
-     * @param _exData ExtendedNodeData struct to write (see resources-structs)
+     * @dev extended node data setter
+     * @param _node - node being configured
+     * @param _u8a ExtendedNodeData
+     * @param _u8b ExtendedNodeData
+     * @param _u16c ExtendedNodeData
+     * @param _u32d ExtendedNodeData
+     * @param _u32e ExtendedNodeData
      */
-    function setExtendedNodeData(uint32 _node, ExtendedNodeData memory _exData)
-        external;
+    function setExtendedNodeData(
+        uint32 _node,
+        uint8 _u8a,
+        uint8 _u8b,
+        uint16 _u16c,
+        uint32 _u32d,
+        uint32 _u32e
+    ) external;
+
+    /**
+     *must be IMMUTABLE!!!!!
+     * @dev external erc721 token as ID configurator (bit 6 set to 1)
+     * @param _node - node being configured
+     * @param _tokenContractAddress  token contract used to verify id
+     * @param _tokenId token ID used to verify id
+     */
+    function setExternalIdToken(
+        uint32 _node,
+        address _tokenContractAddress,
+        uint256 _tokenId
+    ) external;
 
     /**
      * @dev extended node data setter
