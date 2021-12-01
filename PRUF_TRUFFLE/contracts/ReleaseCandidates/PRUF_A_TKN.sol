@@ -34,7 +34,6 @@ import "../Resources/RESOURCE_PRUF_TKN_INTERFACES.sol";
  *  - ability for holders to burn (destroy) their tokens
  *  - a minter role that allows for token minting (creation)
  *  - a pauser role that allows to stop all token transfers
- *  - token ID and URI autogeneration //CTS:EXAIMINE is this still applicable?
  *
  * This contract uses {AccessControl} to lock permissioned functions using the
  * different roles - head to its documentation for details.
@@ -52,7 +51,7 @@ contract A_TKN is
     ERC721Pausable
 {
     using Counters for Counters.Counter;
-    using Strings for uint256; //CTS:EXAMINE this only shows up once, is that correct?
+    //using Strings for uint256; //CTS:EXAMINE this only shows up once, is that correct?
 
     //mapping for token URIs
     mapping(uint256 => string) private _tokenURIs;
@@ -67,7 +66,7 @@ contract A_TKN is
 
     uint256 trustedAgentEnabled = 1;
 
-    bytes32 public constant CONTRACT_ADMIN_ROLE = //CTS:EXAMINE do these need to be public?
+    bytes32 public constant CONTRACT_ADMIN_ROLE = //CTS:PREFERRED
         keccak256("CONTRACT_ADMIN_ROLE");
     bytes32 public constant MINTER_ROLE = keccak256("MINTER_ROLE");
     bytes32 public constant PAUSER_ROLE = keccak256("PAUSER_ROLE");
@@ -77,13 +76,11 @@ contract A_TKN is
 
     address internal STOR_Address;
     address internal RCLR_Address;
-    address internal NODE_MGR_Address;
     address internal NODE_STOR_Address;
     address internal NODE_TKN_Address;
 
     STOR_Interface internal STOR;
     RCLR_Interface internal RCLR;
-    NODE_MGR_Interface internal NODE_MGR;
     NODE_STOR_Interface internal NODE_STOR;
     NODE_TKN_Interface internal NODE_TKN;
 
@@ -381,14 +378,11 @@ contract A_TKN is
     /**
      * @dev Address Setters  - resolves addresses from storage and sets local interfaces
      */
-    function resolveContractAddresses() external isContractAdmin { //CTS:EXAMINE is this limiting for upgradability?
+    function resolveContractAddresses() external isContractAdmin { //CTS:Only needs these contracts as deployed
         //^^^^^^^checks^^^^^^^^^
 
         RCLR_Address = STOR.resolveContractAddress("RCLR");
         RCLR = RCLR_Interface(RCLR_Address);
-
-        NODE_MGR_Address = STOR.resolveContractAddress("NODE_MGR");
-        NODE_MGR = NODE_MGR_Interface(NODE_MGR_Address);
 
         NODE_STOR_Address = STOR.resolveContractAddress("NODE_STOR");
         NODE_STOR = NODE_STOR_Interface(NODE_STOR_Address);
