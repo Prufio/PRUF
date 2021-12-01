@@ -431,20 +431,49 @@ contract NODE_STOR is BASIC {
         //^^^^^^^effects^^^^^^^^^
     }
 
-    /** CTS DPS CRITICAL this must be changed to only allow setting of non-token fields.
-    Token fields must use a separate setter, and it should be expressed in node manager as well
-    so that the ID providers can set it.(must be IMMUTABLE!!!!!)
+    /**
      * @dev extended node data setter
-     * @param _node - node being setup
-     * @param _exData ExtendedNodeData struct to write (see resources-structs)
-     * how do I call this without a setter in NODE_MGR? it takes a struct (THIS CANNOT BE CALLED WITH THE CURRENT VERSION OF NODE MANANGER)
+     * @param _node - node being configured
+     * @param _u8a ExtendedNodeData
+     * @param _u8b ExtendedNodeData
+     * @param _u16c ExtendedNodeData
+     * @param _u32d ExtendedNodeData
+     * @param _u32e ExtendedNodeData
      */
-    !function setExtendedNodeData(uint32 _node, ExtendedNodeData memory _exData)
-        external
-        whenNotPaused
-        isNodeAdmin
-    {
-        nodeDetails[_node] = _exData;
+    function setExtendedNodeData(
+        uint32 _node,
+        uint8 _u8a,
+        uint8 _u8b,
+        uint16 _u16c,
+        uint32 _u32d,
+        uint32 _u32e
+    ) external whenNotPaused isNodeAdmin {
+        nodeDetails[_node].u8a = _u8a;
+        nodeDetails[_node].u8b = _u8b;
+        nodeDetails[_node].u16c = _u16c;
+        nodeDetails[_node].u32d = _u32d;
+        nodeDetails[_node].u32e = _u32e;
+    }
+
+    /**
+     *must be IMMUTABLE!!!!!
+     * @dev external erc721 token as ID configurator (bit 6 set to 1)
+     * @param _node - node being configured
+     * @param _tokenContractAddress  token contract used to verify id
+     * @param _tokenId token ID used to verify id
+     */
+    function setExternalIdToken(
+        uint32 _node,
+        address _tokenContractAddress,
+        uint256 _tokenId
+    ) external whenNotPaused isNodeAdmin {
+        require(
+            nodeDetails[_node].idProviderTokenId == 0,
+            "NS:SEIT: ID Reference TokenID already set"
+        );
+
+        nodeDetails[_node].idProviderAddr = _tokenContractAddress;
+        nodeDetails[_node].idProviderTokenId = _tokenId;
     }
 
     /**
@@ -486,7 +515,7 @@ contract NODE_STOR is BASIC {
      * @dev extended node data getter
      * @param _node - node being queried
      * returns ExtendedNodeData struct (see resources-structs)
-     */ 
+     */
     function getExtendedNodeData(uint32 _node)
         external
         view
