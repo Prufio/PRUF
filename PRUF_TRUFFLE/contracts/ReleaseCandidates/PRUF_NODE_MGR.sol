@@ -16,10 +16,7 @@ _________\/// _____________\/// _______\/// __\///////// __\/// _____________
  * Contract for minting and managing Nodes
  *
  ** IMPORTANT Local (child) node behaviours overwrite parent nodes; **
- ** so local nodes should only be mapped if their nonmutable attributes match those of their parent. **
- *
- * TODO: make a node builder that uses unstoppable domains to build nodes,
- * and an APP that requires both the node and the UD token to be held in order to mint.
+ ** DPS:CHECK VERIFY THAT THIS IS ENFORCED  local nodes should only be mapped if their nonmutable attributes match those of their parent. **
  *
  * STATEMENT OF TERMS OF SERVICE (TOS):
  * User agrees not to intentionally claim any namespace that is a recognized or registered brand name, trade mark,
@@ -42,7 +39,7 @@ contract NODE_MGR is BASIC {
     uint32 private constant startingDiscount = 9500; //Purchased nodes start with 95% profit share
 
     bytes32 public constant NODE_MINTER_ROLE = keccak256("NODE_MINTER_ROLE");
-    bytes32 public constant ID_PROVIDER_ROLE = keccak256("ID_PROVIDER_ROLE");
+    bytes32 public constant ID_VERIFIER_ROLE = keccak256("ID_VERIFIER_ROLE");
 
     constructor() {
         _setupRole(NODE_MINTER_ROLE, _msgSender());
@@ -63,34 +60,18 @@ contract NODE_MGR is BASIC {
         _;
     }
 
-
     /**
-     * @dev Verify caller holds Nodetoken of passed node and holds verifying token if applicable (bit6=1)
-     * @param _node - node for which caller is queried for ownership
+     * @dev Verify user credentials
+     * Originating Address:
+     *      has ID_PROVIDER_ROLE
      */
-    modifier isNodeHolderAndHasIdRootToken(uint32 _node) {
+    modifier isIdVerifier() {
         require(
-            (NODE_TKN.ownerOf(_node) == _msgSender()),
-            "NM:MOD-INHAHIRT: _msgSender() does not hold node token"
+            hasRole(ID_VERIFIER_ROLE, _msgSender()),
+            "NM:MOD-INM: Must have ID_VERIFIER_ROLE"
         );
-        Node memory nodeInfo = getNodeinfo(_node);
-        if (getBitAt(nodeInfo.switches, 6) == 1) { //DPS:TEST
-            ExtendedNodeData memory extendedNodeInfo = NODE_STOR.getExtendedNodeData(
-                _node
-            );
-
-            require(
-                (NODE_TKN.ownerOf(_node) ==
-                    IERC721(extendedNodeInfo.idProviderAddr).ownerOf(
-                        extendedNodeInfo.idProviderTokenId
-                    )), // if switch6 = 1 verify that IDroot token and Node token are held in the same address 
-                "NM:MOD-INHAHIRT: Node and root of identity are separated. Function is disabled"
-            );
-        }
         _;
     }
-
-
 
     //--------------------------------------------External Functions--------------------------
 
@@ -195,15 +176,11 @@ contract NODE_MGR is BASIC {
         uint8 _custodyType,
         bytes32 _CAS1,
         bytes32 _CAS2,
-        address _mintNodeTo
-    ) external nonReentrant returns (uint256) {
+        address _caller
+    ) external nonReentrant whenNotPaused isIdVerifier returns (uint256) {
         require(
             nodeTokenIndex < 4294000000,
             "NM:PN: Only 4294000000 node tokens allowed"
-        );
-        require(
-            hasRole(ID_PROVIDER_ROLE, _msgSender()),
-            "NM:PN: Must have ID_PROVIDER_ROLE"
         );
         require(
             (_custodyType != 3) && (_custodyType != 0),
@@ -217,7 +194,7 @@ contract NODE_MGR is BASIC {
 
         address rootPaymentAddress = paymentData.paymentAddress; //payment for upgrade goes to root node payment address specified for service (1)
 
-        //mint an Node token to _msgSender(), at tokenID nodeTokenIndex, with URI = root Node
+        //mint an Node token to _mintToAddress, at tokenID nodeTokenIndex, with URI = root Node
 
         Node memory ThisNode;
         ThisNode.name = _name;
@@ -230,19 +207,10 @@ contract NODE_MGR is BASIC {
         ThisNode.CAS2 = _CAS2;
         //^^^^^^^effects^^^^^^^^^
 
-        UTIL_TKN.trustedAgentBurn(_mintNodeTo, node_burn);
-        UTIL_TKN.trustedAgentTransfer(
-            _mintNodeTo,
-            rootPaymentAddress,
-            node_price
-        ); //burning 50%+ so we have tokens to incentivise outreach performance
+        UTIL_TKN.trustedAgentBurn(_caller, node_burn);
+        UTIL_TKN.trustedAgentTransfer(_caller, rootPaymentAddress, node_price); //burning 50%+ so we have tokens to incentivise outreach performance
 
-        _createNode(
-            ThisNode,
-            uint32(nodeTokenIndex),
-            _mintNodeTo,
-            _msgSender()
-        );
+        _createNode(ThisNode, uint32(nodeTokenIndex), _caller, _caller);
 
         //Set the default 11 authorized contracts
         if (_custodyType == 2) {
@@ -264,7 +232,7 @@ contract NODE_MGR is BASIC {
         uint32 _node,
         bytes32 _addrHash,
         uint8 _userType
-    ) external whenNotPaused isNodeHolderAndHasIdRootToken(_node) {
+    ) external whenNotPaused isIdVerifier {
         //^^^^^^^checks^^^^^^^^^
 
         NODE_STOR.addUser(_node, _addrHash, _userType);
@@ -281,7 +249,7 @@ contract NODE_MGR is BASIC {
         uint32 _thisNode,
         uint32 _otherNode,
         uint256 _newStatus
-    ) external whenNotPaused isNodeHolderAndHasIdRootToken(_thisNode) {
+    ) external whenNotPaused isIdVerifier {
         NODE_STOR.updateImportStatus(_thisNode, _otherNode, _newStatus);
     }
 
@@ -295,7 +263,7 @@ contract NODE_MGR is BASIC {
         uint32 _node,
         bytes32 _CAS1,
         bytes32 _CAS2
-    ) external whenNotPaused isNodeHolderAndHasIdRootToken(_node) {
+    ) external whenNotPaused isIdVerifier {
         Node memory thisNode = NODE_STOR.getNodeData(_node);
         require(
             (NODE_STOR.getSwitchAt(_node, 1) == 0) ||
@@ -320,7 +288,7 @@ contract NODE_MGR is BASIC {
         uint16 _service,
         uint256 _serviceCost,
         address _paymentAddress
-    ) external whenNotPaused isNodeHolderAndHasIdRootToken(_node) {
+    ) external whenNotPaused isIdVerifier {
         //^^^^^^^checks^^^^^^^^^
 
         NODE_STOR.setOperationCosts(
@@ -345,8 +313,11 @@ contract NODE_MGR is BASIC {
         uint8 _storageProvider,
         address _refAddress,
         uint8 _switches
-    ) external whenNotPaused isNodeHolderAndHasIdRootToken(_node) {
+    ) external whenNotPaused isIdVerifier {
         Node memory thisNode = NODE_STOR.getNodeData(_node);
+        ExtendedNodeData memory thisNodeExtData = NODE_STOR.getExtendedNodeData(
+            _node
+        );
 
         require(
             thisNode.managementType == 255,
@@ -364,6 +335,7 @@ contract NODE_MGR is BASIC {
                 "NM:SNMD: managementType cannot = 0 unless root"
             );
         }
+        //^^^^^^^checks^^^^^^^^^
 
         NODE_STOR.setNonMutableData(
             _node,
@@ -372,7 +344,52 @@ contract NODE_MGR is BASIC {
             _refAddress,
             _switches
         );
-        CTS DPS CRITICAL if extended data shows a verifying contract and token, set switch 6
+
+        //if extended data shows a verifying token id, set switch 6 to one
+        if (thisNodeExtData.idProviderTokenId != 0) {
+            NODE_STOR.modifyNodeSwitches(_node, 6, 1);
+        }
+        //^^^^^^^interactions^^^^^^^^^
+    }
+
+    /**
+     * @dev extended node data setter
+     * @param _node - node being configured
+     * @param _u8a ExtendedNodeData
+     * @param _u8b ExtendedNodeData
+     * @param _u16c ExtendedNodeData
+     * @param _u32d ExtendedNodeData
+     * @param _u32e ExtendedNodeData
+     */
+    function setExtendedNodeData(
+        uint32 _node,
+        uint8 _u8a,
+        uint8 _u8b,
+        uint16 _u16c,
+        uint32 _u32d,
+        uint32 _u32e
+    ) external whenNotPaused isIdVerifier {
+        //^^^^^^^checks^^^^^^^^^
+
+        NODE_STOR.setExtendedNodeData(_node, _u8a, _u8b, _u16c, _u32d, _u32e);
+        //^^^^^^^interactions^^^^^^^^^
+    }
+
+    /**
+     * @dev external erc721 token as ID configurator (bit 6 set to 1)
+     * @param _node - node being configured
+     * @param _tokenContractAddress  token contract used to verify id
+     * @param _tokenId token ID used to verify id
+     */
+    function setExternalIdToken(
+        uint32 _node,
+        address _tokenContractAddress,
+        uint256 _tokenId
+    ) external whenNotPaused isIdVerifier {
+        //^^^^^^^checks^^^^^^^^^
+
+        NODE_STOR.setExternalIdToken(_node, _tokenContractAddress, _tokenId);
+        //^^^^^^^interactions^^^^^^^^^
     }
 
     //-------------------------------------------Private functions ----------------------------------------------
@@ -389,6 +406,8 @@ contract NODE_MGR is BASIC {
         address _recipientAddress,
         address _caller
     ) private whenNotPaused {
+        //^^^^^^^checks^^^^^^^^^
+
         uint256 tokenId = uint256(_newNode);
 
         NODE_STOR.createNodeData(_newNodeData, _newNode, _caller);

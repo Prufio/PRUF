@@ -29,7 +29,6 @@ _________\/// _____________\/// _______\/// __\///////// __\/// _____________
 pragma solidity ^0.8.7;
 
 import "../Resources/PRUF_BASIC.sol";
-//import "../Imports/token/ERC721/IERC721.sol";
 import "../Imports/security/ReentrancyGuard.sol";
 
 contract UD_721 is BASIC {
@@ -43,18 +42,29 @@ contract UD_721 is BASIC {
 
     //address internal TOKEN_Address;
     IERC721 internal UD_TOKEN_CONTRACT;
+    address public UD_token_address;
 
     //--------------------------------------------Modifiers--------------------------
 
     /**
-     * @dev Verify user credentials
-     * Originating Address:
-     *      has NODE_MINTER_ROLE
+     * @dev Verify caller holds Nodetoken of passed node and holds verifying token if applicable (bit6=1)
+     * @param _node - node for which caller is queried for ownership
      */
-    modifier isNodeMinter() {
+    modifier isNodeHolderAndHasIdRootToken(uint32 _node) {
         require(
-            hasRole(NODE_MINTER_ROLE, _msgSender()),
-            "NB:MOD-INM: Must have NODE_MINTER_ROLE"
+            (NODE_TKN.ownerOf(_node) == _msgSender()),
+            "NM:MOD-INHAHIRT: _msgSender() does not hold node token"
+        );
+        Node memory nodeInfo = getNodeinfo(_node);
+        ExtendedNodeData memory extendedNodeInfo = NODE_STOR
+            .getExtendedNodeData(_node);
+
+        require(
+            (NODE_TKN.ownerOf(_node) ==
+                IERC721(extendedNodeInfo.idProviderAddr).ownerOf(
+                    extendedNodeInfo.idProviderTokenId
+                )), // if switch6 = 1 verify that IDroot token and Node token are held in the same address
+            "NM:MOD-INHAHIRT: Node and root of identity are separated. Function is disabled"
         );
         _;
     }
@@ -65,32 +75,16 @@ contract UD_721 is BASIC {
      * @dev Set address of STOR contract to interface with
      * @param _erc721Address address of token contract to interface with
      */
-    function setTokenContract(address _erc721Address)
+    function setUnstoppableDomainsTokenContract(address _erc721Address)
         external
         virtual
         isContractAdmin
     {
         require(_erc721Address != address(0), "B:SSC: Address = 0");
         //^^^^^^^checks^^^^^^^^^
-
+        UD_token_address = _erc721Address;
         UD_TOKEN_CONTRACT = IERC721(_erc721Address);
         //^^^^^^^effects^^^^^^^^^
-    }
-
-    /**
-     * @dev Set address of STOR contract to interface with
-     * @param _prefix prefix of domain
-     * @param _suffix suffix of domain
-     */
-    function createTokenId(string calldata _prefix, string calldata _suffix)
-        external
-        pure
-        returns (bytes32)
-    {
-        bytes32 tempVal = (keccak256(abi.encodePacked(B320X, _prefix)));
-        tempVal = (keccak256(abi.encodePacked(tempVal, _suffix)));
-
-        return tempVal;
     }
 
     /**
@@ -109,8 +103,7 @@ contract UD_721 is BASIC {
         uint8 _custodyType,
         bytes32 _CAS1,
         bytes32 _CAS2
-        //uint8 switches
-    ) external nonReentrant isNodeMinter returns (uint256) {
+    ) external nonReentrant returns (uint256) {
         uint256 tokenId = getTokenIdFromDomain(_domain, _tld);
 
         require( //throws if caller does not hod the appropriate UD token
@@ -119,7 +112,7 @@ contract UD_721 is BASIC {
         );
         //^^^^^^^checks^^^^^^^^^
 
-        string memory nodeName = string(abi.encodePacked(_domain,".",_tld));
+        string memory nodeName = string(abi.encodePacked(_domain, ".", _tld));
 
         uint256 mintedNode = NODE_MGR.purchaseNode(
             nodeName,
@@ -130,12 +123,132 @@ contract UD_721 is BASIC {
             _msgSender()
         );
 
-        CTS DPS CRITICAL TO DO write ud contract, tokenId to node extended data
+        // write UD contract, tokenId to node extended data
+        NODE_MGR.setExternalIdToken(
+            uint32(mintedNode),
+            UD_token_address,
+            tokenId
+        );
 
         return mintedNode;
         //^^^^^^^interactions^^^^^^^^^
     }
 
+    /**
+     * @dev Authorize / Deauthorize users for an address be permitted to make record modifications
+     * @dev only useful for custody types that designate user adresses (type1...)
+     * @param _node - node that user is being authorized in
+     * @param _addrHash - hash of address belonging to user being authorized
+     * @param _userType - authority level for user (see docs)
+     */
+    function addUser(
+        uint32 _node,
+        bytes32 _addrHash,
+        uint8 _userType
+    ) external whenNotPaused isNodeHolderAndHasIdRootToken(_node) {
+        //^^^^^^^checks^^^^^^^^^
+
+        NODE_MGR.addUser(_node, _addrHash, _userType);
+        //^^^^^^^interactions^^^^^^^^^
+    }
+
+    /**
+     * @dev Set import status for foreign nodes
+     * @param _thisNode - node to dis/allow importing into
+     * @param _otherNode - node to be imported
+     * @param _newStatus - importability status (0=not importable, 1=importable >1 =????)
+     */
+    function updateImportStatus(
+        uint32 _thisNode,
+        uint32 _otherNode,
+        uint256 _newStatus
+    ) external whenNotPaused isNodeHolderAndHasIdRootToken(_thisNode) {
+        NODE_STOR.updateImportStatus(_thisNode, _otherNode, _newStatus);
+    }
+
+    /**
+     * @dev Modifies an node Node content adressable storage data pointer
+     * @param _node - node being modified
+     * @param _CAS1 - any external data attatched to node 1/2
+     * @param _CAS2 - any external data attatched to node 2/2
+     */
+    function updateNodeCAS(
+        uint32 _node,
+        bytes32 _CAS1,
+        bytes32 _CAS2
+    ) external whenNotPaused isNodeHolderAndHasIdRootToken(_node) {
+        //^^^^^^^checks^^^^^^^^^
+
+        NODE_STOR.updateNodeCAS(_node, _CAS1, _CAS2);
+        //^^^^^^^interactions^^^^^^^^^
+    }
+
+    /**
+     * @dev Set function costs and payment address per Node, in PRUF(18 decimals)
+     * @param _node - node to set service costs
+     * @param _service - service type being modified (see service types in ZZ_PRUF_DOCS)
+     * @param _serviceCost - 18 decimal fee in PRUF associated with specified service
+     * @param _paymentAddress - address to have _serviceCost paid to
+     */
+    function setOperationCosts(
+        uint32 _node,
+        uint16 _service,
+        uint256 _serviceCost,
+        address _paymentAddress
+    ) external whenNotPaused isNodeHolderAndHasIdRootToken(_node) {
+        //^^^^^^^checks^^^^^^^^^
+
+        NODE_STOR.setOperationCosts(
+            _node,
+            _service,
+            _serviceCost,
+            _paymentAddress
+        );
+        //^^^^^^^effects^^^^^^^^^
+    }
+
+    /**
+     * @dev Configure the immutable data in an Node one time
+     * @param _node - node being modified
+     * @param _managementType - managementType of node (see docs)
+     * @param _storageProvider - storageProvider of node (see docs)
+     * @param _refAddress - address permanently tied to node
+     */
+    function setNonMutableData(
+        uint32 _node,
+        uint8 _managementType,
+        uint8 _storageProvider,
+        address _refAddress,
+        uint8 _switches
+    ) external whenNotPaused isNodeHolderAndHasIdRootToken(_node) {
+        NODE_STOR.setNonMutableData(
+            _node,
+            _managementType,
+            _storageProvider,
+            _refAddress,
+            _switches
+        );
+    }
+
+    /**
+     * @dev extended node data setter
+     * @param _node - node being configured
+     * @param _u8a ExtendedNodeData
+     * @param _u8b ExtendedNodeData
+     * @param _u16c ExtendedNodeData
+     * @param _u32d ExtendedNodeData
+     * @param _u32e ExtendedNodeData
+     */
+    function setExtendedNodeData(
+        uint32 _node,
+        uint8 _u8a,
+        uint8 _u8b,
+        uint16 _u16c,
+        uint32 _u32d,
+        uint32 _u32e
+    ) external whenNotPaused isNodeHolderAndHasIdRootToken(_node) {
+        NODE_STOR.setExtendedNodeData(_node, _u8a, _u8b, _u16c, _u32d, _u32e);
+    }
 
     function getTokenIdFromDomain(string memory _domain, string memory _tld)
         public
