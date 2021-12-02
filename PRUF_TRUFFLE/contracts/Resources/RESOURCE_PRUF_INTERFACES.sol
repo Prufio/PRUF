@@ -350,7 +350,7 @@ interface NODE_MGR_Interface {
         bytes32 _CAS1,
         bytes32 _CAS2,
         address _caller
-    ) external returns (uint256);
+    ) external returns (uint32);
 
     /**
      * @dev Authorize / Deauthorize users for an address be permitted to make record modifications
