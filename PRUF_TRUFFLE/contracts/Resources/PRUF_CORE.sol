@@ -39,6 +39,8 @@ contract CORE is BASIC {
         uint256 tokenId = uint256(_idxHash);
 
         Node memory nodeInfo = minterCheck(_node);
+        // minterCheck verifies conditons to ensure that asset minting is authorized.
+        // also returns nodeInfo as a method to reduce then number of external calls.
 
         bytes32 URIhash = keccak256(abi.encodePacked(_URIsuffix));
 
@@ -296,7 +298,8 @@ contract CORE is BASIC {
     }
 
     /**
-     * @dev gets a node info struct, and checks to see if the caller is authorized to mint. Combined to save an OOCC.
+     * @dev gets a node info struct, and checks to see if the caller is authorized to mint.
+     * Combined to save an OOCC.
      * @param _node - status to check
      * return nodeinfo struct
      */
