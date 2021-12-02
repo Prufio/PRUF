@@ -470,7 +470,21 @@ contract NODE_STOR is BASIC {
             nodeDetails[_node].idProviderTokenId == 0,
             "NS:SEIT: ID Reference TokenID already set"
         );
+        nodeDetails[_node].idProviderAddr = _tokenContractAddress;
+        nodeDetails[_node].idProviderTokenId = _tokenId;
+    }
 
+    /**
+     * @dev external erc721 token as ID configurator (bit 6 set to 1)
+     * @param _node - node being configured
+     * @param _tokenContractAddress  token contract used to verify id
+     * @param _tokenId token ID used to verify id
+     */
+    function daoSetExternalIdToken(
+        uint32 _node,
+        address _tokenContractAddress,
+        uint256 _tokenId
+    ) external whenNotPaused isDAO {
         nodeDetails[_node].idProviderAddr = _tokenContractAddress;
         nodeDetails[_node].idProviderTokenId = _tokenId;
     }

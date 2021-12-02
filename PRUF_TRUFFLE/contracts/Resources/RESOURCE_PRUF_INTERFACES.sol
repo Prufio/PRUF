@@ -448,6 +448,18 @@ interface NODE_MGR_Interface {
         address _tokenContractAddress,
         uint256 _tokenId
     ) external;
+
+    /**
+     * @dev external erc721 token as ID configurator (bit 6 set to 1)
+     * @param _node - node being configured
+     * @param _tokenContractAddress  token contract used to verify id
+     * @param _tokenId token ID used to verify id
+     */
+    function daoSetExternalIdToken(
+        uint32 _node,
+        address _tokenContractAddress,
+        uint256 _tokenId
+    ) external;
 }
 
 //---------------------------------------------------------------------------------------------------------------
