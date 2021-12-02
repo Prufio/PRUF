@@ -123,7 +123,7 @@ contract UD_721 is BASIC {
             _msgSender()
         );
 
-        // write UD contract, tokenId to node extended data
+        // write UD contract, tokenId of UD domain token to node extended data
         NODE_MGR.setExternalIdToken(
             uint32(mintedNode),
             UD_token_address,
