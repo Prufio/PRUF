@@ -38,7 +38,8 @@ contract CORE is BASIC {
     ) internal virtual {
         uint256 tokenId = uint256(_idxHash);
 
-        Node memory nodeInfo = minterCheck(_node);
+        // !!!! NOTE:Unobvious fuctionality !!!!
+        Node memory nodeInfo = minterCheck(_node); 
         // minterCheck verifies conditons to ensure that asset minting is authorized.
         // also returns nodeInfo as a method to reduce then number of external calls.
 
