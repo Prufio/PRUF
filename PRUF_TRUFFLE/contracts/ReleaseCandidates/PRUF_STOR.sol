@@ -194,8 +194,9 @@ contract STOR is AccessControl, ReentrancyGuard, Pausable {
     }
 
     //-----------------------------------------------Events------------------------------------------------//
-    // Emits a report using string,b32
-    event REPORT(string _msg, bytes32 b32); //Needed
+    /** @dev Emits a report using string,b32
+    */
+    event REPORT(string _msg, bytes32 b32);
 
     //--------------------------------Public Functions---------------------------------//
 
