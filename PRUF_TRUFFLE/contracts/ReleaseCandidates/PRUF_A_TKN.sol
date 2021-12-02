@@ -66,7 +66,7 @@ contract A_TKN is
 
     uint256 trustedAgentEnabled = 1;
 
-    bytes32 public constant CONTRACT_ADMIN_ROLE = //CTS:PREFERRED
+    bytes32 public constant CONTRACT_ADMIN_ROLE =
         keccak256("CONTRACT_ADMIN_ROLE");
     bytes32 public constant MINTER_ROLE = keccak256("MINTER_ROLE");
     bytes32 public constant PAUSER_ROLE = keccak256("PAUSER_ROLE");
@@ -465,6 +465,9 @@ contract A_TKN is
     {
         bytes32 _idxHash = bytes32(_tokenId);
         Record memory rec = getRecord(_idxHash);
+        uint256 bit6 = NODE_STOR.getSwitchAt(rec.node, 6);
+ 
+
 
         require(
             rec.assetStatus == 201,
@@ -479,6 +482,21 @@ contract A_TKN is
                 ) == 100),                                  //or is auth type 100 in Node
             "AT:SU:Caller !NTH or authorized"
         );
+
+        //DPS:NEW
+        if (bit6 == 1) {
+            ExtendedNodeData memory extendedNodeInfo = NODE_STOR
+                .getExtendedNodeData(rec.node);
+
+            require(
+                (NODE_TKN.ownerOf(rec.node) ==
+                    IERC721(extendedNodeInfo.idProviderAddr).ownerOf(
+                        extendedNodeInfo.idProviderTokenId
+                    )), // if switch6 = 1 verify that IDroot token and Node token are held in the same address
+                "AT:SU: Node and root of identity are separated. URI Update is disabled"
+            );
+        }
+        
 
         require(
             _isApprovedOrOwner(_msgSender(), _tokenId),
