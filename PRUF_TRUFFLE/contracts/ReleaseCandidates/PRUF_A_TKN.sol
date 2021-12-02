@@ -496,7 +496,7 @@ contract A_TKN is
                 "AT:SU: Node and root of identity are separated. URI Update is disabled"
             );
         }
-        
+
 
         require(
             _isApprovedOrOwner(_msgSender(), _tokenId),
