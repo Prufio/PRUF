@@ -305,7 +305,8 @@ pragma solidity ^0.6.7;
         !!MUST!! be set for custodial contracts
 
         ***NOTE for bit6=1 nodes It is important, for most purposes, to keep the node token and the token that
-        acts as the rood of identity under the custody of the same organization. ***
+        acts as the rood of identity under the custody of the same address. When the Node and reference ID token 
+        are not in the same address, minting, updating, and node administration are disabled. ***
 - -----------------------------------------------------------------
 
 /*-----------------------------------------------------------------
