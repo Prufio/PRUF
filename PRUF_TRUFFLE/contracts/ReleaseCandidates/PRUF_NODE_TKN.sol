@@ -62,9 +62,17 @@ contract NODE_TKN is
 
     string private _baseTokenURI;
 
+    bytes32 public constant CONTRACT_ADMIN_ROLE =
+        keccak256("CONTRACT_ADMIN_ROLE");
     bytes32 public constant MINTER_ROLE = keccak256("MINTER_ROLE");
     bytes32 public constant PAUSER_ROLE = keccak256("PAUSER_ROLE");
     bytes32 public constant DAO_ROLE = keccak256("DAO_ROLE");
+
+    address internal STOR_Address;
+    STOR_Interface internal STOR;
+
+    address internal NODE_STOR_Address;
+    NODE_STOR_Interface internal NODE_STOR;
 
     uint256 trustedAgentEnabled = 1;
 
@@ -74,6 +82,19 @@ contract NODE_TKN is
     }
 
     //----------------------Modifiers----------------------//
+
+    /**
+     * @dev Verify user credentials
+     * Originating Address:
+     *      has CONTRACT_ADMIN_ROLE
+     */
+    modifier isContractAdmin() {
+        require(
+            hasRole(CONTRACT_ADMIN_ROLE, _msgSender()),
+            "AT:MOD-ICA:Calling address does not belong to a contract admin"
+        );
+        _;
+    }
 
     /**
      * @dev Verify user credentials
@@ -89,6 +110,8 @@ contract NODE_TKN is
     }
 
     //----------------------Public Functions----------------------//
+
+    !!!!WRITE A UNIVERSALLY CALLABLE FUNCTION THAT TX's a bit6 node token to its verifying ID token address
 
     /**
      * @dev See {IERC721Metadata-tokenURI}.
@@ -136,6 +159,32 @@ contract NODE_TKN is
 
     //----------------------External Functions----------------------//
 
+    /** DPS:TEST NEW
+     * @dev Set storage contract to interface with
+     * @param _storageAddress - Storage contract address
+     */
+    function setStorageContract(address _storageAddress)
+        external
+        isContractAdmin
+    {
+        require(_storageAddress != address(0), "AT:SSC:Storage address = 0");
+        //^^^^^^^checks^^^^^^^^^
+
+        STOR = STOR_Interface(_storageAddress);
+        //^^^^^^^effects^^^^^^^^^
+    }
+
+    /** DPS:TEST NEW
+     * @dev Address Setters  - resolves addresses from storage and sets local interfaces
+     */
+    function resolveContractAddresses() external isContractAdmin {
+        //CTS:Only needs these contracts as deployed
+        //^^^^^^^checks^^^^^^^^^
+        NODE_STOR_Address = STOR.resolveContractAddress("NODE_STOR");
+        NODE_STOR = NODE_STOR_Interface(NODE_STOR_Address);
+        //^^^^^^^effects/interactions^^^^^^^^^
+    }
+
     /**
      * @dev Mint a Node token
      * @param _recipientAddress - Address to mint token into
@@ -148,6 +197,7 @@ contract NODE_TKN is
         uint256 _tokenId,
         string calldata _tokenURI
     ) external isMinter nonReentrant returns (uint256) {
+        require (_tokenId <= 4294967295); //uint32 cap DPS:TEST:NEW
         //^^^^^^^checks^^^^^^^^^
 
         _safeMint(_recipientAddress, _tokenId);
@@ -236,6 +286,20 @@ contract NODE_TKN is
         address to,
         uint256 tokenId
     ) internal virtual override(ERC721, ERC721Enumerable, ERC721Pausable) {
+        uint256 bit6 = NODE_STOR.getSwitchAt(uint32(tokenId), 6); //safe because no nodes can be minted above uint32
+
+        if (bit6 == 1) { //DPS:NEW TEST
+            ExtendedNodeData memory extendedNodeInfo = NODE_STOR
+                .getExtendedNodeData(uint32(tokenId)); //safe because no nodes can be minted above uint32
+
+            require(
+                (to ==
+                    IERC721(extendedNodeInfo.idProviderAddr).ownerOf(
+                        extendedNodeInfo.idProviderTokenId
+                    )), // if switch6 = 1 verify that token is being sent to the IDroot token address
+                "NT:BTT: Token can only be sent to the address that holds the root-of-identity token."
+            );
+        }
         //^^^^^^^checks^^^^^^^^^
 
         super._beforeTokenTransfer(from, to, tokenId);
