@@ -456,7 +456,7 @@ contract NODE_STOR is BASIC {
     }
 
     /**
-     * @dev external erc721 token as ID configurator (bit 6 set to 1)
+     * @dev set an external erc721 token as ID verification (when bit 6 set to 1)
      * @param _node - node being configured
      * @param _tokenContractAddress  token contract used to verify id
      * @param _tokenId token ID used to verify id
@@ -475,7 +475,7 @@ contract NODE_STOR is BASIC {
     }
 
     /**
-     * @dev external erc721 token as ID configurator (bit 6 set to 1)
+     * @dev DAO set an external erc721 token as ID verification (when bit 6 set to 1)
      * @param _node - node being configured
      * @param _tokenContractAddress  token contract used to verify id
      * @param _tokenId token ID used to verify id
@@ -508,11 +508,10 @@ contract NODE_STOR is BASIC {
      * @param _otherNode - node to be potentially imported
      * returns importability status of _thisNode=>_othernode mapping
      */
-    function getImportstatus(uint32 _thisNode, uint32 _otherNode) //CTS:EXAMINE name change globally to getImportStatus
-        external
-        view
-        returns (uint256)
-    {
+    function getImportstatus(
+        uint32 _thisNode,
+        uint32 _otherNode //CTS:EXAMINE name change globally to getImportStatus
+    ) external view returns (uint256) {
         return importApprovals[_thisNode][_otherNode];
     }
 

@@ -376,7 +376,7 @@ contract NODE_MGR is BASIC {
     }
 
     /**
-     * @dev external erc721 token as ID configurator (bit 6 set to 1)
+     * @dev set an external erc721 token as ID verification (when bit 6 set to 1)
      * @param _node - node being configured
      * @param _tokenContractAddress  token contract used to verify id
      * @param _tokenId token ID used to verify id
