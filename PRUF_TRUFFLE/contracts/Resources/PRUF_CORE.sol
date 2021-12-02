@@ -38,7 +38,7 @@ contract CORE is BASIC {
     ) internal virtual {
         uint256 tokenId = uint256(_idxHash);
 
-        Node memory nodeInfo = getNodeinfoWithMinterCheck(_node);
+        Node memory nodeInfo = minterCheck(_node);
 
         bytes32 URIhash = keccak256(abi.encodePacked(_URIsuffix));
 
@@ -300,9 +300,11 @@ contract CORE is BASIC {
      * @param _node - status to check
      * return nodeinfo struct
      */
-    function getNodeinfoWithMinterCheck(
-        uint32 _node
-    ) internal view returns (Node memory nodeInfo) {
+    function minterCheck(uint32 _node)
+        internal
+        view
+        returns (Node memory nodeInfo)
+    {
         nodeInfo = getNodeinfo(_node);
 
         require(
@@ -321,8 +323,8 @@ contract CORE is BASIC {
             nodeInfo.managementType != 255,
             "C:GNIWAC: Cannot mint with unprovisioned or locked node"
         );
-        require( 
-            (getBitAt(nodeInfo.switches, 7) == 0) || 
+        require(
+            (getBitAt(nodeInfo.switches, 7) == 0) ||
                 (NODE_STOR.getUserType(
                     keccak256(abi.encodePacked(_msgSender())),
                     _node
@@ -335,16 +337,16 @@ contract CORE is BASIC {
             "C:GNIWAC: Caller !NTH"
         );
 
-        if (getBitAt(nodeInfo.switches, 6) == 1) { //DPS:TEST
-            ExtendedNodeData memory extendedNodeInfo = NODE_STOR.getExtendedNodeData(
-                _node
-            );
+        if (getBitAt(nodeInfo.switches, 6) == 1) {
+            //DPS:TEST
+            ExtendedNodeData memory extendedNodeInfo = NODE_STOR
+                .getExtendedNodeData(_node);
 
             require(
                 (NODE_TKN.ownerOf(_node) ==
                     IERC721(extendedNodeInfo.idProviderAddr).ownerOf(
                         extendedNodeInfo.idProviderTokenId
-                    )), // if switch6 = 1 verify that IDroot token and Node token are held in the same address 
+                    )), // if switch6 = 1 verify that IDroot token and Node token are held in the same address
                 "C:GNIWAC: Node and root of identity are separated. Minting is disabled"
             );
         }
