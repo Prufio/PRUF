@@ -106,6 +106,7 @@ let nakedAuthCode7;
 let payableRoleB32;
 let minterRoleB32;
 let trustedAgentRoleB32;
+let IDverifierRoleB32;
 let IDminterRoleB32;
 let assetTransferRoleB32;
 let discardRoleB32;
@@ -317,6 +318,8 @@ contract("NODE_STOR", (accounts) => {
     trustedAgentRoleB32 = await Helper.getStringHash("TRUSTED_AGENT_ROLE");
 
     assetTransferRoleB32 = await Helper.getStringHash("ASSET_TXFR_ROLE");
+
+    IDverifierRoleB32 = await Helper.getStringHash("ID_VERIFIER_ROLE");
 
     IDminterRoleB32 = await Helper.getStringHash("ID_MINTER_ROLE");
 
@@ -610,6 +613,21 @@ contract("NODE_STOR", (accounts) => {
   it("Should authorize account1 for NODE_STOR", () => {
     console.log("Authorizing account1");
     return NODE_STOR.grantRole(DAOroleB32, account1, { from: account1 });
+  });
+
+  it("Should authorize account1 for A_TKN", () => {
+    console.log("Authorizing account1");
+    return NODE_MGR.grantRole(IDverifierRoleB32, account1, { from: account1 });
+  });
+
+  it("Should authorize account1 for A_TKN", () => {
+    console.log("Authorizing account1");
+    return NODE_MGR.grantRole(IDverifierRoleB32, account10, { from: account1 });
+  });
+
+  it("Should authorize account1 for A_TKN", () => {
+    console.log("Authorizing account1");
+    return NODE_MGR.grantRole(IDverifierRoleB32, NODE_BLDR.address, { from: account1 });
   });
 
   it("Should authorize account1 for A_TKN", () => {
@@ -1221,6 +1239,7 @@ contract("NODE_STOR", (accounts) => {
       "3",
       "1",
       "0x0000000000000000000000000000000000000000",
+      '66',
       { from: account1 }
     )
 
@@ -1230,6 +1249,7 @@ contract("NODE_STOR", (accounts) => {
           "2",
           "1",
           "0x0000000000000000000000000000000000000000",
+          '66',
           { from: account1 }
         );
       })
@@ -1240,6 +1260,7 @@ contract("NODE_STOR", (accounts) => {
           "2",
           "1",
           "0x0000000000000000000000000000000000000000",
+          '66',
           { from: account1 }
         );
       })
@@ -1250,6 +1271,7 @@ contract("NODE_STOR", (accounts) => {
           "2",
           "1",
           "0x0000000000000000000000000000000000000000",
+          '66',
           { from: account10 }
         );
       })
@@ -1260,6 +1282,7 @@ contract("NODE_STOR", (accounts) => {
           "2",
           "1",
           "0x0000000000000000000000000000000000000000",
+          '66',
           { from: account1 }
         );
       })
@@ -1270,6 +1293,7 @@ contract("NODE_STOR", (accounts) => {
           "2",
           "1",
           "0x0000000000000000000000000000000000000000",
+          '66',
           { from: account10 }
         );
       });
@@ -1702,6 +1726,12 @@ contract("NODE_STOR", (accounts) => {
     });
   });
 
+  it("Should set setExtendedNodeData 13 to 40", async () => {
+    return NODE_STOR.setExtendedNodeData("13", "40", "40", "40", "40", "40", {
+      from: account1,
+    });
+  });
+
   it("Should increase share of Node 1000001", async () => {
     return NODE_STOR.changeShare("1000001", "9900", { from: account1 });
   });
@@ -1870,8 +1900,8 @@ contract("NODE_STOR", (accounts) => {
   it("Should set ipfs of Node 1000002 to 0xF", async () => {
     return NODE_STOR.updateNodeCAS(
       "1000002",
-      "0xFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFF",
-      "0xFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFF",
+      "0x0000000000000000000000000000000000000000000000000000000000000001",
+      "0x0000000000000000000000000000000000000000000000000000000000000001",
       { from: account1 }
     );
   });

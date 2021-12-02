@@ -162,7 +162,7 @@ contract NODE_STOR is BASIC {
         ); //source Node_Name must match name given
 
         require(
-            (nodeData[_toNode].CAS1 == B320x01), //dest node must have CAS1 set to 0xFFFF.....
+            (nodeData[_toNode].CAS1 == B320x01), //dest node must have CAS1 set to 0x0000...1
             "NS:TN: Destination node not prepared for name transfer"
         );
         //^^^^^^^checks^^^^^^^^^
@@ -456,7 +456,6 @@ contract NODE_STOR is BASIC {
     }
 
     /**
-     *must be IMMUTABLE!!!!!
      * @dev external erc721 token as ID configurator (bit 6 set to 1)
      * @param _node - node being configured
      * @param _tokenContractAddress  token contract used to verify id
@@ -495,7 +494,7 @@ contract NODE_STOR is BASIC {
      * @param _otherNode - node to be potentially imported
      * returns importability status of _thisNode=>_othernode mapping
      */
-    function getImportstatus(uint32 _thisNode, uint32 _otherNode)
+    function getImportstatus(uint32 _thisNode, uint32 _otherNode) //CTS:EXAMINE name change globally to getImportStatus
         external
         view
         returns (uint256)
