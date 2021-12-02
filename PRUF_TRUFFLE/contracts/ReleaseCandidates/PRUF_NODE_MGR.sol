@@ -33,7 +33,7 @@ import "../Resources/PRUF_BASIC.sol";
 import "../Imports/security/ReentrancyGuard.sol";
 
 contract NODE_MGR is BASIC {
-    uint256 private nodeTokenIndex = 1000000; //Starting index for purchased node tokens
+    uint32 private nodeTokenIndex = 1000000; //Starting index for purchased node tokens
     uint256 public node_price = 100000 ether;
     uint256 private node_burn = 100000 ether;
     uint32 private constant startingDiscount = 9500; //Purchased nodes start with 95% profit share
@@ -177,7 +177,7 @@ contract NODE_MGR is BASIC {
         bytes32 _CAS1,
         bytes32 _CAS2,
         address _caller
-    ) external nonReentrant whenNotPaused isIdVerifier returns (uint256) {
+    ) external nonReentrant whenNotPaused isIdVerifier returns (uint32) {
         require(
             nodeTokenIndex < 4294000000,
             "NM:PN: Only 4294000000 node tokens allowed"
@@ -210,11 +210,11 @@ contract NODE_MGR is BASIC {
         UTIL_TKN.trustedAgentBurn(_caller, node_burn);
         UTIL_TKN.trustedAgentTransfer(_caller, rootPaymentAddress, node_price); //burning 50%+ so we have tokens to incentivise outreach performance
 
-        _createNode(ThisNode, uint32(nodeTokenIndex), _caller, _caller);
+        _createNode(ThisNode, nodeTokenIndex, _caller, _caller);
 
         //Set the default 11 authorized contracts
         if (_custodyType == 2) {
-            STOR.enableDefaultContractsForNode(uint32(nodeTokenIndex));
+            STOR.enableDefaultContractsForNode(nodeTokenIndex);
         }
 
         return nodeTokenIndex; //returns Node # of minted token
