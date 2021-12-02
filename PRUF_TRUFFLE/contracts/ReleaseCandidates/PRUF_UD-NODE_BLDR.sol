@@ -114,7 +114,7 @@ contract UD_721 is BASIC {
 
         string memory nodeName = string(abi.encodePacked(_domain, ".", _tld));
 
-        uint256 mintedNode = NODE_MGR.purchaseNode(
+        uint32 mintedNode = NODE_MGR.purchaseNode( 
             nodeName,
             _nodeRoot,
             _custodyType,
@@ -125,7 +125,7 @@ contract UD_721 is BASIC {
 
         // write UD contract, tokenId of UD domain token to node extended data
         NODE_MGR.setExternalIdToken(
-            uint32(mintedNode),
+            mintedNode, 
             UD_token_address,
             tokenId
         );
