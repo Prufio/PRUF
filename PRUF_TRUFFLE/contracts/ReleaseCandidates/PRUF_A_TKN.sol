@@ -378,7 +378,8 @@ contract A_TKN is
     /**
      * @dev Address Setters  - resolves addresses from storage and sets local interfaces
      */
-    function resolveContractAddresses() external isContractAdmin { //CTS:Only needs these contracts as deployed
+    function resolveContractAddresses() external isContractAdmin {
+        //CTS:Only needs these contracts as deployed
         //^^^^^^^checks^^^^^^^^^
 
         RCLR_Address = STOR.resolveContractAddress("RCLR");
@@ -466,8 +467,6 @@ contract A_TKN is
         bytes32 _idxHash = bytes32(_tokenId);
         Record memory rec = getRecord(_idxHash);
         uint256 bit6 = NODE_STOR.getSwitchAt(rec.node, 6);
- 
-
 
         require(
             rec.assetStatus == 201,
@@ -479,15 +478,13 @@ contract A_TKN is
                 (NODE_STOR.getUserType(
                     keccak256(abi.encodePacked(_msgSender())),
                     rec.node
-                ) == 100),                                  //or is auth type 100 in Node
+                ) == 100), //or is auth type 100 in Node
             "AT:SU:Caller !NTH or authorized"
         );
-
-        //DPS:NEW
-        if (bit6 == 1) {
+        
+        if (bit6 == 1) { //DPS:NEW:TEST
             ExtendedNodeData memory extendedNodeInfo = NODE_STOR
                 .getExtendedNodeData(rec.node);
-
             require(
                 (NODE_TKN.ownerOf(rec.node) ==
                     IERC721(extendedNodeInfo.idProviderAddr).ownerOf(
@@ -496,7 +493,6 @@ contract A_TKN is
                 "AT:SU: Node and root of identity are separated. URI Update is disabled"
             );
         }
-        
 
         require(
             _isApprovedOrOwner(_msgSender(), _tokenId),
