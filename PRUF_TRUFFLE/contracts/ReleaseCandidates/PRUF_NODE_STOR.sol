@@ -10,6 +10,8 @@ ________\/\\\ ____________\/\\\ _____\//\\\_\//\\\\\\\\\ _\/\\\ ____________
 _________\/// _____________\/// _______\/// __\///////// __\/// _____________
 *---------------------------------------------------------------------------*/
 
+ //DPS:NEW:NODE_TKN must have NODE_ADMIN_ROLE in NODE_STOR
+
 /**-----------------------------------------------------------------
  * PRUF NODE_STOR
  *
@@ -474,7 +476,7 @@ contract NODE_STOR is BASIC {
         nodeDetails[_node].idProviderTokenId = _tokenId;
     }
 
-    /**
+    /** DPS:TES:NEW
      * @dev DAO set an external erc721 token as ID verification (when bit 6 set to 1)
      * @param _node - node being configured
      * @param _tokenContractAddress  token contract used to verify id
@@ -487,6 +489,22 @@ contract NODE_STOR is BASIC {
     ) external whenNotPaused isDAO {
         nodeDetails[_node].idProviderAddr = _tokenContractAddress;
         nodeDetails[_node].idProviderTokenId = _tokenId;
+    }
+
+    /** DPS:TEST:NEW
+     * @dev unlink erc721 token as ID verification
+     * @param _node - node being unlinked
+     */
+    function unlinkExternalId(uint32 _node) external isNodeAdmin {
+        uint256 switches = nodeData[_node].switches;
+        uint8 position = 6; //Switch position to clear
+
+        //Clear switch
+        switches = switches & ~(1 << (position - 1));
+        nodeData[_node].switches = uint8(switches);
+
+        delete nodeDetails[_node].idProviderAddr;
+        delete nodeDetails[_node].idProviderTokenId;
     }
 
     /**

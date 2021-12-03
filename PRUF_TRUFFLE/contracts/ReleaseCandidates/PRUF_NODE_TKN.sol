@@ -15,6 +15,8 @@ _________\/// _____________\/// _______\/// __\///////// __\/// _____________
  * Node token contract. PRüF Node tokens grant permissions for node management and asset minting.
  *---------------------------------------------------------------*/
 
+ //DPS:NEW:NODE_TKN must have NODE_ADMIN_ROLE in NODE_STOR
+
 // SPDX-License-Identifier: UNLICENSED
 pragma solidity ^0.8.7;
 
@@ -111,7 +113,38 @@ contract NODE_TKN is
 
     //----------------------Public Functions----------------------//
 
-    // !!!!WRITE A UNIVERSALLY CALLABLE FUNCTION THAT TX's a bit6 node token to its verifying ID token address
+    //!!!!WRITE A UNIVERSALLY CALLABLE FUNCTION THAT TX's a bit6 node token to its verifying ID token address
+
+    /** //DPS:NEW TEST
+     * @dev Universally callable function that sends a node token to the address of its referenced ID token,
+     * or removes the bit6 flag if its ID token does not exist.
+     */
+    function fixOrphanedNode(uint256 _thisNode) public {
+        require(_thisNode <= 4294967295, "NT:FON:Node ID out of range");
+        uint32 node = uint32(_thisNode);
+        uint256 bit6 = NODE_STOR.getSwitchAt(node, 6);
+
+        if (bit6 == 1) {
+            ExtendedNodeData memory extendedNodeInfo = NODE_STOR
+                .getExtendedNodeData(node); //safe because no node tokens can be minted beyond uint32
+            address holderOfIdToken;
+
+            //DPS:TEST:NEW test this by calling it on tokens that dont exist as well as ones that do.
+            //NOT SURE THIS WILL WORK AS WRITTEN!!!!
+            try
+                IERC721(extendedNodeInfo.idProviderAddr).ownerOf(
+                    extendedNodeInfo.idProviderTokenId
+                )
+            returns (address addr) {
+                //if the try works, should transfer _thisNode to the address of the ID token
+                holderOfIdToken = addr;
+                _transfer(ownerOf(_thisNode), holderOfIdToken, _thisNode);
+            } catch Error(string memory) {
+                //if the try fails (ID token not exist) then clear the bit6 and ID token data from the node
+                NODE_STOR.unlinkExternalId(node);
+            }
+        }
+    }
 
     /**
      * @dev See {IERC721Metadata-tokenURI}.
@@ -196,7 +229,7 @@ contract NODE_TKN is
         uint256 _tokenId,
         string calldata _tokenURI
     ) external isMinter nonReentrant returns (uint256) {
-        require (_tokenId <= 4294967295); //uint32 cap DPS:TEST:NEW
+        require(_tokenId <= 4294967295); //uint32 cap DPS:TEST:NEW
         //^^^^^^^checks^^^^^^^^^
 
         _safeMint(_recipientAddress, _tokenId);
@@ -274,7 +307,7 @@ contract NODE_TKN is
         //^^^^^^^interactions^^^^^^^^^
     }
 
-    /**
+    /** DPS:NEW:TEST
      * @dev all paused functions are blocked here (inside ERC720Pausable.sol)
      * @param from - from address
      * @param to - to address
@@ -285,22 +318,6 @@ contract NODE_TKN is
         address to,
         uint256 tokenId
     ) internal virtual override(ERC721, ERC721Enumerable, ERC721Pausable) {
-        uint256 bit6 = NODE_STOR.getSwitchAt(uint32(tokenId), 6); //safe because no nodes can be minted above uint32
-
-        if (bit6 == 1) { //DPS:NEW TEST
-            ExtendedNodeData memory extendedNodeInfo = NODE_STOR
-                .getExtendedNodeData(uint32(tokenId)); //safe because no nodes can be minted above uint32
-
-            require(
-                (to ==
-                    IERC721(extendedNodeInfo.idProviderAddr).ownerOf(
-                        extendedNodeInfo.idProviderTokenId
-                    )), // if switch6 = 1 verify that token is being sent to the IDroot token address
-                "NT:BTT: Token can only be sent to the address that holds the root-of-identity token."
-            );
-        }
-        //^^^^^^^checks^^^^^^^^^
-
         super._beforeTokenTransfer(from, to, tokenId);
         //^^^^^^^effects^^^^^^^^^
     }
