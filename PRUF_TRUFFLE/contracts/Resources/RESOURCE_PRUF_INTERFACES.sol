@@ -676,6 +676,24 @@ interface NODE_STOR_Interface {
     ) external;
 
     /**
+     * @dev DAO set an external erc721 token as ID verification (when bit 6 set to 1)
+     * @param _node - node being configured
+     * @param _tokenContractAddress  token contract used to verify id
+     * @param _tokenId token ID used to verify id
+     */
+    function daoSetExternalIdToken(
+        uint32 _node,
+        address _tokenContractAddress,
+        uint256 _tokenId
+    ) external;
+
+    /** 
+     * @dev unlink erc721 token as ID verification
+     * @param _node - node being unlinked
+     */
+    function unlinkExternalId (uint32 _node) external;
+
+    /**
      * @dev extended node data setter
      * @param _foreignNode - node from other blockcahin to point to local node
      * @param _localNode local node to point to
