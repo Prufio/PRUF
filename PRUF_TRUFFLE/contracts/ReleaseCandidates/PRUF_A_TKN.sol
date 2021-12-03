@@ -494,6 +494,7 @@ contract A_TKN is
             );
         }
 
+
         require(
             _isApprovedOrOwner(_msgSender(), _tokenId),
             "AT:SU:Caller !owner nor approved"

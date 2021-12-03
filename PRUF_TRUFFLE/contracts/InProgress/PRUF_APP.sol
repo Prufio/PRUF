@@ -38,7 +38,7 @@ contract APP is CORE {
 
     //--------------------------------------------External Functions--------------------------
 
-    /** //DPS:CHECK
+    /**
      * @dev Creates a new record
      * @param _idxHash - hash of asset information created by frontend inputs
      * @param _rgtHash - hash of rightsholder information created by frontend inputs
@@ -148,7 +148,7 @@ contract APP is CORE {
         //^^^^^^^interactions^^^^^^^^^
     }
 
-    /** //DPS:TEST:NEW PARAMS
+    /**
      * @dev Modify **Record** NonMutableStorage with confirmation of matching rgthash
      * @param _idxHash - hash of asset information created by frontend inputs
      * @param _rgtHash - hash of rightsholder information created by frontend inputs
