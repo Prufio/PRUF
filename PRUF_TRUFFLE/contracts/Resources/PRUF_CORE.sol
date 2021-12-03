@@ -298,7 +298,7 @@ contract CORE is BASIC {
         //^^^^^^^interactions^^^^^^^^^
     }
 
-    /**
+    /** DPS:CHECK:RENAMED
      * @dev gets a node info struct, and checks to see if the caller is authorized to mint.
      * Combined to save an OOCC.
      * @param _node - status to check
