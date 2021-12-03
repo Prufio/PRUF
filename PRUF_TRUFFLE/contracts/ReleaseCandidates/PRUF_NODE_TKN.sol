@@ -111,7 +111,7 @@ contract NODE_TKN is
 
     //----------------------Public Functions----------------------//
 
-    !!!!WRITE A UNIVERSALLY CALLABLE FUNCTION THAT TX's a bit6 node token to its verifying ID token address
+    // !!!!WRITE A UNIVERSALLY CALLABLE FUNCTION THAT TX's a bit6 node token to its verifying ID token address
 
     /**
      * @dev See {IERC721Metadata-tokenURI}.
@@ -159,11 +159,11 @@ contract NODE_TKN is
 
     //----------------------External Functions----------------------//
 
-    /** DPS:TEST NEW
+    /** DPS:TEST NEW CTS:EXAMINE NOT NEEDED, just need to add NODE_STOR
      * @dev Set storage contract to interface with
      * @param _storageAddress - Storage contract address
      */
-    function setStorageContract(address _storageAddress)
+    function setStorageContract(address _storageAddress) //CTS:EXAMINE why is this needed?
         external
         isContractAdmin
     {
@@ -174,11 +174,10 @@ contract NODE_TKN is
         //^^^^^^^effects^^^^^^^^^
     }
 
-    /** DPS:TEST NEW
+    /** DPS:TEST NEW CTS:EXAMINE NOT NEEDED, just need to add NODE_STOR
      * @dev Address Setters  - resolves addresses from storage and sets local interfaces
      */
     function resolveContractAddresses() external isContractAdmin {
-        //CTS:Only needs these contracts as deployed
         //^^^^^^^checks^^^^^^^^^
         NODE_STOR_Address = STOR.resolveContractAddress("NODE_STOR");
         NODE_STOR = NODE_STOR_Interface(NODE_STOR_Address);

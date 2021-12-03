@@ -107,6 +107,7 @@ let payableRoleB32;
 let IDminterRoleB32;
 let minterRoleB32;
 let trustedAgentRoleB32;
+let IDverifierRoleB32;
 let assetTransferRoleB32;
 let discardRoleB32;
 
@@ -319,6 +320,8 @@ contract("NODE_TKN", (accounts) => {
     IDminterRoleB32 = await Helper.getStringHash("ID_MINTER_ROLE");
 
     assetTransferRoleB32 = await Helper.getStringHash("ASSET_TXFR_ROLE");
+
+    IDverifierRoleB32 = await Helper.getStringHash("ID_VERIFIER_ROLE");
 
     discardRoleB32 = await Helper.getStringHash("DISCARD_ROLE");
 
@@ -612,6 +615,21 @@ contract("NODE_TKN", (accounts) => {
   it("Should authorize account1 for A_TKN", () => {
     console.log("Authorizing account1");
     return A_TKN.grantRole(DAOroleB32, account1, { from: account1 });
+  });
+
+  it("Should authorize account1 for A_TKN", () => {
+    console.log("Authorizing account1");
+    return NODE_MGR.grantRole(IDverifierRoleB32, account1, { from: account1 });
+  });
+
+  it("Should authorize account1 for A_TKN", () => {
+    console.log("Authorizing account1");
+    return NODE_MGR.grantRole(IDverifierRoleB32, account10, { from: account1 });
+  });
+
+  it("Should authorize account1 for A_TKN", () => {
+    console.log("Authorizing account1");
+    return NODE_MGR.grantRole(IDverifierRoleB32, NODE_BLDR.address, { from: account1 });
   });
 
   it("Should add Storage to each contract", () => {
@@ -1310,6 +1328,7 @@ contract("NODE_TKN", (accounts) => {
       "3",
       "1",
       "0x0000000000000000000000000000000000000000",
+      '66',
       { from: account1 }
     )
 
@@ -1319,6 +1338,7 @@ contract("NODE_TKN", (accounts) => {
           "2",
           "1",
           "0x0000000000000000000000000000000000000000",
+          '66',
           { from: account1 }
         );
       })
@@ -1329,6 +1349,7 @@ contract("NODE_TKN", (accounts) => {
           "2",
           "1",
           "0x0000000000000000000000000000000000000000",
+          '66',
           { from: account1 }
         );
       })
@@ -1339,6 +1360,7 @@ contract("NODE_TKN", (accounts) => {
           "2",
           "1",
           "0x0000000000000000000000000000000000000000",
+          '66',
           { from: account10 }
         );
       })
@@ -1349,6 +1371,7 @@ contract("NODE_TKN", (accounts) => {
           "2",
           "1",
           "0x0000000000000000000000000000000000000000",
+          '66',
           { from: account1 }
         );
       })
@@ -1359,6 +1382,7 @@ contract("NODE_TKN", (accounts) => {
           "2",
           "1",
           "0x0000000000000000000000000000000000000000",
+          '66',
           { from: account10 }
         );
       });

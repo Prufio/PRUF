@@ -127,7 +127,7 @@ contract APP_NC is CORE {
     }
 
     /**
-     * @dev record NonMutableStorage data  //DPS:TEST changed requires
+     * @dev record NonMutableStorage data
      * @param _idxHash - hash of asset information created by frontend inputs
      * @param _nonMutableStorage1 - field for permanent external asset data
      * @param _nonMutableStorage2 - field for permanent external asset data
