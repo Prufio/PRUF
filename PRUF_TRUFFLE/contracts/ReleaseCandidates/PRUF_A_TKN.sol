@@ -328,7 +328,7 @@ contract A_TKN is
      * @dev returns a baseURI for a storage provider / index combination, as well as the total number of URIs.
      * @param _node - node
      */
-    function getBaseURIForNode(uint32 _node)
+    function getBaseUriForNode(uint32 _node)
         external
         view
         returns (string memory)
