@@ -526,9 +526,9 @@ contract NODE_STOR is BASIC {
      * @param _otherNode - node to be potentially imported
      * returns importability status of _thisNode=>_othernode mapping
      */
-    function getImportstatus(
+    function getImportStatus(
         uint32 _thisNode,
-        uint32 _otherNode //CTS:EXAMINE name change globally to getImportStatus
+        uint32 _otherNode
     ) external view returns (uint256) {
         return importApprovals[_thisNode][_otherNode];
     }
