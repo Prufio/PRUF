@@ -51,7 +51,7 @@ contract A_TKN is
     ERC721Pausable
 {
     using Counters for Counters.Counter;
-    //using Strings for uint256; //CTS:EXAMINE this only shows up once, is that correct?
+    //using Strings for uint256;
 
     //mapping for token URIs
     mapping(uint256 => string) private _tokenURIs;
@@ -165,7 +165,7 @@ contract A_TKN is
         override
         returns (string memory)
     {
-        require(_exists(tokenId), "AT:TU:URI query for nonexistent token");
+        require(_exists(tokenId), "AT:TU:nonexistent token");
         //^^^^^^^checks^^^^^^^^^
 
         Record memory rec = getRecord(bytes32(tokenId));
@@ -328,7 +328,7 @@ contract A_TKN is
      * @dev returns a baseURI for a storage provider / index combination, as well as the total number of URIs.
      * @param _node - node
      */
-    function getBaseURIbyForNode(uint32 _node)
+    function getBaseURIForNode(uint32 _node)
         external
         view
         returns (string memory)
@@ -379,7 +379,6 @@ contract A_TKN is
      * @dev Address Setters  - resolves addresses from storage and sets local interfaces
      */
     function resolveContractAddresses() external isContractAdmin {
-        //CTS:Only needs these contracts as deployed
         //^^^^^^^checks^^^^^^^^^
 
         RCLR_Address = STOR.resolveContractAddress("RCLR");
