@@ -211,7 +211,6 @@ contract NODE_TKN is
      * @dev Address Setters  - resolves addresses from storage and sets local interfaces
      */
     function resolveContractAddresses() external isContractAdmin {
-        //CTS:Only needs these contracts as deployed
         //^^^^^^^checks^^^^^^^^^
         NODE_STOR_Address = STOR.resolveContractAddress("NODE_STOR");
         NODE_STOR = NODE_STOR_Interface(NODE_STOR_Address);
