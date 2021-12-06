@@ -111,8 +111,7 @@ struct escrowDataExtHeavy {
     address addr_2;
     bytes32 b32_1;
     bytes32 b32_2;
-    uint256 u256_1;
-    uint256 u256_2;
+    string escrowStringData;
 }
 
 struct Costs {
