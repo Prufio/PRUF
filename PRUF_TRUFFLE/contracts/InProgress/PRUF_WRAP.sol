@@ -215,7 +215,7 @@ contract WRAP is CORE {
         bytes32 idxHash = keccak256(abi.encodePacked(_idxRaw, _node)); //hash idxRaw with node to get idxHash DPS:TEST
         bytes32 URIhash = keccak256(abi.encodePacked(_URIsuffix));
         uint256 tokenId = uint256(idxHash);
-        Node memory nodeInfo = getNodeinfoWithMinterCheck(_node);
+        Node memory nodeInfo = minterCheck(_node);
 
         require(
             A_TKN.tokenExists(tokenId) == 0,
