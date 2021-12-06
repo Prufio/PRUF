@@ -132,7 +132,7 @@ contract ECR is ECR_CORE {
     //     escrowDataLight.addr_1 = _msgSender();
 
     //     escrowDataExtHeavy memory escrowDataHeavy; //demo for setting "Heavy" struct data
-    //     escrowDataHeavy.u256_1 = 9999;
+    //     escrowDataHeavy.escrowStringData = "string to store";
     //     //^^^^^^^effects^^^^^^^^^
 
     //     _setEscrowData(_idxHash, newEscrowStatus, _escrowOwnerHash, escrowTime);
