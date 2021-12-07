@@ -33,6 +33,9 @@ contract RCLR is ECR_CORE, CORE {
      * @param _idxHash asset ID
      * @param _sender discarder
      * Caller Must have DISCARD_ROLE
+     * //CTS:CHECK - where does this store the URI Suffix? 
+     * //!!!this is going to be an issue. Can store the URI suffix in extended escrow data on discard?
+     * //could store the URI hash in the ??RGTHash?? instead, and store the URI in NM Storage as a JSON element.
      */
     function discard(bytes32 _idxHash, address _sender)
         external
@@ -70,8 +73,10 @@ contract RCLR is ECR_CORE, CORE {
      * maybe describe the reqs in this one, back us up on the security
      * @param _idxHash asset ID
      * @param _rgtHash rights holder hash to set
-     * @param _URIsuffix //CTS:CHECK - where does this get the URI Suffix?
-     */
+     * @param _URIsuffix //CTS:CHECK - where does this get the URI Suffix?   
+     * !!!this is going to be an issue. Can store the URI suffix in extended escrow data on discard?
+     * could store the URI hash in the ??RGTHash?? instead, and store the URI in NM Storage as a JSON element.
+     */ 
     function recycle(bytes32 _idxHash, bytes32 _rgtHash, string memory _URIsuffix) 
         external
         nonReentrant

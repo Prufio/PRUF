@@ -85,7 +85,7 @@ contract NODE_TKN is
 
     //----------------------Modifiers----------------------//
 
-    /**
+    /** DPS:TEST:NEW
      * @dev Verify user credentials
      * Originating Address:
      *      has CONTRACT_ADMIN_ROLE

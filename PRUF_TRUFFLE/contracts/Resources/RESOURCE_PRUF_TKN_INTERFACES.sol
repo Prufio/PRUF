@@ -961,6 +961,15 @@ interface A_TKN_Interface {
         external
         returns (uint256);
 
+    /**
+     * @dev returns a baseURI for a storage provider / index combination, as well as the total number of URIs.
+     * @param _node - node
+     */
+    function getBaseUriForNode(uint32 _node)
+        external;
+
+
+
     // /*
     //  * @dev Reassures user that token is minted in the PRUF system
     //  */

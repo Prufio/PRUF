@@ -177,7 +177,7 @@ contract NODE_MGR is BASIC {
         bytes32 _CAS1,
         bytes32 _CAS2,
         address _caller
-    ) external nonReentrant whenNotPaused isIdVerifier returns (uint32) {
+    ) external nonReentrant whenNotPaused isIdVerifier returns (uint32) { //DPS:CHECK:NOW RETURNS U32 not U256
         require(
             nodeTokenIndex < 4294000000,
             "NM:PN: Only 4294000000 node tokens allowed"

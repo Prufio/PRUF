@@ -22,6 +22,7 @@ _________\/// _____________\/// _______\/// __\///////// __\/// _____________
 pragma solidity ^0.8.7;
 
 import "../Resources/PRUF_CORE.sol";
+
 //import "../Imports/token/ERC721/IERC721.sol";
 
 contract DECORATE is CORE {
@@ -210,7 +211,7 @@ contract DECORATE is CORE {
         bytes32 idxHash = keccak256(abi.encodePacked(_tokenID, _tokenContract));
         Record memory rec = getRecord(idxHash);
         Node memory nodeInfo = getNodeinfo(rec.node);
-
+        //DPS:CHECK:Please explain issue
         require( //CTS:EXAMINE - pretty sure this needs to be fixed to correctly allow modifications based on MT
             nodeInfo.custodyType == 5,
             "D:MI1:Node.custodyType != 5 & record must exist"
@@ -296,8 +297,6 @@ contract DECORATE is CORE {
         deductServiceCosts(rec.node, 3);
         //^^^^^^^interactions^^^^^^^^^
     }
-
-  
 
     //--------------------------------------------INTERNAL Functions--------------------------
 
