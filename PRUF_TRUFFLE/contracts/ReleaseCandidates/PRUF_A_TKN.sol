@@ -636,7 +636,7 @@ contract A_TKN is
         //^^^^^^^effects^^^^^^^^^
     }
 
-    function isApprovedOrOwner(address _addr, uint256 _tokenId) external view {
+    function isApprovedOrOwner(address _addr, uint256 _tokenId) external view { //CTS:EXAMINE why is this function needed
         require(
             _isApprovedOrOwner(_addr, _tokenId),
             "AT:IAOO:Not approved or owner"

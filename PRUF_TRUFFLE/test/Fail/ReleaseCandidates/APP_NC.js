@@ -107,6 +107,7 @@ let payableRoleB32;
 let IDproviderRoleB32;
 let minterRoleB32;
 let trustedAgentRoleB32;
+let IDverifierRoleB32;
 let assetTransferRoleB32;
 let discardRoleB32;
 let DAOroleB32;
@@ -328,6 +329,8 @@ contract("APP_NC", (accounts) => {
     DAOroleB32 = await Helper.getStringHash("DAO_ROLE");
 
     nodeAdminRoleB32 = await Helper.getStringHash("NODE_ADMIN_ROLE");
+
+    IDverifierRoleB32 = await Helper.getStringHash("ID_VERIFIER_ROLE");
 
     nodeMinterRoleB32 = await Helper.getStringHash("NODE_MINTER_ROLE");
   });
@@ -661,6 +664,21 @@ contract("APP_NC", (accounts) => {
   it("Should authorize account1 for NODE_STOR", () => {
     console.log("Authorizing account1");
     return NODE_STOR.grantRole(DAOroleB32, account1, { from: account1 });
+  });
+
+  it("Should authorize account1 for A_TKN", () => {
+    console.log("Authorizing account1");
+    return NODE_MGR.grantRole(IDverifierRoleB32, account1, { from: account1 });
+  });
+
+  it("Should authorize account1 for A_TKN", () => {
+    console.log("Authorizing account1");
+    return NODE_MGR.grantRole(IDverifierRoleB32, account10, { from: account1 });
+  });
+
+  it("Should authorize account1 for A_TKN", () => {
+    console.log("Authorizing account1");
+    return NODE_MGR.grantRole(IDverifierRoleB32, NODE_BLDR.address, { from: account1 });
   });
 
   it("Should add Storage to each contract", () => {
@@ -1376,6 +1394,7 @@ contract("APP_NC", (accounts) => {
       "3",
       "1",
       "0x0000000000000000000000000000000000000000",
+      '66',
       { from: account1 }
     )
 
@@ -1385,6 +1404,7 @@ contract("APP_NC", (accounts) => {
           "2",
           "1",
           "0x0000000000000000000000000000000000000000",
+          '66',
           { from: account1 }
         );
       })
@@ -1395,6 +1415,7 @@ contract("APP_NC", (accounts) => {
           "1",
           "1",
           "0x0000000000000000000000000000000000000000",
+          '66',
           { from: account1 }
         );
       })
@@ -1405,6 +1426,7 @@ contract("APP_NC", (accounts) => {
           "2",
           "1",
           "0x0000000000000000000000000000000000000000",
+          '66',
           { from: account10 }
         );
       })
@@ -1415,6 +1437,7 @@ contract("APP_NC", (accounts) => {
           "2",
           "1",
           "0x0000000000000000000000000000000000000000",
+          '66',
           { from: account1 }
         );
       })
@@ -1425,6 +1448,7 @@ contract("APP_NC", (accounts) => {
           "5",
           "1",
           "0x0000000000000000000000000000000000000000",
+          '66',
           { from: account10 }
         );
       })
@@ -1435,6 +1459,7 @@ contract("APP_NC", (accounts) => {
           "4",
           "1",
           "0x0000000000000000000000000000000000000000",
+          '66',
           { from: account1 }
         );
       });

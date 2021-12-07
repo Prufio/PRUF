@@ -565,7 +565,7 @@ contract STOR is AccessControl, ReentrancyGuard, Pausable {
         //^^^^^^^checks^^^^^^^^^
 
         if (_newAssetStatus == 60) {
-            //if setting to "escrow" status, set rgt to 0xFFF_
+            //if setting to "escrow" status, set rgt to 0x0...01
             rec.rightsHolder = B320x01;
         }
 

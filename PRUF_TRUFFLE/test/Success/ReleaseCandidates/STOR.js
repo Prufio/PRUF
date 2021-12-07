@@ -109,6 +109,7 @@ let trustedAgentRoleB32;
 let assetTransferRoleB32;
 let IDminterRoleB32;
 let discardRoleB32;
+let IDverifierRoleB32;
 
 contract("STOR", (accounts) => {
   console.log(
@@ -325,6 +326,8 @@ contract("STOR", (accounts) => {
     DAOroleB32 = await Helper.getStringHash("DAO_ROLE");
 
     nodeAdminRoleB32 = await Helper.getStringHash("NODE_ADMIN_ROLE");
+
+    IDverifierRoleB32 = await Helper.getStringHash("ID_VERIFIER_ROLE");
 
     nodeMinterRoleB32 = await Helper.getStringHash("NODE_MINTER_ROLE");
   });
@@ -607,6 +610,21 @@ contract("STOR", (accounts) => {
   it("Should authorize account1 for NODE_STOR", () => {
     console.log("Authorizing account1");
     return NODE_STOR.grantRole(DAOroleB32, account1, { from: account1 });
+  });
+
+  it("Should authorize account1 for A_TKN", () => {
+    console.log("Authorizing account1");
+    return NODE_MGR.grantRole(IDverifierRoleB32, account1, { from: account1 });
+  });
+
+  it("Should authorize account1 for A_TKN", () => {
+    console.log("Authorizing account1");
+    return NODE_MGR.grantRole(IDverifierRoleB32, account10, { from: account1 });
+  });
+
+  it("Should authorize account1 for A_TKN", () => {
+    console.log("Authorizing account1");
+    return NODE_MGR.grantRole(IDverifierRoleB32, NODE_BLDR.address, { from: account1 });
   });
 
   it("Should authorize account1 for A_TKN", () => {
@@ -1314,6 +1332,7 @@ contract("STOR", (accounts) => {
       "3",
       "1",
       "0x0000000000000000000000000000000000000000",
+      '66',
       { from: account1 }
     )
 
@@ -1323,6 +1342,7 @@ contract("STOR", (accounts) => {
           "2",
           "1",
           "0x0000000000000000000000000000000000000000",
+          '66',
           { from: account1 }
         );
       })
@@ -1333,6 +1353,7 @@ contract("STOR", (accounts) => {
           "2",
           "1",
           "0x0000000000000000000000000000000000000000",
+          '66',
           { from: account1 }
         );
       })
@@ -1343,6 +1364,7 @@ contract("STOR", (accounts) => {
           "2",
           "1",
           "0x0000000000000000000000000000000000000000",
+          '66',
           { from: account10 }
         );
       })
@@ -1353,6 +1375,7 @@ contract("STOR", (accounts) => {
           "2",
           "1",
           "0x0000000000000000000000000000000000000000",
+          '66',
           { from: account1 }
         );
       })
@@ -1363,6 +1386,7 @@ contract("STOR", (accounts) => {
           "2",
           "1",
           "0x0000000000000000000000000000000000000000",
+          '66',
           { from: account10 }
         );
       });
@@ -1851,6 +1875,40 @@ contract("STOR", (accounts) => {
 
   it("Should set ipfs2 on asset1 to rgt1 and rgt2", async () => {
     return APP_NC.addNonMutableStorage(asset1, rgt1, rgt2, { from: account4 });
+  });
+
+  it("Should verify rgt of asset1 and rgt1", async () => {
+    var Record = [];
+
+    return await STOR.verifyRightsHolder(
+      asset1,
+      rgt1,
+      { from: account2 },
+      function (_err, _result) {
+        if (_err) {
+        } else {
+          Record = Object.values(_result);
+          console.log(Record);
+        }
+      }
+    );
+  });
+
+  it("Should blockchain verify rgt of asset1 and rgt1", async () => {
+    var Record = [];
+
+    return await STOR.verifyRightsHolder(
+      asset1,
+      rgt1,
+      { from: account2 },
+      function (_err, _result) {
+        if (_err) {
+        } else {
+          Record = Object.values(_result);
+          console.log(Record);
+        }
+      }
+    );
   });
 
   it("Should set SharesAddress", async () => {

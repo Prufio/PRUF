@@ -62,10 +62,9 @@ contract DECORATE is CORE {
         whenNotPaused
         isTokenHolder(_tokenID, _tokenContract)
     {
-        //DPS:TEST
         bytes32 idxHash = keccak256(abi.encodePacked(_tokenID, _tokenContract));
         Record memory rec = getRecord(idxHash);
-        Node memory nodeInfo = getNodeinfoWithMinterCheck(_node);
+        Node memory nodeInfo = minterCheck(_node);
 
         require(nodeInfo.custodyType == 5, "D:D:Node.custodyType != 5");
         require(
@@ -317,7 +316,7 @@ contract DECORATE is CORE {
     ) internal {
         bytes32 idxHash = keccak256(abi.encodePacked(_idxRaw, _node)); //hash idxRaw with node to get idxHash DPS:TEST
         uint256 tokenId = uint256(idxHash);
-        Node memory nodeInfo = getNodeinfoWithMinterCheck(_node);
+        Node memory nodeInfo = minterCheck(_node);
 
         require(
             A_TKN.tokenExists(tokenId) == 0,
