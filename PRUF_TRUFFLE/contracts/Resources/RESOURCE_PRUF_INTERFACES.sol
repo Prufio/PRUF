@@ -472,7 +472,6 @@ interface NODE_STOR_Interface {
     //--------------------------------------------Administrative Setters--------------------------
 
     /**
-     *
      * @dev Sets the valid storage type providers.
      * @param _storageProvider - uint position for storage provider
      * @param _status - uint position for custody type status
@@ -507,7 +506,7 @@ interface NODE_STOR_Interface {
      * !! -------- to be used with great caution and only as a result of community governance action -----------
      * @dev Transfers a name from one node to another
      *   -Designed to remedy brand infringement issues. This breaks decentralization and must eventually be given
-     *   -over to some kind of governance contract.
+     *   -over to DAO.
      * @param _fromNode - source node
      * @param _toNode - destination node
      * @param _thisName - name to be transferred
@@ -558,7 +557,7 @@ interface NODE_STOR_Interface {
     ) external;
 
     /**
-     * @dev Administratively Deauthorize address be permitted to mint or modify records (DAO)
+     * @dev Administratively Deauthorize address be permitted to mint or modify records
      * @dev only useful for custody types that designate user adresses (type1...)
      * @param _node - node that user is being deauthorized in
      * @param _addrHash - hash of address to deauthorize
@@ -663,8 +662,7 @@ interface NODE_STOR_Interface {
     ) external;
 
     /**
-     *must be IMMUTABLE!!!!!
-     * @dev external erc721 token as ID configurator (bit 6 set to 1)
+     * @dev set an external erc721 token as ID verification (when bit 6 set to 1)
      * @param _node - node being configured
      * @param _tokenContractAddress  token contract used to verify id
      * @param _tokenId token ID used to verify id
@@ -675,7 +673,7 @@ interface NODE_STOR_Interface {
         uint256 _tokenId
     ) external;
 
-    /**
+    /** DPS:TES:NEW
      * @dev DAO set an external erc721 token as ID verification (when bit 6 set to 1)
      * @param _node - node being configured
      * @param _tokenContractAddress  token contract used to verify id
@@ -687,11 +685,11 @@ interface NODE_STOR_Interface {
         uint256 _tokenId
     ) external;
 
-    /** 
+    /** DPS:TEST:NEW
      * @dev unlink erc721 token as ID verification
      * @param _node - node being unlinked
      */
-    function unlinkExternalId (uint32 _node) external;
+    function unlinkExternalId(uint32 _node) external;
 
     /**
      * @dev extended node data setter
@@ -718,7 +716,7 @@ interface NODE_STOR_Interface {
     function getLocalNode(uint32 _foreignNode) external view returns (uint32);
 
     /**
-     * @dev exttended node data getter
+     * @dev extended node data getter
      * @param _node - node being queried
      * returns ExtendedNodeData struct (see resources-structs)
      */
@@ -779,6 +777,7 @@ interface NODE_STOR_Interface {
      * @dev Retrieve extended nodeData @ _node
      * @param _node - node associated with query
      * @return nodeData (see docs)
+     * supports indirect node reference via localNodeFor[node]
      */
     function getNodeData(uint32 _node) external view returns (Node memory);
 
@@ -823,6 +822,7 @@ interface NODE_STOR_Interface {
          NTHprice: @ _node service cost @ _service
          node: Node index
      }
+     * supports indirect node reference via localNodeFor[node]
      */
     function getInvoice(uint32 _node, uint16 _service)
         external
@@ -834,6 +834,7 @@ interface NODE_STOR_Interface {
      * @param _node - node associated with query
      * @param _service - service associated with query
      * @return Costs Struct for_node
+     * supports indirect node reference via localNodeFor[node]
      */
     function getPaymentData(uint32 _node, uint16 _service)
         external
@@ -844,6 +845,7 @@ interface NODE_STOR_Interface {
      * @dev Retrieve Node_discount @ _node
      * @param _node - node associated with query
      * @return percentage of rewards distribution @ _node
+     * supports indirect node reference via localNodeFor[node]
      */
     function getNodeDiscount(uint32 _node) external view returns (uint32);
 
@@ -852,6 +854,7 @@ interface NODE_STOR_Interface {
      * @param _node - node associated with query
      * @param _position - bit position associated with query
      * @return 1 or 0 (enabled or disabled)
+     * supports indirect node reference via localNodeFor[node]
      */
     function getSwitchAt(uint32 _node, uint8 _position)
         external
@@ -862,6 +865,8 @@ interface NODE_STOR_Interface {
      * @dev creates an node and its corresponding namespace and data fields
      * @param _newNodeData - creation Data for new Node
      * @param _newNode - Node to be created (unique)
+     * @param _caller - function caller passed by trusted calling contract
+     * sets localNodeFor[_newNode] to _newNode
      */
     function createNodeData(
         Node memory _newNodeData,
