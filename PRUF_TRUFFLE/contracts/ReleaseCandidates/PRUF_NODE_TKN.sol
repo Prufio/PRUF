@@ -123,11 +123,11 @@ contract NODE_TKN is
         uint256 bit6 = NODE_STOR.getSwitchAt(node, 6);
 
         if (bit6 == 1) {
-            // ExtendedNodeData memory extendedNodeInfo = NODE_STOR
-            //     .getExtendedNodeData(node); //safe because no node tokens can be minted beyond uint32
-            // address holderOfIdToken;
-            // //DPS:TEST:NEW test this by calling it on tokens that dont exist as well as ones that do.
-            // //NOT SURE THIS WILL WORK AS WRITTEN!!!!
+            ExtendedNodeData memory extendedNodeInfo = NODE_STOR
+                .getExtendedNodeData(node); //safe because no node tokens can be minted beyond uint32
+            address holderOfIdToken;
+            //DPS:TEST:NEW test this by calling it on tokens that dont exist as well as ones that do.
+            //NOT SURE THIS WILL WORK AS WRITTEN!!!!
             // try
             //     IERC721(extendedNodeInfo.idProviderAddr).ownerOf(
             //         extendedNodeInfo.idProviderTokenId
