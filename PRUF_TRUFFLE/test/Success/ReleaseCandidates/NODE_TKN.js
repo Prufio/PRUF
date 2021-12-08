@@ -1672,11 +1672,123 @@ contract("NODE_TKN", (accounts) => {
     );
   });
 
+  it("Should retrieve balance of @ account1", async () => {
+    var Record = "";
+
+    return await NODE_TKN.balanceOf(
+      account1,
+      { from: account1 },
+      function (_err, _result) {
+        if (_err) {
+        } else {
+          Record = _result;
+          console.log(Record);
+        }
+      }
+    );
+  });
+
+  it("Should send node 1000001 to account2", async () => {
+    return NODE_TKN.safeTransferFrom(account1, account2, "1000001", { from: account1 });
+  });
+
+  it("Should retrieve balance of (2) @ account2", async () => {
+    var Record = "";
+
+    return await NODE_TKN.balanceOf(
+      account2,
+      { from: account1 },
+      function (_err, _result) {
+        if (_err) {
+        } else {
+          Record = _result;
+          console.log(Record);
+        }
+      }
+    );
+  });
+
+  it("Should retrieve balance of @ account1", async () => {
+    var Record = "";
+
+    return await NODE_TKN.balanceOf(
+      account1,
+      { from: account1 },
+      function (_err, _result) {
+        if (_err) {
+        } else {
+          Record = _result;
+          console.log(Record);
+        }
+      }
+    );
+  });
+
+  it("Should set the external ID token", async () => {
+    return NODE_STOR.setExternalIdToken("20", A_TKN.address, "1000001", { from: account1 });
+  });
+
+  it("Should transfer node 1000001(ID for 20) to account1", async () => {
+    return NODE_TKN.safeTransferFrom(account2, account1, "1000001", { from: account2 });
+  });
+
   it("Should retrieve balance of (1) @ account2", async () => {
     var Record = "";
 
     return await NODE_TKN.balanceOf(
       account2,
+      { from: account1 },
+      function (_err, _result) {
+        if (_err) {
+        } else {
+          Record = _result;
+          console.log(Record);
+        }
+      }
+    );
+  });
+
+  it("Should retrieve balance of @ account1", async () => {
+    var Record = "";
+
+    return await NODE_TKN.balanceOf(
+      account1,
+      { from: account1 },
+      function (_err, _result) {
+        if (_err) {
+        } else {
+          Record = _result;
+          console.log(Record);
+        }
+      }
+    );
+  });
+
+  it("Should fix orphaned node, and send node 20 to account1", async () => {
+    return NODE_TKN.fixOrphanedNode("20", { from: account4 });
+  });
+
+  it("Should retrieve balance of (0) @ account2", async () => {
+    var Record = "";
+
+    return await NODE_TKN.balanceOf(
+      account2,
+      { from: account1 },
+      function (_err, _result) {
+        if (_err) {
+        } else {
+          Record = _result;
+          console.log(Record);
+        }
+      }
+    );
+  });
+
+  it("Should retrieve balance of @ account1", async () => {
+    var Record = "";
+
+    return await NODE_TKN.balanceOf(
+      account1,
       { from: account1 },
       function (_err, _result) {
         if (_err) {

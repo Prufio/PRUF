@@ -113,9 +113,7 @@ contract NODE_TKN is
 
     //----------------------Public Functions----------------------//
 
-    //!!!!WRITE A UNIVERSALLY CALLABLE FUNCTION THAT TX's a bit6 node token to its verifying ID token address
-
-    /** //DPS:NEW TEST
+    /**
      * @dev Universally callable function that sends a node token to the address of its referenced ID token,
      * or removes the bit6 flag if its ID token does not exist.
      */
@@ -128,7 +126,6 @@ contract NODE_TKN is
             ExtendedNodeData memory extendedNodeInfo = NODE_STOR
                 .getExtendedNodeData(node); //safe because no node tokens can be minted beyond uint32
             address holderOfIdToken;
-
             //DPS:TEST:NEW test this by calling it on tokens that dont exist as well as ones that do.
             //NOT SURE THIS WILL WORK AS WRITTEN!!!!
             try
