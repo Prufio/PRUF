@@ -120,25 +120,25 @@ contract NODE_TKN is
         uint32 node = uint32(_thisNode);
         uint256 bit6 = NODE_STOR.getSwitchAt(node, 6);
 
-        if (bit6 == 1) {
-            ExtendedNodeData memory extendedNodeInfo = NODE_STOR
-                .getExtendedNodeData(node); //safe because no node tokens can be minted beyond uint32
-            address holderOfIdToken;
-            //DPS:TEST:NEW test this by calling it on tokens that dont exist as well as ones that do.
-            //NOT SURE THIS WILL WORK AS WRITTEN!!!!
-            try
-                IERC721(extendedNodeInfo.idProviderAddr).ownerOf(
-                    extendedNodeInfo.idProviderTokenId
-                )
-            returns (address addr) {
-                //if the try works, should transfer _thisNode to the address of the ID token
-                holderOfIdToken = addr;
-                _transfer(ownerOf(_thisNode), holderOfIdToken, _thisNode);
-            } catch Error(string memory) {
-                //if the try fails (ID token not exist) then clear the bit6 and ID token data from the node
-                NODE_STOR.unlinkExternalId(node);
-            }
-        }
+        // if (bit6 == 1) {
+        //     ExtendedNodeData memory extendedNodeInfo = NODE_STOR
+        //         .getExtendedNodeData(node); //safe because no node tokens can be minted beyond uint32
+        //     address holderOfIdToken;
+        //     //DPS:TEST:NEW test this by calling it on tokens that dont exist as well as ones that do.
+        //     //NOT SURE THIS WILL WORK AS WRITTEN!!!!
+        //     try
+        //         IERC721(extendedNodeInfo.idProviderAddr).ownerOf(
+        //             extendedNodeInfo.idProviderTokenId
+        //         )
+        //     returns (address addr) {
+        //         //if the try works, should transfer _thisNode to the address of the ID token
+        //         holderOfIdToken = addr;
+        //         _transfer(ownerOf(_thisNode), holderOfIdToken, _thisNode);
+        //     } catch Error(string memory) {
+        //         //if the try fails (ID token not exist) then clear the bit6 and ID token data from the node
+        //         NODE_STOR.unlinkExternalId(node);
+        //     }
+        // }
     }
 
     /**
@@ -189,7 +189,7 @@ contract NODE_TKN is
 
     /** DPS:TEST NEW CTS:EXAMINE NOT NEEDED, just need to add NODE_STOR
      * @dev Set storage contract to interface with
-     * @param _nodeStorageAddress - Storage contract address
+     * @param _nodeStorageAddress - Node storage contract address
      */
     function setNodeStorageContract(
         address _nodeStorageAddress //CTS:EXAMINE why is this needed?
