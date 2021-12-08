@@ -120,7 +120,8 @@ contract NODE_TKN is
     function fixOrphanedNode(uint256 _thisNode) public {
         require(_thisNode <= 4294967295, "NT:FON:Node ID out of range");
         uint32 node = uint32(_thisNode);
-        uint256 bit6 = NODE_STOR.getSwitchAt(node, 6);
+        //uint256 bit6 = NODE_STOR.getSwitchAt(node, 6);
+        uint256 bit6 = 1;
 
         if (bit6 == 1) {
             ExtendedNodeData memory extendedNodeInfo = NODE_STOR
