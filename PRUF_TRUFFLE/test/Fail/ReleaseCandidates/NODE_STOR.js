@@ -111,6 +111,7 @@ let assetTransferRoleB32;
 let discardRoleB32;
 let DAOroleB32;
 let nodeAdminRoleB32;
+let IDverifierRoleB32;
 let nodeMinterRoleB32;
 
 contract("NODE_STOR", (accounts) => {
@@ -318,6 +319,8 @@ contract("NODE_STOR", (accounts) => {
     IDproviderRoleB32 = await Helper.getStringHash("ID_PROVIDER_ROLE");
 
     trustedAgentRoleB32 = await Helper.getStringHash("TRUSTED_AGENT_ROLE");
+
+    IDverifierRoleB32 = await Helper.getStringHash("ID_VERIFIER_ROLE");
 
     assetTransferRoleB32 = await Helper.getStringHash("ASSET_TXFR_ROLE");
 
@@ -1025,6 +1028,21 @@ contract("NODE_STOR", (accounts) => {
     return RCLR.grantRole(discardRoleB32, A_TKN.address, { from: account1 });
   });
 
+  it("Should authorize account1 for A_TKN", () => {
+    console.log("Authorizing account1");
+    return NODE_MGR.grantRole(IDverifierRoleB32, account1, { from: account1 });
+  });
+
+  it("Should authorize account1 for A_TKN", () => {
+    console.log("Authorizing account1");
+    return NODE_MGR.grantRole(IDverifierRoleB32, account10, { from: account1 });
+  });
+
+  it("Should authorize account1 for A_TKN", () => {
+    console.log("Authorizing account1");
+    return NODE_MGR.grantRole(IDverifierRoleB32, NODE_BLDR.address, { from: account1 });
+  });
+
   it("Should authorize NODE_MGR for NODE_STOR", () => {
     console.log("Authorizing NODE_MGR");
     return NODE_STOR.grantRole(nodeAdminRoleB32, NODE_MGR.address, {
@@ -1381,6 +1399,7 @@ contract("NODE_STOR", (accounts) => {
       "3",
       "1",
       "0x0000000000000000000000000000000000000000",
+      '66',
       { from: account1 }
     )
 
@@ -1390,6 +1409,7 @@ contract("NODE_STOR", (accounts) => {
           "2",
           "1",
           "0x0000000000000000000000000000000000000000",
+          '66',
           { from: account1 }
         );
       })
@@ -1400,6 +1420,7 @@ contract("NODE_STOR", (accounts) => {
           "2",
           "1",
           "0x0000000000000000000000000000000000000000",
+          '66',
           { from: account1 }
         );
       })
@@ -1410,6 +1431,7 @@ contract("NODE_STOR", (accounts) => {
           "2",
           "1",
           "0x0000000000000000000000000000000000000000",
+          '66',
           { from: account10 }
         );
       })
@@ -1420,6 +1442,7 @@ contract("NODE_STOR", (accounts) => {
           "2",
           "1",
           "0x0000000000000000000000000000000000000000",
+          '66',
           { from: account1 }
         );
       })
@@ -1430,6 +1453,7 @@ contract("NODE_STOR", (accounts) => {
           "2",
           "1",
           "0x0000000000000000000000000000000000000000",
+          '66',
           { from: account10 }
         );
       });
@@ -1803,11 +1827,6 @@ contract("NODE_STOR", (accounts) => {
     return NODE_STOR.changeShare("1000001", "9900", { from: account1 });
   });
 
-  //6
-  it("Should fail because cannot decrease share", async () => {
-    return NODE_STOR.changeShare("1000001", "5000", { from: account1 });
-  });
-
   //7
   it("Should fail because increase share of Node 10 > 10000", async () => {
     return NODE_STOR.changeShare("1000001", "10001", { from: account1 });
@@ -1939,8 +1958,14 @@ contract("NODE_STOR", (accounts) => {
     });
   });
 
+  it("Should pause NODE_STOR", async () => {
+    return NODE_STOR.pause({
+      from: account1,
+    });
+  });
+
   //17
-  it("Should fail because caller !admin", async () => {
+  it("Should fail because NODE_STOR is paused", async () => {
     console.log(
       "//**************************************END blockUser FAIL BATCH**********************************************/"
     );
@@ -1952,14 +1977,27 @@ contract("NODE_STOR", (accounts) => {
     });
   });
 
+  it("Should unpause NODE_STOR", async () => {
+    return NODE_STOR.unpause({
+      from: account1,
+    });
+  });
+
   //18
+  it("Should fail because caller !admin", async () => {
+    return NODE_STOR.modifyNodeSwitches("1000003", "1", "1", {
+      from: account2,
+    });
+  });
+
+  //19
   it("Should fail bit pos !>0||<9", async () => {
     return NODE_STOR.modifyNodeSwitches("1000003", "10", "1", {
       from: account1,
     });
   });
 
-  //19
+  //20
   it("Should fail bit !1||0", async () => {
     return NODE_STOR.modifyNodeSwitches("1000003", "1", "4", {
       from: account1,
@@ -1972,7 +2010,7 @@ contract("NODE_STOR", (accounts) => {
     });
   });
 
-  //20
+  //21
   it("Should fail because NODE_STOR is paused", async () => {
     console.log(
       "//**************************************END modifyNodeSwitches FAIL BATCH**********************************************/"
@@ -2007,7 +2045,7 @@ contract("NODE_STOR", (accounts) => {
     });
   });
 
-  //20
+  //22
   it("Should fail because caller !NodeAdmin", async () => {
     return NODE_MGR.createNode(
       "0",
@@ -2030,7 +2068,7 @@ contract("NODE_STOR", (accounts) => {
     });
   });
 
-  //21
+  //23
   it("Should fail because Node = 0", async () => {
     return NODE_MGR.createNode(
       "0",
@@ -2047,7 +2085,7 @@ contract("NODE_STOR", (accounts) => {
     );
   });
 
-  //22
+  //24
   it("Should fail because discount > 10000", async () => {
     return NODE_MGR.createNode(
       "20",
@@ -2064,7 +2102,7 @@ contract("NODE_STOR", (accounts) => {
     );
   });
 
-  //23
+  //25
   it("Should fail because custodyType is invalid", async () => {
     return NODE_MGR.createNode(
       "20",
@@ -2081,7 +2119,7 @@ contract("NODE_STOR", (accounts) => {
     );
   });
 
-  //24
+  //26
   it("Should fail because managementType is invalid", async () => {
     return NODE_MGR.createNode(
       "20",
@@ -2098,7 +2136,7 @@ contract("NODE_STOR", (accounts) => {
     );
   });
 
-  //25
+  //27
   it("Should fail because storageProvider is invalid", async () => {
     return NODE_MGR.createNode(
       "20",
@@ -2115,7 +2153,7 @@ contract("NODE_STOR", (accounts) => {
     );
   });
 
-  //26
+  //28
   it("Should fail because root !exist", async () => {
     return NODE_MGR.createNode(
       "20",
@@ -2152,7 +2190,7 @@ contract("NODE_STOR", (accounts) => {
     return NODE_MGR.grantRole(nodeMinterRoleB32, account2, { from: account1 });
   });
 
-  //27
+  //29
   it("Should fail because root is disabled && !NTH", async () => {
     return NODE_MGR.createNode(
       "20",
@@ -2169,7 +2207,7 @@ contract("NODE_STOR", (accounts) => {
     );
   });
 
-  //28
+  //30
   it("Should fail because caller !rootTokenHolder", async () => {
     return NODE_MGR.createNode(
       "20",
@@ -2186,7 +2224,7 @@ contract("NODE_STOR", (accounts) => {
     );
   });
 
-  //29
+  //31
   it("Should fail because name already exists", async () => {
     return NODE_MGR.createNode(
       "20",
@@ -2203,7 +2241,7 @@ contract("NODE_STOR", (accounts) => {
     );
   });
 
-  //30
+  //32
   it("Should fail because Node already exists", async () => {
     return NODE_MGR.createNode(
       "1",
@@ -2230,7 +2268,7 @@ contract("NODE_STOR", (accounts) => {
     return NODE_STOR.pause({ from: account1 });
   });
 
-  //31
+  //33
   it("Should fail because NODE_STOR is paused", async () => {
     return NODE_STOR.addUser("1000001", account2Hash, "10", { from: account2 });
   });
@@ -2239,7 +2277,7 @@ contract("NODE_STOR", (accounts) => {
     return NODE_STOR.unpause({ from: account1 });
   });
 
-  //32
+  //34
   it("Should fail because caller !NodeAdmin", async () => {
     return NODE_STOR.addUser("1000001", account2Hash, "10", { from: account2 });
   });
@@ -2249,12 +2287,36 @@ contract("NODE_STOR", (accounts) => {
       "//**************************************END addUser FAIL BATCH**********************************************/"
     );
     console.log(
+      "//**************************************BEGIN updateImportStatus FAIL BATCH**********************************************/"
+    );
+    return NODE_STOR.pause({ from: account1 });
+  });
+
+  //35
+  it("Should fail because NODE_STOR is paused", async () => {
+    return NODE_STOR.updateImportStatus("1000001", "1000002", "10", { from: account2 });
+  });
+
+  it("Should unpause NODE_STOR", async () => {
+    return NODE_STOR.unpause({ from: account1 });
+  });
+
+  //36
+  it("Should fail because caller !NodeAdmin", async () => {
+    return NODE_STOR.updateImportStatus("1000001", "1000002", "10", { from: account2 });
+  });
+
+  it("Should pause NODE_STOR", async () => {
+    console.log(
+      "//**************************************END updateImportStatus FAIL BATCH**********************************************/"
+    );
+    console.log(
       "//**************************************BEGIN updateNodeName FAIL BATCH**********************************************/"
     );
     return NODE_STOR.pause({ from: account1 });
   });
 
-  //33
+  //37
   it("Should fail because NODE_STOR is paused", async () => {
     return NODE_STOR.updateNodeName("1", "CUSTODIAL_AC10+", { from: account2 });
   });
@@ -2263,14 +2325,38 @@ contract("NODE_STOR", (accounts) => {
     return NODE_STOR.unpause({ from: account1 });
   });
 
-  //34
+  //38
   it("Should fail because caller !NodeAdmin", async () => {
     return NODE_STOR.updateNodeName("1", "CUSTODIAL_AC10+", { from: account2 });
   });
 
-  //35
+  //39
   it("Should fail because used name being signed to different Node", async () => {
     return NODE_STOR.updateNodeName("2", "Custodial_AC1", { from: account1 });
+  });
+
+  it("Should pause NODE_STOR", async () => {
+    console.log(
+      "//**************************************END updateNodeName FAIL BATCH**********************************************/"
+    );
+    console.log(
+      "//**************************************BEGIN setNodeIdForName FAIL BATCH**********************************************/"
+    );
+    return NODE_STOR.pause({ from: account1 });
+  });
+
+  //40
+  it("Should fail because NODE_STOR is paused", async () => {
+    return NODE_STOR.setNodeIdForName("1", "CUSTODIAL_AC10+", { from: account2 });
+  });
+
+  it("Should unpause NODE_STOR", async () => {
+    return NODE_STOR.unpause({ from: account1 });
+  });
+
+  //41
+  it("Should fail because caller !NodeAdmin", async () => {
+    return NODE_STOR.setNodeIdForName("1", "CUSTODIAL_AC10+", { from: account2 });
   });
 
   it("Should pause NODE_STOR", async () => {
@@ -2283,7 +2369,7 @@ contract("NODE_STOR", (accounts) => {
     return NODE_STOR.pause({ from: account1 });
   });
 
-  //36
+  //42
   it("Should fail because NODE_STOR is paused", async () => {
     return NODE_STOR.updateNodeCAS("1", rgt000, rgt000, { from: account2 });
   });
@@ -2292,12 +2378,12 @@ contract("NODE_STOR", (accounts) => {
     return NODE_STOR.unpause({ from: account1 });
   });
 
-  //37
+  //43
   it("Should fail because caller is not NTH", async () => {
     return NODE_STOR.updateNodeCAS("1", rgt000, rgt000, { from: account2 });
   });
 
-  //38
+  //44
   it("Should fail because CAS fot node is locked", async () => {
     return NODE_STOR.updateNodeCAS("1", rgt000, rgt000, { from: account1 });
   });
@@ -2312,7 +2398,7 @@ contract("NODE_STOR", (accounts) => {
     return NODE_STOR.pause({ from: account1 });
   });
 
-  //39
+  //45
   it("Should fail because NODE_STOR is paused", async () => {
     return NODE_STOR.setOperationCosts(
       "1000001",
@@ -2329,7 +2415,7 @@ contract("NODE_STOR", (accounts) => {
     return NODE_STOR.unpause({ from: account1 });
   });
 
-  //40
+  //46
   it("Should fail because caller !NodeAdmin", async () => {
     return NODE_STOR.setOperationCosts(
       "1000001",
@@ -2352,9 +2438,9 @@ contract("NODE_STOR", (accounts) => {
     return NODE_STOR.pause({ from: account1 });
   });
 
-  //41
+  //47
   it("Should fail because NODE_STOR is paused", async () => {
-    return NODE_STOR.setNonMutableData("1000001", "1", "0", account2, {
+    return NODE_STOR.setNonMutableData("1000001", "1", "0", account2, "66", {
       from: account2,
     });
   });
@@ -2363,9 +2449,9 @@ contract("NODE_STOR", (accounts) => {
     return NODE_STOR.unpause({ from: account1 });
   });
 
-  //42
+  //48
   it("Should fail because caller !NodeAdmin", async () => {
-    return NODE_STOR.setNonMutableData("1000001", "1", "0", account2, {
+    return NODE_STOR.setNonMutableData("1000001", "1", "0", account2, "66", {
       from: account2,
     });
   });
@@ -2386,16 +2472,16 @@ contract("NODE_STOR", (accounts) => {
     );
   });
 
-  //43
+  //49
   it("Should fail because managementType is invalid", async () => {
-    return NODE_STOR.setNonMutableData("50", "10", "0", account1, {
+    return NODE_STOR.setNonMutableData("50", "10", "0", account1, "66", {
       from: account1,
     });
   });
 
-  //44
+  //50
   it("Should fail because storageProvider is invalid", async () => {
-    return NODE_MGR.setNonMutableData("50", "1", "10", account1, {
+    return NODE_MGR.setNonMutableData("50", "1", "10", account1, "66", {
       from: account1,
     });
   });
@@ -2406,7 +2492,7 @@ contract("NODE_STOR", (accounts) => {
     });
   });
 
-  //44
+  //51
   it("Should fail because NODE_STOR is paused", async () => {
     console.log(
       "//**************************************END setNonMutableData FAIL BATCH**********************************************/"
@@ -2423,15 +2509,119 @@ contract("NODE_STOR", (accounts) => {
     });
   });
 
-  //45
+  //52
   it("Should fail because caller !nodeAdmin", async () => {
     return NODE_STOR.setLocalNode("1000001", "10", { from: account2 });
   });
 
-  //46
-  it("Should fail because bit pos !<0||>9", async () => {
+  it("Should pause NODE_STOR", async () => {
+    return NODE_STOR.pause({
+      from: account1,
+    });
+  });
+
+  //53
+  it("Should fail because NODE_STOR is paused", async () => {
     console.log(
       "//**************************************END setLocalNode FAIL BATCH**********************************************/"
+    );
+    console.log(
+      "//**************************************BEGIN setExtendedNodeData FAIL BATCH**********************************************/"
+    );
+    return NODE_STOR.setExtendedNodeData("1000001", "10", "10", "10", "10", "10", { from: account2 });
+  });
+
+  it("Should unpause NODE_STOR", async () => {
+    return NODE_STOR.unpause({
+      from: account1,
+    });
+  });
+
+  //54
+  it("Should fail because caller !nodeAdmin", async () => {
+    return NODE_STOR.setExtendedNodeData("1000001", "10", "10", "10", "10", "10", { from: account2 });
+  });
+
+  it("Should pause NODE_STOR", async () => {
+    return NODE_STOR.pause({
+      from: account1,
+    });
+  });
+
+  //55
+  it("Should fail because NODE_STOR is paused", async () => {
+    console.log(
+      "//**************************************END setExtendedNodeData FAIL BATCH**********************************************/"
+    );
+    console.log(
+      "//**************************************BEGIN setExternalIdToken FAIL BATCH**********************************************/"
+    );
+    return NODE_STOR.setExternalIdToken("1000001", NODE_TKN.address, "1000001", { from: account2 });
+  });
+
+  it("Should unpause NODE_STOR", async () => {
+    return NODE_STOR.unpause({
+      from: account1,
+    });
+  });
+
+  //56
+  it("Should fail because caller !nodeAdmin", async () => {
+    return NODE_STOR.setExternalIdToken("1000001", NODE_TKN.address, "1000001",  { from: account2 });
+  });
+
+  it("Should set external ID token", async () => {
+    return NODE_STOR.setExternalIdToken("1000001", NODE_TKN.address, "1000001",  { from: account1 });
+  });
+
+  //57
+  it("Should fail because external ID already set", async () => {
+    return NODE_STOR.setExternalIdToken("1000001", NODE_TKN.address, "1000002",  { from: account1 });
+  });
+
+  it("Should pause NODE_STOR", async () => {
+    return NODE_STOR.pause({
+      from: account1,
+    });
+  });
+
+  //58
+  it("Should fail because NODE_STOR is paused", async () => {
+    console.log(
+      "//**************************************END setExternalIdToken FAIL BATCH**********************************************/"
+    );
+    console.log(
+      "//**************************************BEGIN daoSetExternalIdToken FAIL BATCH**********************************************/"
+    );
+    return NODE_STOR.daoSetExternalIdToken("1000001", NODE_TKN.address, "1000001", { from: account2 });
+  });
+
+  it("Should unpause NODE_STOR", async () => {
+    return NODE_STOR.unpause({
+      from: account1,
+    });
+  });
+
+  //59
+  it("Should fail because caller !DAO", async () => {
+    return NODE_STOR.daoSetExternalIdToken("1000001", NODE_TKN.address, "1000001",  { from: account2 });
+  });
+
+  //60
+  it("Should fail because caller !NodeAdmin", async () => {
+    console.log(
+      "//**************************************END daoSetExternalIdToken FAIL BATCH**********************************************/"
+    );
+    console.log(
+      "//**************************************BEGIN unlinkExternalId FAIL BATCH**********************************************/"
+    );
+    return NODE_STOR.unlinkExternalId("1000001", { from: account2 });
+  });
+
+  //61
+  it("Should fail because bit pos !<0||>9", async () => {
+    console.log(
+      "//**************************************END unlinkExternalId FAIL BATCH**********************************************/"
     );
     console.log(
       "//**************************************BEGIN getSwitchAt FAIL BATCH**********************************************/"
@@ -2439,7 +2629,7 @@ contract("NODE_STOR", (accounts) => {
     return NODE_STOR.getSwitchAt("1000001", "10", { from: account2 });
   });
 
-  //47
+  //62
   it("Should fail because Node not yet populated", async () => {
     console.log(
       "//**************************************END getSwitchAt FAIL BATCH**********************************************/"
@@ -2450,7 +2640,7 @@ contract("NODE_STOR", (accounts) => {
     return NODE_STOR.getInvoice("100", "1", { from: account2 });
   });
 
-  //48
+  //63
   it("Should fail because service 0 is not valid", async () => {
     return NODE_STOR.getInvoice("1000001", "0", { from: account2 });
   });

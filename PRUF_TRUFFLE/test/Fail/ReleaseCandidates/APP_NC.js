@@ -1980,37 +1980,30 @@ contract("APP_NC", (accounts) => {
     return APP_NC.addNonMutableStorage(asset5, rgt1, rgt1, { from: account2 });
   });
 
-  it("Should set non mutable storage for asset5", async () => {
-    return APP_NC.addNonMutableStorage(asset5, rgt1, rgt1, { from: account1 });
-  });
+
+  it("Should kill switch 2 for ac 1000004", async () => {
+    return NODE_STOR.modifyNodeSwitches("1000004", "2", "0", {
+      from: account1,
+    });
+  })
 
   //6
-  it("Should fail because NMS is occupied", async () => {
-    return APP_NC.addNonMutableStorage(asset5, rgt1, rgt1, { from: account1 });
-  });
-
-  it("Should unauthorize account2 in AC 1000004", async () => {
-    return NODE_MGR.addUser("1000004", account2Hash, "0", {
-      from: account10,
-    });
-  });
-
-  //7
-  it("Should fail because user not permissioned to add NMS", async () => {
+  it("Should fail because switch2 not activated", async () => {
     return APP_NC.addNonMutableStorage(asset4, rgt1, rgt1, { from: account2 });
   });
 
-  it("Should unauthorize account2 in AC 1000004", async () => {
-    return NODE_MGR.addUser("1000004", account2Hash, "0", {
-      from: account10,
+
+  it("Should enable switch 2 for ac 1000004", async () => {
+    return NODE_STOR.modifyNodeSwitches("1000004", "2", "1", {
+      from: account1,
     });
-  });
+  })
 
   it("Should pause APP_NC", async () => {
     return APP_NC.pause({ from: account1 });
   });
 
-  //8
+  //7
   it("Should fail because APP_NC is paused", async () => {
     console.log(
       "//**************************************************END addNonMutableStorage FAIL BATCH***************************************************//"
@@ -2027,14 +2020,14 @@ contract("APP_NC", (accounts) => {
     return APP_NC.unpause({ from: account1 });
   });
 
-  //9
+  //8
   it("Should fail because caller approvedOrOwner", async () => {
     return APP_NC.updateNonMutableStorage(asset5, rgt1, rgt1, {
       from: account2,
     });
   });
 
-  //10
+  //9
   it("Should fail because user not permissioned to update NMS", async () => {
     return APP_NC.updateNonMutableStorage(asset2, rgt1, rgt1, {
       from: account2,
@@ -2051,7 +2044,7 @@ contract("APP_NC", (accounts) => {
     return APP_NC.pause({ from: account1 });
   });
 
-  //11
+  //10
   it("Should Fail because APP_NC is paused", async () => {
     return APP_NC.changeRgt(asset1, rgt2, { from: account5 });
   });
@@ -2060,17 +2053,17 @@ contract("APP_NC", (accounts) => {
     return APP_NC.unpause({ from: account1 });
   });
 
-  //12
+  //11
   it("Should Fail because caller does not hold token", async () => {
     return APP_NC.changeRgt(asset1, rgt2, { from: account5 });
   });
 
-  //13
+  //12
   it("Should fail because record is in stolen status", async () => {
     return APP_NC.changeRgt(asset6, rgt5, { from: account1 });
   });
 
-  //14
+  //13
   it("Should fail because record is in lost status", async () => {
     return APP_NC.changeRgt(asset7, rgt6, { from: account1 });
   });
@@ -2085,7 +2078,7 @@ contract("APP_NC", (accounts) => {
     return APP_NC.pause({ from: account1 });
   });
 
-  //15
+  //14
   it("Should Fail because APP_NC is paused", async () => {
     return APP_NC.modifyStatus(asset1, "51", { from: account5 });
   });
@@ -2094,32 +2087,32 @@ contract("APP_NC", (accounts) => {
     return APP_NC.unpause({ from: account1 });
   });
 
-  //16
+  //15
   it("Should Fail because caller does not hold token", async () => {
     return APP_NC.modifyStatus(asset1, "51", { from: account5 });
   });
 
-  //17
+  //16
   it("Should Fail because being placed in status > 100", async () => {
     return APP_NC.modifyStatus(asset1, "101", { from: account1 });
   });
 
-  //18
+  //17
   it("Should Fail because being placed in status 7", async () => {
     return APP_NC.modifyStatus(asset1, "7", { from: account1 });
   });
 
-  //19
+  //18
   it("Should Fail because being placed in reserved status 57", async () => {
     return APP_NC.modifyStatus(asset1, "57", { from: account1 });
   });
 
-  //20
+  //19
   it("Should Fail because being placed in reserved status 58", async () => {
     return APP_NC.modifyStatus(asset1, "58", { from: account1 });
   });
 
-  //21
+  //20
   it("Should Fail because being placed in status <50", async () => {
     return APP_NC.modifyStatus(asset1, "1", { from: account1 });
   });
@@ -2134,7 +2127,7 @@ contract("APP_NC", (accounts) => {
     return APP_NC.pause({ from: account1 });
   });
 
-  //22
+  //21
   it("Should Fail because APP_NC is paused", async () => {
     return APP_NC.setLostOrStolen(asset1, "53", { from: account5 });
   });
@@ -2143,12 +2136,12 @@ contract("APP_NC", (accounts) => {
     return APP_NC.unpause({ from: account1 });
   });
 
-  //23
+  //22
   it("Should fail because caller does not hold token", async () => {
     return APP_NC.setLostOrStolen(asset1, "53", { from: account5 });
   });
 
-  //24
+  //23
   it("Should fail because assetStatus is < 50", async () => {
     return APP_NC.setLostOrStolen(asset1, "3", { from: account1 });
   });
@@ -2161,6 +2154,11 @@ contract("APP_NC", (accounts) => {
       "//**************************************BEGIN decrementCounter FAIL BATCH**********************************************/"
     );
     return APP_NC.pause({ from: account1 });
+  });
+
+  //24
+  it("Should fail becasue APP_NC is paused", async () => {
+    return APP_NC.decrementCounter(asset1, "15", { from: account5 });
   });
 
   it("Should unpause APP_NC", async () => {

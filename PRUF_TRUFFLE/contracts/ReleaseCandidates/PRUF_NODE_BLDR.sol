@@ -101,7 +101,7 @@ contract NODE_BLDR is BASIC {
         //^^^^^^^interactions^^^^^^^^^
     }
 
-//     /** /** LEAVE AS BOILERPLATE
+//     /** LEAVE AS BOILERPLATE
 //      * @dev transfer a foreign token
 //      * @param _tokenContract Address of foreign token contract
 //      * @param _from origin

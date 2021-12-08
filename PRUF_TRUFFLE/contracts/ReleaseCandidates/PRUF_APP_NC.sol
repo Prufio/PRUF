@@ -145,7 +145,7 @@ contract APP_NC is CORE {
 
         require( //caller must be nodeholder/permissioned or sw2+tokenholder and caller holds the token
             (NODE_STOR.getSwitchAt(rec.node, 2) == 1) && //sw2 is set
-                (A_TKN.ownerOf(uint256(_idxHash)) == _msgSender()),
+                (A_TKN.ownerOf(uint256(_idxHash)) == _msgSender()), //CTS:EXAMINE redundant, checks in isAuthorized
             "ANC:ANMS:User not permissioned to add NMS or does not hold asset"
         );
         //^^^^^^^checks^^^^^^^^^

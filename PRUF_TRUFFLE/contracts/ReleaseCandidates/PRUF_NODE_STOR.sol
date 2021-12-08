@@ -315,7 +315,7 @@ contract NODE_STOR is BASIC {
         uint32 _node,
         uint8 _position,
         uint8 _bit
-    ) external isNodeAdmin whenNotPaused {
+    ) external whenNotPaused isNodeAdmin {
         require(
             (_position > 0) && (_position < 9),
             "NS:MNS: Bit position !>0||<9"

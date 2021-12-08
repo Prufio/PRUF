@@ -106,6 +106,7 @@ let nakedAuthCode7;
 let payableRoleB32;
 let IDproviderRoleB32;
 let minterRoleB32;
+let IDverifierRoleB32;
 let trustedAgentRoleB32;
 let assetTransferRoleB32;
 let discardRoleB32;
@@ -322,6 +323,8 @@ contract("NODE_MGR", (accounts) => {
     assetTransferRoleB32 = await Helper.getStringHash("ASSET_TXFR_ROLE");
 
     discardRoleB32 = await Helper.getStringHash("DISCARD_ROLE");
+
+    IDverifierRoleB32 = await Helper.getStringHash("ID_VERIFIER_ROLE");
 
     DAOroleB32 = await Helper.getStringHash("DAO_ROLE");
 
@@ -1013,6 +1016,21 @@ contract("NODE_MGR", (accounts) => {
     });
   });
 
+  it("Should authorize account1 for A_TKN", () => {
+    console.log("Authorizing account1");
+    return NODE_MGR.grantRole(IDverifierRoleB32, account1, { from: account1 });
+  });
+
+  it("Should authorize account1 for A_TKN", () => {
+    console.log("Authorizing account1");
+    return NODE_MGR.grantRole(IDverifierRoleB32, account10, { from: account1 });
+  });
+
+  it("Should authorize account1 for A_TKN", () => {
+    console.log("Authorizing account1");
+    return NODE_MGR.grantRole(IDverifierRoleB32, NODE_BLDR.address, { from: account1 });
+  });
+
   it("Should authorize NODE_BLDR", () => {
     console.log("Authorizing NODE_BLDR");
     return NODE_MGR.grantRole(IDproviderRoleB32, NODE_BLDR.address, {
@@ -1362,6 +1380,7 @@ contract("NODE_MGR", (accounts) => {
       "3",
       "1",
       "0x0000000000000000000000000000000000000000",
+      '66',
       { from: account1 }
     )
 
@@ -1371,6 +1390,7 @@ contract("NODE_MGR", (accounts) => {
           "2",
           "1",
           "0x0000000000000000000000000000000000000000",
+          '66',
           { from: account1 }
         );
       })
@@ -1381,6 +1401,7 @@ contract("NODE_MGR", (accounts) => {
           "2",
           "1",
           "0x0000000000000000000000000000000000000000",
+          '66',
           { from: account1 }
         );
       })
@@ -1391,6 +1412,7 @@ contract("NODE_MGR", (accounts) => {
           "2",
           "1",
           "0x0000000000000000000000000000000000000000",
+          '66',
           { from: account10 }
         );
       })
@@ -1401,6 +1423,7 @@ contract("NODE_MGR", (accounts) => {
           "2",
           "1",
           "0x0000000000000000000000000000000000000000",
+          '66',
           { from: account1 }
         );
       })
@@ -1411,6 +1434,7 @@ contract("NODE_MGR", (accounts) => {
           "2",
           "1",
           "0x0000000000000000000000000000000000000000",
+          '66',
           { from: account10 }
         );
       });
@@ -1772,8 +1796,61 @@ contract("NODE_MGR", (accounts) => {
   });
 
   it("Should pause NODE_MGR", async () => {
+    return NODE_MGR.pause({ from: account1 });
+  });
+
+  //4
+  it("Should fail because NODE_MGR is paused", async () => {
     console.log(
       "//**************************************END createNode FAIL BATCH**********************************************/"
+    );
+    console.log(
+      "//**************************************BEGIN purchaseNode FAIL BATCH**********************************************/"
+    );
+    return NODE_MGR.purchaseNode(
+      "test",
+      "1",
+      "1",
+      rgt000,
+      rgt000,
+      account2,
+      { from: account2 }
+    );
+  });
+
+  it("Should unpause NODE_MGR", async () => {
+    return NODE_MGR.unpause({ from: account1 });
+  });
+
+  //5
+  it("Should fail because caller !ID_VERIFIER", async () => {
+    return NODE_MGR.purchaseNode(
+      "test",
+      "1",
+      "1",
+      rgt000,
+      rgt000,
+      account2,
+      { from: account2 }
+    );
+  });
+
+  //6
+  it("Should fail because custodyType not auth", async () => {
+    return NODE_MGR.purchaseNode(
+      "test",
+      "1",
+      "0",
+      rgt000,
+      rgt000,
+      account2,
+      { from: account2 }
+    );
+  });
+
+  it("Should pause NODE_MGR", async () => {
+    console.log(
+      "//**************************************END purchaseNode FAIL BATCH**********************************************/"
     );
     console.log(
       "//**************************************BEGIN addUser FAIL BATCH**********************************************/"
@@ -1781,7 +1858,7 @@ contract("NODE_MGR", (accounts) => {
     return NODE_MGR.pause({ from: account1 });
   });
 
-  //4
+  //7
   it("Should fail because NODE_MGR is paused", async () => {
     return NODE_MGR.addUser("1000001", account2Hash, "10", { from: account2 });
   });
@@ -1791,13 +1868,37 @@ contract("NODE_MGR", (accounts) => {
   });
 
   //5
-  it("Should fail because caller does not hold Node token", async () => {
+  it("Should fail because caller not auth", async () => {
     return NODE_MGR.addUser("1000001", account2Hash, "10", { from: account2 });
   });
 
   it("Should pause NODE_MGR", async () => {
+    return NODE_MGR.pause({ from: account1 });
+  });
+
+  //8
+  it("Should fail because NODE_MGR is paused", async () => {
     console.log(
       "//**************************************END addUser FAIL BATCH**********************************************/"
+    );
+    console.log(
+      "//**************************************BEGIN updateImportStatus FAIL BATCH**********************************************/"
+    );
+    return NODE_MGR.updateImportStatus("1000001", "1000002", "1", { from: account1 });
+  });
+
+  it("Should unpause NODE_MGR", async () => {
+    return NODE_MGR.unpause({ from: account1 });
+  });
+
+  //9
+  it("Should fail because caller !ID_VERIFIER", async () => {
+    return NODE_MGR.updateImportStatus("1000001", "1000002", "1", { from: account2 });
+  });
+
+  it("Should pause NODE_MGR", async () => {
+    console.log(
+      "//**************************************END updateImportStatus FAIL BATCH**********************************************/"
     );
     console.log(
       "//**************************************BEGIN updateNodeCAS FAIL BATCH**********************************************/"
@@ -1805,7 +1906,7 @@ contract("NODE_MGR", (accounts) => {
     return NODE_MGR.pause({ from: account1 });
   });
 
-  //6
+  //10
   it("Should fail because NODE_MGR is paused", async () => {
     return NODE_MGR.updateNodeCAS("1", rgt000, rgt000, { from: account1 });
   });
@@ -1814,12 +1915,12 @@ contract("NODE_MGR", (accounts) => {
     return NODE_MGR.unpause({ from: account1 });
   });
 
-  //7
+  //11
   it("Should fail because caller is not NTH", async () => {
     return NODE_MGR.updateNodeCAS("1", rgt000, rgt000, { from: account2 });
   });
 
-  //8
+  //12
   it("Should fail because CAS for node is locked", async () => {
     return NODE_MGR.updateNodeCAS("1", rgt000, rgt000, { from: account1 });
   });
@@ -1834,7 +1935,7 @@ contract("NODE_MGR", (accounts) => {
     return NODE_MGR.pause({ from: account1 });
   });
 
-  //9
+  //13
   it("Should fail because NODE_MGR is paused", async () => {
     return NODE_MGR.setOperationCosts(
       "1000001",
@@ -1851,8 +1952,8 @@ contract("NODE_MGR", (accounts) => {
     return NODE_MGR.unpause({ from: account1 });
   });
 
-  //10
-  it("Should fail because caller is not NTH", async () => {
+  //14
+  it("Should fail because caller !ID_VERIFIER", async () => {
     return NODE_MGR.setOperationCosts(
       "1000001",
       "1",
@@ -1874,9 +1975,9 @@ contract("NODE_MGR", (accounts) => {
     return NODE_MGR.pause({ from: account1 });
   });
 
-  //11
+  //15
   it("Should fail because NODE_MGR is paused", async () => {
-    return NODE_MGR.setNonMutableData("1000001", "1", "0", account2, {
+    return NODE_MGR.setNonMutableData("1000001", "1", "0", account2, "0", {
       from: account2,
     });
   });
@@ -1885,9 +1986,9 @@ contract("NODE_MGR", (accounts) => {
     return NODE_MGR.unpause({ from: account1 });
   });
 
-  //12
-  it("Should fail because caller is not NTH", async () => {
-    return NODE_MGR.setNonMutableData("1000001", "1", "0", account2, {
+  //16
+  it("Should fail because caller !ID_VERIFIER", async () => {
+    return NODE_MGR.setNonMutableData("1000001", "1", "0", account2, "0", {
       from: account2,
     });
   });
@@ -1908,23 +2009,86 @@ contract("NODE_MGR", (accounts) => {
     );
   });
 
-  //13
+  //17
   it("Should fail because immutable data = 255", async () => {
-    return NODE_MGR.setNonMutableData("50", "255", "0", account1, {
+    return NODE_MGR.setNonMutableData("50", "255", "0", account1, "0", {
+      from: account1,
+    });
+  });
+
+  //18
+  it("Should fail because managementType = 0", async () => {
+    return NODE_MGR.setNonMutableData("50", "0", "0", account1, "0", {
       from: account1,
     });
   });
 
   it("Should change Immutable data", async () => {
-    return NODE_MGR.setNonMutableData("50", "1", "1", account1, {
+    return NODE_MGR.setNonMutableData("50", "1", "1", account1, "0", {
       from: account1,
     });
   });
 
-  //14
+  //19
   it("Should fail because immutable data has already been set", async () => {
-    return NODE_MGR.setNonMutableData("50", "1", "0", account1, {
+    return NODE_MGR.setNonMutableData("50", "1", "0", account1, "0", {
       from: account1,
+    });
+  });
+
+  it("Should pause NODE_MGR", async () => {
+    console.log(
+      "//**************************************END setNonMutableData FAIL BATCH**********************************************/"
+    );
+    console.log(
+      "//**************************************BEGIN setExtendedNodeData FAIL BATCH**********************************************/"
+    );
+    return NODE_MGR.pause({ from: account1 });
+  });
+
+  //20
+  it("Should fail because NODE_MGR is paused", async () => {
+    return NODE_MGR.setExtendedNodeData("1000001", "1", "0", "0", "0", "0", {
+      from: account2,
+    });
+  });
+
+  it("Should unpause NODE_MGR", async () => {
+    return NODE_MGR.unpause({ from: account1 });
+  });
+
+  //21
+  it("Should fail because caller !ID_VERIFIER", async () => {
+    return NODE_MGR.setExtendedNodeData("1000001", "1", "0", "0", "0", "0", {
+      from: account2,
+    });
+  });
+
+  it("Should pause NODE_MGR", async () => {
+    console.log(
+      "//**************************************END setExtendedNodeData FAIL BATCH**********************************************/"
+    );
+    console.log(
+      "//**************************************BEGIN setExternalIdToken FAIL BATCH**********************************************/"
+    );
+    return NODE_MGR.pause({ from: account1 });
+  });
+
+  //22
+  it("Should fail because NODE_MGR is paused", async () => {
+    return NODE_MGR.setExternalIdToken("1000001", A_TKN.address, "1", {
+      from: account2,
+    });
+  });
+
+  it("Should unpause NODE_MGR", async () => {
+    return NODE_MGR.unpause({ from: account1 });
+  });
+
+  //23
+  it("Should fail because caller !ID_VERIFIER", async () => {
+    return NODE_MGR.setExternalIdToken("1000001", A_TKN.address, "1",  {
+      from: account2,
     });
   });
 
