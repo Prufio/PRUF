@@ -91,7 +91,7 @@ contract NODE_TKN is
     modifier isContractAdmin() {
         require(
             hasRole(CONTRACT_ADMIN_ROLE, _msgSender()),
-            "AT:MOD-ICA:Calling address does not belong to a contract admin"
+            "NT:MOD-ICA:Calling address does not belong to a contract admin"
         );
         _;
     }
@@ -104,7 +104,7 @@ contract NODE_TKN is
     modifier isMinter() {
         require(
             hasRole(MINTER_ROLE, _msgSender()),
-            "AT:MOD-IM: Calling address !minter"
+            "NT:MOD-IM: Calling address !minter"
         );
         _;
     }
@@ -196,7 +196,7 @@ contract NODE_TKN is
     ) external isContractAdmin {
         require(
             _nodeStorageAddress != address(0),
-            "AT:SSC:Storage address = 0"
+            "NT:SNSC:Storage address = 0"
         );
         //^^^^^^^checks^^^^^^^^^
 

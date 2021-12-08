@@ -632,6 +632,10 @@ contract("NODE_TKN", (accounts) => {
     return NODE_MGR.grantRole(IDverifierRoleB32, NODE_BLDR.address, { from: account1 });
   });
 
+  it("Should add NODE_STOR to NODE_TKN", () => {
+    return NODE_TKN.setNodeStorageContract(NODE_STOR.address, { from: account1 })
+  })
+
   it("Should add Storage to each contract", () => {
     console.log("Adding in APP");
     return APP.setStorageContract(STOR.address, { from: account1 })
