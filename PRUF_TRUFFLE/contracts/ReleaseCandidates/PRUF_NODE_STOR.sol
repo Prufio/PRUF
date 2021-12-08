@@ -10,7 +10,7 @@ ________\/\\\ ____________\/\\\ _____\//\\\_\//\\\\\\\\\ _\/\\\ ____________
 _________\/// _____________\/// _______\/// __\///////// __\/// _____________
 *---------------------------------------------------------------------------*/
 
- //DPS:NEW:NODE_TKN must have NODE_ADMIN_ROLE in NODE_STOR
+//DPS:NEW:NODE_TKN must have NODE_ADMIN_ROLE in NODE_STOR
 
 /**-----------------------------------------------------------------
  * PRUF NODE_STOR
@@ -526,10 +526,11 @@ contract NODE_STOR is BASIC {
      * @param _otherNode - node to be potentially imported
      * returns importability status of _thisNode=>_othernode mapping
      */
-    function getImportStatus(
-        uint32 _thisNode,
-        uint32 _otherNode
-    ) external view returns (uint256) {
+    function getImportStatus(uint32 _thisNode, uint32 _otherNode)
+        external
+        view
+        returns (uint256)
+    {
         return importApprovals[_thisNode][_otherNode];
     }
 

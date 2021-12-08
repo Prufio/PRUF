@@ -70,7 +70,6 @@ contract NODE_TKN is
     bytes32 public constant PAUSER_ROLE = keccak256("PAUSER_ROLE");
     bytes32 public constant DAO_ROLE = keccak256("DAO_ROLE");
 
-    address internal NODE_STOR_Address;
     NODE_STOR_Interface internal NODE_STOR;
 
     uint256 trustedAgentEnabled = 1;
@@ -200,7 +199,7 @@ contract NODE_TKN is
         );
         //^^^^^^^checks^^^^^^^^^
 
-        NODE_STOR = NODE_STOR_Interface(NODE_STOR_Address);
+        NODE_STOR = NODE_STOR_Interface(_nodeStorageAddress);
         //^^^^^^^effects^^^^^^^^^
     }
 
