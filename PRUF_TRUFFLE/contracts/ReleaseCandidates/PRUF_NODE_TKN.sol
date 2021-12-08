@@ -70,9 +70,6 @@ contract NODE_TKN is
     bytes32 public constant PAUSER_ROLE = keccak256("PAUSER_ROLE");
     bytes32 public constant DAO_ROLE = keccak256("DAO_ROLE");
 
-    address internal STOR_Address;
-    STOR_Interface internal STOR;
-
     address internal NODE_STOR_Address;
     NODE_STOR_Interface internal NODE_STOR;
 
@@ -120,8 +117,8 @@ contract NODE_TKN is
     function fixOrphanedNode(uint256 _thisNode) public {
         require(_thisNode <= 4294967295, "NT:FON:Node ID out of range");
         uint32 node = uint32(_thisNode);
-        //uint256 bit6 = NODE_STOR.getSwitchAt(node, 6);
-        uint256 bit6 = 1;
+        uint256 bit6 = NODE_STOR.getSwitchAt(node, 6);
+
 
         if (bit6 == 1) {
             ExtendedNodeData memory extendedNodeInfo = NODE_STOR
@@ -129,18 +126,18 @@ contract NODE_TKN is
             address holderOfIdToken;
             //DPS:TEST:NEW test this by calling it on tokens that dont exist as well as ones that do.
             //NOT SURE THIS WILL WORK AS WRITTEN!!!!
-            // try
-            //     IERC721(extendedNodeInfo.idProviderAddr).ownerOf(
-            //         extendedNodeInfo.idProviderTokenId
-            //     )
-            // returns (address addr) {
-            //     //if the try works, should transfer _thisNode to the address of the ID token
-            //     holderOfIdToken = addr;
-            //     _transfer(ownerOf(_thisNode), holderOfIdToken, _thisNode);
-            // } catch Error(string memory) {
-            //     //if the try fails (ID token not exist) then clear the bit6 and ID token data from the node
-            //     NODE_STOR.unlinkExternalId(node);
-            // }
+            try
+                IERC721(extendedNodeInfo.idProviderAddr).ownerOf(
+                    extendedNodeInfo.idProviderTokenId
+                )
+            returns (address addr) {
+                //if the try works, should transfer _thisNode to the address of the ID token
+                holderOfIdToken = addr;
+                _transfer(ownerOf(_thisNode), holderOfIdToken, _thisNode);
+            } catch Error(string memory) {
+                //if the try fails (ID token not exist) then clear the bit6 and ID token data from the node
+                NODE_STOR.unlinkExternalId(node);
+            }
         }
     }
 
@@ -192,28 +189,19 @@ contract NODE_TKN is
 
     /** DPS:TEST NEW CTS:EXAMINE NOT NEEDED, just need to add NODE_STOR
      * @dev Set storage contract to interface with
-     * @param _storageAddress - Storage contract address
+     * @param _nodeStorageAddress - Storage contract address
      */
-    function setStorageContract(address _storageAddress) //CTS:EXAMINE why is this needed?
+    function setNodeStorageContract(address _nodeStorageAddress) //CTS:EXAMINE why is this needed?
         external
         isContractAdmin
     {
-        require(_storageAddress != address(0), "AT:SSC:Storage address = 0");
+        require(_nodeStorageAddress != address(0), "AT:SSC:Storage address = 0");
         //^^^^^^^checks^^^^^^^^^
 
-        STOR = STOR_Interface(_storageAddress);
+        NODE_STOR = NODE_STOR_Interface(NODE_STOR_Address);
         //^^^^^^^effects^^^^^^^^^
     }
 
-    /** DPS:TEST NEW CTS:EXAMINE NOT NEEDED, just need to add NODE_STOR
-     * @dev Address Setters  - resolves addresses from storage and sets local interfaces
-     */
-    function resolveContractAddresses() external isContractAdmin {
-        //^^^^^^^checks^^^^^^^^^
-        NODE_STOR_Address = STOR.resolveContractAddress("NODE_STOR");
-        NODE_STOR = NODE_STOR_Interface(NODE_STOR_Address);
-        //^^^^^^^effects/interactions^^^^^^^^^
-    }
 
     /**
      * @dev Mint a Node token
