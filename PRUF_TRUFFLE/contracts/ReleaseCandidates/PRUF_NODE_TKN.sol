@@ -15,7 +15,7 @@ _________\/// _____________\/// _______\/// __\///////// __\/// _____________
  * Node token contract. PRüF Node tokens grant permissions for node management and asset minting.
  *---------------------------------------------------------------*/
 
- //DPS:NEW:NODE_TKN must have NODE_ADMIN_ROLE in NODE_STOR
+//DPS:NEW:NODE_TKN must have NODE_ADMIN_ROLE in NODE_STOR
 
 // SPDX-License-Identifier: UNLICENSED
 pragma solidity ^0.8.7;
@@ -119,7 +119,6 @@ contract NODE_TKN is
         uint32 node = uint32(_thisNode);
         uint256 bit6 = NODE_STOR.getSwitchAt(node, 6);
 
-
         if (bit6 == 1) {
             ExtendedNodeData memory extendedNodeInfo = NODE_STOR
                 .getExtendedNodeData(node); //safe because no node tokens can be minted beyond uint32
@@ -191,17 +190,18 @@ contract NODE_TKN is
      * @dev Set storage contract to interface with
      * @param _nodeStorageAddress - Storage contract address
      */
-    function setNodeStorageContract(address _nodeStorageAddress) //CTS:EXAMINE why is this needed?
-        external
-        isContractAdmin
-    {
-        require(_nodeStorageAddress != address(0), "AT:SSC:Storage address = 0");
+    function setNodeStorageContract(
+        address _nodeStorageAddress //CTS:EXAMINE why is this needed?
+    ) external isContractAdmin {
+        require(
+            _nodeStorageAddress != address(0),
+            "AT:SSC:Storage address = 0"
+        );
         //^^^^^^^checks^^^^^^^^^
 
         NODE_STOR = NODE_STOR_Interface(NODE_STOR_Address);
         //^^^^^^^effects^^^^^^^^^
     }
-
 
     /**
      * @dev Mint a Node token
