@@ -51,7 +51,7 @@ contract A_TKN is
     ERC721Pausable
 {
     using Counters for Counters.Counter;
-    //using Strings for uint256;
+    using Strings for uint256;
 
     //mapping for token URIs
     mapping(uint256 => string) private _tokenURIs;
