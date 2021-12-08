@@ -376,8 +376,39 @@ interface UTIL_TKN_Interface {
     import "./Imports/security/ReentrancyGuard.sol";
  */
 interface NODE_TKN_Interface {
-    /*
-     * @dev Mints node token, must be isContractAdmin
+    /**
+     * @dev Universally callable function that sends a node token to the address of its referenced ID token,
+     * or removes the bit6 flag if its ID token does not exist.
+     */
+    function fixOrphanedNode(uint256 _thisNode) external;
+
+    /**
+     * @dev See {IERC721Metadata-tokenURI}.
+     */
+    function tokenURI(uint256 tokenId) external view returns (string memory);
+
+    /**
+     * @dev See {IERC165-supportsInterface}.
+     * @param interfaceId - ID of interface
+     */
+    function supportsInterface(bytes4 interfaceId) external view returns (bool);
+
+    //----------------------External Functions----------------------//
+
+    /** DPS:TEST NEW CTS:EXAMINE NOT NEEDED, just need to add NODE_STOR
+     * @dev Set storage contract to interface with
+     * @param _nodeStorageAddress - Storage contract address
+     */
+    function setNodeStorageContract(
+        address _nodeStorageAddress //CTS:EXAMINE why is this needed?
+    ) external;
+
+    /**
+     * @dev Mint a Node token
+     * @param _recipientAddress - Address to mint token into
+     * @param _tokenId - Token ID to mint
+     * @param _tokenURI - URI string to atatch to token
+     * @return Token ID of minted token
      */
     function mintNodeToken(
         address _recipientAddress,
@@ -490,14 +521,6 @@ interface NODE_TKN_Interface {
      * @dev Returns the token collection symbol.
      */
     function symbol() external view returns (string memory tokenSymbol);
-
-    /**
-     * @dev Returns the Uniform Resource Identifier (URI) for `tokenId` token.
-     */
-    function tokenURI(uint256 tokenId)
-        external
-        view
-        returns (string memory URI);
 
     /**
      * @dev Returns the total amount of tokens stored by the contract.
@@ -965,10 +988,7 @@ interface A_TKN_Interface {
      * @dev returns a baseURI for a storage provider / index combination, as well as the total number of URIs.
      * @param _node - node
      */
-    function getBaseUriForNode(uint32 _node)
-        external;
-
-
+    function getBaseUriForNode(uint32 _node) external;
 
     // /*
     //  * @dev Reassures user that token is minted in the PRUF system
@@ -1390,4 +1410,3 @@ interface MARKET_TKN_Interface {
 }
 
 //=========================================================================================================================================================================================================
-
