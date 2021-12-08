@@ -633,7 +633,6 @@ contract("NODE_TKN", (accounts) => {
   });
 
   it("Should add NODE_STOR to NODE_TKN", () => {
-    console.log("Adding in APP");
     return NODE_TKN.setNodeStorageContract(NODE_STOR.address, { from: account1 })
   })
 
