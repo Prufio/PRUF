@@ -116,6 +116,13 @@ contract("NODE_TKN", (accounts) => {
     "//**************************BEGIN BOOTSTRAP**************************//"
   );
 
+  function timeout(ms) {
+    console.log(
+      "//**************************************END REWARDS_VAULT SETUP**********************************************/"
+    );
+    return new Promise((resolve) => setTimeout(resolve, ms));
+  }
+
   const account1 = accounts[0];
   const account2 = accounts[1];
   const account3 = accounts[2];
@@ -163,33 +170,33 @@ contract("NODE_TKN", (accounts) => {
 
     asset14raw = await Helper.getIdxHashRaw("nnn", "nnn", "nnn", "nnn");
 
-    asset1 = await Helper.getIdxHash(asset1raw, '1000003');
+    asset1 = await Helper.getIdxHash(asset1raw, "1000003");
 
-    asset2 = await Helper.getIdxHash(asset2raw, '1000001');
+    asset2 = await Helper.getIdxHash(asset2raw, "1000001");
 
-    asset3 = await Helper.getIdxHash(asset3raw, '1000001');
+    asset3 = await Helper.getIdxHash(asset3raw, "1000001");
 
-    asset4 = await Helper.getIdxHash(asset4raw, '1000001');
+    asset4 = await Helper.getIdxHash(asset4raw, "1000001");
 
-    asset5 = await Helper.getIdxHash(asset5raw, '1000001');
+    asset5 = await Helper.getIdxHash(asset5raw, "1000001");
 
-    asset6 = await Helper.getIdxHash(asset6raw, '1000003');
+    asset6 = await Helper.getIdxHash(asset6raw, "1000003");
 
-    asset7 = await Helper.getIdxHash(asset7raw, '1000001');
+    asset7 = await Helper.getIdxHash(asset7raw, "1000001");
 
-    asset8 = await Helper.getIdxHash(asset8raw, '1000001');
+    asset8 = await Helper.getIdxHash(asset8raw, "1000001");
 
-    asset9 = await Helper.getIdxHash(asset9raw, '1000001');
+    asset9 = await Helper.getIdxHash(asset9raw, "1000001");
 
-    asset10 = await Helper.getIdxHash(asset10raw, '1000001');
+    asset10 = await Helper.getIdxHash(asset10raw, "1000001");
 
-    asset11 = await Helper.getIdxHash(asset11raw, '1000003');
+    asset11 = await Helper.getIdxHash(asset11raw, "1000003");
 
-    asset12 = await Helper.getIdxHash(asset12raw, '1000001');
+    asset12 = await Helper.getIdxHash(asset12raw, "1000001");
 
-    asset13 = await Helper.getIdxHash(asset13raw, '1000003');
+    asset13 = await Helper.getIdxHash(asset13raw, "1000003");
 
-    asset14 = await Helper.getIdxHash(asset14raw, '1000001');
+    asset14 = await Helper.getIdxHash(asset14raw, "1000001");
 
     rgt1 = await Helper.getJustRgtHash(
       asset1,
@@ -354,7 +361,9 @@ contract("NODE_TKN", (accounts) => {
   });
 
   it("Should deploy PRUF_NODE_STOR", async () => {
-    const PRUF_NODE_STOR_TEST = await PRUF_NODE_STOR.deployed({ from: account1 });
+    const PRUF_NODE_STOR_TEST = await PRUF_NODE_STOR.deployed({
+      from: account1,
+    });
     console.log(PRUF_NODE_STOR_TEST.address);
     assert(PRUF_NODE_STOR_TEST.address !== "");
     NODE_STOR = PRUF_NODE_STOR_TEST;
@@ -410,7 +419,9 @@ contract("NODE_TKN", (accounts) => {
   });
 
   it("Should deploy PRUF_NODE_BLDR", async () => {
-    const PRUF_NODE_BLDR_TEST = await PRUF_NODE_BLDR.deployed({ from: account1 });
+    const PRUF_NODE_BLDR_TEST = await PRUF_NODE_BLDR.deployed({
+      from: account1,
+    });
     console.log(PRUF_NODE_BLDR_TEST.address);
     assert(PRUF_NODE_BLDR_TEST.address !== "");
     NODE_BLDR = PRUF_NODE_BLDR_TEST;
@@ -506,7 +517,9 @@ contract("NODE_TKN", (accounts) => {
 
   it("Should add contract addresses to storage", () => {
     console.log("Adding APP to storage for use in Node 0");
-    return STOR.authorizeContract("APP", APP.address, "0", "1", { from: account1 })
+    return STOR.authorizeContract("APP", APP.address, "0", "1", {
+      from: account1,
+    })
 
       .then(() => {
         console.log("Adding NODE_MGR to storage for use in Node 0");
@@ -517,9 +530,15 @@ contract("NODE_TKN", (accounts) => {
 
       .then(() => {
         console.log("Adding NODE_STOR to storage for use in Node 0");
-        return STOR.authorizeContract("NODE_STOR", NODE_STOR.address, "0", "1", {
-          from: account1,
-        });
+        return STOR.authorizeContract(
+          "NODE_STOR",
+          NODE_STOR.address,
+          "0",
+          "1",
+          {
+            from: account1,
+          }
+        );
       })
 
       .then(() => {
@@ -629,12 +648,16 @@ contract("NODE_TKN", (accounts) => {
 
   it("Should authorize account1 for A_TKN", () => {
     console.log("Authorizing account1");
-    return NODE_MGR.grantRole(IDverifierRoleB32, NODE_BLDR.address, { from: account1 });
+    return NODE_MGR.grantRole(IDverifierRoleB32, NODE_BLDR.address, {
+      from: account1,
+    });
   });
 
   it("Should add NODE_STOR to NODE_TKN", () => {
-    return NODE_TKN.setNodeStorageContract(NODE_STOR.address, { from: account1 })
-  })
+    return NODE_TKN.setNodeStorageContract(NODE_STOR.address, {
+      from: account1,
+    });
+  });
 
   it("Should add Storage to each contract", () => {
     console.log("Adding in APP");
@@ -898,11 +921,10 @@ contract("NODE_TKN", (accounts) => {
   });
 
   it("Should authorize all minter contracts for minting A_TKN(s)", () => {
-        console.log("Authorizing APP_NC");
-        return A_TKN.grantRole(minterRoleB32, APP_NC.address, {
-          from: account1,
-        })
-
+    console.log("Authorizing APP_NC");
+    return A_TKN.grantRole(minterRoleB32, APP_NC.address, {
+      from: account1,
+    })
 
       .then(() => {
         console.log("Authorizing APP");
@@ -912,7 +934,7 @@ contract("NODE_TKN", (accounts) => {
       .then(() => {
         console.log("Authorizing RCLR");
         return A_TKN.grantRole(minterRoleB32, RCLR.address, { from: account1 });
-      })
+      });
   });
 
   it("Should authorize all payable contracts for transactions", () => {
@@ -968,12 +990,18 @@ contract("NODE_TKN", (accounts) => {
         return UTIL_TKN.grantRole(payableRoleB32, APP_NC.address, {
           from: account1,
         });
-      })
+      });
   });
 
   it("Should authorize all minter contracts for minting NODE_TKN(s)", () => {
     console.log("Authorizing NODE_MGR");
     return NODE_TKN.grantRole(minterRoleB32, NODE_MGR.address, {
+      from: account1,
+    });
+  });
+
+  it("Should authorize NODE_TKN as nodeAdmin in NODE_STOR", () => {
+    return NODE_STOR.grantRole(nodeAdminRoleB32, NODE_TKN.address, {
       from: account1,
     });
   });
@@ -999,7 +1027,9 @@ contract("NODE_TKN", (accounts) => {
 
   it("Should authorize NODE_MGR for NODE_STOR", () => {
     console.log("Authorizing NODE_MGR");
-    return NODE_STOR.grantRole(nodeAdminRoleB32, NODE_MGR.address, { from: account1 });
+    return NODE_STOR.grantRole(nodeAdminRoleB32, NODE_MGR.address, {
+      from: account1,
+    });
   });
 
   it("Should authorize NODE_MGR for NODE_STOR", () => {
@@ -1009,10 +1039,10 @@ contract("NODE_TKN", (accounts) => {
 
   it("Should authorize account10 for nodeMinterRoleB32", () => {
     console.log("Authorizing NODE_MGR");
-    return NODE_BLDR.grantRole(nodeMinterRoleB32, account10, { from: account1 });
+    return NODE_BLDR.grantRole(nodeMinterRoleB32, account10, {
+      from: account1,
+    });
   });
-
-
 
   it("Should mint a couple of asset root tokens", () => {
     console.log("Minting root token 1 -C");
@@ -1332,7 +1362,7 @@ contract("NODE_TKN", (accounts) => {
       "3",
       "1",
       "0x0000000000000000000000000000000000000000",
-      '66',
+      "66",
       { from: account1 }
     )
 
@@ -1342,7 +1372,7 @@ contract("NODE_TKN", (accounts) => {
           "2",
           "1",
           "0x0000000000000000000000000000000000000000",
-          '66',
+          "66",
           { from: account1 }
         );
       })
@@ -1353,7 +1383,7 @@ contract("NODE_TKN", (accounts) => {
           "2",
           "1",
           "0x0000000000000000000000000000000000000000",
-          '66',
+          "66",
           { from: account1 }
         );
       })
@@ -1364,7 +1394,7 @@ contract("NODE_TKN", (accounts) => {
           "2",
           "1",
           "0x0000000000000000000000000000000000000000",
-          '66',
+          "66",
           { from: account10 }
         );
       })
@@ -1375,7 +1405,7 @@ contract("NODE_TKN", (accounts) => {
           "2",
           "1",
           "0x0000000000000000000000000000000000000000",
-          '66',
+          "66",
           { from: account1 }
         );
       })
@@ -1386,7 +1416,7 @@ contract("NODE_TKN", (accounts) => {
           "2",
           "1",
           "0x0000000000000000000000000000000000000000",
-          '66',
+          "66",
           { from: account10 }
         );
       });
@@ -1398,41 +1428,41 @@ contract("NODE_TKN", (accounts) => {
       from: account1,
     })
 
-    .then(() => {
-      return NODE_STOR.modifyNodeSwitches("1000001", "7", "1", {
-        from: account1,
-      });
-    })
+      .then(() => {
+        return NODE_STOR.modifyNodeSwitches("1000001", "7", "1", {
+          from: account1,
+        });
+      })
 
-    .then(() => {
-      return NODE_STOR.modifyNodeSwitches("1000002", "7", "1", {
-        from: account1,
-      });
-    })
+      .then(() => {
+        return NODE_STOR.modifyNodeSwitches("1000002", "7", "1", {
+          from: account1,
+        });
+      })
 
-    .then(() => {
-      return NODE_STOR.modifyNodeSwitches("1000003", "7", "1", {
-        from: account1,
-      });
-    })
+      .then(() => {
+        return NODE_STOR.modifyNodeSwitches("1000003", "7", "1", {
+          from: account1,
+        });
+      })
 
-    .then(() => {
-      return NODE_STOR.modifyNodeSwitches("1000004", "7", "1", {
-        from: account1,
-      });
-    })
+      .then(() => {
+        return NODE_STOR.modifyNodeSwitches("1000004", "7", "1", {
+          from: account1,
+        });
+      })
 
-    .then(() => {
-      return NODE_STOR.modifyNodeSwitches("1000005", "7", "1", {
-        from: account1,
-      });
-    })
+      .then(() => {
+        return NODE_STOR.modifyNodeSwitches("1000005", "7", "1", {
+          from: account1,
+        });
+      })
 
-    .then(() => {
-      return NODE_STOR.modifyNodeSwitches("1000006", "7", "1", {
-        from: account1,
-      });
-    })
+      .then(() => {
+        return NODE_STOR.modifyNodeSwitches("1000006", "7", "1", {
+          from: account1,
+        });
+      })
 
       .then(() => {
         return NODE_STOR.modifyNodeSwitches("1000001", "8", "1", {
@@ -1570,7 +1600,9 @@ contract("NODE_TKN", (accounts) => {
     return STOR.enableContractForNode("A_TKN", "1", "1", { from: account1 })
 
       .then(() => {
-        return STOR.enableContractForNode("A_TKN", "2", "1", { from: account1 });
+        return STOR.enableContractForNode("A_TKN", "2", "1", {
+          from: account1,
+        });
       })
 
       .then(() => {
@@ -1643,9 +1675,9 @@ contract("NODE_TKN", (accounts) => {
       });
   });
 
-  it("Should mint 30000 tokens to account2", async () => {
+  it("Should mint 2000000 tokens to account2", async () => {
     "//**************************************BEGIN NODE_TKN TEST**********************************************/";
-    return UTIL_TKN.mint(account2, "30000000000000000000000", {
+    return UTIL_TKN.mint(account2, "2000000000000000000000000", {
       from: account1,
     });
   });
@@ -1657,14 +1689,50 @@ contract("NODE_TKN", (accounts) => {
   });
 
   it("Should mint AC20", async () => {
-    return NODE_TKN.mintNodeToken(account2, "20", "Pruf.io", { from: account1 });
+    return NODE_MGR.purchaseNode("test", "1", "2", rgt000, rgt000, account2, {
+      from: account1,
+    });
   });
+
+  it("Should make sure account2 is the ownerOf Node 1000007", async () => {
+    var Record = "";
+
+    return await NODE_TKN.ownerOf(
+      "1000007",
+      { from: account2 },
+      function (_err, _result) {
+        if (_err) {
+        } else {
+          Record = _result;
+          console.log(Record);
+          console.log(account2);
+        }
+      }
+    );
+  });
+
+  it("Should finalize node 20", () => {
+    return NODE_STOR.modifyNodeSwitches("1000007", "6", "1", {
+      from: account1,
+    });
+  });
+
+  // it("Should finalize node 20", () => {
+  //   return NODE_MGR.setNonMutableData(
+  //     "1000007",
+  //     "3",
+  //     "1",
+  //     "0x0000000000000000000000000000000000000000",
+  //     '32',
+  //     { from: account1 }
+  //   )
+  // })
 
   it("Should retrieve 170", async () => {
     var Record = "";
 
     return await NODE_TKN.tokenExists(
-      "20",
+      "1000007",
       { from: account2 },
       function (_err, _result) {
         if (_err) {
@@ -1693,7 +1761,9 @@ contract("NODE_TKN", (accounts) => {
   });
 
   it("Should send node 1000001 to account2", async () => {
-    return NODE_TKN.safeTransferFrom(account1, account2, "1000001", { from: account1 });
+    return NODE_TKN.safeTransferFrom(account1, account2, "1000001", {
+      from: account1,
+    });
   });
 
   it("Should retrieve balance of (2) @ account2", async () => {
@@ -1729,11 +1799,15 @@ contract("NODE_TKN", (accounts) => {
   });
 
   it("Should set the external ID token", async () => {
-    return NODE_STOR.setExternalIdToken("20", A_TKN.address, "1000001", { from: account1 });
+    return NODE_STOR.setExternalIdToken("1000007", A_TKN.address, "1000001", {
+      from: account1,
+    });
   });
 
   it("Should transfer node 1000001(ID for 20) to account1", async () => {
-    return NODE_TKN.safeTransferFrom(account2, account1, "1000001", { from: account2 });
+    return NODE_TKN.safeTransferFrom(account2, account1, "1000001", {
+      from: account2,
+    });
   });
 
   it("Should retrieve balance of (1) @ account2", async () => {
@@ -1769,23 +1843,25 @@ contract("NODE_TKN", (accounts) => {
   });
 
   it("Should fix orphaned node, and send node 20 to account1", async () => {
-    return NODE_TKN.fixOrphanedNode("20", { from: account4 });
+    return NODE_TKN.fixOrphanedNode("1000007", { from: account4 });
   });
 
   it("Should retrieve balance of (0) @ account2", async () => {
     var Record = "";
 
-    return await NODE_TKN.balanceOf(
-      account2,
-      { from: account1 },
-      function (_err, _result) {
-        if (_err) {
-        } else {
-          Record = _result;
-          console.log(Record);
+    await timeout(5000).then(async () => {
+      return await NODE_TKN.balanceOf(
+        account2,
+        { from: account1 },
+        function (_err, _result) {
+          if (_err) {
+          } else {
+            Record = _result;
+            console.log(Record);
+          }
         }
-      }
-    );
+      );
+    });
   });
 
   it("Should retrieve balance of @ account1", async () => {
@@ -1808,7 +1884,7 @@ contract("NODE_TKN", (accounts) => {
     var Record = "";
 
     return await NODE_TKN.tokenURI(
-      "20",
+      "1000007",
       { from: account1 },
       function (_err, _result) {
         if (_err) {
@@ -1832,7 +1908,7 @@ contract("NODE_TKN", (accounts) => {
     console.log(
       "//*********************************END NODE_TKN TEST*****************************************/"
     );
-    
+
     console.log(
       "//**************************************BEGIN THE WORKS CUSTODIAL**********************************************/"
     );
@@ -1852,7 +1928,9 @@ contract("NODE_TKN", (accounts) => {
   });
 
   it("Should write asset12 in Node 1000001", async () => {
-    return APP.newRecord(asset12raw, rgt12, "1000001", "100", asset12raw, { from: account2 });
+    return APP.newRecord(asset12raw, rgt12, "1000001", "100", asset12raw, {
+      from: account2,
+    });
   });
 
   it("Should retrieve show clean asset 12", async () => {

@@ -106,6 +106,7 @@ let nakedAuthCode7;
 let payableRoleB32;
 let IDminterRoleB32;
 let minterRoleB32;
+let IDverifierRoleB32;
 let trustedAgentRoleB32;
 let assetTransferRoleB32;
 let discardRoleB32;
@@ -319,6 +320,8 @@ contract("STOR", (accounts) => {
     assetTransferRoleB32 = await Helper.getStringHash("ASSET_TXFR_ROLE");
 
     IDminterRoleB32 = await Helper.getStringHash("ID_MINTER_ROLE");
+
+    IDverifierRoleB32 = await Helper.getStringHash("ID_VERIFIER_ROLE");
 
     discardRoleB32 = await Helper.getStringHash("DISCARD_ROLE");
 
@@ -984,6 +987,21 @@ contract("STOR", (accounts) => {
     });
   });
 
+  it("Should authorize account1 for A_TKN", () => {
+    console.log("Authorizing account1");
+    return NODE_MGR.grantRole(IDverifierRoleB32, account1, { from: account1 });
+  });
+
+  it("Should authorize account1 for A_TKN", () => {
+    console.log("Authorizing account1");
+    return NODE_MGR.grantRole(IDverifierRoleB32, account10, { from: account1 });
+  });
+
+  it("Should authorize account1 for A_TKN", () => {
+    console.log("Authorizing account1");
+    return NODE_MGR.grantRole(IDverifierRoleB32, NODE_BLDR.address, { from: account1 });
+  });
+
   it("Should authorize A_TKN to discard", () => {
     console.log("Authorizing A_TKN");
     return RCLR.grantRole(discardRoleB32, A_TKN.address, { from: account1 });
@@ -1322,6 +1340,7 @@ contract("STOR", (accounts) => {
       "3",
       "1",
       "0x0000000000000000000000000000000000000000",
+      "66",
       { from: account1 }
     )
 
@@ -1331,6 +1350,7 @@ contract("STOR", (accounts) => {
           "2",
           "1",
           "0x0000000000000000000000000000000000000000",
+          "66",
           { from: account1 }
         );
       })
@@ -1341,6 +1361,7 @@ contract("STOR", (accounts) => {
           "2",
           "1",
           "0x0000000000000000000000000000000000000000",
+          "66",
           { from: account1 }
         );
       })
@@ -1351,6 +1372,7 @@ contract("STOR", (accounts) => {
           "2",
           "1",
           "0x0000000000000000000000000000000000000000",
+          "66",
           { from: account10 }
         );
       })
@@ -1361,6 +1383,7 @@ contract("STOR", (accounts) => {
           "2",
           "1",
           "0x0000000000000000000000000000000000000000",
+          "66",
           { from: account1 }
         );
       })
@@ -1371,6 +1394,7 @@ contract("STOR", (accounts) => {
           "2",
           "1",
           "0x0000000000000000000000000000000000000000",
+          "66",
           { from: account10 }
         );
       });
@@ -2088,7 +2112,7 @@ contract("STOR", (accounts) => {
       "//**************************************END changeNode FAIL BATCH**********************************************/"
     );
     console.log(
-      "//**************************************BEGIN setStolenOrLost FAIL BATCH**********************************************/"
+      "//**************************************BEGIN setLostOrStolen FAIL BATCH**********************************************/"
     );
     return MAL_APP.setLostOrStolen(asset10, "3", { from: account2 });
   });
@@ -2321,7 +2345,7 @@ contract("STOR", (accounts) => {
       "//**************************************END modifyMutable FAIL BATCH**********************************************/"
     );
     console.log(
-      "//**************************************BEGIN modifyNonMutableStorage FAIL BATCH**********************************************/"
+      "//**************************************BEGIN setNonMutableStorage FAIL BATCH**********************************************/"
     );
     return MAL_APP.addNonMutableStorage(asset10, rgt6, rgt000, { from: account2 });
   });

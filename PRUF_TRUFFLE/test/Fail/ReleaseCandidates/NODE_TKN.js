@@ -109,8 +109,8 @@ let minterRoleB32;
 let trustedAgentRoleB32;
 let assetTransferRoleB32;
 let discardRoleB32;
-let IDverifierRoleB32;
 let DAOroleB32;
+let IDverifierRoleB32;
 let nodeAdminRoleB32;
 let nodeMinterRoleB32;
 
