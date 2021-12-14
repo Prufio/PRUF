@@ -1798,8 +1798,24 @@ contract("NODE_TKN", (accounts) => {
     );
   });
 
+  it("Should retrieve extendedNodeData for 1000007", async () => {
+    var Record = "";
+
+    return await NODE_STOR.getExtendedNodeData(
+      "1000007",
+      { from: account1 },
+      function (_err, _result) {
+        if (_err) {
+        } else {
+          Record = _result;
+          console.log(Record);
+        }
+      }
+    );
+  });
+
   it("Should set the external ID token", async () => {
-    return NODE_STOR.setExternalIdToken("1000007", A_TKN.address, "1000001", {
+    return NODE_STOR.setExternalIdToken("1000007", NODE_TKN.address, "1000001", {
       from: account1,
     });
   });
@@ -1842,8 +1858,56 @@ contract("NODE_TKN", (accounts) => {
     );
   });
 
+  it("Should retrieve extendedNodeData for 1000007", async () => {
+    var Record = "";
+
+    return await NODE_STOR.getExtendedNodeData(
+      "1000007",
+      { from: account1 },
+      function (_err, _result) {
+        if (_err) {
+        } else {
+          Record = _result;
+          console.log(Record);
+        }
+      }
+    );
+  });
+
   it("Should fix orphaned node, and send node 20 to account1", async () => {
     return NODE_TKN.fixOrphanedNode("1000007", { from: account4 });
+  });
+
+  it("Should retrieve SWITCH 6 STATUS", async () => {
+    var Record = "";
+
+    return await NODE_STOR.getSwitchAt(
+      "1000007", "6",
+      { from: account1 },
+      function (_err, _result) {
+        if (_err) {
+        } else {
+          Record = _result;
+          console.log(Record);
+        }
+      }
+    );
+  });
+
+  it("Should retrieve extendedNodeData for 1000007", async () => {
+    var Record = "";
+
+    return await NODE_STOR.getExtendedNodeData(
+      "1000007",
+      { from: account1 },
+      function (_err, _result) {
+        if (_err) {
+        } else {
+          Record = _result;
+          console.log(Record);
+        }
+      }
+    );
   });
 
   it("Should retrieve balance of (0) @ account2", async () => {
