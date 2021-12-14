@@ -11,7 +11,6 @@ __/\\\\\\\\\\\\\ _____/\\\\\\\\\ _______/\\__/\\ ___/\\\\\\\\\\\\\\\
         _\/// _____________\/// _______\/// __\///////// __\/// _____________
 
 
-// SPDX-License-Identifier: UNLICENSED
 /*-----------------------------------------------------------------
 * ------------- SETUP PROCEDURES ---NOT DONE:|0|---DONE:|X|-------------
 * -----------------------------------------------------------------
@@ -32,7 +31,9 @@ __/\\\\\\\\\\\\\ _____/\\\\\\\\\ _______/\\__/\\ ___/\\\\\\\\\\\\\\\
 *
 * 7 - STOR|0|
 *
-* 8 - UTIL_TKN|0|
+* 8 - UD_NODE_BLDR|0|
+*
+* 9 - UTIL_TKN|0|
 * 
 * ----------------- ADD DEFAULT CONTRACTS TO STORAGE (STOR.addDefaultContracts)-----------------|0|
 *
@@ -70,12 +71,11 @@ __/\\\\\\\\\\\\\ _____/\\\\\\\\\ _______/\\__/\\ ___/\\\\\\\\\\\\\\\
 *
 * 3 - NODE_TKN (MINTER_ROLEB32, NODE_MGR.address)   |0|        
 *
-* 4 - NODE_MGR (ID_PROVIDER_ROLEB32, NODE_BLDR.address)   |0|
-*              (DAOroleB32, account1),   |0|        
+* 4 - NODE_MGR (ID_PROVIDER_ROLEB32, NODE_BLDR.address),   |0|
+*              (ID_PROVIDER_ROLEB32, UD_721.address)   |0|
 *
-* 5 - NODE_STOR (NODE_ADMIN_ROLEB32, NODE_MGR.address)   |0|
-*               (NODE_ADMIN_ROLEB32, NODE_MGR.address)   |0|
-*               (DAOroleB32, account1),   |0|        
+* 5 - NODE_STOR (NODE_ADMIN_ROLEB32, NODE_MGR.address),   |0|
+*               (NODE_ADMIN_ROLEB32, UD_721.address)   |0|
 *
 * 6 - NODE_BLDR (NODE_MINTER_ROLEB32, NODE_MGR.address)   |0|
 * 
@@ -90,6 +90,8 @@ __/\\\\\\\\\\\\\ _____/\\\\\\\\\ _______/\\__/\\ ___/\\\\\\\\\\\\\\\
 * 4 - APP_NC (STOR.address)|0|
 *
 * 5 - NODE_BLDR (STOR.address)|0|
+*
+* 6 - UD_721 (STOR.address)|0|
 * 
 * ----------------- RESOLVE CONTRACT resolveContractAddresses (CONTRACT.resolveContractAddresses) -----------------|0|
 *
@@ -102,6 +104,8 @@ __/\\\\\\\\\\\\\ _____/\\\\\\\\\ _______/\\__/\\ ___/\\\\\\\\\\\\\\\
 * 4 - A_TKN|0|
 *
 * 5 - APP_NC|0|
+*
+* 6 - UD_721|0|
 * 
 * ----------------- SET PERMITTED STORAGE PROVIDERS (NODE_STOR.setStorageProviders)-----------------|0|
 * 1 - Unconfigured ('0', '1')   |0|
@@ -113,9 +117,9 @@ __/\\\\\\\\\\\\\ _____/\\\\\\\\\ _______/\\__/\\ ___/\\\\\\\\\\\\\\\
 * ----------------- SET BASEURI FOR STORAGE PROVIDERS (NODE_STOR.setStorageProviders)-----------------|0|
 * 1 - Unconfigured ('0', 'UNCONFIGURED')   |0|
 *
-* 1 - Mutable(IPFS) ('1', 'IPFS')   |0|
+* 1 - Mutable(IPFS) ('1', 'ipfs.io/ipfs/')   |0|
 *
-* 2 - ARWEAVE ('2', 'ARWEAVE')   |0|
+* 2 - ARWEAVE ('2', 'arweave.net/')   |0|
 * 
 * ----------------- SET PERMITTED MANAGEMENT TYPES (NODE_STOR.setMangementTypes)-----------------|0|
 * 1 - Unrestricted ('0', '1')   |0|
