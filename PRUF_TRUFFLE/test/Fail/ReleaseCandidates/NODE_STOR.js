@@ -2619,6 +2619,13 @@ contract("NODE_STOR", (accounts) => {
   });
 
   //61
+  it("Should fail because token does not exist", async () => {
+    return NODE_STOR.setExternalIdToken("1000001", A_TKN.address, "1000001",  {
+      from: account2,
+    });
+  });
+
+  //62
   it("Should fail because bit pos !<0||>9", async () => {
     console.log(
       "//**************************************END unlinkExternalId FAIL BATCH**********************************************/"
@@ -2629,7 +2636,7 @@ contract("NODE_STOR", (accounts) => {
     return NODE_STOR.getSwitchAt("1000001", "10", { from: account2 });
   });
 
-  //62
+  //63
   it("Should fail because Node not yet populated", async () => {
     console.log(
       "//**************************************END getSwitchAt FAIL BATCH**********************************************/"
@@ -2640,7 +2647,7 @@ contract("NODE_STOR", (accounts) => {
     return NODE_STOR.getInvoice("100", "1", { from: account2 });
   });
 
-  //63
+  //64
   it("Should fail because service 0 is not valid", async () => {
     return NODE_STOR.getInvoice("1000001", "0", { from: account2 });
   });
