@@ -1,4 +1,4 @@
-/*--------------------------------------------------------PRüF0.8.8
+/*--------------------------------------------------------PRüF0.9.0
 __/\\\\\\\\\\\\\ _____/\\\\\\\\\ _______/\\__/\\ ___/\\\\\\\\\\\\\\\        
 __\/\\\/////////\\\ _/\\\///////\\\ ____\//__\//____\/\\\///////////__       
 ___\/\\\_______\/\\\_\/\\\_____\/\\\ ________________\/\\\ ____________      
@@ -9,8 +9,6 @@ _______\/\\\ ____________\/\\\ ____\//\\\ _\/\\\___\/\\\_\/\\\ ____________
 ________\/\\\ ____________\/\\\ _____\//\\\_\//\\\\\\\\\ _\/\\\ ____________
 _________\/// _____________\/// _______\/// __\///////// __\/// _____________
 *---------------------------------------------------------------------------*/
-
-//DPS:NEW:NODE_TKN must have NODE_ADMIN_ROLE in NODE_STOR
 
 /**-----------------------------------------------------------------
  * PRUF NODE_STOR
@@ -50,7 +48,7 @@ import "../Imports/security/ReentrancyGuard.sol";
 contract NODE_STOR is BASIC {
     bytes32 public constant NODE_ADMIN_ROLE = keccak256("NODE_ADMIN_ROLE");
 
-    bytes32 public constant B320x01 =
+    bytes32 public constant B320x01 = //CTS:EXAMINE does this need to be set as a constant or can we just put it in directly because its only used once.
         0x0000000000000000000000000000000000000000000000000000000000000001;
 
     mapping(uint32 => uint32) private localNodeFor; //lookup table for child nodes from origin nodeID
@@ -210,10 +208,12 @@ contract NODE_STOR is BASIC {
         whenNotPaused
         isNodeAdmin
     {
+        //^^^^^^^checks^^^^^^^^^
         delete nodeId[_name];
         if (bytes(_name).length != 0) {
             nodeId[_name] = _node;
         }
+        //^^^^^^^effects^^^^^^^^^
     }
 
     /**
@@ -243,13 +243,13 @@ contract NODE_STOR is BASIC {
         Node memory _ac = nodeData[_nodeRoot];
         uint256 tokenId = uint256(_node);
 
-        require((tokenId != 0), "NS:AMAC: Node = 0"); //sanity check inputs
-        require(_discount <= 10000, "NS:AMAC: Discount > 10000 (100%)");
+        require((tokenId != 0), "NS:MN: Node = 0"); //sanity check inputs
+        require(_discount <= 10000, "NS:MN: Discount > 10000 (100%)");
         require( //has valid root
             (_ac.custodyType == 3) || (_nodeRoot == _node),
-            "NS:AMAC: Root !exist"
+            "NS:MN: Root !exist"
         );
-        require(NODE_TKN.tokenExists(tokenId) == 170, "NS:AMAC: Node !exist");
+        require(NODE_TKN.tokenExists(tokenId) == 170, "NS:MN: Node !exist");
 
         //^^^^^^^checks^^^^^^^^^
 
@@ -368,7 +368,7 @@ contract NODE_STOR is BASIC {
     }
 
     /**
-     * @dev Set import status for foreign nodes
+     * @dev Set import status for foreign nodes //CTS:EXAMINE needs better explanation
      * @param _thisNode - node to dis/allow importing into
      * @param _otherNode - node to be imported
      * @param _newStatus - importability status (0=not importable, 1=importable >1 =????)
@@ -476,13 +476,13 @@ contract NODE_STOR is BASIC {
         nodeDetails[_node].idProviderTokenId = _tokenId;
     }
 
-    /** DPS:TES:NEW
+    /**
      * @dev DAO set an external erc721 token as ID verification (when bit 6 set to 1)
      * @param _node - node being configured
      * @param _tokenContractAddress  token contract used to verify id
      * @param _tokenId token ID used to verify id
      */
-    function daoSetExternalIdToken(
+    function daoSetExternalId(
         uint32 _node,
         address _tokenContractAddress,
         uint256 _tokenId
@@ -491,7 +491,7 @@ contract NODE_STOR is BASIC {
         nodeDetails[_node].idProviderTokenId = _tokenId;
     }
 
-    /** DPS:TEST:NEW
+    /**
      * @dev unlink erc721 token as ID verification
      * @param _node - node being unlinked
      */

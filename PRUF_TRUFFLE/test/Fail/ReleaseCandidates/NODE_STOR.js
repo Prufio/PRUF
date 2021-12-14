@@ -2591,9 +2591,9 @@ contract("NODE_STOR", (accounts) => {
       "//**************************************END setExternalIdToken FAIL BATCH**********************************************/"
     );
     console.log(
-      "//**************************************BEGIN daoSetExternalIdToken FAIL BATCH**********************************************/"
+      "//**************************************BEGIN daoSetExternalId FAIL BATCH**********************************************/"
     );
-    return NODE_STOR.daoSetExternalIdToken("1000001", NODE_TKN.address, "1000001", { from: account2 });
+    return NODE_STOR.daoSetExternalId("1000001", NODE_TKN.address, "1000001", { from: account2 });
   });
 
   it("Should unpause NODE_STOR", async () => {
@@ -2604,13 +2604,13 @@ contract("NODE_STOR", (accounts) => {
 
   //59
   it("Should fail because caller !DAO", async () => {
-    return NODE_STOR.daoSetExternalIdToken("1000001", NODE_TKN.address, "1000001",  { from: account2 });
+    return NODE_STOR.daoSetExternalId("1000001", NODE_TKN.address, "1000001",  { from: account2 });
   });
 
   //60
   it("Should fail because caller !NodeAdmin", async () => {
     console.log(
-      "//**************************************END daoSetExternalIdToken FAIL BATCH**********************************************/"
+      "//**************************************END daoSetExternalId FAIL BATCH**********************************************/"
     );
     console.log(
       "//**************************************BEGIN unlinkExternalId FAIL BATCH**********************************************/"

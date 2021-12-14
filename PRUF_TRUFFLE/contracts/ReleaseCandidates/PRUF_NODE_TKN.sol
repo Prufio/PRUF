@@ -1,4 +1,4 @@
-/*--------------------------------------------------------PRüF0.8.8
+/*--------------------------------------------------------PRüF0.9.0
 __/\\\\\\\\\\\\\ _____/\\\\\\\\\ _______/\\__/\\ ___/\\\\\\\\\\\\\\\        
 __\/\\\/////////\\\ _/\\\///////\\\ ____\//__\//____\/\\\///////////__       
 ___\/\\\_______\/\\\_\/\\\_____\/\\\ ________________\/\\\ ____________      
@@ -14,8 +14,6 @@ _________\/// _____________\/// _______\/// __\///////// __\/// _____________
  * PRUF NODE_TKN
  * Node token contract. PRüF Node tokens grant permissions for node management and asset minting.
  *---------------------------------------------------------------*/
-
-//DPS:NEW:NODE_TKN must have NODE_ADMIN_ROLE in NODE_STOR
 
 // SPDX-License-Identifier: UNLICENSED
 pragma solidity ^0.8.7;
@@ -82,7 +80,7 @@ contract NODE_TKN is
 
     //----------------------Modifiers----------------------//
 
-    /** DPS:TEST:NEW
+    /**
      * @dev Verify user credentials
      * Originating Address:
      *      has CONTRACT_ADMIN_ROLE
@@ -186,16 +184,16 @@ contract NODE_TKN is
 
     //----------------------External Functions----------------------//
 
-    /** DPS:TEST NEW CTS:EXAMINE NOT NEEDED, just need to add NODE_STOR
+    /** 
      * @dev Set storage contract to interface with
      * @param _nodeStorageAddress - Node storage contract address
      */
     function setNodeStorageContract(
-        address _nodeStorageAddress //CTS:EXAMINE why is this needed?
+        address _nodeStorageAddress
     ) external isContractAdmin {
         require(
             _nodeStorageAddress != address(0),
-            "NT:SNSC:Storage address = 0"
+            "NT:SNSC: address = 0"
         );
         //^^^^^^^checks^^^^^^^^^
 
@@ -215,7 +213,7 @@ contract NODE_TKN is
         uint256 _tokenId,
         string calldata _tokenURI
     ) external isMinter nonReentrant returns (uint256) {
-        require(_tokenId <= 4294967295); //uint32 cap DPS:TEST:NEW
+        require(_tokenId <= 4294967295); //uint32 cap
         //^^^^^^^checks^^^^^^^^^
 
         _safeMint(_recipientAddress, _tokenId);
@@ -293,7 +291,7 @@ contract NODE_TKN is
         //^^^^^^^interactions^^^^^^^^^
     }
 
-    /** DPS:NEW:TEST
+    /**
      * @dev all paused functions are blocked here (inside ERC720Pausable.sol)
      * @param from - from address
      * @param to - to address

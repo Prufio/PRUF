@@ -395,12 +395,12 @@ interface NODE_TKN_Interface {
 
     //----------------------External Functions----------------------//
 
-    /** DPS:TEST NEW CTS:EXAMINE NOT NEEDED, just need to add NODE_STOR
+    /**
      * @dev Set storage contract to interface with
      * @param _nodeStorageAddress - Storage contract address
      */
     function setNodeStorageContract(
-        address _nodeStorageAddress //CTS:EXAMINE why is this needed?
+        address _nodeStorageAddress
     ) external;
 
     /**

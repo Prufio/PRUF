@@ -1700,6 +1700,10 @@ contract("NODE_STOR", (accounts) => {
     });
   });
 
+  it("Should mint asset1 in Node 1000003", async () => {
+    return APP_NC.newRecord(asset1raw, rgt1, "1000003", "5000", asset1raw, { from: account1 });
+  });
+
   it("Should update Mutable of Node 1000001 to rgt1", async () => {
     return NODE_STOR.updateNodeCAS("1000001", rgt1, rgt1, { from: account1 });
   });
@@ -1976,8 +1980,20 @@ contract("NODE_STOR", (accounts) => {
     );
   });
 
+  it("Should set externalId for node 1000003", async () => {
+    return NODE_STOR.setExternalIdToken("1000003", A_TKN.address, asset1, {
+      from: account1,
+    });
+  });
+
   it("Should modify switch 5 to 1", async () => {
     return NODE_STOR.modifyNodeSwitches("1000003", "5", "1", {
+      from: account1,
+    });
+  });
+
+  it("Should unlink node 1000003 from asset1", async () => {
+    return NODE_STOR.unlinkExternalId("1000003", {
       from: account1,
     });
   });

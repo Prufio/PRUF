@@ -13,9 +13,10 @@ _________\/// _____________\/// _______\/// __\///////// __\/// _____________
 const PRUF_STOR = artifacts.require("STOR");
 const PRUF_APP = artifacts.require("APP");
 const PRUF_NODE_MGR = artifacts.require("NODE_MGR");
+const PRUF_MARKET_TKN = artifacts.require("MARKET_TKN")
 const PRUF_NODE_STOR = artifacts.require("NODE_STOR");
 const PRUF_NODE_TKN = artifacts.require("NODE_TKN");
-const PRUF_UD_NODE_TKN = artifacts.require("UD_721");
+const PRUF_UD_NODE_BLDR = artifacts.require("UD_721");
 const PRUF_A_TKN = artifacts.require("A_TKN");
 const PRUF_NODE_BLDR = artifacts.require("NODE_BLDR");
 const PRUF_ECR_MGR = artifacts.require("ECR_MGR");
@@ -46,6 +47,7 @@ let RCLR;
 let Helper;
 let MAL_APP;
 let UTIL_TKN;
+let MARKET_TKN;
 let UD_721;
 
 let string1Hash;
@@ -105,6 +107,8 @@ let nakedAuthCode1;
 let nakedAuthCode3;
 let nakedAuthCode7;
 
+let domainToken1;
+
 let payableRoleB32;
 let minterRoleB32;
 let trustedAgentRoleB32;
@@ -114,7 +118,7 @@ let assetTransferRoleB32;
 let discardRoleB32;
 let DAOroleB32;
 
-contract("NODE_MGR", (accounts) => {
+contract("UD_NODE_BLDR", (accounts) => {
   console.log(
     "//**************************BEGIN BOOTSTRAP**************************//"
   );
@@ -135,6 +139,13 @@ contract("NODE_MGR", (accounts) => {
     console.log(PRUF_HELPER_TEST.address);
     assert(PRUF_HELPER_TEST.address !== "");
     Helper = PRUF_HELPER_TEST;
+  });
+
+  it("Should deploy UD_721", async () => {
+    PRUF_UD_NODE_BLDR_TEST = await PRUF_UD_NODE_BLDR.deployed({ from: account1 });
+    console.log(PRUF_UD_NODE_BLDR_TEST.address);
+    assert(PRUF_UD_NODE_BLDR_TEST.address !== "");
+    UD_721 = PRUF_UD_NODE_BLDR_TEST;
   });
 
   it("Should build variables", async () => {
@@ -333,6 +344,8 @@ contract("NODE_MGR", (accounts) => {
     nodeAdminRoleB32 = await Helper.getStringHash("NODE_ADMIN_ROLE");
 
     nodeMinterRoleB32 = await Helper.getStringHash("NODE_MINTER_ROLE");
+
+    domainToken1 = await UD_721.getTokenIdFromDomain("test", "io")
   });
 
   it("Should deploy Storage", async () => {
@@ -454,11 +467,11 @@ contract("NODE_MGR", (accounts) => {
     WRAP = PRUF_WRAP_TEST;
   });
 
-  it("Should deploy UD_721", async () => {
-    const PRUF_UD_NODE_BLDR = await PRUF_UD_NODE_BLDR.deployed({ from: account1 });
-    console.log(PRUF_UD_NODE_BLDR.address);
-    assert(PRUF_UD_NODE_BLDR.address !== "");
-    UD_721 = PRUF_UD_NODE_BLDR;
+  it("Should deploy MARKET_TKN", async () => {
+    const PRUF_MARKET_TKN_TEST = await PRUF_MARKET_TKN.deployed({ from: account1 });
+    console.log(PRUF_MARKET_TKN_TEST.address);
+    assert(PRUF_MARKET_TKN_TEST.address !== "");
+    MARKET_TKN = PRUF_MARKET_TKN_TEST;
   });
 
   it("Should add default contracts to storage", () => {
@@ -699,6 +712,11 @@ contract("NODE_MGR", (accounts) => {
     return APP.grantRole(assetTransferRoleB32, APP.address, { from: account1 });
   });
 
+  it("Should authorize account1 for minting market assets", () => {
+    console.log("Authorizing NODE_MGR");
+    return MARKET_TKN.grantRole(minterRoleB32, account1, { from: account1 });
+  });
+
   it("Should authorize A_TKN to discard", () => {
     console.log("Authorizing A_TKN");
     return RCLR.grantRole(discardRoleB32, A_TKN.address, { from: account1 });
@@ -719,6 +737,11 @@ contract("NODE_MGR", (accounts) => {
     return NODE_MGR.grantRole(IDverifierRoleB32, NODE_BLDR.address, { from: account1 });
   });
 
+  it("Should authorize account1 for A_TKN", () => {
+    console.log("Authorizing account1");
+    return NODE_MGR.grantRole(IDverifierRoleB32, UD_721.address, { from: account1 });
+  });
+
   it("Should authorize NODE_MGR for NODE_STOR", () => {
     console.log("Authorizing NODE_MGR");
     return NODE_STOR.grantRole(nodeAdminRoleB32, NODE_MGR.address, { from: account1 })
@@ -726,6 +749,11 @@ contract("NODE_MGR", (accounts) => {
     .then(() => {
       console.log("Authorizing NODE_MGR");
       return NODE_STOR.grantRole(nodeAdminRoleB32, account1, { from: account1 });
+    })
+
+    .then(() => {
+      console.log("Authorizing NODE_MGR");
+      return NODE_STOR.grantRole(nodeAdminRoleB32, UD_721.address, { from: account1 });
     })
 
     .then(() => {
@@ -822,7 +850,14 @@ contract("NODE_MGR", (accounts) => {
       .then(() => {
         console.log("Adding in WRAP");
         return WRAP.setStorageContract(STOR.address, { from: account1 });
-      });
+      })
+
+      .then(() => {
+        console.log("Adding in UD_721");
+        return UD_721.setStorageContract(STOR.address, {
+          from: account1,
+        });
+      })
   });
 
   it("Should resolve contract addresses", () => {
@@ -892,6 +927,11 @@ contract("NODE_MGR", (accounts) => {
       .then(() => {
         console.log("Resolving in WRAP");
         return WRAP.resolveContractAddresses({ from: account1 });
+      })
+
+      .then(() => {
+        console.log("Resolving in UD_721");
+        return UD_721.resolveContractAddresses({ from: account1 });
       });
   });
 
@@ -1541,7 +1581,7 @@ contract("NODE_MGR", (accounts) => {
 
   it("Should mint 30000 tokens to account2", async () => {
     console.log(
-      "//**************************************BEGIN NODE_MGR TEST**********************************************/"
+      "//**************************************BEGIN UD_NODE_BLDR TEST**********************************************/"
     );
     return UTIL_TKN.mint(account2, "300000000000000000000000", {
       from: account1,
@@ -1555,14 +1595,153 @@ contract("NODE_MGR", (accounts) => {
   });
 
   it("Should add NODE_STOR to NODE_TKN", () => {
-    return NODE_TKN.setUnstoppableDomainsTokenContract(A_TKN.address, {
+    return UD_721.setUnstoppableDomainsTokenContract(MARKET_TKN.address, {
       from: account1,
     });
   });
 
+  it("Should mint MARKET_TKN (UD substitute)", () => {
+    return MARKET_TKN.mintConsignmentToken(account1, domainToken1, "test", {
+      from: account1,
+    });
+  });
+
+  it("Should mint node 1000007 under domainToken1", () => {
+    return UD_721.purchaseNode("test", "io", "1", "2", rgt000, rgt000, {
+      from: account1,
+    });
+  });
+
+  it("Should add account2 as admin in 1000007 node", () => {
+    return UD_721.addUser("1000007", account2Hash, "1", {
+      from: account1,
+    });
+  });
+
+  it("Should updateImport status of node 1000007 -> 1000001", () => {
+    return UD_721.updateImportStatus("1000007", "1000001", "1", {
+      from: account1,
+    });
+  });
+
+  it("Should getNodeData for 1000007", async () => {
+    var Record = {};
+
+    return await NODE_STOR.getNodeData(
+      "1000007",
+      { from: account2 },
+      function (_err, _result) {
+        if (_err) {
+        } else {
+          Record = _result;
+          console.log(Record);
+        }
+      }
+    );
+  });
+
+  it("Should updateCAS of node 1000007", () => {
+    return UD_721.updateNodeCAS("1000007", rgt1, rgt1, {
+      from: account1,
+    });
+  });
+
+  it("Should getNodeData for 1000007", async () => {
+    var Record = {};
+
+    return await NODE_STOR.getNodeData(
+      "1000007",
+      { from: account2 },
+      function (_err, _result) {
+        if (_err) {
+        } else {
+          Record = _result;
+          console.log(Record);
+        }
+      }
+    );
+  });
+
+  it("Should setOperationCosts of node 1000007", () => {
+    return UD_721.setOperationCosts(1000007, "1", "10000000000000000000", account1, {
+      from: account1,
+    });
+  });
+
+  it("Should finalize node 1000007", () => {
+    return UD_721.setNonMutableData(
+      "1000007",
+      "3",
+      "1",
+      "0x0000000000000000000000000000000000000000",
+      '66',
+      { from: account1 }
+    )
+  })
+
+  it("Should getNodeData for 1000007", async () => {
+    var Record = {};
+
+    return await NODE_STOR.getNodeData(
+      "1000007",
+      { from: account2 },
+      function (_err, _result) {
+        if (_err) {
+        } else {
+          Record = _result;
+          console.log(Record);
+        }
+      }
+    );
+  });
+
+  it("Should getExtendedNodeData for 1000007", async () => {
+    var Record = {};
+
+    return await NODE_STOR.getExtendedNodeData(
+      "1000007",
+      { from: account2 },
+      function (_err, _result) {
+        if (_err) {
+        } else {
+          Record = _result;
+          console.log(Record);
+        }
+      }
+    );
+  });
+
+  it("Should setNodeExtendedData of node 100007 to all 10s", () => {
+    return UD_721.setExtendedNodeData(
+      "1000007",
+      "10",
+      "10",
+      "10",
+      "10",
+      "10",
+      { from: account1 }
+    )
+  })
+
+  it("Should getExtendedNodeData for 1000007", async () => {
+    var Record = {};
+
+    return await NODE_STOR.getExtendedNodeData(
+      "1000007",
+      { from: account2 },
+      function (_err, _result) {
+        if (_err) {
+        } else {
+          Record = _result;
+          console.log(Record);
+        }
+      }
+    );
+  });
+
   it("Should set SharesAddress", async () => {
     console.log(
-      "//**************************************END NODE_MGR TEST**********************************************/"
+      "//**************************************END UD_NODE_BLDR TEST**********************************************/"
     );
       
     console.log(

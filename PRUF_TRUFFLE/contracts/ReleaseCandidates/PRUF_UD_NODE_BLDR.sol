@@ -1,4 +1,4 @@
-/*--------------------------------------------------------PRüF0.8.8
+/*--------------------------------------------------------PRüF0.9.0
 __/\\\\\\\\\\\\\ _____/\\\\\\\\\ _______/\\__/\\ ___/\\\\\\\\\\\\\\\        
 __\/\\\/////////\\\ _/\\\///////\\\ ____\//__\//____\/\\\///////////__       
 ___\/\\\_______\/\\\_\/\\\_____\/\\\ ________________\/\\\ ____________      
@@ -87,7 +87,7 @@ contract UD_721 is BASIC {
         //^^^^^^^effects^^^^^^^^^
     }
 
-    /**
+    /** //CTS:EXAMINE should this be whenNotPaused?
      * @dev Burns (amount) tokens and mints a new Node token to the calling address
      * @param _domain - chosen domain of node
      * @param _tld - chosen tld of node
@@ -108,7 +108,7 @@ contract UD_721 is BASIC {
 
         require( //throws if caller does not hod the appropriate UD token
             UD_TOKEN_CONTRACT.ownerOf(tokenId) == _msgSender(),
-            "UD_NB:PN:Supplied node name does not match tokenID held by caller"
+            "UDNB:PN:Supplied node name does not match tokenID held by caller"
         );
         //^^^^^^^checks^^^^^^^^^
 

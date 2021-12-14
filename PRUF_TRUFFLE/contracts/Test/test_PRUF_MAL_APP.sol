@@ -467,7 +467,7 @@ contract MAL_APP is CORE_MAL {
         //^^^^^^^interactions^^^^^^^^^
     }
 
-    /* /** //DPS:TEST:NEW PARAMS
+    /* 
      * @dev Modify **Record**.NonMutableStorage with confirmation
      */
     function addNonMutableStorage(

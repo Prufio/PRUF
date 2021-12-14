@@ -1,4 +1,4 @@
-/*--------------------------------------------------------PRüF0.8.8
+/*--------------------------------------------------------PRüF0.9.0
 __/\\\\\\\\\\\\\ _____/\\\\\\\\\ _______/\\__/\\ ___/\\\\\\\\\\\\\\\        
 __\/\\\/////////\\\ _/\\\///////\\\ ____\//__\//____\/\\\///////////__       
 ___\/\\\_______\/\\\_\/\\\_____\/\\\ ________________\/\\\ ____________      
@@ -179,7 +179,7 @@ contract APP_NC is CORE {
         Record memory rec = getRecord(_idxHash);
         require(
             needsImport(rec.assetStatus) == 0,
-            "ANC:ANMN: Record In Transferred, exported, or discarded status"
+            "ANC:ANMS: Record In Transferred, exported, or discarded status"
         );
 
         require( // caller is node authorized
@@ -188,7 +188,7 @@ contract APP_NC is CORE {
                     keccak256(abi.encodePacked(_msgSender())),
                     rec.node
                 ) == 100), //or is auth type 100 in node
-            "AT:SU:Caller !NTH or authorized(100)"
+            "ANC:ANMS:Caller !NTH or authorized(100)"
         );
 
         //^^^^^^^checks^^^^^^^^^

@@ -455,7 +455,7 @@ interface NODE_MGR_Interface {
      * @param _tokenContractAddress  token contract used to verify id
      * @param _tokenId token ID used to verify id
      */
-    function daoSetExternalIdToken(
+    function daoSetExternalId(
         uint32 _node,
         address _tokenContractAddress,
         uint256 _tokenId
@@ -673,7 +673,7 @@ interface NODE_STOR_Interface {
         uint256 _tokenId
     ) external;
 
-    /** DPS:TES:NEW
+    /**
      * @dev DAO set an external erc721 token as ID verification (when bit 6 set to 1)
      * @param _node - node being configured
      * @param _tokenContractAddress  token contract used to verify id
@@ -685,7 +685,7 @@ interface NODE_STOR_Interface {
         uint256 _tokenId
     ) external;
 
-    /** DPS:TEST:NEW
+    /**
      * @dev unlink erc721 token as ID verification
      * @param _node - node being unlinked
      */

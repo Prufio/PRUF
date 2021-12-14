@@ -1,4 +1,4 @@
-/*--------------------------------------------------------PRüF0.8.8
+/*--------------------------------------------------------PRüF0.9.0
 __/\\\\\\\\\\\\\ _____/\\\\\\\\\ _______/\\__/\\ ___/\\\\\\\\\\\\\\\        
 __\/\\\/////////\\\ _/\\\///////\\\ ____\//__\//____\/\\\///////////__       
 ___\/\\\_______\/\\\_\/\\\_____\/\\\ ________________\/\\\ ____________      
@@ -674,7 +674,7 @@ contract STOR is AccessControl, ReentrancyGuard, Pausable {
     /**
      * @dev return a record from the database
      * @param  _idxHash - record asset ID
-     * returns a complete Record struct (see interfaces for struct definitions)
+     * @return a complete Record struct (see interfaces for struct definitions)
      */
     function retrieveRecord(bytes32 _idxHash)
         external

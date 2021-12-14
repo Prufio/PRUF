@@ -1,4 +1,4 @@
-/*--------------------------------------------------------PRüF0.8.8
+/*--------------------------------------------------------PRüF0.9.0
 __/\\\\\\\\\\\\\ _____/\\\\\\\\\ _______/\\__/\\ ___/\\\\\\\\\\\\\\\        
 __\/\\\/////////\\\ _/\\\///////\\\ ____\//__\//____\/\\\///////////__       
 ___\/\\\_______\/\\\_\/\\\_____\/\\\ ________________\/\\\ ____________      
@@ -16,7 +16,7 @@ _________\/// _____________\/// _______\/// __\///////// __\/// _____________
  * Contract for minting and managing Nodes
  *
  ** IMPORTANT Local (child) node behaviours overwrite parent nodes; **
- ** DPS:CHECK VERIFY THAT THIS IS ENFORCED  local nodes should only be mapped if their nonmutable attributes match those of their parent. **
+ ** DPS:CHECK VERIFY THAT THIS IS ENFORCED CTS:EXAMINE where??  local nodes should only be mapped if their nonmutable attributes match those of their parent. **
  *
  * STATEMENT OF TERMS OF SERVICE (TOS):
  * User agrees not to intentionally claim any namespace that is a recognized or registered brand name, trade mark,
@@ -68,7 +68,7 @@ contract NODE_MGR is BASIC {
     modifier isIdVerifier() {
         require(
             hasRole(ID_VERIFIER_ROLE, _msgSender()),
-            "NM:MOD-INM: Must have ID_VERIFIER_ROLE"
+            "NM:MOD-IIV: Must have ID_VERIFIER_ROLE"
         );
         _;
     }
@@ -429,7 +429,7 @@ contract NODE_MGR is BASIC {
     {
         require(
             (_position > 0) && (_position < 9),
-            "NS:GSA: bit position must be between 1 and 8"
+            "NM:GBA: bit position must be between 1 and 8"
         );
         //^^^^^^^checks^^^^^^^^^
 
