@@ -122,10 +122,7 @@ contract NODE_TKN is
                 .getExtendedNodeData(node); //safe because no node tokens can be minted beyond uint32
             address holderOfIdToken;
 
-            //DPS:TEST:CTS:EXAMINE -- function is broken for testing
-
             //DPS:TEST:NEW test this by calling it on tokens that dont exist as well as ones that do.
-            //NOT SURE THIS WILL WORK AS WRITTEN!!!!
             try
                 IERC721(extendedNodeInfo.idProviderAddr).ownerOf(
                     extendedNodeInfo.idProviderTokenId
@@ -138,14 +135,6 @@ contract NODE_TKN is
                 //if the try fails (ID token not exist) then clear the bit6 and ID token data from the node
                 NODE_STOR.unlinkExternalId(node);
             }
-
-            //TEST CODE: transfers the node to the id token address, then unlinks the node.
-            // test with extant ID token and with non-extant ID token. See if there is a revert / require
-            // holderOfIdToken = IERC721(extendedNodeInfo.idProviderAddr).ownerOf(
-            //     extendedNodeInfo.idProviderTokenId
-            // );
-            // _transfer(ownerOf(_thisNode), holderOfIdToken, _thisNode);
-            // NODE_STOR.unlinkExternalId(node);
         }
     }
 
