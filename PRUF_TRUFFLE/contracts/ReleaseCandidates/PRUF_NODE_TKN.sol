@@ -121,20 +121,31 @@ contract NODE_TKN is
             ExtendedNodeData memory extendedNodeInfo = NODE_STOR
                 .getExtendedNodeData(node); //safe because no node tokens can be minted beyond uint32
             address holderOfIdToken;
+
+            //DPS:TEST:CTS:EXAMINE -- function is broken for testing
+
             //DPS:TEST:NEW test this by calling it on tokens that dont exist as well as ones that do.
             //NOT SURE THIS WILL WORK AS WRITTEN!!!!
-            try
-                IERC721(extendedNodeInfo.idProviderAddr).ownerOf(
-                    extendedNodeInfo.idProviderTokenId
-                )
-            returns (address addr) {
-                //if the try works, should transfer _thisNode to the address of the ID token
-                holderOfIdToken = addr;
-                _transfer(ownerOf(_thisNode), holderOfIdToken, _thisNode);
-            } catch Error(string memory) {
-                //if the try fails (ID token not exist) then clear the bit6 and ID token data from the node
-                NODE_STOR.unlinkExternalId(node);
-            }
+            // try
+            //     IERC721(extendedNodeInfo.idProviderAddr).ownerOf(
+            //         extendedNodeInfo.idProviderTokenId
+            //     )
+            // returns (address addr) {
+            //     //if the try works, should transfer _thisNode to the address of the ID token
+            //     holderOfIdToken = addr;
+            //     _transfer(ownerOf(_thisNode), holderOfIdToken, _thisNode);
+            // } catch Error(string memory) {
+            //     //if the try fails (ID token not exist) then clear the bit6 and ID token data from the node
+            //     NODE_STOR.unlinkExternalId(node);
+            // }
+
+            //TEST CODE: transfers the node to the id token address, then unlinks the node.
+            // test with extant ID token and with non-extant ID token. See if there is a revert / require
+            holderOfIdToken = IERC721(extendedNodeInfo.idProviderAddr).ownerOf(
+                extendedNodeInfo.idProviderTokenId
+            );
+            _transfer(ownerOf(_thisNode), holderOfIdToken, _thisNode);
+            NODE_STOR.unlinkExternalId(node);
         }
     }
 
@@ -184,17 +195,15 @@ contract NODE_TKN is
 
     //----------------------External Functions----------------------//
 
-    /** 
+    /**
      * @dev Set storage contract to interface with
      * @param _nodeStorageAddress - Node storage contract address
      */
-    function setNodeStorageContract(
-        address _nodeStorageAddress
-    ) external isContractAdmin {
-        require(
-            _nodeStorageAddress != address(0),
-            "NT:SNSC: address = 0"
-        );
+    function setNodeStorageContract(address _nodeStorageAddress)
+        external
+        isContractAdmin
+    {
+        require(_nodeStorageAddress != address(0), "NT:SNSC: address = 0");
         //^^^^^^^checks^^^^^^^^^
 
         NODE_STOR = NODE_STOR_Interface(_nodeStorageAddress);
