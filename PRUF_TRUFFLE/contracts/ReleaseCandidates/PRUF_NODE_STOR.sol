@@ -472,6 +472,7 @@ contract NODE_STOR is BASIC {
             nodeDetails[_node].idProviderTokenId == 0,
             "NS:SEIT: ID Reference TokenID already set"
         );
+        IERC721(_tokenContractAddress).ownerOf(_tokenId);  //throw in token contract if it doesnt exist
         nodeDetails[_node].idProviderAddr = _tokenContractAddress;
         nodeDetails[_node].idProviderTokenId = _tokenId;
     }
