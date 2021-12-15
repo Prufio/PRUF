@@ -1,4 +1,4 @@
-/*--------------------------------------------------------PRüF0.8.8
+/*--------------------------------------------------------PRüF0.9.0
 __/\\\\\\\\\\\\\ _____/\\\\\\\\\ _______/\\__/\\ ___/\\\\\\\\\\\\\\\        
 __\/\\\/////////\\\ _/\\\///////\\\ ____\//__\//____\/\\\///////////__       
 ___\/\\\_______\/\\\_\/\\\_____\/\\\ ________________\/\\\ ____________      
@@ -38,7 +38,6 @@ contract CORE is BASIC {
     ) internal virtual {
         uint256 tokenId = uint256(_idxHash);
 
-        // !!!! NOTE:Unobvious fuctionality !!!!
         Node memory nodeInfo = minterCheck(_node); 
         // minterCheck verifies conditons to ensure that asset minting is authorized.
         // also returns nodeInfo as a method to reduce then number of external calls.
@@ -117,6 +116,7 @@ contract CORE is BASIC {
             (nodeInfo.managementType < 6),
             "C:WMS:Contract does not support management types > 5 or node is locked"
         );
+
         if ((nodeInfo.custodyType != 1) && (nodeInfo.managementType == 5)) {
             require(
                 (NODE_TKN.ownerOf(_rec.node) == _msgSender()),
@@ -218,7 +218,7 @@ contract CORE is BASIC {
         virtual
         whenNotPaused
     {
-        require(
+        require( //CTS:EXAMINE redundant, caught in ERC20 cannot transfer to the 0 address
             _pricing.rootAddress != address(0),
             "C:DP: root payment address = zero address"
         );

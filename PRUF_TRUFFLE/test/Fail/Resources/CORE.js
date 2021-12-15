@@ -107,6 +107,7 @@ let payableRoleB32;
 let IDminterRoleB32;
 let minterRoleB32;
 let trustedAgentRoleB32;
+let IDverifierRoleB32;
 let assetTransferRoleB32;
 let discardRoleB32;
 
@@ -164,9 +165,9 @@ contract("CORE", (accounts) => {
 
     asset1 = await Helper.getIdxHash(asset1raw, '1000002');
 
-    asset2 = await Helper.getIdxHash(asset2raw, '1000001');
+    asset2 = await Helper.getIdxHash(asset2raw, '1000006');
 
-    asset3 = await Helper.getIdxHash(asset3raw, '1000001');
+    asset3 = await Helper.getIdxHash(asset3raw, '1000007');
 
     asset4 = await Helper.getIdxHash(asset4raw, '1000001');
 
@@ -317,6 +318,8 @@ contract("CORE", (accounts) => {
     IDproviderRoleB32 = await Helper.getStringHash("ID_PROVIDER_ROLE");
 
     trustedAgentRoleB32 = await Helper.getStringHash("TRUSTED_AGENT_ROLE");
+
+    IDverifierRoleB32 = await Helper.getStringHash("ID_VERIFIER_ROLE");
 
     assetTransferRoleB32 = await Helper.getStringHash("ASSET_TXFR_ROLE");
 
@@ -626,6 +629,21 @@ contract("CORE", (accounts) => {
   it("Should authorize account1 for NODE_STOR", () => {
     console.log("Authorizing account1");
     return NODE_STOR.grantRole(DAOroleB32, account1, { from: account1 });
+  });
+
+  it("Should authorize account1 for A_TKN", () => {
+    console.log("Authorizing account1");
+    return NODE_MGR.grantRole(IDverifierRoleB32, account1, { from: account1 });
+  });
+
+  it("Should authorize account1 for A_TKN", () => {
+    console.log("Authorizing account1");
+    return NODE_MGR.grantRole(IDverifierRoleB32, account10, { from: account1 });
+  });
+
+  it("Should authorize account1 for A_TKN", () => {
+    console.log("Authorizing account1");
+    return NODE_MGR.grantRole(IDverifierRoleB32, NODE_BLDR.address, { from: account1 });
   });
 
   it("Should authorize account1 for A_TKN", () => {
@@ -1308,6 +1326,7 @@ contract("CORE", (accounts) => {
       "2",
       "1",
       "0x0000000000000000000000000000000000000000",
+      '66',
       { from: account1 }
     )
 
@@ -1317,6 +1336,7 @@ contract("CORE", (accounts) => {
           "2",
           "1",
           "0x0000000000000000000000000000000000000000",
+          '66',
           { from: account1 }
         );
       })
@@ -1327,6 +1347,7 @@ contract("CORE", (accounts) => {
           "2",
           "1",
           "0x0000000000000000000000000000000000000000",
+          '66',
           { from: account1 }
         );
       })
@@ -1337,6 +1358,7 @@ contract("CORE", (accounts) => {
           "6",
           "1",
           "0x0000000000000000000000000000000000000000",
+          '66',
           { from: account10 }
         );
       })
@@ -1347,6 +1369,7 @@ contract("CORE", (accounts) => {
           "1",
           "1",
           "0x0000000000000000000000000000000000000000",
+          '66',
           { from: account1 }
         );
       })
@@ -1354,9 +1377,10 @@ contract("CORE", (accounts) => {
       .then(() => {
         return NODE_MGR.setNonMutableData(
           "1000006",
-          "2",
+          "6",
           "1",
           "0x0000000000000000000000000000000000000000",
+          '66',
           { from: account1 }
         );
       })
@@ -1364,9 +1388,10 @@ contract("CORE", (accounts) => {
       .then(() => {
         return NODE_MGR.setNonMutableData(
           "1000007",
-          "2",
+          "5",
           "1",
           "0x0000000000000000000000000000000000000000",
+          '66',
           { from: account1 }
         );
       })
@@ -1377,6 +1402,7 @@ contract("CORE", (accounts) => {
           "4",
           "1",
           "0x0000000000000000000000000000000000000000",
+          '66',
           { from: account10 }
         );
       })
@@ -1387,6 +1413,7 @@ contract("CORE", (accounts) => {
           "1",
           "1",
           "0x0000000000000000000000000000000000000000",
+          '66',
           { from: account10 }
         );
       })
@@ -1742,6 +1769,13 @@ contract("CORE", (accounts) => {
       })
 
       .then(() => {
+        console.log("Account1 => 1000006");
+        return NODE_MGR.addUser("1000006", account1Hash, "1", {
+          from: account1,
+        });
+      })
+
+      .then(() => {
         console.log("Account2 => 1000006");
         return NODE_MGR.addUser("1000006", account2Hash, "1", {
           from: account1,
@@ -1817,7 +1851,7 @@ contract("CORE", (accounts) => {
     });
   });
 
-  it('Should write asset1 in Node 10', async () => {
+  it('Should write asset1 in Node 1000002', async () => {
       return APP_NC.newRecord(
           asset1raw,
           rgt13,
@@ -1828,7 +1862,30 @@ contract("CORE", (accounts) => {
       )
   })
 
-  it("should authorize account2 in root Node 1", async () => {
+  it('Should write asset2 in Node 1000006', async () => {
+      return APP_NC.newRecord(
+          asset2raw,
+          rgt13,
+          '1000006',
+          "100",
+          asset2raw,
+          { from: account1 }
+      )
+  })
+
+  it('Should write asset2 in Node 1000006', async () => {
+      return APP_NC.newRecord(
+          asset3raw,
+          rgt13,
+          '1000007',
+          "100",
+          asset3raw,
+          { from: account1 }
+      )
+  })
+
+  //1
+  it("Should fail because asset already exists", async () => {
     console.log(
       "//**************************************END CORE SETUP**********************************************/"
     );
@@ -1836,7 +1893,45 @@ contract("CORE", (accounts) => {
       "//**************************************BEGIN CORE FAIL BATCH (7)**********************************************/"
     );
     console.log(
-      "//**************************************BEGIN getNodeinfoWithMinterCheck FAIL BATCH**********************************************/"
+      "//**************************************BEGIN CreateRecord FAIL BATCH**********************************************/"
+    );
+    return MAL_APP.newRecord(asset1raw, rgt1, "1000002", "100", asset1raw, { from: account1 });
+  });
+
+  //2
+  it("Should fail because node custodyType !authorized", async () => {
+    return MAL_APP.newRecord(asset2raw, rgt2, "1000005", "100", asset2raw, { from: account1 });
+  });
+
+  it("should fail becasue CORE !support managementTypes > 5", async () => {
+    console.log(
+      "//**************************************END createRecord FAIL BATCH**********************************************/"
+    );
+    console.log(
+      "//**************************************BEGIN writeMutableStorage FAIL BATCH**********************************************/"
+    );
+    return APP_NC.modifyMutableStorage(asset2, rgt1, rgt1, { from: account1 });
+  });
+
+  it("should transfer node 1000007 to account2", async () => {
+    return NODE_TKN.safeTransferFrom(account1, account2, "1000007", { from: account1 });
+  });
+
+  //3
+  it("should fail becasue caller !nodeHolder", async () => {
+    return APP_NC.modifyMutableStorage(asset3, rgt1, rgt1, { from: account1 });
+  });
+
+  it("should transfer node 1000007 to account1", async () => {
+    return NODE_TKN.safeTransferFrom(account2, account1, "1000007", { from: account2 });
+  });
+
+  it("should authorize account2 in root Node 1", async () => {
+    console.log(
+      "//**************************************END writeMutableStorage FAIL BATCH**********************************************/"
+    );
+    console.log(
+      "//**************************************BEGIN minterCheck FAIL BATCH**********************************************/"
     );
     console.log("Account2 => AC1");
     return NODE_MGR.addUser("1", account2Hash, "1", { from: account1 });
@@ -1846,7 +1941,7 @@ contract("CORE", (accounts) => {
     return STOR.enableContractForNode("APP", "1", "1", { from: account1 });
   });
 
-  //1
+  //4
   it("Should fail because you cannot create asset in root node", async () => {
     return APP.newRecord(asset2raw, rgt2, "1", "100", asset2raw, { from: account2 });
   });
@@ -1856,7 +1951,7 @@ contract("CORE", (accounts) => {
     return NODE_STOR.setManagementTypes("1", "0", { from: account1 })
   });
 
-  //2
+  //5
   it("Should fail because managementType is invalid", async () => {
     return APP.newRecord(asset2raw, rgt2, "1000009", "100", asset2raw, { from: account2 });
   });
@@ -1872,17 +1967,17 @@ contract("CORE", (accounts) => {
     });
   })
 
-  //3
+  //6
   it("Should fail because connot mint in root node", async () => {
     return APP.newRecord(asset2raw, rgt2, "35", "100", asset2raw, { from: account2 });
   });
 
-  //4
+  //7
   it("Should fail because connot mint in unconfigured node", async () => {
     return APP.newRecord(asset2raw, rgt2, "1000010", "100", asset2raw, { from: account2 });
   });
 
-  //5
+  //8
   it("Should fail because caller not authorzed", async () => {
     return APP.newRecord(asset2raw, rgt2, "1000007", "100", asset2raw, { from: account2 });
   });
@@ -1893,9 +1988,9 @@ contract("CORE", (accounts) => {
     });
   })
 
-  //6
+  //9
   it("Should fail because user !NTH", async () => {
-    return APP_NC.newRecord(asset2raw, rgt2, "1000006", "100", asset2raw, { from: account2 });
+    return APP_NC.newRecord(asset4raw, rgt2, "1000006", "100", asset4raw, { from: account2 });
   });
 
   it("should unauthorize MAL_APP for AC1", async () => {
@@ -1908,25 +2003,9 @@ contract("CORE", (accounts) => {
     });
   });
 
-  it("should authorize account2 in root Node 1", async () => {
-    console.log(
-      "//**************************************END createRecord FAIL BATCH**********************************************/"
-    );
-    console.log(
-      "//**************************************BEGIN createRecord FAIL BATCH**********************************************/"
-    );
-    console.log("Account2 => AC1");
-    return NODE_MGR.addUser("1", account2Hash, "1", { from: account1 });
-  });
-
-  //7
-  it("Should fail because assetToken already exists", async () => {
-    return APP_NC.newRecord(asset1raw, rgt13, "1000002", "100", asset1raw, { from: account2 });
-  });
-
   it("Should set SharesAddress", async () => {
     console.log(
-      "//**************************************END deductPayment FAIL BATCH**********************************************/"
+      "//**************************************END addUser FAIL BATCH**********************************************/"
     );
     console.log(
       "//**************************************END CORE FAIL BATCH**********************************************/"
