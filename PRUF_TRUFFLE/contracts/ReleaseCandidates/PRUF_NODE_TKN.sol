@@ -122,7 +122,6 @@ contract NODE_TKN is
                 .getExtendedNodeData(node); //safe because no node tokens can be minted beyond uint32
             address holderOfIdToken;
 
-            //DPS:TEST:NEW test this by calling it on tokens that dont exist as well as ones that do.
             try
                 IERC721(extendedNodeInfo.idProviderAddr).ownerOf(
                     extendedNodeInfo.idProviderTokenId
