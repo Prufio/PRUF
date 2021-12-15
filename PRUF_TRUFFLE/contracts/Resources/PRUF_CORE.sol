@@ -313,19 +313,19 @@ contract CORE is BASIC {
 
         require(
             nodeInfo.custodyType != 3,
-            "C:GNIWAC:Cannot create asset in a root node (custodyType3)"
+            "C:MC:Cannot create asset in a root node (custodyType3)"
         );
         require(
             NODE_STOR.getManagementTypeStatus(nodeInfo.managementType) != 0,
-            "C:GNIWAC: Invalid management type"
+            "C:MC: Invalid management type"
         );
         require(
             nodeInfo.managementType != 0, //impossible to reach in testing, here for redundancy in root nodes
-            "C:GNIWAC: Cannot mint in root node"
+            "C:MC: Cannot mint in root node"
         );
         require(
             nodeInfo.managementType != 255,
-            "C:GNIWAC: Cannot mint with unprovisioned or locked node"
+            "C:MC: Cannot mint with unprovisioned or locked node"
         );
         require(
             (getBitAt(nodeInfo.switches, 7) == 0) ||
@@ -333,12 +333,12 @@ contract CORE is BASIC {
                     keccak256(abi.encodePacked(_msgSender())),
                     _node
                 ) == 1), // If switch7 = 1, require calling adress is in the authorized users for the node
-            "C:GNIWAC: Caller not authorized user"
+            "C:MC: Caller not authorized user"
         );
         require(
             (getBitAt(nodeInfo.switches, 7) == 1) ||
                 (NODE_TKN.ownerOf(_node) == _msgSender()), // If switch7 = 0, require calling adress holds the node token
-            "C:GNIWAC: Caller !NTH"
+            "C:MC: Caller !NTH"
         );
 
         if (getBitAt(nodeInfo.switches, 6) == 1) {
@@ -350,7 +350,7 @@ contract CORE is BASIC {
                     IERC721(extendedNodeInfo.idProviderAddr).ownerOf(
                         extendedNodeInfo.idProviderTokenId
                     )), // if switch6 = 1 verify that IDroot token and Node token are held in the same address
-                "C:GNIWAC: Node and root of identity are separated. Minting is disabled"
+                "C:MC: Node and root of identity are separated. Minting is disabled"
             );
         }
         //^^^^^^^checks^^^^^^^^^

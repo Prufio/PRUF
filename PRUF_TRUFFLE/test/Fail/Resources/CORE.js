@@ -169,7 +169,7 @@ contract("CORE", (accounts) => {
 
     asset3 = await Helper.getIdxHash(asset3raw, '1000007');
 
-    asset4 = await Helper.getIdxHash(asset4raw, '1000001');
+    asset4 = await Helper.getIdxHash(asset4raw, '1000006');
 
     asset5 = await Helper.getIdxHash(asset5raw, '1000001');
 
@@ -1734,6 +1734,13 @@ contract("CORE", (accounts) => {
       })
 
       .then(() => {
+        console.log("Account1 => 1000007");
+        return NODE_MGR.addUser("1000007", account1Hash, "1", {
+          from: account10,
+        });
+      })
+
+      .then(() => {
         console.log("Account2 => 1000004");
         return NODE_MGR.addUser("1000004", account2Hash, "1", {
           from: account10,
@@ -1873,7 +1880,7 @@ contract("CORE", (accounts) => {
       )
   })
 
-  it('Should write asset2 in Node 1000006', async () => {
+  it('Should write asset2 in Node 1000007', async () => {
       return APP_NC.newRecord(
           asset3raw,
           rgt13,
@@ -1903,6 +1910,7 @@ contract("CORE", (accounts) => {
     return MAL_APP.newRecord(asset2raw, rgt2, "1000005", "100", asset2raw, { from: account1 });
   });
 
+  //3
   it("should fail becasue CORE !support managementTypes > 5", async () => {
     console.log(
       "//**************************************END createRecord FAIL BATCH**********************************************/"
@@ -1917,7 +1925,7 @@ contract("CORE", (accounts) => {
     return NODE_TKN.safeTransferFrom(account1, account2, "1000007", { from: account1 });
   });
 
-  //3
+  //4
   it("should fail becasue caller !nodeHolder", async () => {
     return APP_NC.modifyMutableStorage(asset3, rgt1, rgt1, { from: account1 });
   });
@@ -1941,7 +1949,7 @@ contract("CORE", (accounts) => {
     return STOR.enableContractForNode("APP", "1", "1", { from: account1 });
   });
 
-  //4
+  //5
   it("Should fail because you cannot create asset in root node", async () => {
     return APP.newRecord(asset2raw, rgt2, "1", "100", asset2raw, { from: account2 });
   });
@@ -1951,7 +1959,7 @@ contract("CORE", (accounts) => {
     return NODE_STOR.setManagementTypes("1", "0", { from: account1 })
   });
 
-  //5
+  //6
   it("Should fail because managementType is invalid", async () => {
     return APP.newRecord(asset2raw, rgt2, "1000009", "100", asset2raw, { from: account2 });
   });
@@ -1967,41 +1975,54 @@ contract("CORE", (accounts) => {
     });
   })
 
-  //6
+  //7
   it("Should fail because connot mint in root node", async () => {
     return APP.newRecord(asset2raw, rgt2, "35", "100", asset2raw, { from: account2 });
   });
 
-  //7
+  //8
   it("Should fail because connot mint in unconfigured node", async () => {
     return APP.newRecord(asset2raw, rgt2, "1000010", "100", asset2raw, { from: account2 });
   });
 
-  //8
+  //9
   it("Should fail because caller not authorzed", async () => {
     return APP.newRecord(asset2raw, rgt2, "1000007", "100", asset2raw, { from: account2 });
   });
 
   it("Should set bit 7 to 0 in 1000007", async () => {
-    return NODE_STOR.modifyNodeSwitches("1000007", "7", "0", {
+    return NODE_STOR.modifyNodeSwitches("1000006", "7", "0", {
       from: account1,
     });
   })
 
-  //9
+  //10
   it("Should fail because user !NTH", async () => {
     return APP_NC.newRecord(asset4raw, rgt2, "1000006", "100", asset4raw, { from: account2 });
   });
 
-  it("should unauthorize MAL_APP for AC1", async () => {
-    return STOR.enableContractForNode("MAL_APP", "1", "0", { from: account1 });
-  });
-
-  it("should authorize APP to be payable in UTIL_TKN", async () => {
-    return UTIL_TKN.grantRole(payableRoleB32, MAL_APP.address, {
+  it("Should set externalID (asset1) to node 1000007", async () => {
+    return NODE_STOR.setExternalIdToken("1000007", A_TKN.address, asset2, {
       from: account1,
     });
+  })
+
+  it("Should transfer asset1 to account2", async () => {
+    return A_TKN.safeTransferFrom(account1, account2, asset2, { from: account1 });
   });
+
+  it("Should set bit 6 to 1 in 1000007", async () => {
+    return NODE_STOR.modifyNodeSwitches("1000007", "6", "1", {
+      from: account1,
+    });
+  })
+
+  //11
+  it("Should fail because Id is seperated from node", async () => {
+    return APP_NC.newRecord(asset4raw, rgt2, "1000007", "100", asset4raw, { from: account1 });
+  });
+  
+
 
   it("Should set SharesAddress", async () => {
     console.log(
