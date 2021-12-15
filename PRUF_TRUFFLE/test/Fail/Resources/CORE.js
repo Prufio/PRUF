@@ -2021,12 +2021,10 @@ contract("CORE", (accounts) => {
   it("Should fail because Id is seperated from node", async () => {
     return APP_NC.newRecord(asset4raw, rgt2, "1000007", "100", asset4raw, { from: account1 });
   });
-  
-
 
   it("Should set SharesAddress", async () => {
     console.log(
-      "//**************************************END addUser FAIL BATCH**********************************************/"
+      "//**************************************END minterCheck FAIL BATCH**********************************************/"
     );
     console.log(
       "//**************************************END CORE FAIL BATCH**********************************************/"

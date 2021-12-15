@@ -108,6 +108,7 @@ let IDminterRoleB32;
 let minterRoleB32;
 let trustedAgentRoleB32;
 let assetTransferRoleB32;
+let IDverifierRoleB32;
 let discardRoleB32;
 
 contract("BASIC", (accounts) => {
@@ -319,6 +320,8 @@ contract("BASIC", (accounts) => {
     trustedAgentRoleB32 = await Helper.getStringHash("TRUSTED_AGENT_ROLE");
 
     assetTransferRoleB32 = await Helper.getStringHash("ASSET_TXFR_ROLE");
+
+    IDverifierRoleB32 = await Helper.getStringHash("ID_VERIFIER_ROLE");
 
     discardRoleB32 = await Helper.getStringHash("DISCARD_ROLE");
 
@@ -631,6 +634,21 @@ contract("BASIC", (accounts) => {
   it("Should authorize account1 for NODE_STOR", () => {
     console.log("Authorizing account1");
     return NODE_STOR.grantRole(DAOroleB32, account1, { from: account1 });
+  });
+
+  it("Should authorize account1 for A_TKN", () => {
+    console.log("Authorizing account1");
+    return NODE_MGR.grantRole(IDverifierRoleB32, account1, { from: account1 });
+  });
+
+  it("Should authorize account1 for A_TKN", () => {
+    console.log("Authorizing account1");
+    return NODE_MGR.grantRole(IDverifierRoleB32, account10, { from: account1 });
+  });
+
+  it("Should authorize account1 for A_TKN", () => {
+    console.log("Authorizing account1");
+    return NODE_MGR.grantRole(IDverifierRoleB32, NODE_BLDR.address, { from: account1 });
   });
 
   it("Should add Storage to each contract", () => {
@@ -1345,6 +1363,7 @@ contract("BASIC", (accounts) => {
       "3",
       "1",
       "0x0000000000000000000000000000000000000000",
+      '66',
       { from: account1 }
     )
 
@@ -1354,6 +1373,7 @@ contract("BASIC", (accounts) => {
           "2",
           "1",
           "0x0000000000000000000000000000000000000000",
+          '66',
           { from: account1 }
         );
       })
@@ -1364,6 +1384,7 @@ contract("BASIC", (accounts) => {
           "2",
           "1",
           "0x0000000000000000000000000000000000000000",
+          '66',
           { from: account1 }
         );
       })
@@ -1374,6 +1395,7 @@ contract("BASIC", (accounts) => {
           "2",
           "1",
           "0x0000000000000000000000000000000000000000",
+          '66',
           { from: account10 }
         );
       })
@@ -1384,6 +1406,7 @@ contract("BASIC", (accounts) => {
           "2",
           "1",
           "0x0000000000000000000000000000000000000000",
+          '66',
           { from: account1 }
         );
       })
@@ -1394,6 +1417,7 @@ contract("BASIC", (accounts) => {
           "2",
           "1",
           "0x0000000000000000000000000000000000000000",
+          '66',
           { from: account10 }
         );
       });
