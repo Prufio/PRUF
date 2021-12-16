@@ -48,9 +48,6 @@ import "../Imports/security/ReentrancyGuard.sol";
 contract NODE_STOR is BASIC {
     bytes32 public constant NODE_ADMIN_ROLE = keccak256("NODE_ADMIN_ROLE");
 
-    bytes32 public constant B320x01 = //CTS:EXAMINE does this need to be set as a constant or can we just put it in directly because its only used once.
-        0x0000000000000000000000000000000000000000000000000000000000000001;
-
     mapping(uint32 => uint32) private localNodeFor; //lookup table for child nodes from origin nodeID
     mapping(uint32 => mapping(uint32 => uint256)) private importApprovals; //list of approved nodes to import from for each node
 
@@ -162,7 +159,7 @@ contract NODE_STOR is BASIC {
         ); //source Node_Name must match name given
 
         require(
-            (nodeData[_toNode].CAS1 == B320x01), //dest node must have CAS1 set to 0x0000...1
+            (nodeData[_toNode].CAS1 == 0x0000000000000000000000000000000000000000000000000000000000000001), //dest node must have CAS1 set to 0x0000...1
             "NS:TN: Destination node not prepared for name transfer"
         );
         //^^^^^^^checks^^^^^^^^^
