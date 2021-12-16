@@ -365,7 +365,7 @@ contract NODE_STOR is BASIC {
     }
 
     /**
-     * @dev Set import status for foreign nodes //CTS:EXAMINE needs better explanation
+     * @dev Set import status for foreign nodes -- Adds nodes authorised for import indo _thisNode
      * @param _thisNode - node to dis/allow importing into
      * @param _otherNode - node to be imported
      * @param _newStatus - importability status (0=not importable, 1=importable >1 =????)

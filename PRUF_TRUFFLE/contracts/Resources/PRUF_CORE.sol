@@ -218,10 +218,6 @@ contract CORE is BASIC {
         virtual
         whenNotPaused
     {
-        require( //CTS:EXAMINE redundant, caught in ERC20 cannot transfer to the 0 address
-            _pricing.rootAddress != address(0),
-            "C:DP: root payment address = zero address"
-        );
         if (_pricing.NTHaddress == address(0)) {
             //sets NTHaddress to rootAddress if NTHaddress is not set
             _pricing.NTHaddress = _pricing.rootAddress;
