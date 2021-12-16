@@ -87,7 +87,7 @@ contract UD_721 is BASIC {
         //^^^^^^^effects^^^^^^^^^
     }
 
-    /** //CTS:EXAMINE should this be whenNotPaused?
+    /**
      * @dev Burns (amount) tokens and mints a new Node token to the calling address
      * @param _domain - chosen domain of node
      * @param _tld - chosen tld of node
@@ -103,7 +103,7 @@ contract UD_721 is BASIC {
         uint8 _custodyType,
         bytes32 _CAS1,
         bytes32 _CAS2
-    ) external nonReentrant returns (uint256) {
+    ) external nonReentrant whenNotPaused returns (uint256) {
         uint256 tokenId = getTokenIdFromDomain(_domain, _tld);
 
         require( //throws if caller does not hod the appropriate UD token
