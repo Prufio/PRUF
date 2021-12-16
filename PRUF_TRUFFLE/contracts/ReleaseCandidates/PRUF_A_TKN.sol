@@ -635,7 +635,7 @@ contract A_TKN is
         //^^^^^^^effects^^^^^^^^^
     }
 
-    function isApprovedOrOwner(address _addr, uint256 _tokenId) external view { //DPS:EXAMINE its a zero cost call to check for the interface. My guess is that it is used to simpify interface calls?
+    function isApprovedOrOwner(address _addr, uint256 _tokenId) external view {
         require(
             _isApprovedOrOwner(_addr, _tokenId),
             "AT:IAOO:Not approved or owner"
