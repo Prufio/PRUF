@@ -522,7 +522,7 @@ contract NODE_STOR is BASIC {
      * @dev Set import status for foreing nodes
      * @param _thisNode - node to dis/allow importing into
      * @param _otherNode - node to be potentially imported
-     * returns importability status of _thisNode=>_othernode mapping
+     * @return importability status of _thisNode=>_othernode mapping
      */
     function getImportStatus(uint32 _thisNode, uint32 _otherNode)
         external
