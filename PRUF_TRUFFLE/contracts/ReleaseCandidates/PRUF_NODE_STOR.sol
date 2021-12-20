@@ -365,7 +365,7 @@ contract NODE_STOR is BASIC {
     }
 
     /**
-     * @dev Set import status for foreign nodes -- Adds nodes authorised for import indo _thisNode
+     * @dev Set import status for other nodes -- Adds nodes authorised for import indo _thisNode
      * @param _thisNode - node to dis/allow importing into
      * @param _otherNode - node to be imported
      * @param _newStatus - importability status (0=not importable, 1=importable >1 =????)
@@ -506,7 +506,7 @@ contract NODE_STOR is BASIC {
     }
 
     /**
-     * @dev extended node data setter
+     * @dev point a foreign node from another chain to a local node 
      * @param _foreignNode - node from other blockcahin to point to local node
      * @param _localNode local node to point to
      */
@@ -519,7 +519,7 @@ contract NODE_STOR is BASIC {
     }
 
     /**
-     * @dev Set import status for foreing nodes
+     * @dev Set import status for foreign nodes
      * @param _thisNode - node to dis/allow importing into
      * @param _otherNode - node to be potentially imported
      * @return importability status of _thisNode=>_othernode mapping
@@ -533,8 +533,8 @@ contract NODE_STOR is BASIC {
     }
 
     /**
-     * @dev extended node data setter
-     * @param _foreignNode - node from other blockcahin to check for local node
+     * @dev check a foreign node from alother chain for its local equivelant
+     * @param _foreignNode - node from other blockchain to check for local node
      */
     function getLocalNode(uint32 _foreignNode) external view returns (uint32) {
         return localNodeFor[_foreignNode];

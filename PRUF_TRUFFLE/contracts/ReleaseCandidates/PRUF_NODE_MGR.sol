@@ -9,14 +9,12 @@ _______\/\\\ ____________\/\\\ ____\//\\\ _\/\\\___\/\\\_\/\\\ ____________
 ________\/\\\ ____________\/\\\ _____\//\\\_\//\\\\\\\\\ _\/\\\ ____________
 _________\/// _____________\/// _______\/// __\///////// __\/// _____________
 *---------------------------------------------------------------------------*/
-NEEDS FINAL INSPECTION
 /**-----------------------------------------------------------------
  * PRUF NODE_MGR
  *
  * Contract for minting and managing Nodes
  *
  ** IMPORTANT Local (child) node behaviours overwrite parent nodes; **
- ** DPS:CHECK VERIFY THAT THIS IS ENFORCED CTS:EXAMINE where??  local nodes should only be mapped if their nonmutable attributes match those of their parent. **
  *
  * STATEMENT OF TERMS OF SERVICE (TOS):
  * User agrees not to intentionally claim any namespace that is a recognized or registered brand name, trade mark,
@@ -329,7 +327,6 @@ contract NODE_MGR is BASIC {
         );
 
         if (thisNode.custodyType != 3) {
-            //CTS:EXAMINE
             require(
                 _managementType != 0,
                 "NM:SNMD: managementType cannot = 0 unless root"
