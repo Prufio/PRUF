@@ -253,7 +253,7 @@ pragma solidity ^0.6.7;
 - -----------------------------------------------------------------
 
 *-----------------------------------------------------------------
- * node Custody Types: AC_data.custodyType (AC_manager)
+ * node Custody Types: node_data.custodyType (node_manager)
  * 0   --NONE
  * 1   --Custodial
  * 2   --Non-Custodial
@@ -281,7 +281,7 @@ pragma solidity ^0.6.7;
 - -----------------------------------------------------------------
 
 *-----------------------------------------------------------------
- * node Storage Providers: AC_data.storageProvider (AC_manager)
+ * node Storage Providers: AC_data.storageProvider (node_manager)
  * 0   -- Not Set
  * 1   -- IPFS
  * 2   -- ARweave 
@@ -292,12 +292,12 @@ pragma solidity ^0.6.7;
 - -----------------------------------------------------------------
 
 *-----------------------------------------------------------------
- * node option switches, 1 or 0 : AC_data.switches (AC_manager)
+ * node option switches, 1 or 0 : AC_data.switches (node_manager)
  *             Switches will be duplicated from root 
  * bit1  -- (node CAS) If set, node cannot change CAS data after initial setting
  * bit2  -- (Asset NMS) If set, User can set first NMS 
  * bit4  --
- * bit5  --
+ * bit5  -- (who can move tokens) If set, app contract (if given trustedAgent) can move tokens
  * bit6  -- (who can mint) If set, node token and IDroot token must reside in the same address for minting to occur 
  * bit7  -- (who can mint) If set, ONLY delegated addresses may mint
  * bit8  -- (where to mint to)If not set, tokens will always mint to nodeholder.If set, node allows minting to delegated parties
