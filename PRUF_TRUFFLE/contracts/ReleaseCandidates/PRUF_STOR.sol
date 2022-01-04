@@ -88,11 +88,11 @@ contract STOR is AccessControl, ReentrancyGuard, Pausable {
     }
 
     /**
-     * @dev Verify user credentials
-     * Requires: Originating Address is authorized for node
+     * @dev Verify calling contract credentials
+     * Requires: Originating contract address is authorized for node
      * @param _node node to check address auth
      */
-    modifier isAuthorized(uint32 _node) {
+    modifier isAuthorizedContract(uint32 _node) {
         uint8 auth = contractInfo[contractAddressToName[msg.sender]][_node];
         require(
             ((auth > 0) && (auth < 5)) || (auth == 10),
@@ -399,7 +399,7 @@ contract STOR is AccessControl, ReentrancyGuard, Pausable {
         bytes32 _URIhash,
         uint32 _node,
         uint32 _countDownStart
-    ) external nonReentrant whenNotPaused isAuthorized(_node) {
+    ) external nonReentrant whenNotPaused isAuthorizedContract(_node) {
         require(database[_idxHash].node == 0, "S:NR: Rec already exists"); //idxHash
         require(_rgtHash != 0, "S:NR: RGT = 0");
         require(_node != 0, "S:NR: node = 0");
@@ -445,7 +445,7 @@ contract STOR is AccessControl, ReentrancyGuard, Pausable {
         nonReentrant
         whenNotPaused
         exists(_idxHash) //asset must exist in 'database'
-        isAuthorized(database[_idxHash].node) //calling contract must be authorized in relevant node
+        isAuthorizedContract(database[_idxHash].node) //calling contract must be authorized in relevant node
         notEscrow(_idxHash) // asset must not be held in escrow status
     {
         Record memory rec = database[_idxHash];
@@ -496,7 +496,7 @@ contract STOR is AccessControl, ReentrancyGuard, Pausable {
         whenNotPaused
         exists(_idxHash) //asset must exist in 'database'
         notEscrow(_idxHash) // asset must not be held in escrow status
-        isAuthorized(0) //is an authorized contract, Node nonspecific
+        isAuthorizedContract(0) //is an authorized contract, Node nonspecific
     {
         Record memory rec = database[_idxHash];
 
@@ -524,7 +524,7 @@ contract STOR is AccessControl, ReentrancyGuard, Pausable {
         nonReentrant
         whenNotPaused
         exists(_idxHash)
-        isAuthorized(database[_idxHash].node)
+        isAuthorizedContract(database[_idxHash].node)
     {
         Record memory rec = database[_idxHash];
 
@@ -621,7 +621,7 @@ contract STOR is AccessControl, ReentrancyGuard, Pausable {
         nonReentrant
         whenNotPaused
         exists(_idxHash) //asset must exist in 'database'
-        isAuthorized(database[_idxHash].node) //calling contract must be authorized in relevant node
+        isAuthorizedContract(database[_idxHash].node) //calling contract must be authorized in relevant node
         notEscrow(_idxHash) // asset must not be held in escrow status
     {
         Record memory rec = database[_idxHash];
@@ -650,7 +650,7 @@ contract STOR is AccessControl, ReentrancyGuard, Pausable {
         nonReentrant
         whenNotPaused
         exists(_idxHash) //asset must exist in 'database'
-        isAuthorized(database[_idxHash].node) //calling contract must be authorized in relevant node
+        isAuthorizedContract(database[_idxHash].node) //calling contract must be authorized in relevant node
         notEscrow(_idxHash) // asset must not be held in escrow status
     {
         Record memory rec = database[_idxHash];
@@ -679,7 +679,7 @@ contract STOR is AccessControl, ReentrancyGuard, Pausable {
     function retrieveRecord(bytes32 _idxHash)
         external
         view
-        isAuthorized(0)
+        isAuthorizedContract(0)
         returns (Record memory)
     {
         //^^^^^^^checks^^^^^^^^^
