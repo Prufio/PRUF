@@ -12,7 +12,6 @@ _________\/// _____________\/// _______\/// __\///////// __\/// _____________
 
 /**-----------------------------------------------------------------
  * DAO Specification V0.01
- *
  *---------------------------------------------------------------*/
 
 // SPDX-License-Identifier: UNLICENSED
@@ -38,37 +37,41 @@ contract DAO is BASIC {
 
     /**
      * @dev Resolve contract addresses from STOR
+     * @param _contract contract name to call
      */
-    function DAOresolveContractAddresses(address _contract)
+    function DAOresolveContractAddresses(string calldata _contract)
         external
         isDAOadmin
     {
-        BASIC_Interface(_contract).resolveContractAddresses();
+        BASIC_Interface(resolveName(_contract)).resolveContractAddresses();
     }
 
     /**
      * @dev Set address of STOR contract to interface with
      * @param _storageAddress address of PRUF_STOR
+     * @param _contract contract name to call
      */
-    function DAOsetStorageContract(address _storageAddress, address _contract)
+    function DAOsetStorageContract(address _storageAddress, string calldata _contract)
         external
         isDAOadmin
     {
-        BASIC_Interface(_contract).setStorageContract(_storageAddress);
+        BASIC_Interface(resolveName(_contract)).setStorageContract(_storageAddress);
     }
 
     /***
      * @dev Triggers stopped state. (pausable)
+     * @param _contract contract name to call
      */
-    function DAOpause(address _contract) external isDAOadmin {
-        BASIC_Interface(_contract).pause();
+    function DAOpause(string calldata _contract) external isDAOadmin {
+        BASIC_Interface(resolveName(_contract)).pause();
     }
 
     /***
      * @dev Returns to normal state. (pausable)
+     * @param _contract contract name to call
      */
-    function DAOunpause(address _contract) external isDAOadmin {
-        BASIC_Interface(_contract).unpause();
+    function DAOunpause(string calldata _contract) external isDAOadmin {
+        BASIC_Interface(resolveName(_contract)).unpause();
     }
 
     /**
@@ -76,14 +79,15 @@ contract DAO is BASIC {
      * @param _tokenContract Address of foreign token contract
      * @param _to destination
      * @param _tokenID Token ID
+     * @param _contract contract name to call
      */
     function DAOERC721Transfer(
         address _tokenContract,
         address _to,
         uint256 _tokenID,
-        address _contract
+        string calldata _contract
     ) external isDAOadmin {
-        BASIC_Interface(_contract).ERC721Transfer(
+        BASIC_Interface(resolveName(_contract)).ERC721Transfer(
             _tokenContract,
             _to,
             _tokenID
@@ -95,19 +99,19 @@ contract DAO is BASIC {
      * @param _tokenContract Address of foreign token contract
      * @param _to destination
      * @param _amount amount to transfer
+     * @param _contract contract name to call
      */
     function DAOERC20Transfer(
         address _tokenContract,
         address _to,
         uint256 _amount,
-        address _contract
+        string calldata _contract
     ) external isDAOadmin {
-        BASIC_Interface(_contract).ERC20Transfer(_tokenContract, _to, _amount);
+        BASIC_Interface(resolveName(_contract)).ERC20Transfer(_tokenContract, _to, _amount);
     }
 
 
     //-------------------------A_TKN
-
     /**
      * @dev Sets the baseURI for a storage provider.
      * @param _storageProvider - storage provider number
@@ -136,6 +140,17 @@ contract DAO is BASIC {
         //^^^^^^^checks^^^^^^^^^
         A_TKN.killTrustedAgent(_key);
         //^^^^^^^effects^^^^^^^^^
+    }
+
+    //---------------------------------INTERNAL FUNCTIONS
+
+    /**
+    * @dev name resolver
+    * @param _name name to resolve
+    * returns address of (contract name)
+    */
+    function resolveName (string calldata _name) internal view returns (address) {
+        return STOR.resolveContractAddress(_name);
     }
 
 }
