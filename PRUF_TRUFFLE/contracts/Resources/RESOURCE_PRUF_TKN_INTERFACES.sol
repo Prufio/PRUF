@@ -933,7 +933,7 @@ interface A_TKN_Interface {
      * @dev Set storage contract to interface with
      * @param _storageAddress - Storage contract address
      */
-    function OO_setStorageContract(address _storageAddress) external;
+    function setStorageContract(address _storageAddress) external;
 
     /**
      * @dev Address Setters  - resolves addresses from storage and sets local interfaces
@@ -961,6 +961,16 @@ interface A_TKN_Interface {
      * contract functions.
      */
     function unSetColdWallet() external;
+
+    /**
+     * @dev Sets the baseURI for a storage provider.
+     * @param _storageProvider - storage provider number
+     * @param _URI - baseURI to add
+     */
+    function setBaseURIforStorageType(
+        uint8 _storageProvider,
+        string calldata _URI
+    ) external ;
 
     /**
      * @dev Mint an Asset token
