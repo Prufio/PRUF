@@ -51,11 +51,13 @@ contract DAO is BASIC {
      * @param _storageAddress address of PRUF_STOR
      * @param _contract contract name to call
      */
-    function DAOsetStorageContract(address _storageAddress, string calldata _contract)
-        external
-        isDAOadmin
-    {
-        BASIC_Interface(resolveName(_contract)).setStorageContract(_storageAddress);
+    function DAOsetStorageContract(
+        address _storageAddress,
+        string calldata _contract
+    ) external isDAOadmin {
+        BASIC_Interface(resolveName(_contract)).setStorageContract(
+            _storageAddress
+        );
     }
 
     /***
@@ -107,9 +109,12 @@ contract DAO is BASIC {
         uint256 _amount,
         string calldata _contract
     ) external isDAOadmin {
-        BASIC_Interface(resolveName(_contract)).ERC20Transfer(_tokenContract, _to, _amount);
+        BASIC_Interface(resolveName(_contract)).ERC20Transfer(
+            _tokenContract,
+            _to,
+            _amount
+        );
     }
-
 
     //-------------------------A_TKN
     /**
@@ -145,12 +150,15 @@ contract DAO is BASIC {
     //---------------------------------INTERNAL FUNCTIONS
 
     /**
-    * @dev name resolver
-    * @param _name name to resolve
-    * returns address of (contract name)
-    */
-    function resolveName (string calldata _name) internal view returns (address) {
+     * @dev name resolver
+     * @param _name name to resolve
+     * returns address of (contract name)
+     */
+    function resolveName(string calldata _name)
+        internal
+        view
+        returns (address)
+    {
         return STOR.resolveContractAddress(_name);
     }
-
 }
