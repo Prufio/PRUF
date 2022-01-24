@@ -1580,8 +1580,6 @@ interface STAKE_VAULT_Interface {
     import "./Imports/token/ERC721/IERC721Receiver.sol";
  */
 interface REWARDS_VAULT_Interface {
-    //--------------------------------------External functions--------------------------------------------//
-
     /**
      * @dev Set address of contracts to interface with
      * @param _utilAddress address of UTIL_TKN
@@ -1611,6 +1609,131 @@ interface REWARDS_VAULT_Interface {
      */
     function unpause() external;
 }
+
+//---------------------------------------------------------------------------------------------------------------
+
+/*
+ * @dev Interface for UD_721
+ * INHERITANCE:
+    import "../Resources/PRUF_BASIC.sol";
+    import "../Imports/security/ReentrancyGuard.sol";
+ */
+interface UD_721_Interface {
+    /**
+     * @dev Set address of STOR contract to interface with
+     * @param _erc721Address address of token contract to interface with
+     */
+    function setUnstoppableDomainsTokenContract(address _erc721Address)
+        external;
+
+    /**
+     * @dev Burns (amount) tokens and mints a new Node token to the calling address
+     * @param _domain - chosen domain of node
+     * @param _tld - chosen tld of node
+     * @param _nodeRoot - chosen root of node
+     * @param _custodyType - chosen custodyType of node (see docs)
+     * @param _CAS1 - any external data attatched to node 1/2
+     * @param _CAS2 - any external data attatched to node 2/2
+     */
+    function purchaseNode(
+        string calldata _domain,
+        string calldata _tld,
+        uint32 _nodeRoot,
+        uint8 _custodyType,
+        bytes32 _CAS1,
+        bytes32 _CAS2
+    ) external returns (uint256);
+
+    /**
+     * @dev Authorize / Deauthorize users for an address be permitted to make record modifications
+     * @dev only useful for custody types that designate user adresses (type1...)
+     * @param _node - node that user is being authorized in
+     * @param _addrHash - hash of address belonging to user being authorized
+     * @param _userType - authority level for user (see docs)
+     */
+    function addUser(
+        uint32 _node,
+        bytes32 _addrHash,
+        uint8 _userType
+    ) external;
+
+    /**
+     * @dev Set import status for foreign nodes
+     * @param _thisNode - node to dis/allow importing into
+     * @param _otherNode - node to be imported
+     * @param _newStatus - importability status (0=not importable, 1=importable >1 =????)
+     */
+    function updateImportStatus(
+        uint32 _thisNode,
+        uint32 _otherNode,
+        uint256 _newStatus
+    ) external;
+
+    /**
+     * @dev Modifies an node Node content adressable storage data pointer
+     * @param _node - node being modified
+     * @param _CAS1 - any external data attatched to node 1/2
+     * @param _CAS2 - any external data attatched to node 2/2
+     */
+    function updateNodeCAS(
+        uint32 _node,
+        bytes32 _CAS1,
+        bytes32 _CAS2
+    ) external;
+
+    /**
+     * @dev Set function costs and payment address per Node, in PRUF(18 decimals)
+     * @param _node - node to set service costs
+     * @param _service - service type being modified (see service types in ZZ_PRUF_DOCS)
+     * @param _serviceCost - 18 decimal fee in PRUF associated with specified service
+     * @param _paymentAddress - address to have _serviceCost paid to
+     */
+    function setOperationCosts(
+        uint32 _node,
+        uint16 _service,
+        uint256 _serviceCost,
+        address _paymentAddress
+    ) external;
+
+    /**
+     * @dev Configure the immutable data in an Node one time
+     * @param _node - node being modified
+     * @param _managementType - managementType of node (see docs)
+     * @param _storageProvider - storageProvider of node (see docs)
+     * @param _refAddress - address permanently tied to node
+     */
+    function setNonMutableData(
+        uint32 _node,
+        uint8 _managementType,
+        uint8 _storageProvider,
+        address _refAddress,
+        uint8 _switches
+    ) external;
+
+    /**
+     * @dev extended node data setter
+     * @param _node - node being configured
+     * @param _u8a ExtendedNodeData
+     * @param _u8b ExtendedNodeData
+     * @param _u16c ExtendedNodeData
+     * @param _u32d ExtendedNodeData
+     * @param _u32e ExtendedNodeData
+     */
+    function setExtendedNodeData(
+        uint32 _node,
+        uint8 _u8a,
+        uint8 _u8b,
+        uint16 _u16c,
+        uint32 _u32d,
+        uint32 _u32e
+    ) external;
+
+    function getTokenIdFromDomain(string memory _domain, string memory _tld)
+        external
+        returns (uint256);
+}
+
+//---------------------------------------------------------------------------------------------------------------
 
 /*
  * @dev Interface for BASIC
