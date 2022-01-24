@@ -128,7 +128,7 @@ contract DAO is BASIC {
     ) external isDAOadmin {
         //^^^^^^^checks^^^^^^^^^
         A_TKN.setBaseURIforStorageType(_storageProvider, _URI);
-        //^^^^^^^effects^^^^^^^^^
+        //^^^^^^^interactions^^^^^^^^^
     }
 
     /**
@@ -144,7 +144,341 @@ contract DAO is BASIC {
     function killTrustedAgent(uint256 _key) external isDAOadmin {
         //^^^^^^^checks^^^^^^^^^
         A_TKN.killTrustedAgent(_key);
-        //^^^^^^^effects^^^^^^^^^
+        //^^^^^^^interactions^^^^^^^^^
+    }
+
+    //--------------------------------------------NODE_MGR--------------------------
+
+    /**
+     * @dev Set pricing for Nodes
+     * @param _newNodePrice - cost per node (18 decimals)
+     * @param _newNodeBurn - burn per node (18 decimals)
+     */
+    function setNodePricing(uint256 _newNodePrice, uint256 _newNodeBurn)
+        external
+        isDAOadmin
+    {
+        NODE_MGR.setNodePricing(_newNodePrice, _newNodeBurn);
+    }
+
+    //--------------------------------------------NODE_STOR--------------------------
+
+    /**
+     * @dev Sets the valid storage type providers.
+     * @param _storageProvider - uint position for storage provider
+     * @param _status - uint position for custody type status
+     */
+    function setStorageProviders(uint8 _storageProvider, uint8 _status)
+        external
+        isDAOadmin
+    {
+        //^^^^^^^checks^^^^^^^^^
+        NODE_STOR.setStorageProviders(_storageProvider, _status);
+        //^^^^^^^interactions^^^^^^^^^
+    }
+
+    /**
+     * @dev Sets the valid management types.
+     * @param _managementType - uint position for management type
+     * @param _status - uint position for custody type status
+     */
+    function setManagementTypes(uint8 _managementType, uint8 _status)
+        external
+        isDAOadmin
+    {
+        //^^^^^^^checks^^^^^^^^^
+        NODE_STOR.setManagementTypes(_managementType, _status);
+        //^^^^^^^interactions^^^^^^^^^
+    }
+
+    /**
+     * @dev Sets the valid custody types.
+     * @param _custodyType - uint position for custody type
+     * @param _status - uint position for custody type status
+     */
+    function setCustodyTypes(uint8 _custodyType, uint8 _status)
+        external
+        isDAOadmin
+    {
+        //^^^^^^^checks^^^^^^^^^
+        NODE_STOR.setCustodyTypes(_custodyType, _status);
+        //^^^^^^^interactions^^^^^^^^^
+    }
+
+    /**
+     * !! to be used with great caution !!
+     * This potentially breaks decentralization and must eventually be given over to DAO.
+     * @dev Increases (but cannot decrease) price share for a given node
+     * @param _node - node in which cost share is being modified
+     * @param _newDiscount - discount(1% == 100, 10000 == max)
+     */
+    function changeShare(uint32 _node, uint32 _newDiscount)
+        external
+        isDAOadmin
+    {
+        //^^^^^^^checks^^^^^^^^^
+        NODE_STOR.changeShare(_node, _newDiscount);
+        //^^^^^^^interactions^^^^^^^^^
+    }
+
+    /**
+     * !! -------- to be used with great caution and only as a result of community governance action -----------
+     * @dev Transfers a name from one node to another
+     *   -Designed to remedy brand infringement issues. This breaks decentralization and must eventually be given
+     *   -over to DAO.
+     * @param _fromNode - source node
+     * @param _toNode - destination node
+     * @param _thisName - name to be transferred
+     */
+    function transferName(
+        uint32 _fromNode,
+        uint32 _toNode,
+        string calldata _thisName
+    ) external isDAOadmin {
+        NODE_STOR.transferName(_fromNode, _toNode, _thisName);
+        //^^^^^^^interactions^^^^^^^^^
+    }
+
+    /**
+     * !! -------- to be used with great caution -----------
+     * @dev Modifies an Node with minimal controls
+     * @param _node - node to be modified
+     * @param _nodeRoot - root of node
+     * @param _custodyType - custodyType of node (see docs)
+     * @param _managementType - managementType of node (see docs)
+     * @param _storageProvider - storageProvider of node (see docs)
+     * @param _discount - discount of node (100 == 1%, 10000 == max)
+     * @param _refAddress - referance address associated with an node
+     * @param _CAS1 - any external data attatched to node 1/2
+     * @param _CAS2 - any external data attatched to node 2/2
+     */
+    function modifyNode(
+        uint32 _node,
+        uint32 _nodeRoot,
+        uint8 _custodyType,
+        uint8 _managementType,
+        uint8 _storageProvider,
+        uint32 _discount,
+        address _refAddress,
+        bytes32 _CAS1,
+        bytes32 _CAS2
+    ) external isDAOadmin {
+        NODE_STOR.modifyNode(
+            _node,
+            _nodeRoot,
+            _custodyType,
+            _managementType,
+            _storageProvider,
+            _discount,
+            _refAddress,
+            _CAS1,
+            _CAS2
+        );
+        //^^^^^^^interactions^^^^^^^^^
+    }
+
+    /**
+     * @dev Administratively Deauthorize address be permitted to mint or modify records
+     * @dev only useful for custody types that designate user adresses (type1...)
+     * @param _node - node that user is being deauthorized in
+     * @param _addrHash - hash of address to deauthorize
+     */
+    function blockUser(uint32 _node, bytes32 _addrHash) external isDAOadmin {
+        //^^^^^^^checks^^^^^^^^^
+        NODE_STOR.blockUser(_node, _addrHash);
+        //^^^^^^^interactions^^^^^^^^^
+    }
+
+    /**
+     * @dev DAO set an external erc721 token as ID verification (when bit 6 set to 1)
+     * @param _node - node being configured
+     * @param _tokenContractAddress  token contract used to verify id
+     * @param _tokenId token ID used to verify id
+     */
+    function daoSetExternalId(
+        uint32 _node,
+        address _tokenContractAddress,
+        uint256 _tokenId
+    ) external isDAOadmin {
+        NODE_STOR.daoSetExternalIdToken(_node, _tokenContractAddress, _tokenId);
+    }
+
+    //---------------------------------STOR
+
+    /**
+     * @dev Authorize / Deauthorize ADRESSES permitted to make record modifications, per node
+     * populates contract name resolution and data mappings
+     * @param _contractName - String name of contract
+     * @param _contractAddr - address of contract
+     * @param _node - node to authorize in
+     * @param _contractAuthLevel - auth level to assign
+     */
+    function authorizeContract(
+        string calldata _contractName,
+        address _contractAddr,
+        uint32 _node,
+        uint8 _contractAuthLevel
+    ) external isDAOadmin {
+        //^^^^^^^checks^^^^^^^^^
+        STOR.authorizeContract(
+            _contractName,
+            _contractAddr,
+            _node,
+            _contractAuthLevel
+        );
+        //^^^^^^^interactions^^^^^^^^^
+    }
+
+    /**
+     * @dev set the default list of 11 contracts (zero index) to be applied to Noees
+     * @param _contractNumber - 0-10
+     * @param _name - name
+     * @param _contractAuthLevel - authLevel
+     */
+    function addDefaultContracts(
+        uint256 _contractNumber,
+        string calldata _name,
+        uint8 _contractAuthLevel
+    ) external isDAOadmin {
+        //^^^^^^^checks^^^^^^^^^
+        STOR.addDefaultContracts(_contractNumber, _name, _contractAuthLevel);
+        //^^^^^^^interactions^^^^^^^^^
+    }
+
+    //---------------------------------NODE_TKN
+
+    /**
+     * @dev Set storage contract to interface with
+     * @param _nodeStorageAddress - Node storage contract address
+     */
+    function setNodeStorageContract(address _nodeStorageAddress)
+        external
+        isDAOadmin
+    {
+        //^^^^^^^checks^^^^^^^^^
+        NODE_TKN.setNodeStorageContract(_nodeStorageAddress);
+        //^^^^^^^Interactions^^^^^^^^^
+    }
+
+    //---------------------------------UD_721
+
+    /**
+     * @dev Set address of STOR contract to interface with
+     * @param _erc721Address address of token contract to interface with
+     * @param _UD_721ContractAddress address of UD_721 contract
+     */
+    function setUnstoppableDomainsTokenContract(
+        address _erc721Address,
+        address _UD_721ContractAddress
+    ) external virtual isDAOadmin {
+        //^^^^^^^checks^^^^^^^^^
+        UD_721_Interface(_UD_721ContractAddress)
+            .setUnstoppableDomainsTokenContract(_erc721Address);
+        //^^^^^^^interactions^^^^^^^^^
+    }
+
+    //---------------------------------EO_STAKING
+
+    /**
+     * @dev Setter for setting fractions of a day for minimum interval
+     * @param _minUpgradeInterval in seconds
+     * @param _EO_STAKING_Address address of EO_STAKING contract
+     */
+    function setMinimumPeriod(
+        uint256 _minUpgradeInterval,
+        address _EO_STAKING_Address
+    ) external isDAOadmin {
+        EO_STAKING_Interface(_EO_STAKING_Address).setMinimumPeriod(
+            _minUpgradeInterval
+        );
+    }
+
+    /**
+     * @dev Kill switch for staking reward earning
+     * @param _delay delay in seconds to end stake earning
+     * @param _EO_STAKING_Address address of EO_STAKING contract
+     */
+    function endStaking(uint256 _delay, address _EO_STAKING_Address)
+        external
+        isDAOadmin
+    {
+        EO_STAKING_Interface(_EO_STAKING_Address).endStaking(_delay);
+    }
+
+    /**
+     * @dev Set address of contracts to interface with
+     * @param _utilAddress address of UTIL_TKN(PRUF)
+     * @param _stakeAddress address of STAKE_TKN
+     * @param _stakeVaultAddress address of STAKE_VAULT
+     * @param _rewardsVaultAddress address of REWARDS_VAULT
+     * @param _EO_STAKING_Address address of EO_STAKING contract
+     */
+    function setTokenContracts(
+        address _utilAddress,
+        address _stakeAddress,
+        address _stakeVaultAddress,
+        address _rewardsVaultAddress,
+        address _EO_STAKING_Address
+    ) external isDAOadmin {
+        //^^^^^^^checks^^^^^^^^^
+
+        EO_STAKING_Interface(_EO_STAKING_Address).setTokenContracts(
+            _utilAddress,
+            _stakeAddress,
+            _stakeVaultAddress,
+            _rewardsVaultAddress
+        );
+        //^^^^^^^interactions^^^^^^^^^
+    }
+
+    /**
+     * @dev Set stake tier parameters
+     * @param _stakeTier Staking level to set
+     * @param _min Minumum stake
+     * @param _max Maximum stake
+     * @param _interval staking interval, in dayUnits - set to the number of days that the stake and reward interval will be based on.
+     * @param _bonusPercentage bonusPercentage in tenths of a percent: 15 = 1.5% or 15/1000 per interval. Calculated to a fixed amount of tokens in the actual stake
+     * @param _EO_STAKING_Address address of EO_STAKING contract
+     */
+    function setStakeLevels(
+        uint256 _stakeTier,
+        uint256 _min,
+        uint256 _max,
+        uint256 _interval,
+        uint256 _bonusPercentage,
+        address _EO_STAKING_Address
+    ) external isDAOadmin {
+        //^^^^^^^checks^^^^^^^^^
+        EO_STAKING_Interface(_EO_STAKING_Address).setStakeLevels(
+            _stakeTier,
+            _min,
+            _max,
+            _interval,
+            _bonusPercentage
+        );
+        //^^^^^^^interactions^^^^^^^^^
+    }
+
+    //---------------------------------REWARDS_VAULT and STAKE_VAULT
+
+    /**
+     * @dev Set address of contracts to interface with
+     * @param _utilAddress address of UTIL_TKN
+     * @param _stakeAddress address of STAKE_TKN
+     * @param vaultContractAddress address of REWARDS_VAULT or STAKE_VAULT contract
+     */
+    function setTokenContracts(
+        address _utilAddress,
+        address _stakeAddress,
+        address vaultContractAddress
+    ) external isDAOadmin {
+        //^^^^^^^checks^^^^^^^^^
+        REWARDS_VAULT_Interface(vaultContractAddress).setTokenContracts(
+            _utilAddress,
+            _stakeAddress
+        );
+
+        //^^^^^^^interactions^^^^^^^^^
     }
 
     //---------------------------------INTERNAL FUNCTIONS
