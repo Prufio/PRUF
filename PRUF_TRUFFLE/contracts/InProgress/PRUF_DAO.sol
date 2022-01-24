@@ -12,6 +12,7 @@ _________\/// _____________\/// _______\/// __\///////// __\/// _____________
 
 /**-----------------------------------------------------------------
  * DAO Specification V0.01
+ * //DPS:TEST NEW CONTRACT
  *---------------------------------------------------------------*/
 
 // SPDX-License-Identifier: UNLICENSED
@@ -459,7 +460,7 @@ contract DAO is BASIC {
         //^^^^^^^interactions^^^^^^^^^
     }
 
-    //---------------------------------REWARDS_VAULT and STAKE_VAULT
+    //---------------------------------REWARDS_VAULT and STAKE_VAULT //DPS:TEST works for both?
 
     /**
      * @dev Set address of contracts to interface with
