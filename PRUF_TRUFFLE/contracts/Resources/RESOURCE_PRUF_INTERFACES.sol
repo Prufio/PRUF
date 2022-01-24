@@ -1611,3 +1611,62 @@ interface REWARDS_VAULT_Interface {
      */
     function unpause() external;
 }
+
+/*
+ * @dev Interface for BASIC
+ * INHERITANCE:
+    import "../Resources/RESOURCE_PRUF_INTERFACES.sol";
+    import "../Resources/RESOURCE_PRUF_TKN_INTERFACES.sol";
+    import "../Imports/access/AccessControl.sol";
+    import "../Imports/security/Pausable.sol";
+    import "../Imports/security/ReentrancyGuard.sol";
+    import "../Imports/token/ERC721/IERC721Receiver.sol";
+    import "../Resources/IERC721_URI.sol";
+    import "../Imports/token/ERC20/IERC20.sol";
+ */
+interface BASIC_Interface {
+    /**
+     * @dev Resolve contract addresses from STOR
+     */
+    function resolveContractAddresses() external;
+
+    /**
+     * @dev Set address of STOR contract to interface with
+     * @param _storageAddress address of PRUF_STOR
+     */
+    function setStorageContract(address _storageAddress) external;
+
+    /***
+     * @dev Triggers stopped state. (pausable)
+     */
+    function pause() external;
+
+    /***
+     * @dev Returns to normal state. (pausable)
+     */
+    function unpause() external;
+
+    /**
+     * @dev send an ERC721 token from this contract
+     * @param _tokenContract Address of foreign token contract
+     * @param _to destination
+     * @param _tokenID Token ID
+     */
+    function ERC721Transfer(
+        address _tokenContract,
+        address _to,
+        uint256 _tokenID
+    ) external;
+
+    /**
+     * @dev send an ERC20 token from this contract
+     * @param _tokenContract Address of foreign token contract
+     * @param _to destination
+     * @param _amount amount to transfer
+     */
+    function ERC20Transfer(
+        address _tokenContract,
+        address _to,
+        uint256 _amount
+    ) external;
+}
