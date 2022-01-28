@@ -13,9 +13,10 @@ _________\/// _____________\/// _______\/// __\///////// __\/// _____________
 /**-----------------------------------------------------------------
  *  TO DO --- Find more needed requires?
  *  Add payment based on node info
+ *  Add payment of listing price requirement
  *
  *-----------------------------------------------------------------
- * Wraps and unwraps ERC721 compliant tokens in a PRUF Asset token  DPS:NEW CONTRACT DPS:CHECK
+ * Wraps and unwraps ERC721 compliant tokens in a PRUF market token  DPS:NEW CONTRACT DPS:CHECK
  *  MUST BE TRUSTED AGENT IN MARKET_TKN, A_tkn, Util_Tkn
  *----------------------------------------------------------------*/
 
@@ -242,7 +243,7 @@ contract Market is BASIC {
         ConsignmentTag memory thisTag = tag[_tokenId];
         delete tag[_tokenId];
         delete tagFees[_tokenId];
-        MARKET_TKN.trustedAgentBurn(_tokenId);
+        MARKET_TKN.tagAdminBurn(_tokenId);
         //^^^^^^^effects^^^^^^^^^
 
         foreign721Transfer(
@@ -330,7 +331,7 @@ contract Market is BASIC {
             }
         }
 
-        MARKET_TKN.trustedAgentBurn(_tokenId); //burn the consignment tag, consignment is over as sale has been completed
+        MARKET_TKN.tagAdminBurn(_tokenId); //burn the consignment tag, consignment is over as sale has been completed
 
         foreign721Transfer( //Deliver token to buyer , PRUF or Foreign
             thisTag.tokenContract, //using this token contract
@@ -346,7 +347,8 @@ contract Market is BASIC {
      * @param _node node to get Market fees for
      */
     function getNodeMarketFees(uint32 _node)
-        private view
+        private
+        view
         returns (MarketFees memory)
     {
         //^^^^^^^checks^^^^^^^^^

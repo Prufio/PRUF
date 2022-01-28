@@ -19,6 +19,7 @@ _________\/// _____________\/// _______\/// __\///////// __\/// _____________
 pragma solidity ^0.8.7;
 
 import "../Resources/PRUF_CORE.sol";
+import "../Resources/RESOURCE_PRUF_EXT_INTERFACES.sol";
 
 contract DAO is BASIC {
     bytes32 public constant DAO_ADMIN_ROLE = keccak256("DAO_ADMIN_ROLE");
@@ -31,7 +32,7 @@ contract DAO is BASIC {
     modifier isDAOadmin() {
         require(
             hasRole(DAO_ADMIN_ROLE, _msgSender()),
-            "B:MOD-IP:Calling address is not DAO"
+            "B:MOD-IP:Calling address is not DAO Administrator"
         );
         _;
     }
