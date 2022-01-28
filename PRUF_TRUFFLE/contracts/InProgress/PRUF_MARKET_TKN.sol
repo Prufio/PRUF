@@ -65,34 +65,19 @@ contract MARKET_TKN is
 
     string private _baseTokenURI;
 
-    bytes32 public constant CONTRACT_ADMIN_ROLE =
-        keccak256("CONTRACT_ADMIN_ROLE");
+    // bytes32 public constant CONTRACT_ADMIN_ROLE =
+    //     keccak256("CONTRACT_ADMIN_ROLE");
     bytes32 public constant MINTER_ROLE = keccak256("MINTER_ROLE");
     bytes32 public constant PAUSER_ROLE = keccak256("PAUSER_ROLE");
     bytes32 public constant TAG_ADMIN_ROLE = keccak256("TAG_ADMIN_ROLE");
-    bytes32 public constant TRUSTED_AGENT_ROLE =
-        keccak256("TRUSTED_AGENT_ROLE");
 
-    uint256 trustedAgentEnabled = 1;
+
 
     constructor() ERC721("PRUF Consignment Token", "PRCT") {
         _setupRole(DEFAULT_ADMIN_ROLE, _msgSender());
-        _setupRole(CONTRACT_ADMIN_ROLE, _msgSender());
         _setupRole(PAUSER_ROLE, _msgSender());
     }
 
-    /**
-     * @dev Verify user credentials
-     * Originating Address:
-     *      has CONTRACT_ADMIN_ROLE
-     */
-    modifier isContractAdmin() {
-        require(
-            hasRole(CONTRACT_ADMIN_ROLE, _msgSender()),
-            "AT:MOD-IA:Calling address does not belong to a contract admin"
-        );
-        _;
-    }
 
     /**
      * @dev Verify user credentials
@@ -112,14 +97,10 @@ contract MARKET_TKN is
      * Originating Address:
      *      has TRUSTED_AGENT_ROLE and Trusted Agent role is not disabled
      */
-    modifier isTrustedAgent() {
+    modifier isTagAdmin() {
         require(
-            hasRole(TRUSTED_AGENT_ROLE, _msgSender()),
-            "AT:MOD-ITA:Must have TRUSTED_AGENT_ROLE"
-        );
-        require(
-            trustedAgentEnabled == 1,
-            "AT:MOD-ITA:Trusted Agent function permanently disabled - use allowance / transferFrom pattern"
+            hasRole(TAG_ADMIN_ROLE, _msgSender()),
+            "AT:MOD-ITA:Must have TAG_ADMIN_ROLE"
         );
         _;
     }
@@ -186,11 +167,11 @@ contract MARKET_TKN is
      * @dev Safely burns an consignment token, consignment data
      * @param _tokenId - Token ID to Burn
      */
-    function trustedAgentBurn(uint256 _tokenId)
+    function tagAdminBurn(uint256 _tokenId)
         external
         nonReentrant
         whenNotPaused
-        isTrustedAgent
+        isTagAdmin
     {
         //^^^^^^^checks^^^^^^^^^
         if (_exists(_tokenId)) {

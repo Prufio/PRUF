@@ -1269,7 +1269,7 @@ interface MARKET_TKN_Interface {
      * @dev Safely burns an consignment token, consignment data
      * @param _tokenId - Token ID to Burn
      */
-    function trustedAgentBurn(uint256 _tokenId) external;
+    function tagAdminBurn(uint256 _tokenId) external;
 
     /**
      * @dev See {IERC721Metadata-tokenURI}.
