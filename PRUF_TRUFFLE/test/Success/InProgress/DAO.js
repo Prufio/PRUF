@@ -120,8 +120,24 @@ contract("DAO", (accounts) => {
     return DAO.setBaseURIforStorageType("1", "test", { from: account1 })
   });
 
+  it("Should retrieve STOR.address", async () => {
+    var Record = [];
+
+    return await DAO.resolveName(
+      "A_TKN",
+      { from: account1 },
+      function (_err, _result) {
+        if (_err) {
+        } else {
+          Record = Object.values(_result);
+          console.log(Record);
+        }
+      }
+    );
+  });
+
   it("Should authorize account1 for NODE_STOR", () => {
     console.log("Authorizing account1");
-    return DAO.DAOsetStorageContract(STOR.address, A_TKN.address, { from: account1 });
+    return DAO.DAOsetStorageContract(STOR.address, A_TKN, { from: account1 });
   });
 });
