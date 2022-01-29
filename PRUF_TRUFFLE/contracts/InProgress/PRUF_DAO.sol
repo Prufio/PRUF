@@ -179,7 +179,8 @@ contract DAO is BASIC {
         address _storageAddress,
         string calldata _contract
     ) external isDAOadmin {
-        BASIC_Interface(resolveName(_contract)).setStorageContract(
+        address contractAddress = resolveName(_contract);
+        BASIC_Interface(contractAddress).setStorageContract(
             _storageAddress
         );
     }
