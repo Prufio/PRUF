@@ -179,13 +179,12 @@ contract DAO is BASIC {
         address _storageAddress,
         string calldata _contract
     ) external isDAOadmin {
-        address contractAddress = resolveName(_contract);
-        BASIC_Interface(contractAddress).setStorageContract(
+        BASIC_Interface(resolveName(_contract)).setStorageContract(
             _storageAddress
         );
     }
 
-    /***
+    /**
      * @dev Triggers stopped state. (pausable)
      * @param _contract contract name to call
      */
