@@ -1,8 +1,8 @@
 // /*--------------------------------------------------------PRüF0.9.0
-// __/\\\\\\\\\\\\\ _____/\\\\\\\\\ _______/\\__/\\ ___/\\\\\\\\\\\\\\\        
-// __\/\\\/////////\\\ _/\\\///////\\\ ____\//__\//____\/\\\///////////__       
-// ___\/\\\_______\/\\\_\/\\\_____\/\\\ ________________\/\\\ ____________      
-// ____\/\\\\\\\\\\\\\/__\/\\\\\\\\\\\/_____/\\\____/\\\_\/\\\\\\\\\\\ ____     
+// __/\\\\\\\\\\\\\ _____/\\\\\\\\\ _______/\\__/\\ ___/\\\\\\\\\\\\\\\
+// __\/\\\/////////\\\ _/\\\///////\\\ ____\//__\//____\/\\\///////////__
+// ___\/\\\_______\/\\\_\/\\\_____\/\\\ ________________\/\\\ ____________
+// ____\/\\\\\\\\\\\\\/__\/\\\\\\\\\\\/_____/\\\____/\\\_\/\\\\\\\\\\\ ____
 // _____\/\\\/////////____\/\\\//////\\\ ___\/\\\___\/\\\_\/\\\///////______
 // ______\/\\\ ____________\/\\\ ___\//\\\ __\/\\\___\/\\\_\/\\\ ____________
 // _______\/\\\ ____________\/\\\ ____\//\\\ _\/\\\___\/\\\_\/\\\ ____________
@@ -257,6 +257,9 @@ let discardRoleB32;
 let DAOroleB32;
 let DAOadminRoleB32;
 let contractAdminRoleB32;
+let defaultAdminRoleB32;
+
+let roleMemberCount;
 
 contract("DAO", (accounts) => {
   console.log(
@@ -310,33 +313,33 @@ contract("DAO", (accounts) => {
 
     asset14raw = await Helper.getIdxHashRaw("nnn", "nnn", "nnn", "nnn");
 
-    asset1 = await Helper.getIdxHash(asset1raw, '1000003');
+    asset1 = await Helper.getIdxHash(asset1raw, "1000003");
 
-    asset2 = await Helper.getIdxHash(asset2raw, '1000001');
+    asset2 = await Helper.getIdxHash(asset2raw, "1000001");
 
-    asset3 = await Helper.getIdxHash(asset3raw, '1000001');
+    asset3 = await Helper.getIdxHash(asset3raw, "1000001");
 
-    asset4 = await Helper.getIdxHash(asset4raw, '1000001');
+    asset4 = await Helper.getIdxHash(asset4raw, "1000001");
 
-    asset5 = await Helper.getIdxHash(asset5raw, '1000001');
+    asset5 = await Helper.getIdxHash(asset5raw, "1000001");
 
-    asset6 = await Helper.getIdxHash(asset6raw, '1000003');
+    asset6 = await Helper.getIdxHash(asset6raw, "1000003");
 
-    asset7 = await Helper.getIdxHash(asset7raw, '1000001');
+    asset7 = await Helper.getIdxHash(asset7raw, "1000001");
 
-    asset8 = await Helper.getIdxHash(asset8raw, '1000001');
+    asset8 = await Helper.getIdxHash(asset8raw, "1000001");
 
-    asset9 = await Helper.getIdxHash(asset9raw, '1000001');
+    asset9 = await Helper.getIdxHash(asset9raw, "1000001");
 
-    asset10 = await Helper.getIdxHash(asset10raw, '1000001');
+    asset10 = await Helper.getIdxHash(asset10raw, "1000001");
 
-    asset11 = await Helper.getIdxHash(asset11raw, '1000003');
+    asset11 = await Helper.getIdxHash(asset11raw, "1000003");
 
-    asset12 = await Helper.getIdxHash(asset12raw, '1000001');
+    asset12 = await Helper.getIdxHash(asset12raw, "1000001");
 
-    asset13 = await Helper.getIdxHash(asset13raw, '1000003');
+    asset13 = await Helper.getIdxHash(asset13raw, "1000003");
 
-    asset14 = await Helper.getIdxHash(asset14raw, '1000001');
+    asset14 = await Helper.getIdxHash(asset14raw, "1000001");
 
     rgt1 = await Helper.getJustRgtHash(
       asset1,
@@ -481,6 +484,8 @@ contract("DAO", (accounts) => {
     contractAdminRoleB32 = await Helper.getStringHash("CONTRACT_ADMIN_ROLE");
 
     DAOadminRoleB32 = await Helper.getStringHash("DAO_ADMIN_ROLE");
+
+    defaultAdminRoleB32 = "0x0000000000000000000000000000000000000000000000000000000000000000";
   });
 
   it("Should deploy Storage", async () => {
@@ -505,7 +510,9 @@ contract("DAO", (accounts) => {
   });
 
   it("Should deploy PRUF_NODE_STOR", async () => {
-    const PRUF_NODE_STOR_TEST = await PRUF_NODE_STOR.deployed({ from: account1 });
+    const PRUF_NODE_STOR_TEST = await PRUF_NODE_STOR.deployed({
+      from: account1,
+    });
     console.log(PRUF_NODE_STOR_TEST.address);
     assert(PRUF_NODE_STOR_TEST.address !== "");
     NODE_STOR = PRUF_NODE_STOR_TEST;
@@ -561,7 +568,9 @@ contract("DAO", (accounts) => {
   });
 
   it("Should deploy PRUF_NODE_BLDR", async () => {
-    const PRUF_NODE_BLDR_TEST = await PRUF_NODE_BLDR.deployed({ from: account1 });
+    const PRUF_NODE_BLDR_TEST = await PRUF_NODE_BLDR.deployed({
+      from: account1,
+    });
     console.log(PRUF_NODE_BLDR_TEST.address);
     assert(PRUF_NODE_BLDR_TEST.address !== "");
     NODE_BLDR = PRUF_NODE_BLDR_TEST;
@@ -615,7 +624,9 @@ contract("DAO", (accounts) => {
 
       .then(() => {
         console.log("Adding NODE_TKN to default contract list");
-        return STOR.addDefaultContracts("1", "NODE_TKN", "1", { from: account1 });
+        return STOR.addDefaultContracts("1", "NODE_TKN", "1", {
+          from: account1,
+        });
       })
 
       .then(() => {
@@ -667,7 +678,9 @@ contract("DAO", (accounts) => {
 
   it("Should add contract addresses to storage", () => {
     console.log("Adding APP to storage for use in Node 0");
-    return STOR.authorizeContract("APP", APP.address, "0", "1", { from: account1 })
+    return STOR.authorizeContract("APP", APP.address, "0", "1", {
+      from: account1,
+    })
 
       .then(() => {
         console.log("Adding NODE_MGR to storage for use in Node 0");
@@ -678,9 +691,15 @@ contract("DAO", (accounts) => {
 
       .then(() => {
         console.log("Adding NODE_STOR to storage for use in Node 0");
-        return STOR.authorizeContract("NODE_STOR", NODE_STOR.address, "0", "1", {
-          from: account1,
-        });
+        return STOR.authorizeContract(
+          "NODE_STOR",
+          NODE_STOR.address,
+          "0",
+          "1",
+          {
+            from: account1,
+          }
+        );
       })
 
       .then(() => {
@@ -766,140 +785,6 @@ contract("DAO", (accounts) => {
           from: account1,
         });
       });
-  });
-
-  it("Should authorize account1 as DAOadmin in DAO", () => {
-    console.log("Authorizing account1");
-    return DAO.grantRole(DAOadminRoleB32, account1, { from: account1 });
-  });
-
-  it("Should authorize DAO as DAO in STOR", () => {
-    console.log("Authorizing account1");
-    return STOR.grantRole(DAOroleB32, DAO.address, { from: account1 });
-  });
-
-  it("Should authorize all minter contracts for minting A_TKN(s)", () => {
-        console.log("Authorizing APP_NC");
-        return A_TKN.grantRole(minterRoleB32, APP_NC.address, {
-          from: account1,
-        })
-
-      .then(() => {
-        console.log("Authorizing APP");
-        return A_TKN.grantRole(minterRoleB32, APP.address, { from: account1 });
-      })
-
-      .then(() => {
-        console.log("Authorizing RCLR");
-        return A_TKN.grantRole(minterRoleB32, RCLR.address, { from: account1 });
-      })
-
-      .then(() => {
-        console.log("Authorizing DAO");
-        return A_TKN.grantRole(DAOroleB32, DAO.address, { from: account1 });
-      })
-
-      .then(() => {
-        console.log("Authorizing DAO");
-        return A_TKN.grantRole(contractAdminRoleB32, DAO.address, { from: account1 });
-      })
-  });
-
-  it("Should authorize all payable contracts for transactions", () => {
-    console.log("Authorizing NODE_MGR");
-    return UTIL_TKN.grantRole(payableRoleB32, NODE_MGR.address, {
-      from: account1,
-    })
-
-      .then(() => {
-        console.log("Authorizing APP_NC");
-        return UTIL_TKN.grantRole(payableRoleB32, APP_NC.address, {
-          from: account1,
-        });
-      })
-
-      .then(() => {
-        console.log("Authorizing APP");
-        return UTIL_TKN.grantRole(payableRoleB32, APP.address, {
-          from: account1,
-        });
-      })
-
-      .then(() => {
-        console.log("Authorizing RCLR");
-        return UTIL_TKN.grantRole(payableRoleB32, RCLR.address, {
-          from: account1,
-        });
-      })
-
-      .then(() => {
-        console.log("Authorizing NODE_MGR");
-        return UTIL_TKN.grantRole(trustedAgentRoleB32, NODE_MGR.address, {
-          from: account1,
-        });
-      })
-  });
-
-  it("Should authorize all minter contracts for minting NODE_TKN(s)", () => {
-    console.log("Authorizing NODE_MGR");
-    return NODE_TKN.grantRole(minterRoleB32, NODE_MGR.address, { from: account1 });
-  });
-
-  it("Should authorize NODE_BLDR", () => {
-    console.log("Authorizing NODE_BLDR");
-    return NODE_MGR.grantRole(IDproviderRoleB32, NODE_BLDR.address, {
-      from: account1,
-    })
-
-    .then(() => {
-      console.log("Authorizing account1");
-      return NODE_MGR.grantRole(DAOroleB32, account1, { from: account1 });
-    })
-  });
-
-  it("Should authorize all minter contracts for minting NODE_TKN(s)", () => {
-    console.log("Authorizing NODE_MGR");
-    return APP.grantRole(assetTransferRoleB32, APP.address, { from: account1 });
-  });
-
-  it("Should authorize A_TKN to discard", () => {
-    console.log("Authorizing A_TKN");
-    return RCLR.grantRole(discardRoleB32, A_TKN.address, { from: account1 });
-  });
-
-  it("Should authorize account1 for A_TKN", () => {
-    console.log("Authorizing account1");
-    return NODE_MGR.grantRole(IDverifierRoleB32, account1, { from: account1 });
-  });
-
-  it("Should authorize account1 for A_TKN", () => {
-    console.log("Authorizing account1");
-    return NODE_MGR.grantRole(IDverifierRoleB32, account10, { from: account1 });
-  });
-
-  it("Should authorize account1 for A_TKN", () => {
-    console.log("Authorizing account1");
-    return NODE_MGR.grantRole(IDverifierRoleB32, NODE_BLDR.address, { from: account1 });
-  });
-
-  it("Should authorize NODE_MGR for NODE_STOR", () => {
-    console.log("Authorizing NODE_MGR");
-    return NODE_STOR.grantRole(nodeAdminRoleB32, NODE_MGR.address, { from: account1 })
-
-    .then(() => {
-      console.log("Authorizing NODE_MGR");
-      return NODE_STOR.grantRole(nodeAdminRoleB32, account1, { from: account1 });
-    })
-
-    .then(() => {
-      console.log("Authorizing account1");
-      return NODE_STOR.grantRole(DAOroleB32, account1, { from: account1 });
-    })
-  });
-
-  it("Should authorize account10 for nodeMinterRoleB32", () => {
-    console.log("Authorizing NODE_MGR");
-    return NODE_BLDR.grantRole(nodeMinterRoleB32, account10, { from: account1 });
   });
 
   it("Should add Storage to each contract", () => {
@@ -1064,112 +949,327 @@ contract("DAO", (accounts) => {
 
       .then(() => {
         console.log("Resolving in DAO");
-        return DAO.resolveContractAddresses({ from: account1 })
+        return DAO.resolveContractAddresses({ from: account1 });
       });
+  });
+
+  it("Should authorize account1 as DAOadmin in DAO", () => {
+    console.log("Authorizing account1");
+    return DAO.grantRole(DAOadminRoleB32, account1, { from: account1 });
+  });
+
+  it("Should authorize DAO as DAO in STOR", () => {
+      console.log("Authorizing account1");
+      return STOR.grantRole(DAOroleB32, DAO.address, {
+        from: account1,
+    })
+  });
+
+  it("Should authorize all minter contracts for minting A_TKN(s)", () => {
+    console.log("Authorizing account1");
+    return A_TKN.grantRole(defaultAdminRoleB32, DAO.address, {
+      from: account1,
+    })
+
+      .then(() => {
+        console.log("Authorizing APP_NC");
+        return DAO.DAOgrantRole(minterRoleB32, APP_NC.address, "A_TKN", {
+          from: account1,
+        });
+      })
+
+      .then(() => {
+        console.log("Authorizing APP");
+        return DAO.DAOgrantRole(minterRoleB32, APP.address, "A_TKN", {
+          from: account1,
+        });
+      })
+
+      .then(() => {
+        console.log("Authorizing RCLR");
+        return DAO.DAOgrantRole(minterRoleB32, RCLR.address, "A_TKN", {
+          from: account1,
+        });
+      })
+
+      .then(() => {
+        console.log("Authorizing DAO");
+        return DAO.DAOgrantRole(DAOroleB32, DAO.address, "A_TKN", {
+          from: account1,
+        });
+      });
+  });
+
+  it("Should authorize all payable contracts for transactions", () => {
+    console.log("Authorizing NODE_MGR");
+    return UTIL_TKN.grantRole(defaultAdminRoleB32, DAO.address, {
+      from: account1,
+    })
+
+      .then(() => {
+        console.log("Authorizing NODE_MGR");
+        return DAO.DAOgrantRole(payableRoleB32, NODE_MGR.address, "UTIL_TKN", {
+          from: account1,
+        });
+      })
+
+      .then(() => {
+        console.log("Authorizing APP_NC");
+        return DAO.DAOgrantRole(payableRoleB32, APP_NC.address, "UTIL_TKN", {
+          from: account1,
+        });
+      })
+
+      .then(() => {
+        console.log("Authorizing APP");
+        return DAO.DAOgrantRole(payableRoleB32, APP.address, "UTIL_TKN", {
+          from: account1,
+        });
+      })
+
+      .then(() => {
+        console.log("Authorizing RCLR");
+        return DAO.DAOgrantRole(payableRoleB32, RCLR.address, "UTIL_TKN", {
+          from: account1,
+        });
+      })
+
+      .then(() => {
+        console.log("Authorizing NODE_MGR");
+        return DAO.DAOgrantRole(
+          trustedAgentRoleB32,
+          NODE_MGR.address,
+          "UTIL_TKN",
+          {
+            from: account1,
+          }
+        );
+      });
+  });
+
+  it("Should authorize all minter contracts for minting NODE_TKN(s)", () => {
+    console.log("Authorizing NODE_MGR");
+    return NODE_TKN.grantRole(defaultAdminRoleB32, DAO.address, {
+      from: account1,
+    }).then(() => {
+      console.log("Authorizing NODE_MGR");
+      return DAO.DAOgrantRole(minterRoleB32, NODE_MGR.address, "NODE_TKN", {
+        from: account1,
+      });
+    });
+  });
+
+  it("Should authorize NODE_BLDR", () => {
+    console.log("Authorizing NODE_BLDR");
+    return NODE_MGR.grantRole(defaultAdminRoleB32, DAO.address, {
+      from: account1,
+    })
+
+      .then(() => {
+        console.log("Authorizing account1");
+        return DAO.DAOgrantRole(IDverifierRoleB32, account1, "NODE_MGR", {
+          from: account1,
+        });
+      })
+
+      .then(() => {
+        console.log("Authorizing account1");
+        return DAO.DAOgrantRole(IDverifierRoleB32, account10, "NODE_MGR", {
+          from: account1,
+        });
+      })
+
+      .then(() => {
+        console.log("Authorizing NODE_BLDR");
+        return DAO.DAOgrantRole(
+          IDproviderRoleB32,
+          NODE_BLDR.address,
+          "NODE_MGR",
+          {
+            from: account1,
+          }
+        );
+      })
+
+      .then(() => {
+        console.log("Authorizing NODE_BLDR");
+        return DAO.DAOgrantRole(
+          IDverifierRoleB32,
+          NODE_BLDR.address,
+          "NODE_MGR",
+          {
+            from: account1,
+          }
+        );
+      })
+
+      .then(() => {
+        console.log("Authorizing account1");
+        return DAO.DAOgrantRole(DAOroleB32, DAO.address, "NODE_MGR", {
+          from: account1,
+        });
+      });
+  });
+
+  it("Should authorize all minter contracts for minting NODE_TKN(s)", () => {
+    console.log("Authorizing NODE_MGR");
+    return APP.grantRole(defaultAdminRoleB32, DAO.address, {
+      from: account1,
+    }).then(() => {
+      console.log("Authorizing NODE_MGR");
+      return DAO.DAOgrantRole(assetTransferRoleB32, APP.address, "APP", {
+        from: account1,
+      });
+    });
+  });
+
+  it("Should authorize A_TKN to discard", () => {
+    console.log("Authorizing A_TKN");
+    return RCLR.grantRole(defaultAdminRoleB32, DAO.address, {
+      from: account1,
+    }).then(() => {
+      console.log("Authorizing A_TKN");
+      return DAO.DAOgrantRole(discardRoleB32, A_TKN.address, "RCLR", {
+        from: account1,
+      });
+    });
+  });
+
+  it("Should authorize NODE_MGR for NODE_STOR", () => {
+    console.log("Authorizing NODE_MGR");
+    return NODE_STOR.grantRole(defaultAdminRoleB32, DAO.address, {
+      from: account1,
+    }).then(() => {
+      console.log("Authorizing NODE_MGR");
+      return DAO.DAOgrantRole(nodeAdminRoleB32, NODE_MGR.address, "NODE_STOR", {
+        from: account1,
+      })
+
+        .then(() => {
+          console.log("Authorizing NODE_MGR");
+          return DAO.DAOgrantRole(nodeAdminRoleB32, account1, "NODE_STOR", {
+            from: account1,
+          });
+        })
+
+        .then(() => {
+          console.log("Authorizing  DAO.address");
+          return DAO.DAOgrantRole(DAOroleB32, DAO.address, "NODE_STOR", {
+            from: account1,
+          });
+        });
+    });
+  });
+
+  it("Should authorize account10 for nodeMinterRoleB32", () => {
+    console.log("Authorizing NODE_MGR");
+    return NODE_BLDR.grantRole(nodeMinterRoleB32, account10, {
+      from: account1,
+    })
   });
 
   it("Should set all permitted storage providers", () => {
     console.log("Authorizing UNCONFIGURED");
-    return NODE_STOR.setStorageProviders("0", "1", { from: account1 })
+    return DAO.setStorageProviders("0", "1", { from: account1 })
 
       .then(() => {
         console.log("Authorizing Mutable");
-        return NODE_STOR.setStorageProviders("1", "1", { from: account1 });
+        return DAO.setStorageProviders("1", "1", { from: account1 });
       })
 
       .then(() => {
         console.log("Authorizing ARWEAVE");
-        return NODE_STOR.setStorageProviders("2", "1", { from: account1 });
+        return DAO.setStorageProviders("2", "1", { from: account1 });
       });
   });
 
   it("Should set all baseURI(s) for storage providers", () => {
     console.log("TEST0 == UNCONFIGURED");
-    return A_TKN.setBaseURIforStorageType("0", "TEST0", { from: account1 })
+    return DAO.setBaseURIforStorageType("0", "TEST0", { from: account1 })
 
       .then(() => {
         console.log("TEST1 == Mutable");
-        return A_TKN.setBaseURIforStorageType("1", "TEST1", { from: account1 });
+        return DAO.setBaseURIforStorageType("1", "TEST1", { from: account1 });
       })
 
       .then(() => {
         console.log("TEST2 == ARWEAVE");
-        return A_TKN.setBaseURIforStorageType("2", "TEST2", { from: account1 });
+        return DAO.setBaseURIforStorageType("2", "TEST2", { from: account1 });
       });
   });
 
   it("Should set all permitted management types", () => {
     console.log("Authorizing Unrestricted");
-    return NODE_STOR.setManagementTypes("0", "1", { from: account1 })
+    return DAO.setManagementTypes("0", "1", { from: account1 })
 
       .then(() => {
         console.log("Authorizing Restricted");
-        return NODE_STOR.setManagementTypes("1", "1", { from: account1 });
+        return DAO.setManagementTypes("1", "1", { from: account1 });
       })
 
       .then(() => {
         console.log("Authorizing Less Restricted");
-        return NODE_STOR.setManagementTypes("2", "1", { from: account1 });
+        return DAO.setManagementTypes("2", "1", { from: account1 });
       })
 
       .then(() => {
         console.log("Authorizing Authorized");
-        return NODE_STOR.setManagementTypes("3", "1", { from: account1 });
+        return DAO.setManagementTypes("3", "1", { from: account1 });
       })
 
       .then(() => {
         console.log("Authorizing Trusted");
-        return NODE_STOR.setManagementTypes("4", "1", { from: account1 });
+        return DAO.setManagementTypes("4", "1", { from: account1 });
       })
 
       .then(() => {
         console.log("Authorizing Remotely Managed");
-        return NODE_STOR.setManagementTypes("5", "1", { from: account1 });
+        return DAO.setManagementTypes("5", "1", { from: account1 });
       })
 
       .then(() => {
         console.log("Authorizing Unconfigured");
-        return NODE_STOR.setManagementTypes("255", "1", { from: account1 });
+        return DAO.setManagementTypes("255", "1", { from: account1 });
       });
   });
 
   it("Should set all permitted custody types", () => {
     console.log("Authorizing NONE");
-    return NODE_STOR.setCustodyTypes("0", "1", { from: account1 })
+    return DAO.setCustodyTypes("0", "1", { from: account1 })
 
       .then(() => {
         console.log("Authorizing Custodial");
-        return NODE_STOR.setCustodyTypes("1", "1", { from: account1 });
+        return DAO.setCustodyTypes("1", "1", { from: account1 });
       })
 
       .then(() => {
         console.log("Authorizing Non-Custodial");
-        return NODE_STOR.setCustodyTypes("2", "1", { from: account1 });
+        return DAO.setCustodyTypes("2", "1", { from: account1 });
       })
 
       .then(() => {
         console.log("Authorizing ROOT");
-        return NODE_STOR.setCustodyTypes("3", "1", { from: account1 });
+        return DAO.setCustodyTypes("3", "1", { from: account1 });
       })
 
       .then(() => {
         console.log("Authorizing Verify-Non-Custodial");
-        return NODE_STOR.setCustodyTypes("4", "1", { from: account1 });
+        return DAO.setCustodyTypes("4", "1", { from: account1 });
       })
 
       .then(() => {
         console.log("Authorizing Wrapped or decorated ERC721");
-        return NODE_STOR.setCustodyTypes("5", "1", { from: account1 });
+        return DAO.setCustodyTypes("5", "1", { from: account1 });
       })
 
       .then(() => {
         console.log("Authorizing Free Custodial");
-        return NODE_STOR.setCustodyTypes("11", "1", { from: account1 });
+        return DAO.setCustodyTypes("11", "1", { from: account1 });
       })
 
       .then(() => {
         console.log("Authorizing Free Non-Custodial");
-        return NODE_STOR.setCustodyTypes("12", "1", { from: account1 });
+        return DAO.setCustodyTypes("12", "1", { from: account1 });
       });
   });
 
@@ -1187,8 +1287,7 @@ contract("DAO", (accounts) => {
       rgt000,
       account1,
       { from: account1 }
-    )
-    .then(() => {
+    ).then(() => {
       console.log("Minting root token 2 -NC");
       return NODE_MGR.createNode(
         "2",
@@ -1214,94 +1313,184 @@ contract("DAO", (accounts) => {
     })
 
       .then(() => {
-        return NODE_MGR.setOperationCosts("1", "2", "10000000000000000", account1, {
-          from: account1,
-        });
+        return NODE_MGR.setOperationCosts(
+          "1",
+          "2",
+          "10000000000000000",
+          account1,
+          {
+            from: account1,
+          }
+        );
       })
 
       .then(() => {
-        return NODE_MGR.setOperationCosts("1", "3", "10000000000000000", account1, {
-          from: account1,
-        });
+        return NODE_MGR.setOperationCosts(
+          "1",
+          "3",
+          "10000000000000000",
+          account1,
+          {
+            from: account1,
+          }
+        );
       })
 
       .then(() => {
-        return NODE_MGR.setOperationCosts("1", "4", "10000000000000000", account1, {
-          from: account1,
-        });
+        return NODE_MGR.setOperationCosts(
+          "1",
+          "4",
+          "10000000000000000",
+          account1,
+          {
+            from: account1,
+          }
+        );
       })
 
       .then(() => {
-        return NODE_MGR.setOperationCosts("1", "5", "10000000000000000", account1, {
-          from: account1,
-        });
+        return NODE_MGR.setOperationCosts(
+          "1",
+          "5",
+          "10000000000000000",
+          account1,
+          {
+            from: account1,
+          }
+        );
       })
 
       .then(() => {
-        return NODE_MGR.setOperationCosts("1", "6", "10000000000000000", account1, {
-          from: account1,
-        });
+        return NODE_MGR.setOperationCosts(
+          "1",
+          "6",
+          "10000000000000000",
+          account1,
+          {
+            from: account1,
+          }
+        );
       })
 
       .then(() => {
-        return NODE_MGR.setOperationCosts("1", "7", "10000000000000000", account1, {
-          from: account1,
-        });
+        return NODE_MGR.setOperationCosts(
+          "1",
+          "7",
+          "10000000000000000",
+          account1,
+          {
+            from: account1,
+          }
+        );
       })
 
       .then(() => {
-        return NODE_MGR.setOperationCosts("1", "8", "10000000000000000", account1, {
-          from: account1,
-        });
+        return NODE_MGR.setOperationCosts(
+          "1",
+          "8",
+          "10000000000000000",
+          account1,
+          {
+            from: account1,
+          }
+        );
       })
 
       .then(() => {
         console.log("Setting base costs in Node 2");
-        return NODE_MGR.setOperationCosts("2", "1", "10000000000000000", account1, {
-          from: account1,
-        });
+        return NODE_MGR.setOperationCosts(
+          "2",
+          "1",
+          "10000000000000000",
+          account1,
+          {
+            from: account1,
+          }
+        );
       })
 
       .then(() => {
-        return NODE_MGR.setOperationCosts("2", "2", "10000000000000000", account1, {
-          from: account1,
-        });
+        return NODE_MGR.setOperationCosts(
+          "2",
+          "2",
+          "10000000000000000",
+          account1,
+          {
+            from: account1,
+          }
+        );
       })
 
       .then(() => {
-        return NODE_MGR.setOperationCosts("2", "3", "10000000000000000", account1, {
-          from: account1,
-        });
+        return NODE_MGR.setOperationCosts(
+          "2",
+          "3",
+          "10000000000000000",
+          account1,
+          {
+            from: account1,
+          }
+        );
       })
 
       .then(() => {
-        return NODE_MGR.setOperationCosts("2", "4", "10000000000000000", account1, {
-          from: account1,
-        });
+        return NODE_MGR.setOperationCosts(
+          "2",
+          "4",
+          "10000000000000000",
+          account1,
+          {
+            from: account1,
+          }
+        );
       })
 
       .then(() => {
-        return NODE_MGR.setOperationCosts("2", "5", "10000000000000000", account1, {
-          from: account1,
-        });
+        return NODE_MGR.setOperationCosts(
+          "2",
+          "5",
+          "10000000000000000",
+          account1,
+          {
+            from: account1,
+          }
+        );
       })
 
       .then(() => {
-        return NODE_MGR.setOperationCosts("2", "6", "10000000000000000", account1, {
-          from: account1,
-        });
+        return NODE_MGR.setOperationCosts(
+          "2",
+          "6",
+          "10000000000000000",
+          account1,
+          {
+            from: account1,
+          }
+        );
       })
 
       .then(() => {
-        return NODE_MGR.setOperationCosts("2", "7", "10000000000000000", account1, {
-          from: account1,
-        });
+        return NODE_MGR.setOperationCosts(
+          "2",
+          "7",
+          "10000000000000000",
+          account1,
+          {
+            from: account1,
+          }
+        );
       })
 
       .then(() => {
-        return NODE_MGR.setOperationCosts("2", "8", "10000000000000000", account1, {
-          from: account1,
-        });
+        return NODE_MGR.setOperationCosts(
+          "2",
+          "8",
+          "10000000000000000",
+          account1,
+          {
+            from: account1,
+          }
+        );
       });
   });
 
@@ -1381,8 +1570,7 @@ contract("DAO", (accounts) => {
       rgt000,
       account1,
       { from: account1 }
-    )
-    .then(() => {
+    ).then(() => {
       console.log("Minting Node 1000006 -NC");
       return NODE_BLDR.purchaseNode(
         "Non_Custodial_AC6",
@@ -1403,7 +1591,7 @@ contract("DAO", (accounts) => {
       "3",
       "1",
       "0x0000000000000000000000000000000000000000",
-      '66',
+      "66",
       { from: account1 }
     )
 
@@ -1413,7 +1601,7 @@ contract("DAO", (accounts) => {
           "2",
           "1",
           "0x0000000000000000000000000000000000000000",
-          '66',
+          "66",
           { from: account1 }
         );
       })
@@ -1424,7 +1612,7 @@ contract("DAO", (accounts) => {
           "2",
           "1",
           "0x0000000000000000000000000000000000000000",
-          '66',
+          "66",
           { from: account1 }
         );
       })
@@ -1435,7 +1623,7 @@ contract("DAO", (accounts) => {
           "2",
           "1",
           "0x0000000000000000000000000000000000000000",
-          '66',
+          "66",
           { from: account10 }
         );
       })
@@ -1446,7 +1634,7 @@ contract("DAO", (accounts) => {
           "2",
           "1",
           "0x0000000000000000000000000000000000000000",
-          '66',
+          "66",
           { from: account1 }
         );
       })
@@ -1457,7 +1645,7 @@ contract("DAO", (accounts) => {
           "2",
           "1",
           "0x0000000000000000000000000000000000000000",
-          '66',
+          "66",
           { from: account10 }
         );
       });
@@ -1469,41 +1657,41 @@ contract("DAO", (accounts) => {
       from: account1,
     })
 
-    .then(() => {
-      return NODE_STOR.modifyNodeSwitches("1000001", "7", "1", {
-        from: account1,
-      });
-    })
+      .then(() => {
+        return NODE_STOR.modifyNodeSwitches("1000001", "7", "1", {
+          from: account1,
+        });
+      })
 
-    .then(() => {
-      return NODE_STOR.modifyNodeSwitches("1000002", "7", "1", {
-        from: account1,
-      });
-    })
+      .then(() => {
+        return NODE_STOR.modifyNodeSwitches("1000002", "7", "1", {
+          from: account1,
+        });
+      })
 
-    .then(() => {
-      return NODE_STOR.modifyNodeSwitches("1000003", "7", "1", {
-        from: account1,
-      });
-    })
+      .then(() => {
+        return NODE_STOR.modifyNodeSwitches("1000003", "7", "1", {
+          from: account1,
+        });
+      })
 
-    .then(() => {
-      return NODE_STOR.modifyNodeSwitches("1000004", "7", "1", {
-        from: account1,
-      });
-    })
+      .then(() => {
+        return NODE_STOR.modifyNodeSwitches("1000004", "7", "1", {
+          from: account1,
+        });
+      })
 
-    .then(() => {
-      return NODE_STOR.modifyNodeSwitches("1000005", "7", "1", {
-        from: account1,
-      });
-    })
+      .then(() => {
+        return NODE_STOR.modifyNodeSwitches("1000005", "7", "1", {
+          from: account1,
+        });
+      })
 
-    .then(() => {
-      return NODE_STOR.modifyNodeSwitches("1000006", "7", "1", {
-        from: account1,
-      });
-    })
+      .then(() => {
+        return NODE_STOR.modifyNodeSwitches("1000006", "7", "1", {
+          from: account1,
+        });
+      })
 
       .then(() => {
         return NODE_STOR.modifyNodeSwitches("1000001", "8", "1", {
@@ -1544,8 +1732,9 @@ contract("DAO", (accounts) => {
 
   it("Should authorize APP in all relevant nodes", () => {
     console.log("Authorizing APP");
-    return STOR.enableContractForNode("APP", "1000001", "1", { from: account1 })
-    .then(() => {
+    return STOR.enableContractForNode("APP", "1000001", "1", {
+      from: account1,
+    }).then(() => {
       return STOR.enableContractForNode("APP", "1000002", "1", {
         from: account1,
       });
@@ -1579,9 +1768,12 @@ contract("DAO", (accounts) => {
 
   it("Should authorize APP in all relevant nodes", () => {
     console.log("Authorizing APP");
-    return STOR.enableContractForNode("APP", "1000001", "1", { from: account1 })
-    .then(() => {
-      return STOR.enableContractForNode("APP", "1000002", "1", { from: account1 });
+    return STOR.enableContractForNode("APP", "1000001", "1", {
+      from: account1,
+    }).then(() => {
+      return STOR.enableContractForNode("APP", "1000002", "1", {
+        from: account1,
+      });
     });
   });
 
@@ -1589,8 +1781,7 @@ contract("DAO", (accounts) => {
     console.log("Authorizing MAL_APP");
     return STOR.enableContractForNode("MAL_APP", "1000001", "1", {
       from: account1,
-    })
-    .then(() => {
+    }).then(() => {
       return STOR.enableContractForNode("MAL_APP", "1000002", "1", {
         from: account1,
       });
@@ -1599,8 +1790,9 @@ contract("DAO", (accounts) => {
 
   it("Should authorize ECR in all relevant nodes", () => {
     console.log("Authorizing ECR");
-    return STOR.enableContractForNode("ECR", "1000001", "3", { from: account1 })
-    .then(() => {
+    return STOR.enableContractForNode("ECR", "1000001", "3", {
+      from: account1,
+    }).then(() => {
       return STOR.enableContractForNode("ECR", "1000002", "3", {
         from: account1,
       });
@@ -1634,8 +1826,9 @@ contract("DAO", (accounts) => {
 
   it("Should authorize ECR2 in all relevant nodes", () => {
     console.log("Authorizing ECR2");
-    return STOR.enableContractForNode("ECR2", "1000001", "3", { from: account1 })
-    .then(() => {
+    return STOR.enableContractForNode("ECR2", "1000001", "3", {
+      from: account1,
+    }).then(() => {
       return STOR.enableContractForNode("ECR2", "1000002", "3", {
         from: account1,
       });
@@ -1647,7 +1840,9 @@ contract("DAO", (accounts) => {
     return STOR.enableContractForNode("A_TKN", "1", "1", { from: account1 })
 
       .then(() => {
-        return STOR.enableContractForNode("A_TKN", "2", "1", { from: account1 });
+        return STOR.enableContractForNode("A_TKN", "2", "1", {
+          from: account1,
+        });
       })
 
       .then(() => {
@@ -1672,22 +1867,30 @@ contract("DAO", (accounts) => {
 
       .then(() => {
         console.log("Account2 => 1000001");
-        return NODE_MGR.addUser("1000001", account2Hash, "1", { from: account1 });
+        return NODE_MGR.addUser("1000001", account2Hash, "1", {
+          from: account1,
+        });
       })
 
       .then(() => {
         console.log("Account1 => 1000003");
-        return NODE_MGR.addUser("1000003", account1Hash, "1", { from: account1 });
+        return NODE_MGR.addUser("1000003", account1Hash, "1", {
+          from: account1,
+        });
       })
 
       .then(() => {
         console.log("Account2 => 1000003");
-        return NODE_MGR.addUser("1000003", account2Hash, "1", { from: account1 });
+        return NODE_MGR.addUser("1000003", account2Hash, "1", {
+          from: account1,
+        });
       })
 
       .then(() => {
         console.log("Account4 => 1000003");
-        return NODE_MGR.addUser("1000003", account4Hash, "1", { from: account1 });
+        return NODE_MGR.addUser("1000003", account4Hash, "1", {
+          from: account1,
+        });
       })
 
       .then(() => {
@@ -1713,19 +1916,130 @@ contract("DAO", (accounts) => {
   });
 
   it("Should return true", async () => {
-    console.log(
-      "//**************************************BEGIN DAO TEST**********************************************/"
+    "//**************************************BEGIN DAO TEST**********************************************/";
+    var Record = [];
+
+    return await DAO.DAOhasRole(
+      contractAdminRoleB32,
+      DAO.address,
+      "A_TKN",
+      { from: account1 },
+      function (_err, _result) {
+        if (_err) {
+        } else {
+          Record = _result;
+          console.log(Record);
+        }
+      }
     );
-    return UTIL_TKN.mint(account2, "300000000000000000000000", {
-      from: account1,
-    });
+  });
+
+  it("Should return dao.address", async () => {
+    var Record = [];
+
+    return await DAO.DAOgetRoleAdmin(
+      contractAdminRoleB32,
+      "A_TKN",
+      { from: account1 },
+      function (_err, _result) {
+        if (_err) {
+        } else {
+          Record = _result;
+          console.log(Record);
+          console.log("DAO addr:", DAO.address);
+        }
+      }
+    );
+  });
+
+  it("Should return amount of people who have defaultAdminRole in A_TKN (1)", async () => {
+    var Record = [];
+
+    return await DAO.DAOgetRoleMemberCount(
+      defaultAdminRoleB32,
+      "A_TKN",
+      { from: account1 },
+      function (_err, _result) {
+        if (_err) {
+        } else {
+          Record = _result;
+          console.log(Record);
+          roleMemberCount = Record
+        }
+      }
+    );
+  });
+
+  it("Should display who had defaultAdminRole in index 0 with A_TKN (account1)", async () => {
+    var Record = [];
+
+    return await DAO.DAOgetRoleMember(
+      defaultAdminRoleB32,
+      roleMemberCount,
+      "A_TKN",
+      { from: account1 },
+      function (_err, _result) {
+        if (_err) {
+        } else {
+          Record = _result;
+          console.log(Record);
+          console.log("account1:", account1)
+        }
+      }
+    );
+  });
+
+  it("Should pause A_TKN", async () => {
+    return await DAO.DAOpause(
+      "A_TKN",
+      { from: account1 },
+    );
+  });
+
+  it("Should return true because A_TKN is paused", async () => {
+    var Record = [];
+
+    return await DAO.DAOpaused(
+      "A_TKN",
+      { from: account1 },
+      function (_err, _result) {
+        if (_err) {
+        } else {
+          Record = _result;
+          console.log(Record);
+        }
+      }
+    );
+  });
+
+  it("Should unpause A_TKN", async () => {
+    return await DAO.DAOunpause(
+      "A_TKN",
+      { from: account1 },
+    );
+  });
+
+  it("Should return false because A_TKN is not paused", async () => {
+    var Record = [];
+
+    return await DAO.DAOpaused(
+      "A_TKN",
+      { from: account1 },
+      function (_err, _result) {
+        if (_err) {
+        } else {
+          Record = _result;
+          console.log(Record);
+        }
+      }
+    );
   });
 
   it("Should set SharesAddress", async () => {
     console.log(
       "//**************************************END NODE_MGR TEST**********************************************/"
     );
-      
+
     console.log(
       "//**************************************BEGIN THE WORKS CUSTODIAL**********************************************/"
     );
@@ -1745,7 +2059,9 @@ contract("DAO", (accounts) => {
   });
 
   it("Should write asset12 in Node 1000001", async () => {
-    return APP.newRecord(asset12raw, rgt12, "1000001", "100", asset12raw, { from: account2 });
+    return APP.newRecord(asset12raw, rgt12, "1000001", "100", asset12raw, {
+      from: account2,
+    });
   });
 
   it("Should retrieve show clean asset 12", async () => {

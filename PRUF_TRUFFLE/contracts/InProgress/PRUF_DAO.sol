@@ -32,7 +32,7 @@ contract DAO is BASIC {
     modifier isDAOadmin() {
         require(
             hasRole(DAO_ADMIN_ROLE, _msgSender()),
-            "DAO:MOD-IP:Calling address is not DAO admin"
+            "DAO:MOD-IDA:Calling address is not DAO admin"
         );
         _;
     }
