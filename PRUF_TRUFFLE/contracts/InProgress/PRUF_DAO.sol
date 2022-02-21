@@ -123,7 +123,7 @@ contract DAO is BASIC {
         BASIC_Interface(resolveName(_contract)).renounceRole(_role, _account);
     }
 
-    /**
+    /** CTS:EXAMINE not used in any current contracts, contract must be importing "./AccessControlEnumerable.sol";
      * @dev Returns one of the accounts that have `role`. `index` must be a
      * value between 0 and {getRoleMemberCount}, non-inclusive.
      *
