@@ -16,7 +16,12 @@ const PRUF_NODE_MGR = artifacts.require("NODE_MGR");
 const PRUF_NODE_STOR = artifacts.require("NODE_STOR");
 const PRUF_NODE_TKN = artifacts.require("NODE_TKN");
 const PRUF_A_TKN = artifacts.require("A_TKN");
+const PRUF_UD_NODE_BLDR = artifacts.require("UD_721");
 const PRUF_NODE_BLDR = artifacts.require("NODE_BLDR");
+const PRUF_STAKE_TKN = artifacts.require("STAKE_TKN");
+const PRUF_STAKE_VAULT = artifacts.require("STAKE_VAULT");
+const PRUF_REWARD_VAULT = artifacts.require("REWARDS_VAULT");
+const PRUF_EO_STAKING = artifacts.require("EO_STAKING");
 const PRUF_ECR_MGR = artifacts.require("ECR_MGR");
 const PRUF_ECR = artifacts.require("ECR");
 const PRUF_ECR2 = artifacts.require("ECR2");
@@ -46,6 +51,7 @@ let RCLR;
 let Helper;
 let MAL_APP;
 let UTIL_TKN;
+let UD_721;
 
 let string1Hash;
 let string2Hash;
@@ -117,6 +123,9 @@ let contractAdminRoleB32;
 let defaultAdminRoleB32;
 let pauserRoleB32;
 let roleMemberCount;
+let stakeRoleB32;
+let stakePayerRoleB32;
+let stakeAdminRoleB32;
 
 contract("DAO", (accounts) => {
   console.log(
@@ -344,6 +353,12 @@ contract("DAO", (accounts) => {
 
     pauserRoleB32 = await Helper.getStringHash("PAUSER_ROLE");
 
+    stakeRoleB32 = await Helper.getStringHash("STAKE_ROLE");
+
+    stakePayerRoleB32 = await Helper.getStringHash("STAKE_PAYER_ROLE");
+
+    stakeAdminRoleB32 = await Helper.getStringHash("STAKE_ADMIN_ROLE");
+
     defaultAdminRoleB32 =
       "0x0000000000000000000000000000000000000000000000000000000000000000";
   });
@@ -476,6 +491,51 @@ contract("DAO", (accounts) => {
     console.log(PRUF_DAO_TEST.address);
     assert(PRUF_DAO_TEST.address !== "");
     DAO = PRUF_DAO_TEST;
+  });
+
+  it("Should deploy UD_721", async () => {
+    PRUF_UD_NODE_BLDR_TEST = await PRUF_UD_NODE_BLDR.deployed({
+      from: account1,
+    });
+    console.log(PRUF_UD_NODE_BLDR_TEST.address);
+    assert(PRUF_UD_NODE_BLDR_TEST.address !== "");
+    UD_721 = PRUF_UD_NODE_BLDR_TEST;
+  });
+
+  it("Should deploy PRUF_STAKE_TKN", async () => {
+    const PRUF_STAKE_TKN_TEST = await PRUF_STAKE_TKN.deployed({
+      from: account1,
+    });
+    console.log(PRUF_STAKE_TKN_TEST.address);
+    assert(PRUF_STAKE_TKN_TEST.address !== "");
+    STAKE_TKN = PRUF_STAKE_TKN_TEST;
+  });
+
+  it("Should deploy PRUF_STAKE_VAULT", async () => {
+    const PRUF_STAKE_VAULT_TEST = await PRUF_STAKE_VAULT.deployed({
+      from: account1,
+    });
+    console.log(PRUF_STAKE_VAULT_TEST.address);
+    assert(PRUF_STAKE_VAULT_TEST.address !== "");
+    STAKE_VAULT = PRUF_STAKE_VAULT_TEST;
+  });
+
+  it("Should deploy PRUF_REWARD_VAULT", async () => {
+    const PRUF_REWARD_VAULT_TEST = await PRUF_REWARD_VAULT.deployed({
+      from: account1,
+    });
+    console.log(PRUF_REWARD_VAULT_TEST.address);
+    assert(PRUF_REWARD_VAULT_TEST.address !== "");
+    REWARDS_VAULT = PRUF_REWARD_VAULT_TEST;
+  });
+
+  it("Should deploy PRUF_EO_STAKING", async () => {
+    const PRUF_EO_STAKING_TEST = await PRUF_EO_STAKING.deployed({
+      from: account1,
+    });
+    console.log(PRUF_EO_STAKING_TEST.address);
+    assert(PRUF_EO_STAKING_TEST.address !== "");
+    EO_STAKING = PRUF_EO_STAKING_TEST;
   });
 
   it("Should authorize account1 as DAOadmin in DAO", () => {
@@ -641,6 +701,13 @@ contract("DAO", (accounts) => {
       .then(() => {
         console.log("Adding in DAO");
         return DAO.setStorageContract(STOR.address, { from: account1 });
+      })
+
+      .then(() => {
+        console.log("Adding in UD_721");
+        return UD_721.setStorageContract(STOR.address, {
+          from: account1,
+        });
       });
   });
 
@@ -659,15 +726,9 @@ contract("DAO", (accounts) => {
 
       .then(() => {
         console.log("Adding NODE_STOR to storage for use in Node 0");
-        return DAO.authorizeContract(
-          "NODE_STOR",
-          NODE_STOR.address,
-          "0",
-          "1",
-          {
-            from: account1,
-          }
-        );
+        return DAO.authorizeContract("NODE_STOR", NODE_STOR.address, "0", "1", {
+          from: account1,
+        });
       })
 
       .then(() => {
@@ -827,12 +888,72 @@ contract("DAO", (accounts) => {
       .then(() => {
         console.log("Resolving in DAO");
         return DAO.resolveContractAddresses({ from: account1 });
+      })
+
+      .then(() => {
+        console.log("Resolving in UD_721");
+        return UD_721.resolveContractAddresses({ from: account1 });
       });
   });
 
   it("Should give DAO assetTransferRole for APP_NC", () => {
     console.log("Authorizing account1");
+    return UD_721.grantRole(contractAdminRoleB32, DAO.address, {
+      from: account1,
+    });
+  });
+
+  it("Should give DAO assetTransferRole for APP_NC", () => {
+    console.log("Authorizing account1");
     return APP_NC.grantRole(assetTransferRoleB32, DAO.address, {
+      from: account1,
+    });
+  });
+
+  it("Should authorize STAKE_VAULT for trusted agent functions in UTIL_TKN", async () => {
+    return UTIL_TKN.grantRole(trustedAgentRoleB32, STAKE_VAULT.address, {
+      from: account1,
+    });
+  });
+
+  it("Should authorize EO_STAKING to mint STAKE_TKNs", async () => {
+    return STAKE_TKN.grantRole(minterRoleB32, EO_STAKING.address, {
+      from: account1,
+    });
+  });
+
+  it("Should authorize DAO for EO_STAKING", async () => {
+    return EO_STAKING.grantRole(contractAdminRoleB32, DAO.address, {
+      from: account1,
+    });
+  });
+
+  it("Should authorize DAO as contractAdmin in RV", async () => {
+    return REWARDS_VAULT.grantRole(contractAdminRoleB32, DAO.address, {
+      from: account1,
+    });
+  });
+
+  it("Should authorize DAO as contractAdmin in SV", async () => {
+    return STAKE_VAULT.grantRole(contractAdminRoleB32, DAO.address, {
+      from: account1,
+    });
+  });
+
+  it("Should authorize EO_STAKING to pay rewards", async () => {
+    return REWARDS_VAULT.grantRole(stakePayerRoleB32, EO_STAKING.address, {
+      from: account1,
+    });
+  });
+
+  it("Should authorize EO_STAKING to take stakes out of the STAKE_VAULT", async () => {
+    return STAKE_VAULT.grantRole(stakeRoleB32, EO_STAKING.address, {
+      from: account1,
+    });
+  });
+
+  it("Should authorize EO_STAKING as stake admin in stake_vault", async () => {
+    return STAKE_VAULT.grantRole(stakeAdminRoleB32, EO_STAKING.address, {
       from: account1,
     });
   });
@@ -955,6 +1076,13 @@ contract("DAO", (accounts) => {
 
       .then(() => {
         console.log("Authorizing DAO");
+        return DAO.DAOgrantRole(contractAdminRoleB32, DAO.address, "NODE_TKN", {
+          from: account1,
+        });
+      })
+
+      .then(() => {
+        console.log("Authorizing DAO");
         return DAO.DAOgrantRole(pauserRoleB32, DAO.address, "NODE_TKN", {
           from: account1,
         });
@@ -1017,6 +1145,20 @@ contract("DAO", (accounts) => {
         return DAO.DAOgrantRole(pauserRoleB32, DAO.address, "NODE_MGR", {
           from: account1,
         });
+      })
+
+      .then(() => {
+        console.log("Authorizing account1");
+        return DAO.DAOgrantRole(IDverifierRoleB32, UD_721.address, "NODE_MGR", {
+          from: account1,
+        });
+      })
+
+      .then(() => {
+        console.log("Authorizing NODE_MGR");
+        return DAO.DAOgrantRole(nodeAdminRoleB32, UD_721.address, "NODE_MGR", {
+          from: account1,
+        });
       });
   });
 
@@ -1076,8 +1218,7 @@ contract("DAO", (accounts) => {
           "NODE_STOR",
           {
             from: account1,
-          }
-        )
+          })
 
           .then(() => {
             console.log("Authorizing NODE_MGR");
@@ -1099,6 +1240,18 @@ contract("DAO", (accounts) => {
         return DAO.DAOgrantRole(pauserRoleB32, DAO.address, "NODE_STOR", {
           from: account1,
         });
+      })
+
+      .then(() => {
+        console.log("Authorizing  DAO.address");
+        return DAO.DAOgrantRole(
+          contractAdminRoleB32,
+          DAO.address,
+          "NODE_STOR",
+          {
+            from: account1,
+          }
+        );
       });
   });
 
@@ -2040,9 +2193,17 @@ contract("DAO", (accounts) => {
       }
     );
   });
+
   it("Should change the share of node 1000003", () => {
     console.log("Minting PRUF to account1");
     return DAO.transferName("1000002", "1000003", "Non_Custodial_AC2", {
+      from: account1,
+    });
+  });
+
+  it("Should set externalId for node 1000002", () => {
+    console.log("Minting PRUF to account1");
+    return DAO.daoSetExternalId("1000003", A_TKN.address, asset1, {
       from: account1,
     });
   });
@@ -2052,6 +2213,91 @@ contract("DAO", (accounts) => {
     return DAO.blockUser("1000003", account5, {
       from: account1,
     });
+  });
+
+  it("Should set NODE_STOR in NODE_TKN", () => {
+    console.log("Minting PRUF to account1");
+    return DAO.setNodeStorageContract(NODE_STOR.address, {
+      from: account1,
+    });
+  });
+
+  it("Should set UD contracts", () => {
+    console.log("Minting PRUF to account1");
+    return DAO.setUnstoppableDomainsTokenContract(
+      A_TKN.address,
+      UD_721.address,
+      {
+        from: account1,
+      }
+    );
+  });
+
+  it("Should set minimum staking period", () => {
+    console.log("Minting PRUF to account1");
+    return DAO.setMinimumPeriod("20", EO_STAKING.address, {
+      from: account1,
+    });
+  });
+
+  it("Should end staking", () => {
+    console.log("Minting PRUF to account1");
+    return DAO.endStaking("1000", EO_STAKING.address, {
+      from: account1,
+    });
+  });
+
+  it("Should set token contracts", () => {
+    console.log("Minting PRUF to account1");
+    return DAO.setTokenContractsEO(
+      UTIL_TKN.address,
+      STAKE_TKN.address,
+      STAKE_VAULT.address,
+      REWARDS_VAULT.address,
+      EO_STAKING.address,
+      {
+        from: account1,
+      }
+    );
+  });
+
+  it("Should set stake lv 1", () => {
+    console.log("Minting PRUF to account1");
+    return DAO.setStakeLevels(
+      "1",
+      "1000000000000000000000",
+      "100000000000000000000000",
+      "7",
+      "7",
+      EO_STAKING.address,
+      {
+        from: account1,
+      }
+    );
+  });
+
+  it("Should set token contracts for stake vault", () => {
+    console.log("Minting PRUF to account1");
+    return DAO.setTokenContracts(
+      UTIL_TKN.address,
+      STAKE_TKN.address,
+      STAKE_VAULT.address,
+      {
+        from: account1,
+      }
+    );
+  });
+
+  it("Should set token contracts for rewards vault", () => {
+    console.log("Minting PRUF to account1");
+    return DAO.setTokenContracts(
+      UTIL_TKN.address,
+      STAKE_TKN.address,
+      REWARDS_VAULT.address,
+      {
+        from: account1,
+      }
+    );
   });
 
   it("Should set SharesAddress", async () => {

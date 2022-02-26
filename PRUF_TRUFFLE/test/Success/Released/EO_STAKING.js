@@ -44,6 +44,7 @@ let assetTransferRoleB32;
 let discardRoleB32;
 let stakeRoleB32;
 let stakePayerRoleB32;
+let stakeAdminRoleB32
 
 contract("EO_STAKING", (accounts) => {
   console.log(

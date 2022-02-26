@@ -183,7 +183,7 @@ contract NODE_TKN is
 
     //----------------------External Functions----------------------//
 
-    /**
+    /** CTS:EXAMINE should be DAO managed?
      * @dev Set storage contract to interface with
      * @param _nodeStorageAddress - Node storage contract address
      */
