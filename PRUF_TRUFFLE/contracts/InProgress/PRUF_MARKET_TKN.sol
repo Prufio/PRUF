@@ -17,7 +17,7 @@ __/\\\\\\\\\\\\\ _____/\\\\\\\\\ _______/\\__/\\ ___/\\\\\\\\\\\\\\\
  *---------------------------------------------------------------*/
 
 // SPDX-License-Identifier: UNLICENSED
-pragma solidity ^0.8.7;
+pragma solidity 0.8.7;
 
 import "../Imports/token/ERC721/extensions/ERC721Enumerable.sol";
 import "../Imports/token/ERC721/extensions/ERC721Burnable.sol";

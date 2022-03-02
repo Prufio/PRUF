@@ -19,7 +19,7 @@ _________\/// _____________\/// _______\/// __\///////// __\/// _____________
 // or set to ERC721 contract address <works only with tokens from specified contract address>
 
 // SPDX-License-Identifier: UNLICENSED
-pragma solidity ^0.8.7;
+pragma solidity 0.8.7;
 
 import "../Resources/PRUF_CORE.sol";
 

@@ -16,7 +16,7 @@ _________\/// _____________\/// _______\/// __\///////// __\/// _____________
  *---------------------------------------------------------------*/
 
 // SPDX-License-Identifier: UNLICENSED
-pragma solidity ^0.8.7;
+pragma solidity 0.8.7;
 
 import "../Imports/token/ERC721/extensions/ERC721Enumerable.sol";
 import "../Imports/token/ERC721/extensions/ERC721Burnable.sol";
@@ -70,8 +70,6 @@ contract NODE_TKN is
 
     NODE_STOR_Interface internal NODE_STOR;
 
-    uint256 trustedAgentEnabled = 1;
-
     constructor() ERC721("PRUF Node Token", "PRFN") {
         _setupRole(DEFAULT_ADMIN_ROLE, _msgSender());
         _setupRole(CONTRACT_ADMIN_ROLE, _msgSender());
@@ -112,7 +110,7 @@ contract NODE_TKN is
      * @dev Universally callable function that sends a node token to the address of its referenced ID token,
      * or removes the bit6 flag if its ID token does not exist.
      */
-    function fixOrphanedNode(uint256 _thisNode) public {
+    function fixOrphanedNode(uint256 _thisNode) external {
         require(_thisNode <= 4294967295, "NT:FON:Node ID out of range");
         uint32 node = uint32(_thisNode);
         uint256 bit6 = NODE_STOR.getSwitchAt(node, 6);
@@ -210,7 +208,7 @@ contract NODE_TKN is
         uint256 _tokenId,
         string calldata _tokenURI
     ) external isMinter nonReentrant returns (uint256) {
-        require(_tokenId <= 4294967295); //uint32 cap
+        require(_tokenId <= 4294967295, "NT:MNT: Node limit reached"); //uint32 cap
         //^^^^^^^checks^^^^^^^^^
 
         _safeMint(_recipientAddress, _tokenId);

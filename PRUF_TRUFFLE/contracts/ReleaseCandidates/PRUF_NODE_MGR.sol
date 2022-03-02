@@ -25,7 +25,7 @@ _________\/// _____________\/// _______\/// __\///////// __\/// _____________
  -----------------------------------------------------------------*/
 
 // SPDX-License-Identifier: UNLICENSED
-pragma solidity ^0.8.7;
+pragma solidity 0.8.7;
 
 import "../Resources/PRUF_BASIC.sol";
 import "../Imports/security/ReentrancyGuard.sol";
@@ -409,32 +409,6 @@ contract NODE_MGR is BASIC {
 
         NODE_STOR.createNodeData(_newNodeData, _newNode, _caller);
         NODE_TKN.mintNodeToken(_recipientAddress, tokenId, "pruf.io/nodeToken");
-        //^^^^^^^interactions^^^^^^^^^
-    }
-
-    /**
-     * @dev get bit from uint8 at specified position (1-8)
-     * @param _byte - node associated with query
-     * @param _position - bit position associated with query
-     * @return 1 or 0 (enabled or disabled)
-     * supports indirect node reference via localNodeFor[node]
-     */
-    function getBitAt(uint8 _byte, uint8 _position)
-        internal
-        pure
-        returns (uint256)
-    {
-        require(
-            (_position > 0) && (_position < 9),
-            "NM:GBA: bit position must be between 1 and 8"
-        );
-        //^^^^^^^checks^^^^^^^^^
-
-        if ((_byte & (1 << (_position - 1))) > 0) {
-            return 1;
-        } else {
-            return 0;
-        }
         //^^^^^^^interactions^^^^^^^^^
     }
 }

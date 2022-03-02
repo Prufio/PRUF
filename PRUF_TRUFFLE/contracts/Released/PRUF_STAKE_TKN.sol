@@ -18,7 +18,7 @@ __/\\\\\\\\\\\\\ _____/\\\\\\\\\ _______/\\__/\\ ___/\\\\\\\\\\\\\\\
  *---------------------------------------------------------------*/
 
 // SPDX-License-Identifier: UNLICENSED
-pragma solidity ^0.8.7;
+pragma solidity 0.8.7;
 
 import "../Imports/token/ERC721/ERC721.sol";
 import "../Imports/token/ERC721/extensions/ERC721Enumerable.sol";
@@ -69,7 +69,7 @@ contract STAKE_TKN is
     bytes32 public constant MINTER_ROLE = keccak256("MINTER_ROLE");
     bytes32 public constant PAUSER_ROLE = keccak256("PAUSER_ROLE");
 
-    uint256 trustedAgentEnabled = 1;
+    uint256 trustedAgentEnabled = 1; //CTS:EXAMINE remove?
 
     constructor() ERC721("PRUF EO Staking Token", "PRST") {
         _setupRole(DEFAULT_ADMIN_ROLE, _msgSender());

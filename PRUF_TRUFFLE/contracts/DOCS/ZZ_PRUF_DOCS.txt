@@ -192,6 +192,12 @@ pragma solidity ^0.6.7;
  *
 - -----------------------------------------------------------------
 
+*--------------------------Magic Numbers---------------------------------------
+* PRüF contains a number of magic numbers detailed in the sections below
+*UNIVERSAL:
+* 0/170: false/true
+- -----------------------------------------------------------------
+
 *-----------------------------------------------------------------
 * Service types 
 * 1: newRecordCost // Cost to create a new record
@@ -341,6 +347,9 @@ pragma solidity ^0.6.7;
  *       Status 1-6 Actions cannot be performed by automation.
  *       only ACAdmins can set or unset these statuses, except 5 which can be set by automation
  * 7 = out of Supervised escrow (user < 5)
+ *
+ * All status < 50 are reserved for Non-custodial operations.
+ * All status > 49 are reserved for custodial operations.
  *
  * 50 Locked escrow
  * 51 = transferrable, exportable, automation set/unset (secret confirmed)(ACAdmin can unset)
