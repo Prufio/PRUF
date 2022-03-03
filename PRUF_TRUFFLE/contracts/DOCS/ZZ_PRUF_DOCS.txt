@@ -34,7 +34,8 @@ pragma solidity ^0.6.7;
 /*----------------------------------------------------------------
  *TO DO : look through all RC1 contracts for DAO functions CTS:CHECK
 
-
+ * rewrite marketspace to allow listing on a node (default node has no costs for pruf assets)
+ * make Possible to write handshake messaging between assetholder and listing node
 
 
 
