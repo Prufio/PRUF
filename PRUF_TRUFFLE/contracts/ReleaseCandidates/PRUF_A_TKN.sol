@@ -16,7 +16,7 @@ _________\/// _____________\/// _______\/// __\///////// __\/// _____________
  *---------------------------------------------------------------*/
 
 // SPDX-License-Identifier: UNLICENSED
-pragma solidity ^0.8.7;
+pragma solidity 0.8.7;
 
 import "../Imports/token/ERC721/extensions/ERC721Enumerable.sol";
 import "../Imports/token/ERC721/extensions/ERC721Burnable.sol";
@@ -62,8 +62,6 @@ contract A_TKN is
 
     Counters.Counter private _tokenIdTracker;
 
-    string private _baseTokenURI;
-
     uint256 trustedAgentEnabled = 1;
 
     bytes32 public constant CONTRACT_ADMIN_ROLE =
@@ -84,8 +82,8 @@ contract A_TKN is
     NODE_STOR_Interface internal NODE_STOR;
     NODE_TKN_Interface internal NODE_TKN;
 
-    bytes32 public constant B320x01 =
-        0x0000000000000000000000000000000000000000000000000000000000000001;
+    //B320x01 is written to the rightsholder field in cases where no rightsholder has been declared after transfer
+    bytes32 public constant B320x01 = 0x0000000000000000000000000000000000000000000000000000000000000001;
 
     constructor() ERC721("PRUF Asset Token", "PRAT") {
         _setupRole(DEFAULT_ADMIN_ROLE, _msgSender());
@@ -710,15 +708,6 @@ contract A_TKN is
 
         _tokenURIs[tokenId] = _tokenURI;
         //^^^^^^^effects^^^^^^^^^
-    }
-
-    /**
-     * @dev returns set base URI of asset tokens
-     * @return base URI
-     */
-    function _baseURI() internal view virtual override returns (string memory) {
-        return _baseTokenURI;
-        //^^^^^^^interactions^^^^^^^^^
     }
 
     /**

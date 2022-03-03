@@ -16,7 +16,7 @@ _________\/// _____________\/// _______\/// __\///////// __\/// _____________
  *---------------------------------------------------------------*/
 
 // SPDX-License-Identifier: UNLICENSED
-pragma solidity ^0.8.7;
+pragma solidity 0.8.7;
 import "./RESOURCE_PRUF_STRUCTS.sol";
 
 //---------------------------------------------------------------------------------------------------------------
@@ -673,13 +673,13 @@ interface NODE_STOR_Interface {
         uint256 _tokenId
     ) external;
 
-    /**
+    /** CTS:EXAMINE changed from daoSetExternalIdToken to daoSetExternalId
      * @dev DAO set an external erc721 token as ID verification (when bit 6 set to 1)
      * @param _node - node being configured
      * @param _tokenContractAddress  token contract used to verify id
      * @param _tokenId token ID used to verify id
      */
-    function daoSetExternalIdToken(
+    function daoSetExternalId(
         uint32 _node,
         address _tokenContractAddress,
         uint256 _tokenId

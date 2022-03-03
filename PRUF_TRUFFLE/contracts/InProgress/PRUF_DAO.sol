@@ -16,7 +16,7 @@ _________\/// _____________\/// _______\/// __\///////// __\/// _____________
  *---------------------------------------------------------------*/
 
 // SPDX-License-Identifier: UNLICENSED
-pragma solidity ^0.8.7;
+pragma solidity 0.8.7;
 
 import "../Resources/PRUF_CORE.sol";
 import "../Resources/RESOURCE_PRUF_EXT_INTERFACES.sol";
@@ -32,7 +32,7 @@ contract DAO is BASIC {
     modifier isDAOadmin() {
         require(
             hasRole(DAO_ADMIN_ROLE, _msgSender()),
-            "DAO:MOD-IP:Calling address is not DAO admin"
+            "DAO:MOD-IDA:Calling address is not DAO admin"
         );
         _;
     }
@@ -123,7 +123,7 @@ contract DAO is BASIC {
         BASIC_Interface(resolveName(_contract)).renounceRole(_role, _account);
     }
 
-    /**
+    /** CTS:EXAMINE not used in any current contracts, contract must be importing "./AccessControlEnumerable.sol";
      * @dev Returns one of the accounts that have `role`. `index` must be a
      * value between 0 and {getRoleMemberCount}, non-inclusive.
      *
@@ -179,13 +179,12 @@ contract DAO is BASIC {
         address _storageAddress,
         string calldata _contract
     ) external isDAOadmin {
-        address contractAddress = resolveName(_contract);
-        BASIC_Interface(contractAddress).setStorageContract(
+        BASIC_Interface(resolveName(_contract)).setStorageContract(
             _storageAddress
         );
     }
 
-    /***
+    /**
      * @dev Triggers stopped state. (pausable)
      * @param _contract contract name to call
      */
@@ -421,7 +420,7 @@ contract DAO is BASIC {
         //^^^^^^^interactions^^^^^^^^^
     }
 
-    /**
+    /** CTS:EXAMINE changed from daoSetExternalIdToken to daoSetExternalId
      * @dev DAO set an external erc721 token as ID verification (when bit 6 set to 1)
      * @param _node - node being configured
      * @param _tokenContractAddress  token contract used to verify id
@@ -432,7 +431,7 @@ contract DAO is BASIC {
         address _tokenContractAddress,
         uint256 _tokenId
     ) external isDAOadmin {
-        NODE_STOR.daoSetExternalIdToken(_node, _tokenContractAddress, _tokenId);
+        NODE_STOR.daoSetExternalId(_node, _tokenContractAddress, _tokenId);
     }
 
     //---------------------------------STOR
@@ -537,7 +536,7 @@ contract DAO is BASIC {
         EO_STAKING_Interface(_EO_STAKING_Address).endStaking(_delay);
     }
 
-    /**
+    /** CTS:EXAMINE temporarily changed name due to other function of same name.
      * @dev Set address of contracts to interface with
      * @param _utilAddress address of UTIL_TKN(PRUF)
      * @param _stakeAddress address of STAKE_TKN
@@ -545,7 +544,7 @@ contract DAO is BASIC {
      * @param _rewardsVaultAddress address of REWARDS_VAULT
      * @param _EO_STAKING_Address address of EO_STAKING contract
      */
-    function setTokenContracts(
+    function setTokenContractsEO(
         address _utilAddress,
         address _stakeAddress,
         address _stakeVaultAddress,
