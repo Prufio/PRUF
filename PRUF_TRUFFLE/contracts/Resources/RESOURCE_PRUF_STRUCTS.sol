@@ -26,7 +26,7 @@ struct Record {
     uint32 countDown; // Variable that can only be decreased from countDownStart
     uint32 int32temp; // int32 for persisting transitional data
     //128 bits left in this packing)
-    bytes32 URIhash; //hash of off chain content adressable storage ; unuiqe element of URI 
+    bytes32 URIhash; //hash of off chain content adressable storage ; unuiqe element of URI
     bytes32 mutableStorage1; // Publically viewable asset description
     bytes32 nonMutableStorage1; // Publically viewable immutable notes
     bytes32 mutableStorage2; // Publically viewable asset description
