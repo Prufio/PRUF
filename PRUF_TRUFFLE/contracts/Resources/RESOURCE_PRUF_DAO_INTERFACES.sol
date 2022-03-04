@@ -11,7 +11,7 @@ _________\/// _____________\/// _______\/// __\///////// __\/// _____________
 *---------------------------------------------------------------------------*/
 
 /**-----------------------------------------------------------------
- *  DAO CONTRLO PANEL Interfaces
+ *  DAO CONTROL PANEL Interfaces
  *----------------------------------------------------------------*/
 
 // SPDX-License-Identifier: UNLICENSED
@@ -26,6 +26,14 @@ pragma solidity 0.8.7;
     import "./Imports/security/ReentrancyGuard.sol";
  */
 
+struct Motion {
+    address proposer;
+    uint256 votes;
+    uint256 voterCount;
+    uint256 status; // 0=nonexistant, 1=proposed, 2=approved
+    uint256 proposalTime;
+}
+
 interface DAO_LAYER_AInterface {
     //--------------------------------------------External Functions--------------------------
     /**
@@ -36,7 +44,6 @@ interface DAO_LAYER_AInterface {
         address _account,
         string calldata _contract
     ) external view returns (bool);
-
 
     /**
      * @dev Returns the admin role that controls `role`. See {grantRole} and
@@ -100,7 +107,7 @@ interface DAO_LAYER_AInterface {
         string calldata _contract
     ) external;
 
-    /** 
+    /**
      * @dev Returns one of the accounts that have `role`. `index` must be a
      * value between 0 and {getRoleMemberCount}, non-inclusive.
      *
@@ -131,8 +138,7 @@ interface DAO_LAYER_AInterface {
      * @dev Resolve contract addresses from STOR
      * @param _contract contract name to call
      */
-    function DAOresolveContractAddresses(string calldata _contract)
-        external;
+    function DAOresolveContractAddresses(string calldata _contract) external;
 
     /**
      * @dev Set address of STOR contract to interface with
@@ -237,16 +243,14 @@ interface DAO_LAYER_AInterface {
      * @param _managementType - uint position for management type
      * @param _status - uint position for custody type status
      */
-    function setManagementTypes(uint8 _managementType, uint8 _status)
-        external;
+    function setManagementTypes(uint8 _managementType, uint8 _status) external;
 
     /**
      * @dev Sets the valid custody types.
      * @param _custodyType - uint position for custody type
      * @param _status - uint position for custody type status
      */
-    function setCustodyTypes(uint8 _custodyType, uint8 _status)
-        external;
+    function setCustodyTypes(uint8 _custodyType, uint8 _status) external;
 
     /**
      * !! to be used with great caution !!
@@ -255,8 +259,7 @@ interface DAO_LAYER_AInterface {
      * @param _node - node in which cost share is being modified
      * @param _newDiscount - discount(1% == 100, 10000 == max)
      */
-    function changeShare(uint32 _node, uint32 _newDiscount)
-        external;
+    function changeShare(uint32 _node, uint32 _newDiscount) external;
 
     /**
      * !! -------- to be used with great caution and only as a result of community governance action -----------
@@ -306,7 +309,7 @@ interface DAO_LAYER_AInterface {
      */
     function blockUser(uint32 _node, bytes32 _addrHash) external;
 
-    /** 
+    /**
      * @dev DAO set an external erc721 token as ID verification (when bit 6 set to 1)
      * @param _node - node being configured
      * @param _tokenContractAddress  token contract used to verify id
@@ -317,6 +320,7 @@ interface DAO_LAYER_AInterface {
         address _tokenContractAddress,
         uint256 _tokenId
     ) external;
+
     //---------------------------------STOR
 
     /**
@@ -352,8 +356,7 @@ interface DAO_LAYER_AInterface {
      * @dev Set storage contract to interface with
      * @param _nodeStorageAddress - Node storage contract address
      */
-    function setNodeStorageContract(address _nodeStorageAddress)
-        external;
+    function setNodeStorageContract(address _nodeStorageAddress) external;
 
     //---------------------------------UD_721
 
@@ -384,10 +387,9 @@ interface DAO_LAYER_AInterface {
      * @param _delay delay in seconds to end stake earning
      * @param _EO_STAKING_Address address of EO_STAKING contract
      */
-    function endStaking(uint256 _delay, address _EO_STAKING_Address)
-        external;
+    function endStaking(uint256 _delay, address _EO_STAKING_Address) external;
 
-    /** 
+    /**
      * @dev Set address of contracts to interface with
      * @param _utilAddress address of UTIL_TKN(PRUF)
      * @param _stakeAddress address of STAKE_TKN
@@ -442,10 +444,46 @@ interface DAO_LAYER_AInterface {
      * @param _name name to resolve
      * returns address of (contract name)
      */
-    function resolveName(string calldata _name)
+    function resolveName(string calldata _name) external view returns (address);
+}
+
+interface DAOInterface {
+    /**
+     * @dev Crates an new Motion in the motions map
+     * Originating Address:
+     *      holds > .9_ pruf
+     * @param _motion the hash of the referring contract address, function name, and parmaeters
+     */
+    function createMotion(bytes32 _motion) external;
+
+    /**
+     * @dev Admin voting : to be depricated ---------CAUTION:CENTRALIZATION RISK
+     * @param _motion the motion hash to be voted on
+     * @param _vote //1 = yea, 0 = neigh
+     */
+    function adminVote(bytes32 _motion, uint256 _vote) external;
+
+    /**
+     * @dev Finalizes / tallys votes for a mation
+     * @param _motion the motion hash to be finalized
+     * also clears any expired or failed motions
+     */
+    function finalizeVoting(bytes32 _motion) external;
+
+    /**
+     * @dev Throws if a resolution is not approved. clears the motion if successful
+     * @param _motion the motion hash to check
+     * to be called by DAO_LAYER contracts as a check prior to executing functions
+     */
+    function verifyResolution(bytes32 _motion) external;
+
+    /**
+     * @dev Getter for motions
+     * @param _motion the motion hash to get
+     * to be called by DAO_LAYER contracts as a check prior to executing functions
+     */
+    function getMotionStatus(bytes32 _motion)
         external
         view
-        returns (address);
-
-    
+        returns (Motion memory);
 }
