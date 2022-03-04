@@ -22,9 +22,9 @@ import "../Resources/PRUF_CORE.sol";
 import "../Resources/RESOURCE_PRUF_EXT_INTERFACES.sol";
 import "../Resources/RESOURCE_PRUF_DAO_INTERFACES.sol";
 
-
 contract DAO_LAYER_A is BASIC {
-    bytes32 public constant DAO_CONTROLLER_ROLE = keccak256("DAO_CONTROLLER_ROLE");
+    bytes32 public constant DAO_CONTROLLER_ROLE =
+        keccak256("DAO_CONTROLLER_ROLE");
 
     address internal DAO_Address;
     DAO_Interface internal DAO;
@@ -82,9 +82,8 @@ contract DAO_LAYER_A is BASIC {
 
         DAO_Address = STOR.resolveContractAddress("DAO");
         DAO = DAO_Interface(DAO_Address);
-    
     }
-    
+
     /**
      * @dev Returns `true` if `account` has been granted `role`.
      */
@@ -126,8 +125,21 @@ contract DAO_LAYER_A is BASIC {
         bytes32 _role,
         address _account,
         string calldata _contract
-    ) external isDAOcontroller {
+    ) external isDAOcontroller nonReentrant {
+        bytes32 signature = keccak256(
+            abi.encodePacked(
+                "DAO_grantRole",
+                address(this),
+                _role,
+                _account,
+                _contract
+            )
+        );
+        DAO.verifyResolution(signature);
+        //^^^^^^^checks^^^^^^^^^
+
         BASIC_Interface(resolveName(_contract)).grantRole(_role, _account);
+        //^^^^^^^interactions^^^^^^^^^
     }
 
     /**
@@ -143,7 +155,19 @@ contract DAO_LAYER_A is BASIC {
         bytes32 _role,
         address _account,
         string calldata _contract
-    ) external isDAOcontroller {
+    ) external isDAOcontroller nonReentrant {
+        bytes32 signature = keccak256(
+            abi.encodePacked(
+                "DAO_revokeRole",
+                address(this),
+                _role,
+                _account,
+                _contract
+            )
+        );
+        DAO.verifyResolution(signature);
+        //^^^^^^^checks^^^^^^^^^
+
         BASIC_Interface(resolveName(_contract)).revokeRole(_role, _account);
     }
 
@@ -165,7 +189,19 @@ contract DAO_LAYER_A is BASIC {
         bytes32 _role,
         address _account,
         string calldata _contract
-    ) external isDAOcontroller {
+    ) external isDAOcontroller nonReentrant {
+        bytes32 signature = keccak256(
+            abi.encodePacked(
+                "DAO_renounceRole",
+                address(this),
+                _role,
+                _account,
+                _contract
+            )
+        );
+        DAO.verifyResolution(signature);
+        //^^^^^^^checks^^^^^^^^^
+
         BASIC_Interface(resolveName(_contract)).renounceRole(_role, _account);
     }
 
@@ -212,7 +248,18 @@ contract DAO_LAYER_A is BASIC {
     function DAO_resolveContractAddresses(string calldata _contract)
         external
         isDAOcontroller
+        nonReentrant
     {
+        bytes32 signature = keccak256(
+            abi.encodePacked(
+                "DAO_resolveContractAddresses",
+                address(this),
+                _contract
+            )
+        );
+        DAO.verifyResolution(signature);
+        //^^^^^^^checks^^^^^^^^^
+
         BASIC_Interface(resolveName(_contract)).resolveContractAddresses();
     }
 
@@ -224,7 +271,18 @@ contract DAO_LAYER_A is BASIC {
     function DAO_setStorageContract(
         address _storageAddress,
         string calldata _contract
-    ) external isDAOcontroller {
+    ) external isDAOcontroller nonReentrant {
+        bytes32 signature = keccak256(
+            abi.encodePacked(
+                "DAO_setStorageContract",
+                address(this),
+                _storageAddress,
+                _contract
+            )
+        );
+        DAO.verifyResolution(signature);
+        //^^^^^^^checks^^^^^^^^^
+
         BASIC_Interface(resolveName(_contract)).setStorageContract(
             _storageAddress
         );
@@ -234,7 +292,17 @@ contract DAO_LAYER_A is BASIC {
      * @dev Triggers stopped state. (pausable)
      * @param _contract contract name to call
      */
-    function DAO_pause(string calldata _contract) external isDAOcontroller {
+    function DAO_pause(string calldata _contract)
+        external
+        isDAOcontroller
+        nonReentrant
+    {
+        bytes32 signature = keccak256(
+            abi.encodePacked("DAO_pause", address(this), _contract)
+        );
+        DAO.verifyResolution(signature);
+        //^^^^^^^checks^^^^^^^^^
+
         BASIC_Interface(resolveName(_contract)).pause();
     }
 
@@ -242,7 +310,17 @@ contract DAO_LAYER_A is BASIC {
      * @dev Returns to normal state. (pausable)
      * @param _contract contract name to call
      */
-    function DAO_unpause(string calldata _contract) external isDAOcontroller {
+    function DAO_unpause(string calldata _contract)
+        external
+        isDAOcontroller
+        nonReentrant
+    {
+        bytes32 signature = keccak256(
+            abi.encodePacked("DAO_unpause", address(this), _contract)
+        );
+        DAO.verifyResolution(signature);
+        //^^^^^^^checks^^^^^^^^^
+
         BASIC_Interface(resolveName(_contract)).unpause();
     }
 
@@ -265,7 +343,20 @@ contract DAO_LAYER_A is BASIC {
         address _to,
         uint256 _tokenID,
         string calldata _contract
-    ) external isDAOcontroller {
+    ) external isDAOcontroller nonReentrant {
+        bytes32 signature = keccak256(
+            abi.encodePacked(
+                "DAO_ERC721Transfer",
+                address(this),
+                _tokenContract,
+                _to,
+                _tokenID,
+                _contract
+            )
+        );
+        DAO.verifyResolution(signature);
+        //^^^^^^^checks^^^^^^^^^
+
         BASIC_Interface(resolveName(_contract)).ERC721Transfer(
             _tokenContract,
             _to,
@@ -285,7 +376,20 @@ contract DAO_LAYER_A is BASIC {
         address _to,
         uint256 _amount,
         string calldata _contract
-    ) external isDAOcontroller {
+    ) external isDAOcontroller nonReentrant {
+        bytes32 signature = keccak256(
+            abi.encodePacked(
+                "DAO_ERC20Transfer",
+                address(this),
+                _tokenContract,
+                _to,
+                _amount,
+                _contract
+            )
+        );
+        DAO.verifyResolution(signature);
+        //^^^^^^^checks^^^^^^^^^
+
         BASIC_Interface(resolveName(_contract)).ERC20Transfer(
             _tokenContract,
             _to,
@@ -302,7 +406,18 @@ contract DAO_LAYER_A is BASIC {
     function DAO_setBaseURIforStorageType(
         uint8 _storageProvider,
         string calldata _URI
-    ) external isDAOcontroller {
+    ) external isDAOcontroller nonReentrant {
+        bytes32 signature = keccak256(
+            abi.encodePacked(
+                "DAO_setBaseURIforStorageType",
+                address(this),
+                _storageProvider,
+                _URI
+            )
+        );
+        DAO.verifyResolution(signature);
+        //^^^^^^^checks^^^^^^^^^
+
         //^^^^^^^checks^^^^^^^^^
         A_TKN.setBaseURIforStorageType(_storageProvider, _URI);
         //^^^^^^^interactions^^^^^^^^^
@@ -318,8 +433,17 @@ contract DAO_LAYER_A is BASIC {
      * PRuF "banked" in an allowance for use in the system.
      * @param _key - set to 170 to PERMENANTLY REMOVE TRUSTED AGENT CAPABILITY
      */
-    function DAO_killTrustedAgent(uint256 _key) external isDAOcontroller {
+    function DAO_A_TKN_killTrustedAgent(uint256 _key)
+        external
+        isDAOcontroller
+        nonReentrant
+    {
+        bytes32 signature = keccak256(
+            abi.encodePacked("DAO_A_TKN_killTrustedAgent", address(this), _key)
+        );
+        DAO.verifyResolution(signature);
         //^^^^^^^checks^^^^^^^^^
+
         A_TKN.killTrustedAgent(_key);
         //^^^^^^^interactions^^^^^^^^^
     }
@@ -334,7 +458,19 @@ contract DAO_LAYER_A is BASIC {
     function DAO_setNodePricing(uint256 _newNodePrice, uint256 _newNodeBurn)
         external
         isDAOcontroller
+        nonReentrant
     {
+        bytes32 signature = keccak256(
+            abi.encodePacked(
+                "DAO_setNodePricing",
+                address(this),
+                _newNodePrice,
+                _newNodeBurn
+            )
+        );
+        DAO.verifyResolution(signature);
+        //^^^^^^^checks^^^^^^^^^
+
         NODE_MGR.setNodePricing(_newNodePrice, _newNodeBurn);
     }
 
@@ -348,8 +484,19 @@ contract DAO_LAYER_A is BASIC {
     function DAO_setStorageProviders(uint8 _storageProvider, uint8 _status)
         external
         isDAOcontroller
+        nonReentrant
     {
+        bytes32 signature = keccak256(
+            abi.encodePacked(
+                "DAO_setStorageProviders",
+                address(this),
+                _storageProvider,
+                _status
+            )
+        );
+        DAO.verifyResolution(signature);
         //^^^^^^^checks^^^^^^^^^
+
         NODE_STOR.setStorageProviders(_storageProvider, _status);
         //^^^^^^^interactions^^^^^^^^^
     }
@@ -362,8 +509,19 @@ contract DAO_LAYER_A is BASIC {
     function DAO_setManagementTypes(uint8 _managementType, uint8 _status)
         external
         isDAOcontroller
+        nonReentrant
     {
+        bytes32 signature = keccak256(
+            abi.encodePacked(
+                "DAO_setManagementTypes",
+                address(this),
+                _managementType,
+                _status
+            )
+        );
+        DAO.verifyResolution(signature);
         //^^^^^^^checks^^^^^^^^^
+
         NODE_STOR.setManagementTypes(_managementType, _status);
         //^^^^^^^interactions^^^^^^^^^
     }
@@ -376,8 +534,19 @@ contract DAO_LAYER_A is BASIC {
     function DAO_setCustodyTypes(uint8 _custodyType, uint8 _status)
         external
         isDAOcontroller
+        nonReentrant
     {
+        bytes32 signature = keccak256(
+            abi.encodePacked(
+                "DAO_setCustodyTypes",
+                address(this),
+                _custodyType,
+                _status
+            )
+        );
+        DAO.verifyResolution(signature);
         //^^^^^^^checks^^^^^^^^^
+
         NODE_STOR.setCustodyTypes(_custodyType, _status);
         //^^^^^^^interactions^^^^^^^^^
     }
@@ -392,8 +561,19 @@ contract DAO_LAYER_A is BASIC {
     function DAO_changeShare(uint32 _node, uint32 _newDiscount)
         external
         isDAOcontroller
+        nonReentrant
     {
+        bytes32 signature = keccak256(
+            abi.encodePacked(
+                "DAO_changeShare",
+                address(this),
+                _node,
+                _newDiscount
+            )
+        );
+        DAO.verifyResolution(signature);
         //^^^^^^^checks^^^^^^^^^
+
         NODE_STOR.changeShare(_node, _newDiscount);
         //^^^^^^^interactions^^^^^^^^^
     }
@@ -411,7 +591,19 @@ contract DAO_LAYER_A is BASIC {
         uint32 _fromNode,
         uint32 _toNode,
         string calldata _thisName
-    ) external isDAOcontroller {
+    ) external isDAOcontroller nonReentrant {
+        bytes32 signature = keccak256(
+            abi.encodePacked(
+                "DAO_transferName",
+                address(this),
+                _fromNode,
+                _toNode,
+                _thisName
+            )
+        );
+        DAO.verifyResolution(signature);
+        //^^^^^^^checks^^^^^^^^^
+
         NODE_STOR.transferName(_fromNode, _toNode, _thisName);
         //^^^^^^^interactions^^^^^^^^^
     }
@@ -439,7 +631,25 @@ contract DAO_LAYER_A is BASIC {
         address _refAddress,
         bytes32 _CAS1,
         bytes32 _CAS2
-    ) external isDAOcontroller {
+    ) external isDAOcontroller nonReentrant {
+        bytes32 signature = keccak256(
+            abi.encodePacked(
+                "DAO_modifyNode",
+                address(this),
+                _node,
+                _nodeRoot,
+                _custodyType,
+                _managementType,
+                _storageProvider,
+                _discount,
+                _refAddress,
+                _CAS1,
+                _CAS2
+            )
+        );
+        DAO.verifyResolution(signature);
+        //^^^^^^^checks^^^^^^^^^
+
         NODE_STOR.modifyNode(
             _node,
             _nodeRoot,
@@ -460,13 +670,22 @@ contract DAO_LAYER_A is BASIC {
      * @param _node - node that user is being deauthorized in
      * @param _addrHash - hash of address to deauthorize
      */
-    function DAO_blockUser(uint32 _node, bytes32 _addrHash) external isDAOcontroller {
+    function DAO_blockUser(uint32 _node, bytes32 _addrHash)
+        external
+        isDAOcontroller
+        nonReentrant
+    {
+        bytes32 signature = keccak256(
+            abi.encodePacked("DAO_blockUser", address(this), _node, _addrHash)
+        );
+        DAO.verifyResolution(signature);
         //^^^^^^^checks^^^^^^^^^
+
         NODE_STOR.blockUser(_node, _addrHash);
         //^^^^^^^interactions^^^^^^^^^
     }
 
-    /** 
+    /**
      * @dev DAO set an external erc721 token as ID verification (when bit 6 set to 1)
      * @param _node - node being configured
      * @param _tokenContractAddress  token contract used to verify id
@@ -476,7 +695,19 @@ contract DAO_LAYER_A is BASIC {
         uint32 _node,
         address _tokenContractAddress,
         uint256 _tokenId
-    ) external isDAOcontroller {
+    ) external isDAOcontroller nonReentrant {
+        bytes32 signature = keccak256(
+            abi.encodePacked(
+                "DAO_setExternalId",
+                address(this),
+                _node,
+                _tokenContractAddress,
+                _tokenId
+            )
+        );
+        DAO.verifyResolution(signature);
+        //^^^^^^^checks^^^^^^^^^
+
         NODE_STOR.daoSetExternalId(_node, _tokenContractAddress, _tokenId);
     }
 
@@ -495,8 +726,20 @@ contract DAO_LAYER_A is BASIC {
         address _contractAddr,
         uint32 _node,
         uint8 _contractAuthLevel
-    ) external isDAOcontroller {
+    ) external isDAOcontroller nonReentrant {
+        bytes32 signature = keccak256(
+            abi.encodePacked(
+                "DAO_authorizeContract",
+                address(this),
+                _contractName,
+                _contractAddr,
+                _node,
+                _contractAuthLevel
+            )
+        );
+        DAO.verifyResolution(signature);
         //^^^^^^^checks^^^^^^^^^
+
         STOR.authorizeContract(
             _contractName,
             _contractAddr,
@@ -516,8 +759,19 @@ contract DAO_LAYER_A is BASIC {
         uint256 _contractNumber,
         string calldata _name,
         uint8 _contractAuthLevel
-    ) external isDAOcontroller {
+    ) external isDAOcontroller nonReentrant {
+        bytes32 signature = keccak256(
+            abi.encodePacked(
+                "DAO_addDefaultContracts",
+                address(this),
+                _contractNumber,
+                _name,
+                _contractAuthLevel
+            )
+        );
+        DAO.verifyResolution(signature);
         //^^^^^^^checks^^^^^^^^^
+
         STOR.addDefaultContracts(_contractNumber, _name, _contractAuthLevel);
         //^^^^^^^interactions^^^^^^^^^
     }
@@ -531,8 +785,18 @@ contract DAO_LAYER_A is BASIC {
     function DAO_setNodeStorageContract(address _nodeStorageAddress)
         external
         isDAOcontroller
+        nonReentrant
     {
+        bytes32 signature = keccak256(
+            abi.encodePacked(
+                "DAO_setNodeStorageContract",
+                address(this),
+                _nodeStorageAddress
+            )
+        );
+        DAO.verifyResolution(signature);
         //^^^^^^^checks^^^^^^^^^
+
         NODE_TKN.setNodeStorageContract(_nodeStorageAddress);
         //^^^^^^^Interactions^^^^^^^^^
     }
@@ -547,8 +811,18 @@ contract DAO_LAYER_A is BASIC {
     function DAO_setUnstoppableDomainsTokenContract(
         address _erc721Address,
         address _UD_721ContractAddress
-    ) external virtual isDAOcontroller {
+    ) external virtual isDAOcontroller nonReentrant {
+        bytes32 signature = keccak256(
+            abi.encodePacked(
+                "DAO_setUnstoppableDomainsTokenContract",
+                address(this),
+                _erc721Address,
+                _UD_721ContractAddress
+            )
+        );
+        DAO.verifyResolution(signature);
         //^^^^^^^checks^^^^^^^^^
+
         UD_721_Interface(_UD_721ContractAddress)
             .setUnstoppableDomainsTokenContract(_erc721Address);
         //^^^^^^^interactions^^^^^^^^^
@@ -564,7 +838,18 @@ contract DAO_LAYER_A is BASIC {
     function DAO_setMinimumPeriod(
         uint256 _minUpgradeInterval,
         address _EO_STAKING_Address
-    ) external isDAOcontroller {
+    ) external isDAOcontroller nonReentrant {
+        bytes32 signature = keccak256(
+            abi.encodePacked(
+                "DAO_setMinimumPeriod",
+                address(this),
+                _minUpgradeInterval,
+                _EO_STAKING_Address
+            )
+        );
+        DAO.verifyResolution(signature);
+        //^^^^^^^checks^^^^^^^^^
+
         EO_STAKING_Interface(_EO_STAKING_Address).setMinimumPeriod(
             _minUpgradeInterval
         );
@@ -578,11 +863,23 @@ contract DAO_LAYER_A is BASIC {
     function DAO_endStaking(uint256 _delay, address _EO_STAKING_Address)
         external
         isDAOcontroller
+        nonReentrant
     {
+        bytes32 signature = keccak256(
+            abi.encodePacked(
+                "DAO_endStaking",
+                address(this),
+                _delay,
+                _EO_STAKING_Address
+            )
+        );
+        DAO.verifyResolution(signature);
+        //^^^^^^^checks^^^^^^^^^
+
         EO_STAKING_Interface(_EO_STAKING_Address).endStaking(_delay);
     }
 
-    /** 
+    /**
      * @dev Set address of contracts to interface with
      * @param _utilAddress address of UTIL_TKN(PRUF)
      * @param _stakeAddress address of STAKE_TKN
@@ -596,7 +893,19 @@ contract DAO_LAYER_A is BASIC {
         address _stakeVaultAddress,
         address _rewardsVaultAddress,
         address _EO_STAKING_Address
-    ) external isDAOcontroller {
+    ) external isDAOcontroller nonReentrant {
+        bytes32 signature = keccak256(
+            abi.encodePacked(
+                "DAO_endStaking",
+                address(this),
+                _utilAddress,
+                _stakeAddress,
+                _stakeVaultAddress,
+                _rewardsVaultAddress,
+                _EO_STAKING_Address
+            )
+        );
+        DAO.verifyResolution(signature);
         //^^^^^^^checks^^^^^^^^^
 
         EO_STAKING_Interface(_EO_STAKING_Address).setTokenContracts(
@@ -624,8 +933,22 @@ contract DAO_LAYER_A is BASIC {
         uint256 _interval,
         uint256 _bonusPercentage,
         address _EO_STAKING_Address
-    ) external isDAOcontroller {
+    ) external isDAOcontroller nonReentrant {
+        bytes32 signature = keccak256(
+            abi.encodePacked(
+                "DAO_setStakeLevels",
+                address(this),
+                _stakeTier,
+                _min,
+                _max,
+                _interval,
+                _bonusPercentage,
+                _EO_STAKING_Address
+            )
+        );
+        DAO.verifyResolution(signature);
         //^^^^^^^checks^^^^^^^^^
+
         EO_STAKING_Interface(_EO_STAKING_Address).setStakeLevels(
             _stakeTier,
             _min,
@@ -648,8 +971,19 @@ contract DAO_LAYER_A is BASIC {
         address _utilAddress,
         address _stakeAddress,
         address vaultContractAddress
-    ) external isDAOcontroller {
+    ) external isDAOcontroller nonReentrant {
+        bytes32 signature = keccak256(
+            abi.encodePacked(
+                "DAO_setTokenContracts",
+                address(this),
+                _utilAddress,
+                _stakeAddress,
+                vaultContractAddress
+            )
+        );
+        DAO.verifyResolution(signature);
         //^^^^^^^checks^^^^^^^^^
+
         REWARDS_VAULT_Interface(vaultContractAddress).setTokenContracts(
             _utilAddress,
             _stakeAddress
@@ -665,11 +999,7 @@ contract DAO_LAYER_A is BASIC {
      * @param _name name to resolve
      * returns address of (contract name)
      */
-    function resolveName(string calldata _name)
-        public
-        view
-        returns (address)
-    {
+    function resolveName(string calldata _name) public view returns (address) {
         return STOR.resolveContractAddress(_name);
     }
 }
