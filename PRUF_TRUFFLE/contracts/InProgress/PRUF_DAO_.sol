@@ -22,10 +22,17 @@ import "../Resources/PRUF_CORE.sol";
 import "../Resources/RESOURCE_PRUF_DAO_INTERFACES.sol";
 
 contract DAO is BASIC {
+
+    //SET THESE UNDER DAO CONTROL
     uint256 quorum = 1;
     uint256 passingPercentage = 60;
-    uint256 votingPeriod = 10 days;
-    uint256 confirmationPeriod = 2 days;
+
+    uint256 votingPeriod = 10 minutes; //test params
+    uint256 confirmationPeriod = 2 minutes; //test params
+
+    //uint256 votingPeriod = 10 days;
+    //uint256 confirmationPeriod = 2 days;
+    //^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
 
     bytes32 public constant DAO_ADMIN_ROLE = keccak256("DAO_ADMIN_ROLE");
     bytes32 public constant DAO_LAYER_ROLE = keccak256("DAO_LAYER_ROLE");

@@ -169,6 +169,7 @@ contract DAO_LAYER_A is BASIC {
         //^^^^^^^checks^^^^^^^^^
 
         BASIC_Interface(resolveName(_contract)).revokeRole(_role, _account);
+        //^^^^^^^interactions^^^^^^^^^
     }
 
     /**
@@ -203,6 +204,7 @@ contract DAO_LAYER_A is BASIC {
         //^^^^^^^checks^^^^^^^^^
 
         BASIC_Interface(resolveName(_contract)).renounceRole(_role, _account);
+        //^^^^^^^interactions^^^^^^^^^
     }
 
     /** CTS:APPROVED not used in any current contracts, contract must be importing "./AccessControlEnumerable.sol";
@@ -261,6 +263,7 @@ contract DAO_LAYER_A is BASIC {
         //^^^^^^^checks^^^^^^^^^
 
         BASIC_Interface(resolveName(_contract)).resolveContractAddresses();
+        //^^^^^^^interactions^^^^^^^^^
     }
 
     /**
@@ -286,6 +289,7 @@ contract DAO_LAYER_A is BASIC {
         BASIC_Interface(resolveName(_contract)).setStorageContract(
             _storageAddress
         );
+        //^^^^^^^interactions^^^^^^^^^
     }
 
     /**
@@ -304,6 +308,7 @@ contract DAO_LAYER_A is BASIC {
         //^^^^^^^checks^^^^^^^^^
 
         BASIC_Interface(resolveName(_contract)).pause();
+        //^^^^^^^interactions^^^^^^^^^
     }
 
     /***
@@ -322,6 +327,7 @@ contract DAO_LAYER_A is BASIC {
         //^^^^^^^checks^^^^^^^^^
 
         BASIC_Interface(resolveName(_contract)).unpause();
+        //^^^^^^^interactions^^^^^^^^^
     }
 
     /**
@@ -362,6 +368,7 @@ contract DAO_LAYER_A is BASIC {
             _to,
             _tokenID
         );
+        //^^^^^^^interactions^^^^^^^^^
     }
 
     /**
@@ -395,6 +402,7 @@ contract DAO_LAYER_A is BASIC {
             _to,
             _amount
         );
+        //^^^^^^^interactions^^^^^^^^^
     }
 
     //-------------------------A_TKN
@@ -418,7 +426,6 @@ contract DAO_LAYER_A is BASIC {
         DAO.verifyResolution(signature);
         //^^^^^^^checks^^^^^^^^^
 
-        //^^^^^^^checks^^^^^^^^^
         A_TKN.setBaseURIforStorageType(_storageProvider, _URI);
         //^^^^^^^interactions^^^^^^^^^
     }
@@ -472,6 +479,7 @@ contract DAO_LAYER_A is BASIC {
         //^^^^^^^checks^^^^^^^^^
 
         NODE_MGR.setNodePricing(_newNodePrice, _newNodeBurn);
+        //^^^^^^^interactions^^^^^^^^^
     }
 
     //--------------------------------------------NODE_STOR--------------------------
@@ -709,6 +717,7 @@ contract DAO_LAYER_A is BASIC {
         //^^^^^^^checks^^^^^^^^^
 
         NODE_STOR.daoSetExternalId(_node, _tokenContractAddress, _tokenId);
+        //^^^^^^^interactions^^^^^^^^^
     }
 
     //---------------------------------STOR
@@ -853,6 +862,7 @@ contract DAO_LAYER_A is BASIC {
         EO_STAKING_Interface(_EO_STAKING_Address).setMinimumPeriod(
             _minUpgradeInterval
         );
+        //^^^^^^^interactions^^^^^^^^^
     }
 
     /**
@@ -877,6 +887,7 @@ contract DAO_LAYER_A is BASIC {
         //^^^^^^^checks^^^^^^^^^
 
         EO_STAKING_Interface(_EO_STAKING_Address).endStaking(_delay);
+        //^^^^^^^interactions^^^^^^^^^
     }
 
     /**
@@ -988,7 +999,6 @@ contract DAO_LAYER_A is BASIC {
             _utilAddress,
             _stakeAddress
         );
-
         //^^^^^^^interactions^^^^^^^^^
     }
 
@@ -1001,5 +1011,6 @@ contract DAO_LAYER_A is BASIC {
      */
     function resolveName(string calldata _name) public view returns (address) {
         return STOR.resolveContractAddress(_name);
+        //^^^^^^^interactions^^^^^^^^^
     }
 }
