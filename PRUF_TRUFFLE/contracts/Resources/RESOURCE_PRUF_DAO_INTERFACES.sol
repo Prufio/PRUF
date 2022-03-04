@@ -34,12 +34,11 @@ struct Motion {
     uint256 proposalTime;
 }
 
-interface DAO_LAYER_AInterface {
-    //--------------------------------------------External Functions--------------------------
+interface DAO_LAYER_A_Interface {
     /**
      * @dev Returns `true` if `account` has been granted `role`.
      */
-    function DAOhasRole(
+    function DAO_hasRole(
         bytes32 _role,
         address _account,
         string calldata _contract
@@ -51,7 +50,7 @@ interface DAO_LAYER_AInterface {
      *
      * To change a role's admin, use {AccessControl-_setRoleAdmin}.
      */
-    function DAOgetRoleAdmin(bytes32 _role, string calldata _contract)
+    function DAO_getRoleAdmin(bytes32 _role, string calldata _contract)
         external
         view
         returns (bytes32);
@@ -66,7 +65,7 @@ interface DAO_LAYER_AInterface {
      *
      * - the caller must have ``role``'s admin role.
      */
-    function DAOgrantRole(
+    function DAO_grantRole(
         bytes32 _role,
         address _account,
         string calldata _contract
@@ -81,7 +80,7 @@ interface DAO_LAYER_AInterface {
      *
      * - the caller must have ``role``'s admin role.
      */
-    function DAOrevokeRole(
+    function DAO_revokeRole(
         bytes32 _role,
         address _account,
         string calldata _contract
@@ -101,13 +100,13 @@ interface DAO_LAYER_AInterface {
      *
      * - the caller must be `account`.
      */
-    function DAOrenounceRole(
+    function DAO_renounceRole(
         bytes32 _role,
         address _account,
         string calldata _contract
     ) external;
 
-    /**
+    /** CTS:APPROVED not used in any current contracts, contract must be importing "./AccessControlEnumerable.sol";
      * @dev Returns one of the accounts that have `role`. `index` must be a
      * value between 0 and {getRoleMemberCount}, non-inclusive.
      *
@@ -119,7 +118,7 @@ interface DAO_LAYER_AInterface {
      * https://forum.openzeppelin.com/t/iterating-over-elements-on-enumerableset-in-openzeppelin-contracts/2296[forum post]
      * for more information.
      */
-    function DAOgetRoleMember(
+    function DAO_getRoleMember(
         bytes32 _role,
         uint256 _index,
         string calldata _contract
@@ -129,7 +128,7 @@ interface DAO_LAYER_AInterface {
      * @dev Returns the number of accounts that have `role`. Can be used
      * together with {getRoleMember} to enumerate all bearers of a role.
      */
-    function DAOgetRoleMemberCount(bytes32 _role, string calldata _contract)
+    function DAO_getRoleMemberCount(bytes32 _role, string calldata _contract)
         external
         view
         returns (uint256);
@@ -138,14 +137,14 @@ interface DAO_LAYER_AInterface {
      * @dev Resolve contract addresses from STOR
      * @param _contract contract name to call
      */
-    function DAOresolveContractAddresses(string calldata _contract) external;
+    function DAO_resolveContractAddresses(string calldata _contract) external;
 
     /**
      * @dev Set address of STOR contract to interface with
      * @param _storageAddress address of PRUF_STOR
      * @param _contract contract name to call
      */
-    function DAOsetStorageContract(
+    function DAO_setStorageContract(
         address _storageAddress,
         string calldata _contract
     ) external;
@@ -154,18 +153,18 @@ interface DAO_LAYER_AInterface {
      * @dev Triggers stopped state. (pausable)
      * @param _contract contract name to call
      */
-    function DAOpause(string calldata _contract) external;
+    function DAO_pause(string calldata _contract) external;
 
     /***
      * @dev Returns to normal state. (pausable)
      * @param _contract contract name to call
      */
-    function DAOunpause(string calldata _contract) external;
+    function DAO_unpause(string calldata _contract) external;
 
     /**
      * @dev Returns true if _contract is paused, and false otherwise.
      */
-    function DAOpaused(string calldata _contract) external returns (bool);
+    function DAO_paused(string calldata _contract) external returns (bool);
 
     /**
      * @dev send an ERC721 token from this contract
@@ -174,7 +173,7 @@ interface DAO_LAYER_AInterface {
      * @param _tokenID Token ID
      * @param _contract contract name to call
      */
-    function DAOERC721Transfer(
+    function DAO_ERC721Transfer(
         address _tokenContract,
         address _to,
         uint256 _tokenID,
@@ -188,7 +187,7 @@ interface DAO_LAYER_AInterface {
      * @param _amount amount to transfer
      * @param _contract contract name to call
      */
-    function DAOERC20Transfer(
+    function DAO_ERC20Transfer(
         address _tokenContract,
         address _to,
         uint256 _amount,
@@ -201,7 +200,7 @@ interface DAO_LAYER_AInterface {
      * @param _storageProvider - storage provider number
      * @param _URI - baseURI to add
      */
-    function setBaseURIforStorageType(
+    function DAO_setBaseURIforStorageType(
         uint8 _storageProvider,
         string calldata _URI
     ) external;
@@ -216,7 +215,7 @@ interface DAO_LAYER_AInterface {
      * PRuF "banked" in an allowance for use in the system.
      * @param _key - set to 170 to PERMENANTLY REMOVE TRUSTED AGENT CAPABILITY
      */
-    function killTrustedAgent(uint256 _key) external;
+    function DAO_killTrustedAgent(uint256 _key) external;
 
     //--------------------------------------------NODE_MGR--------------------------
 
@@ -225,7 +224,7 @@ interface DAO_LAYER_AInterface {
      * @param _newNodePrice - cost per node (18 decimals)
      * @param _newNodeBurn - burn per node (18 decimals)
      */
-    function setNodePricing(uint256 _newNodePrice, uint256 _newNodeBurn)
+    function DAO_setNodePricing(uint256 _newNodePrice, uint256 _newNodeBurn)
         external;
 
     //--------------------------------------------NODE_STOR--------------------------
@@ -235,7 +234,7 @@ interface DAO_LAYER_AInterface {
      * @param _storageProvider - uint position for storage provider
      * @param _status - uint position for custody type status
      */
-    function setStorageProviders(uint8 _storageProvider, uint8 _status)
+    function DAO_setStorageProviders(uint8 _storageProvider, uint8 _status)
         external;
 
     /**
@@ -243,14 +242,15 @@ interface DAO_LAYER_AInterface {
      * @param _managementType - uint position for management type
      * @param _status - uint position for custody type status
      */
-    function setManagementTypes(uint8 _managementType, uint8 _status) external;
+    function DAO_setManagementTypes(uint8 _managementType, uint8 _status)
+        external;
 
     /**
      * @dev Sets the valid custody types.
      * @param _custodyType - uint position for custody type
      * @param _status - uint position for custody type status
      */
-    function setCustodyTypes(uint8 _custodyType, uint8 _status) external;
+    function DAO_setCustodyTypes(uint8 _custodyType, uint8 _status) external;
 
     /**
      * !! to be used with great caution !!
@@ -259,7 +259,7 @@ interface DAO_LAYER_AInterface {
      * @param _node - node in which cost share is being modified
      * @param _newDiscount - discount(1% == 100, 10000 == max)
      */
-    function changeShare(uint32 _node, uint32 _newDiscount) external;
+    function DAO_changeShare(uint32 _node, uint32 _newDiscount) external;
 
     /**
      * !! -------- to be used with great caution and only as a result of community governance action -----------
@@ -270,7 +270,7 @@ interface DAO_LAYER_AInterface {
      * @param _toNode - destination node
      * @param _thisName - name to be transferred
      */
-    function transferName(
+    function DAO_transferName(
         uint32 _fromNode,
         uint32 _toNode,
         string calldata _thisName
@@ -289,7 +289,7 @@ interface DAO_LAYER_AInterface {
      * @param _CAS1 - any external data attatched to node 1/2
      * @param _CAS2 - any external data attatched to node 2/2
      */
-    function modifyNode(
+    function DAO_modifyNode(
         uint32 _node,
         uint32 _nodeRoot,
         uint8 _custodyType,
@@ -307,7 +307,7 @@ interface DAO_LAYER_AInterface {
      * @param _node - node that user is being deauthorized in
      * @param _addrHash - hash of address to deauthorize
      */
-    function blockUser(uint32 _node, bytes32 _addrHash) external;
+    function DAO_blockUser(uint32 _node, bytes32 _addrHash) external;
 
     /**
      * @dev DAO set an external erc721 token as ID verification (when bit 6 set to 1)
@@ -315,7 +315,7 @@ interface DAO_LAYER_AInterface {
      * @param _tokenContractAddress  token contract used to verify id
      * @param _tokenId token ID used to verify id
      */
-    function daoSetExternalId(
+    function DAO_setExternalId(
         uint32 _node,
         address _tokenContractAddress,
         uint256 _tokenId
@@ -331,7 +331,7 @@ interface DAO_LAYER_AInterface {
      * @param _node - node to authorize in
      * @param _contractAuthLevel - auth level to assign
      */
-    function authorizeContract(
+    function DAO_authorizeContract(
         string calldata _contractName,
         address _contractAddr,
         uint32 _node,
@@ -344,7 +344,7 @@ interface DAO_LAYER_AInterface {
      * @param _name - name
      * @param _contractAuthLevel - authLevel
      */
-    function addDefaultContracts(
+    function DAO_addDefaultContracts(
         uint256 _contractNumber,
         string calldata _name,
         uint8 _contractAuthLevel
@@ -356,7 +356,7 @@ interface DAO_LAYER_AInterface {
      * @dev Set storage contract to interface with
      * @param _nodeStorageAddress - Node storage contract address
      */
-    function setNodeStorageContract(address _nodeStorageAddress) external;
+    function DAO_setNodeStorageContract(address _nodeStorageAddress) external;
 
     //---------------------------------UD_721
 
@@ -365,7 +365,7 @@ interface DAO_LAYER_AInterface {
      * @param _erc721Address address of token contract to interface with
      * @param _UD_721ContractAddress address of UD_721 contract
      */
-    function setUnstoppableDomainsTokenContract(
+    function DAO_setUnstoppableDomainsTokenContract(
         address _erc721Address,
         address _UD_721ContractAddress
     ) external;
@@ -377,7 +377,7 @@ interface DAO_LAYER_AInterface {
      * @param _minUpgradeInterval in seconds
      * @param _EO_STAKING_Address address of EO_STAKING contract
      */
-    function setMinimumPeriod(
+    function DAO_setMinimumPeriod(
         uint256 _minUpgradeInterval,
         address _EO_STAKING_Address
     ) external;
@@ -387,7 +387,8 @@ interface DAO_LAYER_AInterface {
      * @param _delay delay in seconds to end stake earning
      * @param _EO_STAKING_Address address of EO_STAKING contract
      */
-    function endStaking(uint256 _delay, address _EO_STAKING_Address) external;
+    function DAO_endStaking(uint256 _delay, address _EO_STAKING_Address)
+        external;
 
     /**
      * @dev Set address of contracts to interface with
@@ -397,7 +398,7 @@ interface DAO_LAYER_AInterface {
      * @param _rewardsVaultAddress address of REWARDS_VAULT
      * @param _EO_STAKING_Address address of EO_STAKING contract
      */
-    function setTokenContractsEO(
+    function DAO_setTokenContractsEO(
         address _utilAddress,
         address _stakeAddress,
         address _stakeVaultAddress,
@@ -414,7 +415,7 @@ interface DAO_LAYER_AInterface {
      * @param _bonusPercentage bonusPercentage in tenths of a percent: 15 = 1.5% or 15/1000 per interval. Calculated to a fixed amount of tokens in the actual stake
      * @param _EO_STAKING_Address address of EO_STAKING contract
      */
-    function setStakeLevels(
+    function DAO_setStakeLevels(
         uint256 _stakeTier,
         uint256 _min,
         uint256 _max,
@@ -431,23 +432,21 @@ interface DAO_LAYER_AInterface {
      * @param _stakeAddress address of STAKE_TKN
      * @param vaultContractAddress address of REWARDS_VAULT or STAKE_VAULT contract
      */
-    function setTokenContracts(
+    function DAO_setTokenContracts(
         address _utilAddress,
         address _stakeAddress,
         address vaultContractAddress
     ) external;
-
-    //---------------------------------PUBLIC FUNCTIONS
 
     /**
      * @dev name resolver
      * @param _name name to resolve
      * returns address of (contract name)
      */
-    function resolveName(string calldata _name) external view returns (address);
+    function resolveName(string calldata _name) external returns (address);
 }
 
-interface DAOInterface {
+interface DAO_Interface {
     /**
      * @dev Crates an new Motion in the motions map
      * Originating Address:
