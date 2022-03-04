@@ -22,17 +22,17 @@ import "../Resources/PRUF_CORE.sol";
 import "../Resources/RESOURCE_PRUF_EXT_INTERFACES.sol";
 
 contract DAO_LAYER_A is BASIC {
-    bytes32 public constant DAO_ADMIN_ROLE = keccak256("DAO_ADMIN_ROLE");
+    bytes32 public constant DAO_CONTROLLER_ROLE = keccak256("DAO_CONTROLLER_ROLE");
 
     /**
      * @dev Verify user credentials
      * Originating Address:
      *      has DAO_ROLE
      */
-    modifier isDAOadmin() {
+    modifier isDAOcontroller() {
         require(
-            hasRole(DAO_ADMIN_ROLE, _msgSender()),
-            "DAO:MOD-IDA:Calling address is not DAO admin"
+            hasRole(DAO_CONTROLLER_ROLE, _msgSender()),
+            "DAO-LAYER:MOD-IDA:Calling address is not DAO controller"
         );
         _;
     }
@@ -78,7 +78,7 @@ contract DAO_LAYER_A is BASIC {
         bytes32 _role,
         address _account,
         string calldata _contract
-    ) external isDAOadmin {
+    ) external isDAOcontroller {
         BASIC_Interface(resolveName(_contract)).grantRole(_role, _account);
     }
 
@@ -95,7 +95,7 @@ contract DAO_LAYER_A is BASIC {
         bytes32 _role,
         address _account,
         string calldata _contract
-    ) external isDAOadmin {
+    ) external isDAOcontroller {
         BASIC_Interface(resolveName(_contract)).revokeRole(_role, _account);
     }
 
@@ -117,7 +117,7 @@ contract DAO_LAYER_A is BASIC {
         bytes32 _role,
         address _account,
         string calldata _contract
-    ) external isDAOadmin {
+    ) external isDAOcontroller {
         BASIC_Interface(resolveName(_contract)).renounceRole(_role, _account);
     }
 
@@ -163,7 +163,7 @@ contract DAO_LAYER_A is BASIC {
      */
     function DAOresolveContractAddresses(string calldata _contract)
         external
-        isDAOadmin
+        isDAOcontroller
     {
         BASIC_Interface(resolveName(_contract)).resolveContractAddresses();
     }
@@ -176,7 +176,7 @@ contract DAO_LAYER_A is BASIC {
     function DAOsetStorageContract(
         address _storageAddress,
         string calldata _contract
-    ) external isDAOadmin {
+    ) external isDAOcontroller {
         BASIC_Interface(resolveName(_contract)).setStorageContract(
             _storageAddress
         );
@@ -186,7 +186,7 @@ contract DAO_LAYER_A is BASIC {
      * @dev Triggers stopped state. (pausable)
      * @param _contract contract name to call
      */
-    function DAOpause(string calldata _contract) external isDAOadmin {
+    function DAOpause(string calldata _contract) external isDAOcontroller {
         BASIC_Interface(resolveName(_contract)).pause();
     }
 
@@ -194,7 +194,7 @@ contract DAO_LAYER_A is BASIC {
      * @dev Returns to normal state. (pausable)
      * @param _contract contract name to call
      */
-    function DAOunpause(string calldata _contract) external isDAOadmin {
+    function DAOunpause(string calldata _contract) external isDAOcontroller {
         BASIC_Interface(resolveName(_contract)).unpause();
     }
 
@@ -217,7 +217,7 @@ contract DAO_LAYER_A is BASIC {
         address _to,
         uint256 _tokenID,
         string calldata _contract
-    ) external isDAOadmin {
+    ) external isDAOcontroller {
         BASIC_Interface(resolveName(_contract)).ERC721Transfer(
             _tokenContract,
             _to,
@@ -237,7 +237,7 @@ contract DAO_LAYER_A is BASIC {
         address _to,
         uint256 _amount,
         string calldata _contract
-    ) external isDAOadmin {
+    ) external isDAOcontroller {
         BASIC_Interface(resolveName(_contract)).ERC20Transfer(
             _tokenContract,
             _to,
@@ -254,7 +254,7 @@ contract DAO_LAYER_A is BASIC {
     function setBaseURIforStorageType(
         uint8 _storageProvider,
         string calldata _URI
-    ) external isDAOadmin {
+    ) external isDAOcontroller {
         //^^^^^^^checks^^^^^^^^^
         A_TKN.setBaseURIforStorageType(_storageProvider, _URI);
         //^^^^^^^interactions^^^^^^^^^
@@ -270,7 +270,7 @@ contract DAO_LAYER_A is BASIC {
      * PRuF "banked" in an allowance for use in the system.
      * @param _key - set to 170 to PERMENANTLY REMOVE TRUSTED AGENT CAPABILITY
      */
-    function killTrustedAgent(uint256 _key) external isDAOadmin {
+    function killTrustedAgent(uint256 _key) external isDAOcontroller {
         //^^^^^^^checks^^^^^^^^^
         A_TKN.killTrustedAgent(_key);
         //^^^^^^^interactions^^^^^^^^^
@@ -285,7 +285,7 @@ contract DAO_LAYER_A is BASIC {
      */
     function setNodePricing(uint256 _newNodePrice, uint256 _newNodeBurn)
         external
-        isDAOadmin
+        isDAOcontroller
     {
         NODE_MGR.setNodePricing(_newNodePrice, _newNodeBurn);
     }
@@ -299,7 +299,7 @@ contract DAO_LAYER_A is BASIC {
      */
     function setStorageProviders(uint8 _storageProvider, uint8 _status)
         external
-        isDAOadmin
+        isDAOcontroller
     {
         //^^^^^^^checks^^^^^^^^^
         NODE_STOR.setStorageProviders(_storageProvider, _status);
@@ -313,7 +313,7 @@ contract DAO_LAYER_A is BASIC {
      */
     function setManagementTypes(uint8 _managementType, uint8 _status)
         external
-        isDAOadmin
+        isDAOcontroller
     {
         //^^^^^^^checks^^^^^^^^^
         NODE_STOR.setManagementTypes(_managementType, _status);
@@ -327,7 +327,7 @@ contract DAO_LAYER_A is BASIC {
      */
     function setCustodyTypes(uint8 _custodyType, uint8 _status)
         external
-        isDAOadmin
+        isDAOcontroller
     {
         //^^^^^^^checks^^^^^^^^^
         NODE_STOR.setCustodyTypes(_custodyType, _status);
@@ -343,7 +343,7 @@ contract DAO_LAYER_A is BASIC {
      */
     function changeShare(uint32 _node, uint32 _newDiscount)
         external
-        isDAOadmin
+        isDAOcontroller
     {
         //^^^^^^^checks^^^^^^^^^
         NODE_STOR.changeShare(_node, _newDiscount);
@@ -363,7 +363,7 @@ contract DAO_LAYER_A is BASIC {
         uint32 _fromNode,
         uint32 _toNode,
         string calldata _thisName
-    ) external isDAOadmin {
+    ) external isDAOcontroller {
         NODE_STOR.transferName(_fromNode, _toNode, _thisName);
         //^^^^^^^interactions^^^^^^^^^
     }
@@ -391,7 +391,7 @@ contract DAO_LAYER_A is BASIC {
         address _refAddress,
         bytes32 _CAS1,
         bytes32 _CAS2
-    ) external isDAOadmin {
+    ) external isDAOcontroller {
         NODE_STOR.modifyNode(
             _node,
             _nodeRoot,
@@ -412,7 +412,7 @@ contract DAO_LAYER_A is BASIC {
      * @param _node - node that user is being deauthorized in
      * @param _addrHash - hash of address to deauthorize
      */
-    function blockUser(uint32 _node, bytes32 _addrHash) external isDAOadmin {
+    function blockUser(uint32 _node, bytes32 _addrHash) external isDAOcontroller {
         //^^^^^^^checks^^^^^^^^^
         NODE_STOR.blockUser(_node, _addrHash);
         //^^^^^^^interactions^^^^^^^^^
@@ -428,7 +428,7 @@ contract DAO_LAYER_A is BASIC {
         uint32 _node,
         address _tokenContractAddress,
         uint256 _tokenId
-    ) external isDAOadmin {
+    ) external isDAOcontroller {
         NODE_STOR.daoSetExternalId(_node, _tokenContractAddress, _tokenId);
     }
 
@@ -447,7 +447,7 @@ contract DAO_LAYER_A is BASIC {
         address _contractAddr,
         uint32 _node,
         uint8 _contractAuthLevel
-    ) external isDAOadmin {
+    ) external isDAOcontroller {
         //^^^^^^^checks^^^^^^^^^
         STOR.authorizeContract(
             _contractName,
@@ -468,7 +468,7 @@ contract DAO_LAYER_A is BASIC {
         uint256 _contractNumber,
         string calldata _name,
         uint8 _contractAuthLevel
-    ) external isDAOadmin {
+    ) external isDAOcontroller {
         //^^^^^^^checks^^^^^^^^^
         STOR.addDefaultContracts(_contractNumber, _name, _contractAuthLevel);
         //^^^^^^^interactions^^^^^^^^^
@@ -482,7 +482,7 @@ contract DAO_LAYER_A is BASIC {
      */
     function setNodeStorageContract(address _nodeStorageAddress)
         external
-        isDAOadmin
+        isDAOcontroller
     {
         //^^^^^^^checks^^^^^^^^^
         NODE_TKN.setNodeStorageContract(_nodeStorageAddress);
@@ -499,7 +499,7 @@ contract DAO_LAYER_A is BASIC {
     function setUnstoppableDomainsTokenContract(
         address _erc721Address,
         address _UD_721ContractAddress
-    ) external virtual isDAOadmin {
+    ) external virtual isDAOcontroller {
         //^^^^^^^checks^^^^^^^^^
         UD_721_Interface(_UD_721ContractAddress)
             .setUnstoppableDomainsTokenContract(_erc721Address);
@@ -516,7 +516,7 @@ contract DAO_LAYER_A is BASIC {
     function setMinimumPeriod(
         uint256 _minUpgradeInterval,
         address _EO_STAKING_Address
-    ) external isDAOadmin {
+    ) external isDAOcontroller {
         EO_STAKING_Interface(_EO_STAKING_Address).setMinimumPeriod(
             _minUpgradeInterval
         );
@@ -529,7 +529,7 @@ contract DAO_LAYER_A is BASIC {
      */
     function endStaking(uint256 _delay, address _EO_STAKING_Address)
         external
-        isDAOadmin
+        isDAOcontroller
     {
         EO_STAKING_Interface(_EO_STAKING_Address).endStaking(_delay);
     }
@@ -548,7 +548,7 @@ contract DAO_LAYER_A is BASIC {
         address _stakeVaultAddress,
         address _rewardsVaultAddress,
         address _EO_STAKING_Address
-    ) external isDAOadmin {
+    ) external isDAOcontroller {
         //^^^^^^^checks^^^^^^^^^
 
         EO_STAKING_Interface(_EO_STAKING_Address).setTokenContracts(
@@ -576,7 +576,7 @@ contract DAO_LAYER_A is BASIC {
         uint256 _interval,
         uint256 _bonusPercentage,
         address _EO_STAKING_Address
-    ) external isDAOadmin {
+    ) external isDAOcontroller {
         //^^^^^^^checks^^^^^^^^^
         EO_STAKING_Interface(_EO_STAKING_Address).setStakeLevels(
             _stakeTier,
@@ -600,7 +600,7 @@ contract DAO_LAYER_A is BASIC {
         address _utilAddress,
         address _stakeAddress,
         address vaultContractAddress
-    ) external isDAOadmin {
+    ) external isDAOcontroller {
         //^^^^^^^checks^^^^^^^^^
         REWARDS_VAULT_Interface(vaultContractAddress).setTokenContracts(
             _utilAddress,

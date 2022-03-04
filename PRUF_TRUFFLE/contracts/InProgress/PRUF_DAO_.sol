@@ -22,7 +22,11 @@ import "../Resources/PRUF_CORE.sol";
 import "../Resources/RESOURCE_PRUF_DAO-LAYER_INTERFACES.sol";
 
 contract DAO is BASIC {
+
+    mapping (bytes32 => uint256) private motions;
+
     bytes32 public constant DAO_ADMIN_ROLE = keccak256("DAO_ADMIN_ROLE");
+    bytes32 public constant DAO_LAYER_ROLE = keccak256("DAO_LAYER_ROLE");
 
     /**
      * @dev Verify user credentials
@@ -36,6 +40,31 @@ contract DAO is BASIC {
         );
         _;
     }
+
+    /**
+     * @dev Verify user credentials
+     * Originating Address:
+     *      has DAO_ROLE
+     */
+    modifier isDAOlayer() {
+        require(
+            hasRole(DAO_LAYER_ROLE, _msgSender()),
+            "DAO:MOD-IDL:Calling address is not DAO layer contract"
+        );
+        _;
+    }
+
+    function createMotion(bytes32 motion) external {
+        motions[motion] = 1;
+    }
+
+    function adminAcceptMotion(bytes32 motion) external isDaoAdmin {
+        motions[motion] = 2;
+    }
+
+    function 
+
+
 
 
     //---------------------------------INTERNAL FUNCTIONS
