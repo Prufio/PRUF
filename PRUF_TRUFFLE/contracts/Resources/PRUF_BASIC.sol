@@ -70,8 +70,6 @@ abstract contract BASIC is
     address internal APP_NC_Address;
     APP_NC_Interface internal APP_NC;
 
-    address internal NAKED_Address;
-
     constructor() {
         _setupRole(DEFAULT_ADMIN_ROLE, _msgSender());
         _setupRole(CONTRACT_ADMIN_ROLE, _msgSender());
