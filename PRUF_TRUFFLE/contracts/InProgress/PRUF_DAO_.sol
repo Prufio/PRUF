@@ -22,10 +22,10 @@ import "../Resources/PRUF_CORE.sol";
 import "../Resources/RESOURCE_PRUF_DAO_INTERFACES.sol";
 
 contract DAO is BASIC {
-
     //SET THESE UNDER DAO CONTROL
     uint256 quorum = 1;
     uint256 passingPercentage = 60;
+    uint256 maximumVote = 100000; //max vote in whole PRUF staked (future implementation)
 
     uint256 votingPeriod = 10 minutes; //test params
     uint256 confirmationPeriod = 2 minutes; //test params
@@ -40,6 +40,7 @@ contract DAO is BASIC {
     mapping(bytes32 => Motion) private motions;
 
     event REPORT(bytes32 _motion, string _msg);
+    event VOTE(bytes32 _motion, uint256 _vote, string _msg);
 
     /**
      * @dev Verify user credentials
@@ -96,7 +97,7 @@ contract DAO is BASIC {
     /**
      * @dev Admin voting : to be depricated ---------CAUTION:CENTRALIZATION RISK
      * @param _motion the motion hash to be voted on
-     * @param _vote //1 = yea, 0 = neigh
+     * @param _vote // 0 = neigh, int =
      */
     function adminVote(bytes32 _motion, uint256 _vote) external isDAOadmin {
         require(
@@ -109,9 +110,17 @@ contract DAO is BASIC {
         );
         //^^^^^^^checks^^^^^^^^^
 
+        uint256 vote = _vote;
+        if (vote > maximumVote) {
+            vote = maximumVote;
+        }
+
         motions[_motion].voterCount++;
-        if (_vote == 1) motions[_motion].votes++;
+        motions[_motion].votes = motions[_motion].votes + vote;
         //^^^^^^^effects^^^^^^^^^
+
+        emit VOTE(_motion, vote, "Vote Recorded");
+        //^^^^^^^interactions^^^^^^^^^
     }
 
     /**
