@@ -143,6 +143,27 @@ contract DAO_LAYER_A is BASIC {
     }
 
     /**
+     * @dev command signature getter - for testing, may be redacted for production
+     */
+    function getSig_DAO_grantRole(
+        bytes32 _role,
+        address _account,
+        string calldata _contract
+    ) external view returns (bytes32) {
+        return (
+            keccak256(
+                abi.encodePacked(
+                    "DAO_grantRole",
+                    address(this),
+                    _role,
+                    _account,
+                    _contract
+                )
+            )
+        );
+    }
+
+    /**
      * @dev Revokes `role` from `account`.
      *
      * If `account` had been granted `role`, emits a {RoleRevoked} event.
@@ -170,6 +191,27 @@ contract DAO_LAYER_A is BASIC {
 
         BASIC_Interface(resolveName(_contract)).revokeRole(_role, _account);
         //^^^^^^^interactions^^^^^^^^^
+    }
+
+    /**
+     * @dev command signature getter - for testing, may be redacted for production
+     */
+    function getSig_DAO_revokeRole(
+        bytes32 _role,
+        address _account,
+        string calldata _contract
+    ) external view returns (bytes32) {
+        return (
+            keccak256(
+                abi.encodePacked(
+                    "DAO_revokeRole",
+                    address(this),
+                    _role,
+                    _account,
+                    _contract
+                )
+            )
+        );
     }
 
     /**
@@ -205,6 +247,27 @@ contract DAO_LAYER_A is BASIC {
 
         BASIC_Interface(resolveName(_contract)).renounceRole(_role, _account);
         //^^^^^^^interactions^^^^^^^^^
+    }
+
+    /**
+     * @dev command signature getter - for testing, may be redacted for production
+     */
+    function getSig_DAO_renounceRole(
+        bytes32 _role,
+        address _account,
+        string calldata _contract
+    ) external view returns (bytes32) {
+        return (
+            keccak256(
+                abi.encodePacked(
+                    "DAO_renounceRole",
+                    address(this),
+                    _role,
+                    _account,
+                    _contract
+                )
+            )
+        );
     }
 
     /** CTS:APPROVED not used in any current contracts, contract must be importing "./AccessControlEnumerable.sol";
@@ -264,6 +327,25 @@ contract DAO_LAYER_A is BASIC {
 
         BASIC_Interface(resolveName(_contract)).resolveContractAddresses();
         //^^^^^^^interactions^^^^^^^^^
+    }
+
+    /**
+     * @dev command signature getter - for testing, may be redacted for production
+     */
+    function getSig_DAO_resolveContractAddresses(string calldata _contract)
+        external
+        view
+        returns (bytes32)
+    {
+        return (
+            keccak256(
+                abi.encodePacked(
+                    "DAO_resolveContractAddresses",
+                    address(this),
+                    _contract
+                )
+            )
+        );
     }
 
     /**
