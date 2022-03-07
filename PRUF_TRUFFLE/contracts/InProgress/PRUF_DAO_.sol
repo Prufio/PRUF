@@ -85,7 +85,7 @@ contract DAO is BASIC {
         );
         //^^^^^^^checks^^^^^^^^^
 
-        delete motions[_motion]; //clear any existing data
+        delete motions[_motion]; //clear any existing data // CTS:EXAMINE should this exist?? I dont see a case where a motions status is 0 || > 2
 
         motions[_motion].proposer = _msgSender();
         motions[_motion].status = 1; //put motion in proposed status
@@ -150,7 +150,7 @@ contract DAO is BASIC {
     function verifyResolution(bytes32 _motion) external isDAOlayer {
         require(
             motions[_motion].status == 2,
-            "DAO:MOD-VR:specified action is not approved"
+            "DAO:VR:specified action is not approved"
         );
         //^^^^^^^checks^^^^^^^^^
 
@@ -158,7 +158,7 @@ contract DAO is BASIC {
         //^^^^^^^effects^^^^^^^^^
     }
 
-    /**
+    /** CTS:EXAMINE is this supposed to be named getMotionStatus? seems to get the whole struct
      * @dev Getter for motions
      * @param _motion the motion hash to get
      * to be called by DAO_LAYER contracts as a check prior to executing functions
@@ -182,7 +182,7 @@ contract DAO is BASIC {
     function tallyVotes(bytes32 _motion) internal {
         require(
             block.timestamp > motions[_motion].proposalTime + votingPeriod,
-            "DAO:FV:Voting still open, cannot finalize"
+            "DAO:TV:Voting still open, cannot finalize"
         );
         //^^^^^^^checks^^^^^^^^^
 
