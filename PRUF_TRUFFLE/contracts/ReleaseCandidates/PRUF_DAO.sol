@@ -147,11 +147,16 @@ contract DAO is BASIC {
      * @param _motion the motion hash to check
      * to be called by DAO_LAYER contracts as a check prior to executing functions
      */
-    function verifyResolution(bytes32 _motion) external isDAOlayer {
+    function verifyResolution(bytes32 _motion, address _caller) external isDAOlayer {
         require(
             motions[_motion].status == 2,
-            "DAO:VR:specified action is not approved"
+            "DAO:VR:specified proposal is not approved"
         );
+        require(
+            (motions[_motion].proposer == _caller) || (NODE_TKN.balanceOf(_caller) > 0),
+            "DAO:VR:Caller not authorized to execute resolution"
+        );
+
         //^^^^^^^checks^^^^^^^^^
 
         delete motions[_motion];

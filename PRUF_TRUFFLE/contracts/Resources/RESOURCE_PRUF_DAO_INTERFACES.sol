@@ -474,7 +474,7 @@ interface DAO_Interface {
      * @param _motion the motion hash to check
      * to be called by DAO_LAYER contracts as a check prior to executing functions
      */
-    function verifyResolution(bytes32 _motion) external;
+    function verifyResolution(bytes32 _motion, address _caller) external;
 
     /**
      * @dev Getter for motions
