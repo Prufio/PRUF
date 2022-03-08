@@ -30,8 +30,9 @@ struct Motion {
     address proposer;
     uint256 votes;
     uint256 voterCount;
-    uint256 status; // 0=nonexistant, 1=proposed, 2=approved
-    uint256 proposalTime;
+    uint256 status; // 0=nonexistant, 1=proposed, 2 = approved
+    uint256 proposalEpoch;
+    bytes32 signature; //
 }
 
 interface DAO_LAYER_A_Interface {
@@ -485,4 +486,31 @@ interface DAO_Interface {
         external
         view
         returns (Motion memory);
+}
+
+interface CLOCK_INTERFACE {
+
+    
+
+    /**
+     * @dev gets the current epoch
+     */
+    function thisEpoch() external view returns (uint256);
+
+    /**
+     * @dev gets the current epoch elapsed time
+     */
+    function thisEpochElapsedTime() external view returns (uint256);
+
+    /**
+     * @dev gets the current epochSeconds calue
+     */
+    function getEpochSeconds() external view returns (uint256);
+
+    /**
+     * @dev Sets a new epoch interval
+     * @param _epochSeconds new epoch period to set
+     * caller must be DAO_LAYER
+     */
+    function DAO_setNewEpochInterval(uint256 _epochSeconds) external;
 }
