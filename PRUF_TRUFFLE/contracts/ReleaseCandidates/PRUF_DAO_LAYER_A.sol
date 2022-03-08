@@ -29,6 +29,9 @@ contract DAO_LAYER_A is BASIC {
     address internal DAO_Address;
     DAO_Interface internal DAO;
 
+    address internal CLOCK_Address;
+    CLOCK_Interface internal CLOCK;
+
     /**
      * @dev Verify user credentials
      * Originating Address:
@@ -82,6 +85,9 @@ contract DAO_LAYER_A is BASIC {
 
         DAO_Address = STOR.resolveContractAddress("DAO");
         DAO = DAO_Interface(DAO_Address);
+
+        CLOCK_Address = STOR.resolveContractAddress("CLOCK");
+        CLOCK = CLOCK_Interface(CLOCK_Address);
     }
 
     /**
@@ -1082,6 +1088,31 @@ contract DAO_LAYER_A is BASIC {
             _stakeAddress
         );
         //^^^^^^^interactions^^^^^^^^^
+    }
+
+    //---------------------------------------------EPOCH CLOCK FUNCTIONS
+
+    /**
+     * @dev Set storage contract to interface with
+     * @param _epochSeconds - New period for EPOCHS in seconds
+     */
+    function DAO_setNewEpochInterval(uint256 _epochSeconds)
+        external
+        isDAOcontroller
+        nonReentrant
+    {
+        bytes32 signature = keccak256(
+            abi.encodePacked(
+                "DAO_setNodeStorageContract",
+                address(this),
+                _epochSeconds
+            )
+        );
+        DAO.verifyResolution(signature, _msgSender());
+        //^^^^^^^checks^^^^^^^^^
+
+        CLOCK.setNewEpochInterval(_epochSeconds);
+        //^^^^^^^Interactions^^^^^^^^^
     }
 
     //---------------------------------INTERNAL FUNCTIONS
