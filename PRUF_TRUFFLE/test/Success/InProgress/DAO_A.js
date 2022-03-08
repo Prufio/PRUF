@@ -134,7 +134,7 @@ let stakeAdminRoleB32;
 
 let grantRoleSig;
 
-contract("DAO", (accounts) => {
+contract("DAO_A", (accounts) => {
   console.log(
     "//**************************BEGIN BOOTSTRAP**************************//"
   );
