@@ -488,10 +488,7 @@ interface DAO_Interface {
         returns (Motion memory);
 }
 
-interface CLOCK_INTERFACE {
-
-    
-
+interface CLOCK_Interface {
     /**
      * @dev gets the current epoch
      */
@@ -512,5 +509,5 @@ interface CLOCK_INTERFACE {
      * @param _epochSeconds new epoch period to set
      * caller must be DAO_LAYER
      */
-    function DAO_setNewEpochInterval(uint256 _epochSeconds) external;
+    function setNewEpochInterval(uint256 _epochSeconds) external;
 }
