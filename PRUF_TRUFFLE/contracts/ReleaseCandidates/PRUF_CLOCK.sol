@@ -86,6 +86,7 @@ contract CLOCK is BASIC {
     /**
      * @dev Sets a new epoch interval
      * @param _epochSeconds new epoch period to set
+     * caller must be DAO_LAYER
      */
     function DAO_setNewEpochInterval(uint256 _epochSeconds) external isDAOlayer {
         require(
