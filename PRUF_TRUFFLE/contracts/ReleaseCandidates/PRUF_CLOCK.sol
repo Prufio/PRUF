@@ -21,7 +21,7 @@ pragma solidity 0.8.7;
 import "../Resources/PRUF_CORE.sol";
 
 contract CLOCK is BASIC {
-    //SET THESE UNDER DAO CONTROL
+
     uint256 epochSeconds; //period of epochs, in seconds
     uint256 epochsOriginTime; //current epoch count starts at this time
     uint256 baseEpochs; // epochs past as of epochStartTime
@@ -87,14 +87,14 @@ contract CLOCK is BASIC {
      * @dev Sets a new epoch interval
      * @param _epochSeconds new epoch period to set
      */
-    function DAO_setClock(uint256 _epochSeconds) external isDAOlayer {
+    function DAO_setNewEpochInterval(uint256 _epochSeconds) external isDAOlayer {
         require(
             _epochSeconds >= minEpochSeconds,
-            "CLOCK:DSC:epoch cannot be less than minEpochSeconds"
+            "CLOCK:DSC:proposed epoch interval cannot be less than minEpochSeconds"
         );
         require(
             thisEpochElapsedTime() < _epochSeconds,
-            "CLOCK:DSC:current epoch time elapsed cannot be more that new epoch period"
+            "CLOCK:DSC:current epoch time elapsed cannot be more that proposed epoch interval"
         );
         //^^^^^^^checks^^^^^^^^^
         epochsOriginTime = block.timestamp;
@@ -109,4 +109,3 @@ contract CLOCK is BASIC {
     }
 }
 
-//---------------------------------INTERNAL FUNCTIONS
