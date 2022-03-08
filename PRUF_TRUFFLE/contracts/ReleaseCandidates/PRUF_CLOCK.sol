@@ -88,7 +88,7 @@ contract CLOCK is BASIC {
      * @param _epochSeconds new epoch period to set
      * caller must be DAO_LAYER
      */
-    function DAO_setNewEpochInterval(uint256 _epochSeconds) external isDAOlayer {
+    function setNewEpochInterval(uint256 _epochSeconds) external isDAOlayer {
         require(
             _epochSeconds >= minEpochSeconds,
             "CLOCK:DSC:proposed epoch interval cannot be less than minEpochSeconds"
