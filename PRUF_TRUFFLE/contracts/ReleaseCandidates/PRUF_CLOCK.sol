@@ -98,8 +98,8 @@ contract CLOCK is BASIC {
             "CLOCK:DSC:current epoch time elapsed cannot be more that proposed epoch interval"
         );
         //^^^^^^^checks^^^^^^^^^
-        epochsOriginTime = block.timestamp;
         baseEpochs = thisEpoch();
+        epochsOriginTime = block.timestamp;
         epochSeconds = _epochSeconds;
         emit REPORT(
             "PRUF_CLOCK: Epoch period set to",
