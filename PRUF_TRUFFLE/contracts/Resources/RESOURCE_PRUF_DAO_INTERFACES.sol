@@ -526,3 +526,31 @@ interface DAO_Interface {
         view
         returns (Votes memory);
 }
+
+
+interface CLOCK_Interface {
+    /**
+     * @dev gets the current epoch
+     */
+    function thisEpoch() external view returns (uint256);
+
+    /**
+     * @dev gets the current epoch elapsed time
+     */
+    function thisEpochElapsedTime() external view returns (uint256);
+
+    /**
+     * @dev gets the current epochSeconds calue
+     */
+    function getEpochSeconds() external view returns (uint256);
+
+    /**
+     * @dev Sets a new epoch interval
+     * @param _epochSeconds new epoch period to set
+     * caller must be DAO_LAYER
+     */
+    function setNewEpochInterval(uint256 _epochSeconds) external;
+}
+
+
+
