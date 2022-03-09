@@ -160,17 +160,17 @@ contract DAO_LAYER_A is BASIC {
         address _account,
         string calldata _contract
     ) external view returns (bytes32) {
-        return (
-            keccak256(
-                abi.encodePacked(
-                    "DAO_grantRole",
-                    address(this),
-                    _role,
-                    _account,
-                    _contract
-                )
+        bytes32 baseSig = keccak256(
+            abi.encodePacked(
+                "DAO_grantRole",
+                address(this),
+                _role,
+                _account,
+                _contract
             )
         );
+        return (keccak256(abi.encodePacked(baseSig, CLOCK.thisEpoch))); 
+        // Will not return the correct signature unless called in the correct epoch (motion.votingEpoch + 1)
     }
 
     /**
@@ -206,26 +206,26 @@ contract DAO_LAYER_A is BASIC {
         //^^^^^^^interactions^^^^^^^^^
     }
 
-    /**
-     * @dev command signature getter - for testing, may be redacted for production
-     */
-    function getSig_DAO_revokeRole(
-        bytes32 _role,
-        address _account,
-        string calldata _contract
-    ) external view returns (bytes32) {
-        return (
-            keccak256(
-                abi.encodePacked(
-                    "DAO_revokeRole",
-                    address(this),
-                    _role,
-                    _account,
-                    _contract
-                )
-            )
-        );
-    }
+    // /**
+    //  * @dev command signature getter - for testing, may be redacted for production
+    //  */
+    // function getSig_DAO_revokeRole(
+    //     bytes32 _role,
+    //     address _account,
+    //     string calldata _contract
+    // ) external view returns (bytes32) {
+    //     bytes32 baseSig = keccak256(
+    //         abi.encodePacked(
+    //             "DAO_revokeRole",
+    //             address(this),
+    //             _role,
+    //             _account,
+    //             _contract
+    //         )
+    //     );
+    //     return (keccak256(abi.encodePacked(baseSig, CLOCK.thisEpoch)));
+    //     // Will not return the correct signature unless called in the correct epoch (motion.votingEpoch + 1)
+    // }
 
     /**
      * @dev Revokes `role` from the calling account.
@@ -265,26 +265,27 @@ contract DAO_LAYER_A is BASIC {
         //^^^^^^^interactions^^^^^^^^^
     }
 
-    /**
-     * @dev command signature getter - for testing, may be redacted for production
-     */
-    function getSig_DAO_renounceRole(
-        bytes32 _role,
-        address _account,
-        string calldata _contract
-    ) external view returns (bytes32) {
-        return (
-            keccak256(
-                abi.encodePacked(
-                    "DAO_renounceRole",
-                    address(this),
-                    _role,
-                    _account,
-                    _contract
-                )
-            )
-        );
-    }
+    // /**
+    //  * @dev command signature getter - for testing, may be redacted for production
+    //  */
+    // function getSig_DAO_renounceRole(
+    //     bytes32 _role,
+    //     address _account,
+    //     string calldata _contract
+    // ) external view returns (bytes32) {
+    //     bytes32 baseSig =
+    //         keccak256(
+    //             abi.encodePacked(
+    //                 "DAO_renounceRole",
+    //                 address(this),
+    //                 _role,
+    //                 _account,
+    //                 _contract
+    //             )
+    //     );
+    //     return (keccak256(abi.encodePacked(baseSig, CLOCK.thisEpoch)));
+    //     // Will not return the correct signature unless called in the correct epoch (motion.votingEpoch + 1)
+    // }
 
     /** CTS:APPROVED not used in any current contracts, contract must be importing "./AccessControlEnumerable.sol";
      * @dev Returns one of the accounts that have `role`. `index` must be a

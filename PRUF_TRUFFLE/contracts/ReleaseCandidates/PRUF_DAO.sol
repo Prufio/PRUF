@@ -127,7 +127,7 @@ contract DAO is BASIC {
     }
 
     /**
-     * @dev Admin veto---------CAUTION:CENTRALIZATION RISK
+     * @dev Admin veto for incrementel transfer of power to the DAO---------CAUTION:CENTRALIZATION RISK
      * @param _motion // propsed action
      */
     function adminVeto(
@@ -143,8 +143,8 @@ contract DAO is BASIC {
         );
         //^^^^^^^checks^^^^^^^^^
 
-        //^^^^^^^effects^^^^^^^^^
         motions[_motion].votesFor = 0;
+        //^^^^^^^effects^^^^^^^^^
 
         emit REPORT(_motion, "Vetoed");
         //^^^^^^^interactions^^^^^^^^^
@@ -192,8 +192,11 @@ contract DAO is BASIC {
                 votes;
         }
 
+        nodeVoteHistory[_motion][_node].votes = _votes;
+        nodeVoteHistory[_motion][_node].yn = _yn;
+        yesVoters[_motion][_msgSender()] = _yn;
+        votingActivity[CLOCK.thisEpoch()][_node]++;
         //^^^^^^^effects^^^^^^^^^
-        recordVotingEvent(_motion, _node, _votes, _yn);
 
         emit VOTE(_motion, votes, _yn, "Vote Recorded");
         //^^^^^^^interactions^^^^^^^^^
@@ -252,13 +255,12 @@ contract DAO is BASIC {
      * @param _motionIndex the index of the motion hash to get
      * to be called by DAO_LAYER contracts as a check prior to executing functions
      */
-    function getMotionDataByIndex(uint256 _motionIndex)
+    function getMotionByIndex(uint256 _motionIndex)
         external
         view
-        returns (Motion memory)
+        returns (bytes32)
     {
-        bytes32 motion = indexedMotions[_motionIndex];
-        return motions[motion];
+        return (indexedMotions[_motionIndex]);
         //^^^^^^^interactions^^^^^^^^^
     }
 
@@ -304,26 +306,5 @@ contract DAO is BASIC {
     {
         return (nodeVoteHistory[_motion][_node]);
         //^^^^^^^interactions^^^^^^^^^
-    }
-
-    //---------------------------------INTERNAL FUNCTIONS
-
-    /**
-     * @dev Records data relevant for a voting event for vote history;
-     * @param _motion motion signature
-     * @param _node node casting the votes
-     * @param _votes votes cast
-     * @param _yn for or against
-     */
-    function recordVotingEvent(
-        bytes32 _motion,
-        uint32 _node,
-        uint32 _votes,
-        uint8 _yn
-    ) internal {
-        nodeVoteHistory[_motion][_node].votes = _votes;
-        nodeVoteHistory[_motion][_node].yn = _yn;
-        yesVoters[_motion][_msgSender()] = _yn;
-        votingActivity[CLOCK.thisEpoch()][_node]++;
     }
 }
