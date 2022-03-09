@@ -23,27 +23,12 @@ import "../Resources/RESOURCE_PRUF_EXT_INTERFACES.sol";
 import "../Resources/RESOURCE_PRUF_DAO_INTERFACES.sol";
 
 contract DAO_LAYER_A is BASIC {
-    bytes32 public constant DAO_CONTROLLER_ROLE =
-        keccak256("DAO_CONTROLLER_ROLE");
 
     address internal DAO_Address;
     DAO_Interface internal DAO;
 
     address internal CLOCK_Address;
     CLOCK_Interface internal CLOCK;
-
-    // /**
-    //  * @dev Verify user credentials
-    //  * Originating Address:
-    //  *      has DAO_ROLE
-    //  */
-    // modifier isDAOcontroller() {
-    //     require(
-    //         hasRole(DAO_CONTROLLER_ROLE, _msgSender()),
-    //         "DAO-LAYER:MOD-IDA:Calling address is not DAO controller"
-    //     );
-    //     _;
-    // }
 
     /**
      * @dev Resolve contract addresses from STOR
