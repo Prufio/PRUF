@@ -192,8 +192,11 @@ contract DAO is BASIC {
                 votes;
         }
 
+        nodeVoteHistory[_motion][_node].votes = _votes;
+        nodeVoteHistory[_motion][_node].yn = _yn;
+        yesVoters[_motion][_msgSender()] = _yn;
+        votingActivity[CLOCK.thisEpoch()][_node]++;
         //^^^^^^^effects^^^^^^^^^
-        recordVotingEvent(_motion, _node, _votes, _yn);
 
         emit VOTE(_motion, votes, _yn, "Vote Recorded");
         //^^^^^^^interactions^^^^^^^^^
@@ -303,26 +306,5 @@ contract DAO is BASIC {
     {
         return (nodeVoteHistory[_motion][_node]);
         //^^^^^^^interactions^^^^^^^^^
-    }
-
-    //---------------------------------INTERNAL FUNCTIONS
-
-    /**
-     * @dev Records data relevant for a voting event for vote history;
-     * @param _motion motion signature
-     * @param _node node casting the votes
-     * @param _votes votes cast
-     * @param _yn for or against
-     */
-    function recordVotingEvent(
-        bytes32 _motion,
-        uint32 _node,
-        uint32 _votes,
-        uint8 _yn
-    ) internal {
-        nodeVoteHistory[_motion][_node].votes = _votes;
-        nodeVoteHistory[_motion][_node].yn = _yn;
-        yesVoters[_motion][_msgSender()] = _yn;
-        votingActivity[CLOCK.thisEpoch()][_node]++;
     }
 }
