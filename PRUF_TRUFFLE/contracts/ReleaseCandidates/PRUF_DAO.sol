@@ -32,6 +32,7 @@ contract DAO is BASIC {
     //^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
 
     bytes32 public constant DAO_ADMIN_ROLE = keccak256("DAO_ADMIN_ROLE");
+    bytes32 public constant DAO_VETO_ROLE = keccak256("DAO_VETO_ROLE");
     bytes32 public constant DAO_LAYER_ROLE = keccak256("DAO_LAYER_ROLE");
 
     address internal CLOCK_Address;
@@ -126,7 +127,31 @@ contract DAO is BASIC {
     }
 
     /**
-     * @dev Admin voting : to be depricated ---------CAUTION:CENTRALIZATION RISK
+     * @dev Admin veto---------CAUTION:CENTRALIZATION RISK
+     * @param _motion // propsed action
+     */
+    function adminVeto(
+        bytes32 _motion // propsed action
+    ) external {
+        require(
+            hasRole(DAO_VETO_ROLE, _msgSender()),
+            "DAO:MOD-IDA:Calling address does not have VETO_ROLE"
+        );
+        require(
+            motions[_motion].votesFor != 0,
+            "DAO:AV:Motion not in 'proposed' status"
+        );
+        //^^^^^^^checks^^^^^^^^^
+
+        //^^^^^^^effects^^^^^^^^^
+        motions[_motion].votesFor = 0;
+
+        emit REPORT(_motion, "Vetoed");
+        //^^^^^^^interactions^^^^^^^^^
+    }
+
+    /**
+     * @dev DAO admin will be given to a trusted contract that allows nodes to cast their delegated votes---------CAUTION:CENTRALIZATION RISK
      * @param _motion // propsed action
      * @param _node // node doing the voting
      * @param _votes //# of votes
@@ -206,7 +231,7 @@ contract DAO is BASIC {
         );
 
         require(
-            ((uint256(thisMotion.votesFor) * 10) /
+            ((uint256(thisMotion.votesFor) * 100) /
                 (uint256(thisMotion.votesFor) +
                     uint256(thisMotion.votesAgainst))) >= passingMargin,
             "DAO:VR:specified motion failed to gain required majority margin"
