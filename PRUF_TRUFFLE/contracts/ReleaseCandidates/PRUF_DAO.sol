@@ -78,6 +78,14 @@ contract DAO is BASIC {
      * @param _quorum new value for minimum required voters to create a quorum
      */
     function setQuorum(uint32 _quorum) external isDAOlayer {
+        uint256 mintedNodes;
+        (mintedNodes, , ) = NODE_MGR.currentNodePricingInfo();
+        mintedNodes = mintedNodes - 1000000;
+
+        require(
+            _quorum < ((mintedNodes / 10) + 10),
+            "DAO:SPM:Required Quorum cannot be more than 10% of the indigenous node population"
+        );
         //^^^^^^^checks^^^^^^^^^
 
         quorum = _quorum;
@@ -127,6 +135,9 @@ contract DAO is BASIC {
 
         NODE_TKN_Address = STOR.resolveContractAddress("NODE_TKN");
         NODE_TKN = NODE_TKN_Interface(NODE_TKN_Address);
+
+        NODE_MGR_Address = STOR.resolveContractAddress("NODE_MGR");
+        NODE_MGR = NODE_MGR_Interface(NODE_MGR_Address);
 
         CLOCK_Address = STOR.resolveContractAddress("CLOCK");
         CLOCK = CLOCK_Interface(CLOCK_Address);
