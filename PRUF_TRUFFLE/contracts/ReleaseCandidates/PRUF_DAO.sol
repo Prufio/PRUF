@@ -27,7 +27,7 @@ contract DAO is BASIC {
     uint32 passingMargin = 60; //in percent
     uint32 maximumVote = 100000; //max vote in whole PRUF staked (future implementation)
 
-    uint256 currentProposal;
+    uint256 currentMotion;
 
     //^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
 
@@ -37,10 +37,10 @@ contract DAO is BASIC {
     address internal CLOCK_Address;
     CLOCK_Interface internal CLOCK;
 
-    mapping(bytes32 => Motion) private motions; //proposalSignature => Proposal data -- proposal record
-    mapping(bytes32 => mapping(uint32 => Votes)) private nodeVoteHistory; //proposalSignature => NodeId => vote -- node voting history by proposal
+    mapping(bytes32 => Motion) private motions; //motionSignature => motion data -- motion record
+    mapping(bytes32 => mapping(uint32 => Votes)) private nodeVoteHistory; //motionSignature => NodeId => vote -- node voting history by motion
     mapping(uint256 => mapping(uint32 => uint32)) private votingActivity; //epoch => voterNodeId => votingOccurences -- node voting participation by epoch
-    mapping(uint256 => bytes32) private proposals; //index =>  proposals, enumerable
+    mapping(uint256 => bytes32) private indexedMotions; //index =>  motions enumerated
     mapping(bytes32 => mapping(address => uint8)) private yesVoters; //addresses that voted yes
 
     event REPORT(bytes32 _motion, string _msg);
@@ -117,8 +117,8 @@ contract DAO is BASIC {
         motions[motion].voterCount = 0;
         motions[motion].votingEpoch = CLOCK.thisEpoch() + 1; //voting will start in one epoch
 
-        proposals[currentProposal] = motion;
-        currentProposal++;
+        indexedMotions[currentMotion] = motion;
+        currentMotion++;
 
         emit REPORT(motion, "Motion Created");
         return (motion);
@@ -187,7 +187,7 @@ contract DAO is BASIC {
 
         require(
             CLOCK.thisEpoch() == thisMotion.votingEpoch + 1,
-            "DAO:VR:proposal is not valid in this epoch"
+            "DAO:VR:motion is not valid in this epoch"
         );
 
         require(
@@ -197,19 +197,19 @@ contract DAO is BASIC {
 
         require(
             thisMotion.votesFor > thisMotion.votesAgainst,
-            "DAO:VR:specified proposal was rejected by majority"
+            "DAO:VR:specified motion was rejected by majority"
         );
 
         require(
             thisMotion.voterCount >= quorum,
-            "DAO:VR:specified proposal failed to gain a quorum"
+            "DAO:VR:specified motion failed to gain a quorum"
         );
 
         require(
             ((uint256(thisMotion.votesFor) * 10) /
                 (uint256(thisMotion.votesFor) +
                     uint256(thisMotion.votesAgainst))) >= passingMargin,
-            "DAO:VR:specified proposal failed to gain required majority margin"
+            "DAO:VR:specified motion failed to gain required majority margin"
         );
 
         require(
@@ -232,7 +232,7 @@ contract DAO is BASIC {
         view
         returns (Motion memory)
     {
-        bytes32 motion = proposals[_motionIndex];
+        bytes32 motion = indexedMotions[_motionIndex];
         return motions[motion];
         //^^^^^^^interactions^^^^^^^^^
     }
@@ -285,7 +285,7 @@ contract DAO is BASIC {
 
     /**
      * @dev Records data relevant for a voting event for vote history;
-     * @param _motion proposal signature
+     * @param _motion motion signature
      * @param _node node casting the votes
      * @param _votes votes cast
      * @param _yn for or against
