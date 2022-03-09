@@ -452,6 +452,25 @@ interface DAO_LAYER_A_Interface {
 }
 
 interface DAO_Interface {
+
+    /**
+     * @dev Default param setter
+     * @param _quorum new value for minimum required voters to create a quorum
+     */
+    function setQuorum(uint32 _quorum) external;
+
+    /**
+     * @dev Default param setter
+     * @param _passingMargin new value for minimum required passing margin for votes, in whole percents
+     */
+    function setPassingMargin(uint32 _passingMargin) external;
+
+    /**
+     * @dev Default param setter
+     * @param _max new value for maximum votees per node
+     */
+    function setMaxVote(uint32 _max) external;
+
     /**
      * @dev Resolve contract addresses from STOR
      */
