@@ -24,7 +24,7 @@ import "../Resources/RESOURCE_PRUF_DAO_INTERFACES.sol";
 contract DAO is BASIC {
     //SET THESE UNDER DAO CONTROL
     uint32 quorum = 1;
-    uint32 passingMargin = 60;
+    uint32 passingMargin = 60; //in percent
     uint32 maximumVote = 100000; //max vote in whole PRUF staked (future implementation)
 
     uint256 currentProposal;
@@ -127,12 +127,14 @@ contract DAO is BASIC {
 
     /**
      * @dev Admin voting : to be depricated ---------CAUTION:CENTRALIZATION RISK
-     * @param _motion the motion hash to be voted on
-     * @param _votes // 0 = neigh, int =
+     * @param _motion // propsed action
+     * @param _node // node doing the voting
+     * @param _votes //# of votes
+     * @param _yn // yeah (1) or neigh (0)
      */
     function adminVote(
-        bytes32 _motion, //propsed action
-        uint32 _node, //node doing the voting
+        bytes32 _motion, // propsed action
+        uint32 _node, // node doing the voting
         uint32 _votes, //# of votes
         uint8 _yn // yeah (1) or neigh (0)
     ) external isDAOadmin {
@@ -144,6 +146,10 @@ contract DAO is BASIC {
             CLOCK.thisEpoch() == (motions[_motion].votingEpoch),
             "DAO:AV:Voting window not open"
         );
+        require(
+            nodeVoteHistory[_motion][_node].votes == 0,
+            "DAO:AV:Node has already cast a vote on this motion"
+        );
         //^^^^^^^checks^^^^^^^^^
 
         uint32 votes = _votes;
@@ -151,7 +157,8 @@ contract DAO is BASIC {
             votes = maximumVote;
         }
 
-        motions[_motion].voterCount++;
+        motions[_motion].voterCount++; //increment count of voters participating
+
         if (_yn == 1) {
             motions[_motion].votesFor = motions[_motion].votesFor + votes;
         } else {
