@@ -32,18 +32,18 @@ contract DAO_LAYER_A is BASIC {
     address internal CLOCK_Address;
     CLOCK_Interface internal CLOCK;
 
-    /**
-     * @dev Verify user credentials
-     * Originating Address:
-     *      has DAO_ROLE
-     */
-    modifier isDAOcontroller() {
-        require(
-            hasRole(DAO_CONTROLLER_ROLE, _msgSender()),
-            "DAO-LAYER:MOD-IDA:Calling address is not DAO controller"
-        );
-        _;
-    }
+    // /**
+    //  * @dev Verify user credentials
+    //  * Originating Address:
+    //  *      has DAO_ROLE
+    //  */
+    // modifier isDAOcontroller() {
+    //     require(
+    //         hasRole(DAO_CONTROLLER_ROLE, _msgSender()),
+    //         "DAO-LAYER:MOD-IDA:Calling address is not DAO controller"
+    //     );
+    //     _;
+    // }
 
     /**
      * @dev Resolve contract addresses from STOR
@@ -131,7 +131,7 @@ contract DAO_LAYER_A is BASIC {
         bytes32 _role,
         address _account,
         string calldata _contract
-    ) external isDAOcontroller nonReentrant {
+    ) external  nonReentrant {
         bytes32 signature = keccak256(
             abi.encodePacked(
                 "DAO_grantRole",
@@ -186,7 +186,7 @@ contract DAO_LAYER_A is BASIC {
         bytes32 _role,
         address _account,
         string calldata _contract
-    ) external isDAOcontroller nonReentrant {
+    ) external  nonReentrant {
         bytes32 signature = keccak256(
             abi.encodePacked(
                 "DAO_revokeRole",
@@ -245,7 +245,7 @@ contract DAO_LAYER_A is BASIC {
         bytes32 _role,
         address _account,
         string calldata _contract
-    ) external isDAOcontroller nonReentrant {
+    ) external  nonReentrant {
         bytes32 signature = keccak256(
             abi.encodePacked(
                 "DAO_renounceRole",
@@ -329,7 +329,7 @@ contract DAO_LAYER_A is BASIC {
      */
     function DAO_resolveContractAddresses(string calldata _contract)
         external
-        isDAOcontroller
+        
         nonReentrant
     {
         bytes32 signature = keccak256(
@@ -376,7 +376,7 @@ contract DAO_LAYER_A is BASIC {
     function DAO_setStorageContract(
         address _storageAddress,
         string calldata _contract
-    ) external isDAOcontroller nonReentrant {
+    ) external  nonReentrant {
         bytes32 signature = keccak256(
             abi.encodePacked(
                 "DAO_setStorageContract",
@@ -403,7 +403,7 @@ contract DAO_LAYER_A is BASIC {
      */
     function DAO_pause(string calldata _contract)
         external
-        isDAOcontroller
+        
         nonReentrant
     {
         bytes32 signature = keccak256(
@@ -425,7 +425,7 @@ contract DAO_LAYER_A is BASIC {
      */
     function DAO_unpause(string calldata _contract)
         external
-        isDAOcontroller
+        
         nonReentrant
     {
         bytes32 signature = keccak256(
@@ -460,7 +460,7 @@ contract DAO_LAYER_A is BASIC {
         address _to,
         uint256 _tokenID,
         string calldata _contract
-    ) external isDAOcontroller nonReentrant {
+    ) external  nonReentrant {
         bytes32 signature = keccak256(
             abi.encodePacked(
                 "DAO_ERC721Transfer",
@@ -497,7 +497,7 @@ contract DAO_LAYER_A is BASIC {
         address _to,
         uint256 _amount,
         string calldata _contract
-    ) external isDAOcontroller nonReentrant {
+    ) external  nonReentrant {
         bytes32 signature = keccak256(
             abi.encodePacked(
                 "DAO_ERC20Transfer",
@@ -531,7 +531,7 @@ contract DAO_LAYER_A is BASIC {
     function DAO_setBaseURIforStorageType(
         uint8 _storageProvider,
         string calldata _URI
-    ) external isDAOcontroller nonReentrant {
+    ) external  nonReentrant {
         bytes32 signature = keccak256(
             abi.encodePacked(
                 "DAO_setBaseURIforStorageType",
@@ -562,7 +562,7 @@ contract DAO_LAYER_A is BASIC {
      */
     function DAO_A_TKN_killTrustedAgent(uint256 _key)
         external
-        isDAOcontroller
+        
         nonReentrant
     {
         bytes32 signature = keccak256(
@@ -587,7 +587,7 @@ contract DAO_LAYER_A is BASIC {
      */
     function DAO_setNodePricing(uint256 _newNodePrice, uint256 _newNodeBurn)
         external
-        isDAOcontroller
+        
         nonReentrant
     {
         bytes32 signature = keccak256(
@@ -617,7 +617,7 @@ contract DAO_LAYER_A is BASIC {
      */
     function DAO_setStorageProviders(uint8 _storageProvider, uint8 _status)
         external
-        isDAOcontroller
+        
         nonReentrant
     {
         bytes32 signature = keccak256(
@@ -645,7 +645,7 @@ contract DAO_LAYER_A is BASIC {
      */
     function DAO_setManagementTypes(uint8 _managementType, uint8 _status)
         external
-        isDAOcontroller
+        
         nonReentrant
     {
         bytes32 signature = keccak256(
@@ -673,7 +673,7 @@ contract DAO_LAYER_A is BASIC {
      */
     function DAO_setCustodyTypes(uint8 _custodyType, uint8 _status)
         external
-        isDAOcontroller
+        
         nonReentrant
     {
         bytes32 signature = keccak256(
@@ -703,7 +703,7 @@ contract DAO_LAYER_A is BASIC {
      */
     function DAO_changeShare(uint32 _node, uint32 _newDiscount)
         external
-        isDAOcontroller
+        
         nonReentrant
     {
         bytes32 signature = keccak256(
@@ -737,7 +737,7 @@ contract DAO_LAYER_A is BASIC {
         uint32 _fromNode,
         uint32 _toNode,
         string calldata _thisName
-    ) external isDAOcontroller nonReentrant {
+    ) external  nonReentrant {
         bytes32 signature = keccak256(
             abi.encodePacked(
                 "DAO_transferName",
@@ -780,7 +780,7 @@ contract DAO_LAYER_A is BASIC {
         address _refAddress,
         bytes32 _CAS1,
         bytes32 _CAS2
-    ) external isDAOcontroller nonReentrant {
+    ) external  nonReentrant {
         bytes32 signature = keccak256(
             abi.encodePacked(
                 "DAO_modifyNode",
@@ -824,7 +824,7 @@ contract DAO_LAYER_A is BASIC {
      */
     function DAO_blockUser(uint32 _node, bytes32 _addrHash)
         external
-        isDAOcontroller
+        
         nonReentrant
     {
         bytes32 signature = keccak256(
@@ -850,7 +850,7 @@ contract DAO_LAYER_A is BASIC {
         uint32 _node,
         address _tokenContractAddress,
         uint256 _tokenId
-    ) external isDAOcontroller nonReentrant {
+    ) external  nonReentrant {
         bytes32 signature = keccak256(
             abi.encodePacked(
                 "DAO_setExternalId",
@@ -885,7 +885,7 @@ contract DAO_LAYER_A is BASIC {
         address _contractAddr,
         uint32 _node,
         uint8 _contractAuthLevel
-    ) external isDAOcontroller nonReentrant {
+    ) external  nonReentrant {
         bytes32 signature = keccak256(
             abi.encodePacked(
                 "DAO_authorizeContract",
@@ -921,7 +921,7 @@ contract DAO_LAYER_A is BASIC {
         uint256 _contractNumber,
         string calldata _name,
         uint8 _contractAuthLevel
-    ) external isDAOcontroller nonReentrant {
+    ) external  nonReentrant {
         bytes32 signature = keccak256(
             abi.encodePacked(
                 "DAO_addDefaultContracts",
@@ -949,7 +949,7 @@ contract DAO_LAYER_A is BASIC {
      */
     function DAO_setNodeStorageContract(address _nodeStorageAddress)
         external
-        isDAOcontroller
+        
         nonReentrant
     {
         bytes32 signature = keccak256(
@@ -979,7 +979,7 @@ contract DAO_LAYER_A is BASIC {
     function DAO_setUnstoppableDomainsTokenContract(
         address _erc721Address,
         address _UD_721ContractAddress
-    ) external virtual isDAOcontroller nonReentrant {
+    ) external virtual  nonReentrant {
         bytes32 signature = keccak256(
             abi.encodePacked(
                 "DAO_setUnstoppableDomainsTokenContract",
@@ -1009,7 +1009,7 @@ contract DAO_LAYER_A is BASIC {
     function DAO_setMinimumPeriod(
         uint256 _minUpgradeInterval,
         address _EO_STAKING_Address
-    ) external isDAOcontroller nonReentrant {
+    ) external  nonReentrant {
         bytes32 signature = keccak256(
             abi.encodePacked(
                 "DAO_setMinimumPeriod",
@@ -1037,7 +1037,7 @@ contract DAO_LAYER_A is BASIC {
      */
     function DAO_endStaking(uint256 _delay, address _EO_STAKING_Address)
         external
-        isDAOcontroller
+        
         nonReentrant
     {
         bytes32 signature = keccak256(
@@ -1072,7 +1072,7 @@ contract DAO_LAYER_A is BASIC {
         address _stakeVaultAddress,
         address _rewardsVaultAddress,
         address _EO_STAKING_Address
-    ) external isDAOcontroller nonReentrant {
+    ) external  nonReentrant {
         bytes32 signature = keccak256(
             abi.encodePacked(
                 "DAO_endStaking",
@@ -1115,7 +1115,7 @@ contract DAO_LAYER_A is BASIC {
         uint256 _interval,
         uint256 _bonusPercentage,
         address _EO_STAKING_Address
-    ) external isDAOcontroller nonReentrant {
+    ) external  nonReentrant {
         bytes32 signature = keccak256(
             abi.encodePacked(
                 "DAO_setStakeLevels",
@@ -1156,7 +1156,7 @@ contract DAO_LAYER_A is BASIC {
         address _utilAddress,
         address _stakeAddress,
         address vaultContractAddress
-    ) external isDAOcontroller nonReentrant {
+    ) external  nonReentrant {
         bytes32 signature = keccak256(
             abi.encodePacked(
                 "DAO_setTokenContracts",
@@ -1179,6 +1179,76 @@ contract DAO_LAYER_A is BASIC {
         //^^^^^^^interactions^^^^^^^^^
     }
 
+    //---------------------------------------------DAO SETTING FUNCTIONS
+    
+    /**
+     * @dev Default param setter
+     * @param _quorum new value for minimum required voters to create a quorum
+     */
+    function DAO_setQuorum(uint32 _quorum) external nonReentrant {
+        bytes32 signature = keccak256(
+            abi.encodePacked(
+                "DAO_setQuorum",
+                address(this),
+                _quorum
+            )
+        );
+        DAO.verifyResolution(
+            keccak256(abi.encodePacked(signature, CLOCK.thisEpoch)),
+            _msgSender()
+        );
+        //^^^^^^^checks^^^^^^^^^
+
+        DAO.setQuorum(_quorum);
+        //^^^^^^^interactions^^^^^^^^^
+    }
+
+    /**
+     * @dev Default param setter
+     * @param _passingMargin new value for minimum required passing margin for votes, in whole percents
+     */
+    function DAO_setPassingMargin(uint32 _passingMargin) external nonReentrant {
+        bytes32 signature = keccak256(
+            abi.encodePacked(
+                "DAO_setQuorum",
+                address(this),
+                _passingMargin
+            )
+        );
+        DAO.verifyResolution(
+            keccak256(abi.encodePacked(signature, CLOCK.thisEpoch)),
+            _msgSender()
+        );
+        //^^^^^^^checks^^^^^^^^^
+
+        DAO.setPassingMargin(_passingMargin);
+        //^^^^^^^interactions^^^^^^^^^
+    }
+
+    /**
+     * @dev Default param setter
+     * @param _max new value for maximum votees per node
+     */
+    function DAO_setMaxVote(uint32 _max) external nonReentrant {
+        bytes32 signature = keccak256(
+            abi.encodePacked(
+                "DAO_setQuorum",
+                address(this),
+                _max
+            )
+        );
+        DAO.verifyResolution(
+            keccak256(abi.encodePacked(signature, CLOCK.thisEpoch)),
+            _msgSender()
+        );
+        //^^^^^^^checks^^^^^^^^^
+
+        DAO.setMaxVote(_max);
+        //^^^^^^^effects^^^^^^^^^
+    }
+
+
+
     //---------------------------------------------EPOCH CLOCK FUNCTIONS
 
     /**
@@ -1187,7 +1257,7 @@ contract DAO_LAYER_A is BASIC {
      */
     function DAO_setNewEpochInterval(uint256 _epochSeconds)
         external
-        isDAOcontroller
+        
         nonReentrant
     {
         bytes32 signature = keccak256(
