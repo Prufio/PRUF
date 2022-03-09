@@ -83,8 +83,8 @@ contract DAO is BASIC {
         mintedNodes = mintedNodes - 1000000;
 
         require(
-            _quorum < ((mintedNodes / 10) + 10),
-            "DAO:SPM:Required Quorum cannot be more than 10% of the indigenous node population"
+            _quorum < ((mintedNodes / 20) + 10),
+            "DAO:SPM:proposed Quorum > 5% (+10) of the indigenous node population"
         );
         //^^^^^^^checks^^^^^^^^^
 
@@ -98,8 +98,8 @@ contract DAO is BASIC {
      */
     function setPassingMargin(uint32 _passingMargin) external isDAOlayer {
         require(
-            (_passingMargin > 50) && (passingMargin < 81),
-            "DAO:SPM:Passing margin must be 51-80"
+            (_passingMargin > 50) && (passingMargin < 71),
+            "DAO:SPM:Passing margin must be 51-70"
         );
         //^^^^^^^checks^^^^^^^^^
 
