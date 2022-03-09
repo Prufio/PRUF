@@ -23,9 +23,9 @@ import "../Resources/RESOURCE_PRUF_DAO_INTERFACES.sol";
 
 contract DAO is BASIC {
     //SET THESE UNDER DAO CONTROL
-    uint32 quorum = 1;
-    uint32 passingMargin = 60; //in percent
-    uint32 maximumVote = 100000; //max vote in whole PRUF staked (future implementation)
+    uint32 public quorum = 1;
+    uint32 public passingMargin = 60; //in percent
+    uint32 public maximumVote = 100000; //max vote in whole PRUF staked (future implementation)
 
     uint256 currentMotion;
 
@@ -74,6 +74,47 @@ contract DAO is BASIC {
     }
 
     /**
+     * @dev Default param setter
+     * @param _quorum new value for minimum required voters to create a quorum
+     */
+    function setQuorum(uint32 _quorum) external isDAOlayer {
+        //^^^^^^^checks^^^^^^^^^
+
+        quorum = _quorum;
+        //^^^^^^^effects^^^^^^^^^
+    }
+
+    /**
+     * @dev Default param setter
+     * @param _passingMargin new value for minimum required passing margin for votes, in whole percents
+     */
+    function setPassingMargin(uint32 _passingMargin) external isDAOlayer {
+        require(
+            (_passingMargin > 50) && (passingMargin < 81),
+            "DAO:SPM:Passing margin must be 51-80"
+        );
+        //^^^^^^^checks^^^^^^^^^
+
+        passingMargin = _passingMargin;
+        //^^^^^^^effects^^^^^^^^^
+    }
+
+    /**
+     * @dev Default param setter
+     * @param _max new value for maximum votees per node
+     */
+    function setMaxVote(uint32 _max) external isDAOlayer {
+        require(
+            (_max < 100000000) && _max <= (maximumVote * 2),
+            "DAO:SPM:Maximum vote cannot be more than 100 million or more than twice the previous value"
+        );
+        //^^^^^^^checks^^^^^^^^^
+
+        maximumVote = _max;
+        //^^^^^^^effects^^^^^^^^^
+    }
+
+    /**
      * @dev Resolve contract addresses from STOR
      */
     function resolveContractAddresses()
@@ -89,6 +130,7 @@ contract DAO is BASIC {
 
         CLOCK_Address = STOR.resolveContractAddress("CLOCK");
         CLOCK = CLOCK_Interface(CLOCK_Address);
+        //^^^^^^^interactions^^^^^^^^^
     }
 
     /**
