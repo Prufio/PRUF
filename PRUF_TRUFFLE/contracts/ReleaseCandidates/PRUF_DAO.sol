@@ -127,7 +127,7 @@ contract DAO is BASIC {
     }
 
     /**
-     * @dev Admin veto---------CAUTION:CENTRALIZATION RISK
+     * @dev Admin veto for incrementel transfer of power to the DAO---------CAUTION:CENTRALIZATION RISK
      * @param _motion // propsed action
      */
     function adminVeto(
@@ -143,8 +143,8 @@ contract DAO is BASIC {
         );
         //^^^^^^^checks^^^^^^^^^
 
-        //^^^^^^^effects^^^^^^^^^
         motions[_motion].votesFor = 0;
+        //^^^^^^^effects^^^^^^^^^
 
         emit REPORT(_motion, "Vetoed");
         //^^^^^^^interactions^^^^^^^^^
@@ -252,13 +252,12 @@ contract DAO is BASIC {
      * @param _motionIndex the index of the motion hash to get
      * to be called by DAO_LAYER contracts as a check prior to executing functions
      */
-    function getMotionDataByIndex(uint256 _motionIndex)
+    function getMotionByIndex(uint256 _motionIndex)
         external
         view
-        returns (Motion memory)
+        returns (bytes32)
     {
-        bytes32 motion = indexedMotions[_motionIndex];
-        return motions[motion];
+        return (indexedMotions[_motionIndex]);
         //^^^^^^^interactions^^^^^^^^^
     }
 
