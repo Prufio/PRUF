@@ -28,10 +28,15 @@ pragma solidity 0.8.7;
 
 struct Motion {
     address proposer;
-    uint256 votes;
-    uint256 voterCount;
-    uint256 status; // 0=nonexistant, 1=proposed, 2=approved
-    uint256 proposalTime;
+    uint32 votesFor;
+    uint32 votesAgainst;
+    uint32 voterCount;
+    uint256 votingEpoch;
+}
+
+struct Votes {
+    uint32 votes;
+    uint8 yn; // yeahOrNeigh 1 = yeah
 }
 
 interface DAO_LAYER_A_Interface {
@@ -448,41 +453,104 @@ interface DAO_LAYER_A_Interface {
 
 interface DAO_Interface {
     /**
+     * @dev Resolve contract addresses from STOR
+     */
+    function resolveContractAddresses() external;
+
+    /**
      * @dev Crates an new Motion in the motions map
      * Originating Address:
      *      holds > .9_ pruf
      * @param _motion the hash of the referring contract address, function name, and parmaeters
      */
-    function createMotion(bytes32 _motion) external;
+    function createMotion(bytes32 _motion) external returns (bytes32);
 
     /**
      * @dev Admin voting : to be depricated ---------CAUTION:CENTRALIZATION RISK
      * @param _motion the motion hash to be voted on
-     * @param _vote //1 = yea, 0 = neigh
+     * @param _votes // 0 = neigh, int =
      */
-    function adminVote(bytes32 _motion, uint256 _vote) external;
-
-    /**
-     * @dev Finalizes / tallys votes for a mation
-     * @param _motion the motion hash to be finalized
-     * also clears any expired or failed motions
-     */
-    function finalizeVoting(bytes32 _motion) external;
+    function adminVote(
+        bytes32 _motion, //propsed action
+        uint32 _node, //node doing the voting
+        uint32 _votes, //# of votes
+        uint8 _yn // yeah (1) or neigh (0)
+    ) external;
 
     /**
      * @dev Throws if a resolution is not approved. clears the motion if successful
      * @param _motion the motion hash to check
      * to be called by DAO_LAYER contracts as a check prior to executing functions
      */
-    function verifyResolution(bytes32 _motion) external;
+    function verifyResolution(bytes32 _motion, address _caller) external;
+
+    /**
+     * @dev Getter for motions
+     * @param _motionIndex the index of the motion hash to get
+     * to be called by DAO_LAYER contracts as a check prior to executing functions
+     */
+    function getMotionDataByIndex(uint256 _motionIndex)
+        external
+        view
+        returns (Motion memory);
 
     /**
      * @dev Getter for motions
      * @param _motion the motion hash to get
      * to be called by DAO_LAYER contracts as a check prior to executing functions
      */
-    function getMotionStatus(bytes32 _motion)
+    function getMotionData(bytes32 _motion)
         external
         view
         returns (Motion memory);
+
+    /**
+     * @dev Getter for node voting participation
+     * @param _epoch the epoch to check
+     * @param _node the node to get voting activity for
+     * to be called by DAO_LAYER contracts as a check prior to executing functions
+     */
+    function getNodeActivityByEpoch(uint256 _epoch, uint32 _node)
+        external
+        view
+        returns (uint256);
+
+    /**
+     * @dev Getter for vote history, by motion and node
+     * @param _motion the epoch to check
+     * @param _node the node to get voting activity for
+     * to be called by DAO_LAYER contracts as a check prior to executing functions
+     */
+    function getNodeVotingHistory(bytes32 _motion, uint32 _node)
+        external
+        view
+        returns (Votes memory);
 }
+
+
+interface CLOCK_Interface {
+    /**
+     * @dev gets the current epoch
+     */
+    function thisEpoch() external view returns (uint256);
+
+    /**
+     * @dev gets the current epoch elapsed time
+     */
+    function thisEpochElapsedTime() external view returns (uint256);
+
+    /**
+     * @dev gets the current epochSeconds calue
+     */
+    function getEpochSeconds() external view returns (uint256);
+
+    /**
+     * @dev Sets a new epoch interval
+     * @param _epochSeconds new epoch period to set
+     * caller must be DAO_LAYER
+     */
+    function setNewEpochInterval(uint256 _epochSeconds) external;
+}
+
+
+

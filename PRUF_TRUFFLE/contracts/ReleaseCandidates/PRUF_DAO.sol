@@ -23,24 +23,28 @@ import "../Resources/RESOURCE_PRUF_DAO_INTERFACES.sol";
 
 contract DAO is BASIC {
     //SET THESE UNDER DAO CONTROL
-    uint256 quorum = 1;
-    uint256 passingPercentage = 60;
-    uint256 maximumVote = 100000; //max vote in whole PRUF staked (future implementation)
+    uint32 quorum = 1;
+    uint32 passingMargin = 60;
+    uint32 maximumVote = 100000; //max vote in whole PRUF staked (future implementation)
 
-    uint256 votingPeriod = 10 minutes; //test params
-    uint256 confirmationPeriod = 2 minutes; //test params
+    uint256 currentProposal;
 
-    //uint256 votingPeriod = 10 days;
-    //uint256 confirmationPeriod = 2 days;
     //^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
 
     bytes32 public constant DAO_ADMIN_ROLE = keccak256("DAO_ADMIN_ROLE");
     bytes32 public constant DAO_LAYER_ROLE = keccak256("DAO_LAYER_ROLE");
 
-    mapping(bytes32 => Motion) private motions;
+    address internal CLOCK_Address;
+    CLOCK_Interface internal CLOCK;
+
+    mapping(bytes32 => Motion) private motions; //proposalSignature => Proposal data -- proposal record
+    mapping(bytes32 => mapping(uint32 => Votes)) private nodeVoteHistory; //proposalSignature => NodeId => vote -- node voting history by proposal
+    mapping(uint256 => mapping(uint32 => uint32)) private votingActivity; //epoch => voterNodeId => votingOccurences -- node voting participation by epoch
+    mapping(uint256 => bytes32) private proposals; //index =>  proposals, enumerable
+    mapping(bytes32 => mapping(address => uint8)) private yesVoters; //addresses that voted yes
 
     event REPORT(bytes32 _motion, string _msg);
-    event VOTE(bytes32 _motion, uint256 _vote, string _msg);
+    event VOTE(bytes32 _motion, uint32 _vote, uint8 _yn, string _msg);
 
     /**
      * @dev Verify user credentials
@@ -69,77 +73,98 @@ contract DAO is BASIC {
     }
 
     /**
+     * @dev Resolve contract addresses from STOR
+     */
+    function resolveContractAddresses()
+        external
+        override
+        nonReentrant
+        isContractAdmin
+    {
+        //^^^^^^^checks^^^^^^^^^
+
+        NODE_TKN_Address = STOR.resolveContractAddress("NODE_TKN");
+        NODE_TKN = NODE_TKN_Interface(NODE_TKN_Address);
+
+        CLOCK_Address = STOR.resolveContractAddress("CLOCK");
+        CLOCK = CLOCK_Interface(CLOCK_Address);
+    }
+
+    /**
      * @dev Crates an new Motion in the motions map
      * Originating Address:
      *      holds > .9_ pruf
      * @param _motion the hash of the referring contract address, function name, and parmaeters
      */
-    function createMotion(bytes32 _motion) external {
+    function createMotion(bytes32 _motion) external returns (bytes32) {
+        bytes32 motion = keccak256(
+            abi.encodePacked(_motion, (CLOCK.thisEpoch() + 2))
+        );
         require(
-            ((motions[_motion].status != 1) && (motions[_motion].status != 2)),
+            motions[motion].votesFor == 0,
             "DAO:CM:Motion exists - wait for or finalize motion in progress"
         ); // Motion must not be currently proposed or approved
+
         require(
             UTIL_TKN.balanceOf(_msgSender()) > 99999999999999999, // 1 PRUF MINIMUM REQUIRED TO CREATE A MOTION
             "DAO:CM:Proposer must hold =>1 PRUF"
         );
         //^^^^^^^checks^^^^^^^^^
 
-        delete motions[_motion]; //clear any existing data // CTS:EXAMINE should this exist?? I dont see a case where a motions status is 0 || > 2
+        motions[motion].proposer = _msgSender();
+        motions[motion].votesFor = 1; //put motion in proposed status
+        motions[motion].votesAgainst = 1; //put motion in proposed status
+        motions[motion].voterCount = 0;
+        motions[motion].votingEpoch = CLOCK.thisEpoch() + 1; //voting will start in one epoch
 
-        motions[_motion].proposer = _msgSender();
-        motions[_motion].status = 1; //put motion in proposed status
-        motions[_motion].proposalTime = block.timestamp;
-        emit REPORT(_motion, "Motion Created");
+        proposals[currentProposal] = motion;
+        currentProposal++;
+
+        emit REPORT(motion, "Motion Created");
+        return (motion);
         //^^^^^^^effects^^^^^^^^^
     }
 
     /**
      * @dev Admin voting : to be depricated ---------CAUTION:CENTRALIZATION RISK
      * @param _motion the motion hash to be voted on
-     * @param _vote // 0 = neigh, int =
+     * @param _votes // 0 = neigh, int =
      */
-    function adminVote(bytes32 _motion, uint256 _vote) external isDAOadmin {
+    function adminVote(
+        bytes32 _motion, //propsed action
+        uint32 _node, //node doing the voting
+        uint32 _votes, //# of votes
+        uint8 _yn // yeah (1) or neigh (0)
+    ) external isDAOadmin {
         require(
-            motions[_motion].status == 1,
+            motions[_motion].votesFor != 0,
             "DAO:AV:Motion not in 'proposed' status"
         );
         require(
-            block.timestamp <= motions[_motion].proposalTime + votingPeriod,
-            "DAO:AV:Voting window closed"
+            CLOCK.thisEpoch() == (motions[_motion].votingEpoch),
+            "DAO:AV:Voting window not open"
         );
         //^^^^^^^checks^^^^^^^^^
 
-        uint256 vote = _vote;
-        if (vote > maximumVote) {
-            vote = maximumVote;
+        uint32 votes = _votes;
+        if (votes > maximumVote) {
+            votes = maximumVote;
         }
 
         motions[_motion].voterCount++;
-        motions[_motion].votes = motions[_motion].votes + vote;
-        //^^^^^^^effects^^^^^^^^^
-
-        emit VOTE(_motion, vote, "Vote Recorded");
-        //^^^^^^^interactions^^^^^^^^^
-    }
-
-    /**
-     * @dev Finalizes / tallys votes for a mation
-     * @param _motion the motion hash to be finalized
-     * also clears any expired or failed motions
-     */
-    function finalizeVoting(bytes32 _motion) external {
-        if (
-            block.timestamp >=
-            motions[_motion].proposalTime + votingPeriod + confirmationPeriod
-        ) {
-            delete motions[_motion];
-            emit REPORT(_motion, "Motion Expired");
-            //^^^^^^^checks^^^^^^^^^
+        if (_yn == 1) {
+            motions[_motion].votesFor = motions[_motion].votesFor + votes;
         } else {
-            tallyVotes(_motion);
+            motions[_motion].votesAgainst =
+                motions[_motion].votesAgainst +
+                votes;
         }
+
         //^^^^^^^effects^^^^^^^^^
+        recordVotingEvent(_motion, _node, _votes, _yn);
+
+        emit VOTE(_motion, votes, _yn, "Vote Recorded");
+        //^^^^^^^interactions^^^^^^^^^
     }
 
     /**
@@ -147,23 +172,70 @@ contract DAO is BASIC {
      * @param _motion the motion hash to check
      * to be called by DAO_LAYER contracts as a check prior to executing functions
      */
-    function verifyResolution(bytes32 _motion) external isDAOlayer {
-        require(
-            motions[_motion].status == 2,
-            "DAO:VR:specified action is not approved"
-        );
-        //^^^^^^^checks^^^^^^^^^
+    function verifyResolution(bytes32 _motion, address _caller)
+        external
+        isDAOlayer
+    {
+        Motion memory thisMotion = motions[_motion];
 
-        delete motions[_motion];
+        require(
+            CLOCK.thisEpoch() == thisMotion.votingEpoch + 1,
+            "DAO:VR:proposal is not valid in this epoch"
+        );
+
+        require(
+            thisMotion.proposer != address(0),
+            "DAO:VR:resolution has already been exercised"
+        );
+
+        require(
+            thisMotion.votesFor > thisMotion.votesAgainst,
+            "DAO:VR:specified proposal was rejected by majority"
+        );
+
+        require(
+            thisMotion.voterCount >= quorum,
+            "DAO:VR:specified proposal failed to gain a quorum"
+        );
+
+        require(
+            ((uint256(thisMotion.votesFor) * 10) /
+                (uint256(thisMotion.votesFor) +
+                    uint256(thisMotion.votesAgainst))) >= passingMargin,
+            "DAO:VR:specified proposal failed to gain required majority margin"
+        );
+
+        require(
+            (thisMotion.proposer == _caller) ||
+                (yesVoters[_motion][_caller] == 1),
+            "DAO:VR:Caller not authorized to execute resolution"
+        );
+
+        motions[_motion].proposer = address(0); //mark as exercised
         //^^^^^^^effects^^^^^^^^^
     }
 
-    /** CTS:EXAMINE is this supposed to be named getMotionStatus? seems to get the whole struct
+    /**
+     * @dev Getter for motions
+     * @param _motionIndex the index of the motion hash to get
+     * to be called by DAO_LAYER contracts as a check prior to executing functions
+     */
+    function getMotionDataByIndex(uint256 _motionIndex)
+        external
+        view
+        returns (Motion memory)
+    {
+        bytes32 proposal = proposals[_motionIndex];
+        return motions[proposal];
+        //^^^^^^^interactions^^^^^^^^^
+    }
+
+    /**
      * @dev Getter for motions
      * @param _motion the motion hash to get
      * to be called by DAO_LAYER contracts as a check prior to executing functions
      */
-    function getMotionStatus(bytes32 _motion)
+    function getMotionData(bytes32 _motion)
         external
         view
         returns (Motion memory)
@@ -172,36 +244,54 @@ contract DAO is BASIC {
         //^^^^^^^interactions^^^^^^^^^
     }
 
+    /**
+     * @dev Getter for node voting participation
+     * @param _epoch the epoch to check
+     * @param _node the node to get voting activity for
+     * to be called by DAO_LAYER contracts as a check prior to executing functions
+     */
+    function getNodeActivityByEpoch(uint256 _epoch, uint32 _node)
+        external
+        view
+        returns (uint256)
+    {
+        return (uint256(votingActivity[_epoch][_node]));
+        //^^^^^^^interactions^^^^^^^^^
+    }
+
+    /**
+     * @dev Getter for vote history, by motion and node
+     * @param _motion the epoch to check
+     * @param _node the node to get voting activity for
+     * to be called by DAO_LAYER contracts as a check prior to executing functions
+     */
+    function getNodeVotingHistory(bytes32 _motion, uint32 _node)
+        public
+        view
+        returns (Votes memory)
+    {
+        return (nodeVoteHistory[_motion][_node]);
+        //^^^^^^^interactions^^^^^^^^^
+    }
+
     //---------------------------------INTERNAL FUNCTIONS
 
     /**
-     * @dev Veriifies quorum and checks pass/fail for votes;
-     * deletes failed motions
-     * @param _motion the motion hash to tally
+     * @dev Records data relevant for a voting event for vote history;
+     * @param _proposal proposal signature
+     * @param _node node casting the votes
+     * @param _votes votes cast
+     * @param _yn for or against
      */
-    function tallyVotes(bytes32 _motion) internal {
-        require(
-            block.timestamp > motions[_motion].proposalTime + votingPeriod,
-            "DAO:TV:Voting still open, cannot finalize"
-        );
-        //^^^^^^^checks^^^^^^^^^
-
-        Motion memory thisMotion = motions[_motion];
-
-        if (thisMotion.voterCount > quorum) {
-            uint256 votePercent = ((thisMotion.votes * 100) /
-                thisMotion.voterCount);
-            if (votePercent >= passingPercentage) {
-                motions[_motion].status = 2;
-                emit REPORT(_motion, "Passed");
-            } else {
-                delete motions[_motion];
-                emit REPORT(_motion, "Failed");
-            }
-        } else {
-            delete motions[_motion];
-            emit REPORT(_motion, "Quorum not met.");
-        }
-        //^^^^^^^effects^^^^^^^^^
+    function recordVotingEvent(
+        bytes32 _proposal,
+        uint32 _node,
+        uint32 _votes,
+        uint8 _yn
+    ) internal {
+        nodeVoteHistory[_proposal][_node].votes = _votes;
+        nodeVoteHistory[_proposal][_node].yn = _yn;
+        yesVoters[_proposal][_msgSender()] = _yn;
+        votingActivity[CLOCK.thisEpoch()][_node]++;
     }
 }

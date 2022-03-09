@@ -29,6 +29,9 @@ contract DAO_LAYER_A is BASIC {
     address internal DAO_Address;
     DAO_Interface internal DAO;
 
+    address internal CLOCK_Address;
+    CLOCK_Interface internal CLOCK;
+
     /**
      * @dev Verify user credentials
      * Originating Address:
@@ -82,6 +85,9 @@ contract DAO_LAYER_A is BASIC {
 
         DAO_Address = STOR.resolveContractAddress("DAO");
         DAO = DAO_Interface(DAO_Address);
+
+        CLOCK_Address = STOR.resolveContractAddress("CLOCK");
+        CLOCK = CLOCK_Interface(CLOCK_Address);
     }
 
     /**
@@ -135,7 +141,11 @@ contract DAO_LAYER_A is BASIC {
                 _contract
             )
         );
-        DAO.verifyResolution(signature);
+
+        DAO.verifyResolution(
+            keccak256(abi.encodePacked(signature, CLOCK.thisEpoch)),
+            _msgSender()
+        );
         //^^^^^^^checks^^^^^^^^^
 
         BASIC_Interface(resolveName(_contract)).grantRole(_role, _account);
@@ -186,7 +196,10 @@ contract DAO_LAYER_A is BASIC {
                 _contract
             )
         );
-        DAO.verifyResolution(signature);
+        DAO.verifyResolution(
+            keccak256(abi.encodePacked(signature, CLOCK.thisEpoch)),
+            _msgSender()
+        );
         //^^^^^^^checks^^^^^^^^^
 
         BASIC_Interface(resolveName(_contract)).revokeRole(_role, _account);
@@ -242,7 +255,10 @@ contract DAO_LAYER_A is BASIC {
                 _contract
             )
         );
-        DAO.verifyResolution(signature);
+        DAO.verifyResolution(
+            keccak256(abi.encodePacked(signature, CLOCK.thisEpoch)),
+            _msgSender()
+        );
         //^^^^^^^checks^^^^^^^^^
 
         BASIC_Interface(resolveName(_contract)).renounceRole(_role, _account);
@@ -322,7 +338,10 @@ contract DAO_LAYER_A is BASIC {
                 _contract
             )
         );
-        DAO.verifyResolution(signature);
+        DAO.verifyResolution(
+            keccak256(abi.encodePacked(signature, CLOCK.thisEpoch)),
+            _msgSender()
+        );
         //^^^^^^^checks^^^^^^^^^
 
         BASIC_Interface(resolveName(_contract)).resolveContractAddresses();
@@ -365,7 +384,10 @@ contract DAO_LAYER_A is BASIC {
                 _contract
             )
         );
-        DAO.verifyResolution(signature);
+        DAO.verifyResolution(
+            keccak256(abi.encodePacked(signature, CLOCK.thisEpoch)),
+            _msgSender()
+        );
         //^^^^^^^checks^^^^^^^^^
 
         BASIC_Interface(resolveName(_contract)).setStorageContract(
@@ -386,7 +408,10 @@ contract DAO_LAYER_A is BASIC {
         bytes32 signature = keccak256(
             abi.encodePacked("DAO_pause", address(this), _contract)
         );
-        DAO.verifyResolution(signature);
+        DAO.verifyResolution(
+            keccak256(abi.encodePacked(signature, CLOCK.thisEpoch)),
+            _msgSender()
+        );
         //^^^^^^^checks^^^^^^^^^
 
         BASIC_Interface(resolveName(_contract)).pause();
@@ -405,7 +430,10 @@ contract DAO_LAYER_A is BASIC {
         bytes32 signature = keccak256(
             abi.encodePacked("DAO_unpause", address(this), _contract)
         );
-        DAO.verifyResolution(signature);
+        DAO.verifyResolution(
+            keccak256(abi.encodePacked(signature, CLOCK.thisEpoch)),
+            _msgSender()
+        );
         //^^^^^^^checks^^^^^^^^^
 
         BASIC_Interface(resolveName(_contract)).unpause();
@@ -442,7 +470,10 @@ contract DAO_LAYER_A is BASIC {
                 _contract
             )
         );
-        DAO.verifyResolution(signature);
+        DAO.verifyResolution(
+            keccak256(abi.encodePacked(signature, CLOCK.thisEpoch)),
+            _msgSender()
+        );
         //^^^^^^^checks^^^^^^^^^
 
         BASIC_Interface(resolveName(_contract)).ERC721Transfer(
@@ -476,7 +507,10 @@ contract DAO_LAYER_A is BASIC {
                 _contract
             )
         );
-        DAO.verifyResolution(signature);
+        DAO.verifyResolution(
+            keccak256(abi.encodePacked(signature, CLOCK.thisEpoch)),
+            _msgSender()
+        );
         //^^^^^^^checks^^^^^^^^^
 
         BASIC_Interface(resolveName(_contract)).ERC20Transfer(
@@ -505,7 +539,10 @@ contract DAO_LAYER_A is BASIC {
                 _URI
             )
         );
-        DAO.verifyResolution(signature);
+        DAO.verifyResolution(
+            keccak256(abi.encodePacked(signature, CLOCK.thisEpoch)),
+            _msgSender()
+        );
         //^^^^^^^checks^^^^^^^^^
 
         A_TKN.setBaseURIforStorageType(_storageProvider, _URI);
@@ -530,7 +567,10 @@ contract DAO_LAYER_A is BASIC {
         bytes32 signature = keccak256(
             abi.encodePacked("DAO_A_TKN_killTrustedAgent", address(this), _key)
         );
-        DAO.verifyResolution(signature);
+        DAO.verifyResolution(
+            keccak256(abi.encodePacked(signature, CLOCK.thisEpoch)),
+            _msgSender()
+        );
         //^^^^^^^checks^^^^^^^^^
 
         A_TKN.killTrustedAgent(_key);
@@ -557,7 +597,10 @@ contract DAO_LAYER_A is BASIC {
                 _newNodeBurn
             )
         );
-        DAO.verifyResolution(signature);
+        DAO.verifyResolution(
+            keccak256(abi.encodePacked(signature, CLOCK.thisEpoch)),
+            _msgSender()
+        );
         //^^^^^^^checks^^^^^^^^^
 
         NODE_MGR.setNodePricing(_newNodePrice, _newNodeBurn);
@@ -584,7 +627,10 @@ contract DAO_LAYER_A is BASIC {
                 _status
             )
         );
-        DAO.verifyResolution(signature);
+        DAO.verifyResolution(
+            keccak256(abi.encodePacked(signature, CLOCK.thisEpoch)),
+            _msgSender()
+        );
         //^^^^^^^checks^^^^^^^^^
 
         NODE_STOR.setStorageProviders(_storageProvider, _status);
@@ -609,7 +655,10 @@ contract DAO_LAYER_A is BASIC {
                 _status
             )
         );
-        DAO.verifyResolution(signature);
+        DAO.verifyResolution(
+            keccak256(abi.encodePacked(signature, CLOCK.thisEpoch)),
+            _msgSender()
+        );
         //^^^^^^^checks^^^^^^^^^
 
         NODE_STOR.setManagementTypes(_managementType, _status);
@@ -634,7 +683,10 @@ contract DAO_LAYER_A is BASIC {
                 _status
             )
         );
-        DAO.verifyResolution(signature);
+        DAO.verifyResolution(
+            keccak256(abi.encodePacked(signature, CLOCK.thisEpoch)),
+            _msgSender()
+        );
         //^^^^^^^checks^^^^^^^^^
 
         NODE_STOR.setCustodyTypes(_custodyType, _status);
@@ -661,7 +713,10 @@ contract DAO_LAYER_A is BASIC {
                 _newDiscount
             )
         );
-        DAO.verifyResolution(signature);
+        DAO.verifyResolution(
+            keccak256(abi.encodePacked(signature, CLOCK.thisEpoch)),
+            _msgSender()
+        );
         //^^^^^^^checks^^^^^^^^^
 
         NODE_STOR.changeShare(_node, _newDiscount);
@@ -691,7 +746,10 @@ contract DAO_LAYER_A is BASIC {
                 _thisName
             )
         );
-        DAO.verifyResolution(signature);
+        DAO.verifyResolution(
+            keccak256(abi.encodePacked(signature, CLOCK.thisEpoch)),
+            _msgSender()
+        );
         //^^^^^^^checks^^^^^^^^^
 
         NODE_STOR.transferName(_fromNode, _toNode, _thisName);
@@ -737,7 +795,10 @@ contract DAO_LAYER_A is BASIC {
                 _CAS2
             )
         );
-        DAO.verifyResolution(signature);
+        DAO.verifyResolution(
+            keccak256(abi.encodePacked(signature, CLOCK.thisEpoch)),
+            _msgSender()
+        );
         //^^^^^^^checks^^^^^^^^^
 
         NODE_STOR.modifyNode(
@@ -768,7 +829,10 @@ contract DAO_LAYER_A is BASIC {
         bytes32 signature = keccak256(
             abi.encodePacked("DAO_blockUser", address(this), _node, _addrHash)
         );
-        DAO.verifyResolution(signature);
+        DAO.verifyResolution(
+            keccak256(abi.encodePacked(signature, CLOCK.thisEpoch)),
+            _msgSender()
+        );
         //^^^^^^^checks^^^^^^^^^
 
         NODE_STOR.blockUser(_node, _addrHash);
@@ -795,7 +859,10 @@ contract DAO_LAYER_A is BASIC {
                 _tokenId
             )
         );
-        DAO.verifyResolution(signature);
+        DAO.verifyResolution(
+            keccak256(abi.encodePacked(signature, CLOCK.thisEpoch)),
+            _msgSender()
+        );
         //^^^^^^^checks^^^^^^^^^
 
         NODE_STOR.daoSetExternalId(_node, _tokenContractAddress, _tokenId);
@@ -828,7 +895,10 @@ contract DAO_LAYER_A is BASIC {
                 _contractAuthLevel
             )
         );
-        DAO.verifyResolution(signature);
+        DAO.verifyResolution(
+            keccak256(abi.encodePacked(signature, CLOCK.thisEpoch)),
+            _msgSender()
+        );
         //^^^^^^^checks^^^^^^^^^
 
         STOR.authorizeContract(
@@ -860,7 +930,10 @@ contract DAO_LAYER_A is BASIC {
                 _contractAuthLevel
             )
         );
-        DAO.verifyResolution(signature);
+        DAO.verifyResolution(
+            keccak256(abi.encodePacked(signature, CLOCK.thisEpoch)),
+            _msgSender()
+        );
         //^^^^^^^checks^^^^^^^^^
 
         STOR.addDefaultContracts(_contractNumber, _name, _contractAuthLevel);
@@ -885,7 +958,10 @@ contract DAO_LAYER_A is BASIC {
                 _nodeStorageAddress
             )
         );
-        DAO.verifyResolution(signature);
+        DAO.verifyResolution(
+            keccak256(abi.encodePacked(signature, CLOCK.thisEpoch)),
+            _msgSender()
+        );
         //^^^^^^^checks^^^^^^^^^
 
         NODE_TKN.setNodeStorageContract(_nodeStorageAddress);
@@ -911,7 +987,10 @@ contract DAO_LAYER_A is BASIC {
                 _UD_721ContractAddress
             )
         );
-        DAO.verifyResolution(signature);
+        DAO.verifyResolution(
+            keccak256(abi.encodePacked(signature, CLOCK.thisEpoch)),
+            _msgSender()
+        );
         //^^^^^^^checks^^^^^^^^^
 
         UD_721_Interface(_UD_721ContractAddress)
@@ -938,7 +1017,10 @@ contract DAO_LAYER_A is BASIC {
                 _EO_STAKING_Address
             )
         );
-        DAO.verifyResolution(signature);
+        DAO.verifyResolution(
+            keccak256(abi.encodePacked(signature, CLOCK.thisEpoch)),
+            _msgSender()
+        );
         //^^^^^^^checks^^^^^^^^^
 
         EO_STAKING_Interface(_EO_STAKING_Address).setMinimumPeriod(
@@ -965,7 +1047,10 @@ contract DAO_LAYER_A is BASIC {
                 _EO_STAKING_Address
             )
         );
-        DAO.verifyResolution(signature);
+        DAO.verifyResolution(
+            keccak256(abi.encodePacked(signature, CLOCK.thisEpoch)),
+            _msgSender()
+        );
         //^^^^^^^checks^^^^^^^^^
 
         EO_STAKING_Interface(_EO_STAKING_Address).endStaking(_delay);
@@ -998,7 +1083,10 @@ contract DAO_LAYER_A is BASIC {
                 _EO_STAKING_Address
             )
         );
-        DAO.verifyResolution(signature);
+        DAO.verifyResolution(
+            keccak256(abi.encodePacked(signature, CLOCK.thisEpoch)),
+            _msgSender()
+        );
         //^^^^^^^checks^^^^^^^^^
 
         EO_STAKING_Interface(_EO_STAKING_Address).setTokenContracts(
@@ -1039,7 +1127,10 @@ contract DAO_LAYER_A is BASIC {
                 _EO_STAKING_Address
             )
         );
-        DAO.verifyResolution(signature);
+        DAO.verifyResolution(
+            keccak256(abi.encodePacked(signature, CLOCK.thisEpoch)),
+            _msgSender()
+        );
         //^^^^^^^checks^^^^^^^^^
 
         EO_STAKING_Interface(_EO_STAKING_Address).setStakeLevels(
@@ -1074,7 +1165,10 @@ contract DAO_LAYER_A is BASIC {
                 vaultContractAddress
             )
         );
-        DAO.verifyResolution(signature);
+        DAO.verifyResolution(
+            keccak256(abi.encodePacked(signature, CLOCK.thisEpoch)),
+            _msgSender()
+        );
         //^^^^^^^checks^^^^^^^^^
 
         REWARDS_VAULT_Interface(vaultContractAddress).setTokenContracts(
@@ -1082,6 +1176,34 @@ contract DAO_LAYER_A is BASIC {
             _stakeAddress
         );
         //^^^^^^^interactions^^^^^^^^^
+    }
+
+    //---------------------------------------------EPOCH CLOCK FUNCTIONS
+
+    /**
+     * @dev Set storage contract to interface with
+     * @param _epochSeconds - New period for EPOCHS in seconds
+     */
+    function DAO_setNewEpochInterval(uint256 _epochSeconds)
+        external
+        isDAOcontroller
+        nonReentrant
+    {
+        bytes32 signature = keccak256(
+            abi.encodePacked(
+                "DAO_setNodeStorageContract",
+                address(this),
+                _epochSeconds
+            )
+        );
+        DAO.verifyResolution(
+            keccak256(abi.encodePacked(signature, CLOCK.thisEpoch)),
+            _msgSender()
+        );
+        //^^^^^^^checks^^^^^^^^^
+
+        CLOCK.setNewEpochInterval(_epochSeconds);
+        //^^^^^^^Interactions^^^^^^^^^
     }
 
     //---------------------------------INTERNAL FUNCTIONS
