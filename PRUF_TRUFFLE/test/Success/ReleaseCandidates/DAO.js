@@ -33,8 +33,8 @@ const PRUF_MAL_APP = artifacts.require("MAL_APP");
 const PRUF_UTIL_TKN = artifacts.require("UTIL_TKN");
 const PRUF_DECORATE = artifacts.require("DECORATE");
 const PRUF_WRAP = artifacts.require("WRAP");
-const PRUF_DAO = artifacts.require("DAO_A");
-const PRUF_DAO_A = artifacts.require("DAO_A");
+const PRUF_DAO = artifacts.require("DAO");
+const PRUF_DAO_A = artifacts.require("DAO_LAYER_A");
 
 let STOR;
 let APP;
@@ -54,7 +54,7 @@ let MAL_APP;
 let UTIL_TKN;
 let UD_721;
 let DAO_A;
-let DAO_A;
+let DAO_;
 
 let string1Hash;
 let string2Hash;
@@ -149,6 +149,10 @@ contract("DAO", (accounts) => {
   const account8 = accounts[7];
   const account9 = accounts[8];
   const account10 = accounts[9];
+
+  function timeout(ms) {
+    return new Promise((resolve) => setTimeout(resolve, ms));
+  }
 
   it("Should deploy PRUF_HELPER", async () => {
     const PRUF_HELPER_TEST = await PRUF_HELPER.deployed({ from: account1 });
@@ -373,7 +377,6 @@ contract("DAO", (accounts) => {
     defaultAdminRoleB32 =
       "0x0000000000000000000000000000000000000000000000000000000000000000";
 
-    grantRoleSig = web3.utils.soliditySha3("DAO_grantRole", )
   });
 
   it("Should deploy Storage", async () => {
@@ -558,6 +561,29 @@ contract("DAO", (accounts) => {
     EO_STAKING = PRUF_EO_STAKING_TEST;
   });
 
+  it("Should set grantRoleSig", () => {
+    grantRoleSig = web3.utils.soliditySha3("DAO_grantRole", DAO_A.address, defaultAdminRoleB32, DAO_A.address, A_TKN.address)
+    return console.log(grantRoleSig)
+  });
+
+  it("Should get grantRoleSig", async () => {
+    var Record = [];
+
+    return await DAO_A.getSig_DAO_grantRole(
+      defaultAdminRoleB32,
+      DAO_A.address,
+      A_TKN.address,
+      { from: account2 },
+      function (_err, _result) {
+        if (_err) {
+        } else {
+          Record = Object.values(_result);
+          console.log(Record);
+        }
+      }
+    );
+  });
+
   it("Should authorize account1 as DAOadmin in DAO_A", () => {
     console.log("Authorizing account1");
     return DAO_A.grantRole(DAOcontrollerRoleB32, account1, { from: account1 });
@@ -568,10 +594,15 @@ contract("DAO", (accounts) => {
     return DAO.grantRole(DAOlayerRoleB32, DAO_A.address, { from: account1 });
   });
 
-  it("Should authorize account1 as DAOadmin in DAO_A", () => {
+  it("Should authorize account1 as DAOadmin in DAO", () => {
     console.log("Authorizing account1");
-    return DAO.grantRole(DAOA, DAO_A.address, { from: account1 });
+    return DAO.grantRole(DAOadminRoleB32, account1, { from: account1 });
   });
+
+  // it("Should authorize account1 as DAOadmin in DAO_A", () => {
+  //   console.log("Authorizing account1");
+  //   return DAO.grantRole(DAO_A, DAO_A.address, { from: account1 });
+  // });
 
   it("Should authorize DAO_A as DAO_A in STOR", () => {
     console.log("Authorizing account1");
@@ -587,59 +618,59 @@ contract("DAO", (accounts) => {
 
   it("Should add default contracts to storage", () => {
     console.log("Adding NODE_MGR to default contract list");
-    return DAO_A.addDefaultContracts("0", "NODE_MGR", "1", { from: account1 })
+    return STOR.addDefaultContracts("0", "NODE_MGR", "1", { from: account1 })
 
       .then(() => {
         console.log("Adding NODE_TKN to default contract list");
-        return DAO_A.addDefaultContracts("1", "NODE_TKN", "1", {
+        return STOR.addDefaultContracts("1", "NODE_TKN", "1", {
           from: account1,
         });
       })
 
       .then(() => {
         console.log("Adding A_TKN to default contract list");
-        return DAO_A.addDefaultContracts("2", "A_TKN", "1", { from: account1 });
+        return STOR.addDefaultContracts("2", "A_TKN", "1", { from: account1 });
       })
 
       .then(() => {
         console.log("Adding ECR_MGR to default contract list");
-        return DAO_A.addDefaultContracts("3", "ECR_MGR", "1", {
+        return STOR.addDefaultContracts("3", "ECR_MGR", "1", {
           from: account1,
         });
       })
 
       .then(() => {
         console.log("Adding APP_NC to default contract list");
-        return DAO_A.addDefaultContracts("4", "APP_NC", "2", { from: account1 });
+        return STOR.addDefaultContracts("4", "APP_NC", "2", { from: account1 });
       })
 
       .then(() => {
         console.log("Adding APP_NC to default contract list");
-        return DAO_A.addDefaultContracts("5", "APP_NC", "2", { from: account1 });
+        return STOR.addDefaultContracts("5", "APP_NC", "2", { from: account1 });
       })
 
       .then(() => {
         console.log("Adding RCLR to default contract list");
-        return DAO_A.addDefaultContracts("6", "RCLR", "3", { from: account1 });
+        return STOR.addDefaultContracts("6", "RCLR", "3", { from: account1 });
       })
 
       .then(() => {
         console.log("Adding NODE_STOR to default contract list");
-        return DAO_A.addDefaultContracts("8", "NODE_STOR", "1", {
+        return STOR.addDefaultContracts("8", "NODE_STOR", "1", {
           from: account1,
         });
       })
 
       .then(() => {
         console.log("Adding DECORATE to default contract list");
-        return DAO_A.addDefaultContracts("9", "DECORATE", "2", {
+        return STOR.addDefaultContracts("9", "DECORATE", "2", {
           from: account1,
         });
       })
 
       .then(() => {
         console.log("Adding WRAP to default contract list");
-        return DAO_A.addDefaultContracts("10", "WRAP", "2", { from: account1 });
+        return STOR.addDefaultContracts("10", "WRAP", "2", { from: account1 });
       });
   });
 
@@ -743,104 +774,104 @@ contract("DAO", (accounts) => {
 
   it("Should add contract addresses to storage", () => {
     console.log("Adding APP to storage for use in Node 0");
-    return DAO_A.authorizeContract("APP", APP.address, "0", "1", {
+    return STOR.authorizeContract("APP", APP.address, "0", "1", {
       from: account1,
     })
 
       .then(() => {
         console.log("Adding NODE_MGR to storage for use in Node 0");
-        return DAO_A.authorizeContract("NODE_MGR", NODE_MGR.address, "0", "1", {
+        return STOR.authorizeContract("NODE_MGR", NODE_MGR.address, "0", "1", {
           from: account1,
         });
       })
 
       .then(() => {
         console.log("Adding NODE_STOR to storage for use in Node 0");
-        return DAO_A.authorizeContract("NODE_STOR", NODE_STOR.address, "0", "1", {
+        return STOR.authorizeContract("NODE_STOR", NODE_STOR.address, "0", "1", {
           from: account1,
         });
       })
 
       .then(() => {
         console.log("Adding NODE_TKN to storage for use in Node 0");
-        return DAO_A.authorizeContract("NODE_TKN", NODE_TKN.address, "0", "1", {
+        return STOR.authorizeContract("NODE_TKN", NODE_TKN.address, "0", "1", {
           from: account1,
         });
       })
 
       .then(() => {
         console.log("Adding A_TKN to storage for use in Node 0");
-        return DAO_A.authorizeContract("A_TKN", A_TKN.address, "0", "1", {
+        return STOR.authorizeContract("A_TKN", A_TKN.address, "0", "1", {
           from: account1,
         });
       })
 
       .then(() => {
         console.log("Adding ECR_MGR to storage for use in Node 0");
-        return DAO_A.authorizeContract("ECR_MGR", ECR_MGR.address, "0", "1", {
+        return STOR.authorizeContract("ECR_MGR", ECR_MGR.address, "0", "1", {
           from: account1,
         });
       })
 
       .then(() => {
         console.log("Adding ECR to storage for use in Node 0");
-        return DAO_A.authorizeContract("ECR", ECR.address, "0", "3", {
+        return STOR.authorizeContract("ECR", ECR.address, "0", "3", {
           from: account1,
         });
       })
 
       .then(() => {
         console.log("Adding ECR2 to storage for use in Node 0");
-        return DAO_A.authorizeContract("ECR2", ECR2.address, "0", "3", {
+        return STOR.authorizeContract("ECR2", ECR2.address, "0", "3", {
           from: account1,
         });
       })
 
       .then(() => {
         console.log("Adding APP_NC to storage for use in Node 0");
-        return DAO_A.authorizeContract("APP_NC", APP_NC.address, "0", "2", {
+        return STOR.authorizeContract("APP_NC", APP_NC.address, "0", "2", {
           from: account1,
         });
       })
 
       .then(() => {
         console.log("Adding ECR_NC to storage for use in Node 0");
-        return DAO_A.authorizeContract("ECR_NC", ECR_NC.address, "0", "3", {
+        return STOR.authorizeContract("ECR_NC", ECR_NC.address, "0", "3", {
           from: account1,
         });
       })
 
       .then(() => {
         console.log("Adding RCLR to storage for use in Node 0");
-        return DAO_A.authorizeContract("RCLR", RCLR.address, "0", "3", {
+        return STOR.authorizeContract("RCLR", RCLR.address, "0", "3", {
           from: account1,
         });
       })
 
       .then(() => {
         console.log("Adding MAL_APP to storage for use in Node 0");
-        return DAO_A.authorizeContract("MAL_APP", MAL_APP.address, "0", "1", {
+        return STOR.authorizeContract("MAL_APP", MAL_APP.address, "0", "1", {
           from: account1,
         });
       })
 
       .then(() => {
         console.log("Adding UTIL_TKN to storage for use in Node 0");
-        return DAO_A.authorizeContract("UTIL_TKN", UTIL_TKN.address, "0", "1", {
+        return STOR.authorizeContract("UTIL_TKN", UTIL_TKN.address, "0", "1", {
           from: account1,
         });
       })
 
       .then(() => {
         console.log("Adding DECORATE to storage for use in Node 0");
-        return DAO_A.authorizeContract("DECORATE", DECORATE.address, "0", "2", {
+        return STOR.authorizeContract("DECORATE", DECORATE.address, "0", "2", {
           from: account1,
         });
       })
 
       .then(() => {
         console.log("Adding WRAP to storage for use in Node 0");
-        return DAO_A.authorizeContract("WRAP", WRAP.address, "0", "2", {
+        return STOR.authorizeContract("WRAP", WRAP.address, "0", "2", {
           from: account1,
         });
       });
@@ -988,50 +1019,49 @@ contract("DAO", (accounts) => {
     });
   });
 
-  it("Should authorize all minter contracts for minting A_TKN(s)", () => {
-    console.log("Authorizing account1");
-    return A_TKN.grantRole(defaultAdminRoleB32, DAO_A.address, {
-      from: account1,
-    })
+  // it("Should authorize all minter contracts for minting A_TKN(s)", () => {
+    // console.log("Authorizing account1");
+    // return A_TKN.grantRole(defaultAdminRoleB32, DAO_A.address, {
+    //   from: account1,
+    // })
 
-      .then(() => {
+    it("Should authorize all minter contracts for minting A_TKN(s)", () => {
         console.log("Authorizing APP_NC");
-        return DAO_A.DAO_grantRole(minterRoleB32, APP_NC.address, "A_TKN", {
+        return A_TKN.grantRole(minterRoleB32, APP_NC.address, {
           from: account1,
-        });
-      })
+        })
 
       .then(() => {
         console.log("Authorizing APP");
-        return DAO_A.DAO_grantRole(minterRoleB32, APP.address, "A_TKN", {
+        return A_TKN.grantRole(minterRoleB32, APP.address, {
           from: account1,
         });
       })
 
       .then(() => {
         console.log("Authorizing RCLR");
-        return DAO_A.DAO_grantRole(minterRoleB32, RCLR.address, "A_TKN", {
+        return A_TKN.grantRole(minterRoleB32, RCLR.address, {
           from: account1,
         });
       })
 
       .then(() => {
         console.log("Authorizing RCLR");
-        return DAO_A.DAO_grantRole(minterRoleB32, account1, "A_TKN", {
+        return A_TKN.grantRole(minterRoleB32, account1, {
           from: account1,
         });
       })
 
       .then(() => {
         console.log("Authorizing DAO_A");
-        return DAO_A.DAO_grantRole(DAOroleB32, DAO_A.address, "A_TKN", {
+        return A_TKN.grantRole(DAOroleB32, DAO_A.address, {
           from: account1,
         });
       })
 
       .then(() => {
         console.log("Authorizing DAO_A");
-        return DAO_A.DAO_grantRole(pauserRoleB32, DAO_A.address, "A_TKN", {
+        return A_TKN.grantRole(pauserRoleB32, DAO_A.address, {
           from: account1,
         });
       });
@@ -1045,38 +1075,37 @@ contract("DAO", (accounts) => {
 
       .then(() => {
         console.log("Authorizing NODE_MGR");
-        return DAO_A.DAO_grantRole(payableRoleB32, NODE_MGR.address, "UTIL_TKN", {
+        return UTIL_TKN.grantRole(payableRoleB32, NODE_MGR.address, {
           from: account1,
         });
       })
 
       .then(() => {
         console.log("Authorizing APP_NC");
-        return DAO_A.DAO_grantRole(payableRoleB32, APP_NC.address, "UTIL_TKN", {
+        return UTIL_TKN.grantRole(payableRoleB32, APP_NC.address, {
           from: account1,
         });
       })
 
       .then(() => {
         console.log("Authorizing APP");
-        return DAO_A.DAO_grantRole(payableRoleB32, APP.address, "UTIL_TKN", {
+        return UTIL_TKN.grantRole(payableRoleB32, APP.address, {
           from: account1,
         });
       })
 
       .then(() => {
         console.log("Authorizing RCLR");
-        return DAO_A.DAO_grantRole(payableRoleB32, RCLR.address, "UTIL_TKN", {
+        return UTIL_TKN.grantRole(payableRoleB32, RCLR.address, {
           from: account1,
         });
       })
 
       .then(() => {
         console.log("Authorizing NODE_MGR");
-        return DAO_A.DAO_grantRole(
+        return UTIL_TKN.grantRole(
           trustedAgentRoleB32,
           NODE_MGR.address,
-          "UTIL_TKN",
           {
             from: account1,
           }
@@ -1085,7 +1114,7 @@ contract("DAO", (accounts) => {
 
       .then(() => {
         console.log("Authorizing DAO_A");
-        return DAO_A.DAO_grantRole(pauserRoleB32, DAO_A.address, "UTIL_TKN", {
+        return UTIL_TKN.grantRole(pauserRoleB32, DAO_A.address, {
           from: account1,
         });
       });
@@ -1099,21 +1128,21 @@ contract("DAO", (accounts) => {
 
       .then(() => {
         console.log("Authorizing NODE_MGR");
-        return DAO_A.DAO_grantRole(minterRoleB32, NODE_MGR.address, "NODE_TKN", {
+        return NODE_TKN.grantRole(minterRoleB32, NODE_MGR.address, {
           from: account1,
         });
       })
 
       .then(() => {
         console.log("Authorizing DAO_A");
-        return DAO_A.DAO_grantRole(contractAdminRoleB32, DAO_A.address, "NODE_TKN", {
+        return NODE_TKN.grantRole(contractAdminRoleB32, DAO_A.address, {
           from: account1,
         });
       })
 
       .then(() => {
         console.log("Authorizing DAO_A");
-        return DAO_A.DAO_grantRole(pauserRoleB32, DAO_A.address, "NODE_TKN", {
+        return NODE_TKN.grantRole(pauserRoleB32, DAO_A.address, {
           from: account1,
         });
       });
@@ -1127,24 +1156,23 @@ contract("DAO", (accounts) => {
 
       .then(() => {
         console.log("Authorizing account1");
-        return DAO_A.DAO_grantRole(IDverifierRoleB32, account1, "NODE_MGR", {
+        return NODE_MGR.grantRole(IDverifierRoleB32, account1, {
           from: account1,
         });
       })
 
       .then(() => {
         console.log("Authorizing account1");
-        return DAO_A.DAO_grantRole(IDverifierRoleB32, account10, "NODE_MGR", {
+        return NODE_MGR.grantRole(IDverifierRoleB32, account10, {
           from: account1,
         });
       })
 
       .then(() => {
         console.log("Authorizing NODE_BLDR");
-        return DAO_A.DAO_grantRole(
+        return NODE_MGR.grantRole(
           IDproviderRoleB32,
           NODE_BLDR.address,
-          "NODE_MGR",
           {
             from: account1,
           }
@@ -1153,10 +1181,9 @@ contract("DAO", (accounts) => {
 
       .then(() => {
         console.log("Authorizing NODE_BLDR");
-        return DAO_A.DAO_grantRole(
+        return NODE_MGR.grantRole(
           IDverifierRoleB32,
           NODE_BLDR.address,
-          "NODE_MGR",
           {
             from: account1,
           }
@@ -1165,28 +1192,28 @@ contract("DAO", (accounts) => {
 
       .then(() => {
         console.log("Authorizing account1");
-        return DAO_A.DAO_grantRole(DAOroleB32, DAO_A.address, "NODE_MGR", {
+        return NODE_MGR.grantRole(DAOroleB32, DAO_A.address, {
           from: account1,
         });
       })
 
       .then(() => {
         console.log("Authorizing DAO_A");
-        return DAO_A.DAO_grantRole(pauserRoleB32, DAO_A.address, "NODE_MGR", {
+        return NODE_MGR.grantRole(pauserRoleB32, DAO_A.address, {
           from: account1,
         });
       })
 
       .then(() => {
         console.log("Authorizing account1");
-        return DAO_A.DAO_grantRole(IDverifierRoleB32, UD_721.address, "NODE_MGR", {
+        return NODE_MGR.grantRole(IDverifierRoleB32, UD_721.address, {
           from: account1,
         });
       })
 
       .then(() => {
         console.log("Authorizing NODE_MGR");
-        return DAO_A.DAO_grantRole(nodeAdminRoleB32, UD_721.address, "NODE_MGR", {
+        return NODE_MGR.grantRole(nodeAdminRoleB32, UD_721.address, {
           from: account1,
         });
       });
@@ -1200,14 +1227,14 @@ contract("DAO", (accounts) => {
 
       .then(() => {
         console.log("Authorizing NODE_MGR");
-        return DAO_A.DAO_grantRole(assetTransferRoleB32, APP.address, "APP", {
+        return APP.grantRole(assetTransferRoleB32, APP.address, {
           from: account1,
         });
       })
 
       .then(() => {
         console.log("Authorizing DAO_A");
-        return DAO_A.DAO_grantRole(pauserRoleB32, DAO_A.address, "APP", {
+        return APP.grantRole(pauserRoleB32, DAO_A.address, {
           from: account1,
         });
       });
@@ -1221,14 +1248,14 @@ contract("DAO", (accounts) => {
 
       .then(() => {
         console.log("Authorizing A_TKN");
-        return DAO_A.DAO_grantRole(discardRoleB32, A_TKN.address, "RCLR", {
+        return RCLR.grantRole(discardRoleB32, A_TKN.address, {
           from: account1,
         });
       })
 
       .then(() => {
         console.log("Authorizing DAO_A");
-        return DAO_A.DAO_grantRole(pauserRoleB32, DAO_A.address, "RCLR", {
+        return RCLR.grantRole(pauserRoleB32, DAO_A.address, {
           from: account1,
         });
       });
@@ -1242,24 +1269,23 @@ contract("DAO", (accounts) => {
 
       .then(() => {
         console.log("Authorizing NODE_MGR");
-        return DAO_A.DAO_grantRole(
+        return NODE_STOR.grantRole(
           nodeAdminRoleB32,
           NODE_MGR.address,
-          "NODE_STOR",
           {
             from: account1,
           })
 
           .then(() => {
             console.log("Authorizing NODE_MGR");
-            return DAO_A.DAO_grantRole(nodeAdminRoleB32, account1, "NODE_STOR", {
+            return NODE_STOR.grantRole(nodeAdminRoleB32, account1, {
               from: account1,
             });
           })
 
           .then(() => {
             console.log("Authorizing  DAO_A.address");
-            return DAO_A.DAO_grantRole(DAOroleB32, DAO_A.address, "NODE_STOR", {
+            return NODE_STOR.grantRole(DAOroleB32, DAO_A.address, {
               from: account1,
             });
           });
@@ -1267,17 +1293,16 @@ contract("DAO", (accounts) => {
 
       .then(() => {
         console.log("Authorizing DAO_A");
-        return DAO_A.DAO_grantRole(pauserRoleB32, DAO_A.address, "NODE_STOR", {
+        return NODE_STOR.grantRole(pauserRoleB32, DAO_A.address, {
           from: account1,
         });
       })
 
       .then(() => {
         console.log("Authorizing  DAO_A.address");
-        return DAO_A.DAO_grantRole(
+        return NODE_STOR.grantRole(
           contractAdminRoleB32,
           DAO_A.address,
-          "NODE_STOR",
           {
             from: account1,
           }
@@ -1292,108 +1317,122 @@ contract("DAO", (accounts) => {
     });
   });
 
+  it("Should authorize account10 for nodeMinterRoleB32", () => {
+    console.log("Authorizing NODE_MGR");
+    return NODE_STOR.grantRole(DAOroleB32, account1, {
+      from: account1,
+    });
+  });
+
+  it("Should authorize account10 for nodeMinterRoleB32", () => {
+    console.log("Authorizing NODE_MGR");
+    return A_TKN.grantRole(DAOroleB32, account1, {
+      from: account1,
+    });
+  });
+
   it("Should set all permitted storage providers", () => {
     console.log("Authorizing UNCONFIGURED");
-    return DAO_A.setStorageProviders("0", "1", { from: account1 })
+    return NODE_STOR.setStorageProviders("0", "1", { from: account1 })
 
       .then(() => {
         console.log("Authorizing Mutable");
-        return DAO_A.setStorageProviders("1", "1", { from: account1 });
+        return NODE_STOR.setStorageProviders("1", "1", { from: account1 });
       })
 
       .then(() => {
         console.log("Authorizing ARWEAVE");
-        return DAO_A.setStorageProviders("2", "1", { from: account1 });
+        return NODE_STOR.setStorageProviders("2", "1", { from: account1 });
       });
   });
 
   it("Should set all baseURI(s) for storage providers", () => {
     console.log("TEST0 == UNCONFIGURED");
-    return DAO_A.setBaseURIforStorageType("0", "TEST0", { from: account1 })
+    return A_TKN.setBaseURIforStorageType("0", "TEST0", { from: account1 })
 
       .then(() => {
         console.log("TEST1 == Mutable");
-        return DAO_A.setBaseURIforStorageType("1", "TEST1", { from: account1 });
+        return A_TKN.setBaseURIforStorageType("1", "TEST1", { from: account1 });
       })
 
       .then(() => {
         console.log("TEST2 == ARWEAVE");
-        return DAO_A.setBaseURIforStorageType("2", "TEST2", { from: account1 });
+        return A_TKN.setBaseURIforStorageType("2", "TEST2", { from: account1 });
       });
   });
 
   it("Should set all permitted management types", () => {
     console.log("Authorizing Unrestricted");
-    return DAO_A.setManagementTypes("0", "1", { from: account1 })
+    return NODE_STOR.setManagementTypes("0", "1", { from: account1 })
 
       .then(() => {
         console.log("Authorizing Restricted");
-        return DAO_A.setManagementTypes("1", "1", { from: account1 });
+        return NODE_STOR.setManagementTypes("1", "1", { from: account1 });
       })
 
       .then(() => {
         console.log("Authorizing Less Restricted");
-        return DAO_A.setManagementTypes("2", "1", { from: account1 });
+        return NODE_STOR.setManagementTypes("2", "1", { from: account1 });
       })
 
       .then(() => {
         console.log("Authorizing Authorized");
-        return DAO_A.setManagementTypes("3", "1", { from: account1 });
+        return NODE_STOR.setManagementTypes("3", "1", { from: account1 });
       })
 
       .then(() => {
         console.log("Authorizing Trusted");
-        return DAO_A.setManagementTypes("4", "1", { from: account1 });
+        return NODE_STOR.setManagementTypes("4", "1", { from: account1 });
       })
 
       .then(() => {
         console.log("Authorizing Remotely Managed");
-        return DAO_A.setManagementTypes("5", "1", { from: account1 });
+        return NODE_STOR.setManagementTypes("5", "1", { from: account1 });
       })
 
       .then(() => {
         console.log("Authorizing Unconfigured");
-        return DAO_A.setManagementTypes("255", "1", { from: account1 });
+        return NODE_STOR.setManagementTypes("255", "1", { from: account1 });
       });
   });
 
   it("Should set all permitted custody types", () => {
     console.log("Authorizing NONE");
-    return DAO_A.setCustodyTypes("0", "1", { from: account1 })
+    return NODE_STOR.setCustodyTypes("0", "1", { from: account1 })
 
       .then(() => {
         console.log("Authorizing Custodial");
-        return DAO_A.setCustodyTypes("1", "1", { from: account1 });
+        return NODE_STOR.setCustodyTypes("1", "1", { from: account1 });
       })
 
       .then(() => {
         console.log("Authorizing Non-Custodial");
-        return DAO_A.setCustodyTypes("2", "1", { from: account1 });
+        return NODE_STOR.setCustodyTypes("2", "1", { from: account1 });
       })
 
       .then(() => {
         console.log("Authorizing ROOT");
-        return DAO_A.setCustodyTypes("3", "1", { from: account1 });
+        return NODE_STOR.setCustodyTypes("3", "1", { from: account1 });
       })
 
       .then(() => {
         console.log("Authorizing Verify-Non-Custodial");
-        return DAO_A.setCustodyTypes("4", "1", { from: account1 });
+        return NODE_STOR.setCustodyTypes("4", "1", { from: account1 });
       })
 
       .then(() => {
         console.log("Authorizing Wrapped or decorated ERC721");
-        return DAO_A.setCustodyTypes("5", "1", { from: account1 });
+        return NODE_STOR.setCustodyTypes("5", "1", { from: account1 });
       })
 
       .then(() => {
         console.log("Authorizing Free Custodial");
-        return DAO_A.setCustodyTypes("11", "1", { from: account1 });
+        return NODE_STOR.setCustodyTypes("11", "1", { from: account1 });
       })
 
       .then(() => {
         console.log("Authorizing Free Non-Custodial");
-        return DAO_A.setCustodyTypes("12", "1", { from: account1 });
+        return NODE_STOR.setCustodyTypes("12", "1", { from: account1 });
       });
   });
 
@@ -2046,289 +2085,50 @@ contract("DAO", (accounts) => {
       });
   });
 
-  it("Should return true", async () => {
-    "//**************************************BEGIN DAO_A TEST**********************************************/";
-    var Record = [];
-
-    return await DAO_A.DAOhasRole(
-      contractAdminRoleB32,
-      DAO_A.address,
-      "A_TKN",
-      { from: account1 },
-      function (_err, _result) {
-        if (_err) {
-        } else {
-          Record = _result;
-          console.log(Record);
-        }
-      }
-    );
-  });
-
-  it("Should return dao.address", async () => {
-    var Record = [];
-
-    return await DAO_A.DAOgetRoleAdmin(
-      contractAdminRoleB32,
-      "A_TKN",
-      { from: account1 },
-      function (_err, _result) {
-        if (_err) {
-        } else {
-          Record = _result;
-          console.log(Record);
-          console.log("DAO_A addr:", DAO_A.address);
-        }
-      }
-    );
-  });
-
-  it("Should return amount of people who have defaultAdminRole in A_TKN (2)", async () => {
-    var Record = [];
-
-    return await DAO_A.DAOgetRoleMemberCount(
-      defaultAdminRoleB32,
-      "A_TKN",
-      { from: account1 },
-      function (_err, _result) {
-        if (_err) {
-        } else {
-          Record = _result;
-          console.log(Record);
-          roleMemberCount = Record;
-        }
-      }
-    );
-  });
-
-  it("Should return who is defaultAdmin at index1", async () => {
-    var Record = [];
-
-    return await DAO_A.DAOgetRoleMember(
-      defaultAdminRoleB32,
-      "1",
-      "A_TKN",
-      { from: account1 },
-      function (_err, _result) {
-        if (_err) {
-        } else {
-          Record = _result;
-          console.log(Record);
-          roleMemberCount = Record;
-        }
-      }
-    );
-  });
-
-  it("Should pause A_TKN", () => {
-    return DAO_A.DAOpause("A_TKN", { from: account1 });
-  });
-
-  it("Should return true", async () => {
-    const result = await DAO_A.DAOpaused.call("A_TKN", { from: account1 });
-    return console.log("result", result);
-  });
-
-  it("Should unpause A_TKN", () => {
-    return DAO_A.DAOunpause("A_TKN", { from: account1 });
+  it("Should mint 30000 tokens to account1", async () => {
+    return UTIL_TKN.mint(account1, "30000000000000000000000", {
+      from: account1,
+    });
   });
 
   it("Should return false", async () => {
-    const result = await DAO_A.DAOpaused.call("A_TKN", { from: account1 });
+    const result = await A_TKN.hasRole.call(defaultAdminRoleB32, DAO_A.address, { from: account1 });
     return console.log("result", result);
   });
 
-  it("Should mint asset token to NODE_BLDR contract", () => {
-    return APP_NC.newRecord(asset1raw, rgt1, "1000003", "100", "BLAH", {
+  it("Should create Motion for grandRole in A_TKN for defaultAdminRole to DAO_A", async () => {
+    return DAO.createMotion(grantRoleSig, {
       from: account1,
     });
   });
 
-  it("Should mint asset token to NODE_BLDR contract", () => {
-    return APP_NC.modifyStatus(asset1, "51", {
+  it("Should vote for motion to gain priority", async () => {
+    return DAO.adminVote(grantRoleSig, "100000", {
       from: account1,
     });
   });
 
-  it("Should mint asset token to NODE_BLDR contract", () => {
-    return A_TKN.safeTransferFrom(account1, APP_NC.address, asset1, {
+  it("Should finalize voting", async () => {
+
+    await timeout(10000).then(() => {
+    return DAO.finalizeVoting(grantRoleSig, {
+      from: account1,
+    });
+  })
+  });
+
+  it("Should attempt to grantRole to DAO_A", async () => {
+
+    return DAO_A.DAO_grantRole(defaultAdminRoleB32, DAO_A, A_TKN.address, {
       from: account1,
     });
   });
 
-  it("Should transfer Asset token to account1", () => {
-    return DAO_A.DAOERC721Transfer(A_TKN.address, account1, asset1, "APP_NC", {
-      from: account1,
-    });
+  it("Should return true", async () => {
+    const result = await A_TKN.hasRole.call(defaultAdminRoleB32, DAO_A.address, { from: account1 });
+    return console.log("result", result);
   });
 
-  // it("Should Mint 800000 ü", () => {
-  //   console.log("Minting PRUF to account1");
-  //   return UTIL_TKN.mint(APP_NC.address, "8000000000000000000000000", {
-  //     from: account1,
-  //   });
-  // });
-
-  // it("Should transfer ü token to account1", () => {
-  //   return DAO_A.DAOERC20Transfer(
-  //     UTIL_TKN.address,
-  //     account1,
-  //     "8000000000000000000000000",
-  //     "APP_NC",
-  //     {
-  //       from: account1,
-  //     }
-  //   );
-  // });
-
-  it("Should kill trusted agent", () => {
-    console.log("Minting PRUF to account1");
-    return DAO_A.killTrustedAgent("170", {
-      from: account1,
-    });
-  });
-
-  it("Should reset node pricing", () => {
-    console.log("Minting PRUF to account1");
-    return DAO_A.setNodePricing(
-      "50000000000000000000000",
-      "50000000000000000000000",
-      {
-        from: account1,
-      }
-    );
-  });
-
-  it("Should change the share of node 1000003", () => {
-    console.log("Minting PRUF to account1");
-    return DAO_A.changeShare("1000003", "2000", {
-      from: account1,
-    });
-  });
-
-  it("Should change the share of node 1000003", () => {
-    console.log("Minting PRUF to account1");
-    return DAO_A.modifyNode(
-      "1000003",
-      "1",
-      "2",
-      "2",
-      "1",
-      "1000",
-      account000,
-      "0x0000000000000000000000000000000000000000000000000000000000000001",
-      rgt2,
-      {
-        from: account1,
-      }
-    );
-  });
-
-  it("Should change the share of node 1000003", () => {
-    console.log("Minting PRUF to account1");
-    return DAO_A.transferName("1000002", "1000003", "Non_Custodial_AC2", {
-      from: account1,
-    });
-  });
-
-  it("Should set externalId for node 1000002", () => {
-    console.log("Minting PRUF to account1");
-    return DAO_A.daoSetExternalId("1000003", A_TKN.address, asset1, {
-      from: account1,
-    });
-  });
-
-  it("Should block account5 for Node 1000003", () => {
-    console.log("Minting PRUF to account1");
-    return DAO_A.blockUser("1000003", account5, {
-      from: account1,
-    });
-  });
-
-  it("Should set NODE_STOR in NODE_TKN", () => {
-    console.log("Minting PRUF to account1");
-    return DAO_A.setNodeStorageContract(NODE_STOR.address, {
-      from: account1,
-    });
-  });
-
-  it("Should set UD contracts", () => {
-    console.log("Minting PRUF to account1");
-    return DAO_A.setUnstoppableDomainsTokenContract(
-      A_TKN.address,
-      UD_721.address,
-      {
-        from: account1,
-      }
-    );
-  });
-
-  it("Should set minimum staking period", () => {
-    console.log("Minting PRUF to account1");
-    return DAO_A.setMinimumPeriod("20", EO_STAKING.address, {
-      from: account1,
-    });
-  });
-
-  it("Should end staking", () => {
-    console.log("Minting PRUF to account1");
-    return DAO_A.endStaking("1000", EO_STAKING.address, {
-      from: account1,
-    });
-  });
-
-  it("Should set token contracts", () => {
-    console.log("Minting PRUF to account1");
-    return DAO_A.setTokenContractsEO(
-      UTIL_TKN.address,
-      STAKE_TKN.address,
-      STAKE_VAULT.address,
-      REWARDS_VAULT.address,
-      EO_STAKING.address,
-      {
-        from: account1,
-      }
-    );
-  });
-
-  it("Should set stake lv 1", () => {
-    console.log("Minting PRUF to account1");
-    return DAO_A.setStakeLevels(
-      "1",
-      "1000000000000000000000",
-      "100000000000000000000000",
-      "7",
-      "7",
-      EO_STAKING.address,
-      {
-        from: account1,
-      }
-    );
-  });
-
-  it("Should set token contracts for stake vault", () => {
-    console.log("Minting PRUF to account1");
-    return DAO_A.setTokenContracts(
-      UTIL_TKN.address,
-      STAKE_TKN.address,
-      STAKE_VAULT.address,
-      {
-        from: account1,
-      }
-    );
-  });
-
-  it("Should set token contracts for rewards vault", () => {
-    console.log("Minting PRUF to account1");
-    return DAO_A.setTokenContracts(
-      UTIL_TKN.address,
-      STAKE_TKN.address,
-      REWARDS_VAULT.address,
-      {
-        from: account1,
-      }
-    );
-  });
 
   it("Should set SharesAddress", async () => {
     console.log(

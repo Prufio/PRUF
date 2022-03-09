@@ -138,7 +138,7 @@ abstract contract BASIC is
     modifier isDAO() virtual {
         require(
             hasRole(DAO_ROLE, _msgSender()),
-            "B:MOD-IP:Calling address is not DAO"
+            "B:MOD-ID:Calling address is not DAO"
         );
         _;
     }
