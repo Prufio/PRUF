@@ -232,8 +232,8 @@ contract DAO is BASIC {
         view
         returns (Motion memory)
     {
-        bytes32 proposal = proposals[_motionIndex];
-        return motions[proposal];
+        bytes32 motion = proposals[_motionIndex];
+        return motions[motion];
         //^^^^^^^interactions^^^^^^^^^
     }
 
@@ -285,20 +285,20 @@ contract DAO is BASIC {
 
     /**
      * @dev Records data relevant for a voting event for vote history;
-     * @param _proposal proposal signature
+     * @param _motion proposal signature
      * @param _node node casting the votes
      * @param _votes votes cast
      * @param _yn for or against
      */
     function recordVotingEvent(
-        bytes32 _proposal,
+        bytes32 _motion,
         uint32 _node,
         uint32 _votes,
         uint8 _yn
     ) internal {
-        nodeVoteHistory[_proposal][_node].votes = _votes;
-        nodeVoteHistory[_proposal][_node].yn = _yn;
-        yesVoters[_proposal][_msgSender()] = _yn;
+        nodeVoteHistory[_motion][_node].votes = _votes;
+        nodeVoteHistory[_motion][_node].yn = _yn;
+        yesVoters[_motion][_msgSender()] = _yn;
         votingActivity[CLOCK.thisEpoch()][_node]++;
     }
 }
