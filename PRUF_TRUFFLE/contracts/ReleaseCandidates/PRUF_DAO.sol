@@ -135,7 +135,7 @@ contract DAO is BASIC {
     ) external {
         require(
             hasRole(DAO_VETO_ROLE, _msgSender()),
-            "DAO:MOD-IDA:Calling address does not have VETO_ROLE"
+            "DAO:AV:Calling address does not have VETO_ROLE"
         );
         require(
             motions[_motion].votesFor != 0,
