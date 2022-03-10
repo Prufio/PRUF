@@ -128,13 +128,34 @@ contract DAO_LAYER_A is BASIC {
         );
 
         DAO.verifyResolution(
-            keccak256(abi.encodePacked(signature, CLOCK.thisEpoch)),
+            keccak256(abi.encodePacked(signature, CLOCK.thisEpoch)), //CTS:EXAMINE: BROKEN CANT SEND THIS HASH, IT WILL NOT EQUAL THE ORIGINAL MOTION SIGNATURE
             _msgSender()
         );
         //^^^^^^^checks^^^^^^^^^
 
         BASIC_Interface(resolveName(_contract)).grantRole(_role, _account);
         //^^^^^^^interactions^^^^^^^^^
+    }
+
+    /**
+     * @dev command signature getter - for testing, may be redacted for production
+     */
+    function getSig_DAO_grantRoleBaseHash(
+        bytes32 _role,
+        address _account,
+        string calldata _contract
+    ) external view returns (bytes32) {
+        bytes32 baseSig = keccak256(
+            abi.encodePacked(
+                "DAO_grantRole",
+                address(this),
+                _role,
+                _account,
+                _contract
+            )
+        );
+        return baseSig; 
+        // Will not return the correct signature unless called in the correct epoch (motion.votingEpoch + 1)
     }
 
     /**
@@ -154,7 +175,7 @@ contract DAO_LAYER_A is BASIC {
                 _contract
             )
         );
-        return (keccak256(abi.encodePacked(baseSig, CLOCK.thisEpoch))); 
+        return keccak256(abi.encodePacked(baseSig, CLOCK.thisEpoch())); 
         // Will not return the correct signature unless called in the correct epoch (motion.votingEpoch + 1)
     }
 

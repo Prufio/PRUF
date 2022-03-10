@@ -141,6 +141,9 @@ contract DAO is BASIC {
 
         CLOCK_Address = STOR.resolveContractAddress("CLOCK");
         CLOCK = CLOCK_Interface(CLOCK_Address);
+
+        UTIL_TKN_Address = STOR.resolveContractAddress("UTIL_TKN");
+        UTIL_TKN = UTIL_TKN_Interface(UTIL_TKN_Address);
         //^^^^^^^interactions^^^^^^^^^
     }
 
@@ -153,6 +156,7 @@ contract DAO is BASIC {
     function createMotion(bytes32 _motion) external returns (bytes32) {
         bytes32 motion = keccak256(
             abi.encodePacked(_motion, (CLOCK.thisEpoch() + 2))
+            // _motion;
         );
         require(
             motions[motion].votesFor == 0,
@@ -323,6 +327,33 @@ contract DAO is BASIC {
      * to be called by DAO_LAYER contracts as a check prior to executing functions
      */
     function getMotionData(bytes32 _motion)
+        external
+        view
+        returns (
+            address,
+            uint32,
+            uint32,
+            uint32,
+            uint256
+        )
+    {
+        Motion memory motion = motions[_motion];
+        return (
+            motion.proposer,
+            motion.votesFor,
+            motion.votesAgainst,
+            motion.voterCount,
+            motion.votingEpoch
+        );
+        //^^^^^^^interactions^^^^^^^^^
+    }
+
+    /**
+     * @dev Getter for motions
+     * @param _motion the motion hash to get
+     * to be called by DAO_LAYER contracts as a check prior to executing functions
+     */
+    function getMotionDataStruct(bytes32 _motion)
         external
         view
         returns (Motion memory)
