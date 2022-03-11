@@ -451,7 +451,7 @@ interface DAO_LAYER_A_Interface {
     function resolveName(string calldata _name) external returns (address);
 }
 
-interface DAO_Interface {
+interface DAO_CORE_Interface {
 
     /**
      * @dev Default param setter
@@ -476,26 +476,38 @@ interface DAO_Interface {
      */
     function resolveContractAddresses() external;
 
-    /**
+     /**
      * @dev Crates an new Motion in the motions map
-     * Originating Address:
-     *      holds > .9_ pruf
      * @param _motion the hash of the referring contract address, function name, and parmaeters
+     * @param _proposer //proposing address
      */
-    function createMotion(bytes32 _motion) external returns (bytes32);
+    function adminCreateMotion(bytes32 _motion, address _proposer) external returns (bytes32);
+    
 
     /**
-     * @dev Admin voting : to be depricated ---------CAUTION:CENTRALIZATION RISK
-     * @param _motion the motion hash to be voted on
-     * @param _votes // 0 = neigh, int =
+     * @dev DAO admin will be given to a trusted contract that allows nodes to cast their delegated votes---------CAUTION:CENTRALIZATION RISK
+     * @param _motion // propsed action
+     * @param _node // node doing the voting
+     * @param _votes //# of votes
+     * @param _yn // yeah (1) or neigh (0)
+     * @param _voter //voting address
      */
     function adminVote(
         bytes32 _motion, //propsed action
         uint32 _node, //node doing the voting
         uint32 _votes, //# of votes
-        uint8 _yn // yeah (1) or neigh (0)
+        uint8 _yn, // yeah (1) or neigh (0)
+        address _voter //voting address
     ) external;
 
+    /**
+     * @dev Admin veto for incrementel transfer of power to the DAO---------CAUTION:CENTRALIZATION RISK
+     * @param _motion // propsed action
+     */
+    function adminVeto(
+        bytes32 _motion // propsed action
+    ) external;
+    
     /**
      * @dev Throws if a resolution is not approved. clears the motion if successful
      * @param _motion the motion hash to check
