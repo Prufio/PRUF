@@ -36,7 +36,7 @@ contract CLOCK is BASIC {
     event REPORT(string _msg, uint256 _seconds, uint256 _epoch);
 
     constructor() {
-        epochSeconds = 9; //DPS:CHECK CAUTION TESTING VALUE
+        epochSeconds = 6; //DPS:CHECK CAUTION TESTING VALUE
         //epochSeconds = 1 weeks;
         epochsOriginTime = block.timestamp;
     }

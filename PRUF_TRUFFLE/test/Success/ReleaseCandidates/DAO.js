@@ -2149,16 +2149,16 @@ contract("DAO", (accounts) => {
   });
 
   it("Should set grantRoleSigComplete", async () => {
+    await timeout(8000).then( async () => {
     grantRoleSigComplete = await DAO.getMotionByIndex("0", { from: account1 });
     return console.log(grantRoleSigComplete);
   });
+  });
 
   it("Should vote for motion to gain priority", async () => {
-    await timeout(10000).then(() => {
       return DAO.adminVote(grantRoleSigComplete, "1000001", "100000", "1", {
         from: account1,
       });
-    });
   });
 
   it("Should return current epoch", async () => {
@@ -2190,7 +2190,7 @@ contract("DAO", (accounts) => {
   it("Should return motionData", async () => {
     var Record = [];
 
-    // await timeout(20000).then( async () => {
+    await timeout(7000).then( async () => {
     return await DAO.getMotionData(
       grantRoleSigComplete,
       { from: account1 },
@@ -2202,17 +2202,23 @@ contract("DAO", (accounts) => {
         }
       }
     );
-    // })
+    })
   });
 
   it("Should return current epoch", async () => {
+    await timeout(7000).then(async () => {
     const result = await CLOCK.thisEpoch(
       { from: account1 }
     );
     return console.log("result", result);
   });
+  });
 
   it("Should attempt to grantRole to DAO_A", async () => {
+    const result = await CLOCK.thisEpoch(
+      { from: account1 }
+    );
+    console.log("result", result);
       return DAO_A.DAO_grantRole(defaultAdminRoleB32, DAO_A.address, "A_TKN", {
         from: account1,
       });
@@ -2226,11 +2232,22 @@ contract("DAO", (accounts) => {
   });
 
   it("Should attempt to grantRole to DAO_A", async () => {
-    await timeout(10000).then(() => {
+    // await timeout(10000).then(async () => {
+      const result = await CLOCK.thisEpoch(
+        { from: account1 }
+      );
+      console.log("result", result);
       return DAO_A.DAO_grantRole(defaultAdminRoleB32, DAO_A.address, "A_TKN", {
         from: account1,
       });
-    });
+    // });
+  });
+
+  it("Should return current epoch", async () => {
+    const result = await CLOCK.thisEpoch(
+      { from: account1 }
+    );
+    return console.log("result", result);
   });
 
   it("Should return true", async () => {
