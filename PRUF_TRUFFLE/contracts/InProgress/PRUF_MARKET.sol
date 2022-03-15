@@ -12,8 +12,7 @@ _________\/// _____________\/// _______\/// __\///////// __\/// _____________
 
 /**-----------------------------------------------------------------
  *  TO DO --- Find more needed requires?
- *  Add payment based on node info
- *  Add payment of listing price requirement
+ * NEED TO ADD NODE APPROVAL CHECKS FOR ALL RELEVANT OPERATIONS
  *
  *-----------------------------------------------------------------
  * Wraps and unwraps ERC721 compliant tokens in a PRUF market token  DPS:NEW CONTRACT DPS:CHECK
@@ -25,7 +24,6 @@ pragma solidity 0.8.7;
 
 import "../Resources/PRUF_BASIC.sol";
 
-
 contract Market is BASIC {
     address internal MARKET_TKN_Address;
     address public charityAddress;
@@ -34,6 +32,7 @@ contract Market is BASIC {
 
     mapping(uint256 => ConsignmentTag) private tag; // pruf tokenID -> original TokenID, ContractAddress
     mapping(uint256 => MarketFees) private tagFees; // pruf tokenID -> original TokenID, ContractAddress
+    mapping(bytes32 => uint256) private approvedConsignments; //consignments approved by node
 
     /**
      * @dev Verify user credentials
@@ -74,6 +73,32 @@ contract Market is BASIC {
         charityAddress = _charityAddress;
     }
 
+    /**
+     * @dev Lets a node submit approval to list items in its marketspace
+     * @param _node, //node issuing approval
+     * @param _tokenId //zero if all from contract / node
+     * @param _ERC721TokenContract contract address for token to wrap
+     * @param _nodeToApprove //zero if all pruf nodes (using PRUF contract address)
+     * @param _approved approval status ( 0 = not)
+     */
+    function approveForConsignment(
+        uint32 _node, //node issuing approval
+        uint256 _tokenId, //zero if all from contract
+        address _ERC721TokenContract,
+        uint32 _nodeToApprove, //zero if all pruf nodes (using PRUF contract address)
+        uint256 _approved // zero to unaprove. Any other = approved.
+    )
+        external
+        nonReentrant
+        whenNotPaused
+        isTokenHolder(_node, NODE_TKN_Address)
+    {
+        bytes32 consignmentHash = keccak256(
+            abi.encodePacked(_tokenId, _ERC721TokenContract, _nodeToApprove, _node)
+        );
+        approvedConsignments[consignmentHash] = _approved;
+        //^^^^^^^interactions^^^^^^^^^
+    }
 
     /**
      * @dev Wraps a pruf asset, takes original from caller (holds it in contract)
@@ -98,7 +123,11 @@ contract Market is BASIC {
         Record memory rec = getRecord(idxHash);
         require(
             rec.assetStatus == 51,
-            "M:C:PRUF asset is not status 51 (transferrable)"
+            "M:CPA:PRUF asset is not status 51 (transferrable)"
+        );
+        require(
+            ADD NODE APPROVAL CHECKS FOR ALL RELEVANT OPERATIONS,
+            "M:CPA:Asset not approved for consignment by node"
         );
         //^^^^^^^checks^^^^^^^^^
 
@@ -149,7 +178,10 @@ contract Market is BASIC {
         whenNotPaused
         isTokenHolder(_tokenId, _ERC721TokenContract)
     {
-        // without this, the dark forest gets it!
+        require(
+            ADD NODE APPROVAL CHECKS FOR ALL RELEVANT OPERATIONS,
+            "M:CT:Asset not approved for consignment by node"
+        );
         //^^^^^^^checks^^^^^^^^^
 
         ConsignmentTag memory thisTag;
@@ -206,6 +238,7 @@ contract Market is BASIC {
         whenNotPaused
         isTokenHolder(_tokenId, MARKET_TKN_Address)
     {
+        ADD NODE APPROVAL CHECKS FOR ALL RELEVANT OPERATIONS
         //^^^^^^^checks^^^^^^^
 
         tag[_tokenId].currency = _currency;
@@ -251,6 +284,7 @@ contract Market is BASIC {
     function purchaseItem(
         uint256 _tokenId //consignment token ID
     ) external nonReentrant whenNotPaused {
+        ADD NODE APPROVAL CHECKS FOR ALL RELEVANT OPERATIONS
         //^^^^^^^checks^^^^^^^^^
 
         //collect relevant information for this consignement
@@ -347,10 +381,10 @@ contract Market is BASIC {
         Costs memory listingFee = NODE_STOR.getPaymentData(_node, 1000);
         Costs memory comission = NODE_STOR.getPaymentData(_node, 1001);
 
-        theseFees.listingFeePaymentAddress = listingFee.paymentAddress; 
-        theseFees.listingFee = listingFee.serviceCost; 
-        theseFees.saleCommissionPaymentAddress = comission.paymentAddress; 
-        theseFees.saleCommission = comission.serviceCost; 
+        theseFees.listingFeePaymentAddress = listingFee.paymentAddress;
+        theseFees.listingFee = listingFee.serviceCost;
+        theseFees.saleCommissionPaymentAddress = comission.paymentAddress;
+        theseFees.saleCommission = comission.serviceCost;
         //^^^^^^^effects^^^^^^^^^
 
         return theseFees;
@@ -389,5 +423,22 @@ contract Market is BASIC {
         uint256 _amount
     ) internal {
         IERC20(_tokenContract).transferFrom(_from, _to, _amount);
+    }
+
+    /**  
+     * @dev get consignment approval
+     * @param _tokenId tokenId or zero if all approved for address / node
+     * @param _ERC721TokenContract contract address
+     * @param _approvedNode node approved by _byNode, or zero for all nodes or non-PRüF asset
+     * @param _byNode node to check approval for 
+     */
+    function getApproval(uint256 _tokenId, address _ERC721TokenContract, uint32 _approvedNode, uint _byNode)
+        public
+        view
+        returns (uint256)
+    {
+        return (approvedConsignments[keccak256(
+            abi.encodePacked(_tokenId, _ERC721TokenContract, _approvedNode, _byNode)
+        )]);
     }
 }
