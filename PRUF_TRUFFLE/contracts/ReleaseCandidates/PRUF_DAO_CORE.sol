@@ -154,7 +154,7 @@ contract DAO_CORE is BASIC {
      * @param _motion the hash of the referring contract address, function name, and parmaeters
      * @param _proposer //proposing address
      */
-    function adminCreateMotion(bytes32 _motion, address _proposer) external returns (bytes32) {
+    function adminCreateMotion(bytes32 _motion, address _proposer) external isDAOadmin returns (bytes32) {
         bytes32 motion = keccak256(
             abi.encodePacked(_motion, (CLOCK.thisEpoch() + 2))
             // _motion;
