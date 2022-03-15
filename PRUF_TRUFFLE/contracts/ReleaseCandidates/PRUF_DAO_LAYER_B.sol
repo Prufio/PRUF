@@ -45,29 +45,29 @@ contract DAO_LAYER_A is BASIC {
         NODE_TKN_Address = STOR.resolveContractAddress("NODE_TKN");
         NODE_TKN = NODE_TKN_Interface(NODE_TKN_Address);
 
-        NODE_MGR_Address = STOR.resolveContractAddress("NODE_MGR");
-        NODE_MGR = NODE_MGR_Interface(NODE_MGR_Address);
+        // NODE_MGR_Address = STOR.resolveContractAddress("NODE_MGR");
+        // NODE_MGR = NODE_MGR_Interface(NODE_MGR_Address);
 
-        NODE_STOR_Address = STOR.resolveContractAddress("NODE_STOR");
-        NODE_STOR = NODE_STOR_Interface(NODE_STOR_Address);
+        // NODE_STOR_Address = STOR.resolveContractAddress("NODE_STOR");
+        // NODE_STOR = NODE_STOR_Interface(NODE_STOR_Address);
 
-        UTIL_TKN_Address = STOR.resolveContractAddress("UTIL_TKN");
-        UTIL_TKN = UTIL_TKN_Interface(UTIL_TKN_Address);
+        // UTIL_TKN_Address = STOR.resolveContractAddress("UTIL_TKN");
+        // UTIL_TKN = UTIL_TKN_Interface(UTIL_TKN_Address);
 
-        A_TKN_Address = STOR.resolveContractAddress("A_TKN");
-        A_TKN = A_TKN_Interface(A_TKN_Address);
+        // A_TKN_Address = STOR.resolveContractAddress("A_TKN");
+        // A_TKN = A_TKN_Interface(A_TKN_Address);
 
-        ECR_MGR_Address = STOR.resolveContractAddress("ECR_MGR");
-        ECR_MGR = ECR_MGR_Interface(ECR_MGR_Address);
+        // ECR_MGR_Address = STOR.resolveContractAddress("ECR_MGR");
+        // ECR_MGR = ECR_MGR_Interface(ECR_MGR_Address);
 
-        APP_Address = STOR.resolveContractAddress("APP");
-        APP = APP_Interface(APP_Address);
+        // APP_Address = STOR.resolveContractAddress("APP");
+        // APP = APP_Interface(APP_Address);
 
-        RCLR_Address = STOR.resolveContractAddress("RCLR");
-        RCLR = RCLR_Interface(RCLR_Address);
+        // RCLR_Address = STOR.resolveContractAddress("RCLR");
+        // RCLR = RCLR_Interface(RCLR_Address);
 
-        APP_NC_Address = STOR.resolveContractAddress("APP_NC");
-        APP_NC = APP_NC_Interface(APP_NC_Address);
+        // APP_NC_Address = STOR.resolveContractAddress("APP_NC");
+        // APP_NC = APP_NC_Interface(APP_NC_Address);
 
        DAO_CORE_Address = STOR.resolveContractAddress("DAO_CORE");
         DAO_CORE = DAO_CORE_Interface(DAO_CORE_Address);
