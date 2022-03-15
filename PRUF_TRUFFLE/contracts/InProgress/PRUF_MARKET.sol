@@ -25,14 +25,11 @@ pragma solidity 0.8.7;
 
 import "../Resources/PRUF_BASIC.sol";
 
-//import "../Imports/token/ERC721/IERC721.sol";
-//import "../Imports/token/ERC20/IERC20.sol";
 
 contract Market is BASIC {
     address internal MARKET_TKN_Address;
     address public charityAddress;
-    uint256 listingPrice; //price in pruf(18) of listing a non-pruf asset
-    // uint256 defaultCommission; //as divisor: 1 = 100% ---- 10 = 10% ---- 100 = 1% ---- 1000 = 0.1%
+
     MARKET_TKN_Interface internal MARKET_TKN;
 
     mapping(uint256 => ConsignmentTag) private tag; // pruf tokenID -> original TokenID, ContractAddress
@@ -60,7 +57,7 @@ contract Market is BASIC {
      * @param _address MARKET_TKN contract address
      */
 
-    function setTokenAddress(address _address) external isContractAdmin {
+    function setMarketTokenAddress(address _address) external isContractAdmin {
         MARKET_TKN_Address = _address;
         MARKET_TKN = MARKET_TKN_Interface(MARKET_TKN_Address);
     }
@@ -77,14 +74,6 @@ contract Market is BASIC {
         charityAddress = _charityAddress;
     }
 
-    /**
-     * @dev sets the default cost in PRüF of listing a non-PRüF NFT
-     * @param _price cost in PRüF(18) of listing a non-PRüF NFT
-     */
-
-    function setListingPrice(uint32 _price) external isContractAdmin {
-        listingPrice = _price;
-    }
 
     /**
      * @dev Wraps a pruf asset, takes original from caller (holds it in contract)
@@ -353,18 +342,18 @@ contract Market is BASIC {
     {
         //^^^^^^^checks^^^^^^^^^
 
-        MarketFees memory fees;
+        MarketFees memory theseFees;
 
         Costs memory listingFee = NODE_STOR.getPaymentData(_node, 1000);
         Costs memory comission = NODE_STOR.getPaymentData(_node, 1001);
 
-        fees.listingFeePaymentAddress = listingFee.paymentAddress;
-        fees.listingFee = listingFee.serviceCost;
-        fees.saleCommissionPaymentAddress = comission.paymentAddress;
-        fees.saleCommission = comission.serviceCost;
+        theseFees.listingFeePaymentAddress = listingFee.paymentAddress; 
+        theseFees.listingFee = listingFee.serviceCost; 
+        theseFees.saleCommissionPaymentAddress = comission.paymentAddress; 
+        theseFees.saleCommission = comission.serviceCost; 
         //^^^^^^^effects^^^^^^^^^
 
-        return fees;
+        return theseFees;
         //^^^^^^^interactions^^^^^^^^^
     }
 
