@@ -42,8 +42,8 @@ contract DAO_LAYER_A is BASIC {
     {
         //^^^^^^^checks^^^^^^^^^
 
-        NODE_TKN_Address = STOR.resolveContractAddress("NODE_TKN");
-        NODE_TKN = NODE_TKN_Interface(NODE_TKN_Address);
+        // NODE_TKN_Address = STOR.resolveContractAddress("NODE_TKN");
+        // NODE_TKN = NODE_TKN_Interface(NODE_TKN_Address);
 
         NODE_MGR_Address = STOR.resolveContractAddress("NODE_MGR");
         NODE_MGR = NODE_MGR_Interface(NODE_MGR_Address);
