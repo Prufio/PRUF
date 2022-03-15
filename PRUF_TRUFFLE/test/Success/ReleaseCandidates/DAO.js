@@ -33,8 +33,10 @@ const PRUF_MAL_APP = artifacts.require("MAL_APP");
 const PRUF_UTIL_TKN = artifacts.require("UTIL_TKN");
 const PRUF_DECORATE = artifacts.require("DECORATE");
 const PRUF_WRAP = artifacts.require("WRAP");
+const PRUF_DAO_CORE = artifacts.require("DAO_CORE");
 const PRUF_DAO = artifacts.require("DAO");
 const PRUF_DAO_A = artifacts.require("DAO_LAYER_A");
+const PRUF_DAO_B = artifacts.require("DAO_LAYER_B");
 const PRUF_CLOCK = artifacts.require("CLOCK");
 
 let STOR;
@@ -55,6 +57,8 @@ let MAL_APP;
 let UTIL_TKN;
 let UD_721;
 let DAO_A;
+let DAO_B;
+let DAO_CORE;
 let DAO;
 let CLOCK;
 
@@ -137,7 +141,7 @@ let stakeAdminRoleB32;
 let grantRoleSig;
 let grantRoleSigComplete;
 
-contract("DAO", (accounts) => {
+contract("DAO_CORE", (accounts) => {
   console.log(
     "//**************************BEGIN BOOTSTRAP**************************//"
   );
@@ -504,11 +508,25 @@ contract("DAO", (accounts) => {
     WRAP = PRUF_WRAP_TEST;
   });
 
+  it("Should deploy PRUF_DAO_CORE", async () => {
+    const PRUF_DAO_CORE_TEST = await PRUF_DAO_CORE.deployed({ from: account1 });
+    console.log(PRUF_DAO_CORE_TEST.address);
+    assert(PRUF_DAO_CORE_TEST.address !== "");
+    DAO_CORE = PRUF_DAO_CORE_TEST;
+  });
+
   it("Should deploy PRUF_DAO_A", async () => {
     const PRUF_DAO_A_TEST = await PRUF_DAO_A.deployed({ from: account1 });
     console.log(PRUF_DAO_A_TEST.address);
     assert(PRUF_DAO_A_TEST.address !== "");
     DAO_A = PRUF_DAO_A_TEST;
+  });
+
+  it("Should deploy PRUF_DAO_B", async () => {
+    const PRUF_DAO_B_TEST = await PRUF_DAO_B.deployed({ from: account1 });
+    console.log(PRUF_DAO_B_TEST.address);
+    assert(PRUF_DAO_B_TEST.address !== "");
+    DAO_B = PRUF_DAO_B_TEST;
   });
 
   it("Should deploy PRUF_DAO", async () => {
@@ -579,17 +597,24 @@ contract("DAO", (accounts) => {
 
   it("Should authorize account1 as DAOadmin in DAO_A", () => {
     console.log("Authorizing account1");
-    return DAO.grantRole(DAOlayerRoleB32, DAO_A.address, { from: account1 });
+    return DAO_B.grantRole(DAOcontrollerRoleB32, account1, { from: account1 });
   });
 
-  it("Should authorize account1 as DAOadmin in DAO", () => {
+  it("Should authorize account1 as DAOadmin in DAO_A", () => {
     console.log("Authorizing account1");
-    return DAO.grantRole(DAOadminRoleB32, account1, { from: account1 });
+    return DAO_CORE.grantRole(DAOlayerRoleB32, DAO_A.address, {
+      from: account1,
+    });
+  });
+
+  it("Should authorize account1 as DAOadmin in DAO_CORE", () => {
+    console.log("Authorizing account1");
+    return DAO_CORE.grantRole(DAOadminRoleB32, DAO.address, { from: account1 });
   });
 
   // it("Should authorize account1 as DAOadmin in DAO_A", () => {
   //   console.log("Authorizing account1");
-  //   return DAO.grantRole(DAO_A, DAO_A.address, { from: account1 });
+  //   return DAO_CORE.grantRole(DAO_A, DAO_A.address, { from: account1 });
   // });
 
   it("Should authorize DAO_A as DAO_A in STOR", () => {
@@ -598,10 +623,21 @@ contract("DAO", (accounts) => {
       from: account1,
     });
   });
+  it("Should authorize DAO_B as DAO_B in STOR", () => {
+    console.log("Authorizing account1");
+    return STOR.grantRole(DAOroleB32, DAO_B.address, {
+      from: account1,
+    });
+  });
 
   it("Should add storage to DAO_A", () => {
     console.log("Adding in DAO_A");
     return DAO_A.setStorageContract(STOR.address, { from: account1 });
+  });
+
+  it("Should add storage to DAO_B", () => {
+    console.log("Adding in DAO_B");
+    return DAO_B.setStorageContract(STOR.address, { from: account1 });
   });
 
   it("Should add default contracts to storage", () => {
@@ -753,8 +789,18 @@ contract("DAO", (accounts) => {
       })
 
       .then(() => {
+        console.log("Adding in DAO_B");
+        return DAO_B.setStorageContract(STOR.address, { from: account1 });
+      })
+
+      .then(() => {
         console.log("Adding in DAO");
         return DAO.setStorageContract(STOR.address, { from: account1 });
+      })
+
+      .then(() => {
+        console.log("Adding in DAO_CORE");
+        return DAO_CORE.setStorageContract(STOR.address, { from: account1 });
       })
 
       .then(() => {
@@ -870,7 +916,7 @@ contract("DAO", (accounts) => {
 
       .then(() => {
         console.log("Adding DECORATE to storage for use in Node 0");
-        return STOR.authorizeContract("DAO", DAO.address, "0", "1", {
+        return STOR.authorizeContract("DAO_CORE", DAO_CORE.address, "0", "1", {
           from: account1,
         });
       })
@@ -965,8 +1011,18 @@ contract("DAO", (accounts) => {
       })
 
       .then(() => {
+        console.log("Resolving in DAO_B");
+        return DAO_B.resolveContractAddresses({ from: account1 });
+      })
+
+      .then(() => {
         console.log("Resolving in DAO");
         return DAO.resolveContractAddresses({ from: account1 });
+      })
+
+      .then(() => {
+        console.log("Resolving in DAO_CORE");
+        return DAO_CORE.resolveContractAddresses({ from: account1 });
       })
 
       .then(() => {
@@ -985,6 +1041,20 @@ contract("DAO", (accounts) => {
   it("Should give DAO_A assetTransferRole for APP_NC", () => {
     console.log("Authorizing account1");
     return APP_NC.grantRole(assetTransferRoleB32, DAO_A.address, {
+      from: account1,
+    });
+  });
+
+  it("Should give DAO_B assetTransferRole for APP_NC", () => {
+    console.log("Authorizing account1");
+    return UD_721.grantRole(contractAdminRoleB32, DAO_B.address, {
+      from: account1,
+    });
+  });
+
+  it("Should give DAO_B assetTransferRole for APP_NC", () => {
+    console.log("Authorizing account1");
+    return APP_NC.grantRole(assetTransferRoleB32, DAO_B.address, {
       from: account1,
     });
   });
@@ -1037,23 +1107,24 @@ contract("DAO", (accounts) => {
     });
   });
 
+  it("Should authorize all minter contracts for minting A_TKN(s)", () => {
+    console.log("Authorizing account1");
+    return A_TKN.grantRole(defaultAdminRoleB32, DAO_A.address, {
+      from: account1,
+    });
+  });
+
   // it("Should authorize all minter contracts for minting A_TKN(s)", () => {
-  // console.log("Authorizing account1");
-  // return A_TKN.grantRole(defaultAdminRoleB32, DAO_A.address, {
-  //   from: account1,
-  // })
+  //   console.log("Authorizing APP_NC");
+  //   return A_TKN.grantRole(minterRoleB32, APP_NC.address, {
+  //     from: account1,
+  //   })
 
   it("Should authorize all minter contracts for minting A_TKN(s)", () => {
-    console.log("Authorizing APP_NC");
-    return A_TKN.grantRole(minterRoleB32, APP_NC.address, {
-      from: account1,
-    })
-
-      .then(() => {
         console.log("Authorizing APP");
         return A_TKN.grantRole(minterRoleB32, APP.address, {
           from: account1,
-        });
+        // });
       })
 
       .then(() => {
@@ -2094,8 +2165,8 @@ contract("DAO", (accounts) => {
     grantRoleSig = web3.utils.soliditySha3(
       { type: "string", value: "DAO_grantRole" },
       { type: "address", value: DAO_A.address },
-      { type: "bytes32", value: defaultAdminRoleB32 },
-      { type: "address", value: DAO_A.address },
+      { type: "bytes32", value: minterRoleB32 },
+      { type: "address", value: APP_NC.address },
       { type: "string", value: "A_TKN" }
     );
     return console.log(grantRoleSig);
@@ -2105,8 +2176,8 @@ contract("DAO", (accounts) => {
     var Record = [];
 
     return await DAO_A.getSig_DAO_grantRoleBaseHash(
-      defaultAdminRoleB32,
-      DAO_A.address,
+      minterRoleB32,
+      APP_NC.address,
       "A_TKN",
       { from: account2 },
       function (_err, _result) {
@@ -2121,17 +2192,15 @@ contract("DAO", (accounts) => {
 
   it("Should return false", async () => {
     const result = await A_TKN.hasRole.call(
-      defaultAdminRoleB32,
-      DAO_A.address,
+      minterRoleB32,
+      APP_NC.address,
       { from: account1 }
     );
     return console.log("result", result);
   });
 
   it("Should return current epoch", async () => {
-    const result = await CLOCK.thisEpoch(
-      { from: account1 }
-    );
+    const result = await CLOCK.thisEpoch({ from: account1 });
     return console.log("result", result);
   });
 
@@ -2142,35 +2211,33 @@ contract("DAO", (accounts) => {
   });
 
   it("Should return current epoch", async () => {
-    const result = await CLOCK.thisEpoch(
-      { from: account1 }
-    );
+    const result = await CLOCK.thisEpoch({ from: account1 });
     return console.log("result", result);
   });
 
   it("Should set grantRoleSigComplete", async () => {
-    await timeout(8000).then( async () => {
-    grantRoleSigComplete = await DAO.getMotionByIndex("0", { from: account1 });
-    return console.log(grantRoleSigComplete);
-  });
+    await timeout(30000).then(async () => {
+      grantRoleSigComplete = await DAO_CORE.getMotionByIndex("0", {
+        from: account1,
+      });
+      return console.log(grantRoleSigComplete);
+    });
   });
 
   it("Should vote for motion to gain priority", async () => {
-      return DAO.adminVote(grantRoleSigComplete, "1000001", "100000", "1", {
-        from: account1,
-      });
+    return DAO.vote(grantRoleSigComplete, "1000001", "1", {
+      from: account1,
+    });
   });
 
   it("Should return current epoch", async () => {
-    const result = await CLOCK.thisEpoch(
-      { from: account1 }
-    );
+    const result = await CLOCK.thisEpoch({ from: account1 });
     return console.log("result", result);
   });
 
   // it("Should finalize voting", async () => {
   //   await timeout(10000).then(() => {
-  //     return DAO.finalizeVoting(grantRoleSig, {
+  //     return DAO_CORE.finalizeVoting(grantRoleSig, {
   //       from: account1,
   //     });
   //   });
@@ -2180,7 +2247,7 @@ contract("DAO", (accounts) => {
   //   var result;
   //   await timeout(15000).then( async () => {
   //     var result;
-  //   result = await DAO.getMotionData(grantRoleSigComplete, 
+  //   result = await DAO_CORE.getMotionData(grantRoleSigComplete,
   //     { from: account1 }
   //   );
   // });
@@ -2190,63 +2257,55 @@ contract("DAO", (accounts) => {
   it("Should return motionData", async () => {
     var Record = [];
 
-    await timeout(7000).then( async () => {
-    return await DAO.getMotionData(
-      grantRoleSigComplete,
-      { from: account1 },
-      function (_err, _result) {
-        if (_err) {
-        } else {
-          Record = Object.values(_result);
-          console.log(Record);
-        }
-      }
-    );
-    })
-  });
-
-  it("Should return current epoch", async () => {
     await timeout(7000).then(async () => {
-    const result = await CLOCK.thisEpoch(
-      { from: account1 }
-    );
-    return console.log("result", result);
-  });
-  });
-
-  it("Should attempt to grantRole to DAO_A", async () => {
-    const result = await CLOCK.thisEpoch(
-      { from: account1 }
-    );
-    console.log("result", result);
-      return DAO_A.DAO_grantRole(defaultAdminRoleB32, DAO_A.address, "A_TKN", {
-        from: account1,
-      });
+      return await DAO_CORE.getMotionData(
+        grantRoleSigComplete,
+        { from: account1 },
+        function (_err, _result) {
+          if (_err) {
+          } else {
+            Record = Object.values(_result);
+            console.log(Record);
+          }
+        }
+      );
+    });
   });
 
   it("Should return current epoch", async () => {
-    const result = await CLOCK.thisEpoch(
-      { from: account1 }
-    );
+    await timeout(30000).then(async () => {
+      const result = await CLOCK.thisEpoch({ from: account1 });
+      return console.log("result", result);
+    });
+  });
+
+  // it("Should attempt to grantRole to DAO_A", async () => {
+  //   const result = await CLOCK.thisEpoch(
+  //     { from: account1 }
+  //   );
+  //   console.log("result", result);
+  //     return DAO_A.DAO_grantRole(defaultAdminRoleB32, DAO_A.address, "A_TKN", {
+  //       from: account1,
+  //     });
+  // });
+
+  it("Should return current epoch", async () => {
+    const result = await CLOCK.thisEpoch({ from: account1 });
     return console.log("result", result);
   });
 
   it("Should attempt to grantRole to DAO_A", async () => {
     // await timeout(10000).then(async () => {
-      const result = await CLOCK.thisEpoch(
-        { from: account1 }
-      );
-      console.log("result", result);
-      return DAO_A.DAO_grantRole(defaultAdminRoleB32, DAO_A.address, "A_TKN", {
-        from: account1,
-      });
+    const result = await CLOCK.thisEpoch({ from: account1 });
+    console.log("result", result);
+    return DAO_A.DAO_grantRole(minterRoleB32, APP_NC.address, "A_TKN", {
+      from: account1,
+    });
     // });
   });
 
   it("Should return current epoch", async () => {
-    const result = await CLOCK.thisEpoch(
-      { from: account1 }
-    );
+    const result = await CLOCK.thisEpoch({ from: account1 });
     return console.log("result", result);
   });
 

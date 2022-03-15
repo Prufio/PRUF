@@ -23,7 +23,7 @@ import "../Resources/PRUF_CORE.sol";
 import "../Resources/RESOURCE_PRUF_EXT_INTERFACES.sol";
 import "../Resources/RESOURCE_PRUF_DAO_INTERFACES.sol";
 
-contract DAO_LAYER_A is BASIC {
+contract DAO_LAYER_B is BASIC {
 
     address internal DAO_CORE_Address;
     DAO_CORE_Interface internal DAO_CORE;
