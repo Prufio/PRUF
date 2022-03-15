@@ -436,6 +436,8 @@ contract Market is BASIC {
         public
         view
         returns (uint256)
+
+        BROKEN BECAUSE DOES NOT CHECK FOR VARIATIONS (approved for node but I give tokenID, etc. Need to check all scenarios)
     {
         return (approvedConsignments[keccak256(
             abi.encodePacked(_tokenId, _ERC721TokenContract, _approvedNode, _byNode)
