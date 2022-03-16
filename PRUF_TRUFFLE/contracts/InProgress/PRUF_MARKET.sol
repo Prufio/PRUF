@@ -12,8 +12,7 @@ _________\/// _____________\/// _______\/// __\///////// __\/// _____________
 
 /**-----------------------------------------------------------------
  *  TO DO --- Find more needed requires?
- * NEED TO ADD NODE APPROVAL CHECKS FOR ALL RELEVANT OPERATIONS
-
+ * 
  struct ConsignmentTag {
     uint256 tokenId;
     address tokenContract;
@@ -24,7 +23,8 @@ _________\/// _____________\/// _______\/// __\///////// __\/// _____________
  *
  *-----------------------------------------------------------------
  * Wraps and unwraps ERC721 compliant tokens in a PRUF market token  DPS:NEW CONTRACT DPS:CHECK
- *  MUST BE TRUSTED AGENT IN MARKET_TKN, A_tkn, Util_Tkn
+ * Allows Node operators to set fees,approve assets, contracts, or nodes to list in their node. 
+ * MUST BE TRUSTED AGENT IN MARKET_TKN, A_tkn, Util_Tkn
  *----------------------------------------------------------------*/
 
 // SPDX-License-Identifier: UNLICENSED
@@ -38,8 +38,8 @@ contract Market is BASIC {
 
     MARKET_TKN_Interface internal MARKET_TKN;
 
-    mapping(uint256 => ConsignmentTag) private tag; // pruf tokenID -> original TokenID, ContractAddress
-    mapping(uint256 => MarketFees) private tagFees; // pruf tokenID -> original TokenID, ContractAddress
+    mapping(uint256 => ConsignmentTag) private tag; // Market tokenID -> Consignment Tag
+    mapping(uint256 => MarketFees) private tagFees; // Market tokenID -> Market Fee Struct
     mapping(bytes32 => uint256) private approvedConsignments; //consignments approved by node
 
     /**
@@ -143,12 +143,14 @@ contract Market is BASIC {
         //^^^^^^^checks^^^^^^^^^
 
         ConsignmentTag memory thisTag;
-        bytes32 consignmentTag = keccak256(
-            abi.encodePacked(_tokenId, A_TKN_Address)
+
+        uint256 newTokenId = uint256(
+            keccak256(abi.encodePacked(_tokenId, A_TKN_Address))
         );
-        uint256 newTokenId = uint256(consignmentTag);
 
         string memory uri = A_TKN.tokenURI(_tokenId);
+
+        MarketFees memory theseFees = getNodeMarketFees(_consigningNode);
 
         thisTag.tokenId = _tokenId;
         thisTag.tokenContract = A_TKN_Address;
@@ -157,10 +159,19 @@ contract Market is BASIC {
         thisTag.node = _consigningNode;
 
         tag[newTokenId] = thisTag;
-        tagFees[newTokenId] = getNodeMarketFees(_consigningNode);
+        tagFees[newTokenId] = theseFees;
+
         //^^^^^^^effects^^^^^^^^^
 
         A_TKN.trustedAgentTransferFrom(_msgSender(), address(this), _tokenId); //move token to this contract using TRUSTED_AGENT_ROLE
+
+        if (theseFees.listingFee != 0) {
+            UTIL_TKN.trustedAgentTransfer( //Pay listing fee in PRüF using TAT
+                _msgSender(),
+                theseFees.listingFeePaymentAddress,
+                theseFees.listingFee
+            );
+        }
 
         MARKET_TKN.mintConsignmentToken(_msgSender(), newTokenId, uri);
         //^^^^^^^interactions^^^^^^^^^
@@ -195,13 +206,11 @@ contract Market is BASIC {
 
         ConsignmentTag memory thisTag;
 
-        bytes32 consignmentTag = keccak256(
-            abi.encodePacked(_tokenId, _ERC721TokenContract)
+        uint256 newTokenId = uint256(
+            keccak256(abi.encodePacked(_tokenId, A_TKN_Address))
         );
 
-        uint256 newTokenId = uint256(consignmentTag);
-
-        MarketFees memory fees = getNodeMarketFees(_consigningNode);
+        MarketFees memory theseFees = getNodeMarketFees(_consigningNode);
 
         thisTag.tokenId = _tokenId;
         thisTag.tokenContract = _ERC721TokenContract;
@@ -209,7 +218,7 @@ contract Market is BASIC {
         thisTag.price = _price;
 
         tag[newTokenId] = thisTag;
-        tagFees[newTokenId] = fees;
+        tagFees[newTokenId] = theseFees;
         //^^^^^^^effects^^^^^^^^^
 
         foreign721Transfer( // move token to this contract using allowance
@@ -219,11 +228,11 @@ contract Market is BASIC {
             _tokenId
         );
 
-        if (fees.listingFee != 0) {
+        if (theseFees.listingFee != 0) {
             UTIL_TKN.trustedAgentTransfer( //Pay listing fee in PRüF using TAT
                 _msgSender(),
-                fees.listingFeePaymentAddress,
-                fees.listingFee
+                theseFees.listingFeePaymentAddress,
+                theseFees.listingFee
             );
         }
 
