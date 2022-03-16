@@ -147,7 +147,7 @@ contract DAO_CORE is BASIC {
         //^^^^^^^interactions^^^^^^^^^
     }
 
-    /**
+    /** //CTS:EXAMINE shouldnt this be permissioned properly?
      * @dev Crates an new Motion in the motions map
      * Originating Address:
      *      holds > .9_ pruf
