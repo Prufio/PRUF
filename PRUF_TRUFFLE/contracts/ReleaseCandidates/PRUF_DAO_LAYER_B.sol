@@ -114,7 +114,7 @@ contract DAO_LAYER_B is BASIC {
     function DAO_setUnstoppableDomainsTokenContract(
         address _erc721Address,
         address _UD_721ContractAddress
-    ) external virtual  nonReentrant {
+    ) external virtual nonReentrant {
         bytes32 signature = keccak256(
             abi.encodePacked(
                 "DAO_setUnstoppableDomainsTokenContract",
@@ -392,7 +392,6 @@ contract DAO_LAYER_B is BASIC {
      */
     function DAO_setNewEpochInterval(uint256 _epochSeconds)
         external
-        
         nonReentrant
     {
         bytes32 signature = keccak256(
@@ -411,8 +410,6 @@ contract DAO_LAYER_B is BASIC {
         CLOCK.setNewEpochInterval(_epochSeconds);
         //^^^^^^^Interactions^^^^^^^^^
     }
-
-    //---------------------------------INTERNAL FUNCTIONS
 
     /**
      * @dev name resolver
