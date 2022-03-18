@@ -84,7 +84,7 @@ contract DAO_CORE is BASIC {
 
         require(
             _quorum < ((mintedNodes / 20) + 10),
-            "DAO_CORE:SPM:proposed Quorum > 5% (+10) of the indigenous node population"
+            "DAO_CORE:SQ:proposed Quorum > 5% (+10) of the indigenous node population"
         );
         //^^^^^^^checks^^^^^^^^^
 
@@ -114,7 +114,7 @@ contract DAO_CORE is BASIC {
     function setMaxVote(uint32 _max) external isDAOlayer {
         require(
             (_max < 100000000) && _max <= (maximumVote * 2),
-            "DAO_CORE:SPM:Maximum vote cannot be more than 100 million or more than twice the previous value"
+            "DAO_CORE:SMV:Maximum vote cannot be more than 100 million or more than twice the previous value"
         );
         //^^^^^^^checks^^^^^^^^^
 
@@ -147,17 +147,16 @@ contract DAO_CORE is BASIC {
         //^^^^^^^interactions^^^^^^^^^
     }
 
-    /** //CTS:EXAMINE shouldnt this be permissioned properly?
+    /**
      * @dev Crates an new Motion in the motions map
      * Originating Address:
      *      holds > .9_ pruf
      * @param _motion the hash of the referring contract address, function name, and parmaeters
-     * @param _proposer //proposing address
+     * @param _proposer proposing address
      */
     function adminCreateMotion(bytes32 _motion, address _proposer) external isDAOadmin returns (bytes32) {
         bytes32 motion = keccak256(
             abi.encodePacked(_motion, (CLOCK.thisEpoch() + 2))
-            // _motion;
         );
         require(
             motions[motion].votesFor == 0,
@@ -189,7 +188,7 @@ contract DAO_CORE is BASIC {
     ) external isDAOadmin{
         require(
             motions[_motion].votesFor != 0,
-            "DAO_CORE:AV:Motion not in 'proposed' status"
+            "DAO_CORE:AVO:Motion not in 'proposed' status"
         );
         //^^^^^^^checks^^^^^^^^^
 
@@ -275,7 +274,7 @@ contract DAO_CORE is BASIC {
 
         require(
             thisMotion.proposer != address(0),
-            "DAO_CORE:VR:resolution has already been exercised"
+            "DAO_CORE:VR:resolution has already been exercised" //CTS:EXAMINE shouldnt this br 'already been exercised or does not exist'
         );
 
         require(

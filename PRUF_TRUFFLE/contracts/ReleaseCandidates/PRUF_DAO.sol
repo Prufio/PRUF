@@ -68,7 +68,7 @@ contract DAO is BASIC {
             "DAO:CM:Proposer must hold =>1 PRUF"
         );
         //^^^^^^^checks^^^^^^^^^
-        return (DAO_CORE.adminCreateMotion(_motion, _msgSender()));
+        return DAO_CORE.adminCreateMotion(_motion, _msgSender());
         //^^^^^^^effects^^^^^^^^^
     }
 
@@ -90,7 +90,7 @@ contract DAO is BASIC {
     }
 
     /**
-    /* Placeholder voting until node staking becomes complete. 
+     * Placeholder voting until node staking becomes complete. 
      * The eventual contract will wuery the staked amount to calculate voting power.
      * @dev Node voting
      * @param _motion // propsed action
