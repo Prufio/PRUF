@@ -27,8 +27,8 @@ contract DAO is BASIC {
 
     bytes32 public constant DAO_VETO_ROLE = keccak256("DAO_VETO_ROLE");
 
-    address internal DAO_CORE_Address;
-    DAO_CORE_Interface internal DAO_CORE;
+    address internal DAO_STOR_Address;
+    DAO_STOR_Interface internal DAO_STOR;
 
     event REPORT(bytes32 _motion, string _msg);
 
@@ -50,14 +50,14 @@ contract DAO is BASIC {
         UTIL_TKN_Address = STOR.resolveContractAddress("UTIL_TKN");
         UTIL_TKN = UTIL_TKN_Interface(UTIL_TKN_Address);
 
-        DAO_CORE_Address = STOR.resolveContractAddress("DAO_CORE");
-        DAO_CORE = DAO_CORE_Interface(DAO_CORE_Address);
+        DAO_STOR_Address = STOR.resolveContractAddress("DAO_STOR");
+        DAO_STOR = DAO_STOR_Interface(DAO_STOR_Address);
 
         //^^^^^^^interactions^^^^^^^^^
     }
 
     /**
-     * @dev Crates an new Motion in DAO_CORE
+     * @dev Crates an new Motion in DAO_STOR
      * Originating Address:
      *      holds > .9_ pruf
      * @param _motion the hash of the referring contract address, function name, and parmaeters
@@ -68,7 +68,7 @@ contract DAO is BASIC {
             "DAO:CM:Proposer must hold =>1 PRUF"
         );
         //^^^^^^^checks^^^^^^^^^
-        return DAO_CORE.adminCreateMotion(_motion, _msgSender());
+        return DAO_STOR.adminCreateMotion(_motion, _msgSender());
         //^^^^^^^effects^^^^^^^^^
     }
 
@@ -85,7 +85,7 @@ contract DAO is BASIC {
         );
         //^^^^^^^checks^^^^^^^^^
 
-        DAO_CORE.adminVeto(_motion);
+        DAO_STOR.adminVeto(_motion);
         //^^^^^^^interactions^^^^^^^^^
     }
 
@@ -108,7 +108,7 @@ contract DAO is BASIC {
         );
         //^^^^^^^checks^^^^^^^^^
 
-        DAO_CORE.adminVote(_motion, _node, 1000, _yn, _msgSender()); // Votes with 1000 votes only
+        DAO_STOR.adminVote(_motion, _node, 1000, _yn, _msgSender()); // Votes with 1000 votes only
         //^^^^^^^interactions^^^^^^^^^
     }
 }

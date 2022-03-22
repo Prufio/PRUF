@@ -22,7 +22,7 @@ pragma solidity 0.8.7;
 import "../Resources/PRUF_CORE.sol";
 import "../Resources/RESOURCE_PRUF_DAO_INTERFACES.sol";
 
-contract DAO_CORE is BASIC {
+contract DAO_STOR is BASIC {
     //SET THESE UNDER DAO CONTROL
     uint32 public quorum = 1;
     uint32 public passingMargin = 60; //in percent
@@ -55,7 +55,7 @@ contract DAO_CORE is BASIC {
     modifier isDAOadmin() {
         require(
             hasRole(DAO_ADMIN_ROLE, _msgSender()),
-            "DAO_CORE:MOD-IDA:Calling address is not DAO admin"
+            "DAO_STOR:MOD-IDA:Calling address is not DAO admin"
         );
         _;
     }
@@ -68,7 +68,7 @@ contract DAO_CORE is BASIC {
     modifier isDAOlayer() {
         require(
             hasRole(DAO_LAYER_ROLE, _msgSender()),
-            "DAO_CORE:MOD-IDL:Calling address is not DAO layer contract"
+            "DAO_STOR:MOD-IDL:Calling address is not DAO layer contract"
         );
         _;
     }
@@ -84,7 +84,7 @@ contract DAO_CORE is BASIC {
 
         require(
             _quorum < ((mintedNodes / 20) + 10),
-            "DAO_CORE:SQ:proposed Quorum > 5% (+10) of the indigenous node population"
+            "DAO_STOR:SQ:proposed Quorum > 5% (+10) of the indigenous node population"
         );
         //^^^^^^^checks^^^^^^^^^
 
@@ -99,7 +99,7 @@ contract DAO_CORE is BASIC {
     function setPassingMargin(uint32 _passingMargin) external isDAOlayer {
         require(
             (_passingMargin > 50) && (passingMargin < 71),
-            "DAO_CORE:SPM:Passing margin must be 51-70"
+            "DAO_STOR:SPM:Passing margin must be 51-70"
         );
         //^^^^^^^checks^^^^^^^^^
 
@@ -114,7 +114,7 @@ contract DAO_CORE is BASIC {
     function setMaxVote(uint32 _max) external isDAOlayer {
         require(
             (_max < 100000000) && _max <= (maximumVote * 2),
-            "DAO_CORE:SMV:Maximum vote cannot be more than 100 million or more than twice the previous value"
+            "DAO_STOR:SMV:Maximum vote cannot be more than 100 million or more than twice the previous value"
         );
         //^^^^^^^checks^^^^^^^^^
 
@@ -160,7 +160,7 @@ contract DAO_CORE is BASIC {
         );
         require(
             motions[motion].votesFor == 0,
-            "DAO_CORE:CM:Motion exists - wait for or finalize motion in progress"
+            "DAO_STOR:CM:Motion exists - wait for or finalize motion in progress"
         ); // Motion must not be currently proposed or approved
 
         //^^^^^^^checks^^^^^^^^^
@@ -188,7 +188,7 @@ contract DAO_CORE is BASIC {
     ) external isDAOadmin{
         require(
             motions[_motion].votesFor != 0,
-            "DAO_CORE:AVO:Motion not in 'proposed' status"
+            "DAO_STOR:AVO:Motion not in 'proposed' status"
         );
         //^^^^^^^checks^^^^^^^^^
 
@@ -216,18 +216,18 @@ contract DAO_CORE is BASIC {
     ) external isDAOadmin {
         require(
             motions[_motion].votesFor != 0,
-            "DAO_CORE:AV:Motion not in 'proposed' status"
+            "DAO_STOR:AV:Motion not in 'proposed' status"
         );
         require(
             CLOCK.thisEpoch() == (motions[_motion].votingEpoch),
-            "DAO_CORE:AV:Voting window not open"
+            "DAO_STOR:AV:Voting window not open"
         );
         require(
             nodeVoteHistory[_motion][_node].votes == 0,
-            "DAO_CORE:AV:Node has already cast a vote on this motion"
+            "DAO_STOR:AV:Node has already cast a vote on this motion"
         );
         require( (_yn == 0) || (_yn == 1),
-        "DAO_CORE:AV:vote type must be 1 or 0 only"
+        "DAO_STOR:AV:vote type must be 1 or 0 only"
         );
         //^^^^^^^checks^^^^^^^^^
 
@@ -269,35 +269,35 @@ contract DAO_CORE is BASIC {
 
         require(
             CLOCK.thisEpoch() == thisMotion.votingEpoch + 1,
-            "DAO_CORE:VR:motion is not valid in this epoch"
+            "DAO_STOR:VR:motion is not valid in this epoch"
         );
 
         require(
             thisMotion.proposer != address(0),
-            "DAO_CORE:VR:resolution has already been exercised" //CTS:EXAMINE shouldnt this br 'already been exercised or does not exist'
+            "DAO_STOR:VR:resolution has already been exercised" //CTS:EXAMINE shouldnt this br 'already been exercised or does not exist'
         );
 
         require(
             thisMotion.votesFor > thisMotion.votesAgainst,
-            "DAO_CORE:VR:specified motion was rejected by majority"
+            "DAO_STOR:VR:specified motion was rejected by majority"
         );
 
         require(
             thisMotion.voterCount >= quorum,
-            "DAO_CORE:VR:specified motion failed to gain a quorum"
+            "DAO_STOR:VR:specified motion failed to gain a quorum"
         );
 
         require(
             ((uint256(thisMotion.votesFor) * 100) /
                 (uint256(thisMotion.votesFor) +
                     uint256(thisMotion.votesAgainst))) >= passingMargin,
-            "DAO_CORE:VR:specified motion failed to gain required majority margin"
+            "DAO_STOR:VR:specified motion failed to gain required majority margin"
         );
 
         require(
             (thisMotion.proposer == _caller) ||
                 (yesVoters[_motion][_caller] == 1),
-            "DAO_CORE:VR:Caller not authorized to execute resolution"
+            "DAO_STOR:VR:Caller not authorized to execute resolution"
         );
 
         motions[_motion].proposer = address(0); //mark as exercised
