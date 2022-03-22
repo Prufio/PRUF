@@ -192,7 +192,7 @@ contract DAO_STOR is BASIC {
     function adminVeto(bytes32 _motion) external isDAOadmin {
         require(
             motions[_motion].votesFor != 0,
-            "DAO_STOR:AVO:Motion not in 'proposed' status"
+            "DAO_STOR:AVeto:Motion not in 'proposed' status"
         );
         //^^^^^^^checks^^^^^^^^^
 
@@ -220,19 +220,19 @@ contract DAO_STOR is BASIC {
     ) external isDAOadmin {
         require(
             motions[_motion].votesFor != 0,
-            "DAO_STOR:AV:Motion not in 'proposed' status"
+            "DAO_STOR:AVote:Motion not in 'proposed' status"
         );
         require(
             CLOCK.thisEpoch() == (motions[_motion].votingEpoch),
-            "DAO_STOR:AV:Voting window not open"
+            "DAO_STOR:AVote:Voting window not open"
         );
         require(
             nodeVoteHistory[_motion][_node].votes == 0,
-            "DAO_STOR:AV:Node has already cast a vote on this motion"
+            "DAO_STOR:AVote:Node has already cast a vote on this motion"
         );
         require(
             (_yn == 0) || (_yn == 1),
-            "DAO_STOR:AV:vote type must be 1 or 0 only"
+            "DAO_STOR:AVote:vote type must be 1 or 0 only"
         );
         //^^^^^^^checks^^^^^^^^^
 
