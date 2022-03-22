@@ -25,8 +25,8 @@ import "../Resources/RESOURCE_PRUF_DAO_INTERFACES.sol";
 
 contract DAO_LAYER_B is BASIC {
 
-    address internal DAO_CORE_Address;
-    DAO_CORE_Interface internal DAO_CORE;
+    address internal DAO_STOR_Address;
+    DAO_STOR_Interface internal DAO_STOR;
 
     address internal CLOCK_Address;
     CLOCK_Interface internal CLOCK;
@@ -69,8 +69,8 @@ contract DAO_LAYER_B is BASIC {
         // APP_NC_Address = STOR.resolveContractAddress("APP_NC");
         // APP_NC = APP_NC_Interface(APP_NC_Address);
 
-       DAO_CORE_Address = STOR.resolveContractAddress("DAO_CORE");
-        DAO_CORE = DAO_CORE_Interface(DAO_CORE_Address);
+       DAO_STOR_Address = STOR.resolveContractAddress("DAO_STOR");
+        DAO_STOR = DAO_STOR_Interface(DAO_STOR_Address);
 
         CLOCK_Address = STOR.resolveContractAddress("CLOCK");
         CLOCK = CLOCK_Interface(CLOCK_Address);
@@ -87,17 +87,14 @@ contract DAO_LAYER_B is BASIC {
         
         nonReentrant
     {
-        bytes32 signature = keccak256(
+         verifySig(
             abi.encodePacked(
                 "DAO_setNodeStorageContract",
                 address(this),
                 _nodeStorageAddress
             )
         );
-        DAO_CORE.verifyResolution(
-            keccak256(abi.encodePacked(signature, CLOCK.thisEpoch())),
-            _msgSender()
-        );
+         
         //^^^^^^^checks^^^^^^^^^
 
         NODE_TKN.setNodeStorageContract(_nodeStorageAddress);
@@ -115,7 +112,7 @@ contract DAO_LAYER_B is BASIC {
         address _erc721Address,
         address _UD_721ContractAddress
     ) external virtual nonReentrant {
-        bytes32 signature = keccak256(
+         verifySig(
             abi.encodePacked(
                 "DAO_setUnstoppableDomainsTokenContract",
                 address(this),
@@ -123,10 +120,7 @@ contract DAO_LAYER_B is BASIC {
                 _UD_721ContractAddress
             )
         );
-        DAO_CORE.verifyResolution(
-            keccak256(abi.encodePacked(signature, CLOCK.thisEpoch())),
-            _msgSender()
-        );
+         
         //^^^^^^^checks^^^^^^^^^
 
         UD_721_Interface(_UD_721ContractAddress)
@@ -145,7 +139,7 @@ contract DAO_LAYER_B is BASIC {
         uint256 _minUpgradeInterval,
         address _EO_STAKING_Address
     ) external  nonReentrant {
-        bytes32 signature = keccak256(
+         verifySig(
             abi.encodePacked(
                 "DAO_setMinimumPeriod",
                 address(this),
@@ -153,10 +147,7 @@ contract DAO_LAYER_B is BASIC {
                 _EO_STAKING_Address
             )
         );
-        DAO_CORE.verifyResolution(
-            keccak256(abi.encodePacked(signature, CLOCK.thisEpoch())),
-            _msgSender()
-        );
+         
         //^^^^^^^checks^^^^^^^^^
 
         EO_STAKING_Interface(_EO_STAKING_Address).setMinimumPeriod(
@@ -175,7 +166,7 @@ contract DAO_LAYER_B is BASIC {
         
         nonReentrant
     {
-        bytes32 signature = keccak256(
+         verifySig(
             abi.encodePacked(
                 "DAO_endStaking",
                 address(this),
@@ -183,10 +174,7 @@ contract DAO_LAYER_B is BASIC {
                 _EO_STAKING_Address
             )
         );
-        DAO_CORE.verifyResolution(
-            keccak256(abi.encodePacked(signature, CLOCK.thisEpoch())),
-            _msgSender()
-        );
+         
         //^^^^^^^checks^^^^^^^^^
 
         EO_STAKING_Interface(_EO_STAKING_Address).endStaking(_delay);
@@ -208,7 +196,7 @@ contract DAO_LAYER_B is BASIC {
         address _rewardsVaultAddress,
         address _EO_STAKING_Address
     ) external  nonReentrant {
-        bytes32 signature = keccak256(
+         verifySig(
             abi.encodePacked(
                 "DAO_endStaking",
                 address(this),
@@ -219,10 +207,7 @@ contract DAO_LAYER_B is BASIC {
                 _EO_STAKING_Address
             )
         );
-        DAO_CORE.verifyResolution(
-            keccak256(abi.encodePacked(signature, CLOCK.thisEpoch())),
-            _msgSender()
-        );
+         
         //^^^^^^^checks^^^^^^^^^
 
         EO_STAKING_Interface(_EO_STAKING_Address).setTokenContracts(
@@ -251,7 +236,7 @@ contract DAO_LAYER_B is BASIC {
         uint256 _bonusPercentage,
         address _EO_STAKING_Address
     ) external  nonReentrant {
-        bytes32 signature = keccak256(
+         verifySig(
             abi.encodePacked(
                 "DAO_setStakeLevels",
                 address(this),
@@ -263,10 +248,7 @@ contract DAO_LAYER_B is BASIC {
                 _EO_STAKING_Address
             )
         );
-        DAO_CORE.verifyResolution(
-            keccak256(abi.encodePacked(signature, CLOCK.thisEpoch())),
-            _msgSender()
-        );
+         
         //^^^^^^^checks^^^^^^^^^
 
         EO_STAKING_Interface(_EO_STAKING_Address).setStakeLevels(
@@ -292,7 +274,7 @@ contract DAO_LAYER_B is BASIC {
         address _stakeAddress,
         address vaultContractAddress
     ) external  nonReentrant {
-        bytes32 signature = keccak256(
+         verifySig(
             abi.encodePacked(
                 "DAO_setTokenContracts",
                 address(this),
@@ -301,10 +283,7 @@ contract DAO_LAYER_B is BASIC {
                 vaultContractAddress
             )
         );
-        DAO_CORE.verifyResolution(
-            keccak256(abi.encodePacked(signature, CLOCK.thisEpoch())),
-            _msgSender()
-        );
+         
         //^^^^^^^checks^^^^^^^^^
 
         REWARDS_VAULT_Interface(vaultContractAddress).setTokenContracts(
@@ -321,20 +300,17 @@ contract DAO_LAYER_B is BASIC {
      * @param _quorum new value for minimum required voters to create a quorum
      */
     function DAO_setQuorum(uint32 _quorum) external nonReentrant {
-        bytes32 signature = keccak256(
+         verifySig(
             abi.encodePacked(
                 "DAO_setQuorum",
                 address(this),
                 _quorum
             )
         );
-        DAO_CORE.verifyResolution(
-            keccak256(abi.encodePacked(signature, CLOCK.thisEpoch())),
-            _msgSender()
-        );
+         
         //^^^^^^^checks^^^^^^^^^
 
-        DAO_CORE.setQuorum(_quorum);
+        DAO_STOR.setQuorum(_quorum);
         //^^^^^^^interactions^^^^^^^^^
     }
 
@@ -343,20 +319,17 @@ contract DAO_LAYER_B is BASIC {
      * @param _passingMargin new value for minimum required passing margin for votes, in whole percents
      */
     function DAO_setPassingMargin(uint32 _passingMargin) external nonReentrant {
-        bytes32 signature = keccak256(
+         verifySig(
             abi.encodePacked(
                 "DAO_setQuorum",
                 address(this),
                 _passingMargin
             )
         );
-        DAO_CORE.verifyResolution(
-            keccak256(abi.encodePacked(signature, CLOCK.thisEpoch())),
-            _msgSender()
-        );
+         
         //^^^^^^^checks^^^^^^^^^
 
-        DAO_CORE.setPassingMargin(_passingMargin);
+        DAO_STOR.setPassingMargin(_passingMargin);
         //^^^^^^^interactions^^^^^^^^^
     }
 
@@ -365,20 +338,17 @@ contract DAO_LAYER_B is BASIC {
      * @param _max new value for maximum votees per node
      */
     function DAO_setMaxVote(uint32 _max) external nonReentrant {
-        bytes32 signature = keccak256(
+         verifySig(
             abi.encodePacked(
                 "DAO_setQuorum",
                 address(this),
                 _max
             )
         );
-        DAO_CORE.verifyResolution(
-            keccak256(abi.encodePacked(signature, CLOCK.thisEpoch())),
-            _msgSender()
-        );
+         
         //^^^^^^^checks^^^^^^^^^
 
-        DAO_CORE.setMaxVote(_max);
+        DAO_STOR.setMaxVote(_max);
         //^^^^^^^effects^^^^^^^^^
     }
 
@@ -394,21 +364,33 @@ contract DAO_LAYER_B is BASIC {
         external
         nonReentrant
     {
-        bytes32 signature = keccak256(
+         verifySig(
             abi.encodePacked(
                 "DAO_setNodeStorageContract",
                 address(this),
                 _epochSeconds
             )
         );
-        DAO_CORE.verifyResolution(
-            keccak256(abi.encodePacked(signature, CLOCK.thisEpoch())),
-            _msgSender()
-        );
+         
         //^^^^^^^checks^^^^^^^^^
 
         CLOCK.setNewEpochInterval(_epochSeconds);
         //^^^^^^^Interactions^^^^^^^^^
+    }
+
+
+//-----------------INTERNAL FUNCTIONS
+    /**
+     * @dev Makes signature hash and verifies against DAO_STOR
+     * @param _sigArray signature of call to approve
+     */
+    function verifySig(bytes memory _sigArray) internal {
+        DAO_STOR.verifyResolution(
+            keccak256(
+                abi.encodePacked(keccak256(_sigArray), CLOCK.thisEpoch())
+            ),
+            _msgSender()
+        );
     }
 
     /**
