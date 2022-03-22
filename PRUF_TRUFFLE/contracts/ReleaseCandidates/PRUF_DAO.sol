@@ -78,7 +78,7 @@ contract DAO is BASIC {
     ) external {
         require(
             hasRole(DAO_VETO_ROLE, _msgSender()),
-            "DAO:AV:Calling address does not have VETO_ROLE"
+            "DAO:VETO:Calling address does not have VETO_ROLE"
         );
         //^^^^^^^checks^^^^^^^^^
 
