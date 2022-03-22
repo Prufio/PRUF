@@ -94,7 +94,6 @@ contract DAO_LAYER_B is BASIC {
                 _UD_721ContractAddress
             )
         );
-
         //^^^^^^^checks^^^^^^^^^
 
         UD_721_Interface(_UD_721ContractAddress)
@@ -121,7 +120,6 @@ contract DAO_LAYER_B is BASIC {
                 _EO_STAKING_Address
             )
         );
-
         //^^^^^^^checks^^^^^^^^^
 
         EO_STAKING_Interface(_EO_STAKING_Address).setMinimumPeriod(
@@ -147,7 +145,6 @@ contract DAO_LAYER_B is BASIC {
                 _EO_STAKING_Address
             )
         );
-
         //^^^^^^^checks^^^^^^^^^
 
         EO_STAKING_Interface(_EO_STAKING_Address).endStaking(_delay);
@@ -180,7 +177,6 @@ contract DAO_LAYER_B is BASIC {
                 _EO_STAKING_Address
             )
         );
-
         //^^^^^^^checks^^^^^^^^^
 
         EO_STAKING_Interface(_EO_STAKING_Address).setTokenContracts(
@@ -221,7 +217,6 @@ contract DAO_LAYER_B is BASIC {
                 _EO_STAKING_Address
             )
         );
-
         //^^^^^^^checks^^^^^^^^^
 
         EO_STAKING_Interface(_EO_STAKING_Address).setStakeLevels(
@@ -256,7 +251,6 @@ contract DAO_LAYER_B is BASIC {
                 vaultContractAddress
             )
         );
-
         //^^^^^^^checks^^^^^^^^^
 
         REWARDS_VAULT_Interface(vaultContractAddress).setTokenContracts(

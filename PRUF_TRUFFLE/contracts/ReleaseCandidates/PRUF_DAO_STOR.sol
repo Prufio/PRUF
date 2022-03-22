@@ -283,7 +283,7 @@ contract DAO_STOR is BASIC {
 
         require(
             thisMotion.proposer != address(0),
-            "DAO_STOR:VR:resolution has already been exercised" //CTS:EXAMINE shouldnt this br 'already been exercised or does not exist'
+            "DAO_STOR:VR:resolution has already been exercised or does not exist"
         );
 
         require(

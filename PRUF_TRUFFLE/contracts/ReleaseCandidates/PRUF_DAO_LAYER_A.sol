@@ -92,7 +92,6 @@ contract DAO_LAYER_A is BASIC {
                 _nodeStorageAddress
             )
         );
-
         //^^^^^^^checks^^^^^^^^^
 
         NODE_TKN.setNodeStorageContract(_nodeStorageAddress);
@@ -117,7 +116,6 @@ contract DAO_LAYER_A is BASIC {
                 _URI
             )
         );
-
         //^^^^^^^checks^^^^^^^^^
 
         A_TKN.setBaseURIforStorageType(_storageProvider, _URI);
@@ -137,9 +135,7 @@ contract DAO_LAYER_A is BASIC {
     function DAO_A_TKN_killTrustedAgent(uint256 _key) external nonReentrant {
         verifySig(
             abi.encodePacked("DAO_A_TKN_killTrustedAgent", address(this), _key)
-        );
-
-        //^^^^^^^checks^^^^^^^^^
+        ); //^^^^^^^checks^^^^^^^^^
 
         A_TKN.killTrustedAgent(_key);
         //^^^^^^^interactions^^^^^^^^^
@@ -164,7 +160,6 @@ contract DAO_LAYER_A is BASIC {
                 _newNodeBurn
             )
         );
-
         //^^^^^^^checks^^^^^^^^^
 
         NODE_MGR.setNodePricing(_newNodePrice, _newNodeBurn);
@@ -190,7 +185,6 @@ contract DAO_LAYER_A is BASIC {
                 _status
             )
         );
-
         //^^^^^^^checks^^^^^^^^^
 
         NODE_STOR.setStorageProviders(_storageProvider, _status);
@@ -214,7 +208,6 @@ contract DAO_LAYER_A is BASIC {
                 _status
             )
         );
-
         //^^^^^^^checks^^^^^^^^^
 
         NODE_STOR.setManagementTypes(_managementType, _status);
@@ -237,9 +230,7 @@ contract DAO_LAYER_A is BASIC {
                 _custodyType,
                 _status
             )
-        );
-
-        //^^^^^^^checks^^^^^^^^^
+        ); //^^^^^^^checks^^^^^^^^^
 
         NODE_STOR.setCustodyTypes(_custodyType, _status);
         //^^^^^^^interactions^^^^^^^^^
@@ -264,7 +255,6 @@ contract DAO_LAYER_A is BASIC {
                 _newDiscount
             )
         );
-
         //^^^^^^^checks^^^^^^^^^
 
         NODE_STOR.changeShare(_node, _newDiscount);
@@ -294,7 +284,6 @@ contract DAO_LAYER_A is BASIC {
                 _thisName
             )
         );
-
         //^^^^^^^checks^^^^^^^^^
 
         NODE_STOR.transferName(_fromNode, _toNode, _thisName);
@@ -340,7 +329,6 @@ contract DAO_LAYER_A is BASIC {
                 _CAS2
             )
         );
-
         //^^^^^^^checks^^^^^^^^^
 
         NODE_STOR.modifyNode(
@@ -370,7 +358,6 @@ contract DAO_LAYER_A is BASIC {
         verifySig(
             abi.encodePacked("DAO_blockUser", address(this), _node, _addrHash)
         );
-
         //^^^^^^^checks^^^^^^^^^
 
         NODE_STOR.blockUser(_node, _addrHash);
@@ -397,7 +384,6 @@ contract DAO_LAYER_A is BASIC {
                 _tokenId
             )
         );
-
         //^^^^^^^checks^^^^^^^^^
 
         NODE_STOR.daoSetExternalId(_node, _tokenContractAddress, _tokenId);
@@ -430,7 +416,6 @@ contract DAO_LAYER_A is BASIC {
                 _contractAuthLevel
             )
         );
-
         //^^^^^^^checks^^^^^^^^^
 
         STOR.authorizeContract(
@@ -461,8 +446,7 @@ contract DAO_LAYER_A is BASIC {
                 _name,
                 _contractAuthLevel
             )
-        );
-        //^^^^^^^checks^^^^^^^^^
+        ); //^^^^^^^checks^^^^^^^^^
 
         STOR.addDefaultContracts(_contractNumber, _name, _contractAuthLevel);
         //^^^^^^^interactions^^^^^^^^^
