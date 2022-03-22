@@ -41,8 +41,8 @@ contract DAO_LAYER_A is BASIC {
     {
         //^^^^^^^checks^^^^^^^^^
 
-        // NODE_TKN_Address = STOR.resolveContractAddress("NODE_TKN");
-        // NODE_TKN = NODE_TKN_Interface(NODE_TKN_Address);
+        NODE_TKN_Address = STOR.resolveContractAddress("NODE_TKN");
+        NODE_TKN = NODE_TKN_Interface(NODE_TKN_Address);
 
         NODE_MGR_Address = STOR.resolveContractAddress("NODE_MGR");
         NODE_MGR = NODE_MGR_Interface(NODE_MGR_Address);
@@ -50,23 +50,23 @@ contract DAO_LAYER_A is BASIC {
         NODE_STOR_Address = STOR.resolveContractAddress("NODE_STOR");
         NODE_STOR = NODE_STOR_Interface(NODE_STOR_Address);
 
-        UTIL_TKN_Address = STOR.resolveContractAddress("UTIL_TKN");
-        UTIL_TKN = UTIL_TKN_Interface(UTIL_TKN_Address);
+        // UTIL_TKN_Address = STOR.resolveContractAddress("UTIL_TKN");
+        // UTIL_TKN = UTIL_TKN_Interface(UTIL_TKN_Address);
 
         A_TKN_Address = STOR.resolveContractAddress("A_TKN");
         A_TKN = A_TKN_Interface(A_TKN_Address);
 
-        ECR_MGR_Address = STOR.resolveContractAddress("ECR_MGR");
-        ECR_MGR = ECR_MGR_Interface(ECR_MGR_Address);
+        // ECR_MGR_Address = STOR.resolveContractAddress("ECR_MGR");
+        // ECR_MGR = ECR_MGR_Interface(ECR_MGR_Address);
 
-        APP_Address = STOR.resolveContractAddress("APP");
-        APP = APP_Interface(APP_Address);
+        // APP_Address = STOR.resolveContractAddress("APP");
+        // APP = APP_Interface(APP_Address);
 
-        RCLR_Address = STOR.resolveContractAddress("RCLR");
-        RCLR = RCLR_Interface(RCLR_Address);
+        // RCLR_Address = STOR.resolveContractAddress("RCLR");
+        // RCLR = RCLR_Interface(RCLR_Address);
 
-        APP_NC_Address = STOR.resolveContractAddress("APP_NC");
-        APP_NC = APP_NC_Interface(APP_NC_Address);
+        // APP_NC_Address = STOR.resolveContractAddress("APP_NC");
+        // APP_NC = APP_NC_Interface(APP_NC_Address);
 
         DAO_STOR_Address = STOR.resolveContractAddress("DAO_STOR");
         DAO_STOR = DAO_STOR_Interface(DAO_STOR_Address);
@@ -75,313 +75,28 @@ contract DAO_LAYER_A is BASIC {
         CLOCK = CLOCK_Interface(CLOCK_Address);
     }
 
-    /**
-     * @dev Returns `true` if `account` has been granted `role`. //CTS:EXAMINE does this need to be dao controlled?
-     */
-    function DAO_hasRole(
-        bytes32 _role,
-        address _account,
-        string calldata _contract
-    ) external view returns (bool) {
-        return (
-            BASIC_Interface(resolveName(_contract)).hasRole(_role, _account)
-        );
-    }
+    //---------------------------------NODE_TKN
 
     /**
-     * @dev Returns the admin role that controls `role`. See {grantRole} and //CTS:EXAMINE does this need to be dao controlled?
-     * {revokeRole}.
-     *
-     * To change a role's admin, use {AccessControl-_setRoleAdmin}.
+     * @dev Set storage contract to interface with
+     * @param _nodeStorageAddress - Node storage contract address
      */
-    function DAO_getRoleAdmin(bytes32 _role, string calldata _contract)
-        external
-        view
-        returns (bytes32)
-    {
-        return (BASIC_Interface(resolveName(_contract)).getRoleAdmin(_role));
-    }
-
-    /**
-     * @dev Grants `role` to `account`.
-     *
-     * If `account` had not been already granted `role`, emits a {RoleGranted}
-     * event.
-     *
-     * Requirements:
-     *
-     * - the caller must have ``role``'s admin role.
-     */
-    function DAO_grantRole(
-        bytes32 _role,
-        address _account,
-        string calldata _contract
-    ) external nonReentrant {
-        verifySig(
-            abi.encodePacked(
-                "DAO_grantRole",
-                address(this),
-                _role,
-                _account,
-                _contract
-            )
-        );
-
-        //^^^^^^^checks^^^^^^^^^
-
-        BASIC_Interface(resolveName(_contract)).grantRole(_role, _account);
-        //^^^^^^^interactions^^^^^^^^^
-    }
-
-    /**
-     * @dev Revokes `role` from `account`.
-     *
-     * If `account` had been granted `role`, emits a {RoleRevoked} event.
-     *
-     * Requirements:
-     *
-     * - the caller must have ``role``'s admin role.
-     */
-    function DAO_revokeRole(
-        bytes32 _role,
-        address _account,
-        string calldata _contract
-    ) external nonReentrant {
-        verifySig(
-            abi.encodePacked(
-                "DAO_revokeRole",
-                address(this),
-                _role,
-                _account,
-                _contract
-            )
-        );
-
-        //^^^^^^^checks^^^^^^^^^
-
-        BASIC_Interface(resolveName(_contract)).revokeRole(_role, _account);
-        //^^^^^^^interactions^^^^^^^^^
-    }
-
-    /**
-     * @dev Revokes `role` from the calling account.
-     *
-     * Roles are often managed via {grantRole} and {revokeRole}: this function's
-     * purpose is to provide a mechanism for accounts to lose their privileges
-     * if they are compromised (such as when a trusted device is misplaced).
-     *
-     * If the calling account had been granted `role`, emits a {RoleRevoked}
-     * event.
-     *
-     * Requirements:
-     *
-     * - the caller must be `account`.
-     */
-    function DAO_renounceRole(
-        bytes32 _role,
-        address _account,
-        string calldata _contract
-    ) external nonReentrant {
-        verifySig(
-            abi.encodePacked(
-                "DAO_renounceRole",
-                address(this),
-                _role,
-                _account,
-                _contract
-            )
-        );
-
-        //^^^^^^^checks^^^^^^^^^
-
-        BASIC_Interface(resolveName(_contract)).renounceRole(_role, _account);
-        //^^^^^^^interactions^^^^^^^^^
-    }
-
-    /** //CTS:EXAMINE does this need to be dao controlled?
-     * @dev Returns one of the accounts that have `role`. `index` must be a
-     * value between 0 and {getRoleMemberCount}, non-inclusive.
-     *
-     * Role bearers are not sorted in any particular way, and their ordering may
-     * change at any point.
-     *
-     * WARNING: When using {getRoleMember} and {getRoleMemberCount}, make sure
-     * you perform all queries on the same block. See the following
-     * https://forum.openzeppelin.com/t/iterating-over-elements-on-enumerableset-in-openzeppelin-contracts/2296[forum post]
-     * for more information.
-     */
-    function DAO_getRoleMember(
-        bytes32 _role,
-        uint256 _index,
-        string calldata _contract
-    ) external view returns (address) {
-        return (
-            BASIC_Interface(resolveName(_contract)).getRoleMember(_role, _index)
-        );
-    }
-
-    /** //CTS:EXAMINE does this need to be dao controlled?
-     * @dev Returns the number of accounts that have `role`. Can be used
-     * together with {getRoleMember} to enumerate all bearers of a role.
-     */
-    function DAO_getRoleMemberCount(bytes32 _role, string calldata _contract)
-        external
-        view
-        returns (uint256)
-    {
-        return (
-            BASIC_Interface(resolveName(_contract)).getRoleMemberCount(_role)
-        );
-    }
-
-    /**
-     * @dev Resolve contract addresses from STOR
-     * @param _contract contract name to call
-     */
-    function DAO_resolveContractAddresses(string calldata _contract)
+    function DAO_setNodeStorageContract(address _nodeStorageAddress)
         external
         nonReentrant
     {
         verifySig(
             abi.encodePacked(
-                "DAO_resolveContractAddresses",
+                "DAO_setNodeStorageContract",
                 address(this),
-                _contract
+                _nodeStorageAddress
             )
         );
 
         //^^^^^^^checks^^^^^^^^^
 
-        BASIC_Interface(resolveName(_contract)).resolveContractAddresses();
-        //^^^^^^^interactions^^^^^^^^^
-    }
-
-    /**
-     * @dev Set address of STOR contract to interface with
-     * @param _storageAddress address of PRUF_STOR
-     * @param _contract contract name to call
-     */
-    function DAO_setStorageContract(
-        address _storageAddress,
-        string calldata _contract
-    ) external nonReentrant {
-        verifySig(
-            abi.encodePacked(
-                "DAO_setStorageContract",
-                address(this),
-                _storageAddress,
-                _contract
-            )
-        );
-
-        //^^^^^^^checks^^^^^^^^^
-
-        BASIC_Interface(resolveName(_contract)).setStorageContract(
-            _storageAddress
-        );
-        //^^^^^^^interactions^^^^^^^^^
-    }
-
-    /**
-     * @dev Triggers stopped state. (pausable)
-     * @param _contract contract name to call
-     */
-    function DAO_pause(string calldata _contract) external nonReentrant {
-        verifySig(abi.encodePacked("DAO_pause", address(this), _contract));
-
-        //^^^^^^^checks^^^^^^^^^
-
-        BASIC_Interface(resolveName(_contract)).pause();
-        //^^^^^^^interactions^^^^^^^^^
-    }
-
-    /***
-     * @dev Returns to normal state. (pausable)
-     * @param _contract contract name to call
-     */
-    function DAO_unpause(string calldata _contract) external nonReentrant {
-        verifySig(abi.encodePacked("DAO_unpause", address(this), _contract));
-
-        //^^^^^^^checks^^^^^^^^^
-
-        BASIC_Interface(resolveName(_contract)).unpause();
-        //^^^^^^^interactions^^^^^^^^^
-    }
-
-    /** //CTS:EXAMINE does this need to be dao controlled?
-     * {revokeRole}.
-     * @dev Returns true if _contract is paused, and false otherwise.
-     */
-    function DAO_paused(string calldata _contract) external returns (bool) {
-        return (BASIC_Interface(resolveName(_contract)).paused());
-    }
-
-    /**
-     * @dev send an ERC721 token from this contract
-     * @param _tokenContract Address of foreign token contract
-     * @param _to destination
-     * @param _tokenID Token ID
-     * @param _contract contract name to call
-     */
-    function DAO_ERC721Transfer(
-        address _tokenContract,
-        address _to,
-        uint256 _tokenID,
-        string calldata _contract
-    ) external nonReentrant {
-        verifySig(
-            abi.encodePacked(
-                "DAO_ERC721Transfer",
-                address(this),
-                _tokenContract,
-                _to,
-                _tokenID,
-                _contract
-            )
-        );
-
-        //^^^^^^^checks^^^^^^^^^
-
-        BASIC_Interface(resolveName(_contract)).ERC721Transfer(
-            _tokenContract,
-            _to,
-            _tokenID
-        );
-        //^^^^^^^interactions^^^^^^^^^
-    }
-
-    /**
-     * @dev send an ERC20 token from this contract
-     * @param _tokenContract Address of foreign token contract
-     * @param _to destination
-     * @param _amount amount to transfer
-     * @param _contract contract name to call
-     */
-    function DAO_ERC20Transfer(
-        address _tokenContract,
-        address _to,
-        uint256 _amount,
-        string calldata _contract
-    ) external nonReentrant {
-        verifySig(
-            abi.encodePacked(
-                "DAO_ERC20Transfer",
-                address(this),
-                _tokenContract,
-                _to,
-                _amount,
-                _contract
-            )
-        );
-
-        //^^^^^^^checks^^^^^^^^^
-
-        BASIC_Interface(resolveName(_contract)).ERC20Transfer(
-            _tokenContract,
-            _to,
-            _amount
-        );
-        //^^^^^^^interactions^^^^^^^^^
+        NODE_TKN.setNodeStorageContract(_nodeStorageAddress);
+        //^^^^^^^Interactions^^^^^^^^^
     }
 
     //-------------------------A_TKN

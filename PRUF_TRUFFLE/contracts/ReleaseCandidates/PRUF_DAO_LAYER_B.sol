@@ -24,7 +24,6 @@ import "../Resources/RESOURCE_PRUF_EXT_INTERFACES.sol";
 import "../Resources/RESOURCE_PRUF_DAO_INTERFACES.sol";
 
 contract DAO_LAYER_B is BASIC {
-
     address internal DAO_STOR_Address;
     DAO_STOR_Interface internal DAO_STOR;
 
@@ -42,8 +41,8 @@ contract DAO_LAYER_B is BASIC {
     {
         //^^^^^^^checks^^^^^^^^^
 
-        NODE_TKN_Address = STOR.resolveContractAddress("NODE_TKN");
-        NODE_TKN = NODE_TKN_Interface(NODE_TKN_Address);
+        // NODE_TKN_Address = STOR.resolveContractAddress("NODE_TKN");
+        // NODE_TKN = NODE_TKN_Interface(NODE_TKN_Address);
 
         // NODE_MGR_Address = STOR.resolveContractAddress("NODE_MGR");
         // NODE_MGR = NODE_MGR_Interface(NODE_MGR_Address);
@@ -69,36 +68,11 @@ contract DAO_LAYER_B is BASIC {
         // APP_NC_Address = STOR.resolveContractAddress("APP_NC");
         // APP_NC = APP_NC_Interface(APP_NC_Address);
 
-       DAO_STOR_Address = STOR.resolveContractAddress("DAO_STOR");
+        DAO_STOR_Address = STOR.resolveContractAddress("DAO_STOR");
         DAO_STOR = DAO_STOR_Interface(DAO_STOR_Address);
 
         CLOCK_Address = STOR.resolveContractAddress("CLOCK");
         CLOCK = CLOCK_Interface(CLOCK_Address);
-    }
-
-    //---------------------------------NODE_TKN
-
-    /**
-     * @dev Set storage contract to interface with
-     * @param _nodeStorageAddress - Node storage contract address
-     */
-    function DAO_setNodeStorageContract(address _nodeStorageAddress)
-        external
-        
-        nonReentrant
-    {
-         verifySig(
-            abi.encodePacked(
-                "DAO_setNodeStorageContract",
-                address(this),
-                _nodeStorageAddress
-            )
-        );
-         
-        //^^^^^^^checks^^^^^^^^^
-
-        NODE_TKN.setNodeStorageContract(_nodeStorageAddress);
-        //^^^^^^^Interactions^^^^^^^^^
     }
 
     //---------------------------------UD_721
@@ -112,7 +86,7 @@ contract DAO_LAYER_B is BASIC {
         address _erc721Address,
         address _UD_721ContractAddress
     ) external virtual nonReentrant {
-         verifySig(
+        verifySig(
             abi.encodePacked(
                 "DAO_setUnstoppableDomainsTokenContract",
                 address(this),
@@ -120,7 +94,7 @@ contract DAO_LAYER_B is BASIC {
                 _UD_721ContractAddress
             )
         );
-         
+
         //^^^^^^^checks^^^^^^^^^
 
         UD_721_Interface(_UD_721ContractAddress)
@@ -138,8 +112,8 @@ contract DAO_LAYER_B is BASIC {
     function DAO_setMinimumPeriod(
         uint256 _minUpgradeInterval,
         address _EO_STAKING_Address
-    ) external  nonReentrant {
-         verifySig(
+    ) external nonReentrant {
+        verifySig(
             abi.encodePacked(
                 "DAO_setMinimumPeriod",
                 address(this),
@@ -147,7 +121,7 @@ contract DAO_LAYER_B is BASIC {
                 _EO_STAKING_Address
             )
         );
-         
+
         //^^^^^^^checks^^^^^^^^^
 
         EO_STAKING_Interface(_EO_STAKING_Address).setMinimumPeriod(
@@ -163,10 +137,9 @@ contract DAO_LAYER_B is BASIC {
      */
     function DAO_endStaking(uint256 _delay, address _EO_STAKING_Address)
         external
-        
         nonReentrant
     {
-         verifySig(
+        verifySig(
             abi.encodePacked(
                 "DAO_endStaking",
                 address(this),
@@ -174,7 +147,7 @@ contract DAO_LAYER_B is BASIC {
                 _EO_STAKING_Address
             )
         );
-         
+
         //^^^^^^^checks^^^^^^^^^
 
         EO_STAKING_Interface(_EO_STAKING_Address).endStaking(_delay);
@@ -195,8 +168,8 @@ contract DAO_LAYER_B is BASIC {
         address _stakeVaultAddress,
         address _rewardsVaultAddress,
         address _EO_STAKING_Address
-    ) external  nonReentrant {
-         verifySig(
+    ) external nonReentrant {
+        verifySig(
             abi.encodePacked(
                 "DAO_endStaking",
                 address(this),
@@ -207,7 +180,7 @@ contract DAO_LAYER_B is BASIC {
                 _EO_STAKING_Address
             )
         );
-         
+
         //^^^^^^^checks^^^^^^^^^
 
         EO_STAKING_Interface(_EO_STAKING_Address).setTokenContracts(
@@ -235,8 +208,8 @@ contract DAO_LAYER_B is BASIC {
         uint256 _interval,
         uint256 _bonusPercentage,
         address _EO_STAKING_Address
-    ) external  nonReentrant {
-         verifySig(
+    ) external nonReentrant {
+        verifySig(
             abi.encodePacked(
                 "DAO_setStakeLevels",
                 address(this),
@@ -248,7 +221,7 @@ contract DAO_LAYER_B is BASIC {
                 _EO_STAKING_Address
             )
         );
-         
+
         //^^^^^^^checks^^^^^^^^^
 
         EO_STAKING_Interface(_EO_STAKING_Address).setStakeLevels(
@@ -273,8 +246,8 @@ contract DAO_LAYER_B is BASIC {
         address _utilAddress,
         address _stakeAddress,
         address vaultContractAddress
-    ) external  nonReentrant {
-         verifySig(
+    ) external nonReentrant {
+        verifySig(
             abi.encodePacked(
                 "DAO_setTokenContracts",
                 address(this),
@@ -283,7 +256,7 @@ contract DAO_LAYER_B is BASIC {
                 vaultContractAddress
             )
         );
-         
+
         //^^^^^^^checks^^^^^^^^^
 
         REWARDS_VAULT_Interface(vaultContractAddress).setTokenContracts(
@@ -293,93 +266,7 @@ contract DAO_LAYER_B is BASIC {
         //^^^^^^^interactions^^^^^^^^^
     }
 
-    //---------------------------------------------DAO SETTING FUNCTIONS
-    
-    /**
-     * @dev Default param setter
-     * @param _quorum new value for minimum required voters to create a quorum
-     */
-    function DAO_setQuorum(uint32 _quorum) external nonReentrant {
-         verifySig(
-            abi.encodePacked(
-                "DAO_setQuorum",
-                address(this),
-                _quorum
-            )
-        );
-         
-        //^^^^^^^checks^^^^^^^^^
-
-        DAO_STOR.setQuorum(_quorum);
-        //^^^^^^^interactions^^^^^^^^^
-    }
-
-    /**
-     * @dev Default param setter
-     * @param _passingMargin new value for minimum required passing margin for votes, in whole percents
-     */
-    function DAO_setPassingMargin(uint32 _passingMargin) external nonReentrant {
-         verifySig(
-            abi.encodePacked(
-                "DAO_setQuorum",
-                address(this),
-                _passingMargin
-            )
-        );
-         
-        //^^^^^^^checks^^^^^^^^^
-
-        DAO_STOR.setPassingMargin(_passingMargin);
-        //^^^^^^^interactions^^^^^^^^^
-    }
-
-    /**
-     * @dev Default param setter
-     * @param _max new value for maximum votees per node
-     */
-    function DAO_setMaxVote(uint32 _max) external nonReentrant {
-         verifySig(
-            abi.encodePacked(
-                "DAO_setQuorum",
-                address(this),
-                _max
-            )
-        );
-         
-        //^^^^^^^checks^^^^^^^^^
-
-        DAO_STOR.setMaxVote(_max);
-        //^^^^^^^effects^^^^^^^^^
-    }
-
-
-
-    //---------------------------------------------EPOCH CLOCK FUNCTIONS
-
-    /**
-     * @dev Set storage contract to interface with
-     * @param _epochSeconds - New period for EPOCHS in seconds
-     */
-    function DAO_setNewEpochInterval(uint256 _epochSeconds)
-        external
-        nonReentrant
-    {
-         verifySig(
-            abi.encodePacked(
-                "DAO_setNodeStorageContract",
-                address(this),
-                _epochSeconds
-            )
-        );
-         
-        //^^^^^^^checks^^^^^^^^^
-
-        CLOCK.setNewEpochInterval(_epochSeconds);
-        //^^^^^^^Interactions^^^^^^^^^
-    }
-
-
-//-----------------INTERNAL FUNCTIONS
+    //-----------------INTERNAL FUNCTIONS
     /**
      * @dev Makes signature hash and verifies against DAO_STOR
      * @param _sigArray signature of call to approve
