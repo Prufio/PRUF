@@ -451,7 +451,7 @@ interface DAO_LAYER_A_Interface {
     function resolveName(string calldata _name) external returns (address);
 }
 
-interface DAO_CORE_Interface {
+interface DAO_STOR_Interface {
 
     /**
      * @dev Default param setter
