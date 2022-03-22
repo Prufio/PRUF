@@ -83,7 +83,6 @@ contract DAO_LAYER_BASIC is BASIC {
      */
     function DAO_setQuorum(uint32 _quorum) external nonReentrant {
         verifySig(abi.encodePacked("DAO_setQuorum", address(this), _quorum));
-
         //^^^^^^^checks^^^^^^^^^
 
         DAO_STOR.setQuorum(_quorum);
@@ -98,7 +97,6 @@ contract DAO_LAYER_BASIC is BASIC {
         verifySig(
             abi.encodePacked("DAO_setQuorum", address(this), _passingMargin)
         );
-
         //^^^^^^^checks^^^^^^^^^
 
         DAO_STOR.setPassingMargin(_passingMargin);
@@ -111,7 +109,6 @@ contract DAO_LAYER_BASIC is BASIC {
      */
     function DAO_setMaxVote(uint32 _max) external nonReentrant {
         verifySig(abi.encodePacked("DAO_setQuorum", address(this), _max));
-
         //^^^^^^^checks^^^^^^^^^
 
         DAO_STOR.setMaxVote(_max);
@@ -135,7 +132,6 @@ contract DAO_LAYER_BASIC is BASIC {
                 _epochSeconds
             )
         );
-
         //^^^^^^^checks^^^^^^^^^
 
         CLOCK.setNewEpochInterval(_epochSeconds);
@@ -145,7 +141,7 @@ contract DAO_LAYER_BASIC is BASIC {
     //-----------------------------------------------Functions shared by many contracts through inheritance
 
     /**
-     * @dev Returns `true` if `account` has been granted `role`. //CTS:EXAMINE does this need to be dao controlled?
+     * @dev Returns `true` if `account` has been granted `role`. //DPS:PREFERRED for interface building ease of use
      */
     function DAO_hasRole(
         bytes32 _role,
@@ -158,7 +154,7 @@ contract DAO_LAYER_BASIC is BASIC {
     }
 
     /**
-     * @dev Returns the admin role that controls `role`. See {grantRole} and //CTS:EXAMINE does this need to be dao controlled?
+     * @dev Returns the admin role that controls `role`. See {grantRole} and ////DPS:PREFERRED for interface building ease of use
      * {revokeRole}.
      *
      * To change a role's admin, use {AccessControl-_setRoleAdmin}.
@@ -196,7 +192,6 @@ contract DAO_LAYER_BASIC is BASIC {
                 _contract
             )
         );
-
         //^^^^^^^checks^^^^^^^^^
 
         BASIC_Interface(resolveName(_contract)).grantRole(_role, _account);
@@ -227,7 +222,6 @@ contract DAO_LAYER_BASIC is BASIC {
                 _contract
             )
         );
-
         //^^^^^^^checks^^^^^^^^^
 
         BASIC_Interface(resolveName(_contract)).revokeRole(_role, _account);
@@ -263,14 +257,13 @@ contract DAO_LAYER_BASIC is BASIC {
                 _contract
             )
         );
-
         //^^^^^^^checks^^^^^^^^^
 
         BASIC_Interface(resolveName(_contract)).renounceRole(_role, _account);
         //^^^^^^^interactions^^^^^^^^^
     }
 
-    /** //CTS:EXAMINE does this need to be dao controlled?
+    /** //DPS:PREFERRED for interface building ease of use
      * @dev Returns one of the accounts that have `role`. `index` must be a
      * value between 0 and {getRoleMemberCount}, non-inclusive.
      *
@@ -292,7 +285,7 @@ contract DAO_LAYER_BASIC is BASIC {
         );
     }
 
-    /** //CTS:EXAMINE does this need to be dao controlled?
+    /** //DPS:PREFERRED for interface building ease of use
      * @dev Returns the number of accounts that have `role`. Can be used
      * together with {getRoleMember} to enumerate all bearers of a role.
      */
@@ -321,7 +314,6 @@ contract DAO_LAYER_BASIC is BASIC {
                 _contract
             )
         );
-
         //^^^^^^^checks^^^^^^^^^
 
         BASIC_Interface(resolveName(_contract)).resolveContractAddresses();
@@ -345,7 +337,6 @@ contract DAO_LAYER_BASIC is BASIC {
                 _contract
             )
         );
-
         //^^^^^^^checks^^^^^^^^^
 
         BASIC_Interface(resolveName(_contract)).setStorageContract(
@@ -360,7 +351,6 @@ contract DAO_LAYER_BASIC is BASIC {
      */
     function DAO_pause(string calldata _contract) external nonReentrant {
         verifySig(abi.encodePacked("DAO_pause", address(this), _contract));
-
         //^^^^^^^checks^^^^^^^^^
 
         BASIC_Interface(resolveName(_contract)).pause();
@@ -373,14 +363,13 @@ contract DAO_LAYER_BASIC is BASIC {
      */
     function DAO_unpause(string calldata _contract) external nonReentrant {
         verifySig(abi.encodePacked("DAO_unpause", address(this), _contract));
-
         //^^^^^^^checks^^^^^^^^^
 
         BASIC_Interface(resolveName(_contract)).unpause();
         //^^^^^^^interactions^^^^^^^^^
     }
 
-    /** //CTS:EXAMINE does this need to be dao controlled?
+    /** //DPS:PREFERRED for interface building ease of use
      * {revokeRole}.
      * @dev Returns true if _contract is paused, and false otherwise.
      */
@@ -411,7 +400,6 @@ contract DAO_LAYER_BASIC is BASIC {
                 _contract
             )
         );
-
         //^^^^^^^checks^^^^^^^^^
 
         BASIC_Interface(resolveName(_contract)).ERC721Transfer(
@@ -445,7 +433,6 @@ contract DAO_LAYER_BASIC is BASIC {
                 _contract
             )
         );
-
         //^^^^^^^checks^^^^^^^^^
 
         BASIC_Interface(resolveName(_contract)).ERC20Transfer(
