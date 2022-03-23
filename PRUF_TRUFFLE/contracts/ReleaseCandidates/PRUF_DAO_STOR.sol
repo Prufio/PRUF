@@ -77,19 +77,20 @@ contract DAO_STOR is BASIC {
      * @dev Default param setter
      * @param _quorum new value for minimum required voters to create a quorum
      */
-    function setQuorum(uint32 _quorum) external isDAOlayer {
+    function setQuorum(uint32 _quorum) external isDAOlayer returns(uint256){
         uint256 mintedNodes;
         (mintedNodes, , ) = NODE_MGR.currentNodePricingInfo();
         mintedNodes = mintedNodes - 1000000;
 
-        require(
-            _quorum < ((mintedNodes / 20) + 10),
-            "DAO_STOR:SQ:proposed Quorum > 5% (+10) of the indigenous node population"
-        );
+        // require(
+        //     _quorum < ((mintedNodes / 20) + 10), //CTS:EXAMINE can this become a decimal issue?
+        //     "DAO_STOR:SQ:proposed Quorum > 5% (+10) of the indigenous node population"
+        // );
         //^^^^^^^checks^^^^^^^^^
 
         quorum = _quorum;
         //^^^^^^^effects^^^^^^^^^
+        return (mintedNodes / 20) + 10;
     }
 
     /**
@@ -180,7 +181,7 @@ contract DAO_STOR is BASIC {
     }
 
     /**
-     * @dev Admin veto for incrementel transfer of power to the DAO---------CAUTION:CENTRALIZATION RISK
+     * @dev Admin veto for incremental transfer of power to the DAO---------CAUTION:CENTRALIZATION RISK
      * @param _motion // propsed action
      */
     function adminVeto(

@@ -146,6 +146,8 @@ let revokeRoleSigComplete;
 let renounceRoleSig;
 let renounceRoleSigComplete;
 
+let result;
+
 contract("DAO_STOR", (accounts) => {
   console.log(
     "//**************************BEGIN BOOTSTRAP**************************//"
@@ -618,9 +620,21 @@ contract("DAO_STOR", (accounts) => {
     });
   });
 
+  it("Should authorize account1 as DAOadmin in DAO_A", () => {
+    console.log("Authorizing account1");
+    return DAO_STOR.grantRole(DAOlayerRoleB32, account1, {
+      from: account1,
+    });
+  });
+
   it("Should authorize account1 as DAOadmin in DAO_STOR", () => {
     console.log("Authorizing account1");
     return DAO_STOR.grantRole(DAOadminRoleB32, DAO.address, { from: account1 });
+  });
+
+  it("Should authorize account1 as DAOadmin in DAO_STOR", () => {
+    console.log("Authorizing account1");
+    return DAO_STOR.grantRole(DAOadminRoleB32, account1, { from: account1 });
   });
 
   // it("Should authorize account1 as DAOadmin in DAO_A", () => {
@@ -1129,15 +1143,15 @@ contract("DAO_STOR", (accounts) => {
     console.log("Authorizing APP_NC");
     return A_TKN.grantRole(minterRoleB32, APP_NC.address, {
       from: account1,
-    })
-  })
+    });
+  });
 
   it("Should authorize all minter contracts for minting A_TKN(s)", () => {
-        console.log("Authorizing APP");
-        return A_TKN.grantRole(minterRoleB32, APP.address, {
-          from: account1,
-        // });
-      })
+    console.log("Authorizing APP");
+    return A_TKN.grantRole(minterRoleB32, APP.address, {
+      from: account1,
+      // });
+    })
 
       .then(() => {
         console.log("Authorizing RCLR");
@@ -2167,375 +2181,282 @@ contract("DAO_STOR", (accounts) => {
       });
   });
 
-  it("Should mint 30000 tokens to account1", async () => {
-    return UTIL_TKN.mint(account1, "30000000000000000000000", {
+  it("Should retrieve quorum(1)", async () => {
+    result = await DAO_STOR.quorum({
       from: account1,
     });
+    return console.log("result:", result);
   });
 
-  it("Should set revokeRole", () => {
-    revokeRoleSig = web3.utils.soliditySha3(
-      { type: "string", value: "DAO_revokeRole" },
-      { type: "address", value: DAO_A.address },
-      { type: "bytes32", value: minterRoleB32 },
-      { type: "address", value: APP_NC.address },
-      { type: "string", value: "A_TKN" }
-    );
-    return console.log(revokeRoleSig);
+  it("Should set quorum to 2", async () => {
+    result = await DAO_STOR.setQuorum("2", { from: account1 });
+    return console.log(result);
   });
 
-  it("Should return true", async () => {
-    const result = await A_TKN.hasRole.call(
-      minterRoleB32,
-      APP_NC.address,
-      { from: account1 }
-    );
-    return console.log("result", result);
-  });
-
-  it("Should return current epoch", async () => {
-    const result = await CLOCK.thisEpoch({ from: account1 });
-    return console.log("result", result);
-  });
-
-  it("Should return current epoch", async () => {
-    const result = await CLOCK.setClock("1", "10", { from: account1 });
-    return console.log("result", result);
-  });
-
-  it("Should create Motion for grandRole in A_TKN for defaultAdminRole to DAO_A", async () => {
-    return DAO.createMotion(revokeRoleSig, {
+  it("Should retrieve quorum(2)", async () => {
+    result = await DAO_STOR.quorum({
       from: account1,
     });
+    return console.log("result:", result);
   });
 
-  it("Should return current epoch", async () => {
-    const result = await CLOCK.thisEpoch({ from: account1 });
-    return console.log("result", result);
-  });
-
-  it("Should set grantRoleSigComplete", async () => {
-    // await timeout(30000).then(async () => {
-      revokeRoleSigComplete = await DAO_STOR.getMotionByIndex("0", {
-        from: account1,
-      });
-      return console.log(revokeRoleSigComplete);
-    // });
-  });
-
-  it("Should return current epoch", async () => {
-    const result = await CLOCK.setClock("2", "10", { from: account1 });
-    return console.log("result", result);
-  });
-
-  it("Should vote for motion to gain priority", async () => {
-    return DAO.vote(revokeRoleSigComplete, "1000001", "1", {
+  it("Should retrieve passingMargin(60)", async () => {
+    result = await DAO_STOR.passingMargin({
       from: account1,
     });
+    return console.log("result:", result);
   });
 
-  it("Should return current epoch", async () => {
-    const result = await CLOCK.thisEpoch({ from: account1 });
-    return console.log("result", result);
+  it("Should set passingMargin to 65", async () => {
+    return DAO_STOR.setPassingMargin("65", { from: account1 });
   });
 
-  it("Should return motionData", async () => {
-    var Record = [];
-
-    // await timeout(7000).then(async () => {
-      return await DAO_STOR.getMotionData(
-        revokeRoleSigComplete,
-        { from: account1 },
-        function (_err, _result) {
-          if (_err) {
-          } else {
-            Record = Object.values(_result);
-            console.log(Record);
-          }
-        }
-      );
-    // });
-  });
-
-  it("Should return current epoch", async () => {
-    // await timeout(20000).then(async () => {
-      const result = await CLOCK.thisEpoch({ from: account1 });
-      return console.log("result", result);
-    // });
-  });
-
-  it("Should return current epoch", async () => {
-    const result = await CLOCK.thisEpoch({ from: account1 });
-    return console.log("result", result);
-  });
-
-  it("Should return current epoch", async () => {
-    const result = await CLOCK.setClock("3", "10", { from: account1 });
-    return console.log("result", result);
-  });
-
-  it("Should attempt to revokeRole to DAO_A", async () => {
-    const result = await CLOCK.thisEpoch({ from: account1 });
-    console.log("result", result);
-    return DAO_A.DAO_revokeRole(minterRoleB32, APP_NC.address, "A_TKN", {
+  it("Should retrieve passingMargin(65)", async () => {
+    result = await DAO_STOR.passingMargin({
       from: account1,
     });
+    return console.log("result:", result);
   });
 
-  it("Should return current epoch", async () => {
-    const result = await CLOCK.thisEpoch({ from: account1 });
-    return console.log("result", result);
+  it("Should retrieve maximumVote(100000)", async () => {
+    result = await DAO_STOR.maximumVote({
+      from: account1,
+    });
+    return console.log("result:", result);
   });
 
-  it("Should return false", async () => {
-    const result = await A_TKN.hasRole.call(
-      minterRoleB32,
-      APP_NC.address,
-      { from: account1 }
-    );
-    return console.log("result", result);
+  it("Should set maximumVote to 150000", async () => {
+    return DAO_STOR.setMaxVote("150000", { from: account1 });
+  });
+
+  it("Should retrieve maximumVote(150000)", async () => {
+    result = await DAO_STOR.maximumVote({
+      from: account1,
+    });
+    return console.log("result:", result);
   });
 
   it("Should set grantRoleSig", () => {
-    grantRoleSig = web3.utils.soliditySha3(
-      { type: "string", value: "DAO_grantRole" },
-      { type: "address", value: DAO_A.address },
-      { type: "bytes32", value: minterRoleB32 },
-      { type: "address", value: APP_NC.address },
-      { type: "string", value: "A_TKN" }
+    grantRoleSig = web3.utils.keccak256(web3.eth.abi.encodeParameters(
+      ['string', 'address', 'bytes32', 'address', 'string'],
+      ['DAO_grantRole', DAO_A.address, minterRoleB32, APP_NC.address, 'A_TKN']
+      )
     );
     return console.log(grantRoleSig);
   });
 
-  it("Should return false", async () => {
-    const result = await A_TKN.hasRole.call(
-      minterRoleB32,
-      APP_NC.address,
-      { from: account1 }
-    );
-    return console.log("result", result);
-  });
-  //NEW
-  it("Should return current epoch", async () => {
-    const result = await CLOCK.thisEpoch({ from: account1 });
-    return console.log("result", result);
-  });
-
-  it("Should return current epoch", async () => {
-    const result = await CLOCK.setClock("4", "10", { from: account1 });
-    return console.log("result", result);
+  it("Should setEpoch", async () => {
+    return CLOCK.setClock("1", "10", { from: account1 });
   });
 
   it("Should create Motion for grandRole in A_TKN for defaultAdminRole to DAO_A", async () => {
-    return DAO.createMotion(grantRoleSig, {
+    return DAO_STOR.adminCreateMotion(grantRoleSig, account1, {
       from: account1,
     });
-  });
-
-  it("Should return current epoch", async () => {
-    const result = await CLOCK.thisEpoch({ from: account1 });
-    return console.log("result", result);
   });
 
   it("Should set grantRoleSigComplete", async () => {
     // await timeout(30000).then(async () => {
-      grantRoleSigComplete = await DAO_STOR.getMotionByIndex("1", {
-        from: account1,
-      });
-      return console.log(grantRoleSigComplete);
-    // });
-  });
-
-  it("Should return current epoch", async () => {
-    const result = await CLOCK.setClock("5", "10", { from: account1 });
-    return console.log("result", result);
-  });
-
-  it("Should vote for motion to gain priority", async () => {
-    return DAO.vote(grantRoleSigComplete, "1000001", "1", {
+    grantRoleSigComplete = await DAO_STOR.getMotionByIndex("0", {
       from: account1,
     });
-  });
-
-  it("Should return current epoch", async () => {
-    const result = await CLOCK.thisEpoch({ from: account1 });
-    return console.log("result", result);
+    return console.log(grantRoleSigComplete);
+    // });
   });
 
   it("Should return motionData", async () => {
-    var Record = [];
-
-    // await timeout(7000).then(async () => {
-      return await DAO_STOR.getMotionData(
-        grantRoleSigComplete,
-        { from: account1 },
-        function (_err, _result) {
-          if (_err) {
-          } else {
-            Record = Object.values(_result);
-            console.log(Record);
-          }
-        }
-      );
-    // });
-  });
-
-  it("Should return current epoch", async () => {
-    // await timeout(30000).then(async () => {
-      return console.log("waiting...");
-    // });
-  });
-
-  it("Should return current epoch", async () => {
-    const result = await CLOCK.setClock("6", "10", { from: account1 });
-    return console.log("result", result);
-  });
-
-  it("Should veto current proposal", async () => {
-    return DAO.veto(grantRoleSigComplete, { from: account1 });
-  });
-
-  it("Should return motionData", async () => {
-    var Record = [];
-
-    // await timeout(7000).then(async () => {
-      return await DAO_STOR.getMotionData(
-        grantRoleSigComplete,
-        { from: account1 },
-        function (_err, _result) {
-          if (_err) {
-          } else {
-            Record = Object.values(_result);
-            console.log(Record);
-          }
-        }
-      );
-    // });
-  });
-
-  it("Should fail because votes for = 0", async () => {
-    const result = await CLOCK.thisEpoch({ from: account1 });
-    console.log("result", result);
-    return DAO_A.DAO_grantRole(minterRoleB32, APP_NC.address, "A_TKN", {
+    console.log({ grantRoleSigComplete });
+    result = await DAO_STOR.getMotionData(grantRoleSigComplete, {
       from: account1,
     });
+    return console.log(result);
   });
 
   it("Should return current epoch", async () => {
-    const result = await CLOCK.thisEpoch({ from: account1 });
-    return console.log("result", result);
+    return CLOCK.setClock("2", "10", { from: account1 });
   });
 
-  it("Should return false", async () => {
-    const result = await A_TKN.hasRole.call(
-      minterRoleB32,
-      APP_NC.address,
-      { from: account1 }
+  it("Should get nodeActivityByEpoch(null)", async () => {
+    var Record = [];
+
+    return await DAO_STOR.getNodeActivityByEpoch(
+      "2",
+      "1000001",
+      { from: account1 },
+      function (_err, _result) {
+        if (_err) {
+        } else {
+          Record = Object.values(_result);
+          console.log(Record);
+        }
+      }
     );
-    return console.log("result", result);
-  });
-//NEW
-  it("Should return current epoch", async () => {
-    const result = await CLOCK.thisEpoch({ from: account1 });
-    return console.log("result", result);
   });
 
-  it("Should return current epoch", async () => {
-    const result = await CLOCK.setClock("7", "10", { from: account1 });
-    return console.log("result", result);
+  it("Should get nodeVotingHistory(null)", async () => {
+    var Record = [];
+
+    return await DAO_STOR.getNodeVotingHistory(
+      grantRoleSigComplete,
+      "1000001",
+      { from: account1 },
+      function (_err, _result) {
+        if (_err) {
+        } else {
+          Record = Object.values(_result);
+          console.log(Record);
+        }
+      }
+    );
+  });
+
+  it("Should vote on motion", async () => {
+    return DAO_STOR.adminVote(
+      grantRoleSigComplete,
+      "1000001",
+      "10000",
+      "1",
+      account1,
+      {
+        from: account1,
+      }
+    );
+  });
+
+  it("Should vote on motion", async () => {
+    return DAO_STOR.adminVote(
+      grantRoleSigComplete,
+      "1000002",
+      "10000",
+      "1",
+      account1,
+      {
+        from: account1,
+      }
+    );
+  });
+
+  it("Should vote on motion", async () => {
+    return DAO_STOR.adminVote(
+      grantRoleSigComplete,
+      "1000003",
+      "10000",
+      "1",
+      account1,
+      {
+        from: account1,
+      }
+    );
+  });
+
+  it("Should vote on motion", async () => {
+    return DAO_STOR.adminVote(
+      grantRoleSigComplete,
+      "1000004",
+      "10000",
+      "1",
+      account1,
+      {
+        from: account1,
+      }
+    );
+  });
+
+  it("Should get nodeActivityByEpoch(???)", async () => {
+    var Record = [];
+
+    return await DAO_STOR.getNodeActivityByEpoch(
+      "2",
+      "1000001",
+      { from: account1 },
+      function (_err, _result) {
+        if (_err) {
+        } else {
+          Record = Object.values(_result);
+          console.log(Record);
+        }
+      }
+    );
+  });
+
+  it("Should get nodeVotingHistory(???)", async () => {
+    var Record = [];
+
+    return await DAO_STOR.getNodeVotingHistory(
+      grantRoleSigComplete,
+      "1000001",
+      { from: account1 },
+      function (_err, _result) {
+        if (_err) {
+        } else {
+          Record = Object.values(_result);
+          console.log(Record);
+        }
+      }
+    );
+  });
+
+  it("Should setEpoch", async () => {
+    return CLOCK.setClock("3", "10", { from: account1 });
+  });
+
+  it("Should verifyResolution", async () => {
+    return DAO_STOR.verifyResolution(grantRoleSigComplete, account1, {
+      from: account1,
+    });
+  });
+
+  it("Should setEpoch", async () => {
+    return CLOCK.setClock("4", "10", { from: account1 });
   });
 
   it("Should create Motion for grandRole in A_TKN for defaultAdminRole to DAO_A", async () => {
-    return DAO.createMotion(grantRoleSig, {
+    return DAO_STOR.adminCreateMotion(grantRoleSig, account1, {
       from: account1,
     });
   });
 
-  it("Should return current epoch", async () => {
-    const result = await CLOCK.thisEpoch({ from: account1 });
-    return console.log("result", result);
-  });
-
-  it("Should set grantRoleSigComplete", async () => {
-    // await timeout(30000).then(async () => {
-      grantRoleSigComplete = await DAO_STOR.getMotionByIndex("2", {
-        from: account1,
-      });
-      return console.log(grantRoleSigComplete);
-    // });
-  });
-
-  it("Should return current epoch", async () => {
-    const result = await CLOCK.setClock("8", "10", { from: account1 });
-    return console.log("result", result);
-  });
-
-  it("Should vote for motion to gain priority", async () => {
-    return DAO.vote(grantRoleSigComplete, "1000001", "1", {
+  it("Should create Motion for grandRole in A_TKN for defaultAdminRole to DAO_A", async () => {
+    grantRoleSigComplete = await DAO_STOR.getMotionByIndex("1", {
       from: account1,
     });
-  });
-
-  it("Should return current epoch", async () => {
-    const result = await CLOCK.thisEpoch({ from: account1 });
-    return console.log("result", result);
+    console.log("grantRoleSigComplete", grantRoleSigComplete);
   });
 
   it("Should return motionData", async () => {
-    var Record = [];
+    var Record = {};
 
-    // await timeout(7000).then(async () => {
-      return await DAO_STOR.getMotionData(
-        grantRoleSigComplete,
-        { from: account1 },
-        function (_err, _result) {
-          if (_err) {
-          } else {
-            Record = Object.values(_result);
-            console.log(Record);
-          }
+    return await DAO_STOR.getMotionData(
+      grantRoleSigComplete,
+      { from: account1 },
+      function (_err, _result) {
+        if (_err) {
+        } else {
+          Record = Object.values(_result);
+          console.log(Record);
         }
-      );
-    // });
+      }
+    );
   });
 
-  it("Should return current epoch", async () => {
-    // await timeout(30000).then(async () => {
-      const result = await CLOCK.thisEpoch({ from: account1 });
-      return console.log("result", result);
-    // });
+  it("Should return motionDataStruct", async () => {
+    result = await DAO_STOR.getMotionDataStruct(
+      grantRoleSigComplete,
+      { from: account1 },
+      function (_err, _result) {
+        if (_err) {
+        } else {
+          // Record = Object.values(result);
+          console.log({result});
+        }
+      }
+    );
   });
 
-  it("Should return current epoch", async () => {
-    const result = await CLOCK.thisEpoch({ from: account1 });
-    return console.log("result", result);
-  });
-
-  it("Should return current epoch", async () => {
-    const result = await CLOCK.setClock("9", "10", { from: account1 });
-    return console.log("result", result);
-  });
-
-  it("Should attempt to grantRole to DAO_A", async () => {
-    const result = await CLOCK.thisEpoch({ from: account1 });
-    console.log("result", result);
-    return DAO_A.DAO_grantRole(minterRoleB32, APP_NC.address, "A_TKN", {
+  it("Should veto motion", async () => {
+    return DAO_STOR.adminVeto(grantRoleSigComplete, {
       from: account1,
     });
-  });
-
-  it("Should return current epoch", async () => {
-    const result = await CLOCK.thisEpoch({ from: account1 });
-    return console.log("result", result);
-  });
-
-  it("Should return true", async () => {
-    const result = await A_TKN.hasRole.call(
-      minterRoleB32,
-      APP_NC.address,
-      { from: account1 }
-    );
-    return console.log("result", result);
   });
 
   it("Should set SharesAddress", async () => {

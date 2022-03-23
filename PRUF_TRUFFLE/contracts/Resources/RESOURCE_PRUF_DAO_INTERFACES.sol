@@ -501,7 +501,7 @@ interface DAO_STOR_Interface {
     ) external;
 
     /**
-     * @dev Admin veto for incrementel transfer of power to the DAO---------CAUTION:CENTRALIZATION RISK
+     * @dev Admin veto for incremental transfer of power to the DAO---------CAUTION:CENTRALIZATION RISK
      * @param _motion // propsed action
      */
     function adminVeto(
