@@ -82,7 +82,7 @@ contract DAO_LAYER_BASIC is BASIC {
      * @param _quorum new value for minimum required voters to create a quorum
      */
     function DAO_setQuorum(uint32 _quorum) external nonReentrant {
-        verifySig(abi.encodePacked("DAO_setQuorum", address(this), _quorum));
+        verifySig(abi.encode("DAO_setQuorum", address(this), _quorum));
         //^^^^^^^checks^^^^^^^^^
 
         DAO_STOR.setQuorum(_quorum);
@@ -95,7 +95,7 @@ contract DAO_LAYER_BASIC is BASIC {
      */
     function DAO_setPassingMargin(uint32 _passingMargin) external nonReentrant {
         verifySig(
-            abi.encodePacked("DAO_setQuorum", address(this), _passingMargin)
+            abi.encode("DAO_setQuorum", address(this), _passingMargin)
         );
         //^^^^^^^checks^^^^^^^^^
 
@@ -108,7 +108,7 @@ contract DAO_LAYER_BASIC is BASIC {
      * @param _max new value for maximum votees per node
      */
     function DAO_setMaxVote(uint32 _max) external nonReentrant {
-        verifySig(abi.encodePacked("DAO_setQuorum", address(this), _max));
+        verifySig(abi.encode("DAO_setQuorum", address(this), _max));
         //^^^^^^^checks^^^^^^^^^
 
         DAO_STOR.setMaxVote(_max);
@@ -126,7 +126,7 @@ contract DAO_LAYER_BASIC is BASIC {
         nonReentrant
     {
         verifySig(
-            abi.encodePacked(
+            abi.encode(
                 "DAO_setNodeStorageContract",
                 address(this),
                 _epochSeconds
@@ -184,7 +184,7 @@ contract DAO_LAYER_BASIC is BASIC {
         string calldata _contract
     ) external nonReentrant {
         verifySig(
-            abi.encodePacked(
+            abi.encode(
                 "DAO_grantRole",
                 address(this),
                 _role,
@@ -214,7 +214,7 @@ contract DAO_LAYER_BASIC is BASIC {
         string calldata _contract
     ) external nonReentrant {
         verifySig(
-            abi.encodePacked(
+            abi.encode(
                 "DAO_revokeRole",
                 address(this),
                 _role,
@@ -249,7 +249,7 @@ contract DAO_LAYER_BASIC is BASIC {
         string calldata _contract
     ) external nonReentrant {
         verifySig(
-            abi.encodePacked(
+            abi.encode(
                 "DAO_renounceRole",
                 address(this),
                 _role,
@@ -308,7 +308,7 @@ contract DAO_LAYER_BASIC is BASIC {
         nonReentrant
     {
         verifySig(
-            abi.encodePacked(
+            abi.encode(
                 "DAO_resolveContractAddresses",
                 address(this),
                 _contract
@@ -330,7 +330,7 @@ contract DAO_LAYER_BASIC is BASIC {
         string calldata _contract
     ) external nonReentrant {
         verifySig(
-            abi.encodePacked(
+            abi.encode(
                 "DAO_setStorageContract",
                 address(this),
                 _storageAddress,
@@ -350,7 +350,7 @@ contract DAO_LAYER_BASIC is BASIC {
      * @param _contract contract name to call
      */
     function DAO_pause(string calldata _contract) external nonReentrant {
-        verifySig(abi.encodePacked("DAO_pause", address(this), _contract));
+        verifySig(abi.encode("DAO_pause", address(this), _contract));
         //^^^^^^^checks^^^^^^^^^
 
         BASIC_Interface(resolveName(_contract)).pause();
@@ -362,7 +362,7 @@ contract DAO_LAYER_BASIC is BASIC {
      * @param _contract contract name to call
      */
     function DAO_unpause(string calldata _contract) external nonReentrant {
-        verifySig(abi.encodePacked("DAO_unpause", address(this), _contract));
+        verifySig(abi.encode("DAO_unpause", address(this), _contract));
         //^^^^^^^checks^^^^^^^^^
 
         BASIC_Interface(resolveName(_contract)).unpause();
@@ -391,7 +391,7 @@ contract DAO_LAYER_BASIC is BASIC {
         string calldata _contract
     ) external nonReentrant {
         verifySig(
-            abi.encodePacked(
+            abi.encode(
                 "DAO_ERC721Transfer",
                 address(this),
                 _tokenContract,
@@ -424,7 +424,7 @@ contract DAO_LAYER_BASIC is BASIC {
         string calldata _contract
     ) external nonReentrant {
         verifySig(
-            abi.encodePacked(
+            abi.encode(
                 "DAO_ERC20Transfer",
                 address(this),
                 _tokenContract,
@@ -452,7 +452,7 @@ contract DAO_LAYER_BASIC is BASIC {
     function verifySig(bytes memory _sigArray) internal {
         DAO_STOR.verifyResolution(
             keccak256(
-                abi.encodePacked(keccak256(_sigArray), CLOCK.thisEpoch())
+                abi.encode(keccak256(_sigArray), CLOCK.thisEpoch())
             ),
             _msgSender()
         );

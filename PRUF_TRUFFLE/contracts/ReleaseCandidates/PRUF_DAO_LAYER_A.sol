@@ -86,7 +86,7 @@ contract DAO_LAYER_A is BASIC {
         nonReentrant
     {
         verifySig(
-            abi.encodePacked(
+            abi.encode(
                 "DAO_setNodeStorageContract",
                 address(this),
                 _nodeStorageAddress
@@ -109,7 +109,7 @@ contract DAO_LAYER_A is BASIC {
         string calldata _URI
     ) external nonReentrant {
         verifySig(
-            abi.encodePacked(
+            abi.encode(
                 "DAO_setBaseURIforStorageType",
                 address(this),
                 _storageProvider,
@@ -134,7 +134,7 @@ contract DAO_LAYER_A is BASIC {
      */
     function DAO_A_TKN_killTrustedAgent(uint256 _key) external nonReentrant {
         verifySig(
-            abi.encodePacked("DAO_A_TKN_killTrustedAgent", address(this), _key)
+            abi.encode("DAO_A_TKN_killTrustedAgent", address(this), _key)
         ); //^^^^^^^checks^^^^^^^^^
 
         A_TKN.killTrustedAgent(_key);
@@ -153,7 +153,7 @@ contract DAO_LAYER_A is BASIC {
         nonReentrant
     {
         verifySig(
-            abi.encodePacked(
+            abi.encode(
                 "DAO_setNodePricing",
                 address(this),
                 _newNodePrice,
@@ -178,7 +178,7 @@ contract DAO_LAYER_A is BASIC {
         nonReentrant
     {
         verifySig(
-            abi.encodePacked(
+            abi.encode(
                 "DAO_setStorageProviders",
                 address(this),
                 _storageProvider,
@@ -201,7 +201,7 @@ contract DAO_LAYER_A is BASIC {
         nonReentrant
     {
         verifySig(
-            abi.encodePacked(
+            abi.encode(
                 "DAO_setManagementTypes",
                 address(this),
                 _managementType,
@@ -224,7 +224,7 @@ contract DAO_LAYER_A is BASIC {
         nonReentrant
     {
         verifySig(
-            abi.encodePacked(
+            abi.encode(
                 "DAO_setCustodyTypes",
                 address(this),
                 _custodyType,
@@ -248,7 +248,7 @@ contract DAO_LAYER_A is BASIC {
         nonReentrant
     {
         verifySig(
-            abi.encodePacked(
+            abi.encode(
                 "DAO_changeShare",
                 address(this),
                 _node,
@@ -276,7 +276,7 @@ contract DAO_LAYER_A is BASIC {
         string calldata _thisName
     ) external nonReentrant {
         verifySig(
-            abi.encodePacked(
+            abi.encode(
                 "DAO_transferName",
                 address(this),
                 _fromNode,
@@ -315,7 +315,7 @@ contract DAO_LAYER_A is BASIC {
         bytes32 _CAS2
     ) external nonReentrant {
         verifySig(
-            abi.encodePacked(
+            abi.encode(
                 "DAO_modifyNode",
                 address(this),
                 _node,
@@ -356,7 +356,7 @@ contract DAO_LAYER_A is BASIC {
         nonReentrant
     {
         verifySig(
-            abi.encodePacked("DAO_blockUser", address(this), _node, _addrHash)
+            abi.encode("DAO_blockUser", address(this), _node, _addrHash)
         );
         //^^^^^^^checks^^^^^^^^^
 
@@ -376,7 +376,7 @@ contract DAO_LAYER_A is BASIC {
         uint256 _tokenId
     ) external nonReentrant {
         verifySig(
-            abi.encodePacked(
+            abi.encode(
                 "DAO_setExternalId",
                 address(this),
                 _node,
@@ -407,7 +407,7 @@ contract DAO_LAYER_A is BASIC {
         uint8 _contractAuthLevel
     ) external nonReentrant {
         verifySig(
-            abi.encodePacked(
+            abi.encode(
                 "DAO_authorizeContract",
                 address(this),
                 _contractName,
@@ -439,7 +439,7 @@ contract DAO_LAYER_A is BASIC {
         uint8 _contractAuthLevel
     ) external nonReentrant {
         verifySig(
-            abi.encodePacked(
+            abi.encode(
                 "DAO_addDefaultContracts",
                 address(this),
                 _contractNumber,
@@ -461,7 +461,7 @@ contract DAO_LAYER_A is BASIC {
     function verifySig(bytes memory _sigArray) internal {
         DAO_STOR.verifyResolution(
             keccak256(
-                abi.encodePacked(keccak256(_sigArray), CLOCK.thisEpoch())
+                abi.encode(keccak256(_sigArray), CLOCK.thisEpoch())
             ),
             _msgSender()
         );

@@ -87,7 +87,7 @@ contract DAO_LAYER_B is BASIC {
         address _UD_721ContractAddress
     ) external virtual nonReentrant {
         verifySig(
-            abi.encodePacked(
+            abi.encode(
                 "DAO_setUnstoppableDomainsTokenContract",
                 address(this),
                 _erc721Address,
@@ -113,7 +113,7 @@ contract DAO_LAYER_B is BASIC {
         address _EO_STAKING_Address
     ) external nonReentrant {
         verifySig(
-            abi.encodePacked(
+            abi.encode(
                 "DAO_setMinimumPeriod",
                 address(this),
                 _minUpgradeInterval,
@@ -138,7 +138,7 @@ contract DAO_LAYER_B is BASIC {
         nonReentrant
     {
         verifySig(
-            abi.encodePacked(
+            abi.encode(
                 "DAO_endStaking",
                 address(this),
                 _delay,
@@ -167,7 +167,7 @@ contract DAO_LAYER_B is BASIC {
         address _EO_STAKING_Address
     ) external nonReentrant {
         verifySig(
-            abi.encodePacked(
+            abi.encode(
                 "DAO_endStaking",
                 address(this),
                 _utilAddress,
@@ -206,7 +206,7 @@ contract DAO_LAYER_B is BASIC {
         address _EO_STAKING_Address
     ) external nonReentrant {
         verifySig(
-            abi.encodePacked(
+            abi.encode(
                 "DAO_setStakeLevels",
                 address(this),
                 _stakeTier,
@@ -243,7 +243,7 @@ contract DAO_LAYER_B is BASIC {
         address vaultContractAddress
     ) external nonReentrant {
         verifySig(
-            abi.encodePacked(
+            abi.encode(
                 "DAO_setTokenContracts",
                 address(this),
                 _utilAddress,
@@ -268,7 +268,7 @@ contract DAO_LAYER_B is BASIC {
     function verifySig(bytes memory _sigArray) internal {
         DAO_STOR.verifyResolution(
             keccak256(
-                abi.encodePacked(keccak256(_sigArray), CLOCK.thisEpoch())
+                abi.encode(keccak256(_sigArray), CLOCK.thisEpoch())
             ),
             _msgSender()
         );

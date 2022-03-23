@@ -161,7 +161,7 @@ contract DAO_STOR is BASIC {
         returns (bytes32)
     {
         bytes32 motion = keccak256(
-            abi.encodePacked(_motion, (CLOCK.thisEpoch() + 2))
+            abi.encode(_motion, (CLOCK.thisEpoch() + 2))
         );
         require(
             motions[motion].votesFor == 0,
