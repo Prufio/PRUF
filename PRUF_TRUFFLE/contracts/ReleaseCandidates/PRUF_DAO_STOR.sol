@@ -24,7 +24,7 @@ import "../Resources/RESOURCE_PRUF_DAO_INTERFACES.sol";
 
 contract DAO_STOR is BASIC {
     //SET THESE UNDER DAO CONTROL
-    uint32 public quorum = 1;
+    uint32 public quorum = 5;
     uint32 public passingMargin = 60; //in percent
     uint32 public maximumVote = 100000; //max vote in whole PRUF staked (future implementation)
 
@@ -77,21 +77,20 @@ contract DAO_STOR is BASIC {
      * @dev Default param setter
      * @param _quorum new value for minimum required voters to create a quorum
      */
-    function setQuorum(uint32 _quorum) external isDAOlayer returns(uint256){
+    function setQuorum(uint32 _quorum) external isDAOlayer {
         uint256 mintedNodes;
 
         (mintedNodes, , ) = NODE_MGR.currentNodePricingInfo();
         mintedNodes = mintedNodes - 1000000;
 
-        // require(
-        //     _quorum < ((mintedNodes / 20) + 10), //CTS:EXAMINE can this become a decimal issue?
-        //     "DAO_STOR:SQ:proposed Quorum > 5% (+10) of the indigenous node population"
-        // );
+        require(
+            _quorum < ((mintedNodes / 20) + 10), //CTS:EXAMINE can this become a decimal issue?
+            "DAO_STOR:SQ:proposed Quorum > 5% (+10) of the indigenous node population"
+        );
         //^^^^^^^checks^^^^^^^^^
 
         quorum = _quorum;
         //^^^^^^^effects^^^^^^^^^
-        return (mintedNodes / 20) + 10;
     }
 
     /**

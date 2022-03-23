@@ -2181,59 +2181,95 @@ contract("DAO_STOR", (accounts) => {
       });
   });
 
-  it("Should retrieve quorum(1)", async () => {
-    result = await DAO_STOR.quorum({
+  it("Should mint 30000 tokens to account2", async () => {
+    return UTIL_TKN.mint(account2, "30000000000000000000000", {
       from: account1,
     });
-    return console.log("result:", result);
   });
 
-  it("Should set quorum to 2", async () => {
-    result = await DAO_STOR.setQuorum("2", { from: account1 });
-    return console.log(result);
+  //1
+  it("Should fail because caller !DAO_LAYER", () => {
+    console.log(
+      "//**************************************END DAO_STOR SETUP**********************************************/"
+    );
+    console.log(
+      "//**************************************BEGIN DAO_STOR FAIL BATCH (48)**********************************************/"
+    );
+    console.log(
+      "//**************************************BEGIN setQuorum FAIL BATCH**********************************************/"
+    );
+    return DAO_STOR.setQuorum("2", { from: account2 });
   });
 
-  it("Should retrieve quorum(2)", async () => {
-    result = await DAO_STOR.quorum({
+  //2
+  it("Should fail because quorum is too high", () => {
+    return DAO_STOR.setQuorum("15", { from: account1 });
+  });
+
+  //3
+  it("Should fail because caller !DAO_LAYER", () => {
+    console.log(
+      "//**************************************END setQuorum FAIL BATCH**********************************************/"
+    );
+    console.log(
+      "//**************************************BEGIN setPassingMargin FAIL BATCH**********************************************/"
+    );
+    return DAO_STOR.setPassingMargin('51', {
+      from: account2,
+    });
+  });
+
+  //4
+  it("Should fail because passing margin is under 50", () => {
+    return DAO_STOR.setPassingMargin('49', {
       from: account1,
     });
-    return console.log("result:", result);
   });
 
-  it("Should retrieve passingMargin(60)", async () => {
-    result = await DAO_STOR.passingMargin({
+  //5
+  it("Should fail because caller !DAO_LAYER", () => {
+    console.log(
+      "//**************************************END setPassingMargin FAIL BATCH**********************************************/"
+    );
+    console.log(
+      "//**************************************BEGIN setMaxVote FAIL BATCH**********************************************/"
+    );
+    return DAO_STOR.setMaxVote('99999999', {
+      from: account2,
+    });
+  });
+
+  //6
+  it("Should fail because MaxVote is too high", () => {
+    return DAO_STOR.setMaxVote('100000001', {
       from: account1,
     });
-    return console.log("result:", result);
   });
 
-  it("Should set passingMargin to 65", async () => {
-    return DAO_STOR.setPassingMargin("65", { from: account1 });
-  });
-
-  it("Should retrieve passingMargin(65)", async () => {
-    result = await DAO_STOR.passingMargin({
-      from: account1,
+  //7
+  it("Should fail because caller !CONTRACT_ADMIN", () => {
+    console.log(
+      "//**************************************END setMaxVote FAIL BATCH**********************************************/"
+    );
+    console.log(
+      "//**************************************BEGIN resolveContractAddresses FAIL BATCH**********************************************/"
+    );
+    return DAO_STOR.resolveContractAddresses({
+      from: account2,
     });
-    return console.log("result:", result);
   });
 
-  it("Should retrieve maximumVote(100000)", async () => {
-    result = await DAO_STOR.maximumVote({
-      from: account1,
+  //8
+  it("Should fail because caller !DAO_ADMIN", () => {
+    console.log(
+      "//**************************************END resolveContractAddresses FAIL BATCH**********************************************/"
+    );
+    console.log(
+      "//**************************************BEGIN adminCreateMotion FAIL BATCH**********************************************/"
+    );
+    return DAO_STOR.adminCreateMotion(rgt1, account1, {
+      from: account9,
     });
-    return console.log("result:", result);
-  });
-
-  it("Should set maximumVote to 150000", async () => {
-    return DAO_STOR.setMaxVote("150000", { from: account1 });
-  });
-
-  it("Should retrieve maximumVote(150000)", async () => {
-    result = await DAO_STOR.maximumVote({
-      from: account1,
-    });
-    return console.log("result:", result);
   });
 
   it("Should set grantRoleSig", () => {
@@ -2245,163 +2281,150 @@ contract("DAO_STOR", (accounts) => {
     return console.log(grantRoleSig);
   });
 
-  it("Should setEpoch", async () => {
-    return CLOCK.setClock("1", "10", { from: account1 });
+  it("Should createMotion", () => {
+    return DAO_STOR.adminCreateMotion(grantRoleSig, account1, {
+      from: account1,
+    });
   });
 
-  it("Should create Motion for grandRole in A_TKN for defaultAdminRole to DAO_A", async () => {
+  //9
+  it("Should fail because motion already exists", () => {
     return DAO_STOR.adminCreateMotion(grantRoleSig, account1, {
       from: account1,
     });
   });
 
   it("Should set grantRoleSigComplete", async () => {
-    // await timeout(30000).then(async () => {
     grantRoleSigComplete = await DAO_STOR.getMotionByIndex("0", {
       from: account1,
     });
     return console.log(grantRoleSigComplete);
-    // });
   });
 
-  it("Should return motionData", async () => {
-    // console.log({ grantRoleSigComplete });
-    result = await DAO_STOR.getMotionData(grantRoleSigComplete, {
+  //10
+  it("Should fail because caller !DAO_ADMIN", () => {
+    console.log(
+      "//**************************************END adminCreateMotion FAIL BATCH**********************************************/"
+    );
+    console.log(
+      "//**************************************BEGIN adminVote FAIL BATCH**********************************************/"
+    );
+    return DAO_STOR.adminVote(grantRoleSigComplete, "1000001", "10000", "1", account1, {
+      from: account9,
+    });
+  });
+
+  //11
+  it("Should fail because motion not in proposed status", () => {
+    return DAO_STOR.adminVote(grantRoleSig, "1000001", "10000", "1", account1, {
       from: account1,
     });
-    return console.log(result);
   });
 
-  it("Should return current epoch", async () => {
+  it("Should setEpoch", async () => {
+    return CLOCK.setClock("1", "10", { from: account1 });
+  });
+
+  it("Should vote on motion", () => {
+    return DAO_STOR.adminVote(grantRoleSigComplete, "1000001", "10000", "1", account1, {
+      from: account1,
+    });
+  });
+
+  it("Should vote on motion", () => {
+    return DAO_STOR.adminVote(grantRoleSigComplete, "1000002", "10000", "1", account1, {
+      from: account1,
+    });
+  });
+
+  it("Should vote on motion", () => {
+    return DAO_STOR.adminVote(grantRoleSigComplete, "1000003", "10000", "1", account1, {
+      from: account1,
+    });
+  });
+
+  it("Should vote on motion", () => {
+    return DAO_STOR.adminVote(grantRoleSigComplete, "1000004", "10000", "1", account1, {
+      from: account1,
+    });
+  });
+
+  it("Should vote on motion", () => {
+    return DAO_STOR.adminVote(grantRoleSigComplete, "1000005", "10000", "1", account1, {
+      from: account1,
+    });
+  });
+
+  //12
+  it("Should fail because node has already voted", () => {
+    return DAO_STOR.adminVote(grantRoleSigComplete, "1000001", "10000", "1", account1, {
+      from: account1,
+    });
+  });
+
+  //13
+  it("Should fail because y/n !1||0", () => {
+    return DAO_STOR.adminVote(grantRoleSigComplete, "1000006", "10000", "2", account1, {
+      from: account1,
+    });
+  });
+
+  //14
+  it("Should fail because caller !DAO_LAYER", () => {
+    console.log(
+      "//**************************************END adminVote FAIL BATCH**********************************************/"
+    );
+    console.log(
+      "//**************************************BEGIN verifyResolution FAIL BATCH**********************************************/"
+    );
+    return DAO_STOR.verifyResolution(grantRoleSigComplete, account1, {
+      from: account9,
+    });
+  });
+
+  //15
+  it("Should fail because motion is not valid in this epoch", () => {
+    return DAO_STOR.verifyResolution(grantRoleSigComplete, account1, {
+      from: account1,
+    });
+  });
+
+  it("Should setEpoch", async () => {
     return CLOCK.setClock("2", "10", { from: account1 });
   });
 
-  it("Should get nodeActivityByEpoch(null)", async () => {
-    var Record = [];
-
-    return await DAO_STOR.getNodeActivityByEpoch(
-      "2",
-      "1000001",
-      { from: account1 },
-      function (_err, _result) {
-        if (_err) {
-        } else {
-          Record = Object.values(_result);
-          console.log(Record);
-        }
-      }
-    );
+  it("Should resolve motion", () => {
+    return DAO_STOR.verifyResolution(grantRoleSigComplete, account1, {
+      from: account1,
+    });
   });
 
-  it("Should get nodeVotingHistory(null)", async () => {
-    var Record = [];
-
-    return await DAO_STOR.getNodeVotingHistory(
-      grantRoleSigComplete,
-      "1000001",
-      { from: account1 },
-      function (_err, _result) {
-        if (_err) {
-        } else {
-          Record = Object.values(_result);
-          console.log(Record);
-        }
-      }
-    );
+  //16
+  it("Should fail because motion already resolved", () => {
+    return DAO_STOR.verifyResolution(grantRoleSigComplete, account1, {
+      from: account1,
+    });
   });
 
-  it("Should vote on motion", async () => {
-    return DAO_STOR.adminVote(
-      grantRoleSigComplete,
-      "1000001",
-      "10000",
-      "1",
-      account1,
-      {
-        from: account1,
-      }
-    );
+  it("Should createMotion(1)", () => {
+    return DAO_STOR.adminCreateMotion(grantRoleSig, account1, {
+      from: account1,
+    });
   });
 
-  it("Should vote on motion", async () => {
-    return DAO_STOR.adminVote(
-      grantRoleSigComplete,
-      "1000002",
-      "10000",
-      "1",
-      account1,
-      {
-        from: account1,
-      }
-    );
-  });
-
-  it("Should vote on motion", async () => {
-    return DAO_STOR.adminVote(
-      grantRoleSigComplete,
-      "1000003",
-      "10000",
-      "1",
-      account1,
-      {
-        from: account1,
-      }
-    );
-  });
-
-  it("Should vote on motion", async () => {
-    return DAO_STOR.adminVote(
-      grantRoleSigComplete,
-      "1000004",
-      "10000",
-      "1",
-      account1,
-      {
-        from: account1,
-      }
-    );
-  });
-
-  it("Should get nodeActivityByEpoch(???)", async () => {
-    var Record = [];
-
-    return await DAO_STOR.getNodeActivityByEpoch(
-      "2",
-      "1000001",
-      { from: account1 },
-      function (_err, _result) {
-        if (_err) {
-        } else {
-          Record = Object.values(_result);
-          console.log(Record);
-        }
-      }
-    );
-  });
-
-  it("Should get nodeVotingHistory(???)", async () => {
-    var Record = [];
-
-    return await DAO_STOR.getNodeVotingHistory(
-      grantRoleSigComplete,
-      "1000001",
-      { from: account1 },
-      function (_err, _result) {
-        if (_err) {
-        } else {
-          Record = Object.values(_result);
-          console.log(Record);
-        }
-      }
-    );
+  it("Should set grantRoleSigComplete", async () => {
+    grantRoleSigComplete = await DAO_STOR.getMotionByIndex("1", {
+      from: account1,
+    });
+    return console.log(grantRoleSigComplete);
   });
 
   it("Should setEpoch", async () => {
     return CLOCK.setClock("3", "10", { from: account1 });
   });
 
-  it("Should verifyResolution", async () => {
-    return DAO_STOR.verifyResolution(grantRoleSigComplete, account1, {
+  it("Should vote no on motion(1)", () => {
+    return DAO_STOR.adminVote(grantRoleSigComplete, "1000001", "10000", "0", account1, {
       from: account1,
     });
   });
@@ -2410,25 +2433,53 @@ contract("DAO_STOR", (accounts) => {
     return CLOCK.setClock("4", "10", { from: account1 });
   });
 
-  it("Should create Motion for grandRole in A_TKN for defaultAdminRole to DAO_A", async () => {
-    return DAO_STOR.adminCreateMotion(grantRoleSig, account1, {
+  //17
+  it("Should fail because motion was rejected by majority", () => {
+    return DAO_STOR.verifyResolution(grantRoleSigComplete, account1, {
       from: account1,
     });
   });
 
-  it("Should create Motion for grandRole in A_TKN for defaultAdminRole to DAO_A", async () => {
-    grantRoleSigComplete = await DAO_STOR.getMotionByIndex("1", {
+  it("Should setEpoch", async () => {
+    return CLOCK.setClock("3", "10", { from: account1 });
+  });
+
+  it("Should vote yes on motion(1)", () => {
+    return DAO_STOR.adminVote(grantRoleSigComplete, "1000002", "10000", "1", account1, {
       from: account1,
     });
-    console.log("grantRoleSigComplete", grantRoleSigComplete);
   });
+
+  it("Should vote yes on motion(1)", () => {
+    return DAO_STOR.adminVote(grantRoleSigComplete, "1000003", "20000", "1", account1, {
+      from: account1,
+    });
+  });
+
+  it("Should vote no on motion(1)", () => {
+    return DAO_STOR.adminVote(grantRoleSigComplete, "1000004", "10000", "0", account1, {
+      from: account1,
+    });
+  });
+
+  it("Should setEpoch", async () => {
+    return CLOCK.setClock("4", "10", { from: account1 });
+  });
+
+  // it("Should return motionData", async () => {
+  //   // console.log({ grantRoleSigComplete });
+  //   result = await DAO_STOR.getMotionData(grantRoleSigComplete, {
+  //     from: account1,
+  //   });
+  //   return console.log(Object.values({result}));
+  // });
 
   it("Should return motionData", async () => {
-    var Record = {};
+    var Record = [];
 
     return await DAO_STOR.getMotionData(
       grantRoleSigComplete,
-      { from: account1 },
+      { from: account2 },
       function (_err, _result) {
         if (_err) {
         } else {
@@ -2439,29 +2490,96 @@ contract("DAO_STOR", (accounts) => {
     );
   });
 
-  it("Should return motionDataStruct", async () => {
-    result = await DAO_STOR.getMotionDataStruct(
+  //18
+  it("Should fail because does not meet quorum", () => {
+    return DAO_STOR.verifyResolution(grantRoleSigComplete, account1, {
+      from: account1,
+    });
+  });
+
+  it("Should setEpoch", async () => {
+    return CLOCK.setClock("3", "10", { from: account1 });
+  });
+
+  it("Should vote yes on motion(1)", () => {
+    return DAO_STOR.adminVote(grantRoleSigComplete, "1000005", "1000", "0", account1, {
+      from: account1,
+    });
+  });
+
+  it("Should setEpoch", async () => {
+    return CLOCK.setClock("4", "10", { from: account1 });
+  });
+
+  it("Should return motionData", async () => {
+    var Record = [];
+
+    return await DAO_STOR.getMotionData(
       grantRoleSigComplete,
-      { from: account1 },
+      { from: account2 },
       function (_err, _result) {
         if (_err) {
         } else {
-          // Record = Object.values(result);
-          console.log({result});
+          Record = Object.values(_result);
+          console.log(Record);
         }
       }
     );
   });
 
-  it("Should veto motion", async () => {
-    return DAO_STOR.adminVeto(grantRoleSigComplete, {
+  //19
+  it("Should fail because vote does not pass due to majority", () => {
+    return DAO_STOR.verifyResolution(grantRoleSigComplete, account1, {
+      from: account1,
+    });
+  });
+
+  it("Should setEpoch", async () => {
+    return CLOCK.setClock("3", "10", { from: account1 });
+  });
+
+  it("Should vote no on motion(1)", () => {
+    return DAO_STOR.adminVote(grantRoleSigComplete, "1000006", "1000000", "1", account1, {
+      from: account1,
+    });
+  });
+
+  it("Should vote no on motion(1)", () => {
+    return DAO_STOR.adminVote(grantRoleSigComplete, "1000007", "1000000", "1", account1, {
+      from: account1,
+    });
+  });
+
+  it("Should setEpoch", async () => {
+    return CLOCK.setClock("4", "10", { from: account1 });
+  });
+
+  it("Should return motionData", async () => {
+    var Record = [];
+
+    return await DAO_STOR.getMotionData(
+      grantRoleSigComplete,
+      { from: account2 },
+      function (_err, _result) {
+        if (_err) {
+        } else {
+          Record = Object.values(_result);
+          console.log(Record);
+        }
+      }
+    );
+  });
+
+  //20
+  it("Should fail because caller not authorized to execute resolution", () => {
+    return DAO_STOR.verifyResolution(grantRoleSigComplete, account2, {
       from: account1,
     });
   });
 
   it("Should set SharesAddress", async () => {
     console.log(
-      "//**************************************END NODE_MGR TEST**********************************************/"
+      "//**************************************END DAO_STOR TEST**********************************************/"
     );
     console.log(
       "//**************************************BEGIN THE WORKS CUSTODIAL**********************************************/"

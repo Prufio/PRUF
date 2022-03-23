@@ -146,9 +146,7 @@ let revokeRoleSigComplete;
 let renounceRoleSig;
 let renounceRoleSigComplete;
 
-let result;
-
-contract("DAO_STOR", (accounts) => {
+contract("DAO", (accounts) => {
   console.log(
     "//**************************BEGIN BOOTSTRAP**************************//"
   );
@@ -620,21 +618,9 @@ contract("DAO_STOR", (accounts) => {
     });
   });
 
-  it("Should authorize account1 as DAOadmin in DAO_A", () => {
-    console.log("Authorizing account1");
-    return DAO_STOR.grantRole(DAOlayerRoleB32, account1, {
-      from: account1,
-    });
-  });
-
   it("Should authorize account1 as DAOadmin in DAO_STOR", () => {
     console.log("Authorizing account1");
     return DAO_STOR.grantRole(DAOadminRoleB32, DAO.address, { from: account1 });
-  });
-
-  it("Should authorize account1 as DAOadmin in DAO_STOR", () => {
-    console.log("Authorizing account1");
-    return DAO_STOR.grantRole(DAOadminRoleB32, account1, { from: account1 });
   });
 
   // it("Should authorize account1 as DAOadmin in DAO_A", () => {
@@ -1143,15 +1129,15 @@ contract("DAO_STOR", (accounts) => {
     console.log("Authorizing APP_NC");
     return A_TKN.grantRole(minterRoleB32, APP_NC.address, {
       from: account1,
-    });
-  });
+    })
+  })
 
   it("Should authorize all minter contracts for minting A_TKN(s)", () => {
-    console.log("Authorizing APP");
-    return A_TKN.grantRole(minterRoleB32, APP.address, {
-      from: account1,
-      // });
-    })
+        console.log("Authorizing APP");
+        return A_TKN.grantRole(minterRoleB32, APP.address, {
+          from: account1,
+        // });
+      })
 
       .then(() => {
         console.log("Authorizing RCLR");
@@ -2181,287 +2167,70 @@ contract("DAO_STOR", (accounts) => {
       });
   });
 
-  it("Should retrieve quorum(1)", async () => {
-    result = await DAO_STOR.quorum({
+  it("Should mint 30000 tokens to account1", async () => {
+    return UTIL_TKN.mint(account1, "30000000000000000000000", {
       from: account1,
     });
-    return console.log("result:", result);
   });
 
-  it("Should set quorum to 2", async () => {
-    result = await DAO_STOR.setQuorum("2", { from: account1 });
-    return console.log(result);
-  });
-
-  it("Should retrieve quorum(2)", async () => {
-    result = await DAO_STOR.quorum({
-      from: account1,
-    });
-    return console.log("result:", result);
-  });
-
-  it("Should retrieve passingMargin(60)", async () => {
-    result = await DAO_STOR.passingMargin({
-      from: account1,
-    });
-    return console.log("result:", result);
-  });
-
-  it("Should set passingMargin to 65", async () => {
-    return DAO_STOR.setPassingMargin("65", { from: account1 });
-  });
-
-  it("Should retrieve passingMargin(65)", async () => {
-    result = await DAO_STOR.passingMargin({
-      from: account1,
-    });
-    return console.log("result:", result);
-  });
-
-  it("Should retrieve maximumVote(100000)", async () => {
-    result = await DAO_STOR.maximumVote({
-      from: account1,
-    });
-    return console.log("result:", result);
-  });
-
-  it("Should set maximumVote to 150000", async () => {
-    return DAO_STOR.setMaxVote("150000", { from: account1 });
-  });
-
-  it("Should retrieve maximumVote(150000)", async () => {
-    result = await DAO_STOR.maximumVote({
-      from: account1,
-    });
-    return console.log("result:", result);
-  });
-
-  it("Should set grantRoleSig", () => {
-    grantRoleSig = web3.utils.keccak256(web3.eth.abi.encodeParameters(
-      ['string', 'address', 'bytes32', 'address', 'string'],
-      ['DAO_grantRole', DAO_A.address, minterRoleB32, APP_NC.address, 'A_TKN']
-      )
+  //1
+  it("Should fail because caller !CONTRACT_ADMIN", () => {
+    console.log(
+      "//**************************************END DAO SETUP**********************************************/"
     );
-    return console.log(grantRoleSig);
-  });
-
-  it("Should setEpoch", async () => {
-    return CLOCK.setClock("1", "10", { from: account1 });
-  });
-
-  it("Should create Motion for grandRole in A_TKN for defaultAdminRole to DAO_A", async () => {
-    return DAO_STOR.adminCreateMotion(grantRoleSig, account1, {
-      from: account1,
+    console.log(
+      "//**************************************BEGIN DAO FAIL BATCH (4)**********************************************/"
+    );
+    console.log(
+      "//**************************************BEGIN resolveContractAddresses FAIL BATCH**********************************************/"
+    );
+    return DAO.resolveContractAddresses({
+      from: account2,
     });
   });
 
-  it("Should set grantRoleSigComplete", async () => {
-    // await timeout(30000).then(async () => {
-    grantRoleSigComplete = await DAO_STOR.getMotionByIndex("0", {
-      from: account1,
-    });
-    return console.log(grantRoleSigComplete);
-    // });
-  });
-
-  it("Should return motionData", async () => {
-    // console.log({ grantRoleSigComplete });
-    result = await DAO_STOR.getMotionData(grantRoleSigComplete, {
-      from: account1,
-    });
-    return console.log(result);
-  });
-
-  it("Should return current epoch", async () => {
-    return CLOCK.setClock("2", "10", { from: account1 });
-  });
-
-  it("Should get nodeActivityByEpoch(null)", async () => {
-    var Record = [];
-
-    return await DAO_STOR.getNodeActivityByEpoch(
-      "2",
-      "1000001",
-      { from: account1 },
-      function (_err, _result) {
-        if (_err) {
-        } else {
-          Record = Object.values(_result);
-          console.log(Record);
-        }
-      }
+  //2
+  it("Should fail because caller !PRUF holder", () => {
+    console.log(
+      "//**************************************END resolveContractAddresses FAIL BATCH**********************************************/"
     );
-  });
-
-  it("Should get nodeVotingHistory(null)", async () => {
-    var Record = [];
-
-    return await DAO_STOR.getNodeVotingHistory(
-      grantRoleSigComplete,
-      "1000001",
-      { from: account1 },
-      function (_err, _result) {
-        if (_err) {
-        } else {
-          Record = Object.values(_result);
-          console.log(Record);
-        }
-      }
+    console.log(
+      "//**************************************BEGIN createMotion FAIL BATCH**********************************************/"
     );
-  });
-
-  it("Should vote on motion", async () => {
-    return DAO_STOR.adminVote(
-      grantRoleSigComplete,
-      "1000001",
-      "10000",
-      "1",
-      account1,
-      {
-        from: account1,
-      }
-    );
-  });
-
-  it("Should vote on motion", async () => {
-    return DAO_STOR.adminVote(
-      grantRoleSigComplete,
-      "1000002",
-      "10000",
-      "1",
-      account1,
-      {
-        from: account1,
-      }
-    );
-  });
-
-  it("Should vote on motion", async () => {
-    return DAO_STOR.adminVote(
-      grantRoleSigComplete,
-      "1000003",
-      "10000",
-      "1",
-      account1,
-      {
-        from: account1,
-      }
-    );
-  });
-
-  it("Should vote on motion", async () => {
-    return DAO_STOR.adminVote(
-      grantRoleSigComplete,
-      "1000004",
-      "10000",
-      "1",
-      account1,
-      {
-        from: account1,
-      }
-    );
-  });
-
-  it("Should get nodeActivityByEpoch(???)", async () => {
-    var Record = [];
-
-    return await DAO_STOR.getNodeActivityByEpoch(
-      "2",
-      "1000001",
-      { from: account1 },
-      function (_err, _result) {
-        if (_err) {
-        } else {
-          Record = Object.values(_result);
-          console.log(Record);
-        }
-      }
-    );
-  });
-
-  it("Should get nodeVotingHistory(???)", async () => {
-    var Record = [];
-
-    return await DAO_STOR.getNodeVotingHistory(
-      grantRoleSigComplete,
-      "1000001",
-      { from: account1 },
-      function (_err, _result) {
-        if (_err) {
-        } else {
-          Record = Object.values(_result);
-          console.log(Record);
-        }
-      }
-    );
-  });
-
-  it("Should setEpoch", async () => {
-    return CLOCK.setClock("3", "10", { from: account1 });
-  });
-
-  it("Should verifyResolution", async () => {
-    return DAO_STOR.verifyResolution(grantRoleSigComplete, account1, {
-      from: account1,
+    return DAO.createMotion(rgt1, {
+      from: account9,
     });
   });
 
-  it("Should setEpoch", async () => {
-    return CLOCK.setClock("4", "10", { from: account1 });
-  });
-
-  it("Should create Motion for grandRole in A_TKN for defaultAdminRole to DAO_A", async () => {
-    return DAO_STOR.adminCreateMotion(grantRoleSig, account1, {
-      from: account1,
+  //3
+  it("Should fail because caller !have VETO_ROLE", () => {
+    console.log(
+      "//**************************************END createMotion FAIL BATCH**********************************************/"
+    );
+    console.log(
+      "//**************************************BEGIN veto FAIL BATCH**********************************************/"
+    );
+    return DAO.veto(rgt1, {
+      from: account9,
     });
   });
 
-  it("Should create Motion for grandRole in A_TKN for defaultAdminRole to DAO_A", async () => {
-    grantRoleSigComplete = await DAO_STOR.getMotionByIndex("1", {
-      from: account1,
-    });
-    console.log("grantRoleSigComplete", grantRoleSigComplete);
-  });
-
-  it("Should return motionData", async () => {
-    var Record = {};
-
-    return await DAO_STOR.getMotionData(
-      grantRoleSigComplete,
-      { from: account1 },
-      function (_err, _result) {
-        if (_err) {
-        } else {
-          Record = Object.values(_result);
-          console.log(Record);
-        }
-      }
+  //4
+  it("Should fail because caller !Node holder", () => {
+    console.log(
+      "//**************************************END veto FAIL BATCH**********************************************/"
     );
-  });
-
-  it("Should return motionDataStruct", async () => {
-    result = await DAO_STOR.getMotionDataStruct(
-      grantRoleSigComplete,
-      { from: account1 },
-      function (_err, _result) {
-        if (_err) {
-        } else {
-          // Record = Object.values(result);
-          console.log({result});
-        }
-      }
+    console.log(
+      "//**************************************BEGIN vote FAIL BATCH**********************************************/"
     );
-  });
-
-  it("Should veto motion", async () => {
-    return DAO_STOR.adminVeto(grantRoleSigComplete, {
-      from: account1,
+    return DAO.vote(rgt1, '1000001', "1", {
+      from: account9,
     });
   });
 
   it("Should set SharesAddress", async () => {
     console.log(
-      "//**************************************END NODE_MGR TEST**********************************************/"
+      "//**************************************END DAO TEST**********************************************/"
     );
     console.log(
       "//**************************************BEGIN THE WORKS CUSTODIAL**********************************************/"
