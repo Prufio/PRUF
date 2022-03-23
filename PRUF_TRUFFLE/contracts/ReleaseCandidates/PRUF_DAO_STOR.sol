@@ -50,7 +50,7 @@ contract DAO_STOR is BASIC {
     /**
      * @dev Verify user credentials
      * Originating Address:
-     *      has DAO_ROLE
+     *      has DAO_ADMIN_ROLE
      */
     modifier isDAOadmin() {
         require(
@@ -63,7 +63,7 @@ contract DAO_STOR is BASIC {
     /**
      * @dev Verify user credentials
      * Originating Address:
-     *      has DAO_ROLE
+     *      has DAO_LAYER_ROLE
      */
     modifier isDAOlayer() {
         require(
@@ -79,6 +79,7 @@ contract DAO_STOR is BASIC {
      */
     function setQuorum(uint32 _quorum) external isDAOlayer returns(uint256){
         uint256 mintedNodes;
+
         (mintedNodes, , ) = NODE_MGR.currentNodePricingInfo();
         mintedNodes = mintedNodes - 1000000;
 
@@ -114,7 +115,7 @@ contract DAO_STOR is BASIC {
      */
     function setMaxVote(uint32 _max) external isDAOlayer {
         require(
-            (_max < 100000000) && _max <= (maximumVote * 2),
+            (_max < 100000000) && (_max <= (maximumVote * 2)),
             "DAO_STOR:SMV:Maximum vote cannot be more than 100 million or more than twice the previous value"
         );
         //^^^^^^^checks^^^^^^^^^
@@ -155,9 +156,13 @@ contract DAO_STOR is BASIC {
      * @param _motion the hash of the referring contract address, function name, and parmaeters
      * @param _proposer proposing address
      */
-    function adminCreateMotion(bytes32 _motion, address _proposer) external isDAOadmin returns (bytes32) {
+    function adminCreateMotion(bytes32 _motion, address _proposer)
+        external
+        isDAOadmin
+        returns (bytes32)
+    {
         bytes32 motion = keccak256(
-            abi.encodePacked(_motion, (CLOCK.thisEpoch() + 2))
+            abi.encode(_motion, (CLOCK.thisEpoch() + 2))
         );
         require(
             motions[motion].votesFor == 0,
@@ -167,29 +172,28 @@ contract DAO_STOR is BASIC {
         //^^^^^^^checks^^^^^^^^^
 
         motions[motion].proposer = _proposer;
-        motions[motion].votesFor = 1; //put motion in proposed status
-        motions[motion].votesAgainst = 1; //put motion in proposed status
-        motions[motion].voterCount = 0;
-        motions[motion].votingEpoch = CLOCK.thisEpoch() + 1; //voting will start in one epoch
+        motions[motion].votesFor = 1; //put motion in proposed status...1 vote for and against
+        motions[motion].votesAgainst = 1; //put motion in proposed status...1 vote for and against
+        motions[motion].voterCount = 0; //initialize JIC is a repeat
+        motions[motion].votingEpoch = CLOCK.thisEpoch() + 1; //voting can start in one epoch
 
-        indexedMotions[currentMotion] = motion;
-        currentMotion++;
+        indexedMotions[currentMotion] = motion; //set enumaratable
+        currentMotion++; //increment enumeration for next motion
+        //^^^^^^^effects^^^^^^^^^
 
         emit REPORT(motion, "Motion Created");
-        return (motion);
-        //^^^^^^^effects^^^^^^^^^
+        return (motion); //return the finished signature hash of the motion
+        //^^^^^^^interactions^^^^^^^^^
     }
 
     /**
-     * @dev Admin veto for incremental transfer of power to the DAO---------CAUTION:CENTRALIZATION RISK
-     * @param _motion // propsed action
+     * @dev Admin veto for incrementel transfer of power to the DAO---------CAUTION:CENTRALIZATION RISK
+     * @param _motion // propsed action to veto
      */
-    function adminVeto(
-        bytes32 _motion // propsed action
-    ) external isDAOadmin{
+    function adminVeto(bytes32 _motion) external isDAOadmin {
         require(
             motions[_motion].votesFor != 0,
-            "DAO_STOR:AVO:Motion not in 'proposed' status"
+            "DAO_STOR:AVeto:Motion not in 'proposed' status"
         );
         //^^^^^^^checks^^^^^^^^^
 
@@ -217,36 +221,40 @@ contract DAO_STOR is BASIC {
     ) external isDAOadmin {
         require(
             motions[_motion].votesFor != 0,
-            "DAO_STOR:AV:Motion not in 'proposed' status"
+            "DAO_STOR:AVote:Motion not in 'proposed' status"
         );
         require(
             CLOCK.thisEpoch() == (motions[_motion].votingEpoch),
-            "DAO_STOR:AV:Voting window not open"
+            "DAO_STOR:AVote:Voting window not open"
         );
         require(
             nodeVoteHistory[_motion][_node].votes == 0,
-            "DAO_STOR:AV:Node has already cast a vote on this motion"
+            "DAO_STOR:AVote:Node has already cast a vote on this motion"
         );
-        require( (_yn == 0) || (_yn == 1),
-        "DAO_STOR:AV:vote type must be 1 or 0 only"
+        require(
+            (_yn == 0) || (_yn == 1),
+            "DAO_STOR:AVote:vote type must be 1 or 0 only"
         );
         //^^^^^^^checks^^^^^^^^^
 
         uint32 votes = _votes;
         if (votes > maximumVote) {
             votes = maximumVote;
-        }
+        } // truncate votes cast to maximumVote
 
-        motions[_motion].voterCount++; //increment count of voters participating
+        motions[_motion].voterCount++; //increment counter of participating voters
 
         if (_yn == 1) {
+            //cast votes for
             motions[_motion].votesFor = motions[_motion].votesFor + votes;
-        } else { 
+        } else {
+            //cast votes against
             motions[_motion].votesAgainst =
                 motions[_motion].votesAgainst +
                 votes;
         }
 
+        //store voting metrics
         nodeVoteHistory[_motion][_node].votes = _votes;
         nodeVoteHistory[_motion][_node].yn = _yn;
         yesVoters[_motion][_voter] = _yn;
@@ -258,8 +266,9 @@ contract DAO_STOR is BASIC {
     }
 
     /**
-     * @dev Throws if a resolution is not approved. clears the motion if successful
+     * @dev Throws if a resolution is not approved. clears the motion if successful, returning control to the calling contract
      * @param _motion the motion hash to check
+     * @param _caller original calling address
      * to be called by DAO_LAYER contracts as a check prior to executing functions
      */
     function verifyResolution(bytes32 _motion, address _caller)
@@ -275,7 +284,7 @@ contract DAO_STOR is BASIC {
 
         require(
             thisMotion.proposer != address(0),
-            "DAO_STOR:VR:resolution has already been exercised" //CTS:EXAMINE shouldnt this br 'already been exercised or does not exist'
+            "DAO_STOR:VR:resolution has already been exercised or does not exist"
         );
 
         require(
@@ -300,8 +309,9 @@ contract DAO_STOR is BASIC {
                 (yesVoters[_motion][_caller] == 1),
             "DAO_STOR:VR:Caller not authorized to execute resolution"
         );
+        //^^^^^^^checks^^^^^^^^^
 
-        motions[_motion].proposer = address(0); //mark as exercised
+        motions[_motion].proposer = address(0); //mark as motion as exercised (cannot be reused)
         //^^^^^^^effects^^^^^^^^^
     }
 
@@ -315,6 +325,8 @@ contract DAO_STOR is BASIC {
         view
         returns (bytes32)
     {
+        //^^^^^^^checks^^^^^^^^^
+
         return (indexedMotions[_motionIndex]);
         //^^^^^^^interactions^^^^^^^^^
     }
@@ -335,6 +347,8 @@ contract DAO_STOR is BASIC {
             uint256
         )
     {
+        //^^^^^^^checks^^^^^^^^^
+
         Motion memory motion = motions[_motion];
         return (
             motion.proposer,
@@ -356,6 +370,8 @@ contract DAO_STOR is BASIC {
         view
         returns (Motion memory)
     {
+        //^^^^^^^checks^^^^^^^^^
+
         return motions[_motion];
         //^^^^^^^interactions^^^^^^^^^
     }
@@ -371,6 +387,8 @@ contract DAO_STOR is BASIC {
         view
         returns (uint256)
     {
+        //^^^^^^^checks^^^^^^^^^
+
         return (uint256(votingActivity[_epoch][_node]));
         //^^^^^^^interactions^^^^^^^^^
     }
@@ -386,6 +404,7 @@ contract DAO_STOR is BASIC {
         view
         returns (Votes memory)
     {
+        //^^^^^^^checks^^^^^^^^^
         return (nodeVoteHistory[_motion][_node]);
         //^^^^^^^interactions^^^^^^^^^
     }

@@ -23,15 +23,12 @@ import "../Resources/PRUF_CORE.sol";
 import "../Resources/RESOURCE_PRUF_DAO_INTERFACES.sol";
 
 contract DAO is BASIC {
-    //^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
-
     bytes32 public constant DAO_VETO_ROLE = keccak256("DAO_VETO_ROLE");
 
     address internal DAO_STOR_Address;
     DAO_STOR_Interface internal DAO_STOR;
 
     event REPORT(bytes32 _motion, string _msg);
-
 
     /**
      * @dev Resolve contract addresses from STOR
@@ -52,7 +49,6 @@ contract DAO is BASIC {
 
         DAO_STOR_Address = STOR.resolveContractAddress("DAO_STOR");
         DAO_STOR = DAO_STOR_Interface(DAO_STOR_Address);
-
         //^^^^^^^interactions^^^^^^^^^
     }
 
@@ -68,8 +64,9 @@ contract DAO is BASIC {
             "DAO:CM:Proposer must hold =>1 PRUF"
         );
         //^^^^^^^checks^^^^^^^^^
+
         return DAO_STOR.adminCreateMotion(_motion, _msgSender());
-        //^^^^^^^effects^^^^^^^^^
+        //^^^^^^^interactions^^^^^^^^^
     }
 
     /**
@@ -81,7 +78,7 @@ contract DAO is BASIC {
     ) external {
         require(
             hasRole(DAO_VETO_ROLE, _msgSender()),
-            "DAO:AV:Calling address does not have VETO_ROLE"
+            "DAO:VETO:Calling address does not have VETO_ROLE"
         );
         //^^^^^^^checks^^^^^^^^^
 
@@ -90,8 +87,8 @@ contract DAO is BASIC {
     }
 
     /**
-     * Placeholder voting until node staking becomes complete. 
-     * The eventual contract will wuery the staked amount to calculate voting power.
+     * Placeholder voting until node staking becomes complete.
+     * The final version contract will query the staked amount to calculate voting power.
      * @dev Node voting
      * @param _motion // propsed action
      * @param _node // node doing the voting
@@ -108,7 +105,7 @@ contract DAO is BASIC {
         );
         //^^^^^^^checks^^^^^^^^^
 
-        DAO_STOR.adminVote(_motion, _node, 1000, _yn, _msgSender()); // Votes with 1000 votes only
+        DAO_STOR.adminVote(_motion, _node, 1000, _yn, _msgSender()); // Votes with 1000 votes for each node
         //^^^^^^^interactions^^^^^^^^^
     }
 }
