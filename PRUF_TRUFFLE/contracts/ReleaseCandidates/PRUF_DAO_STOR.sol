@@ -99,7 +99,7 @@ contract DAO_STOR is BASIC {
      */
     function setPassingMargin(uint32 _passingMargin) external isDAOlayer {
         require(
-            (_passingMargin > 50) && (passingMargin < 71),
+            (_passingMargin > 50) && (_passingMargin < 71), //CTS:EXAMINE changed (passingMargin < 71) to (_passingMargin < 71)
             "DAO_STOR:SPM:Passing margin must be 51-70"
         );
         //^^^^^^^checks^^^^^^^^^

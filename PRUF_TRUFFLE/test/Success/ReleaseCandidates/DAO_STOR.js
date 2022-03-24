@@ -2355,7 +2355,7 @@ contract("DAO_STOR", (accounts) => {
       "1000004",
       "10000",
       "1",
-      account1,
+      account10,
       {
         from: account1,
       }
@@ -2401,7 +2401,7 @@ contract("DAO_STOR", (accounts) => {
   });
 
   it("Should verifyResolution", async () => {
-    return DAO_STOR.verifyResolution(grantRoleSigComplete, account1, {
+    return DAO_STOR.verifyResolution(grantRoleSigComplete, account10, {
       from: account1,
     });
   });
