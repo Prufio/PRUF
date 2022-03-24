@@ -110,7 +110,7 @@ contract DAO_STOR is BASIC {
 
     /**
      * @dev Default param setter
-     * @param _max new value for maximum votees per node
+     * @param _max new value for maximum votes per node
      */
     function setMaxVote(uint32 _max) external isDAOlayer {
         require(
@@ -192,7 +192,7 @@ contract DAO_STOR is BASIC {
     function adminVeto(bytes32 _motion) external isDAOadmin {
         require(
             motions[_motion].votesFor != 0,
-            "DAO_STOR:AVeto:Motion not in 'proposed' status"
+            "DAO_STOR:veto:Motion not in 'proposed' status"
         );
         //^^^^^^^checks^^^^^^^^^
 
@@ -220,19 +220,19 @@ contract DAO_STOR is BASIC {
     ) external isDAOadmin {
         require(
             motions[_motion].votesFor != 0,
-            "DAO_STOR:AVote:Motion not in 'proposed' status"
+            "DAO_STOR:vote:Motion not in 'proposed' status"
         );
         require(
             CLOCK.thisEpoch() == (motions[_motion].votingEpoch),
-            "DAO_STOR:AVote:Voting window not open"
+            "DAO_STOR:vote:Voting window not open"
         );
         require(
             nodeVoteHistory[_motion][_node].votes == 0,
-            "DAO_STOR:AVote:Node has already cast a vote on this motion"
+            "DAO_STOR:vote:Node has already cast a vote on this motion"
         );
         require(
             (_yn == 0) || (_yn == 1),
-            "DAO_STOR:AVote:vote type must be 1 or 0 only"
+            "DAO_STOR:vote:vote type must be 1 or 0 only"
         );
         //^^^^^^^checks^^^^^^^^^
 
