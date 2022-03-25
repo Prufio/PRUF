@@ -133,6 +133,7 @@ struct MarketFees {
     //data for PRUF_MARKET fees and commissions
     address listingFeePaymentAddress;
     address saleCommissionPaymentAddress;
+    uint8 approval;
     uint256 listingFee;
     uint256 saleCommission;
 }
