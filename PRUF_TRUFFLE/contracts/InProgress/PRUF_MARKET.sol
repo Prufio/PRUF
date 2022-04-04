@@ -13,17 +13,13 @@ _________\/// _____________\/// _______\/// __\///////// __\/// _____________
 /**-----------------------------------------------------------------
  *  TO DO --- Find more needed requires?
  * 
- struct ConsignmentTag {
-    uint256 tokenId;
-    address tokenContract;
-    address currency;
-    uint256 price;
-    uint32 node;
- }
+ * DPS:NEW CONTRACT DPS:CHECK
+ *
  *
  *-----------------------------------------------------------------
- * Wraps and unwraps ERC721 compliant tokens in a PRUF market token  DPS:NEW CONTRACT DPS:CHECK
- * Allows Node operators to set fees,approve assets, contracts, or nodes to list in their node. 
+ * Wraps and unwraps ERC721 compliant tokens in a PRUF market token  
+ * Allows Node operators to set fees,approve assets, contracts, 
+ * or nodes to list in their node, as well as setting valid currencies for listing. 
  * MUST BE TRUSTED AGENT IN MARKET_TKN, A_tkn, Util_Tkn
  *----------------------------------------------------------------*/
 
@@ -40,7 +36,7 @@ contract Market is BASIC {
 
     mapping(uint256 => ConsignmentTag) private tag; // Market tokenID -> Consignment Tag
     mapping(uint256 => MarketFees) private tagFees; // Market tokenID -> Market Fee Struct
-    mapping(bytes32 => uint256) private approvedConsignments; //consignments approved by node
+    mapping(address => mapping(bytes32 => MarketFees)) private approvals; //consignments approved by node
 
     /**
      * @dev Verify user credentials
@@ -83,6 +79,7 @@ contract Market is BASIC {
 
     /**
      * @dev Lets a node submit approval to list items in its marketspace
+     * @param _currency ERC20 contract address to approve
      * @param _node, node issuing approval
      * @param _tokenId zero if all from contract / node
      * @param _ERC721TokenContract contract address for token to wrap (A_TKN for PRüF)
@@ -90,6 +87,7 @@ contract Market is BASIC {
      * @param _approved one to approve. zero to unaprove. two to blacklist (valid = 0,1,2)
      */
     function approveForConsignment(
+        address _currency,
         uint32 _node,
         uint256 _tokenId,
         address _ERC721TokenContract,
@@ -103,21 +101,16 @@ contract Market is BASIC {
     {
         require(_approved < 3, "M:AFC:approval must be less than 3");
         bytes32 consignmentHash = keccak256(
-            abi.encodePacked(
-                _tokenId,
-                _ERC721TokenContract,
-                _nodeToApprove,
-                _node
-            )
+            abi.encode(_tokenId, _ERC721TokenContract, _nodeToApprove, _node)
         );
-        approvedConsignments[consignmentHash] = _approved;
+        approvals[_currency][consignmentHash].approval = _approved;
         //^^^^^^^interactions^^^^^^^^^
     }
 
     /**
      * @dev Wraps a pruf asset, takes original from caller (holds it in contract)
      * @param _tokenId tokenID of token to wrap
-     * @param _currency currency to make transaction in
+     * @param _currency currency to make consignment in
      * @param _price price in _currency to require for transfer
      * @param _consigningNode node doing the consignment
      */
@@ -132,14 +125,19 @@ contract Market is BASIC {
         whenNotPaused
         isTokenHolder(_tokenId, A_TKN_Address)
     {
-        // without this, the dark forest gets it!
         bytes32 idxHash = bytes32(_tokenId);
         Record memory rec = getRecord(idxHash);
         require(
             rec.assetStatus == 51,
             "M:CPA:PRUF asset is not status 51 (transferrable)"
         );
-        getApproval(_tokenId, A_TKN_Address, rec.node, _consigningNode);
+        MarketFees memory theseFees = getApproval(
+            _currency,
+            _tokenId,
+            A_TKN_Address,
+            rec.node,
+            _consigningNode
+        );
         //^^^^^^^checks^^^^^^^^^
 
         ConsignmentTag memory thisTag;
@@ -149,8 +147,6 @@ contract Market is BASIC {
         );
 
         string memory uri = A_TKN.tokenURI(_tokenId);
-
-        MarketFees memory theseFees = getNodeMarketFees(_consigningNode);
 
         thisTag.tokenId = _tokenId;
         thisTag.tokenContract = A_TKN_Address;
@@ -181,7 +177,7 @@ contract Market is BASIC {
      * @dev Wraps a token, takes original from caller (holds it in contract)
      * @param _tokenId tokenID of token to wrap
      * @param _ERC721TokenContract contract address for token to wrap
-     * @param _currency currency to make transaction in
+     * @param _currency currency to make consignment in
      * @param _price price in _currency to require for transfer
      * @param _consigningNode node doing the consignment
      * @param uri string for URI
@@ -201,7 +197,13 @@ contract Market is BASIC {
         whenNotPaused
         isTokenHolder(_tokenId, _ERC721TokenContract)
     {
-        getApproval(_tokenId, _ERC721TokenContract, 0, _consigningNode);
+        MarketFees memory theseFees = getApproval(
+            _currency,
+            _tokenId,
+            _ERC721TokenContract,
+            0,
+            _consigningNode
+        );
         //^^^^^^^checks^^^^^^^^^
 
         ConsignmentTag memory thisTag;
@@ -209,8 +211,6 @@ contract Market is BASIC {
         uint256 newTokenId = uint256(
             keccak256(abi.encodePacked(_tokenId, A_TKN_Address))
         );
-
-        MarketFees memory theseFees = getNodeMarketFees(_consigningNode);
 
         thisTag.tokenId = _tokenId;
         thisTag.tokenContract = _ERC721TokenContract;
@@ -243,7 +243,7 @@ contract Market is BASIC {
     /**
      * @dev Updates pricing information for an active consignment
      * @param _tokenId ID of consignment
-     * @param _currency currency to make transaction in
+     * @param _currency currency to make consignment in
      * @param _price price in _currency to require for transfer
      */
     function updateConsignment(
@@ -266,6 +266,7 @@ contract Market is BASIC {
         }
 
         getApproval(
+            _currency,
             thisTag.tokenId,
             thisTag.tokenContract,
             prufNode,
@@ -324,6 +325,7 @@ contract Market is BASIC {
         }
 
         getApproval(
+            thisTag.currency,
             thisTag.tokenId,
             thisTag.tokenContract,
             prufNode,
@@ -408,31 +410,6 @@ contract Market is BASIC {
         //^^^^^^^interactions^^^^^^^^^
     }
 
-    /** DPS:CHECK
-     * @dev Get Market fees struct
-     * @param _node node to get Market fees for
-     */
-    function getNodeMarketFees(uint32 _node)
-        private
-        view
-        returns (MarketFees memory)
-    {
-        //^^^^^^^checks^^^^^^^^^
-
-        MarketFees memory theseFees;
-
-        Costs memory listingFee = NODE_STOR.getPaymentData(_node, 1000);
-        Costs memory comission = NODE_STOR.getPaymentData(_node, 1001);
-
-        theseFees.listingFeePaymentAddress = listingFee.paymentAddress;
-        theseFees.listingFee = listingFee.serviceCost;
-        theseFees.saleCommissionPaymentAddress = comission.paymentAddress;
-        theseFees.saleCommission = comission.serviceCost;
-        //^^^^^^^effects^^^^^^^^^
-
-        return theseFees;
-        //^^^^^^^interactions^^^^^^^^^
-    }
 
     //-------------------------------------------------------------------------
 
@@ -470,21 +447,28 @@ contract Market is BASIC {
 
     /**
      * @dev get consignment approval (reverts if no approval found)
+     * @param _currency ERC20 contract as approved currency
      * @param _tokenId tokenId or zero if all approved for address / node
      * @param _ERC721TokenContract contract address
      * @param _approvedNode node approved by _approvingNode, or zero for all nodes or non-PRüF asset
      * @param _approvingNode node to check approval for
      */
     function getApproval(
+        address _currency,
         uint256 _tokenId,
         address _ERC721TokenContract,
         uint32 _approvedNode,
         uint256 _approvingNode
-    ) public view {
-        //Check for approval by specific token
-        uint256 individualApproval = approvedConsignments[
+    ) public view returns (MarketFees memory) {
+        MarketFees memory theseFees;
+        MarketFees memory finalFees;
+        //------begin decision stack
+
+        //check for approval by contract
+        uint256 approvalByContract;
+        theseFees = approvals[_currency][
             keccak256(
-                abi.encodePacked(
+                abi.encode(
                     _tokenId,
                     _ERC721TokenContract,
                     _approvedNode,
@@ -492,44 +476,68 @@ contract Market is BASIC {
                 )
             )
         ];
-        require(individualApproval != 2, "M:APPROVE:Asset blacklisted!");
 
-        //check for approval by contract
-        uint256 approvalByContract;
+        approvalByContract = theseFees.approval;
 
-        approvalByContract = approvedConsignments[
-            keccak256(
-                abi.encodePacked(
-                    uint256(0),
-                    _ERC721TokenContract,
-                    uint32(0),
-                    _approvingNode
-                )
-            )
-        ];
         require(
             approvalByContract != 2,
             "M:APPROVE:Asset contract blacklisted!"
         );
 
+        if (theseFees.approval == 1) {
+            finalFees = theseFees;
+        }
+
         // check for approval by node
         uint256 approvalByNode;
-
-        approvalByNode = approvedConsignments[
+        theseFees = approvals[_currency][
             keccak256(
-                abi.encodePacked(
-                    uint256(0),
+                abi.encode(
+                    _tokenId,
                     _ERC721TokenContract,
                     _approvedNode,
                     _approvingNode
                 )
             )
         ];
+
+        approvalByNode = theseFees.approval;
+
         require(approvalByNode != 2, "M:APPROVE:Asset node blacklisted!");
+
+        if (theseFees.approval == 1) {
+            finalFees = theseFees;
+        }
+
+        //Check for approval by specific token
+
+        uint256 individualApproval = theseFees.approval;
+        theseFees = approvals[_currency][
+            keccak256(
+                abi.encode(
+                    _tokenId,
+                    _ERC721TokenContract,
+                    _approvedNode,
+                    _approvingNode
+                )
+            )
+        ];
+
+        require(individualApproval != 2, "M:APPROVE:Asset blacklisted!");
+
+        if (theseFees.approval == 1) {
+            finalFees = theseFees;
+        }
+
+        //--------------------end of decision stack
 
         require(
             (individualApproval + approvalByNode + approvalByContract) > 0,
             "M:APPROVE:Asset or asset contract / node not approved"
         );
+        //^^^^^^^^^^^^^^^CHECKS with minor internal effects^^^^^^^^^^^^^^^
+
+        return (finalFees);
+        //^^^^^^^^^^^^^^^INTERACTIONS^^^^^^^^^^^^^^^
     }
 }

@@ -209,9 +209,6 @@ pragma solidity ^0.6.7;
 * 6: forceModifyCost // Cost to brute-force a record transfer
 * 7: decCounter Cost // Cost to decrement the counter
 * 8: modDescCost // Cost to modify the description
-* 1000: Market Listing Fee (in pruf 18d) // for non-PRUF NFTs
-* 1001: Market Sale Comission // Commission, as divisor (1000 = 0.1%), for sale of item (any ERC20)
-
 - -----------------------------------------------------------------
 
 *-----------------------------------------------------------------

@@ -81,10 +81,10 @@ contract DAO_STOR is BASIC {
         uint256 mintedNodes;
 
         (mintedNodes, , ) = NODE_MGR.currentNodePricingInfo();
-        mintedNodes = mintedNodes - 1000000;
+        mintedNodes = mintedNodes - 1000000; //nodes minted inside ecosystem start at ID 1000000
 
         require(
-            _quorum < ((mintedNodes / 20) + 10), //CTS:EXAMINE can this become a decimal issue?
+            _quorum < ((mintedNodes / 20) + 10), 
             "DAO_STOR:SQ:proposed Quorum > 5% (+10) of the indigenous node population"
         );
         //^^^^^^^checks^^^^^^^^^
@@ -99,7 +99,7 @@ contract DAO_STOR is BASIC {
      */
     function setPassingMargin(uint32 _passingMargin) external isDAOlayer {
         require(
-            (_passingMargin > 50) && (_passingMargin < 71), //CTS:EXAMINE changed (passingMargin < 71) to (_passingMargin < 71)
+            (_passingMargin > 50) && (_passingMargin < 71), 
             "DAO_STOR:SPM:Passing margin must be 51-70"
         );
         //^^^^^^^checks^^^^^^^^^
