@@ -83,25 +83,25 @@ contract Market is BASIC {
 
     /**
      * @dev Lets a node submit approval to list items in its marketspace
-     * @param _node, //node issuing approval
-     * @param _tokenId //zero if all from contract / node
-     * @param _ERC721TokenContract contract address for token to wrap
-     * @param _nodeToApprove //zero if all pruf nodes (using PRUF contract address)
-     * @param _approved approval status ( 0 = not)
+     * @param _node, node issuing approval
+     * @param _tokenId zero if all from contract / node
+     * @param _ERC721TokenContract contract address for token to wrap (A_TKN for PRüF)
+     * @param _nodeToApprove zero if all pruf nodes (using PRUF A_TKN contract address)
+     * @param _approved one to approve. zero to unaprove. two to blacklist (valid = 0,1,2)
      */
     function approveForConsignment(
-        uint32 _node, //node issuing approval
-        uint256 _tokenId, //zero if all from contract
-        address _ERC721TokenContract, //contract to approve (A_TKN for PRüF)
-        uint32 _nodeToApprove, //zero if all pruf nodes (using PRüF A_TKN contract address only)
-        uint256 _approved // one to approve. zero to unaprove. two to blacklist (valid = 0,1,2)
+        uint32 _node,
+        uint256 _tokenId,
+        address _ERC721TokenContract,
+        uint32 _nodeToApprove,
+        uint256 _approved 
     )
         external
         nonReentrant
         whenNotPaused
         isTokenHolder(_node, NODE_TKN_Address)
     {
-        require(_approved < 3, "M:AFC:approval must be 0,1,or 2");
+        require(_approved < 3, "M:AFC:approval must be less than 3");
         bytes32 consignmentHash = keccak256(
             abi.encodePacked(
                 _tokenId,
@@ -281,10 +281,8 @@ contract Market is BASIC {
     }
 
     /**
-     * @dev Unwraps a token, burns the MARKET_TKN, returns original to caller
+     * @dev Unwraps a token, burns the MARKET_TKN, returns consigned token to caller
      * @param _tokenId tokenID of consignment token being redeemed
-     * burns consignment token from caller wallet
-     * Sends original consigned 721 to caller
      */
     function withdrawFromConsignment(uint256 _tokenId)
         external
@@ -292,7 +290,6 @@ contract Market is BASIC {
         whenNotPaused
         isTokenHolder(_tokenId, MARKET_TKN_Address)
     {
-        //caller holds the consignment ticket ^^
         //^^^^^^^checks^^^^^^^^^
 
         ConsignmentTag memory thisTag = tag[_tokenId];
@@ -312,10 +309,10 @@ contract Market is BASIC {
 
     /**
      * @dev Purchse an item from the consignment contract
-     * @param _tokenId consignment ID
+     * @param _tokenId consignment token ID
      */
     function purchaseItem(
-        uint256 _tokenId //consignment token ID
+        uint256 _tokenId
     ) external nonReentrant whenNotPaused {
         uint32 prufNode;
 
