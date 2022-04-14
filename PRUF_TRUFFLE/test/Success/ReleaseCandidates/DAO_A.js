@@ -33,7 +33,7 @@ const PRUF_MAL_APP = artifacts.require("MAL_APP");
 const PRUF_UTIL_TKN = artifacts.require("UTIL_TKN");
 const PRUF_DECORATE = artifacts.require("DECORATE");
 const PRUF_WRAP = artifacts.require("WRAP");
-const PRUF_DAO = artifacts.require("DAO_A");
+const PRUF_DAO = artifacts.require("DAO");
 const PRUF_DAO_A = artifacts.require("DAO_A");
 
 let STOR;
@@ -49,11 +49,10 @@ let ECR2;
 let ECR_NC;
 let APP_NC;
 let RCLR;
-let Helper;
 let MAL_APP;
 let UTIL_TKN;
 let UD_721;
-let DAO_A;
+let DAO;
 let DAO_A;
 
 let string1Hash;
@@ -558,22 +557,17 @@ contract("DAO_A", (accounts) => {
     EO_STAKING = PRUF_EO_STAKING_TEST;
   });
 
-  it("Should authorize account1 as DAOadmin in DAO_A", () => {
+  it("Should authorize account1 as DAOcontroller in DAO_A", () => {
     console.log("Authorizing account1");
     return DAO_A.grantRole(DAOcontrollerRoleB32, account1, { from: account1 });
   });
 
-  it("Should authorize account1 as DAOadmin in DAO_A", () => {
+  it("Should authorize account1 as DAOlayer in DAO_A", () => {
     console.log("Authorizing account1");
     return DAO.grantRole(DAOlayerRoleB32, DAO_A.address, { from: account1 });
   });
 
-  it("Should authorize account1 as DAOadmin in DAO_A", () => {
-    console.log("Authorizing account1");
-    return DAO.grantRole(DAOA, DAO_A.address, { from: account1 });
-  });
-
-  it("Should authorize DAO_A as DAO_A in STOR", () => {
+  it("Should authorize DAO_A as DAOrole in STOR", () => {
     console.log("Authorizing account1");
     return STOR.grantRole(DAOroleB32, DAO_A.address, {
       from: account1,
