@@ -66,7 +66,7 @@ contract NODE_TKN is
         keccak256("CONTRACT_ADMIN_ROLE");
     bytes32 public constant MINTER_ROLE = keccak256("MINTER_ROLE");
     bytes32 public constant PAUSER_ROLE = keccak256("PAUSER_ROLE");
-    bytes32 public constant DAO_ROLE = keccak256("DAO_ROLE");
+    // bytes32 public constant DAO_ROLE = keccak256("DAO_ROLE"); //CTS:EXAMINE never used
 
     NODE_STOR_Interface internal NODE_STOR;
 

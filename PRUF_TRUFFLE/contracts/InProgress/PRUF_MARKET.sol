@@ -103,7 +103,7 @@ contract Market is BASIC {
         bytes32 consignmentHash = keccak256(
             abi.encode(_tokenId, _ERC721TokenContract, _nodeToApprove, _node)
         );
-        approvals[_currency][consignmentHash].approval = _approved;
+        // approvals[_currency][consignmentHash].approval = _approved; //CTS:EXAMINE Type uint256 is not implicitly convertible to expected type uint8.
         //^^^^^^^interactions^^^^^^^^^
     }
 
