@@ -21,6 +21,7 @@ const PRUF_APP_NC = artifacts.require("APP_NC");
 const PRUF_DAO = artifacts.require("DAO");
 const PRUF_DAO_A = artifacts.require("DAO_LAYER_A");
 const PRUF_DAO_B = artifacts.require("DAO_LAYER_B");
+const PRUF_DAO_STOR = artifacts.require("DAO_STOR");
 const PRUF_HELPER = artifacts.require("Helper");
 const PRUF_CLOCK = artifacts.require("FAKE_CLOCK");
 
@@ -34,7 +35,10 @@ let NODE_STOR;
 let APP_NC;
 let DAO;
 let DAO_A;
+let DAO_B;
+let DAO_STOR;
 let Helper;
+let CLOCK;
 
 let payableRoleB32;
 let minterRoleB32;
@@ -54,6 +58,10 @@ let roleMemberCount;
 let stakeRoleB32;
 let stakePayerRoleB32;
 let stakeAdminRoleB32;
+let daoVetoRoleB32;
+
+let rgt000 =
+  "0x0000000000000000000000000000000000000000000000000000000000000000";
 
 contract("Launch", (accounts) => {
   console.log(
@@ -90,11 +98,29 @@ contract("Launch", (accounts) => {
     NODE_TKN = PRUF_NODE_TKN_TEST;
   });
 
+  it("Should deploy PRUF_NODE_STOR", async () => {
+    const PRUF_NODE_STOR_TEST = await PRUF_NODE_STOR.deployed({
+      from: account1,
+    });
+    console.log(PRUF_NODE_STOR_TEST.address);
+    assert(PRUF_NODE_STOR_TEST.address !== "");
+    NODE_STOR = PRUF_NODE_STOR_TEST;
+  });
+
   it("Should deploy PRUF_NODE_MGR", async () => {
     const PRUF_NODE_MGR_TEST = await PRUF_NODE_MGR.deployed({ from: account1 });
     console.log(PRUF_NODE_MGR_TEST.address);
     assert(PRUF_NODE_MGR_TEST.address !== "");
     NODE_MGR = PRUF_NODE_MGR_TEST;
+  });
+
+  it("Should deploy PRUF_NODE_BLDR", async () => {
+    const PRUF_NODE_BLDR_TEST = await PRUF_NODE_BLDR.deployed({
+      from: account1,
+    });
+    console.log(PRUF_NODE_BLDR_TEST.address);
+    assert(PRUF_NODE_BLDR_TEST.address !== "");
+    NODE_BLDR = PRUF_NODE_BLDR_TEST;
   });
 
   it("Should deploy PRUF_APP_NC", async () => {
@@ -130,6 +156,22 @@ contract("Launch", (accounts) => {
     console.log(PRUF_DAO_TEST.address);
     assert(PRUF_DAO_TEST.address !== "");
     DAO = PRUF_DAO_TEST;
+  });
+
+  it("Should deploy PRUF_DAO_STOR", async () => {
+    const PRUF_DAO_STOR_TEST = await PRUF_DAO_STOR.deployed({ from: account1 });
+    console.log(PRUF_DAO_STOR_TEST.address);
+    assert(PRUF_DAO_STOR_TEST.address !== "");
+    DAO_STOR = PRUF_DAO_STOR_TEST;
+  });
+
+  it("Should deploy CLOCK", async () => {
+    const PRUF_CLOCK_TEST = await PRUF_CLOCK.deployed({
+      from: account1,
+    });
+    console.log(PRUF_CLOCK_TEST.address);
+    assert(PRUF_CLOCK_TEST.address !== "");
+    CLOCK = PRUF_CLOCK_TEST;
   });
 
   it("Should build Roles", async () => {
@@ -170,6 +212,8 @@ contract("Launch", (accounts) => {
     stakePayerRoleB32 = await Helper.getStringHash("STAKE_PAYER_ROLE");
 
     stakeAdminRoleB32 = await Helper.getStringHash("STAKE_ADMIN_ROLE");
+
+    daoVetoRoleB32 = await Helper.getStringHash("DAO_VETO_ROLE");
 
     defaultAdminRoleB32 =
       "0x0000000000000000000000000000000000000000000000000000000000000000";
@@ -465,8 +509,7 @@ contract("Launch", (accounts) => {
     console.log("Authorizing NODE_MGR");
     return UTIL_TKN.grantRole(payableRoleB32, NODE_MGR.address, {
       from: account1,
-    })
-    .then(() => {
+    }).then(() => {
       console.log("Authorizing APP_NC");
       return UTIL_TKN.grantRole(payableRoleB32, APP_NC.address, {
         from: account1,
@@ -560,7 +603,7 @@ contract("Launch", (accounts) => {
     });
   });
 
-  it("Should authorize account1 with DAOrole for NODE_STOR", () => {
+  it("Should authorize account1 with DAOrole for STOR", () => {
     return STOR.grantRole(DAOroleB32, account1, {
       from: account1,
     });
@@ -569,6 +612,12 @@ contract("Launch", (accounts) => {
   it("Should authorize account1 with DAOrole for A_TKN", () => {
     console.log("Authorizing NODE_MGR");
     return A_TKN.grantRole(DAOroleB32, account1, {
+      from: account1,
+    });
+  });
+
+  it("Should authorize account1 with DAOrole for NODE_STOR", () => {
+    return NODE_STOR.grantRole(DAOroleB32, account1, {
       from: account1,
     });
   });
@@ -679,104 +728,110 @@ contract("Launch", (accounts) => {
   });
 
   it("Should mint root tokens", () => {
-      console.log("Minting Art node")
-      return NODE_MGR.createNode(
-        "1",
-        "Art",
-        "1",
-        "3",
-        "0",
-        "0",
-        "9500",
-        rgt000,
-        rgt000,
-        account1,
-        { from: account1 }
-      ).then(() => {
-        console.log("Minting Apparel node")
+    console.log("Minting Art node");
+    return NODE_MGR.createNode(
+      "1",
+      "Art",
+      "1",
+      "3",
+      "0",
+      "0",
+      "9500",
+      rgt000,
+      rgt000,
+      account1,
+      { from: account1 }
+    )
+      .then(() => {
+        console.log("Minting Apparel node");
         return NODE_MGR.createNode(
-            "2",
-            "Apparel",
-            "2",
-            "3",
-            "0",
-            "0",
-            "9500",
-            rgt000,
-            rgt000,
-            account1,
-        );
-      }).then(() => {
-        console.log("Minting Ticketing node")
-        return NODE_MGR.createNode(
-            "3",
-            "Ticketing",
-            "3",
-            "3",
-            "0",
-            "0",
-            "9500",
-            rgt000,
-            rgt000,
-            account1,
-        );
-      }).then(() => {
-        console.log("Minting Consumables node")
-        return NODE_MGR.createNode(
-            "4",
-            "Consumables",
-            "4",
-            "3",
-            "0",
-            "0",
-            "9500",
-            rgt000,
-            rgt000,
-            account1,
-        );
-      }).then(() => {
-        console.log("Minting Transportation node")
-        return NODE_MGR.createNode(
-            "5",
-            "Transportation",
-            "5",
-            "3",
-            "0",
-            "0",
-            "9500",
-            rgt000,
-            rgt000,
-            account1,
-        );
-      }).then(() => {
-        console.log("Minting Industrial node")
-        return NODE_MGR.createNode(
-            "6",
-            "Industrial",
-            "6",
-            "3",
-            "0",
-            "0",
-            "9500",
-            rgt000,
-            rgt000,
-            account1,
-        );
-      }).then(() => {
-        console.log("Minting Miscellaneous node")
-        return NODE_MGR.createNode(
-            "7",
-            "Miscellaneous",
-            "7",
-            "3",
-            "0",
-            "0",
-            "9500",
-            rgt000,
-            rgt000,
-            account1,
+          "2",
+          "Apparel",
+          "2",
+          "3",
+          "0",
+          "0",
+          "9500",
+          rgt000,
+          rgt000,
+          account1
         );
       })
+      .then(() => {
+        console.log("Minting Ticketing node");
+        return NODE_MGR.createNode(
+          "3",
+          "Ticketing",
+          "3",
+          "3",
+          "0",
+          "0",
+          "9500",
+          rgt000,
+          rgt000,
+          account1
+        );
+      })
+      .then(() => {
+        console.log("Minting Consumables node");
+        return NODE_MGR.createNode(
+          "4",
+          "Consumables",
+          "4",
+          "3",
+          "0",
+          "0",
+          "9500",
+          rgt000,
+          rgt000,
+          account1
+        );
+      })
+      .then(() => {
+        console.log("Minting Transportation node");
+        return NODE_MGR.createNode(
+          "5",
+          "Transportation",
+          "5",
+          "3",
+          "0",
+          "0",
+          "9500",
+          rgt000,
+          rgt000,
+          account1
+        );
+      })
+      .then(() => {
+        console.log("Minting Industrial node");
+        return NODE_MGR.createNode(
+          "6",
+          "Industrial",
+          "6",
+          "3",
+          "0",
+          "0",
+          "9500",
+          rgt000,
+          rgt000,
+          account1
+        );
+      })
+      .then(() => {
+        console.log("Minting Miscellaneous node");
+        return NODE_MGR.createNode(
+          "7",
+          "Miscellaneous",
+          "7",
+          "3",
+          "0",
+          "0",
+          "9500",
+          rgt000,
+          rgt000,
+          account1
+        );
+      });
   });
 
   it("Should set costs in Art", () => {
@@ -866,7 +921,7 @@ contract("Launch", (accounts) => {
             from: account1,
           }
         );
-      })
+      });
   });
 
   it("Should set costs in Apparel", () => {
@@ -956,7 +1011,7 @@ contract("Launch", (accounts) => {
             from: account1,
           }
         );
-      })
+      });
   });
 
   it("Should set costs in Ticketing", () => {
@@ -1046,7 +1101,7 @@ contract("Launch", (accounts) => {
             from: account1,
           }
         );
-      })
+      });
   });
 
   it("Should set costs in Consumables", () => {
@@ -1136,7 +1191,7 @@ contract("Launch", (accounts) => {
             from: account1,
           }
         );
-      })
+      });
   });
 
   it("Should set costs in Transportation", () => {
@@ -1226,7 +1281,7 @@ contract("Launch", (accounts) => {
             from: account1,
           }
         );
-      })
+      });
   });
 
   it("Should set costs in Industrial", () => {
@@ -1316,7 +1371,7 @@ contract("Launch", (accounts) => {
             from: account1,
           }
         );
-      })
+      });
   });
 
   it("Should set costs in Miscellaneous", () => {
@@ -1406,6 +1461,6 @@ contract("Launch", (accounts) => {
             from: account1,
           }
         );
-      })
+      });
   });
 });
