@@ -163,7 +163,7 @@ contract UD_721 is BASIC {
         uint32 _otherNode,
         uint256 _newStatus
     ) external whenNotPaused isNodeHolderAndHasIdRootToken(_thisNode) {
-        NODE_STOR.updateImportStatus(_thisNode, _otherNode, _newStatus);
+        NODE_MGR.updateImportStatus(_thisNode, _otherNode, _newStatus);
     }
 
     /**
@@ -179,7 +179,7 @@ contract UD_721 is BASIC {
     ) external whenNotPaused isNodeHolderAndHasIdRootToken(_node) {
         //^^^^^^^checks^^^^^^^^^
 
-        NODE_STOR.updateNodeCAS(_node, _CAS1, _CAS2);
+        NODE_MGR.updateNodeCAS(_node, _CAS1, _CAS2);
         //^^^^^^^interactions^^^^^^^^^
     }
 
@@ -198,7 +198,7 @@ contract UD_721 is BASIC {
     ) external whenNotPaused isNodeHolderAndHasIdRootToken(_node) {
         //^^^^^^^checks^^^^^^^^^
 
-        NODE_STOR.setOperationCosts(
+        NODE_MGR.setOperationCosts(
             _node,
             _service,
             _serviceCost,
@@ -221,7 +221,7 @@ contract UD_721 is BASIC {
         address _refAddress,
         uint8 _switches
     ) external whenNotPaused isNodeHolderAndHasIdRootToken(_node) {
-        NODE_STOR.setNonMutableData(
+        NODE_MGR.setNonMutableData(
             _node,
             _managementType,
             _storageProvider,
@@ -247,7 +247,7 @@ contract UD_721 is BASIC {
         uint32 _u32d,
         uint32 _u32e
     ) external whenNotPaused isNodeHolderAndHasIdRootToken(_node) {
-        NODE_STOR.setExtendedNodeData(_node, _u8a, _u8b, _u16c, _u32d, _u32e);
+        NODE_MGR.setExtendedNodeData(_node, _u8a, _u8b, _u16c, _u32d, _u32e);
     }
 
     function getTokenIdFromDomain(string memory _domain, string memory _tld)
