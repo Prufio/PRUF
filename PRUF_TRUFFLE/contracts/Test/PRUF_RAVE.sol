@@ -27,7 +27,7 @@ import "../Imports/security/ReentrancyGuard.sol";
 contract RAVE is BASIC {
     constructor() {
         //THIS CONTRACT LAUNCHES PAUSED BY DEFAULT JUST IN CASE YOU ARE AN IDIOT
-        _pause();
+        // _pause();
     }
 
     /**
