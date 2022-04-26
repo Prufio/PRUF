@@ -51,6 +51,9 @@ __/\\\\\\\\\\\\\ _____/\\\\\\\\\ _______/\\__/\\ ___/\\\\\\\\\\\\\\\
       it("Should deploy PRUF_HELPER", async () => {
       });
     
+      it("Should deploy RAVE", async () => {
+      });
+    
       it("Should authorize account1 as DAOveto in DAO", () => {
         return DAO.grantRole(daoVetoRoleB32, account1);
       });
@@ -191,6 +194,10 @@ __/\\\\\\\\\\\\\ _____/\\\\\\\\\ _______/\\__/\\ ___/\\\\\\\\\\\\\\\
           return UTIL_TKN.grantRole(payableRoleB32, APP_NC.address);
       });
     
+      it("Should authorize RAVE with minterRole for UTIL_TKN", () => {
+        return UTIL_TKN.grantRole(minterRoleB32, RAVE.address);
+      });
+    
       it("Should authorize DAO_A with contractAdminRole for NODE_TKN", () => {
         return NODE_TKN.grantRole(contractAdminRoleB32, DAO_A.address);
       });
@@ -221,6 +228,10 @@ __/\\\\\\\\\\\\\ _____/\\\\\\\\\ _______/\\__/\\ ___/\\\\\\\\\\\\\\\
     
       it("Should authorize DAO_A with pauserRole for NODE_MGR", () => {
         return NODE_MGR.grantRole(pauserRoleB32, DAO_A.address);
+      });
+    
+      it("Should authorize RAVE with IDverifierRole for NODE_MGR", () => {
+        return NODE_MGR.grantRole(IDverifierRoleB32, RAVE.adddress);
       });
     
       it("Should authorize DAO_A with defaultAdminRole for NODE_STOR", () => {
