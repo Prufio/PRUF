@@ -24,6 +24,7 @@ const PRUF_DAO_B = artifacts.require("DAO_LAYER_B");
 const PRUF_DAO_STOR = artifacts.require("DAO_STOR");
 const PRUF_HELPER = artifacts.require("Helper");
 const PRUF_CLOCK = artifacts.require("FAKE_CLOCK");
+const PRUF_RAVE = artifacts.require("RAVE");
 
 let STOR;
 let UTIL_TKN;
@@ -39,6 +40,7 @@ let DAO_B;
 let DAO_STOR;
 let Helper;
 let CLOCK;
+let RAVE;
 
 let payableRoleB32;
 let minterRoleB32;
@@ -174,6 +176,15 @@ contract("Launch", (accounts) => {
     CLOCK = PRUF_CLOCK_TEST;
   });
 
+  it("Should deploy RAVE", async () => {
+    const PRUF_RAVE_TEST = await PRUF_RAVE.deployed({
+      from: account1,
+    });
+    console.log(PRUF_RAVE_TEST.address);
+    assert(PRUF_RAVE_TEST.address !== "");
+    RAVE = PRUF_RAVE_TEST;
+  });
+
   it("Should build Roles", async () => {
     payableRoleB32 = await Helper.getStringHash("PAYABLE_ROLE");
 
@@ -217,6 +228,18 @@ contract("Launch", (accounts) => {
 
     defaultAdminRoleB32 =
       "0x0000000000000000000000000000000000000000000000000000000000000000";
+  });
+
+  it("Should authorize account1 as DAOveto in DAO", () => {
+    return RAVE.unpause({ from: account1 });
+  });
+
+  it("Should authorize account1 as DAOveto in DAO", () => {
+    return NODE_MGR.grantRole(IDverifierRoleB32, RAVE.address, { from: account1 });
+  });
+
+  it("Should authorize account1 as DAOveto in DAO", () => {
+    return UTIL_TKN.grantRole(minterRoleB32, RAVE.address, { from: account1 });
   });
 
   it("Should authorize account1 as DAOveto in DAO", () => {
@@ -333,6 +356,11 @@ contract("Launch", (accounts) => {
       .then(() => {
         console.log("Adding in DAO_STOR");
         return DAO_STOR.setStorageContract(STOR.address, { from: account1 });
+      })
+
+      .then(() => {
+        console.log("Adding in RAVE");
+        return RAVE.setStorageContract(STOR.address, { from: account1 });
       });
   });
 
@@ -440,6 +468,11 @@ contract("Launch", (accounts) => {
       .then(() => {
         console.log("Resolving in DAO_STOR");
         return DAO_STOR.resolveContractAddresses({ from: account1 });
+      })
+
+      .then(() => {
+        console.log("Resolving in RAVE");
+        return RAVE.resolveContractAddresses({ from: account1 });
       });
   });
 
@@ -1462,5 +1495,27 @@ contract("Launch", (accounts) => {
           }
         );
       });
+  });
+
+  it("Should give me ü", () => {
+    return UTIL_TKN.mint(account1, '1000000000000000000000000', {
+      from: account1,
+    });
+  });
+
+  it("Should give me ü", () => {
+    return RAVE.bumpMe({
+      from: account1,
+    });
+  });
+
+  it("Should give me ü", () => {
+    return RAVE.purchaseNode('M1 Misc', '7', '2', rgt000, rgt000, account1, { 
+      from: account1,
+    });
+  });
+
+  it("Should give me ID_VERIFIER_ROLE", () => {
+    return console.log(IDverifierRoleB32)
   });
 });
