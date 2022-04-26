@@ -44,7 +44,7 @@ contract CLOCK is BASIC {
     /**
      * @dev Verify user credentials
      * Originating Address:
-     *      has DAO_ROLE
+     *      has DAO_LAYER_ROLE
      */
     modifier isDAOlayer() {
         require(

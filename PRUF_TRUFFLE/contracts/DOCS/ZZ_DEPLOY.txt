@@ -1,5 +1,4 @@
 /*-----------------------------------------------------------------
-
 __/\\\\\\\\\\\\\ _____/\\\\\\\\\ _______/\\__/\\ ___/\\\\\\\\\\\\\\\        
  _\/\\\/////////\\\ _/\\\///////\\\ ____\//__\//____\/\\\///////////__       
   _\/\\\_______\/\\\_\/\\\_____\/\\\ ________________\/\\\ ____________      
@@ -9,227 +8,453 @@ __/\\\\\\\\\\\\\ _____/\\\\\\\\\ _______/\\__/\\ ___/\\\\\\\\\\\\\\\
       _\/\\\ ____________\/\\\ ____\//\\\ _\/\\\___\/\\\_\/\\\ ____________  
        _\/\\\ ____________\/\\\ _____\//\\\_\//\\\\\\\\\ _\/\\\ ____________ 
         _\/// _____________\/// _______\/// __\///////// __\/// _____________
-
-
 /*-----------------------------------------------------------------
-* ------------- SETUP PROCEDURES ---NOT DONE:|0|---DONE:|X|-------------
-* -----------------------------------------------------------------
-*
-* ----------------- DEPLOY CONTRACTS -----------------|0|
-*
-* 1 - A_TKN|0|
-*
-* 2 - APP_NC|0|
-*
-* 3 - NODE_BLDR|0|
-*
-* 4 - NODE_MGR|0|
-*
-* 5 - NODE_STOR|0|
-*
-* 6 - NODE_TKN|0|
-*
-* 7 - STOR|0|
-*
-* 8 - UD_NODE_BLDR|0|
-*
-* 9 - UTIL_TKN|0|
-* 
-* ----------------- ADD DEFAULT CONTRACTS TO STORAGE (STOR.addDefaultContracts)-----------------|0|
-*
-* 1 - NODE_MGR ("0", NODE_MGR, '1')|0|
-*
-* 2 - NODE_TKN ("1", NODE_TKN, '1')|0|
-*
-* 3 - NODE_STOR ("2", NODE_STOR, '1')|0|
-*
-* 4 - APP_NC ("3", APP_NC, '2')|0|
-*
-* 5 - A_TKN ("4", A_TKN, '1')|0|
-* 
-* ----------------- ADD CONTRACTS TO STORAGE (STOR.authorizeContract)-----------------|0|
-*
-* 1 - NODE_MGR ("NODE_MGR", NODE_MGR.address, '0', '1')|0|
-*
-* 2 - NODE_STOR ("NODE_STOR", NODE_STOR.address, '0', '1')|0|
-*
-* 3 - NODE_TKN ("NODE_TKN", NODE_TKN.address, '0', '1')|0|
-*
-* 4 - A_TKN ("A_TKN", A_TKN.address, '0', '1')|0|
-*
-* 5 - APP_NC ("APP_NC", APP_NC.address, '0', '2')|0|
-*
-* 6 - UTIL_TKN ("UTIL_TKN", UTIL_TKN.address, '0', '1')|0|
-* 
-* ----------------- DIVY UP ROLES (CONTRACT.grantRole) (B32'S) -----------------|0|
-* 1 - A_TKN (MINTER_ROLEB32, APP_NC.address),   |0|
-*           (DAOroleB32, account1),   |0|
-*
-* 2 - UTIL_TKN (PAYABLE_ROLEB32, NODE_MGR.address),   |0|
-*              (PAYABLE_ROLEB32, APP_NC.address),   |0|
-*              (TRUSTED_AGENT_ROLEB32, NODE_MGR.address)   |0|        
-*
-* 3 - NODE_TKN (MINTER_ROLEB32, NODE_MGR.address)   |0|        
-*
-* 4 - NODE_MGR (ID_PROVIDER_ROLEB32, NODE_BLDR.address),   |0|
-*              (ID_PROVIDER_ROLEB32, UD_721.address)   |0|
-*
-* 5 - NODE_STOR (NODE_ADMIN_ROLEB32, NODE_MGR.address),   |0|
-*               (NODE_ADMIN_ROLEB32, UD_721.address)   |0|
-*
-* 6 - NODE_BLDR (NODE_MINTER_ROLEB32, NODE_MGR.address)   |0|
-* 
-* ----------------- ADD STORAGE TO CONTRACTS (CONTRACT.setStorageContract) -----------------|0|
-*
-* 1 - NODE_MGR (STOR.address)|0|
-*
-* 2 - NODE_STOR (STOR.address)|0|
-*
-* 3 - A_TKN (STOR.address)|0|
-*
-* 4 - APP_NC (STOR.address)|0|
-*
-* 5 - NODE_BLDR (STOR.address)|0|
-*
-* 6 - UD_721 (STOR.address)|0|
-* 
-* ----------------- RESOLVE CONTRACT resolveContractAddresses (CONTRACT.resolveContractAddresses) -----------------|0|
-*
-* 1 - NODE_MGR|0|
-*
-* 2 - NODE_STOR|0|
-*
-* 3 - NODE_BLDR|0|
-*
-* 4 - A_TKN|0|
-*
-* 5 - APP_NC|0|
-*
-* 6 - UD_721|0|
-* 
-* ----------------- SET PERMITTED STORAGE PROVIDERS (NODE_STOR.setStorageProviders)-----------------|0|
-* 1 - Unconfigured ('0', '1')   |0|
-*
-* 1 - Mutable(IPFS) ('1', '1')   |0|
-*
-* 2 - ARWEAVE ('2', '1')   |0|
-* 
-* ----------------- SET BASEURI FOR STORAGE PROVIDERS (NODE_STOR.setStorageProviders)-----------------|0|
-* 1 - Unconfigured ('0', 'UNCONFIGURED')   |0|
-*
-* 1 - Mutable(IPFS) ('1', 'ipfs.io/ipfs/')   |0|
-*
-* 2 - ARWEAVE ('2', 'arweave.net/')   |0|
-* 
-* ----------------- SET PERMITTED MANAGEMENT TYPES (NODE_STOR.setMangementTypes)-----------------|0|
-* 1 - Unrestricted ('0', '1')   |0|
-*
-* 2 - Restricted ('1', '1')   |0|
-*
-* 3 - Less Restricted ('2', '1')   |0|
-*
-* 4 - Authorized ('3', '1')   |0|
-*
-* 5 - Trusted ('4', '1')   |0|
-*
-* 6 - Remotely Managed ('5', '1')   |0|
-*
-* 7 - Unconfigured ('255', '1')   |0|
-* 
-* ----------------- SET PERMITTED CUSTODY TYPES (NODE_STOR.setCustodyTypes)-----------------|0|
-* 1 - NONE ('0', '1')   |0|
-*
-* 2 - Custodial ('1', '1')   |0|
-*
-* 3 - Non-Custodial ('2', '1')   |0|
-*
-* 4 - Root ('3', '1')   |0|
-* 
-* ----------------- MINT ROOT TOKENS (NODE_MGR.createNode)-----------------|0|
-* 1 - ROOT1 ('1', 'name', '1', '3', '0', "9500", 0x000...(b32), 0x000...(b32), address1)   |0|
-*
-* 2 - ROOT2 ('2', 'name', '2', '3', '0', '0', "9500", 0x000...(b32), 0x000...(b32), address1)   |0|
-*
-* 3 - ROOT3 ('3', 'name', '3', '3', '0', '0', "9500", 0x000...(b32), 0x000...(b32), address1)   |0|
-*
-* 4 - ROOT4 ('4', 'name', '4', '3', '0', '0', "9500", 0x000...(b32), 0x000...(b32), address1)   |0|
-*
-* 5 - ROOT5 ('5', 'name', '5', '3', '0', '0', "9500", 0x000...(b32), 0x000...(b32), address1)   |0|
-*
-* 6 - ROOT4 ('6', 'name', '6', '3', '0', '0', "9500", 0x000...(b32), 0x000...(b32), address1)   |0|
-*
-* 7 - ROOT5 ('7', 'name', '7', '3', '0', '0', "9500", 0x000...(b32), 0x000...(b32), address1)   |0|
-*
-* ----------------- ROOT TOKEN PRICING (NODE_MGR.setOperationCosts)-----------------|0|
-* 1 - ROOT1 ('1', '1', PRUF+(0*18), PAYMENT_ADDR)   |0|
-*           ('1', '2', PRUF+(0*18), PAYMENT_ADDR)   |0|
-*           ('1', '3', PRUF+(0*18), PAYMENT_ADDR)   |0|
-*           ('1', '4', PRUF+(0*18), PAYMENT_ADDR)   |0|
-*           ('1', '5', PRUF+(0*18), PAYMENT_ADDR)   |0|
-*           ('1', '6', PRUF+(0*18), PAYMENT_ADDR)   |0|
-*           ('1', '7', PRUF+(0*18), PAYMENT_ADDR)   |0|
-*           ('1', '8', PRUF+(0*18), PAYMENT_ADDR)   |0|
-*
-* 2 - ROOT2 ('2', '1', PRUF+(0*18), PAYMENT_ADDR)   |0|
-*           ('2', '2', PRUF+(0*18), PAYMENT_ADDR)   |0|
-*           ('2', '3', PRUF+(0*18), PAYMENT_ADDR)   |0|
-*           ('2', '4', PRUF+(0*18), PAYMENT_ADDR)   |0|
-*           ('2', '5', PRUF+(0*18), PAYMENT_ADDR)   |0|
-*           ('2', '6', PRUF+(0*18), PAYMENT_ADDR)   |0|
-*           ('2', '7', PRUF+(0*18), PAYMENT_ADDR)   |0|
-*           ('2', '8', PRUF+(0*18), PAYMENT_ADDR)   |0|
-*
-* 3 - ROOT3 ('3', '1', PRUF+(0*18), PAYMENT_ADDR)   |0|
-*           ('3', '2', PRUF+(0*18), PAYMENT_ADDR)   |0|
-*           ('3', '3', PRUF+(0*18), PAYMENT_ADDR)   |0|
-*           ('3', '4', PRUF+(0*18), PAYMENT_ADDR)   |0|
-*           ('3', '5', PRUF+(0*18), PAYMENT_ADDR)   |0|
-*           ('3', '6', PRUF+(0*18), PAYMENT_ADDR)   |0|
-*           ('3', '7', PRUF+(0*18), PAYMENT_ADDR)   |0|
-*           ('3', '8', PRUF+(0*18), PAYMENT_ADDR)   |0|
-*
-* 4 - ROOT4 ('4', '1', PRUF+(0*18), PAYMENT_ADDR)   |0|
-*           ('4', '2', PRUF+(0*18), PAYMENT_ADDR)   |0|
-*           ('4', '3', PRUF+(0*18), PAYMENT_ADDR)   |0|
-*           ('4', '4', PRUF+(0*18), PAYMENT_ADDR)   |0|
-*           ('4', '5', PRUF+(0*18), PAYMENT_ADDR)   |0|
-*           ('4', '6', PRUF+(0*18), PAYMENT_ADDR)   |0|
-*           ('4', '7', PRUF+(0*18), PAYMENT_ADDR)   |0|
-*           ('4', '8', PRUF+(0*18), PAYMENT_ADDR)   |0|
-*
-* 5 - ROOT5 ('5', '1', PRUF+(0*18), PAYMENT_ADDR)   |0|
-*           ('5', '2', PRUF+(0*18), PAYMENT_ADDR)   |0|
-*           ('5', '3', PRUF+(0*18), PAYMENT_ADDR)   |0|
-*           ('5', '4', PRUF+(0*18), PAYMENT_ADDR)   |0|
-*           ('5', '5', PRUF+(0*18), PAYMENT_ADDR)   |0|
-*           ('5', '6', PRUF+(0*18), PAYMENT_ADDR)   |0|
-*           ('5', '7', PRUF+(0*18), PAYMENT_ADDR)   |0|
-*           ('5', '8', PRUF+(0*18), PAYMENT_ADDR)   |0|
-*
-* 6 - ROOT4 ('6', '1', PRUF+(0*18), PAYMENT_ADDR)   |0|
-*           ('6', '2', PRUF+(0*18), PAYMENT_ADDR)   |0|
-*           ('6', '3', PRUF+(0*18), PAYMENT_ADDR)   |0|
-*           ('6', '4', PRUF+(0*18), PAYMENT_ADDR)   |0|
-*           ('6', '5', PRUF+(0*18), PAYMENT_ADDR)   |0|
-*           ('6', '6', PRUF+(0*18), PAYMENT_ADDR)   |0|
-*           ('6', '7', PRUF+(0*18), PAYMENT_ADDR)   |0|
-*           ('6', '8', PRUF+(0*18), PAYMENT_ADDR)   |0|
-*
-* 7 - ROOT5 ('7', '1', PRUF+(0*18), PAYMENT_ADDR)   |0|
-*           ('7', '2', PRUF+(0*18), PAYMENT_ADDR)   |0|
-*           ('7', '3', PRUF+(0*18), PAYMENT_ADDR)   |0|
-*           ('7', '4', PRUF+(0*18), PAYMENT_ADDR)   |0|
-*           ('7', '5', PRUF+(0*18), PAYMENT_ADDR)   |0|
-*           ('7', '6', PRUF+(0*18), PAYMENT_ADDR)   |0|
-*           ('7', '7', PRUF+(0*18), PAYMENT_ADDR)   |0|
-*           ('7', '8', PRUF+(0*18), PAYMENT_ADDR)   |0|
-*
-* ----------------- MINT PRUF TO USERS (UTIL_TKN.mint) -----------------|0|
-* 1 - USER1 (USER1.address, PRUF+(0*18))   |0|
-*
-* 2 - USER2 (USER2.address, PRUF+(0*18))   |0|
-* 
-* ----------------- SET SHARES ADDRESS (UTIL_TKN.AdminSetSharesAddress) -----------------|0|
-* 1 - OWNER (OWNER.address)   |0|
-* 
-*-----------------------------------------------------------------
+      it("Should deploy Storage", async () => {
+      });
+    
+      it("Should deploy UTIL_TKN", async () => {
+      });
+    
+      it("Should deploy PRUF_A_TKN", async () => {
+      });
+    
+      it("Should deploy PRUF_NODE_TKN", async () => {
+      });
+    
+      it("Should deploy PRUF_NODE_STOR", async () => {
+      });
+    
+      it("Should deploy PRUF_NODE_MGR", async () => {
+      });
+    
+      it("Should deploy PRUF_NODE_BLDR", async () => {
+      });
+    
+      it("Should deploy PRUF_APP_NC", async () => {
+      });
+    
+      it("Should deploy PRUF_DAO_A", async () => {
+      });
+     
+      it("Should deploy PRUF_DAO_B", async () => {
+      });
+    
+      it("Should deploy PRUF_DAO", async () => {
+      });
+    
+      it("Should deploy PRUF_DAO_STOR", async () => {
+      });
+    
+      it("Should deploy CLOCK", async () => {
+      });
+    
+      it("Should deploy PRUF_HELPER", async () => {
+      });
+    
+      it("Should authorize account1 as DAOveto in DAO", () => {
+        return DAO.grantRole(daoVetoRoleB32, account1);
+      });
+    
+      it("Should authorize DAO_A as DAOlayer in DAO_STOR", () => {
+        return DAO_STOR.grantRole(DAOlayerRoleB32, DAO_A.address);
+      });
+    
+      it("Should authorize DAO_B as DAOlayer in DAO_STOR", () => {
+        return DAO_STOR.grantRole(DAOlayerRoleB32, DAO_B.address);
+      });
+    
+      it("Should authorize DAO as DAOadmin in DAO_STOR", () => {
+        return DAO_STOR.grantRole(DAOadminRoleB32, DAO.address);
+      });
+    
+      it("Should authorize DAO_A in STOR", () => {
+        return STOR.grantRole(DAOroleB32, DAO_A.address);
+      });
+    
+      it("Should authorize DAO_B in STOR", () => {
+        return STOR.grantRole(DAOroleB32, DAO_B.address);
+      });
+    
+      it("Should add default contracts to storage", () => {
+        return STOR.addDefaultContracts("0", "NODE_MGR", "1")
+    
+            return STOR.addDefaultContracts("1", "NODE_TKN", "1")
+    
+            return STOR.addDefaultContracts("2", "NODE_STOR", "1")
+    
+            return STOR.addDefaultContracts("3", "A_TKN", "1")
+    
+            return STOR.addDefaultContracts("4", "APP_NC", "2");
+      });
+    
+      it("Should add Storage to each contract", () => {
+        return NODE_MGR.setStorageContract(STOR.address)
+    
+            return NODE_STOR.setStorageContract(STOR.address)
+    
+            return A_TKN.setStorageContract(STOR.address)
+    
+            return APP_NC.setStorageContract(STOR.address)
+    
+            return NODE_BLDR.setStorageContract(STOR.address)
+    
+            return DAO_A.setStorageContract(STOR.address)
+    
+            return DAO_B.setStorageContract(STOR.address)
+    
+            return DAO.setStorageContract(STOR.address)
+    
+            return DAO_STOR.setStorageContract(STOR.address);
+      });
+    
+      it("Should add contract addresses to storage", () => {
+        return STOR.authorizeContract("NODE_MGR", NODE_MGR.address, "0", "1")
+    
+            return STOR.authorizeContract("NODE_STOR", NODE_STOR.address, "0", "1",)
+    
+            return STOR.authorizeContract("NODE_TKN", NODE_TKN.address, "0", "1")
+    
+            return STOR.authorizeContract("A_TKN", A_TKN.address, "0", "1")
+    
+            return STOR.authorizeContract("UTIL_TKN", UTIL_TKN.address, "0", "1")
+    
+            return STOR.authorizeContract("DAO_STOR", DAO_STOR.address, "0", "1")
+    
+            return STOR.authorizeContract("CLOCK", CLOCK.address, "0", "1");
+    
+            return STOR.authorizeContract("APP_NC", APP_NC.address, "0", "2")
+      });
+    
+      it("Should resolve contract addresses", () => {
+        return NODE_MGR.resolveContractAddresses()
+    
+            return NODE_STOR.resolveContractAddresses()
+    
+            return A_TKN.resolveContractAddresses()
+    
+            return APP_NC.resolveContractAddresses()
+    
+            return NODE_BLDR.resolveContractAddresses()
+    
+            return DAO_A.resolveContractAddresses()
+    
+            return DAO_B.resolveContractAddresses()
+    
+            return DAO.resolveContractAddresses()
+    
+            return DAO_STOR.resolveContractAddresses()
+      });
+    
+      it("Should give DAO_A assetTransferRole for APP_NC", () => {
+        return APP_NC.grantRole(assetTransferRoleB32, DAO_A.address);
+      });
+    
+      it("Should give DAO_B assetTransferRole for APP_NC", () => {
+        return APP_NC.grantRole(assetTransferRoleB32, DAO_B.address);
+      });
+    
+      it("Should authorize DAO_A with defaultAdminRole for A_TKN", () => {
+        return A_TKN.grantRole(defaultAdminRoleB32, DAO_A.address);
+      });
+    
+      it("Should authorize APP_NC with minterRole for A_TKN", () => {
+        return A_TKN.grantRole(minterRoleB32, APP_NC.address);
+      });
+    
+      it("Should authorize DAO_A with DAOrole for A_TKN", () => {
+        return A_TKN.grantRole(DAOroleB32, DAO_A.address);
+      });
+    
+      it("Should authorize DAO_A with pauserRole for A_TKN", () => {
+        return A_TKN.grantRole(pauserRoleB32, DAO_A.address);
+      });
+    
+      it("Should authorize account1 with minterRole for A_TKN", () => {
+        return A_TKN.grantRole(minterRoleB32, account1);
+      });
+    
+      it("Should authorize DAO_A with defaultAdminRole for UTIL_TKN", () => {
+        return UTIL_TKN.grantRole(defaultAdminRoleB32, DAO_A.address);
+      });
+    
+      it("Should authorize NODE_MGR with trustedAgentRole for UTIL_TKN", () => {
+        return UTIL_TKN.grantRole(trustedAgentRoleB32, NODE_MGR.address);
+      });
+    
+      it("Should authorize DAO_A with pauserRole for UTIL_TKN", () => {
+        return UTIL_TKN.grantRole(pauserRoleB32, DAO_A.address);
+      });
+    
+      it("Should authorize all payable contracts for transactions", () => {
+        return UTIL_TKN.grantRole(payableRoleB32, NODE_MGR.address)
+        
+          return UTIL_TKN.grantRole(payableRoleB32, APP_NC.address);
+      });
+    
+      it("Should authorize DAO_A with contractAdminRole for NODE_TKN", () => {
+        return NODE_TKN.grantRole(contractAdminRoleB32, DAO_A.address);
+      });
+    
+      it("Should authorize DAO_A with pauserRole for NODE_TKN", () => {
+        return NODE_TKN.grantRole(pauserRoleB32, DAO_A.address);
+      });
+    
+      it("Should authorize NODE_MGR with minterRole for NODE_TKN", () => {
+        return NODE_TKN.grantRole(minterRoleB32, NODE_MGR.address);
+      });
+    
+      it("Should authorize DAO_A with defaultAdminRole for NODE_MGR", () => {
+        return NODE_MGR.grantRole(defaultAdminRoleB32, DAO_A.address);
+      });
+    
+      it("Should authorize account1 with IDverifierRole for NODE_MGR", () => {
+        return NODE_MGR.grantRole(IDverifierRoleB32, account1);
+      });
+    
+      it("Should authorize NODE_BLDR with IDverifierRole for NODE_MGR", () => {
+        return NODE_MGR.grantRole(IDverifierRoleB32, NODE_BLDR.address);
+      });
+    
+      it("Should authorize DAO_A with DAOrole for NODE_MGR", () => {
+        return NODE_MGR.grantRole(DAOroleB32, DAO_A.address);
+      });
+    
+      it("Should authorize DAO_A with pauserRole for NODE_MGR", () => {
+        return NODE_MGR.grantRole(pauserRoleB32, DAO_A.address);
+      });
+    
+      it("Should authorize DAO_A with defaultAdminRole for NODE_STOR", () => {
+        return NODE_STOR.grantRole(defaultAdminRoleB32, DAO_A.address);
+      });
+    
+      it("Should authorize DAO_A with DAOrole for NODE_STOR", () => {
+        return NODE_STOR.grantRole(DAOroleB32, DAO_A.address);
+      });
+    
+      it("Should authorize DAO_A with pauserRole for NODE_STOR", () => {
+        return NODE_STOR.grantRole(pauserRoleB32, DAO_A.address);
+      });
+    
+      it("Should authorize DAO_A with contractAdminRole for NODE_STOR", () => {
+        return NODE_STOR.grantRole(contractAdminRoleB32, DAO_A.address);
+      });
+    
+      it("Should authorize NODE_MGR with nodeAdminRole for NODE_STOR", () => {
+        return NODE_STOR.grantRole(nodeAdminRoleB32, NODE_MGR.address);
+      });
+    
+      it("Should authorize account1 with nodeAdminRole for NODE_STOR", () => {
+        return NODE_STOR.grantRole(nodeAdminRoleB32, account1);
+      });
+    
+      it("Should authorize account1 with DAOrole for NODE_STOR", () => {
+        return NODE_STOR.grantRole(DAOroleB32, account1);
+      });
+    
+      it("Should authorize account1 with DAOrole for STOR", () => {
+        return STOR.grantRole(DAOroleB32, account1);
+      });
+    
+      it("Should authorize account1 with DAOrole for A_TKN", () => {
+        return A_TKN.grantRole(DAOroleB32, account1);
+      });
+    
+      it("Should set all permitted storage providers", () => {
+        return NODE_STOR.setStorageProviders("0", "1")
+    
+            return NODE_STOR.setStorageProviders("1", "1")
+    
+            return NODE_STOR.setStorageProviders("2", "1");
+      });
+    
+      it("Should set all permitted management types", () => {
+        return NODE_STOR.setManagementTypes("0", "1")
+    
+            return NODE_STOR.setManagementTypes("1", "1")
+    
+            return NODE_STOR.setManagementTypes("2", "1")
+    
+            return NODE_STOR.setManagementTypes("3", "1")
+    
+            return NODE_STOR.setManagementTypes("4", "1")
+    
+            return NODE_STOR.setManagementTypes("5", "1")
+    
+            return NODE_STOR.setManagementTypes("255", "1");
+      });
+    
+      it("Should set all permitted custody types", () => {
+        return NODE_STOR.setCustodyTypes("0", "1")
+    
+            return NODE_STOR.setCustodyTypes("1", "1")
+    
+            return NODE_STOR.setCustodyTypes("2", "1")
+    
+            return NODE_STOR.setCustodyTypes("3", "1")
+    
+            return NODE_STOR.setCustodyTypes("4", "1")
+    
+            return NODE_STOR.setCustodyTypes("5", "1")
+    
+            return NODE_STOR.setCustodyTypes("11", "1")
+    
+            return NODE_STOR.setCustodyTypes("12", "1");
+      });
+    
+      it("Should set all baseURI(s) for storage providers", () => {
+        return A_TKN.setBaseURIforStorageType("0", "TEST0")
+    
+            return A_TKN.setBaseURIforStorageType("1", "https://ipfs.io/ipfs/")
+    
+            return A_TKN.setBaseURIforStorageType("2", "https://arweave.net/");
+      });
+    
+      it("Should mint root tokens", () => {
+        return NODE_MGR.createNode(
+          "1", "Art", "1", "3", "0", "0", "9500", rgt000, rgt000, account1)
+
+            return NODE_MGR.createNode(
+              "2", "Apparel", "2", "3", "0", "0", "9500", rgt000, rgt000, account1)
+
+            return NODE_MGR.createNode(
+              "3", "Ticketing", "3", "3", "0", "0", "9500", rgt000, rgt000, account1)
+
+            return NODE_MGR.createNode(
+              "4", "Consumables", "4", "3", "0", "0", "9500", rgt000, rgt000, account1)
+
+            return NODE_MGR.createNode(
+	      "5", "Transportation", "5", "3", "0", "0", "9500", rgt000, rgt000, account1)
+
+            return NODE_MGR.createNode(
+              "6", "Industrial", "6", "3", "0", "0", "9500", rgt000, rgt000, account1)
+
+            return NODE_MGR.createNode(
+              "7", "Miscellaneous", "7", "3", "0", "0", "9500", rgt000, rgt000, account1);
+      });
+    
+      it("Should set costs in Art", () => {
+        return NODE_MGR.setOperationCosts("1", "1", "10000000000000000", account1)
+    
+            return NODE_MGR.setOperationCosts("1", "2", "10000000000000000", account1)
+    
+            return NODE_MGR.setOperationCosts("1", "3", "10000000000000000", account1)
+    
+            return NODE_MGR.setOperationCosts("1", "4", "10000000000000000", account1)
+    
+            return NODE_MGR.setOperationCosts("1", "5", "10000000000000000", account1)
+    
+            return NODE_MGR.setOperationCosts("1", "6", "10000000000000000", account1)
+    
+            return NODE_MGR.setOperationCosts("1", "7", "10000000000000000", account1)
+    
+           return NODE_MGR.setOperationCosts("1", "8", "10000000000000000", account1);
+      });
+    
+      it("Should set costs in Apparel", () => {
+        return NODE_MGR.setOperationCosts("2", "1", "10000000000000000", account1)
+    
+            return NODE_MGR.setOperationCosts("2", "2", "10000000000000000", account1)
+    
+            return NODE_MGR.setOperationCosts("2", "3", "10000000000000000", account1)
+    
+            return NODE_MGR.setOperationCosts("2", "4", "10000000000000000", account1)
+    
+            return NODE_MGR.setOperationCosts("2", "5", "10000000000000000", account1)
+    
+            return NODE_MGR.setOperationCosts("2", "6", "10000000000000000", account1)
+    
+            return NODE_MGR.setOperationCosts("2", "7", "10000000000000000", account1)
+    
+           return NODE_MGR.setOperationCosts("2", "8", "10000000000000000", account1);
+      });
+    
+      it("Should set costs in Ticketing", () => {
+        return NODE_MGR.setOperationCosts("3", "1", "10000000000000000", account1)
+    
+            return NODE_MGR.setOperationCosts("3", "2", "10000000000000000", account1)
+    
+            return NODE_MGR.setOperationCosts("3", "3", "10000000000000000", account1)
+    
+            return NODE_MGR.setOperationCosts("3", "4", "10000000000000000", account1)
+    
+            return NODE_MGR.setOperationCosts("3", "5", "10000000000000000", account1)
+    
+            return NODE_MGR.setOperationCosts("3", "6", "10000000000000000", account1)
+    
+            return NODE_MGR.setOperationCosts("3", "7", "10000000000000000", account1)
+    
+           return NODE_MGR.setOperationCosts("3", "8", "10000000000000000", account1);
+      });
+    
+      it("Should set costs in Consumables", () => {
+        return NODE_MGR.setOperationCosts("4", "1", "10000000000000000", account1)
+    
+            return NODE_MGR.setOperationCosts("4", "2", "10000000000000000", account1)
+    
+            return NODE_MGR.setOperationCosts("4", "3", "10000000000000000", account1)
+    
+            return NODE_MGR.setOperationCosts("4", "4", "10000000000000000", account1)
+    
+            return NODE_MGR.setOperationCosts("4", "5", "10000000000000000", account1)
+    
+            return NODE_MGR.setOperationCosts("4", "6", "10000000000000000", account1)
+    
+            return NODE_MGR.setOperationCosts("4", "7", "10000000000000000", account1)
+    
+           return NODE_MGR.setOperationCosts("4", "8", "10000000000000000", account1);
+      });
+    
+      it("Should set costs in Transportation", () => {
+        return NODE_MGR.setOperationCosts("5", "1", "10000000000000000", account1)
+    
+            return NODE_MGR.setOperationCosts("5", "2", "10000000000000000", account1)
+    
+            return NODE_MGR.setOperationCosts("5", "3", "10000000000000000", account1)
+    
+            return NODE_MGR.setOperationCosts("5", "4", "10000000000000000", account1)
+    
+            return NODE_MGR.setOperationCosts("5", "5", "10000000000000000", account1)
+    
+            return NODE_MGR.setOperationCosts("5", "6", "10000000000000000", account1)
+    
+            return NODE_MGR.setOperationCosts("5", "7", "10000000000000000", account1)
+    
+            return NODE_MGR.setOperationCosts("5", "8", "10000000000000000", account1);
+      });
+    
+      it("Should set costs in Industrial", () => {
+        return NODE_MGR.setOperationCosts("6", "1", "10000000000000000", account1)
+    
+            return NODE_MGR.setOperationCosts("6", "2", "10000000000000000", account1)
+    
+            return NODE_MGR.setOperationCosts("6", "3", "10000000000000000", account1)
+    
+            return NODE_MGR.setOperationCosts("6", "4", "10000000000000000", account1)
+    
+            return NODE_MGR.setOperationCosts("6", "5", "10000000000000000", account1)
+    
+            return NODE_MGR.setOperationCosts("6", "6", "10000000000000000", account1)
+    
+            return NODE_MGR.setOperationCosts("6", "7", "10000000000000000", account1)
+    
+            return NODE_MGR.setOperationCosts("6", "8", "10000000000000000", account1);
+      });
+    
+      it("Should set costs in Miscellaneous", () => {
+        return NODE_MGR.setOperationCosts("7", "1", "10000000000000000", account1)
+    
+            return NODE_MGR.setOperationCosts("7", "2", "10000000000000000", account1)
+    
+            return NODE_MGR.setOperationCosts("7", "3", "10000000000000000", account1)
+    
+            return NODE_MGR.setOperationCosts("7", "4", "10000000000000000", account1)
+    
+            return NODE_MGR.setOperationCosts("7", "5", "10000000000000000", account1)
+    
+            return NODE_MGR.setOperationCosts("7", "6", "10000000000000000", account1)
+    
+            return NODE_MGR.setOperationCosts("7", "7", "10000000000000000", account1)
+    
+            return NODE_MGR.setOperationCosts( "7", "8", "10000000000000000", account1);
+      });
+*----------------------------------------------------------------

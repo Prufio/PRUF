@@ -11,11 +11,18 @@ _________\/// _____________\/// _______\/// __\///////// __\/// _____________
 *---------------------------------------------------------------------------*/
 
 /**-----------------------------------------------------------------
- * PRUF PRUF_RAVE
- * Simple identity provider for minting new nodes and pruf like a Sheik.
- * DO NOT LAUNCH THIS CONTRACT ON MAINNET LOL 
+ * PRUF UD_NODES
+ * Identity provider for minting new nodes using posession of corresponding 721 token for verification.
  *
- * CONTRACT MUST BE GIVEN ID_PROVIDER_ROLE IN NODE_MGR and MINTER_ROLE in UTIL_TKN
+ * !!!! CONTRACT MUST BE GIVEN ID_PROVIDER_ROLE IN NODE_MGR !!!!
+ *
+ *
+ * STATEMENT OF TERMS OF SERVICE (TOS):
+ * User agrees not to intentionally claim any namespace that is a recognized or registered brand name, trade mark,
+ * or other Intellectual property not belonging to the user, and agrees to voluntarily remove any name or brand found to be
+ * infringing from any record that the user controls, within 30 days of notification. If notification is not possible or
+ * there is no response to notification, the user agrees that the name record may be changed without their permission or cooperation.
+ * Use of this software constitutes consent to the terms above.
  -----------------------------------------------------------------*/
 
 // SPDX-License-Identifier: UNLICENSED
@@ -24,55 +31,103 @@ pragma solidity 0.8.7;
 import "../Resources/PRUF_BASIC.sol";
 import "../Imports/security/ReentrancyGuard.sol";
 
-contract RAVE is BASIC {
+contract UD_721 is BASIC {
+    bytes32 public constant NODE_MINTER_ROLE = keccak256("NODE_MINTER_ROLE");
+    bytes32 private constant B320X =
+        0x0000000000000000000000000000000000000000000000000000000000000000;
+
     constructor() {
-        //THIS CONTRACT LAUNCHES PAUSED BY DEFAULT JUST IN CASE YOU ARE AN IDIOT
-        // _pause();
+        _setupRole(NODE_MINTER_ROLE, _msgSender());
     }
+
+    //address internal TOKEN_Address;
+    IERC721 internal UD_TOKEN_CONTRACT;
+    address public UD_token_address;
+
+    //--------------------------------------------Modifiers--------------------------
 
     /**
-     * @dev Verify caller holds Nodetoken
+     * @dev Verify caller holds Nodetoken of passed node and holds verifying token if applicable (bit6=1)
      * @param _node - node for which caller is queried for ownership
      */
-    modifier isNodeHolder(uint32 _node) {
+    modifier isNodeHolderAndHasIdRootToken(uint32 _node) {
         require(
             (NODE_TKN.ownerOf(_node) == _msgSender()),
-            "RAVE:MOD-INH: _msgSender() does not hold node token"
+            "NM:MOD-INHAHIRT: _msgSender() does not hold node token"
+        );
+        Node memory nodeInfo = getNodeinfo(_node);
+        ExtendedNodeData memory extendedNodeInfo = NODE_STOR
+            .getExtendedNodeData(_node);
+
+        require(
+            (NODE_TKN.ownerOf(_node) ==
+                IERC721(extendedNodeInfo.idProviderAddr).ownerOf(
+                    extendedNodeInfo.idProviderTokenId
+                )), // if switch6 = 1 verify that IDroot token and Node token are held in the same address
+            "NM:MOD-INHAHIRT: Node and root of identity are separated. Function is disabled"
         );
         _;
-    }
-
-    function bumpMe() external nonReentrant whenNotPaused {
-        UTIL_TKN.mint(_msgSender(), 10000000000000000000000);
     }
 
     //--------------------------------------------External Functions--------------------------
 
     /**
+     * @dev Set address of STOR contract to interface with
+     * @param _erc721Address address of token contract to interface with
+     */
+    function setUnstoppableDomainsTokenContract(address _erc721Address)
+        external
+        virtual
+        isContractAdmin
+    {
+        require(_erc721Address != address(0), "B:SSC: Address = 0");
+        //^^^^^^^checks^^^^^^^^^
+        UD_token_address = _erc721Address;
+        UD_TOKEN_CONTRACT = IERC721(_erc721Address);
+        //^^^^^^^effects^^^^^^^^^
+    }
+
+    /**
      * @dev Burns (amount) tokens and mints a new Node token to the calling address
-     * @param _name - chosen name of node
+     * @param _domain - chosen domain of node
+     * @param _tld - chosen tld of node
      * @param _nodeRoot - chosen root of node
      * @param _custodyType - chosen custodyType of node (see docs)
      * @param _CAS1 - any external data attatched to node 1/2
      * @param _CAS2 - any external data attatched to node 2/2
      */
     function purchaseNode(
-        string calldata _name,
+        string calldata _domain,
+        string calldata _tld,
         uint32 _nodeRoot,
         uint8 _custodyType,
         bytes32 _CAS1,
-        bytes32 _CAS2,
-        address _mintNodeFor
+        bytes32 _CAS2
     ) external nonReentrant whenNotPaused returns (uint256) {
+        uint256 tokenId = getTokenIdFromDomain(_domain, _tld);
+
+        require( //throws if caller does not hod the appropriate UD token
+            UD_TOKEN_CONTRACT.ownerOf(tokenId) == _msgSender(),
+            "UDNB:PN:Supplied node name does not match tokenID held by caller"
+        );
         //^^^^^^^checks^^^^^^^^^
 
-        uint256 mintedNode = NODE_MGR.purchaseNode(
-            _name,
+        string memory nodeName = string(abi.encodePacked(_domain, ".", _tld));
+
+        uint32 mintedNode = NODE_MGR.purchaseNode( 
+            nodeName,
             _nodeRoot,
             _custodyType,
             _CAS1,
             _CAS2,
-            _mintNodeFor
+            _msgSender()
+        );
+
+        // write UD contract, tokenId of UD domain token to node extended data
+        NODE_MGR.setExternalIdToken(
+            mintedNode, 
+            UD_token_address,
+            tokenId
         );
 
         return mintedNode;
@@ -90,7 +145,7 @@ contract RAVE is BASIC {
         uint32 _node,
         bytes32 _addrHash,
         uint8 _userType
-    ) external whenNotPaused isNodeHolder(_node) {
+    ) external whenNotPaused isNodeHolderAndHasIdRootToken(_node) {
         //^^^^^^^checks^^^^^^^^^
 
         NODE_MGR.addUser(_node, _addrHash, _userType);
@@ -107,7 +162,7 @@ contract RAVE is BASIC {
         uint32 _thisNode,
         uint32 _otherNode,
         uint256 _newStatus
-    ) external whenNotPaused isNodeHolder(_thisNode) {
+    ) external whenNotPaused isNodeHolderAndHasIdRootToken(_thisNode) {
         NODE_STOR.updateImportStatus(_thisNode, _otherNode, _newStatus);
     }
 
@@ -121,7 +176,7 @@ contract RAVE is BASIC {
         uint32 _node,
         bytes32 _CAS1,
         bytes32 _CAS2
-    ) external whenNotPaused isNodeHolder(_node) {
+    ) external whenNotPaused isNodeHolderAndHasIdRootToken(_node) {
         //^^^^^^^checks^^^^^^^^^
 
         NODE_STOR.updateNodeCAS(_node, _CAS1, _CAS2);
@@ -140,7 +195,7 @@ contract RAVE is BASIC {
         uint16 _service,
         uint256 _serviceCost,
         address _paymentAddress
-    ) external whenNotPaused isNodeHolder(_node) {
+    ) external whenNotPaused isNodeHolderAndHasIdRootToken(_node) {
         //^^^^^^^checks^^^^^^^^^
 
         NODE_STOR.setOperationCosts(
@@ -165,7 +220,7 @@ contract RAVE is BASIC {
         uint8 _storageProvider,
         address _refAddress,
         uint8 _switches
-    ) external whenNotPaused isNodeHolder(_node) {
+    ) external whenNotPaused isNodeHolderAndHasIdRootToken(_node) {
         NODE_STOR.setNonMutableData(
             _node,
             _managementType,
@@ -191,7 +246,30 @@ contract RAVE is BASIC {
         uint16 _u16c,
         uint32 _u32d,
         uint32 _u32e
-    ) external whenNotPaused isNodeHolder(_node) {
+    ) external whenNotPaused isNodeHolderAndHasIdRootToken(_node) {
         NODE_STOR.setExtendedNodeData(_node, _u8a, _u8b, _u16c, _u32d, _u32e);
+    }
+
+    function getTokenIdFromDomain(string memory _domain, string memory _tld)
+        public
+        pure
+        returns (uint256)
+    {
+        bytes32 namehash = 0;
+        if (bytes(abi.encodePacked(_domain, _tld)).length != 0) {
+            namehash = keccak256(
+                abi.encodePacked(namehash, keccak256(abi.encodePacked(_tld)))
+            );
+
+            if (bytes(abi.encodePacked(_domain)).length != 0) {
+                namehash = keccak256(
+                    abi.encodePacked(
+                        namehash,
+                        keccak256(abi.encodePacked(_domain))
+                    )
+                );
+            }
+        }
+        return uint256(namehash);
     }
 }
