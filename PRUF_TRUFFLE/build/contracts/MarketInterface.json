@@ -1,0 +1,1859 @@
+{
+  "contractName": "MarketInterface",
+  "abi": [
+    {
+      "inputs": [
+        {
+          "internalType": "address",
+          "name": "_address",
+          "type": "address"
+        }
+      ],
+      "name": "setTokenAddress",
+      "outputs": [],
+      "stateMutability": "nonpayable",
+      "type": "function"
+    },
+    {
+      "inputs": [
+        {
+          "internalType": "address",
+          "name": "_charityAddress",
+          "type": "address"
+        }
+      ],
+      "name": "setCharityAddress",
+      "outputs": [],
+      "stateMutability": "nonpayable",
+      "type": "function"
+    },
+    {
+      "inputs": [
+        {
+          "internalType": "uint32",
+          "name": "_price",
+          "type": "uint32"
+        }
+      ],
+      "name": "setListingPrice",
+      "outputs": [],
+      "stateMutability": "nonpayable",
+      "type": "function"
+    },
+    {
+      "inputs": [
+        {
+          "internalType": "uint256",
+          "name": "_tokenId",
+          "type": "uint256"
+        },
+        {
+          "internalType": "address",
+          "name": "_currency",
+          "type": "address"
+        },
+        {
+          "internalType": "uint256",
+          "name": "_price",
+          "type": "uint256"
+        },
+        {
+          "internalType": "uint32",
+          "name": "_node",
+          "type": "uint32"
+        }
+      ],
+      "name": "consignPrufAsset",
+      "outputs": [],
+      "stateMutability": "nonpayable",
+      "type": "function"
+    },
+    {
+      "inputs": [
+        {
+          "internalType": "uint256",
+          "name": "_tokenId",
+          "type": "uint256"
+        },
+        {
+          "internalType": "address",
+          "name": "_ERC721TokenContract",
+          "type": "address"
+        },
+        {
+          "internalType": "address",
+          "name": "_currency",
+          "type": "address"
+        },
+        {
+          "internalType": "uint256",
+          "name": "_price",
+          "type": "uint256"
+        },
+        {
+          "internalType": "uint32",
+          "name": "_node",
+          "type": "uint32"
+        },
+        {
+          "internalType": "string",
+          "name": "uri",
+          "type": "string"
+        }
+      ],
+      "name": "consignToken",
+      "outputs": [],
+      "stateMutability": "nonpayable",
+      "type": "function"
+    },
+    {
+      "inputs": [
+        {
+          "internalType": "uint256",
+          "name": "_tokenId",
+          "type": "uint256"
+        },
+        {
+          "internalType": "address",
+          "name": "_currency",
+          "type": "address"
+        },
+        {
+          "internalType": "uint256",
+          "name": "_price",
+          "type": "uint256"
+        }
+      ],
+      "name": "updateConsignment",
+      "outputs": [],
+      "stateMutability": "nonpayable",
+      "type": "function"
+    },
+    {
+      "inputs": [
+        {
+          "internalType": "uint256",
+          "name": "_tokenId",
+          "type": "uint256"
+        }
+      ],
+      "name": "withdrawFromConsignment",
+      "outputs": [],
+      "stateMutability": "nonpayable",
+      "type": "function"
+    },
+    {
+      "inputs": [
+        {
+          "internalType": "uint256",
+          "name": "_tokenId",
+          "type": "uint256"
+        }
+      ],
+      "name": "purchaseItem",
+      "outputs": [],
+      "stateMutability": "nonpayable",
+      "type": "function"
+    }
+  ],
+  "metadata": "{\"compiler\":{\"version\":\"0.8.7+commit.e28d00a7\"},\"language\":\"Solidity\",\"output\":{\"abi\":[{\"inputs\":[{\"internalType\":\"uint256\",\"name\":\"_tokenId\",\"type\":\"uint256\"},{\"internalType\":\"address\",\"name\":\"_currency\",\"type\":\"address\"},{\"internalType\":\"uint256\",\"name\":\"_price\",\"type\":\"uint256\"},{\"internalType\":\"uint32\",\"name\":\"_node\",\"type\":\"uint32\"}],\"name\":\"consignPrufAsset\",\"outputs\":[],\"stateMutability\":\"nonpayable\",\"type\":\"function\"},{\"inputs\":[{\"internalType\":\"uint256\",\"name\":\"_tokenId\",\"type\":\"uint256\"},{\"internalType\":\"address\",\"name\":\"_ERC721TokenContract\",\"type\":\"address\"},{\"internalType\":\"address\",\"name\":\"_currency\",\"type\":\"address\"},{\"internalType\":\"uint256\",\"name\":\"_price\",\"type\":\"uint256\"},{\"internalType\":\"uint32\",\"name\":\"_node\",\"type\":\"uint32\"},{\"internalType\":\"string\",\"name\":\"uri\",\"type\":\"string\"}],\"name\":\"consignToken\",\"outputs\":[],\"stateMutability\":\"nonpayable\",\"type\":\"function\"},{\"inputs\":[{\"internalType\":\"uint256\",\"name\":\"_tokenId\",\"type\":\"uint256\"}],\"name\":\"purchaseItem\",\"outputs\":[],\"stateMutability\":\"nonpayable\",\"type\":\"function\"},{\"inputs\":[{\"internalType\":\"address\",\"name\":\"_charityAddress\",\"type\":\"address\"}],\"name\":\"setCharityAddress\",\"outputs\":[],\"stateMutability\":\"nonpayable\",\"type\":\"function\"},{\"inputs\":[{\"internalType\":\"uint32\",\"name\":\"_price\",\"type\":\"uint32\"}],\"name\":\"setListingPrice\",\"outputs\":[],\"stateMutability\":\"nonpayable\",\"type\":\"function\"},{\"inputs\":[{\"internalType\":\"address\",\"name\":\"_address\",\"type\":\"address\"}],\"name\":\"setTokenAddress\",\"outputs\":[],\"stateMutability\":\"nonpayable\",\"type\":\"function\"},{\"inputs\":[{\"internalType\":\"uint256\",\"name\":\"_tokenId\",\"type\":\"uint256\"},{\"internalType\":\"address\",\"name\":\"_currency\",\"type\":\"address\"},{\"internalType\":\"uint256\",\"name\":\"_price\",\"type\":\"uint256\"}],\"name\":\"updateConsignment\",\"outputs\":[],\"stateMutability\":\"nonpayable\",\"type\":\"function\"},{\"inputs\":[{\"internalType\":\"uint256\",\"name\":\"_tokenId\",\"type\":\"uint256\"}],\"name\":\"withdrawFromConsignment\",\"outputs\":[],\"stateMutability\":\"nonpayable\",\"type\":\"function\"}],\"devdoc\":{\"kind\":\"dev\",\"methods\":{\"consignPrufAsset(uint256,address,uint256,uint32)\":{\"details\":\"Wraps a pruf asset, takes original from caller (holds it in contract)\",\"params\":{\"_currency\":\"currency to make transaction in\",\"_node\":\"node doing the consignment\",\"_price\":\"price in _currency to require for transfer\",\"_tokenId\":\"tokenID of token to wrap\"}},\"consignToken(uint256,address,address,uint256,uint32,string)\":{\"details\":\"Wraps a token, takes original from caller (holds it in contract)\",\"params\":{\"_ERC721TokenContract\":\"contract address for token to wrap\",\"_currency\":\"currency to make transaction in\",\"_node\":\"node doing the consignment\",\"_price\":\"price in _currency to require for transfer\",\"_tokenId\":\"tokenID of token to wrap\",\"uri\":\"string for URI Prerequisite: contract authorized for token txfr Takes original 721\"}},\"purchaseItem(uint256)\":{\"details\":\"Purchse an item from the consignment contract\",\"params\":{\"_tokenId\":\"consignment ID\"}},\"setCharityAddress(address)\":{\"details\":\"sets the charity donation address\",\"params\":{\"_charityAddress\":\"charity erc20 address\"}},\"setListingPrice(uint32)\":{\"details\":\"sets the default cost in PR\\u00fcF of listing a non-PR\\u00fcF NFT\",\"params\":{\"_price\":\"cost in PR\\u00fcF(18) of listing a non-PR\\u00fcF NFT\"}},\"setTokenAddress(address)\":{\"details\":\"sets the MARKET_TKN contract address\",\"params\":{\"_address\":\"MARKET_TKN contract address\"}},\"updateConsignment(uint256,address,uint256)\":{\"details\":\"Updates pricing information for an active consignment\",\"params\":{\"_currency\":\"currency to make transaction in\",\"_price\":\"price in _currency to require for transfer\",\"_tokenId\":\"ID of consignment\"}},\"withdrawFromConsignment(uint256)\":{\"details\":\"Unwraps a token, burns the MARKET_TKN, returns original to caller\",\"params\":{\"_tokenId\":\"tokenID of consignment token being redeemed burns consignment token from caller wallet Sends original consigned 721 to caller\"}}},\"version\":1},\"userdoc\":{\"kind\":\"user\",\"methods\":{},\"version\":1}},\"settings\":{\"compilationTarget\":{\"project:/contracts/Resources/RESOURCE_PRUF_EXT_INTERFACES.sol\":\"MarketInterface\"},\"evmVersion\":\"london\",\"libraries\":{},\"metadata\":{\"bytecodeHash\":\"ipfs\"},\"optimizer\":{\"enabled\":true,\"runs\":200},\"remappings\":[]},\"sources\":{\"project:/contracts/Resources/RESOURCE_PRUF_EXT_INTERFACES.sol\":{\"keccak256\":\"0xe66096c50b940b576d1788accce7b2ebf8de6fab1674ebb1c5066ff294acff8b\",\"license\":\"UNLICENSED\",\"urls\":[\"bzz-raw://c3726ab3c7ab292a19dd29c2ac49b1fb6ffea14f075142754a6a368c505c871f\",\"dweb:/ipfs/Qmayu7WBknqv3BFCw4EXhxSkCQRwdWfHyRTPjm41CjT64H\"]}},\"version\":1}",
+  "bytecode": "0x",
+  "deployedBytecode": "0x",
+  "immutableReferences": {},
+  "generatedSources": [],
+  "deployedGeneratedSources": [],
+  "sourceMap": "",
+  "deployedSourceMap": "",
+  "source": "/**--------------------------------------------------------PRüF0.8.7\n__/\\\\\\\\\\\\\\\\\\\\\\\\\\ _____/\\\\\\\\\\\\\\\\\\ _______/\\\\__/\\\\ ___/\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\        \n__\\/\\\\\\/////////\\\\\\ _/\\\\\\///////\\\\\\ ____\\//__\\//____\\/\\\\\\///////////__       \n___\\/\\\\\\_______\\/\\\\\\_\\/\\\\\\_____\\/\\\\\\ ________________\\/\\\\\\ ____________      \n____\\/\\\\\\\\\\\\\\\\\\\\\\\\\\/__\\/\\\\\\\\\\\\\\\\\\\\\\/_____/\\\\\\____/\\\\\\_\\/\\\\\\\\\\\\\\\\\\\\\\ ____     \n_____\\/\\\\\\/////////____\\/\\\\\\//////\\\\\\ ___\\/\\\\\\___\\/\\\\\\_\\/\\\\\\///////______\n______\\/\\\\\\ ____________\\/\\\\\\ ___\\//\\\\\\ __\\/\\\\\\___\\/\\\\\\_\\/\\\\\\ ____________\n_______\\/\\\\\\ ____________\\/\\\\\\ ____\\//\\\\\\ _\\/\\\\\\___\\/\\\\\\_\\/\\\\\\ ____________\n________\\/\\\\\\ ____________\\/\\\\\\ _____\\//\\\\\\_\\//\\\\\\\\\\\\\\\\\\ _\\/\\\\\\ ____________\n_________\\/// _____________\\/// _______\\/// __\\///////// __\\/// _____________\n*---------------------------------------------------------------------------*/\n\n/**-----------------------------------------------------------------\n *  Extra Interfaces\n *----------------------------------------------------------------*/\n\n// SPDX-License-Identifier: UNLICENSED\npragma solidity 0.8.7;\n\n//---------------------------------------------------------------------------------------------------------------\n/*\n * @dev Interface for Market\n * INHERITANCE:\n    import \"./Imports/access/Ownable.sol\";\n    import \"./Imports/security/Pausable.sol\";\n    import \"./Imports/security/ReentrancyGuard.sol\";\n */\n\ninterface MarketInterface {\n    //--------------------------------------------External Functions--------------------------\n\n    /**\n     * @dev sets the MARKET_TKN contract address\n     * @param _address MARKET_TKN contract address\n     */\n\n    function setTokenAddress(address _address) external;\n\n    /**\n     * @dev sets the charity donation address\n     * @param _charityAddress charity erc20 address\n     */\n\n    function setCharityAddress(address _charityAddress) external;\n\n    /**\n     * @dev sets the default cost in PRüF of listing a non-PRüF NFT\n     * @param _price cost in PRüF(18) of listing a non-PRüF NFT\n     */\n\n    function setListingPrice(uint32 _price) external;\n\n    /**\n     * @dev Wraps a pruf asset, takes original from caller (holds it in contract)\n     * @param _tokenId tokenID of token to wrap\n     * @param _currency currency to make transaction in\n     * @param _price price in _currency to require for transfer\n     * @param _node node doing the consignment\n     */\n    function consignPrufAsset(\n        uint256 _tokenId,\n        address _currency,\n        uint256 _price,\n        uint32 _node\n    ) external;\n\n    /**\n     * @dev Wraps a token, takes original from caller (holds it in contract)\n     * @param _tokenId tokenID of token to wrap\n     * @param _ERC721TokenContract contract address for token to wrap\n     * @param _currency currency to make transaction in\n     * @param _price price in _currency to require for transfer\n     * @param _node node doing the consignment\n     * @param uri string for URI\n     * Prerequisite: contract authorized for token txfr\n     * Takes original 721\n     */\n    function consignToken(\n        uint256 _tokenId,\n        address _ERC721TokenContract,\n        address _currency,\n        uint256 _price,\n        uint32 _node,\n        string memory uri\n    ) external;\n\n    /**\n     * @dev Updates pricing information for an active consignment\n     * @param _tokenId ID of consignment\n     * @param _currency currency to make transaction in\n     * @param _price price in _currency to require for transfer\n     */\n    function updateConsignment(\n        uint256 _tokenId,\n        address _currency,\n        uint256 _price\n    ) external;\n\n    /**\n     * @dev Unwraps a token, burns the MARKET_TKN, returns original to caller\n     * @param _tokenId tokenID of consignment token being redeemed\n     * burns consignment token from caller wallet\n     * Sends original consigned 721 to caller\n     */\n    function withdrawFromConsignment(uint256 _tokenId) external;\n\n    /**\n     * @dev Purchse an item from the consignment contract\n     * @param _tokenId consignment ID\n     */\n    function purchaseItem(\n        uint256 _tokenId //consignment token ID\n    ) external;\n}\n",
+  "sourcePath": "/Users/drake/Documents/DEV/PRUF/PRUF_TRUFFLE/contracts/Resources/RESOURCE_PRUF_EXT_INTERFACES.sol",
+  "ast": {
+    "absolutePath": "project:/contracts/Resources/RESOURCE_PRUF_EXT_INTERFACES.sol",
+    "exportedSymbols": {
+      "MarketInterface": [
+        26554
+      ]
+    },
+    "id": 26555,
+    "license": "UNLICENSED",
+    "nodeType": "SourceUnit",
+    "nodes": [
+      {
+        "id": 26485,
+        "literals": [
+          "solidity",
+          "0.8",
+          ".7"
+        ],
+        "nodeType": "PragmaDirective",
+        "src": "1040:22:122"
+      },
+      {
+        "abstract": false,
+        "baseContracts": [],
+        "contractDependencies": [],
+        "contractKind": "interface",
+        "fullyImplemented": false,
+        "id": 26554,
+        "linearizedBaseContracts": [
+          26554
+        ],
+        "name": "MarketInterface",
+        "nameLocation": "1383:15:122",
+        "nodeType": "ContractDefinition",
+        "nodes": [
+          {
+            "documentation": {
+              "id": 26486,
+              "nodeType": "StructuredDocumentation",
+              "src": "1501:111:122",
+              "text": " @dev sets the MARKET_TKN contract address\n @param _address MARKET_TKN contract address"
+            },
+            "functionSelector": "26a4e8d2",
+            "id": 26491,
+            "implemented": false,
+            "kind": "function",
+            "modifiers": [],
+            "name": "setTokenAddress",
+            "nameLocation": "1627:15:122",
+            "nodeType": "FunctionDefinition",
+            "parameters": {
+              "id": 26489,
+              "nodeType": "ParameterList",
+              "parameters": [
+                {
+                  "constant": false,
+                  "id": 26488,
+                  "mutability": "mutable",
+                  "name": "_address",
+                  "nameLocation": "1651:8:122",
+                  "nodeType": "VariableDeclaration",
+                  "scope": 26491,
+                  "src": "1643:16:122",
+                  "stateVariable": false,
+                  "storageLocation": "default",
+                  "typeDescriptions": {
+                    "typeIdentifier": "t_address",
+                    "typeString": "address"
+                  },
+                  "typeName": {
+                    "id": 26487,
+                    "name": "address",
+                    "nodeType": "ElementaryTypeName",
+                    "src": "1643:7:122",
+                    "stateMutability": "nonpayable",
+                    "typeDescriptions": {
+                      "typeIdentifier": "t_address",
+                      "typeString": "address"
+                    }
+                  },
+                  "visibility": "internal"
+                }
+              ],
+              "src": "1642:18:122"
+            },
+            "returnParameters": {
+              "id": 26490,
+              "nodeType": "ParameterList",
+              "parameters": [],
+              "src": "1669:0:122"
+            },
+            "scope": 26554,
+            "src": "1618:52:122",
+            "stateMutability": "nonpayable",
+            "virtual": false,
+            "visibility": "external"
+          },
+          {
+            "documentation": {
+              "id": 26492,
+              "nodeType": "StructuredDocumentation",
+              "src": "1676:109:122",
+              "text": " @dev sets the charity donation address\n @param _charityAddress charity erc20 address"
+            },
+            "functionSelector": "0c9be46d",
+            "id": 26497,
+            "implemented": false,
+            "kind": "function",
+            "modifiers": [],
+            "name": "setCharityAddress",
+            "nameLocation": "1800:17:122",
+            "nodeType": "FunctionDefinition",
+            "parameters": {
+              "id": 26495,
+              "nodeType": "ParameterList",
+              "parameters": [
+                {
+                  "constant": false,
+                  "id": 26494,
+                  "mutability": "mutable",
+                  "name": "_charityAddress",
+                  "nameLocation": "1826:15:122",
+                  "nodeType": "VariableDeclaration",
+                  "scope": 26497,
+                  "src": "1818:23:122",
+                  "stateVariable": false,
+                  "storageLocation": "default",
+                  "typeDescriptions": {
+                    "typeIdentifier": "t_address",
+                    "typeString": "address"
+                  },
+                  "typeName": {
+                    "id": 26493,
+                    "name": "address",
+                    "nodeType": "ElementaryTypeName",
+                    "src": "1818:7:122",
+                    "stateMutability": "nonpayable",
+                    "typeDescriptions": {
+                      "typeIdentifier": "t_address",
+                      "typeString": "address"
+                    }
+                  },
+                  "visibility": "internal"
+                }
+              ],
+              "src": "1817:25:122"
+            },
+            "returnParameters": {
+              "id": 26496,
+              "nodeType": "ParameterList",
+              "parameters": [],
+              "src": "1851:0:122"
+            },
+            "scope": 26554,
+            "src": "1791:61:122",
+            "stateMutability": "nonpayable",
+            "virtual": false,
+            "visibility": "external"
+          },
+          {
+            "documentation": {
+              "id": 26498,
+              "nodeType": "StructuredDocumentation",
+              "src": "1858:147:122",
+              "text": " @dev sets the default cost in PRüF of listing a non-PRüF NFT\n @param _price cost in PRüF(18) of listing a non-PRüF NFT"
+            },
+            "functionSelector": "9f54d767",
+            "id": 26503,
+            "implemented": false,
+            "kind": "function",
+            "modifiers": [],
+            "name": "setListingPrice",
+            "nameLocation": "2020:15:122",
+            "nodeType": "FunctionDefinition",
+            "parameters": {
+              "id": 26501,
+              "nodeType": "ParameterList",
+              "parameters": [
+                {
+                  "constant": false,
+                  "id": 26500,
+                  "mutability": "mutable",
+                  "name": "_price",
+                  "nameLocation": "2043:6:122",
+                  "nodeType": "VariableDeclaration",
+                  "scope": 26503,
+                  "src": "2036:13:122",
+                  "stateVariable": false,
+                  "storageLocation": "default",
+                  "typeDescriptions": {
+                    "typeIdentifier": "t_uint32",
+                    "typeString": "uint32"
+                  },
+                  "typeName": {
+                    "id": 26499,
+                    "name": "uint32",
+                    "nodeType": "ElementaryTypeName",
+                    "src": "2036:6:122",
+                    "typeDescriptions": {
+                      "typeIdentifier": "t_uint32",
+                      "typeString": "uint32"
+                    }
+                  },
+                  "visibility": "internal"
+                }
+              ],
+              "src": "2035:15:122"
+            },
+            "returnParameters": {
+              "id": 26502,
+              "nodeType": "ParameterList",
+              "parameters": [],
+              "src": "2059:0:122"
+            },
+            "scope": 26554,
+            "src": "2011:49:122",
+            "stateMutability": "nonpayable",
+            "virtual": false,
+            "visibility": "external"
+          },
+          {
+            "documentation": {
+              "id": 26504,
+              "nodeType": "StructuredDocumentation",
+              "src": "2066:308:122",
+              "text": " @dev Wraps a pruf asset, takes original from caller (holds it in contract)\n @param _tokenId tokenID of token to wrap\n @param _currency currency to make transaction in\n @param _price price in _currency to require for transfer\n @param _node node doing the consignment"
+            },
+            "functionSelector": "fef53561",
+            "id": 26515,
+            "implemented": false,
+            "kind": "function",
+            "modifiers": [],
+            "name": "consignPrufAsset",
+            "nameLocation": "2388:16:122",
+            "nodeType": "FunctionDefinition",
+            "parameters": {
+              "id": 26513,
+              "nodeType": "ParameterList",
+              "parameters": [
+                {
+                  "constant": false,
+                  "id": 26506,
+                  "mutability": "mutable",
+                  "name": "_tokenId",
+                  "nameLocation": "2422:8:122",
+                  "nodeType": "VariableDeclaration",
+                  "scope": 26515,
+                  "src": "2414:16:122",
+                  "stateVariable": false,
+                  "storageLocation": "default",
+                  "typeDescriptions": {
+                    "typeIdentifier": "t_uint256",
+                    "typeString": "uint256"
+                  },
+                  "typeName": {
+                    "id": 26505,
+                    "name": "uint256",
+                    "nodeType": "ElementaryTypeName",
+                    "src": "2414:7:122",
+                    "typeDescriptions": {
+                      "typeIdentifier": "t_uint256",
+                      "typeString": "uint256"
+                    }
+                  },
+                  "visibility": "internal"
+                },
+                {
+                  "constant": false,
+                  "id": 26508,
+                  "mutability": "mutable",
+                  "name": "_currency",
+                  "nameLocation": "2448:9:122",
+                  "nodeType": "VariableDeclaration",
+                  "scope": 26515,
+                  "src": "2440:17:122",
+                  "stateVariable": false,
+                  "storageLocation": "default",
+                  "typeDescriptions": {
+                    "typeIdentifier": "t_address",
+                    "typeString": "address"
+                  },
+                  "typeName": {
+                    "id": 26507,
+                    "name": "address",
+                    "nodeType": "ElementaryTypeName",
+                    "src": "2440:7:122",
+                    "stateMutability": "nonpayable",
+                    "typeDescriptions": {
+                      "typeIdentifier": "t_address",
+                      "typeString": "address"
+                    }
+                  },
+                  "visibility": "internal"
+                },
+                {
+                  "constant": false,
+                  "id": 26510,
+                  "mutability": "mutable",
+                  "name": "_price",
+                  "nameLocation": "2475:6:122",
+                  "nodeType": "VariableDeclaration",
+                  "scope": 26515,
+                  "src": "2467:14:122",
+                  "stateVariable": false,
+                  "storageLocation": "default",
+                  "typeDescriptions": {
+                    "typeIdentifier": "t_uint256",
+                    "typeString": "uint256"
+                  },
+                  "typeName": {
+                    "id": 26509,
+                    "name": "uint256",
+                    "nodeType": "ElementaryTypeName",
+                    "src": "2467:7:122",
+                    "typeDescriptions": {
+                      "typeIdentifier": "t_uint256",
+                      "typeString": "uint256"
+                    }
+                  },
+                  "visibility": "internal"
+                },
+                {
+                  "constant": false,
+                  "id": 26512,
+                  "mutability": "mutable",
+                  "name": "_node",
+                  "nameLocation": "2498:5:122",
+                  "nodeType": "VariableDeclaration",
+                  "scope": 26515,
+                  "src": "2491:12:122",
+                  "stateVariable": false,
+                  "storageLocation": "default",
+                  "typeDescriptions": {
+                    "typeIdentifier": "t_uint32",
+                    "typeString": "uint32"
+                  },
+                  "typeName": {
+                    "id": 26511,
+                    "name": "uint32",
+                    "nodeType": "ElementaryTypeName",
+                    "src": "2491:6:122",
+                    "typeDescriptions": {
+                      "typeIdentifier": "t_uint32",
+                      "typeString": "uint32"
+                    }
+                  },
+                  "visibility": "internal"
+                }
+              ],
+              "src": "2404:105:122"
+            },
+            "returnParameters": {
+              "id": 26514,
+              "nodeType": "ParameterList",
+              "parameters": [],
+              "src": "2518:0:122"
+            },
+            "scope": 26554,
+            "src": "2379:140:122",
+            "stateMutability": "nonpayable",
+            "virtual": false,
+            "visibility": "external"
+          },
+          {
+            "documentation": {
+              "id": 26516,
+              "nodeType": "StructuredDocumentation",
+              "src": "2525:488:122",
+              "text": " @dev Wraps a token, takes original from caller (holds it in contract)\n @param _tokenId tokenID of token to wrap\n @param _ERC721TokenContract contract address for token to wrap\n @param _currency currency to make transaction in\n @param _price price in _currency to require for transfer\n @param _node node doing the consignment\n @param uri string for URI\n Prerequisite: contract authorized for token txfr\n Takes original 721"
+            },
+            "functionSelector": "82ee07bf",
+            "id": 26531,
+            "implemented": false,
+            "kind": "function",
+            "modifiers": [],
+            "name": "consignToken",
+            "nameLocation": "3027:12:122",
+            "nodeType": "FunctionDefinition",
+            "parameters": {
+              "id": 26529,
+              "nodeType": "ParameterList",
+              "parameters": [
+                {
+                  "constant": false,
+                  "id": 26518,
+                  "mutability": "mutable",
+                  "name": "_tokenId",
+                  "nameLocation": "3057:8:122",
+                  "nodeType": "VariableDeclaration",
+                  "scope": 26531,
+                  "src": "3049:16:122",
+                  "stateVariable": false,
+                  "storageLocation": "default",
+                  "typeDescriptions": {
+                    "typeIdentifier": "t_uint256",
+                    "typeString": "uint256"
+                  },
+                  "typeName": {
+                    "id": 26517,
+                    "name": "uint256",
+                    "nodeType": "ElementaryTypeName",
+                    "src": "3049:7:122",
+                    "typeDescriptions": {
+                      "typeIdentifier": "t_uint256",
+                      "typeString": "uint256"
+                    }
+                  },
+                  "visibility": "internal"
+                },
+                {
+                  "constant": false,
+                  "id": 26520,
+                  "mutability": "mutable",
+                  "name": "_ERC721TokenContract",
+                  "nameLocation": "3083:20:122",
+                  "nodeType": "VariableDeclaration",
+                  "scope": 26531,
+                  "src": "3075:28:122",
+                  "stateVariable": false,
+                  "storageLocation": "default",
+                  "typeDescriptions": {
+                    "typeIdentifier": "t_address",
+                    "typeString": "address"
+                  },
+                  "typeName": {
+                    "id": 26519,
+                    "name": "address",
+                    "nodeType": "ElementaryTypeName",
+                    "src": "3075:7:122",
+                    "stateMutability": "nonpayable",
+                    "typeDescriptions": {
+                      "typeIdentifier": "t_address",
+                      "typeString": "address"
+                    }
+                  },
+                  "visibility": "internal"
+                },
+                {
+                  "constant": false,
+                  "id": 26522,
+                  "mutability": "mutable",
+                  "name": "_currency",
+                  "nameLocation": "3121:9:122",
+                  "nodeType": "VariableDeclaration",
+                  "scope": 26531,
+                  "src": "3113:17:122",
+                  "stateVariable": false,
+                  "storageLocation": "default",
+                  "typeDescriptions": {
+                    "typeIdentifier": "t_address",
+                    "typeString": "address"
+                  },
+                  "typeName": {
+                    "id": 26521,
+                    "name": "address",
+                    "nodeType": "ElementaryTypeName",
+                    "src": "3113:7:122",
+                    "stateMutability": "nonpayable",
+                    "typeDescriptions": {
+                      "typeIdentifier": "t_address",
+                      "typeString": "address"
+                    }
+                  },
+                  "visibility": "internal"
+                },
+                {
+                  "constant": false,
+                  "id": 26524,
+                  "mutability": "mutable",
+                  "name": "_price",
+                  "nameLocation": "3148:6:122",
+                  "nodeType": "VariableDeclaration",
+                  "scope": 26531,
+                  "src": "3140:14:122",
+                  "stateVariable": false,
+                  "storageLocation": "default",
+                  "typeDescriptions": {
+                    "typeIdentifier": "t_uint256",
+                    "typeString": "uint256"
+                  },
+                  "typeName": {
+                    "id": 26523,
+                    "name": "uint256",
+                    "nodeType": "ElementaryTypeName",
+                    "src": "3140:7:122",
+                    "typeDescriptions": {
+                      "typeIdentifier": "t_uint256",
+                      "typeString": "uint256"
+                    }
+                  },
+                  "visibility": "internal"
+                },
+                {
+                  "constant": false,
+                  "id": 26526,
+                  "mutability": "mutable",
+                  "name": "_node",
+                  "nameLocation": "3171:5:122",
+                  "nodeType": "VariableDeclaration",
+                  "scope": 26531,
+                  "src": "3164:12:122",
+                  "stateVariable": false,
+                  "storageLocation": "default",
+                  "typeDescriptions": {
+                    "typeIdentifier": "t_uint32",
+                    "typeString": "uint32"
+                  },
+                  "typeName": {
+                    "id": 26525,
+                    "name": "uint32",
+                    "nodeType": "ElementaryTypeName",
+                    "src": "3164:6:122",
+                    "typeDescriptions": {
+                      "typeIdentifier": "t_uint32",
+                      "typeString": "uint32"
+                    }
+                  },
+                  "visibility": "internal"
+                },
+                {
+                  "constant": false,
+                  "id": 26528,
+                  "mutability": "mutable",
+                  "name": "uri",
+                  "nameLocation": "3200:3:122",
+                  "nodeType": "VariableDeclaration",
+                  "scope": 26531,
+                  "src": "3186:17:122",
+                  "stateVariable": false,
+                  "storageLocation": "memory",
+                  "typeDescriptions": {
+                    "typeIdentifier": "t_string_memory_ptr",
+                    "typeString": "string"
+                  },
+                  "typeName": {
+                    "id": 26527,
+                    "name": "string",
+                    "nodeType": "ElementaryTypeName",
+                    "src": "3186:6:122",
+                    "typeDescriptions": {
+                      "typeIdentifier": "t_string_storage_ptr",
+                      "typeString": "string"
+                    }
+                  },
+                  "visibility": "internal"
+                }
+              ],
+              "src": "3039:170:122"
+            },
+            "returnParameters": {
+              "id": 26530,
+              "nodeType": "ParameterList",
+              "parameters": [],
+              "src": "3218:0:122"
+            },
+            "scope": 26554,
+            "src": "3018:201:122",
+            "stateMutability": "nonpayable",
+            "virtual": false,
+            "visibility": "external"
+          },
+          {
+            "documentation": {
+              "id": 26532,
+              "nodeType": "StructuredDocumentation",
+              "src": "3225:238:122",
+              "text": " @dev Updates pricing information for an active consignment\n @param _tokenId ID of consignment\n @param _currency currency to make transaction in\n @param _price price in _currency to require for transfer"
+            },
+            "functionSelector": "b51eb064",
+            "id": 26541,
+            "implemented": false,
+            "kind": "function",
+            "modifiers": [],
+            "name": "updateConsignment",
+            "nameLocation": "3477:17:122",
+            "nodeType": "FunctionDefinition",
+            "parameters": {
+              "id": 26539,
+              "nodeType": "ParameterList",
+              "parameters": [
+                {
+                  "constant": false,
+                  "id": 26534,
+                  "mutability": "mutable",
+                  "name": "_tokenId",
+                  "nameLocation": "3512:8:122",
+                  "nodeType": "VariableDeclaration",
+                  "scope": 26541,
+                  "src": "3504:16:122",
+                  "stateVariable": false,
+                  "storageLocation": "default",
+                  "typeDescriptions": {
+                    "typeIdentifier": "t_uint256",
+                    "typeString": "uint256"
+                  },
+                  "typeName": {
+                    "id": 26533,
+                    "name": "uint256",
+                    "nodeType": "ElementaryTypeName",
+                    "src": "3504:7:122",
+                    "typeDescriptions": {
+                      "typeIdentifier": "t_uint256",
+                      "typeString": "uint256"
+                    }
+                  },
+                  "visibility": "internal"
+                },
+                {
+                  "constant": false,
+                  "id": 26536,
+                  "mutability": "mutable",
+                  "name": "_currency",
+                  "nameLocation": "3538:9:122",
+                  "nodeType": "VariableDeclaration",
+                  "scope": 26541,
+                  "src": "3530:17:122",
+                  "stateVariable": false,
+                  "storageLocation": "default",
+                  "typeDescriptions": {
+                    "typeIdentifier": "t_address",
+                    "typeString": "address"
+                  },
+                  "typeName": {
+                    "id": 26535,
+                    "name": "address",
+                    "nodeType": "ElementaryTypeName",
+                    "src": "3530:7:122",
+                    "stateMutability": "nonpayable",
+                    "typeDescriptions": {
+                      "typeIdentifier": "t_address",
+                      "typeString": "address"
+                    }
+                  },
+                  "visibility": "internal"
+                },
+                {
+                  "constant": false,
+                  "id": 26538,
+                  "mutability": "mutable",
+                  "name": "_price",
+                  "nameLocation": "3565:6:122",
+                  "nodeType": "VariableDeclaration",
+                  "scope": 26541,
+                  "src": "3557:14:122",
+                  "stateVariable": false,
+                  "storageLocation": "default",
+                  "typeDescriptions": {
+                    "typeIdentifier": "t_uint256",
+                    "typeString": "uint256"
+                  },
+                  "typeName": {
+                    "id": 26537,
+                    "name": "uint256",
+                    "nodeType": "ElementaryTypeName",
+                    "src": "3557:7:122",
+                    "typeDescriptions": {
+                      "typeIdentifier": "t_uint256",
+                      "typeString": "uint256"
+                    }
+                  },
+                  "visibility": "internal"
+                }
+              ],
+              "src": "3494:83:122"
+            },
+            "returnParameters": {
+              "id": 26540,
+              "nodeType": "ParameterList",
+              "parameters": [],
+              "src": "3586:0:122"
+            },
+            "scope": 26554,
+            "src": "3468:119:122",
+            "stateMutability": "nonpayable",
+            "virtual": false,
+            "visibility": "external"
+          },
+          {
+            "documentation": {
+              "id": 26542,
+              "nodeType": "StructuredDocumentation",
+              "src": "3593:252:122",
+              "text": " @dev Unwraps a token, burns the MARKET_TKN, returns original to caller\n @param _tokenId tokenID of consignment token being redeemed\n burns consignment token from caller wallet\n Sends original consigned 721 to caller"
+            },
+            "functionSelector": "b6226360",
+            "id": 26547,
+            "implemented": false,
+            "kind": "function",
+            "modifiers": [],
+            "name": "withdrawFromConsignment",
+            "nameLocation": "3859:23:122",
+            "nodeType": "FunctionDefinition",
+            "parameters": {
+              "id": 26545,
+              "nodeType": "ParameterList",
+              "parameters": [
+                {
+                  "constant": false,
+                  "id": 26544,
+                  "mutability": "mutable",
+                  "name": "_tokenId",
+                  "nameLocation": "3891:8:122",
+                  "nodeType": "VariableDeclaration",
+                  "scope": 26547,
+                  "src": "3883:16:122",
+                  "stateVariable": false,
+                  "storageLocation": "default",
+                  "typeDescriptions": {
+                    "typeIdentifier": "t_uint256",
+                    "typeString": "uint256"
+                  },
+                  "typeName": {
+                    "id": 26543,
+                    "name": "uint256",
+                    "nodeType": "ElementaryTypeName",
+                    "src": "3883:7:122",
+                    "typeDescriptions": {
+                      "typeIdentifier": "t_uint256",
+                      "typeString": "uint256"
+                    }
+                  },
+                  "visibility": "internal"
+                }
+              ],
+              "src": "3882:18:122"
+            },
+            "returnParameters": {
+              "id": 26546,
+              "nodeType": "ParameterList",
+              "parameters": [],
+              "src": "3909:0:122"
+            },
+            "scope": 26554,
+            "src": "3850:60:122",
+            "stateMutability": "nonpayable",
+            "virtual": false,
+            "visibility": "external"
+          },
+          {
+            "documentation": {
+              "id": 26548,
+              "nodeType": "StructuredDocumentation",
+              "src": "3916:107:122",
+              "text": " @dev Purchse an item from the consignment contract\n @param _tokenId consignment ID"
+            },
+            "functionSelector": "d38ea5bf",
+            "id": 26553,
+            "implemented": false,
+            "kind": "function",
+            "modifiers": [],
+            "name": "purchaseItem",
+            "nameLocation": "4037:12:122",
+            "nodeType": "FunctionDefinition",
+            "parameters": {
+              "id": 26551,
+              "nodeType": "ParameterList",
+              "parameters": [
+                {
+                  "constant": false,
+                  "id": 26550,
+                  "mutability": "mutable",
+                  "name": "_tokenId",
+                  "nameLocation": "4067:8:122",
+                  "nodeType": "VariableDeclaration",
+                  "scope": 26553,
+                  "src": "4059:16:122",
+                  "stateVariable": false,
+                  "storageLocation": "default",
+                  "typeDescriptions": {
+                    "typeIdentifier": "t_uint256",
+                    "typeString": "uint256"
+                  },
+                  "typeName": {
+                    "id": 26549,
+                    "name": "uint256",
+                    "nodeType": "ElementaryTypeName",
+                    "src": "4059:7:122",
+                    "typeDescriptions": {
+                      "typeIdentifier": "t_uint256",
+                      "typeString": "uint256"
+                    }
+                  },
+                  "visibility": "internal"
+                }
+              ],
+              "src": "4049:55:122"
+            },
+            "returnParameters": {
+              "id": 26552,
+              "nodeType": "ParameterList",
+              "parameters": [],
+              "src": "4113:0:122"
+            },
+            "scope": 26554,
+            "src": "4028:86:122",
+            "stateMutability": "nonpayable",
+            "virtual": false,
+            "visibility": "external"
+          }
+        ],
+        "scope": 26555,
+        "src": "1373:2743:122",
+        "usedErrors": []
+      }
+    ],
+    "src": "1040:3077:122"
+  },
+  "legacyAST": {
+    "absolutePath": "project:/contracts/Resources/RESOURCE_PRUF_EXT_INTERFACES.sol",
+    "exportedSymbols": {
+      "MarketInterface": [
+        26554
+      ]
+    },
+    "id": 26555,
+    "license": "UNLICENSED",
+    "nodeType": "SourceUnit",
+    "nodes": [
+      {
+        "id": 26485,
+        "literals": [
+          "solidity",
+          "0.8",
+          ".7"
+        ],
+        "nodeType": "PragmaDirective",
+        "src": "1040:22:122"
+      },
+      {
+        "abstract": false,
+        "baseContracts": [],
+        "contractDependencies": [],
+        "contractKind": "interface",
+        "fullyImplemented": false,
+        "id": 26554,
+        "linearizedBaseContracts": [
+          26554
+        ],
+        "name": "MarketInterface",
+        "nameLocation": "1383:15:122",
+        "nodeType": "ContractDefinition",
+        "nodes": [
+          {
+            "documentation": {
+              "id": 26486,
+              "nodeType": "StructuredDocumentation",
+              "src": "1501:111:122",
+              "text": " @dev sets the MARKET_TKN contract address\n @param _address MARKET_TKN contract address"
+            },
+            "functionSelector": "26a4e8d2",
+            "id": 26491,
+            "implemented": false,
+            "kind": "function",
+            "modifiers": [],
+            "name": "setTokenAddress",
+            "nameLocation": "1627:15:122",
+            "nodeType": "FunctionDefinition",
+            "parameters": {
+              "id": 26489,
+              "nodeType": "ParameterList",
+              "parameters": [
+                {
+                  "constant": false,
+                  "id": 26488,
+                  "mutability": "mutable",
+                  "name": "_address",
+                  "nameLocation": "1651:8:122",
+                  "nodeType": "VariableDeclaration",
+                  "scope": 26491,
+                  "src": "1643:16:122",
+                  "stateVariable": false,
+                  "storageLocation": "default",
+                  "typeDescriptions": {
+                    "typeIdentifier": "t_address",
+                    "typeString": "address"
+                  },
+                  "typeName": {
+                    "id": 26487,
+                    "name": "address",
+                    "nodeType": "ElementaryTypeName",
+                    "src": "1643:7:122",
+                    "stateMutability": "nonpayable",
+                    "typeDescriptions": {
+                      "typeIdentifier": "t_address",
+                      "typeString": "address"
+                    }
+                  },
+                  "visibility": "internal"
+                }
+              ],
+              "src": "1642:18:122"
+            },
+            "returnParameters": {
+              "id": 26490,
+              "nodeType": "ParameterList",
+              "parameters": [],
+              "src": "1669:0:122"
+            },
+            "scope": 26554,
+            "src": "1618:52:122",
+            "stateMutability": "nonpayable",
+            "virtual": false,
+            "visibility": "external"
+          },
+          {
+            "documentation": {
+              "id": 26492,
+              "nodeType": "StructuredDocumentation",
+              "src": "1676:109:122",
+              "text": " @dev sets the charity donation address\n @param _charityAddress charity erc20 address"
+            },
+            "functionSelector": "0c9be46d",
+            "id": 26497,
+            "implemented": false,
+            "kind": "function",
+            "modifiers": [],
+            "name": "setCharityAddress",
+            "nameLocation": "1800:17:122",
+            "nodeType": "FunctionDefinition",
+            "parameters": {
+              "id": 26495,
+              "nodeType": "ParameterList",
+              "parameters": [
+                {
+                  "constant": false,
+                  "id": 26494,
+                  "mutability": "mutable",
+                  "name": "_charityAddress",
+                  "nameLocation": "1826:15:122",
+                  "nodeType": "VariableDeclaration",
+                  "scope": 26497,
+                  "src": "1818:23:122",
+                  "stateVariable": false,
+                  "storageLocation": "default",
+                  "typeDescriptions": {
+                    "typeIdentifier": "t_address",
+                    "typeString": "address"
+                  },
+                  "typeName": {
+                    "id": 26493,
+                    "name": "address",
+                    "nodeType": "ElementaryTypeName",
+                    "src": "1818:7:122",
+                    "stateMutability": "nonpayable",
+                    "typeDescriptions": {
+                      "typeIdentifier": "t_address",
+                      "typeString": "address"
+                    }
+                  },
+                  "visibility": "internal"
+                }
+              ],
+              "src": "1817:25:122"
+            },
+            "returnParameters": {
+              "id": 26496,
+              "nodeType": "ParameterList",
+              "parameters": [],
+              "src": "1851:0:122"
+            },
+            "scope": 26554,
+            "src": "1791:61:122",
+            "stateMutability": "nonpayable",
+            "virtual": false,
+            "visibility": "external"
+          },
+          {
+            "documentation": {
+              "id": 26498,
+              "nodeType": "StructuredDocumentation",
+              "src": "1858:147:122",
+              "text": " @dev sets the default cost in PRüF of listing a non-PRüF NFT\n @param _price cost in PRüF(18) of listing a non-PRüF NFT"
+            },
+            "functionSelector": "9f54d767",
+            "id": 26503,
+            "implemented": false,
+            "kind": "function",
+            "modifiers": [],
+            "name": "setListingPrice",
+            "nameLocation": "2020:15:122",
+            "nodeType": "FunctionDefinition",
+            "parameters": {
+              "id": 26501,
+              "nodeType": "ParameterList",
+              "parameters": [
+                {
+                  "constant": false,
+                  "id": 26500,
+                  "mutability": "mutable",
+                  "name": "_price",
+                  "nameLocation": "2043:6:122",
+                  "nodeType": "VariableDeclaration",
+                  "scope": 26503,
+                  "src": "2036:13:122",
+                  "stateVariable": false,
+                  "storageLocation": "default",
+                  "typeDescriptions": {
+                    "typeIdentifier": "t_uint32",
+                    "typeString": "uint32"
+                  },
+                  "typeName": {
+                    "id": 26499,
+                    "name": "uint32",
+                    "nodeType": "ElementaryTypeName",
+                    "src": "2036:6:122",
+                    "typeDescriptions": {
+                      "typeIdentifier": "t_uint32",
+                      "typeString": "uint32"
+                    }
+                  },
+                  "visibility": "internal"
+                }
+              ],
+              "src": "2035:15:122"
+            },
+            "returnParameters": {
+              "id": 26502,
+              "nodeType": "ParameterList",
+              "parameters": [],
+              "src": "2059:0:122"
+            },
+            "scope": 26554,
+            "src": "2011:49:122",
+            "stateMutability": "nonpayable",
+            "virtual": false,
+            "visibility": "external"
+          },
+          {
+            "documentation": {
+              "id": 26504,
+              "nodeType": "StructuredDocumentation",
+              "src": "2066:308:122",
+              "text": " @dev Wraps a pruf asset, takes original from caller (holds it in contract)\n @param _tokenId tokenID of token to wrap\n @param _currency currency to make transaction in\n @param _price price in _currency to require for transfer\n @param _node node doing the consignment"
+            },
+            "functionSelector": "fef53561",
+            "id": 26515,
+            "implemented": false,
+            "kind": "function",
+            "modifiers": [],
+            "name": "consignPrufAsset",
+            "nameLocation": "2388:16:122",
+            "nodeType": "FunctionDefinition",
+            "parameters": {
+              "id": 26513,
+              "nodeType": "ParameterList",
+              "parameters": [
+                {
+                  "constant": false,
+                  "id": 26506,
+                  "mutability": "mutable",
+                  "name": "_tokenId",
+                  "nameLocation": "2422:8:122",
+                  "nodeType": "VariableDeclaration",
+                  "scope": 26515,
+                  "src": "2414:16:122",
+                  "stateVariable": false,
+                  "storageLocation": "default",
+                  "typeDescriptions": {
+                    "typeIdentifier": "t_uint256",
+                    "typeString": "uint256"
+                  },
+                  "typeName": {
+                    "id": 26505,
+                    "name": "uint256",
+                    "nodeType": "ElementaryTypeName",
+                    "src": "2414:7:122",
+                    "typeDescriptions": {
+                      "typeIdentifier": "t_uint256",
+                      "typeString": "uint256"
+                    }
+                  },
+                  "visibility": "internal"
+                },
+                {
+                  "constant": false,
+                  "id": 26508,
+                  "mutability": "mutable",
+                  "name": "_currency",
+                  "nameLocation": "2448:9:122",
+                  "nodeType": "VariableDeclaration",
+                  "scope": 26515,
+                  "src": "2440:17:122",
+                  "stateVariable": false,
+                  "storageLocation": "default",
+                  "typeDescriptions": {
+                    "typeIdentifier": "t_address",
+                    "typeString": "address"
+                  },
+                  "typeName": {
+                    "id": 26507,
+                    "name": "address",
+                    "nodeType": "ElementaryTypeName",
+                    "src": "2440:7:122",
+                    "stateMutability": "nonpayable",
+                    "typeDescriptions": {
+                      "typeIdentifier": "t_address",
+                      "typeString": "address"
+                    }
+                  },
+                  "visibility": "internal"
+                },
+                {
+                  "constant": false,
+                  "id": 26510,
+                  "mutability": "mutable",
+                  "name": "_price",
+                  "nameLocation": "2475:6:122",
+                  "nodeType": "VariableDeclaration",
+                  "scope": 26515,
+                  "src": "2467:14:122",
+                  "stateVariable": false,
+                  "storageLocation": "default",
+                  "typeDescriptions": {
+                    "typeIdentifier": "t_uint256",
+                    "typeString": "uint256"
+                  },
+                  "typeName": {
+                    "id": 26509,
+                    "name": "uint256",
+                    "nodeType": "ElementaryTypeName",
+                    "src": "2467:7:122",
+                    "typeDescriptions": {
+                      "typeIdentifier": "t_uint256",
+                      "typeString": "uint256"
+                    }
+                  },
+                  "visibility": "internal"
+                },
+                {
+                  "constant": false,
+                  "id": 26512,
+                  "mutability": "mutable",
+                  "name": "_node",
+                  "nameLocation": "2498:5:122",
+                  "nodeType": "VariableDeclaration",
+                  "scope": 26515,
+                  "src": "2491:12:122",
+                  "stateVariable": false,
+                  "storageLocation": "default",
+                  "typeDescriptions": {
+                    "typeIdentifier": "t_uint32",
+                    "typeString": "uint32"
+                  },
+                  "typeName": {
+                    "id": 26511,
+                    "name": "uint32",
+                    "nodeType": "ElementaryTypeName",
+                    "src": "2491:6:122",
+                    "typeDescriptions": {
+                      "typeIdentifier": "t_uint32",
+                      "typeString": "uint32"
+                    }
+                  },
+                  "visibility": "internal"
+                }
+              ],
+              "src": "2404:105:122"
+            },
+            "returnParameters": {
+              "id": 26514,
+              "nodeType": "ParameterList",
+              "parameters": [],
+              "src": "2518:0:122"
+            },
+            "scope": 26554,
+            "src": "2379:140:122",
+            "stateMutability": "nonpayable",
+            "virtual": false,
+            "visibility": "external"
+          },
+          {
+            "documentation": {
+              "id": 26516,
+              "nodeType": "StructuredDocumentation",
+              "src": "2525:488:122",
+              "text": " @dev Wraps a token, takes original from caller (holds it in contract)\n @param _tokenId tokenID of token to wrap\n @param _ERC721TokenContract contract address for token to wrap\n @param _currency currency to make transaction in\n @param _price price in _currency to require for transfer\n @param _node node doing the consignment\n @param uri string for URI\n Prerequisite: contract authorized for token txfr\n Takes original 721"
+            },
+            "functionSelector": "82ee07bf",
+            "id": 26531,
+            "implemented": false,
+            "kind": "function",
+            "modifiers": [],
+            "name": "consignToken",
+            "nameLocation": "3027:12:122",
+            "nodeType": "FunctionDefinition",
+            "parameters": {
+              "id": 26529,
+              "nodeType": "ParameterList",
+              "parameters": [
+                {
+                  "constant": false,
+                  "id": 26518,
+                  "mutability": "mutable",
+                  "name": "_tokenId",
+                  "nameLocation": "3057:8:122",
+                  "nodeType": "VariableDeclaration",
+                  "scope": 26531,
+                  "src": "3049:16:122",
+                  "stateVariable": false,
+                  "storageLocation": "default",
+                  "typeDescriptions": {
+                    "typeIdentifier": "t_uint256",
+                    "typeString": "uint256"
+                  },
+                  "typeName": {
+                    "id": 26517,
+                    "name": "uint256",
+                    "nodeType": "ElementaryTypeName",
+                    "src": "3049:7:122",
+                    "typeDescriptions": {
+                      "typeIdentifier": "t_uint256",
+                      "typeString": "uint256"
+                    }
+                  },
+                  "visibility": "internal"
+                },
+                {
+                  "constant": false,
+                  "id": 26520,
+                  "mutability": "mutable",
+                  "name": "_ERC721TokenContract",
+                  "nameLocation": "3083:20:122",
+                  "nodeType": "VariableDeclaration",
+                  "scope": 26531,
+                  "src": "3075:28:122",
+                  "stateVariable": false,
+                  "storageLocation": "default",
+                  "typeDescriptions": {
+                    "typeIdentifier": "t_address",
+                    "typeString": "address"
+                  },
+                  "typeName": {
+                    "id": 26519,
+                    "name": "address",
+                    "nodeType": "ElementaryTypeName",
+                    "src": "3075:7:122",
+                    "stateMutability": "nonpayable",
+                    "typeDescriptions": {
+                      "typeIdentifier": "t_address",
+                      "typeString": "address"
+                    }
+                  },
+                  "visibility": "internal"
+                },
+                {
+                  "constant": false,
+                  "id": 26522,
+                  "mutability": "mutable",
+                  "name": "_currency",
+                  "nameLocation": "3121:9:122",
+                  "nodeType": "VariableDeclaration",
+                  "scope": 26531,
+                  "src": "3113:17:122",
+                  "stateVariable": false,
+                  "storageLocation": "default",
+                  "typeDescriptions": {
+                    "typeIdentifier": "t_address",
+                    "typeString": "address"
+                  },
+                  "typeName": {
+                    "id": 26521,
+                    "name": "address",
+                    "nodeType": "ElementaryTypeName",
+                    "src": "3113:7:122",
+                    "stateMutability": "nonpayable",
+                    "typeDescriptions": {
+                      "typeIdentifier": "t_address",
+                      "typeString": "address"
+                    }
+                  },
+                  "visibility": "internal"
+                },
+                {
+                  "constant": false,
+                  "id": 26524,
+                  "mutability": "mutable",
+                  "name": "_price",
+                  "nameLocation": "3148:6:122",
+                  "nodeType": "VariableDeclaration",
+                  "scope": 26531,
+                  "src": "3140:14:122",
+                  "stateVariable": false,
+                  "storageLocation": "default",
+                  "typeDescriptions": {
+                    "typeIdentifier": "t_uint256",
+                    "typeString": "uint256"
+                  },
+                  "typeName": {
+                    "id": 26523,
+                    "name": "uint256",
+                    "nodeType": "ElementaryTypeName",
+                    "src": "3140:7:122",
+                    "typeDescriptions": {
+                      "typeIdentifier": "t_uint256",
+                      "typeString": "uint256"
+                    }
+                  },
+                  "visibility": "internal"
+                },
+                {
+                  "constant": false,
+                  "id": 26526,
+                  "mutability": "mutable",
+                  "name": "_node",
+                  "nameLocation": "3171:5:122",
+                  "nodeType": "VariableDeclaration",
+                  "scope": 26531,
+                  "src": "3164:12:122",
+                  "stateVariable": false,
+                  "storageLocation": "default",
+                  "typeDescriptions": {
+                    "typeIdentifier": "t_uint32",
+                    "typeString": "uint32"
+                  },
+                  "typeName": {
+                    "id": 26525,
+                    "name": "uint32",
+                    "nodeType": "ElementaryTypeName",
+                    "src": "3164:6:122",
+                    "typeDescriptions": {
+                      "typeIdentifier": "t_uint32",
+                      "typeString": "uint32"
+                    }
+                  },
+                  "visibility": "internal"
+                },
+                {
+                  "constant": false,
+                  "id": 26528,
+                  "mutability": "mutable",
+                  "name": "uri",
+                  "nameLocation": "3200:3:122",
+                  "nodeType": "VariableDeclaration",
+                  "scope": 26531,
+                  "src": "3186:17:122",
+                  "stateVariable": false,
+                  "storageLocation": "memory",
+                  "typeDescriptions": {
+                    "typeIdentifier": "t_string_memory_ptr",
+                    "typeString": "string"
+                  },
+                  "typeName": {
+                    "id": 26527,
+                    "name": "string",
+                    "nodeType": "ElementaryTypeName",
+                    "src": "3186:6:122",
+                    "typeDescriptions": {
+                      "typeIdentifier": "t_string_storage_ptr",
+                      "typeString": "string"
+                    }
+                  },
+                  "visibility": "internal"
+                }
+              ],
+              "src": "3039:170:122"
+            },
+            "returnParameters": {
+              "id": 26530,
+              "nodeType": "ParameterList",
+              "parameters": [],
+              "src": "3218:0:122"
+            },
+            "scope": 26554,
+            "src": "3018:201:122",
+            "stateMutability": "nonpayable",
+            "virtual": false,
+            "visibility": "external"
+          },
+          {
+            "documentation": {
+              "id": 26532,
+              "nodeType": "StructuredDocumentation",
+              "src": "3225:238:122",
+              "text": " @dev Updates pricing information for an active consignment\n @param _tokenId ID of consignment\n @param _currency currency to make transaction in\n @param _price price in _currency to require for transfer"
+            },
+            "functionSelector": "b51eb064",
+            "id": 26541,
+            "implemented": false,
+            "kind": "function",
+            "modifiers": [],
+            "name": "updateConsignment",
+            "nameLocation": "3477:17:122",
+            "nodeType": "FunctionDefinition",
+            "parameters": {
+              "id": 26539,
+              "nodeType": "ParameterList",
+              "parameters": [
+                {
+                  "constant": false,
+                  "id": 26534,
+                  "mutability": "mutable",
+                  "name": "_tokenId",
+                  "nameLocation": "3512:8:122",
+                  "nodeType": "VariableDeclaration",
+                  "scope": 26541,
+                  "src": "3504:16:122",
+                  "stateVariable": false,
+                  "storageLocation": "default",
+                  "typeDescriptions": {
+                    "typeIdentifier": "t_uint256",
+                    "typeString": "uint256"
+                  },
+                  "typeName": {
+                    "id": 26533,
+                    "name": "uint256",
+                    "nodeType": "ElementaryTypeName",
+                    "src": "3504:7:122",
+                    "typeDescriptions": {
+                      "typeIdentifier": "t_uint256",
+                      "typeString": "uint256"
+                    }
+                  },
+                  "visibility": "internal"
+                },
+                {
+                  "constant": false,
+                  "id": 26536,
+                  "mutability": "mutable",
+                  "name": "_currency",
+                  "nameLocation": "3538:9:122",
+                  "nodeType": "VariableDeclaration",
+                  "scope": 26541,
+                  "src": "3530:17:122",
+                  "stateVariable": false,
+                  "storageLocation": "default",
+                  "typeDescriptions": {
+                    "typeIdentifier": "t_address",
+                    "typeString": "address"
+                  },
+                  "typeName": {
+                    "id": 26535,
+                    "name": "address",
+                    "nodeType": "ElementaryTypeName",
+                    "src": "3530:7:122",
+                    "stateMutability": "nonpayable",
+                    "typeDescriptions": {
+                      "typeIdentifier": "t_address",
+                      "typeString": "address"
+                    }
+                  },
+                  "visibility": "internal"
+                },
+                {
+                  "constant": false,
+                  "id": 26538,
+                  "mutability": "mutable",
+                  "name": "_price",
+                  "nameLocation": "3565:6:122",
+                  "nodeType": "VariableDeclaration",
+                  "scope": 26541,
+                  "src": "3557:14:122",
+                  "stateVariable": false,
+                  "storageLocation": "default",
+                  "typeDescriptions": {
+                    "typeIdentifier": "t_uint256",
+                    "typeString": "uint256"
+                  },
+                  "typeName": {
+                    "id": 26537,
+                    "name": "uint256",
+                    "nodeType": "ElementaryTypeName",
+                    "src": "3557:7:122",
+                    "typeDescriptions": {
+                      "typeIdentifier": "t_uint256",
+                      "typeString": "uint256"
+                    }
+                  },
+                  "visibility": "internal"
+                }
+              ],
+              "src": "3494:83:122"
+            },
+            "returnParameters": {
+              "id": 26540,
+              "nodeType": "ParameterList",
+              "parameters": [],
+              "src": "3586:0:122"
+            },
+            "scope": 26554,
+            "src": "3468:119:122",
+            "stateMutability": "nonpayable",
+            "virtual": false,
+            "visibility": "external"
+          },
+          {
+            "documentation": {
+              "id": 26542,
+              "nodeType": "StructuredDocumentation",
+              "src": "3593:252:122",
+              "text": " @dev Unwraps a token, burns the MARKET_TKN, returns original to caller\n @param _tokenId tokenID of consignment token being redeemed\n burns consignment token from caller wallet\n Sends original consigned 721 to caller"
+            },
+            "functionSelector": "b6226360",
+            "id": 26547,
+            "implemented": false,
+            "kind": "function",
+            "modifiers": [],
+            "name": "withdrawFromConsignment",
+            "nameLocation": "3859:23:122",
+            "nodeType": "FunctionDefinition",
+            "parameters": {
+              "id": 26545,
+              "nodeType": "ParameterList",
+              "parameters": [
+                {
+                  "constant": false,
+                  "id": 26544,
+                  "mutability": "mutable",
+                  "name": "_tokenId",
+                  "nameLocation": "3891:8:122",
+                  "nodeType": "VariableDeclaration",
+                  "scope": 26547,
+                  "src": "3883:16:122",
+                  "stateVariable": false,
+                  "storageLocation": "default",
+                  "typeDescriptions": {
+                    "typeIdentifier": "t_uint256",
+                    "typeString": "uint256"
+                  },
+                  "typeName": {
+                    "id": 26543,
+                    "name": "uint256",
+                    "nodeType": "ElementaryTypeName",
+                    "src": "3883:7:122",
+                    "typeDescriptions": {
+                      "typeIdentifier": "t_uint256",
+                      "typeString": "uint256"
+                    }
+                  },
+                  "visibility": "internal"
+                }
+              ],
+              "src": "3882:18:122"
+            },
+            "returnParameters": {
+              "id": 26546,
+              "nodeType": "ParameterList",
+              "parameters": [],
+              "src": "3909:0:122"
+            },
+            "scope": 26554,
+            "src": "3850:60:122",
+            "stateMutability": "nonpayable",
+            "virtual": false,
+            "visibility": "external"
+          },
+          {
+            "documentation": {
+              "id": 26548,
+              "nodeType": "StructuredDocumentation",
+              "src": "3916:107:122",
+              "text": " @dev Purchse an item from the consignment contract\n @param _tokenId consignment ID"
+            },
+            "functionSelector": "d38ea5bf",
+            "id": 26553,
+            "implemented": false,
+            "kind": "function",
+            "modifiers": [],
+            "name": "purchaseItem",
+            "nameLocation": "4037:12:122",
+            "nodeType": "FunctionDefinition",
+            "parameters": {
+              "id": 26551,
+              "nodeType": "ParameterList",
+              "parameters": [
+                {
+                  "constant": false,
+                  "id": 26550,
+                  "mutability": "mutable",
+                  "name": "_tokenId",
+                  "nameLocation": "4067:8:122",
+                  "nodeType": "VariableDeclaration",
+                  "scope": 26553,
+                  "src": "4059:16:122",
+                  "stateVariable": false,
+                  "storageLocation": "default",
+                  "typeDescriptions": {
+                    "typeIdentifier": "t_uint256",
+                    "typeString": "uint256"
+                  },
+                  "typeName": {
+                    "id": 26549,
+                    "name": "uint256",
+                    "nodeType": "ElementaryTypeName",
+                    "src": "4059:7:122",
+                    "typeDescriptions": {
+                      "typeIdentifier": "t_uint256",
+                      "typeString": "uint256"
+                    }
+                  },
+                  "visibility": "internal"
+                }
+              ],
+              "src": "4049:55:122"
+            },
+            "returnParameters": {
+              "id": 26552,
+              "nodeType": "ParameterList",
+              "parameters": [],
+              "src": "4113:0:122"
+            },
+            "scope": 26554,
+            "src": "4028:86:122",
+            "stateMutability": "nonpayable",
+            "virtual": false,
+            "visibility": "external"
+          }
+        ],
+        "scope": 26555,
+        "src": "1373:2743:122",
+        "usedErrors": []
+      }
+    ],
+    "src": "1040:3077:122"
+  },
+  "compiler": {
+    "name": "solc",
+    "version": "0.8.7+commit.e28d00a7.Emscripten.clang"
+  },
+  "networks": {},
+  "schemaVersion": "3.4.3",
+  "updatedAt": "2022-04-27T15:19:14.272Z",
+  "devdoc": {
+    "kind": "dev",
+    "methods": {
+      "consignPrufAsset(uint256,address,uint256,uint32)": {
+        "details": "Wraps a pruf asset, takes original from caller (holds it in contract)",
+        "params": {
+          "_currency": "currency to make transaction in",
+          "_node": "node doing the consignment",
+          "_price": "price in _currency to require for transfer",
+          "_tokenId": "tokenID of token to wrap"
+        }
+      },
+      "consignToken(uint256,address,address,uint256,uint32,string)": {
+        "details": "Wraps a token, takes original from caller (holds it in contract)",
+        "params": {
+          "_ERC721TokenContract": "contract address for token to wrap",
+          "_currency": "currency to make transaction in",
+          "_node": "node doing the consignment",
+          "_price": "price in _currency to require for transfer",
+          "_tokenId": "tokenID of token to wrap",
+          "uri": "string for URI Prerequisite: contract authorized for token txfr Takes original 721"
+        }
+      },
+      "purchaseItem(uint256)": {
+        "details": "Purchse an item from the consignment contract",
+        "params": {
+          "_tokenId": "consignment ID"
+        }
+      },
+      "setCharityAddress(address)": {
+        "details": "sets the charity donation address",
+        "params": {
+          "_charityAddress": "charity erc20 address"
+        }
+      },
+      "setListingPrice(uint32)": {
+        "details": "sets the default cost in PRüF of listing a non-PRüF NFT",
+        "params": {
+          "_price": "cost in PRüF(18) of listing a non-PRüF NFT"
+        }
+      },
+      "setTokenAddress(address)": {
+        "details": "sets the MARKET_TKN contract address",
+        "params": {
+          "_address": "MARKET_TKN contract address"
+        }
+      },
+      "updateConsignment(uint256,address,uint256)": {
+        "details": "Updates pricing information for an active consignment",
+        "params": {
+          "_currency": "currency to make transaction in",
+          "_price": "price in _currency to require for transfer",
+          "_tokenId": "ID of consignment"
+        }
+      },
+      "withdrawFromConsignment(uint256)": {
+        "details": "Unwraps a token, burns the MARKET_TKN, returns original to caller",
+        "params": {
+          "_tokenId": "tokenID of consignment token being redeemed burns consignment token from caller wallet Sends original consigned 721 to caller"
+        }
+      }
+    },
+    "version": 1
+  },
+  "userdoc": {
+    "kind": "user",
+    "methods": {},
+    "version": 1
+  }
+}

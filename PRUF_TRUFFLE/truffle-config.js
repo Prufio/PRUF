@@ -23,7 +23,9 @@
 // //
 // const fs = require('fs');
 // const mnemonic = "dress cradle trigger claim seminar front fit stone high barely series copy";
-
+// const HDWalletProvider = require('@truffle/hdwallet-provider');
+// const privateKey = "";
+// const endpointUrl = "wss://kovan.infura.io/ws/v3/ab9233de7c4b4adea39fcf3c41914959";
 module.exports = {
   /**
    * Networks define how you connect to your ethereum client and let you set the
@@ -52,7 +54,20 @@ module.exports = {
       host: "127.0.0.1",     // Localhost (default: none)
       port: 7545,            // Standard Ethereum port (default: none)
       network_id: "5777",       // Any network (default: none)
-     },
+    },
+    // kovan: {
+    //   provider: function() {
+    //     return new HDWalletProvider(
+    //       //private keys array
+    //       [privateKey],
+    //       //url to ethereum node
+    //       endpointUrl
+    //     )
+    //   },
+    //   gas: 5000000,
+    //   gasPrice: 25000000000,
+    //   network_id: 42
+    // },
 
     // Another network with more advanced options...
     // advanced: {
@@ -85,9 +100,9 @@ module.exports = {
   },
 
   // Set default mocha options here, use special reporters etc.
-  mocha: {
+  // mocha: {
     // timeout: 100000
-  },
+  // },
 
   // Configure your compilers
   compilers: {

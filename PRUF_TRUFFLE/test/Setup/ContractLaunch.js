@@ -15,7 +15,7 @@ const PRUF_UTIL_TKN = artifacts.require("UTIL_TKN");
 const PRUF_A_TKN = artifacts.require("A_TKN");
 const PRUF_NODE_TKN = artifacts.require("NODE_TKN");
 const PRUF_NODE_MGR = artifacts.require("NODE_MGR");
-const PRUF_NODE_BLDR = artifacts.require("NODE_BLDR");
+// const PRUF_NODE_BLDR = artifacts.require("NODE_BLDR");
 const PRUF_NODE_STOR = artifacts.require("NODE_STOR");
 const PRUF_APP_NC = artifacts.require("APP_NC");
 const PRUF_DAO = artifacts.require("DAO");
@@ -26,12 +26,12 @@ const PRUF_HELPER = artifacts.require("Helper");
 const PRUF_CLOCK = artifacts.require("FAKE_CLOCK");
 const PRUF_RAVE = artifacts.require("RAVE");
 
-let STOR;
+let STOR
 let UTIL_TKN;
 let A_TKN;
 let NODE_TKN;
 let NODE_MGR;
-let NODE_BLDR;
+// let NODE_BLDR;
 let NODE_STOR;
 let APP_NC;
 let DAO;
@@ -60,8 +60,11 @@ let roleMemberCount;
 let stakeRoleB32;
 let stakePayerRoleB32;
 let stakeAdminRoleB32;
+let nodeAdminRole;
 let daoVetoRoleB32;
 
+
+let roles = {};
 let rgt000 =
   "0x0000000000000000000000000000000000000000000000000000000000000000";
 
@@ -116,14 +119,14 @@ contract("Launch", (accounts) => {
     NODE_MGR = PRUF_NODE_MGR_TEST;
   });
 
-  it("Should deploy PRUF_NODE_BLDR", async () => {
-    const PRUF_NODE_BLDR_TEST = await PRUF_NODE_BLDR.deployed({
-      from: account1,
-    });
-    console.log(PRUF_NODE_BLDR_TEST.address);
-    assert(PRUF_NODE_BLDR_TEST.address !== "");
-    NODE_BLDR = PRUF_NODE_BLDR_TEST;
-  });
+  // it("Should deploy PRUF_NODE_BLDR", async () => {
+  //   const PRUF_NODE_BLDR_TEST = await PRUF_NODE_BLDR.deployed({
+  //     from: account1,
+  //   });
+  //   console.log(PRUF_NODE_BLDR_TEST.address);
+  //   assert(PRUF_NODE_BLDR_TEST.address !== "");
+  //   NODE_BLDR = PRUF_NODE_BLDR_TEST;
+  // });
 
   it("Should deploy PRUF_APP_NC", async () => {
     const PRUF_APP_NC_TEST = await PRUF_APP_NC.deployed({ from: account1 });
@@ -224,15 +227,20 @@ contract("Launch", (accounts) => {
 
     stakeAdminRoleB32 = await Helper.getStringHash("STAKE_ADMIN_ROLE");
 
-    daoVetoRoleB32 = await Helper.getStringHash("DAO_VETO_ROLE");
+  nodeAdminRole = web3.utils.soliditySha3("NODE_ADMIN_ROLE");
+  daoVetoRoleB32 = web3.utils.soliditySha3("DAO_VETO_ROLE")
+      console.log(nodeAdminRole)
+      roles = {payableRoleB32, minterRoleB32, trustedAgentRoleB32, 
+        IDminterRoleB32, IDverifierRoleB32, assetTransferRoleB32,
+        discardRoleB32, DAOroleB32, DAOcontrollerRoleB32, DAOlayerRoleB32,
+        DAOadminRoleB32, contractAdminRoleB32, defaultAdminRoleB32, pauserRoleB32,
+        roleMemberCount, stakeRoleB32, stakePayerRoleB32, stakeAdminRoleB32, daoVetoRoleB32
+      }
+      console.log({roles})
 
     defaultAdminRoleB32 =
       "0x0000000000000000000000000000000000000000000000000000000000000000";
-  });
-
-  it("Should authorize account1 as DAOveto in DAO", () => {
-    return RAVE.unpause({ from: account1 });
-  });
+  })
 
   it("Should authorize account1 as DAOveto in DAO", () => {
     return NODE_MGR.grantRole(IDverifierRoleB32, RAVE.address, { from: account1 });
@@ -331,12 +339,12 @@ contract("Launch", (accounts) => {
         });
       })
 
-      .then(() => {
-        console.log("Adding in NODE_BLDR");
-        return NODE_BLDR.setStorageContract(STOR.address, {
-          from: account1,
-        });
-      })
+      // .then(() => {
+      //   console.log("Adding in NODE_BLDR");
+      //   return NODE_BLDR.setStorageContract(STOR.address, {
+      //     from: account1,
+      //   });
+      // })
 
       .then(() => {
         console.log("Adding in DAO_A");
@@ -445,10 +453,10 @@ contract("Launch", (accounts) => {
         return APP_NC.resolveContractAddresses({ from: account1 });
       })
 
-      .then(() => {
-        console.log("Resolving in NODE_BLDR");
-        return NODE_BLDR.resolveContractAddresses({ from: account1 });
-      })
+      // .then(() => {
+      //   console.log("Resolving in NODE_BLDR");
+      //   return NODE_BLDR.resolveContractAddresses({ from: account1 });
+      // })
 
       .then(() => {
         console.log("Resolving in DAO_A");
@@ -582,11 +590,11 @@ contract("Launch", (accounts) => {
     });
   });
 
-  it("Should authorize NODE_BLDR with IDverifierRole for NODE_MGR", () => {
-    return NODE_MGR.grantRole(IDverifierRoleB32, NODE_BLDR.address, {
-      from: account1,
-    });
-  });
+  // it("Should authorize NODE_BLDR with IDverifierRole for NODE_MGR", () => {
+  //   return NODE_MGR.grantRole(IDverifierRoleB32, NODE_BLDR.address, {
+  //     from: account1,
+  //   });
+  // });
 
   it("Should authorize DAO_A with DAOrole for NODE_MGR", () => {
     return NODE_MGR.grantRole(DAOroleB32, DAO_A.address, {
@@ -1495,27 +1503,5 @@ contract("Launch", (accounts) => {
           }
         );
       });
-  });
-
-  it("Should give me ü", () => {
-    return UTIL_TKN.mint(account1, '1000000000000000000000000', {
-      from: account1,
-    });
-  });
-
-  it("Should give me ü", () => {
-    return RAVE.bumpMe({
-      from: account1,
-    });
-  });
-
-  it("Should give me ü", () => {
-    return RAVE.purchaseNode('M1 Misc', '7', '2', rgt000, rgt000, account1, { 
-      from: account1,
-    });
-  });
-
-  it("Should give me ID_VERIFIER_ROLE", () => {
-    return console.log(IDverifierRoleB32)
   });
 });
